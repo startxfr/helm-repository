@@ -1,0 +1,163 @@
+#!/bin/bash
+SXV4_CONSOLE_VERSION=3.9.109
+
+
+
+# read chart version
+function chartReadVersion {
+    if [[ "" != "$1" ]]; then
+        echo $(cat $1/Chart.yaml | yq -r .version)
+    else
+        echo ""
+    fi
+}
+
+# router for create sub-command
+function routerCreate {
+    if [[ "" != "$1" ]]; then
+        echo -e "\e[32mCreate\e[0m $1 helm chart"
+        cd $PROJECT_PATH
+        helm create $1
+        cd - &>/dev/null
+    else
+        menuHeadArt
+        cat <<EOF
+
+Startx helm sub-command for creating helm chart
+
+Usage:
+  ./sx-helm create <chart-name>
+
+EOF
+    fi
+}
+
+# router for test sub-command
+function routerTest {
+    if [[ "" != "$1" ]]; then
+        echo -e "\e[33mTest\e[0m $1 helm chart"
+        cd $PROJECT_PATH
+        helm lint $1
+        cd - &>/dev/null
+    else
+        menuHeadArt
+        cat <<EOF
+
+Startx helm sub-command for testing helm chart
+
+Usage:
+  ./sx-helm test <chart-name>
+
+EOF
+    fi
+}
+
+# router for package sub-command
+function routerPackage {
+    if [[ "" != "$1" ]]; then
+        local CURRENT_RELEASE=$(chartReadVersion $1)
+        echo -e "\e[34mPackage\e[0m $1 helm chart version $CURRENT_RELEASE"
+        cd $PROJECT_PATH
+        helm package $1
+        cd - &>/dev/null
+    else
+        menuHeadArt
+        cat <<EOF
+
+Startx helm sub-command for packaging helm chart
+
+Usage:
+  ./sx-helm package <chart-name>
+
+EOF
+    fi
+}
+
+# router for release sub-command
+function routerRelease {
+    if [[ "" != "$1" ]]; then
+        echo -e "\e[35mRelease\e[0m $1 helm chart"
+        cd $PROJECT_PATH
+        local CURRENT_RELEASE=$(chartReadVersion $1)
+        local NEXT_RELEASE=$(cat $1/Chart.yaml | yq -r .version  | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
+        if [[ "auto" == "$2" || "-a" == "$2" ]]; then
+            echo -e "\e[35mRelease\e[0m $1 auto-version $NEXT_RELEASE"
+        else
+            echo -en "\e[35mRelease\e[0m Set $1 next version [$NEXT_RELEASE] : "
+            read nextRel
+            if [[ "$nextRel" != "" ]]; then
+                NEXT_RELEASE=$nextRel
+            fi
+        fi
+        sed -i "s/$CURRENT_RELEASE/$NEXT_RELEASE/" $1/Chart.yaml
+        echo -e "\e[35mRelease\e[0m $1 version $NEXT_RELEASE"
+        routerPackage $1
+        cd - &>/dev/null
+    else
+        menuHeadArt
+        cat <<EOF
+
+Startx helm sub-command for releasing helm chart
+
+Usage:
+  ./sx-helm release <chart-name>
+
+EOF
+    fi
+}
+
+# router for delete sub-command
+function routerDelete {
+    if [[ "" != "$1" ]]; then
+        echo -e "\e[31mDelete\e[0m $1 helm chart"
+        rm -rf $PROJECT_PATH/$1
+    else
+        menuHeadArt
+        cat <<EOF
+
+Startx helm sub-command for deleting helm chart
+
+Usage:
+  ./sx-helm delete <chart-name>
+
+EOF
+    fi
+}
+
+# menu switch for usage command
+function menuUsage {
+    menuHeadArt
+cat <<EOF
+
+This client helps you develop, build, deploy, and run your Startx applications on any OpenShift or Kubernetes compatible
+platform. It also includes the administrative commands for managing a cluster under the 'adm' subcommand.
+
+Available commands are : setup, environment, component, dev and client
+
+Available components are : api, botarmy, internet, intranet, formation, partner, monkey
+and all alias reference all components except monkey
+
+Usage:
+  ./sx-helm <chart-name> <action> [flags]
+
+- Actions  :
+  - create                             Create an new helm chart
+  - test                               Test an helm chart
+  - package                            Package an helm chart
+  - release                            Release an helm chart
+  - delete                             Delete an helm chart
+
+- Examples  :
+  ./sx-helm <name> create              Create an new helm chart
+  ./sx-helm <name> test                Test an helm chart
+  ./sx-helm <name> package             Package an helm chart
+  ./sx-helm <name> release             Release an helm chart
+  ./sx-helm <name> delete              Delete an helm chart
+
+EOF
+}
+
+# menu display AsciiArt
+function menuHeadArt {
+cat $PROJECT_LIBPATH/header.txt
+}

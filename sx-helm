@@ -1,0 +1,20 @@
+#!/bin/bash
+PROJECT_PATH=`dirname $(readlink -f $0)`
+PROJECT_LIBPATH=$PROJECT_PATH/_tools
+
+source $PROJECT_LIBPATH/cli
+
+## Start prog switch
+
+    if [[ "" != "$1" ]]; then
+        case $2 in
+            create)                 routerCreate $@;;
+            test)                   routerTest $@;;
+            package)                routerPackage $@;;
+            release)                routerRelease $@;;
+            delete)                 routerDelete $@ ;;
+            *)                      menuUsage $@ ;;
+        esac
+    else
+        menuUsage
+    fi
