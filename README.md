@@ -85,4 +85,5 @@ test are OK.
 
 | Release | Date     | Description                                     |
 | ------- | -------- | ----------------------------------------------- |
+| 0.0.2   | 20-09-26 | stable CLI                                      |
 | 0.0.1   | 20-09-26 | Initial commit                                  |
