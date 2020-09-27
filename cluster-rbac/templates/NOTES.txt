@@ -1,0 +1,48 @@
+
+Cluster configuration is done.
+
+-- Context -------------------------
+  scope       : {{ include "startx.appScope" . }}
+  cluster     : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+  component   : {{ include "startx.appComponent" . }}
+  app         : {{ include "startx.appName" . }}
+  version     : {{ include "startx.appVersion" . }}
+
+-- Cluster Configuration ------------
+{{- if .Values.autoscaling.enabled -}}
+ - Cluster autoscaling enabled (up to {{- default 4 .Values.autoscaling.max.nodes -}} nodes, {{- default 32 .Values.autoscaling.max.cores -}} Cores and {{- default 1024 .Values.autoscaling.max.memory -}} RAM)
+  # oc describe ClusterAutoscaler default 
+{{- else -}}
+ - Cluster autoscaling disabled
+{{- end -}}
+{{- if .Values.clusterversion.enabled -}}
+ - Cluster version enabled (channel {{- default "candidate" .Values.clusterversion.channel -}}-{{- default "4.5" .Values.clusterversion.version -}})
+  # oc describe ClusterVersion version 
+{{- else -}}
+ - Cluster version disabled
+{{- end -}}
+{{- if .Values.alertmanager.enabled -}}
+ - Cluster alert-manager enabled (receiver {{- default "receiverName" .Values.alertmanager.receiverName -}}  is of {{- default "api" .Values.alertmanager.type -}} type)
+  # oc get secret alertmanager-main -n openshift-monitoring
+{{- else -}}
+ - Cluster alert-manager disabled
+{{- end -}}
+{{- if .Values.imageprunner.enabled -}}
+ - Cluster image prunner enabled (scheduled every {{- default "30 * * * *" .Values.imageprunner.schedule -}})
+  # oc describe ImagePruner cluster 
+{{- else -}}
+ - Cluster image prunner disabled
+{{- end -}}
+{{- if .Values.projecttemplate.enabled -}}
+ - Cluster project template enabled (with{{- if .Values.projecttemplate.rbac.enabled -}}{{- else -}}out{{- end -}} RBAC, with{{- if .Values.projecttemplate.networkpolicy.enabled -}}{{- else -}}out{{- end -}} NetworkPolicy)
+  # oc describe template project-request -n openshift-config
+{{- else -}}
+ - Cluster project template disabled
+{{- end -}}
+{{- if .Values.redhat.enabled -}}
+ - Cluster redhat projects enabled (with{{- if .Values.redhat.operators -}}{{- else -}}out{{- end -}} RH operators)
+  # oc describe ns openshift-operators-redhat
+{{- else -}}
+ - Cluster project template disabled
+{{- end -}}

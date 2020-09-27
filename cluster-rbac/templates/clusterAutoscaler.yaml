@@ -1,0 +1,27 @@
+{{- if .Values.autoscaling.enabled -}}
+kind: ClusterAutoscaler
+apiVersion: autoscaling.openshift.io/v1
+metadata:
+  name: "default"
+  labels:
+    {{- include "cluster-rbac.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{- include "startx.appName" . -}}-autoscaling-{{- include "startx.appVersion" . -}}
+  annotations:
+    {{- include "cluster-rbac.annotations" . | nindent 4 }}
+spec:
+  podPriorityThreshold: -10
+  resourceLimits:
+    cores:
+      max: {{- default 32 .Values.autoscaling.max.cores -}}
+      min: {{- default 4 .Values.autoscaling.min.cores -}}
+    maxNodesTotal: {{- default 32 .Values.autoscaling.max.nodes -}}
+    memory:
+      max: {{- default 1024 .Values.autoscaling.max.memory -}}
+      min: {{- default 64 .Values.autoscaling.min.memory -}}
+  scaleDown:
+    enabled: {{- if .Values.autoscaling.scaleDown -}}true{{- else -}}false{{- end -}}
+    delayAfterAdd: 5m
+    delayAfterDelete: 2m
+    delayAfterFailure: 20s
+    unneededTime: 60s
+{{- end -}}

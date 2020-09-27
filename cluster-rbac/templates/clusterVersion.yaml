@@ -1,0 +1,13 @@
+{{- if .Values.clusterversion.enabled -}}
+kind: ClusterVersion
+apiVersion: config.openshift.io/v1
+metadata:
+  name: version
+  labels:
+    {{- include "cluster-rbac.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{- include "startx.appName" . -}}-clusterversion-{{- include "startx.appVersion" . -}}
+  annotations:
+    {{- include "cluster-rbac.annotations" . | nindent 4 }}
+spec:
+  channel: {{- default "candidate" .Values.clusterversion.channel -}}-{{- default "4.5" .Values.clusterversion.version -}}
+{{- end -}}
