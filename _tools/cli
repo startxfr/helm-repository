@@ -1,5 +1,9 @@
 #!/bin/bash
 SXV4_CONSOLE_VERSION=3.9.109
+SHARED_TEMPLATE_NAME=_startx.tpl
+SHARED_TEMPLATE=_tools/$SHARED_TEMPLATE_NAME
+SHARED_SAMPLE=_tools/sample
+SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
 
 
 
@@ -15,18 +19,31 @@ function chartReadVersion {
 # router for create sub-command
 function routerCreate {
     if [[ "" != "$1" ]]; then
-        echo -e "\e[32mCreate\e[0m $1 helm chart"
-        cd $PROJECT_PATH
-        helm create $1
-        cd - &>/dev/null
+        if [[ "" != "$2" ]]; then
+            echo -e "\e[32mCreate\e[0m $1 helm chart from $2"
+            cd $PROJECT_PATH
+            cp -R $2 $1 &>/dev/null
+            rm $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
+            rm -f $1/templates/*.yaml &>/dev/null
+            cp $($2/templates/*.yaml | head -n 1) $1/templates/ &>/dev/null
+            ln -P $SHARED_TEMPLATE $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
+            cd - &>/dev/null
+        else
+            echo -e "\e[32mCreate\e[0m $1 helm chart from sample"
+            cd $PROJECT_PATH
+            cp -R $SHARED_SAMPLE $1 &>/dev/null
+            rm $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
+            cp $($2/templates/*.yaml | head -n 1) $1/templates/ &>/dev/null
+            ln -P $SHARED_TEMPLATE $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
+            cd - &>/dev/null
     else
         menuHeadArt
         cat <<EOF
 
-Startx helm sub-command for creating helm chart
+Startx helm sub-command for creating helm chart based on the given model. If no model found, use the sample model
 
 Usage:
-  ./sx-helm create <chart-name>
+  ./sx-helm create <chart-name> [chart-model]
 
 EOF
     fi
