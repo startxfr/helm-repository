@@ -94,21 +94,3 @@ app.startx.fr/component: "infra"
 app.kubernetes.io/component: "infra"
 app.kubernetes.io/part-of: {{ include "startx.appCluster" . | quote }}
 {{- end -}}
-
-
-
-
-{{/*
-STARTX cluster config helpers
-*/}}
-
-{{/* Common labels */}}
-{{- define "cluster-config.labels" -}}
-{{ include "startx.labelsInfra" . }}
-app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
-{{- end -}}
-
-{{/* Common cluster-config annotations */}}
-{{- define "cluster-config.annotations" -}}
-{{- include "startx.annotationsInfra" . -}}
-{{- end -}}
