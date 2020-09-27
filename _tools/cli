@@ -19,13 +19,13 @@ function chartReadVersion {
 # router for create sub-command
 function routerCreate {
     if [[ "" != "$1" ]]; then
-        if [[ "" != "$2" ]]; then
-            echo -e "\e[32mCreate\e[0m $1 helm chart from $2"
+        if [[ "" != "$3" && -r $3 ]]; then
+            echo -e "\e[32mCreate\e[0m $1 helm chart from $3"
             cd $PROJECT_PATH
-            cp -R $2 $1 &>/dev/null
+            cp -R $3 $1 &>/dev/null
             rm $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
             rm -f $1/templates/*.yaml &>/dev/null
-            cp $($2/templates/*.yaml | head -n 1) $1/templates/ &>/dev/null
+            cp $(ls $3/templates/*.yaml | head -n 1) $1/templates/ &>/dev/null
             ln -P $SHARED_TEMPLATE $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
             cd - &>/dev/null
         else
@@ -33,9 +33,9 @@ function routerCreate {
             cd $PROJECT_PATH
             cp -R $SHARED_SAMPLE $1 &>/dev/null
             rm $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
-            cp $($2/templates/*.yaml | head -n 1) $1/templates/ &>/dev/null
             ln -P $SHARED_TEMPLATE $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
             cd - &>/dev/null
+        fi
     else
         menuHeadArt
         cat <<EOF
