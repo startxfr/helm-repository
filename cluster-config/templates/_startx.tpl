@@ -94,3 +94,4 @@ app.startx.fr/component: "infra"
 app.kubernetes.io/component: "infra"
 app.kubernetes.io/part-of: {{ include "startx.appCluster" . | quote }}
 {{- end -}}
+
