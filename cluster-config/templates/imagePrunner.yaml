@@ -1,0 +1,17 @@
+{{- if .Values.imageprunner.enabled -}}
+kind: ImagePruner
+apiVersion: imageregistry.operator.openshift.io/v1
+metadata:
+  name: cluster
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{- include "startx.appName" . -}}-imageprunner-{{- include "startx.appVersion" . -}}
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+spec:
+  failedJobsHistoryLimit: {{- default 10 .Values.imageprunner.history.failed -}}
+  successfulJobsHistoryLimit: {{- default 10 .Values.imageprunner.history.successful -}}
+  schedule: {{- default "45 * * * *" .Values.imageprunner.schedule -}}
+  suspend: {{- default false .Values.imageprunner.suspend -}}
+  keepTagRevisions: 3
+{{- end -}}

@@ -1,68 +1,99 @@
 # Default values for cluster-config.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
 
-replicaCount: 1
+# Application deployment context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: startx
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant)
+  app: startx-paas
+  # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+  version: 0.0.3
 
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+# Configuration of the cluster auto-scaling feature
+autoscaling:
+  # Enable the cluster auto-scaling
+  enabled: true
+  # Define the minimum
+  min: 
+    # Minimum cores accross cluster
+    cores: 4
+    # Minimum gigabytes of memory accross cluster
+    memory: 60
+    # Minimum numbers of nodes
+    nodes: 1
+  # Define the maximum
+  max: 
+    # Maximum cores accross cluster
+    cores: 32
+    # Maximum gigabytes of memory accross cluster
+    memory: 200
+    # Maximum numbers of nodes
+    nodes: 8
+  # Enable scale down feature
+  scaleDown: true
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name:
+# Configuration of the cluster-version feature
+clusterversion:
+  # Enable the cluster-version
+  enabled: true
+  # Define the related channel
+  channel: candidate
+  # Define the maximum
+  version: 4.5
 
-podSecurityContext: {}
-  # fsGroup: 2000
+# Configuration of the cluster alert-manager feature
+alertmanager:
+  # Enable the cluster alert-manager
+  enabled: true
+  # Define the related channel
+  receiverName: PagerDutyStartx
+  # Define the type of alert receiver (pagerDutty or api)
+  type: pagerDutty
+  # PagerDutty specific params
+  pagerDutty:
+    # PagerDutty application key
+    key: _pager_dutty_key_
+  # API specific params
+  api:
+    # API endpoint for receiver
+    endpoint: _api_endpoint_
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+# Configuration of the cluster image-prunner feature
+imageprunner:
+  # Enable the cluster image-prunner
+  enabled: true
+  # Cron formated scheduler
+  schedule: "15 * * * *"
+  # History limits for logs retention
+  history: 
+    # History limit for failing run
+    failed: 5
+    # History limit for successfull run
+    successful: 5
+  # Suspend the image prunning
+  suspend: false
 
-service:
-  type: ClusterIP
-  port: 80
+# Configuration of the cluster project-template feature
+projecttemplate:
+  # Enable the cluster image-prunner
+  enabled: true
+  # Configure RBAC applied to new projects
+  rbac: 
+    # Enable RBAC default for new projects
+    enabled: true
+  # Configure network-policy applied to new projects
+  networkpolicy: 
+    # Enable network-policy default for new projects
+    enabled: true
 
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths: []
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+# Configuration of cluster config for redhat tools
+redhat:
+  # Enable redhat operator namespace
+  operators: true
