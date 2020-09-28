@@ -74,7 +74,10 @@ function routerPackage {
     if [[ "" != "$1" ]]; then
         local CURRENT_RELEASE=$(chartReadVersion $1)
         echo -e "\e[34mPackage\e[0m $1 helm chart version $CURRENT_RELEASE"
-        cd $PROJECT_PATH
+        cd $PROJECT_LIBPATH
+        echo -e "\e[34mPackage\e[0m $1 v$CURRENT_RELEASE add package to git repository"
+        git add $PROJECT_PATH/$1/* &>/dev/null
+        git commit -m "[$1] release version $CURRENT_RELEASE" $PROJECT_PATH &>/dev/null
         helm package $1
         cd - &>/dev/null
     else
