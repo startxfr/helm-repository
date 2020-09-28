@@ -27,4 +27,5 @@ Release naming and convention is described in the [release documentation](./rele
 
 ### History
 
-You can get a detiled list of this helm-chart repository in the [history documentation](./history.md).
+You can get a detailed list of this helm-chart releases in the [history documentation](./history.md). 
+The current release is for theses helm-charts is 0.0.5. More information are available in [version 0.0 releases history](./history.md#version-00x-chanteix).
