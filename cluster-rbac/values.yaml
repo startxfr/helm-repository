@@ -11,89 +11,31 @@ context:
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant)
-  app: startx-paas
+  app: startx-infra
   # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
   version: 0.0.3
 
-# Configuration of the cluster auto-scaling feature
-autoscaling:
-  # Enable the cluster auto-scaling
+# Create groups if enabled
+groups:
+  # Enable the cluster groups creation
   enabled: true
-  # Define the minimum
-  min: 
-    # Minimum cores accross cluster
-    cores: 4
-    # Minimum gigabytes of memory accross cluster
-    memory: 60
-    # Minimum numbers of nodes
-    nodes: 1
-  # Define the maximum
-  max: 
-    # Maximum cores accross cluster
-    cores: 32
-    # Maximum gigabytes of memory accross cluster
-    memory: 200
-    # Maximum numbers of nodes
-    nodes: 8
-  # Enable scale down feature
-  scaleDown: true
-
-
-# Configuration of the cluster-version feature
-clusterversion:
-  # Enable the cluster-version
-  enabled: true
-  # Define the related channel
-  channel: candidate
-  # Define the maximum
-  version: 4.5
-
-# Configuration of the cluster alert-manager feature
-alertmanager:
-  # Enable the cluster alert-manager
-  enabled: true
-  # Define the related channel
-  receiverName: PagerDutyStartx
-  # Define the type of alert receiver (pagerDutty or api)
-  type: pagerDutty
-  # PagerDutty specific params
-  pagerDutty:
-    # PagerDutty application key
-    key: _pager_dutty_key_
-  # API specific params
-  api:
-    # API endpoint for receiver
-    endpoint: _api_endpoint_
-
-# Configuration of the cluster image-prunner feature
-imageprunner:
-  # Enable the cluster image-prunner
-  enabled: true
-  # Cron formated scheduler
-  schedule: "15 * * * *"
-  # History limits for logs retention
-  history: 
-    # History limit for failing run
-    failed: 5
-    # History limit for successfull run
-    successful: 5
-  # Suspend the image prunning
-  suspend: false
-
-# Configuration of the cluster project-template feature
-projecttemplate:
-  # Enable the cluster image-prunner
-  enabled: true
-  # Configure RBAC applied to new projects
-  rbac: 
-    # Enable RBAC default for new projects
-    enabled: true
-  # Configure network-policy applied to new projects
-  networkpolicy: 
-    # Enable network-policy default for new projects
-    enabled: true
-
-# Configuration of cluster config for redhat tools
-redhat:
-  # Enable redhat operator namespace
-  operators: true
+  # List group to create
+  list: 
+      # Developper ID
+    - id: dev
+      # Developper name
+      name: dev
+      # Developper cluster role
+      clusterRole: self-provisionner
+      # Devops ID
+    - id: devops
+      # Devops name
+      name: devops
+      # Devops cluster role
+      clusterRole: self-provisionner
+      # Ops ID
+    - id: ops
+      # Ops name
+      name: devops
+      # Ops cluster role
+      clusterRole: cluster-admin
