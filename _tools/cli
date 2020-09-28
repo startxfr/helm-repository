@@ -111,9 +111,15 @@ function routerRelease {
         routerPackage $1
         echo -e "\e[35mRelease\e[0m $1 v$NEXT_RELEASE package moved to docs/packages/"
         mv $PROJECT_PATH/$1-$NEXT_RELEASE.tgz $PROJECT_PATH/docs/packages/
+        echo -e "\e[35mRelease\e[0m $1 v$NEXT_RELEASE add package to git repository"
+        git add $PROJECT_PATH/docs/packages &>/dev/null
+        git commit -m "[$1] release version $NEXT_RELEASE" $PROJECT_PATH/docs/packages &>/dev/null
         local REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY/"
         echo -e "\e[35mRelease\e[0m Generate index for $REPOURL"
         helm repo index --url https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY/packages/ $PROJECT_PATH/docs/packages/
+        echo -e "\e[35mRelease\e[0m versionning of index for $REPOURL"
+        git add $PROJECT_PATH/docs/packages &>/dev/null
+        git commit -m "[docs] release index $NEXT_RELEASE" $PROJECT_PATH/docs/packages &>/dev/null
         cd - &>/dev/null
     else
         menuHeadArt
