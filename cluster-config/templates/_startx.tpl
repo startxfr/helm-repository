@@ -71,13 +71,13 @@ openshift.io/generated-by: startx-helm-infra
 app.startx.fr/scope: {{ include "startx.appScope" . | quote }}
 {{- end }}
 {{- if .Values.context.cluster }}
-app.startx.fr/scope: {{ include "startx.appCluster" . | quote }}
+app.startx.fr/cluster: {{ include "startx.appCluster" . | quote }}
 {{- end }}
 {{- if .Values.context.environment }}
-app.startx.fr/scope: {{ include "startx.appEnvironment" . | quote }}
+app.startx.fr/environment: {{ include "startx.appEnvironment" . | quote }}
 {{- end }}
 {{- if .Values.context.app }}
-app.startx.fr/scope: {{ include "startx.appName" . | quote }}
+app.startx.fr/app: {{ include "startx.appName" . | quote }}
 {{- end }}
 {{- if .Values.context.version }}
 app.startx.fr/version: {{ include "startx.appVersion" . | quote }}
@@ -94,4 +94,3 @@ app.startx.fr/component: "infra"
 app.kubernetes.io/component: "infra"
 app.kubernetes.io/part-of: {{ include "startx.appCluster" . | quote }}
 {{- end -}}
-
