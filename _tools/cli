@@ -114,7 +114,7 @@ function routerRelease {
         echo -e "\e[35mRelease\e[0m $1 v$NEXT_RELEASE add package to git repository"
         git add $PROJECT_PATH/docs/packages &>/dev/null
         git add $PROJECT_PATH/$1/* &>/dev/null
-        git commit -m "[$1] release version $NEXT_RELEASE" $PROJECT_PATH/docs/packages &>/dev/null
+        git commit -m "[$1] release version $NEXT_RELEASE" $PROJECT_PATH &>/dev/null
         local REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY/"
         echo -e "\e[35mRelease\e[0m Generate index for $REPOURL"
         helm repo index --url https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY/packages/ $PROJECT_PATH/docs/packages/
