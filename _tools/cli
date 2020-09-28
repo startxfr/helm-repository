@@ -109,6 +109,8 @@ function routerRelease {
         sed -i "s/$CURRENT_RELEASE/$NEXT_RELEASE/" $1/Chart.yaml
         echo -e "\e[35mRelease\e[0m $1 version $NEXT_RELEASE"
         routerPackage $1
+        echo -e "\e[35mRelease\e[0m $1 v$NEXT_RELEASE package moved to _packages/"
+        mv $PROJECT_PATH/$1-$NEXT_RELEASE.tgz $PROJECT_PATH/docs/packages/
         cd - &>/dev/null
     else
         menuHeadArt

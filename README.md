@@ -81,10 +81,19 @@ test are OK.
 
 ## Release history
 
+### version 0.1.x (seilhac)
+
+| Release | Date     | Description                    |
+| ------- | -------- | ------------------------------ |
+| 0.1.0   | 20-09-28 | Stable two module architecture |
+
 ### version 0.0.x (chanteix)
 
 | Release | Date     | Description                                     |
 | ------- | -------- | ----------------------------------------------- |
+| 0.0.8   | 20-09-28 | release cluster-config chart into helm registry |
+| 0.0.7   | 20-09-28 | stable cluster-rbac second chart                |
+| 0.0.6   | 20-09-27 | stable cluster-config chart                     |
 | 0.0.5   | 20-09-27 | Second chart for shared resource test           |
 | 0.0.3   | 20-09-26 | Sample chart design                             |
 | 0.0.2   | 20-09-26 | stable CLI                                      |
