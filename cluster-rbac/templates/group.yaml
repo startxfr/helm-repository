@@ -1,0 +1,23 @@
+{{- if .Values.groups.enabled -}}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{ range .Values.groups.list }}
+kind: Group
+apiVersion: rbac.authorization.k8s.io
+metadata:
+  name: {{ .id }}
+  labels:
+    {{- include "cluster-rbac.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-rbac-group-{{ .id }}-{{- include "startx.appVersion" $root -}}"
+  annotations:
+    {{- include "cluster-rbac.annotations" $root | nindent 4 }}
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: {{ .name | quote }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .clusterRole | quote }}
+{{ end }}
+{{ end }}
