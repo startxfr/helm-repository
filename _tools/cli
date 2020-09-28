@@ -4,8 +4,8 @@ SHARED_TEMPLATE_NAME=_startx.tpl
 SHARED_TEMPLATE=_tools/$SHARED_TEMPLATE_NAME
 SHARED_SAMPLE=_tools/sample
 SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
-
-
+GITHUB_USER=startxfr
+GITHUB_REPOSITORY=helm-charts-ocp-infra
 
 # read chart version
 function chartReadVersion {
@@ -111,6 +111,9 @@ function routerRelease {
         routerPackage $1
         echo -e "\e[35mRelease\e[0m $1 v$NEXT_RELEASE package moved to docs/packages/"
         mv $PROJECT_PATH/$1-$NEXT_RELEASE.tgz $PROJECT_PATH/docs/packages/
+        local REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY/"
+        echo -e "\e[35mRelease\e[0m Generate index for $REPOURL"
+        helm repo index --url https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY/packages/ $PROJECT_PATH/docs/packages/
         cd - &>/dev/null
     else
         menuHeadArt
