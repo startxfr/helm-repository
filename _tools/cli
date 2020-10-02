@@ -1,158 +1,233 @@
 #!/bin/bash
+
 SXV4_CONSOLE_VERSION=3.9.109
 SHARED_TEMPLATE_NAME=_startx.tpl
 SHARED_TEMPLATE=_tools/$SHARED_TEMPLATE_NAME
-SHARED_SAMPLE=_tools/sample
+SHARED_NAME=_sample_
+SHARED_SAMPLE=_tools/$SHARED_NAME
 SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
+REPO_PACKAGE_DIR=docs/packages
+BRANCH_NAME=devel
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-charts-ocp-infra
+
+
+#####################
+## GENERICS FUNCTIONS
 
 # read chart version
 function chartReadVersion {
     if [[ "" != "$1" ]]; then
-        echo $(cat $1/Chart.yaml | yq -r .version)
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq -r .version)
     else
         echo ""
     fi
 }
 
-# router for create sub-command
-function routerCreate {
+# read chart description
+function chartReadDescription {
     if [[ "" != "$1" ]]; then
-        if [[ "" != "$3" && -r $3 ]]; then
-            echo -e "\e[32mCreate\e[0m $1 helm chart from $3"
-            cd $PROJECT_PATH
-            cp -R $3 $1 &>/dev/null
-            rm $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
-            rm -f $1/templates/*.yaml &>/dev/null
-            cp $(ls $3/templates/*.yaml | head -n 1) $1/templates/ &>/dev/null
-            ln -P $SHARED_TEMPLATE $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
-            cd - &>/dev/null
-        else
-            echo -e "\e[32mCreate\e[0m $1 helm chart from sample"
-            cd $PROJECT_PATH
-            cp -R $SHARED_SAMPLE $1 &>/dev/null
-            rm $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
-            ln -P $SHARED_TEMPLATE $1/templates/$SHARED_TEMPLATE_NAME &>/dev/null
-            cd - &>/dev/null
-        fi
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq -r .description)
     else
-        menuHeadArt
-        cat <<EOF
-
-Startx helm sub-command for creating helm chart based on the given model. If no model found, use the sample model
-
-Usage:
-  ./sx-helm create <chart-name> [chart-model]
-
-EOF
+        echo ""
     fi
 }
 
-# router for test sub-command
-function routerTest {
+# read chart name
+function chartReadName {
     if [[ "" != "$1" ]]; then
-        echo -e "\e[33mTest\e[0m $1 helm chart"
-        cd $PROJECT_PATH
-        helm lint $1
-        cd - &>/dev/null
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq -r .name)
     else
-        menuHeadArt
-        cat <<EOF
-
-Startx helm sub-command for testing helm chart
-
-Usage:
-  ./sx-helm test <chart-name>
-
-EOF
+        echo ""
     fi
 }
 
-# router for package sub-command
-function routerPackage {
+# read chart appVersion
+function chartReadAppVersion {
     if [[ "" != "$1" ]]; then
-        local CURRENT_RELEASE=$(chartReadVersion $1)
-        echo -e "\e[34mPackage\e[0m $1 helm chart version $CURRENT_RELEASE"
-        cd $PROJECT_PATH
-        echo -e "\e[34mPackage\e[0m $1 v$CURRENT_RELEASE add package to git repository"
-        git add $1/* &>/dev/null
-        git commit -m "[$1] release version $CURRENT_RELEASE" $1 &>/dev/null
-        helm package $1
-        cd - &>/dev/null
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq -r .appVersion)
     else
-        menuHeadArt
-        cat <<EOF
-
-Startx helm sub-command for packaging helm chart
-
-Usage:
-  ./sx-helm package <chart-name>
-
-EOF
+        echo ""
     fi
 }
 
-# router for release sub-command
-function routerRelease {
-    if [[ "" != "$1" ]]; then
-        echo -e "\e[35mRelease\e[0m $1 helm chart"
-        cd $PROJECT_PATH
-        local CURRENT_RELEASE=$(chartReadVersion $1)
-        local NEXT_RELEASE=$(cat $1/Chart.yaml | yq -r .version  | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
-        if [[ "auto" == "$2" || "-a" == "$2" ]]; then
-            echo -e "\e[35mRelease\e[0m $1 auto-version $NEXT_RELEASE"
-        else
-            echo -en "\e[35mRelease\e[0m Set $1 next version [$NEXT_RELEASE] : "
-            read nextRel
-            if [[ "$nextRel" != "" ]]; then
-                NEXT_RELEASE=$nextRel
-            fi
-        fi
-        sed -i "s/$CURRENT_RELEASE/$NEXT_RELEASE/" $1/Chart.yaml
-        echo -e "\e[35mRelease\e[0m $1 version $NEXT_RELEASE"
-        routerPackage $1
-        echo -e "\e[35mRelease\e[0m $1 v$NEXT_RELEASE package moved to docs/packages/"
-        mv $PROJECT_PATH/$1-$NEXT_RELEASE.tgz $PROJECT_PATH/docs/packages/
-        echo -e "\e[35mRelease\e[0m $1 v$NEXT_RELEASE add package to git repository"
-        git add $PROJECT_PATH/docs/packages &>/dev/null
-        git add $PROJECT_PATH/$1/* &>/dev/null
-        git commit -m "[$1] release version $NEXT_RELEASE" $PROJECT_PATH &>/dev/null
-        local REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY/"
-        echo -e "\e[35mRelease\e[0m Generate index for $REPOURL"
-        helm repo index --url https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY/packages/ $PROJECT_PATH/docs/packages/
-        echo -e "\e[35mRelease\e[0m versionning of index for $REPOURL"
-        git add $PROJECT_PATH/docs/packages &>/dev/null
-        git commit -m "[docs] release index $NEXT_RELEASE" $PROJECT_PATH/docs/packages &>/dev/null
-        cd - &>/dev/null
-    else
-        menuHeadArt
-        cat <<EOF
 
-Startx helm sub-command for releasing helm chart
 
-Usage:
-  ./sx-helm release <chart-name>
 
-EOF
-    fi
-}
+##########################
+## ROUTER GLOBALS COMMANDS
 
 # router for delete sub-command
-function routerDelete {
-    if [[ "" != "$1" ]]; then
-        echo -e "\e[31mDelete\e[0m $1 helm chart"
-        rm -rf $PROJECT_PATH/$1
+function routerList {
+    echo -e "\e[31mList\e[0m helm chart in $PROJECT_CHARTPATH"
+    cd $PROJECT_CHARTPATH
+    local LIST=$(ls -d -I "_*" -I "docs" *)
+    cd - &>/dev/null
+    for chart in $LIST; do
+        echo -e " - $chart"
+    done
+}
+
+# router for publish command
+function routerPublish {
+    local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
+    echo -e "\e[36mPublish\e[0m Generate index for $repo_url"
+    helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
+    echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
+    git add $PROJECT_PATH/docs/packages &>/dev/null
+    git commit -m "[docs] update repository index" $PROJECT_PATH/docs/packages &>/dev/null
+    git push origin $BRANCH_NAME
+}
+
+
+
+#################################
+## ROUTER HELM-CHART SUB-COMMANDS
+
+# router for chart info sub-command
+function routerChartInfo {
+    local chart_name=$1
+    if [[ "" != "$chart_name" ]]; then
+        echo -e "\e[32mCreate\e[0m \e[1m\e[31mERROR\e[0m \e[1m$chart_name\e[0m helm chart \e[1malready exist\e[0m in $PROJECT_CHARTPATH"
+        local current_name=$(chartReadName $chart_name)
+        local current_release=$(chartReadVersion $chart_name)
+        local current_desc=$(chartReadDescription $chart_name)
+        local current_apprelease=$(chartReadAppVersion $chart_name)
+        echo -e "\e[31mInfo\e[0m about $chart_name helm chart"
+        echo "- Package     : $chart_name-$current_release"
+        echo "- Version     : $current_release"
+        echo "- Name        : $current_name"
+        echo "- Description : $current_desc"
+        echo "- App version : $current_apprelease"
+    fi
+}
+
+# router for chart reate sub-command
+function routerChartCreate {
+    local chart_name=$1
+    local chart_template=$2
+    local template_name=_sample_
+    local template_dir=$PROJECT_CHARTPATH/$chart_template
+    local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    if [[ -r $chart_dir ]]; then
+        echo -e "\e[32mCreate\e[0m \e[1m\e[31mERROR\e[0m \e[1m$chart_name\e[0m helm chart \e[1malready exist\e[0m in $PROJECT_CHARTPATH"
+        exit
+    fi
+    if [[ "" != "$chart_template" && -r $template_dir ]]; then
+        template_name=$chart_template
     else
-        menuHeadArt
-        cat <<EOF
+        template_dir=$PROJECT_PATH/$SHARED_SAMPLE
+    fi
+    echo -e "\e[32mCreate\e[0m \e[1m$chart_name\e[0m helm chart from \e[1m$template_name\e[0m"
+    cp -R $template_dir $chart_dir &>/dev/null
+    sed -i "s/$template_name/$chart_name/g" $(find $chart_dir -type f)
+    rm $chart_dir/templates/$SHARED_TEMPLATE_NAME &>/dev/null
+    ln -P $PROJECT_PATH/$SHARED_TEMPLATE $chart_dir/templates/$SHARED_TEMPLATE_NAME &>/dev/null
+    git add $1/* &>/dev/null
+    git commit -am "[chart/$chart_name] Create from $template_name" $chart_dir &>/dev/null
+}
 
-Startx helm sub-command for deleting helm chart
+# router for chart test sub-command
+function routerChartTest {
+    local chart_name=$1
+    local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    local test_dir=$chart_dir/templates/tests
+    if [[ -r $chart_dir ]]; then
+        echo -e "\e[33mTest\e[0m \e[1m$chart_name\e[0m helm chart"
+        if [[ ! -r $test_dir ]]; then
+            echo -e "\e[33mTest\e[0m \e[1m\e[31mERROR\e[0m \e[1m$chart_name\e[0m helm chart \e[1mdoesn't have a test\e[0m script in $test_dir"
+            exit
+        fi
+        helm lint $chart_dir
+    else
+        echo -e "\e[33mTest\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        routerList
+    fi
+}
 
-Usage:
-  ./sx-helm delete <chart-name>
+# router for chart package sub-command
+function routerChartPackage {
+    local chart_name=$1
+    local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    if [[ -r $chart_dir ]]; then
+        echo -e "\e[34mPackage\e[0m \e[1m$chart_name\e[0m helm chart"
+        local current_release=$(chartReadVersion $chart_name)
+        echo -e "\e[34mPackage\e[0m \e[1m$chart_name\e[0m helm chart version $current_release"
+        cd $PROJECT_CHARTPATH
+        echo -e "\e[34mPackage\e[0m \e[1m$chart_name commit change\e[0m to git repository"
+        git add $chart_name/* &>/dev/null
+        git commit -m "[chart/$chart_name] release version $current_release" $chart_name &>/dev/null
+        echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH"
+        helm package $chart_name &>/dev/null
+        cd - &>/dev/null
+    else
+        echo -e "\e[34mPackage\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        routerList
+    fi
+}
 
-EOF
+# router for chart release sub-command
+function routerChartRelease {
+    local chart_name=$1
+    local auto_feature=$2
+    local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    if [[ -r $chart_dir ]]; then
+        echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m helm chart"
+        local current_release=$(chartReadVersion $chart_name)
+        local next_release=$(cat $chart_dir/Chart.yaml | yq -r .version  | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
+        if [[ "auto" == "$auto_feature" || "-a" == "$auto_feature" ]]; then
+            echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m auto-version $next_release"
+        else
+            echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Set $chart_name next version [$next_release] : "
+            read nextRel
+            if [[ "$nextRel" != "" ]]; then
+                next_release=$nextRel
+            fi
+        fi
+        sed -i "s/$current_release/$next_release/" $chart_dir/Chart.yaml
+        echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m version $next_release"
+        routerChartPackage $chart_name
+        echo -e "\e[35mRelease\e[0m \e[1mmove $chart_name-$next_release.tgz\e[0m to \e[1m$REPO_PACKAGE_DIR\e[0m"
+        mv $PROJECT_CHARTPATH/$chart_name-$next_release.tgz $PROJECT_PATH/$REPO_PACKAGE_DIR/
+        echo -e "\e[35mRelease\e[0m \e[1m$chart_name record v$next_release package\e[0m into git repository"
+        git add $PROJECT_PATH/$REPO_PACKAGE_DIR/$chart_name-$next_release.tgz &>/dev/null
+        git commit -m "[chart/$chart_name] release package for version $next_release" $PROJECT_PATH/$REPO_PACKAGE_DIR &>/dev/null
+    else
+        echo -e "\e[35mRelease\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        routerList
+    fi
+}
+
+# router for chart publish sub-command
+function routerChartPublish {
+    local chart_name=$1
+    local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
+    local current_release=$(chartReadVersion $chart_name)
+    if [[ -r $chart_dir ]]; then
+        echo -e "\e[36mPublish\e[0m \e[1m$chart_name\e[0m helm chart"
+        echo -e "\e[36mPublish\e[0m Generate index for $repo_url"
+        helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
+        echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
+        git add $PROJECT_PATH/docs/packages &>/dev/null
+        git commit -m "[docs] update repository index with $chart_name v$current_release" $PROJECT_PATH/docs/packages &>/dev/null
+        git push origin $BRANCH_NAME
+    else
+        echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        routerList
+    fi
+}
+
+# router for chart delete sub-command
+function routerChartDelete {
+    local chart_name=$1
+    local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    if [[ "" != "$chart_name" && -w $PROJECT_CHARTPATH/$1 ]]; then
+        echo -e "\e[31mDelete\e[0m \e[1m$chart_name\e[0m helm chart"
+        rm -rf $chart_dir
+    else
+        echo -e "\e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        routerList
     fi
 }
 
@@ -161,30 +236,52 @@ function menuUsage {
     menuHeadArt
 cat <<EOF
 
-This client helps you develop, build, deploy, and run your Startx applications on any OpenShift or Kubernetes compatible
-platform. It also includes the administrative commands for managing a cluster under the 'adm' subcommand.
+This client helps you develop, test, package and publish a bunch of helm-charts 
+hosted into the same helm repository.
 
-Available commands are : setup, environment, component, dev and client
+Usage:
+  ./sx-helm <action> [flags]
 
-Available components are : api, botarmy, internet, intranet, formation, partner, monkey
-and all alias reference all components except monkey
+- Actions  :
+  - list                           list all helm-chart managed
+  - publish                        Publish all change into repository
+  - version                        Get version of this tools
+  - <chart-name>                   Use chart-named sub-command (see ./sx-helm chart-name help)
+
+- Examples  :
+  ./sx-helm list                   list all helm-chart managed
+  ./sx-helm publish                Publish all change into repository
+  ./sx-helm version                Get version of this tools
+  ./sx-helm <chart-name> info      Get info on a managed helm-chart (see ./sx-helm chart-name help for more commands)
+
+EOF
+}
+
+# menu switch for usage of chart sub-command
+function menuUsageChart {
+    menuHeadArt
+cat <<EOF
+
+This client helps you develop, test, package and publish an helm-chart.
 
 Usage:
   ./sx-helm <chart-name> <action> [flags]
 
 - Actions  :
-  - create                             Create an new helm chart
-  - test                               Test an helm chart
-  - package                            Package an helm chart
-  - release                            Release an helm chart
-  - delete                             Delete an helm chart
+  - create                         Create an new helm chart
+  - info                           Get information about a given helm-chart
+  - test                           Test an helm chart
+  - package                        Package an helm chart
+  - release                        Release an helm chart
+  - delete                         Delete an helm chart
 
 - Examples  :
-  ./sx-helm <name> create              Create an new helm chart
-  ./sx-helm <name> test                Test an helm chart
-  ./sx-helm <name> package             Package an helm chart
-  ./sx-helm <name> release             Release an helm chart
-  ./sx-helm <name> delete              Delete an helm chart
+  ./sx-helm my-example create      Create an new helm chart named my-example
+  ./sx-helm my-example info        Read info about helm chart named my-example
+  ./sx-helm my-example test        Test my-example chart
+  ./sx-helm my-example package     Package my-example chart
+  ./sx-helm my-example release     Release my-example chart
+  ./sx-helm my-example delete      Delete my-example chart
 
 EOF
 }
