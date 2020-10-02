@@ -1,0 +1,108 @@
+{{- if .Values.projecttemplate.enabled -}}
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: project-request
+  namespace: openshift-config
+  labels:
+    {{- include "my-example.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{- include "startx.appName" . -}}-projecttemplate-{{- include "startx.appVersion" . -}}
+  annotations:
+    {{- include "my-example.annotations" . | nindent 4 }}
+objects:
+  - kind: Project
+    apiVersion: project.openshift.io/v1
+    metadata:
+      name: ${PROJECT_NAME}
+      labels:
+        {{- include "my-example.labels" . | nindent 8 }}
+        app.kubernetes.io/name: ${PROJECT_NAME}-project
+      annotations:
+        {{- include "my-example.annotations" . | nindent 8 }}
+        openshift.io/description: ${PROJECT_DESCRIPTION}
+        openshift.io/display-name: ${PROJECT_DISPLAYNAME}
+        openshift.io/requester: ${PROJECT_REQUESTING_USER}
+    spec: {}
+  - kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: admin
+      namespace: ${PROJECT_NAME}
+      labels:
+        {{- include "my-example.labels" . | nindent 8 }}
+        app.kubernetes.io/name: "admin-rolebinding"
+      annotations:
+        {{- include "my-example.annotations" . | nindent 8 }}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: admin
+    subjects:
+      - kind: User
+        apiGroup: rbac.authorization.k8s.io
+        name: ${PROJECT_ADMIN_USER}
+      - kind: User
+        apiGroup: rbac.authorization.k8s.io
+        name: "admin"
+  - kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: user
+      namespace: ${PROJECT_NAME}
+      labels:
+        {{- include "my-example.labels" . | nindent 8 }}
+        app.kubernetes.io/name: "user-rolebinding"
+      annotations:
+        {{- include "my-example.annotations" . | nindent 8 }}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: self-provisioner
+    subjects:
+      - kind: User
+        apiGroup: rbac.authorization.k8s.io
+        name: ${PROJECT_REQUESTING_USER}
+      - kind: User
+        apiGroup: rbac.authorization.k8s.io
+        name: "devops"
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: allow-from-same-namespace
+      namespace: ${PROJECT_NAME}
+      labels:
+        {{- include "my-example.labels" . | nindent 8 }}
+        app.kubernetes.io/name: "allow-from-same-namespace-networkpolicy"
+      annotations:
+        {{- include "my-example.annotations" . | nindent 8 }}
+    spec:
+      podSelector:
+      ingress:
+      - from:
+        - podSelector: {}
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: allow-from-openshift-ingress
+      namespace: ${PROJECT_NAME}
+      labels:
+        {{- include "my-example.labels" . | nindent 8 }}
+        app.kubernetes.io/name: "allow-from-openshift-ingress-networkpolicy"
+      annotations:
+        {{- include "my-example.annotations" . | nindent 8 }}
+    spec:
+      ingress:
+      - from:
+        - namespaceSelector:
+            matchLabels:
+              network.openshift.io/policy-group: ingress
+      podSelector: {}
+      policyTypes:
+      - Ingress
+parameters:
+- name: PROJECT_NAME
+- name: PROJECT_DISPLAYNAME
+- name: PROJECT_DESCRIPTION
+- name: PROJECT_ADMIN_USER
+- name: PROJECT_REQUESTING_USER
+{{- end -}}
