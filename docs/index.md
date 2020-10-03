@@ -6,38 +6,46 @@ This helm repository hold various helm-chart configuring Openshift cluster compo
 
 ### 1. Requirements
 
-1. install some cli dependencies
-    ```bash
-    yum install yq -y
-    ```
+#### 1.1. install cli dependencies
 
-2. install helm
-    ```bash
-    yum install helm -y
-    ```
+```bash
+yum install yq -y
+```
 
-3. Beiing connected to an openshift cluster
-    ```bash
-    oc login -t <my-token> <my-openshift-api>
-    ```
+#### 1.2. install helm
+
+```bash
+yum install helm -y
+```
+
+#### 1.3. Beiing connected to an openshift cluster
+
+```bash
+oc login -t <my-token> <my-openshift-api>
+```
+
+If you don't have access to an openshift cluster, consider using codeready-container to
+run locally a simulated cluster.
 
 ### 2. Install repository
 
-1. Install this repository
-    ```bash
-    helm repo add startx https://startxfr.github.io/helm-charts-ocp-infra/
-    ```
+#### 2.1. Install this repository
 
-2. List all chart in this repository
-    ```bash
-    helm search startx
-    ```
+```bash
+helm repo add startx https://startxfr.github.io/helm-charts-ocp-infra/packages/
+```
+
+#### 2.2. List all chart in this repository
+
+```bash
+helm search startx
+```
 
 ### 3. Install chart
 
-1. install helm
-    ```bash
-    helm install startx/cluster-config
+```bash
+helm install startx/cluster-config
+```
 
 ## Release
 
