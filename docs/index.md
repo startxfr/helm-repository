@@ -1,6 +1,6 @@
 # This repository
 
-This helm repository hold various helm-chart configuring Openshift cluster components
+This [helm repository](https://startxfr.github.io/helm-charts-ocp-infra/packages/index.yaml) hold various helm-chart configuring Openshift cluster components
 
 ## Usage
 
@@ -38,14 +38,27 @@ helm repo add startx https://startxfr.github.io/helm-charts-ocp-infra/packages/
 #### 2.2. List all chart in this repository
 
 ```bash
-helm search startx
+helm search repo startx
 ```
 
 ### 3. Install chart
 
+#### 3.1. Show chart detail
+
+```bash
+helm show chart startx/cluster-config
+```
+
+#### 3.2. Install chart into cluster
+
 ```bash
 helm install startx/cluster-config
 ```
+
+## Chart list
+
+- [cluster-config](https://github.com/startxfr/helm-charts-ocp-infra/tree/master/charts/cluster-config) ```helm show chart startx/cluster-config```
+- [cluster-rbac](https://github.com/startxfr/helm-charts-ocp-infra/tree/master/charts/cluster-rbac) ```helm show chart startx/cluster-rbac```
 
 ## Release
 

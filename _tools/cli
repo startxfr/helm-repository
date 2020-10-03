@@ -71,12 +71,28 @@ function routerList {
 # router for publish command
 function routerPublish {
     local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
+    local branch_current="master"
+    local branch_target="master"
+    if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
+        branch_current="$BRANCH_NAME"
+    fi
     echo -e "\e[36mPublish\e[0m Generate index for $repo_url"
     helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
     echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
     git add $PROJECT_PATH/docs/packages &>/dev/null
     git commit -m "[docs] update repository index" $PROJECT_PATH/docs/packages &>/dev/null
-    git push origin $BRANCH_NAME
+    git push origin $branch_current
+    if [[ "$branch_current" != "$branch_target" ]]; then
+        echo -e "\e[36mPublish\e[0m merge \e[1m$branch_current\e[0m into \e[1m$branch_target\e[0m"
+        git checkout $branch_target &>/dev/null
+        git merge --commit $branch_current
+        echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m and \e[1m$branch_target\e[0m"
+        git push origin $branch_target $branch_current
+        git checkout $branch_current
+    else 
+        echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m"
+        git push origin $branch_target
+    fi
 }
 
 
@@ -123,8 +139,8 @@ function routerChartCreate {
     sed -i "s/$template_name/$chart_name/g" $(find $chart_dir -type f)
     rm $chart_dir/templates/$SHARED_TEMPLATE_NAME &>/dev/null
     ln -P $PROJECT_PATH/$SHARED_TEMPLATE $chart_dir/templates/$SHARED_TEMPLATE_NAME &>/dev/null
-    git add $1/* &>/dev/null
-    git commit -am "[chart/$chart_name] Create from $template_name" $chart_dir &>/dev/null
+    git add $chart_dir &>/dev/null
+    git commit -m "[chart/$chart_name] Create from $template_name" $chart_dir &>/dev/null
 }
 
 # router for chart test sub-command
@@ -210,7 +226,7 @@ function routerChartPublish {
         helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
         echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
         git add $PROJECT_PATH/docs/packages &>/dev/null
-        git commit -m "[docs] update repository index with $chart_name v$current_release" $PROJECT_PATH/docs/packages &>/dev/null
+        git commit -m "[docs] store chart $chart_name v$current_release package in docs" $PROJECT_PATH/docs/packages &>/dev/null
         git push origin $BRANCH_NAME
     else
         echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
@@ -222,9 +238,11 @@ function routerChartPublish {
 function routerChartDelete {
     local chart_name=$1
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
-    if [[ "" != "$chart_name" && -w $PROJECT_CHARTPATH/$1 ]]; then
+    if [[ "" != "$chart_name" && -w $chart_dir ]]; then
         echo -e "\e[31mDelete\e[0m \e[1m$chart_name\e[0m helm chart"
-        rm -rf $chart_dir
+        rm -rf $chart_dir &>/dev/null
+        git add $chart_dir &>/dev/null
+        git commit -m "[chart/$chart_name] deleted chart $chart_name" $chart_dir &>/dev/null
     else
         echo -e "\e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
         routerList
