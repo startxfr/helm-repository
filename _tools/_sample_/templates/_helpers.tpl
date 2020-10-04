@@ -1,13 +1,13 @@
 {{/* vim: set filetype=mustache: */}}
-{{/* STARTX example helpers */}}
+{{/* STARTX _sample_ helpers */}}
 
 {{/* Common labels */}}
-{{- define "example.labels" -}}
-{{ include "startx.labels" . }}
+{{- define "_sample_.labels" -}}
+{{ include "startx.labelsInfra" . }}
 app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- end -}}
 
-{{/* Common example annotations */}}
-{{- define "example.annotations" -}}
+{{/* Common _sample_ annotations */}}
+{{- define "_sample_.annotations" -}}
 {{- include "startx.annotationsInfra" . -}}
 {{- end -}}

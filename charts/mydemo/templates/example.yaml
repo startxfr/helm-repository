@@ -5,8 +5,8 @@ metadata:
   name: {{ include "startx.appName" . }}
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
-    {{- include "_sample_.labels" . | nindent 4 }}
+    {{- include "mydemo.labels" . | nindent 4 }}
   annotations:
-    {{- include "_sample_.annotations" . | nindent 4 }}
+    {{- include "mydemo.annotations" . | nindent 4 }}
 stringData:
   example_key: "{{- .Values.sample_value }}"
