@@ -12,14 +12,14 @@ spec:
   podPriorityThreshold: -10
   resourceLimits:
     cores:
-      max: {{- default 32 .Values.autoscaling.max.cores -}}
-      min: {{- default 4 .Values.autoscaling.min.cores -}}
-    maxNodesTotal: {{- default 32 .Values.autoscaling.max.nodes -}}
+      max: {{ default 32 .Values.autoscaling.max.cores }}
+      min: {{ default 4 .Values.autoscaling.min.cores }}
+    maxNodesTotal: {{ default 32 .Values.autoscaling.max.nodes }}
     memory:
-      max: {{- default 1024 .Values.autoscaling.max.memory -}}
-      min: {{- default 64 .Values.autoscaling.min.memory -}}
+      max: {{ default 1024 .Values.autoscaling.max.memory }}
+      min: {{ default 64 .Values.autoscaling.min.memory }}
   scaleDown:
-    enabled: {{- if .Values.autoscaling.scaleDown -}}true{{- else -}}false{{- end -}}
+    enabled: {{ if .Values.autoscaling.scaleDown }}true{{ else }}false{{ end }}
     delayAfterAdd: 5m
     delayAfterDelete: 2m
     delayAfterFailure: 20s
