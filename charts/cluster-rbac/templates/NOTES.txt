@@ -1,5 +1,6 @@
 
-Cluster configuration is done.
+
+Cluster RBAC is deployed.
 
 -- Context -------------------------
   scope       : {{ include "startx.appScope" . }}
@@ -10,9 +11,11 @@ Cluster configuration is done.
   version     : {{ include "startx.appVersion" . }}
 
 -- Cluster RBAC --------------------
-{{- if .Values.groups.enabled -}}
+
+{{ if .Values.groups.enabled }}
  - Cluster RBAC group enabled ({{ range .Values.groups.list }}{{ .id }},{{- end -}})
-  # oc get ClusterRoleBinding {{- if .Values.context.scope }} -l app.startx.fr/scope={{ .Values.context.scope | quote }}{{- end }}
-{{- else -}}
+   # oc get ClusterRoleBinding {{- if .Values.context.scope }} -l app.startx.fr/scope={{ include "startx.appScope" . }}{{- end }}
+   # oc get group {{- if .Values.context.scope }} -l app.startx.fr/scope={{ include "startx.appScope" . }}{{- end }}
+{{ else }}
  - Cluster RBAC group disabled
-{{- end -}}
+{{ end }}
