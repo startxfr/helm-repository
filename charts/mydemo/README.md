@@ -1,6 +1,6 @@
 # Helm-chart STARTX : mydemo
 
-This helm chart must have a description
+This helm chart have a manual description
 
 ## Install the repository
 
