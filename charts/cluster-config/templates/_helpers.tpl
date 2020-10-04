@@ -1,5 +1,6 @@
 {{/* vim: set filetype=mustache: */}}
-{{/* STARTX cluster config helpers */}}
+
+{{/* STARTX Cluster config helpers */}}
 
 {{/* Common labels */}}
 {{- define "cluster-config.labels" -}}
