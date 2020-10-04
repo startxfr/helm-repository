@@ -5,7 +5,7 @@ metadata:
   name: version
   labels:
     {{- include "cluster-config.labels" . | nindent 4 }}
-    app.kubernetes.io/name: {{- include "startx.appName" . -}}-clusterversion-{{- include "startx.appVersion" . -}}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-clusterversion-{{- include "startx.appVersion" . -}}"
   annotations:
     {{- include "cluster-config.annotations" . | nindent 4 }}
 spec:
