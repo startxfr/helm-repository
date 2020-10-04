@@ -82,7 +82,7 @@ STARTX common helpers
 
 {{/* Common annotation for infra charts */}}
 {{- define "startx.annotationsInfra" -}}
-openshift.io/generated-by: startx-helm-infra
+openshift.io/generated-by: startx-helm-{{- .Chart.Name -}}
 {{- end -}}
 
 {{/* Common labels */}}
