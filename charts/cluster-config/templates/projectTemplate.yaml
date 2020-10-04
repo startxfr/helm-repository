@@ -6,7 +6,7 @@ metadata:
   namespace: openshift-config
   labels:
     {{- include "cluster-config.labels" . | nindent 4 }}
-    app.kubernetes.io/name: {{- include "startx.appName" . -}}-projecttemplate-{{- include "startx.appVersion" . -}}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-projecttemplate-{{- include "startx.appVersion" . -}}"
   annotations:
     {{- include "cluster-config.annotations" . | nindent 4 }}
 objects:

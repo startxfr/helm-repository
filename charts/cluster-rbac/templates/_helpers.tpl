@@ -1,6 +1,6 @@
 {{/* vim: set filetype=mustache: */}}
 
-{{/* STARTX cluster RBAC helpers */}}
+{{/* STARTX Cluster RBAC helpers */}}
 
 {{/* Common labels */}}
 {{- define "cluster-rbac.labels" -}}
