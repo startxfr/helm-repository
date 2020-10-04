@@ -32,32 +32,56 @@ STARTX common helpers
 
 {{/* Expand the scope of the application.*/}}
 {{- define "startx.appScope" -}}
-{{- default "scope" .Values.context.scope | trunc 63 | trimSuffix "-" -}}
+    {{- if .Values.context }}
+    {{- default "scope" .Values.context.scope | trunc 63 | trimSuffix "-" -}}
+    {{- else }}
+    scope
+    {{- end }}
 {{- end -}}
 
 {{/* Expand the cluster of the application.*/}}
 {{- define "startx.appCluster" -}}
-{{- default "cluster" .Values.context.cluster | trunc 63 | trimSuffix "-" -}}
+    {{- if .Values.context }}
+    {{- default "cluster" .Values.context.cluster | trunc 63 | trimSuffix "-" -}}
+    {{- else }}
+    cluster
+    {{- end }}
 {{- end -}}
 
 {{/* Expand the environment of the application.*/}}
 {{- define "startx.appEnvironment" -}}
-{{- default "environment" .Values.context.environment | trunc 63 | trimSuffix "-" -}}
+    {{- if .Values.context }}
+    {{- default "environment" .Values.context.environment | trunc 63 | trimSuffix "-" -}}
+    {{- else }}
+    environment
+    {{- end }}
 {{- end -}}
 
 {{/* Expand the component of the application.*/}}
 {{- define "startx.appComponent" -}}
-{{- default "component" .Values.context.component | trunc 63 | trimSuffix "-" -}}
+    {{- if .Values.context }}
+    {{- default "component" .Values.context.component | trunc 63 | trimSuffix "-" -}}
+    {{- else }}
+    component
+    {{- end }}
 {{- end -}}
 
 {{/* Expand the name of the application.*/}}
 {{- define "startx.appName" -}}
-{{- default .Chart.Name .Values.context.app | trunc 63 | trimSuffix "-" -}}
+    {{- if .Values.context }}
+    {{- default .Chart.Name .Values.context.app | trunc 63 | trimSuffix "-" -}}
+    {{- else }}
+    {{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+    {{- end }}
 {{- end -}}
 
 {{/* Expand the version of the application.*/}}
 {{- define "startx.appVersion" -}}
-{{- default .Chart.Version .Values.context.version | trunc 63 | trimSuffix "-" -}}
+    {{- if .Values.context }}
+    {{- default .Chart.Version .Values.context.version | trunc 63 | trimSuffix "-" -}}
+    {{- else }}
+    {{- .Chart.Version | trunc 63 | trimSuffix "-" -}}
+    {{- end }}
 {{- end -}}
 
 {{/* Common annotation for infra charts */}}
@@ -89,7 +113,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service | quote  }}
 
 {{/* Common infrastructure labels */}}
 {{- define "startx.labelsInfra" -}}
-{{ include "startx.labelsCommon" . }}
+{{- include "startx.labelsCommon" . }}
 app.startx.fr/component: "infra"
 app.kubernetes.io/component: "infra"
 app.kubernetes.io/part-of: {{ include "startx.appCluster" . | quote }}
