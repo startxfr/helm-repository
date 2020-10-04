@@ -5,10 +5,10 @@
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{- $scope -}}-{{ .id }}
+  name: "{{ .id }}-{{ .clusterRole }}"
   labels:
     {{- include "cluster-rbac.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-crb-{{ .id }}-{{- include "startx.appVersion" $root -}}"
+    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-crb"
   annotations:
     {{- include "cluster-rbac.annotations" $root | nindent 4 }}
     rbac.authorization.kubernetes.io/autoupdate: "true"

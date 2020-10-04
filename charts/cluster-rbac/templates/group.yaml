@@ -5,19 +5,12 @@
 kind: Group
 apiVersion: rbac.authorization.k8s.io
 metadata:
-  name: {{ .id }}
+  name: "{{ .id }}"
   labels:
     {{- include "cluster-rbac.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-rbac-group-{{ .id }}-{{- include "startx.appVersion" $root -}}"
+    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-group"
   annotations:
     {{- include "cluster-rbac.annotations" $root | nindent 4 }}
-subjects:
-  - kind: Group
-    apiGroup: rbac.authorization.k8s.io
-    name: {{ .name | quote }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: {{ .clusterRole | quote }}
+users: []
 {{ end }}
 {{ end }}
