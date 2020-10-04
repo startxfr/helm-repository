@@ -172,9 +172,9 @@ function routerChartPackage {
         local current_release=$(chartReadVersion $chart_name)
         echo -e "\e[34mPackage\e[0m \e[1m$chart_name\e[0m helm chart version $current_release"
         cd $PROJECT_CHARTPATH
-        # echo -e "\e[34mPackage\e[0m \e[1m$chart_name commit change\e[0m to git repository"
-        # git add $chart_name/* &>/dev/null
-        # git commit -m "[chart/$chart_name] release version $current_release" $chart_name &>/dev/null
+        echo -e "\e[34mPackage\e[0m \e[1m$chart_name commit change\e[0m to git repository"
+        git add $chart_name/* &>/dev/null
+        git commit -m "[chart/$chart_name] package version $current_release" $chart_name &>/dev/null
         echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH"
         helm package $chart_name &>/dev/null
         cd - &>/dev/null
@@ -204,7 +204,7 @@ function routerChartRelease {
         fi
         echo -e "\e[35mRelease\e[0m Update \e[1m$chart_name\e[0m release number $next_release in $chart_name/Chart.yaml"
         sed -i "s/$current_release/$next_release/" $chart_dir/Chart.yaml
-        git add $chart_dir/Chart.yaml
+        git add $chart_dir
         git commit -m "[chart/$chart_name] Upgrade release number, from $current_release to $next_release in Chart.yaml" $chart_dir/Chart.yaml &>/dev/null
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m version $next_release"
         routerChartPackage $chart_name
