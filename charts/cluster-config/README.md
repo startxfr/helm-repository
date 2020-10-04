@@ -16,6 +16,10 @@ helm show chart startx/cluster-config
 
 ## Install this chart
 
+This chart is use as a package envelop for configuration of cluster ressources already existing
+It can't be use as a common helm-chart (using ```helm install```) but should be used the
+following way :
+
 ```bash
-helm install startx/cluster-config
+helm template cluster-config startx/cluster-config | oc apply -f -
 ```
