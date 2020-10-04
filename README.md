@@ -1,10 +1,60 @@
 # helm-charts-ocp-infra
 
-helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD)
+helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
+For more informations and access to the chart index, you can visit the [repository homepage](https://startxfr.github.io/helm-charts-ocp-infra/).
 
 ## Install chart from repository
 
-XXXXX
+### 1. Requirements
+
+#### 1.1. install cli dependencies
+
+```bash
+yum install yq -y
+```
+
+#### 1.2. install helm
+
+```bash
+yum install helm -y
+```
+
+#### 1.3. Beiing connected to an openshift cluster
+
+```bash
+oc login -t <my-token> <my-openshift-api>
+```
+
+If you don't have access to an openshift cluster, consider using codeready-container to
+run locally a simulated cluster.
+
+### 2. Install repository
+
+#### 2.1. Install this repository
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-charts-ocp-infra/packages/
+```
+
+#### 2.2. List all chart in this repository
+
+```bash
+helm search repo startx
+```
+
+### 3. Install chart
+
+#### 3.1. Show chart detail
+
+```bash
+helm show chart startx/cluster-config
+```
+
+#### 3.2. Install chart into cluster
+
+```bash
+helm install startx/cluster-config
+```
 
 ## Install chart building environment
 
