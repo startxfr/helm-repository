@@ -4,9 +4,9 @@ metadata:
   name: "{{- include "startx.appName" . -}}-testdummy-{{- include "startx.appVersion" . -}}"
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-testdummy-{{- include "startx.appVersion" . -}}"
-    {{- include "example.labels" . | nindent 4 }}
+    {{- include "_sample_.labels" . | nindent 4 }}
   annotations:
-    {{- include "example.annotations" . | nindent 4 }}
+    {{- include "_sample_.annotations" . | nindent 4 }}
 spec:
   containers:
     - name: exit

@@ -2,9 +2,11 @@ kind: Secret
 type: Opaque
 apiVersion: v1
 metadata:
-  name: example
+  name: {{ include "startx.appName" . }}
   labels:
-    {{- include "example.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-example-{{- include "startx.appVersion" . -}}"
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+    {{- include "_sample_.labels" . | nindent 4 }}
+  annotations:
+    {{- include "_sample_.annotations" . | nindent 4 }}
 stringData:
-  example: {{- .Values.sample_value }}
+  example_key: "{{- .Values.sample_value }}"

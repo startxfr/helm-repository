@@ -11,7 +11,7 @@ metadata:
   annotations:
     {{- include "cluster-config.annotations" . | nindent 4 }}
 stringData:
-{{- if eq .Values.alertmanager.type "pagerDutty" -}}
+  {{- if eq .Values.alertmanager.type "pagerDutty" -}}
   alertmanager.yaml: |-
     global:
       resolve_timeout: 5m
@@ -30,7 +30,7 @@ stringData:
         - receiver: {{- .Values.alertmanager.receiverName }}
           match:
             alertname: Watchdog
-{{- else if eq .Values.alertmanager.type "api" -}}
+  {{- else if eq .Values.alertmanager.type "api" -}}
   alertmanager.yaml: |-
     global:
       resolve_timeout: 5m
@@ -49,5 +49,5 @@ stringData:
         - receiver: {{- .Values.alertmanager.receiverName }}
           match:
             alertname: Watchdog
-{{- end -}}
+  {{- end -}}
 {{- end -}}
