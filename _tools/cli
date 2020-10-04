@@ -243,11 +243,39 @@ function routerChartPublish {
 function routerChartDelete {
     local chart_name=$1
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    local remove_repository=$2
+    local publish_repository=yes
     if [[ "" != "$chart_name" && -w $chart_dir ]]; then
         echo -e "\e[31mDelete\e[0m \e[1m$chart_name\e[0m helm chart"
+        if [[ "--with-repository" == "$remove_repository" || "-r" == "$remove_repository" ]]; then
+            echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m with repository delete"
+            remove_repository=yes
+        else
+            echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m With repository delete [y/N] : "
+            read delRep
+            if [[ "$delRep" == "y"  || "$delRep" == "Y" ]]; then
+                remove_repository=yes
+            fi
+        fi
+
+        if [[ "$remove_repository" == "yes" ]]; then
+            echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Publish change to repository  [Y/n] : "
+            read delRep
+            if [[ "$delRep" == "n"  || "$delRep" == "N" ]]; then
+                publish_repository=no
+            fi
+        fi
         rm -rf $chart_dir &>/dev/null
         git add $chart_dir &>/dev/null
         git commit -m "[chart/$chart_name] deleted chart $chart_name" $chart_dir &>/dev/null
+        if [[ "$remove_repository" == "yes" ]]; then
+            rm -rf $PROJECT_PATH/docs/packages/$chart_name-*.tgz &>/dev/null
+            git add $PROJECT_PATH/docs/packages/$chart_name-*.tgz &>/dev/null
+            git commit -m "[chart/$chart_name] deleted chart $chart_name packages into repository" $PROJECT_PATH &>/dev/null
+            if [[ "$publish_repository" == "yes" ]]; then
+                routerPublish
+            fi
+        fi
     else
         echo -e "\e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
         routerList
@@ -296,6 +324,7 @@ Usage:
   - test                           Test an helm chart
   - package                        Package an helm chart
   - release                        Release an helm chart
+  - publish                        Publish an helm chart into repository
   - delete                         Delete an helm chart
 
 - Examples  :
@@ -304,6 +333,7 @@ Usage:
   ./sx-helm my-example test        Test my-example chart
   ./sx-helm my-example package     Package my-example chart
   ./sx-helm my-example release     Release my-example chart
+  ./sx-helm my-example publish     Publish an helm chart into repository
   ./sx-helm my-example delete      Delete my-example chart
 
 EOF
