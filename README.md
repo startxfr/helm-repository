@@ -1,7 +1,7 @@
-# helm-charts-ocp-infra
+# helm-repository
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
-For more informations and access to the chart index, you can visit the [repository homepage](https://startxfr.github.io/helm-charts-ocp-infra/).
+For more informations and access to the chart index, you can visit the [repository homepage](https://startxfr.github.io/helm-repository/).
 
 ## Install chart from repository
 
@@ -33,7 +33,7 @@ run locally a simulated cluster.
 #### 2.1. Install this repository
 
 ```bash
-helm repo add startx https://startxfr.github.io/helm-charts-ocp-infra/packages/
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ```
 
 #### 2.2. List all chart in this repository
@@ -63,8 +63,8 @@ In order to get the full developement environment, you must stick to the followi
 ### 1. Get a copy of the repository
 
 ```bash
-git clone https://github.com/startxfr/helm-charts-ocp-infra.git
-cd helm-charts-ocp-infra
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository
 ```
 
 ### 2. Create a new chart
