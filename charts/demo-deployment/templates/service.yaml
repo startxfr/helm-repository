@@ -4,10 +4,10 @@ metadata:
   name: {{ include "startx.appName" . }}
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
-    {{- include "demo-pod.labels" . | nindent 4 }}
+    {{- include "demo-deployment.labels" . | nindent 4 }}
     app: {{ include "startx.appName" . }}
   annotations:
-    {{- include "demo-pod.annotations" . | nindent 4 }}
+    {{- include "demo-deployment.annotations" . | nindent 4 }}
 spec:
   ports:
     - name: http
