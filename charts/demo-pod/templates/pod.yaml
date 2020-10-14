@@ -5,6 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
     {{- include "demo-pod.labels" . | nindent 4 }}
+    app: {{ include "startx.appName" . }}
   annotations:
     {{- include "demo-pod.annotations" . | nindent 4 }}
 spec:
