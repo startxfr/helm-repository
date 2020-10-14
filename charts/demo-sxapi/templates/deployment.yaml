@@ -27,24 +27,24 @@ spec:
     spec: 
       containers:
         - name: service
-          image: "{{- .Values.image }}"
+          image: "startx/sxapi:{{- .Values.sxapi_version }}"
           env:
             - name: SX_DEBUG
               value: "{{- .Values.debug }}"
             - name: SX_VERBOSE
               value: "true"
-          command:
-            - "{{- .Values.command }}"
-          args:
-            - "{{- .Values.args }}"
+          envFrom:
+            - configMapRef:
+                name: {{ include "startx.appName" . }}-app
+          command: [ "npm" , "run", "{{- .Values.profile }}" ]
           ports:
-          - containerPort: 8080
+          - containerPort: 8077
             name: http
             protocol: TCP
           livenessProbe:
             exec:
               command:
-                - "{{- .Values.command }}"
+                - "/usr/bin/sx-nodejs"
                 - isLive
             initialDelaySeconds: 1
             timeoutSeconds: 1
@@ -54,7 +54,7 @@ spec:
           readinessProbe:
             exec:
               command:
-                - "{{- .Values.command }}"
+                - "/usr/bin/sx-nodejs"
                 - isReady
             initialDelaySeconds: 1
             timeoutSeconds: 1
@@ -70,6 +70,23 @@ spec:
               memory: 32Mi
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
+          volumeMounts:
+            - name: "sxapi-deploy-log"
+              mountPath: "/var/log/httpd"
+            - name: sxapi-deploy-conf
+              mountPath: "/conf"
+      volumes:
+        - name: "sxapi-deploy-log"
+          emptyDir:
+            medium: ""
+        - name: sxapi-deploy-conf
+          configMap:
+            name: "{{ include "startx.appName" . }}-lib"
+            items:
+            - key: sxapi.yml
+              path: sxapi.yml
+            - key: mylib.js
+              path: mylib.js
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
