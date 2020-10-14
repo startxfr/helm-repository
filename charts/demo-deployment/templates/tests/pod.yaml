@@ -4,13 +4,13 @@ metadata:
   name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-test"
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-test-pod"
-    {{- include "cluster-config.labels" . | nindent 4 }}
+    {{- include "demo-deployment.labels" . | nindent 4 }}
   annotations:
-    {{- include "cluster-config.annotations" . | nindent 4 }}
+    {{- include "demo-deployment.annotations" . | nindent 4 }}
 spec:
   containers:
     - name: exit
-      image: startx/fedora
+      image: busybox
       command: 
         - "bash"
         - "-c"
