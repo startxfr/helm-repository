@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ include "startx.appName" . }}
+  name: {{ include "startx.appName" . }}-test
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
     {{- include "demo-pod.labels" . | nindent 4 }}
