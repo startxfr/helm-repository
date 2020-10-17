@@ -18,23 +18,23 @@ context:
 # Configuration of the cluster auto-scaling feature
 autoscaling:
   # Enable the cluster auto-scaling
-  enabled: true
+  enabled: false
   # Define the minimum
   min: 
     # Minimum cores accross cluster
     cores: 4
     # Minimum gigabytes of memory accross cluster
-    memory: 60
+    memory: 16
     # Minimum numbers of nodes
-    nodes: 1
+    nodes: 2
   # Define the maximum
   max: 
     # Maximum cores accross cluster
-    cores: 32
+    cores: 40
     # Maximum gigabytes of memory accross cluster
-    memory: 200
+    memory: 160
     # Maximum numbers of nodes
-    nodes: 8
+    nodes: 20
   # Enable scale down feature
   scaleDown: true
 
@@ -78,7 +78,7 @@ imageprunner:
     # History limit for successfull run
     successful: 5
   # Suspend the image prunning
-  suspend: false
+  suspend: true
 
 # Configuration of the cluster project-template feature
 projecttemplate:

@@ -1,0 +1,46 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-infra
+autoscaling:
+  enabled: true
+  min: 
+    cores: 4
+    memory: 16
+    nodes: 2
+  max: 
+    cores: 64
+    memory: 400
+    nodes: 10
+  scaleDown: true
+clusterversion:
+  enabled: true
+  channel: candidate
+  version: 4.5
+alertmanager:
+  enabled: true
+  receiverName: PagerDutyStartx
+  type: pagerDutty
+  pagerDutty:
+    key: _pager_dutty_startx_key_
+  api:
+    endpoint: _api_startx_endpoint_
+imageprunner:
+  enabled: true
+  schedule: "30 * * * *"
+  history: 
+    failed: 10
+    successful: 5
+  suspend: false
+projecttemplate:
+  enabled: true
+  rbac: 
+    enabled: true
+  networkpolicy: 
+    enabled: true
+redhat:
+  operators: true
