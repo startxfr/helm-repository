@@ -1,0 +1,32 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-infra
+groups:
+  enabled: true
+  list: 
+  - id: dev
+    name: dev
+    clusterRole: basic-user
+    users: 
+    - dev
+  - id: admin
+    name: admin
+    clusterRole: cluster-admin
+    users: 
+    - admin
+  - id: devops
+    name: devops
+    # Devops cluster role
+    clusterRole: edit
+    users: 
+    - devops
+  - id: ops
+    name: ops
+    clusterRole: self-provisionner
+    users: 
+    - ops
