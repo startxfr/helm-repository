@@ -1,0 +1,31 @@
+#!/bin/bash
+PROJECT_PATH=`dirname $(readlink -f $0)`
+PROJECT_CHARTPATH=$PROJECT_PATH/charts
+PROJECT_LIBPATH=$PROJECT_PATH/_tools
+
+source $PROJECT_LIBPATH/cli
+
+## Start prog switch
+
+if [[ "$1" != "" ]]; then
+    case $1 in
+        list)                   routerList;;
+        publish)                routerPublish;;
+        release)                routerRelease;;
+        version)                routerVersion;;
+        *)
+            case $2 in
+                info)           routerChartInfo $1;;
+                create)         routerChartCreate $1 $3;;
+                test)           routerChartTest $1;;
+                package)        routerChartPackage $1;;
+                release)        routerChartRelease $1 $3;;
+                delete)         routerChartDelete $1 ;;
+                publish)        routerChartPublish $@ ;;
+                *)              menuUsageChart $@ ;;
+            esac
+        ;;
+    esac
+else
+    menuUsage
+fi
