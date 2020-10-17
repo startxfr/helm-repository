@@ -26,16 +26,33 @@ groups:
       # Developper name
       name: dev
       # Developper cluster role
-      clusterRole: self-provisionner
+      clusterRole: basic-user
+      # user enrolled in this group
+      users: 
+        - dev
       # Devops ID
     - id: devops
       # Devops name
       name: devops
       # Devops cluster role
-      clusterRole: self-provisionner
+      clusterRole: edit
+      # user enrolled in this group
+      users: 
+        - devops
       # Ops ID
     - id: ops
       # Ops name
-      name: devops
+      name: ops
       # Ops cluster role
+      clusterRole: self-provisionner
+      # user enrolled in this group
+      users: 
+        - ops
+    - id: admin
+      # admin name
+      name: admin
+      # admin cluster role
       clusterRole: cluster-admin
+      # user enrolled in this group
+      users: 
+        - admin
