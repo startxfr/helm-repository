@@ -23,3 +23,19 @@ following way :
 ```bash
 helm template cluster-config startx/cluster-config | oc apply -f -
 ```
+
+## Install specific values
+
+This chart is delivered with 2 values files :
+
+### Default values
+
+```bash
+helm template cluster-config startx/cluster-config -v https://github.com/startxfr/helm-repository/blob/master/charts/cluster-config/values.yaml | oc apply -f -
+```
+
+### startx values
+
+```bash
+helm template cluster-config startx/cluster-config -v https://github.com/startxfr/helm-repository/blob/master/charts/cluster-config/values-startx.yaml | oc apply -f -
+```
