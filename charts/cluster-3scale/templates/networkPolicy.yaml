@@ -1,0 +1,19 @@
+{{- if .Values.project.networkPolicy.enabled -}}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: "{{- .Values.project.name -}}-allow-all-ns"
+  namespace: {{ .Values.project.name | quote }}
+  labels:
+    {{- include "cluster-3scale.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-allow-all-ns-np"
+  annotations:
+    {{- include "cluster-3scale.annotations" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: 3scale
+  ingress:
+    - from:
+        - namespaceSelector: {}
+{{- end -}}

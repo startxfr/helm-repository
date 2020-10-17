@@ -1,0 +1,52 @@
+
+
+Cluster configuration is deployed.
+
+-- Context -------------------------
+  scope       : {{ include "startx.appScope" . }}
+  cluster     : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+  component   : {{ include "startx.appComponent" . }}
+  app         : {{ include "startx.appName" . }}
+  version     : {{ include "startx.appVersion" . }}
+
+-- Project Configuration -----------
+project : {{ .Values.project.name }}
+{{ if .Values.project.quotas.enabled }}
+quotas  : enabled
+{{ else }}
+quotas  : disabled
+{{ end }}
+{{ if .Values.project.limits.enabled }}
+limits  : enabled
+{{ else }}
+limits  : disabled
+{{ end }}
+{{ if .Values.project.networkPolicy.enabled }}
+networkPolicy  : enabled
+{{ else }}
+networkPolicy  : disabled
+{{ end }}
+{{ if .Values.project.rbac.enabled }}
+rbac  : enabled
+{{ else }}
+rbac  : disabled
+{{ end }}
+
+{{ if .Values.operator.enabled }}
+-- Operator Configuration -----------
+operator : {{ .Values.operator.operator }}:{{ .Values.operator.version }}
+namespace : {{ .Values.operator.namespace }}
+marketplace : {{ .Values.operator.marketplace }}
+channel : {{ .Values.operator.channel }}
+{{ if .Values.manager.enabled }}
+manager  : enabled
+{{ else }}
+manager  : disabled
+{{ end }}
+{{ if .Values.rhn.enabled }}
+rhn  : enabled
+{{ else }}
+rhn  : disabled
+{{ end }}
+{{ end }}

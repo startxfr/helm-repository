@@ -1,0 +1,69 @@
+# Default values for cluster-3scale.
+
+# Application deployment context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: startx-infra
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Project used in this helm
+project:
+  # The namespace where 3scale server goes to
+  name: startx-3scale
+  # Quotas to apply to the project
+  quotas: 
+    # Enable the project quotas
+    enabled: true
+  # Quotas to apply to the project
+  limits: 
+    # Enable the project limits
+    enabled: true
+  # NetworkPolicy to apply to the project
+  networkPolicy: 
+    # Enable the project networkPolicy
+    enabled: true
+  # Create rolebinding if enabled
+  rbac:
+    # Enable the cluster groups creation
+    enabled: true
+    # List group to create
+    groups: 
+      # Developper Name
+    - name: devops
+      # Developper cluster role
+      clusterRole: admin
+# Operator configuration
+operator:
+  # Enable the configuration of the operator
+  enabled: true
+  # The operator namespace where objects goes to
+  namespace: openshift-operators
+  # The operator marketplace namespace where objects goes to
+  marketplace: openshift-marketplace
+  # Name of the channel in the operator marketplace
+  channel: threescale-2.9
+  # CSV base name
+  operator: 3scale-operator
+  # CSV version
+  version: "0.6.0" 
+# Deploy an API manager
+manager:
+  # Enable the configuration of the API manager
+  enabled: true
+# RHN informations for the container catalog
+rhn:
+  # Enable the configuration of the rhn account for image pull
+  enabled: true
+  # Redhat Network access user to the RH container catalog
+  user: rhnuser
+  # Redhat Network access password to the Rh container catalog
+  pwd: rhnpwd
