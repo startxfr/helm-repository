@@ -12,6 +12,9 @@ metadata:
     app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-group"
   annotations:
     {{- include "cluster-rbac.annotations" $root | nindent 4 }}
-users: []
+users: 
+{{- range .users }}
+  - "{{ . }}"
+{{ end }}
 {{ end }}
 {{ end }}
