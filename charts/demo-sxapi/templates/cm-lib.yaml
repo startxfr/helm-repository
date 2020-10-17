@@ -11,10 +11,10 @@ metadata:
 data:
   SX_ID: {{ include "startx.appName" . }}-app
   SX_TYPE: app
-  SX_COMPONENT: {{ include ".startx.appComponent" . }}
-  SX_NAME: Startx {{ include ".startx.appComponent" . }} application
-  SX_SUMMARY: Startx {{ include ".startx.appComponent" . }} application based on apache container
-  SX_VERSION: {{ include ".startx.appEnvironment" . }}
+  SX_COMPONENT: {{ include "startx.appComponent" . }}
+  SX_NAME: Startx {{ include "startx.appComponent" . }} application
+  SX_SUMMARY: Startx {{ include "startx.appComponent" . }} application based on apache container
+  SX_VERSION: {{ include "startx.appEnvironment" . }}
   sxapi.yml: |-
     name: {{ include "startx.appName" . }}
     description: This is the description of {{ include "startx.appName" . }}
@@ -39,14 +39,11 @@ data:
             <body><div class="container">
             <h1><span class="glyphicon glyphicon-eye-open"></span> Your API {{ include "startx.appName" . }} is
             live !</h1>
-            <div class="alert alert-success" role="alert"><p>This API is {{ include "startx.appName" . }}
-            running on <b>{{hostname}}</b> with current release <b>v{{ include "startx.appVersion" . }}</b></p></div>
-            <div class="alert alert-info" role="alert"><p>The application signature is <b>{{ include "startx.appNameVersion" . }}</b>
-            and corespond to the example API using micro-service framework <b>{{package.name}}
-            v{{package.version}}</b>.</p></div>
+            <div class="alert alert-success" role="alert"><p>This API is {{ include "startx.appName" . }} (<b>v{{ include "startx.appVersion" . }}</b>)</p></div>
+            <div class="alert alert-info" role="alert"><p>The application signature is <b>{{ include "startx.appNameVersion" . }}</b>.</p></div>
             <h1>Demo de deploiement</h1>
             <nav class="navbar navbar-default navbar-fixed-bottom"><div class="container">
-            Microservice engine is <b>{{package.name}} v{{package.version}}</b>. {{package.description}}</div></nav>
+            Microservice engine is <b>{{ include "startx.appName" . }} v{{ include "startx.appVersion" . }}</b></div></nav>
             </div></body>
             </html>
       - path: "/health"

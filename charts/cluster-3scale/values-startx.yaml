@@ -1,0 +1,36 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-infra
+project:
+  name: startx-3scale
+  quotas: 
+    enabled: true
+  limits: 
+    enabled: true
+  networkPolicy: 
+    enabled: true
+  rbac:
+    enabled: true
+    groups: 
+    - name: devops
+      clusterRole: admin
+    - name: ops
+      clusterRole: admin
+operator:
+  enabled: true
+  namespace: openshift-operators
+  marketplace: openshift-marketplace
+  channel: threescale-2.9
+  operator: 3scale-operator
+  version: "0.6.0"
+manager:
+  enabled: true
+rhn:
+  enabled: true
+  user: startx_rhnuser
+  pwd: startx_rhnpwd

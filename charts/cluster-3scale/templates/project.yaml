@@ -1,0 +1,11 @@
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: {{ .Values.project.name | quote }}
+  labels:
+    {{- include "cluster-3scale.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-project"
+  annotations:
+    {{- include "cluster-3scale.annotations" . | nindent 4 }}
+    openshift.io/description: "STARTX 3Scale enterprise api-management & control plane"
+    openshift.io/display-name: "STARTX Infra - 3SCALE"
