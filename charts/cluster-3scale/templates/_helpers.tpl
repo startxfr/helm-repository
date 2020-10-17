@@ -10,5 +10,5 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common cluster-3scale annotations */}}
 {{- define "cluster-3scale.annotations" -}}
-{{- include "startx.annotationsInfra" . -}}
+{{ include "startx.annotationsInfra" . }}
 {{- end -}}

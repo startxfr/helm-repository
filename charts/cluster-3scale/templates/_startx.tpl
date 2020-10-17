@@ -82,15 +82,16 @@ STARTX common helpers
 
 {{/* Common annotation for infra charts */}}
 {{- define "startx.annotationsInfra" -}}
-openshift.io/generated-by: startx-helm-{{- .Chart.Name -}}
+openshift.io/generated-by: startx-{{- .Chart.Name -}}-helm
+openshift.io/requester: startx-{{- .Chart.Name -}}-helm
 {{- end -}}
 
 {{/* Common labels */}}
 {{- define "startx.labelsCommon" -}}
-{{- if .Values.context }}
-{{- if .Values.context.scope }}
+{{- if .Values.context -}}
+{{- if .Values.context.scope -}}
 app.startx.fr/scope: {{ include "startx.appScope" . | quote }}
-{{- end }}
+{{- end -}}
 {{- if .Values.context.cluster }}
 app.startx.fr/cluster: {{ include "startx.appCluster" . | quote }}
 {{- end }}

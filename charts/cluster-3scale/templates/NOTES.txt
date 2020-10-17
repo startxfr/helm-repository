@@ -10,40 +10,43 @@ Cluster configuration is deployed.
   app         : {{ include "startx.appName" . }}
   version     : {{ include "startx.appVersion" . }}
 
--- Cluster Configuration -----------
-{{ if .Values.autoscaling.enabled }}
- - Cluster autoscaling enabled (up to {{ default 4 .Values.autoscaling.max.nodes }} nodes, {{ default 32 .Values.autoscaling.max.cores }} Cores and {{ default 1024 .Values.autoscaling.max.memory }} RAM)
-  # oc describe ClusterAutoscaler default 
+-- Project Configuration -----------
+project : {{ .Values.project.name }}
+{{ if .Values.project.quotas.enabled }}
+quotas  : enabled
 {{ else }}
- - Cluster autoscaling disabled
+quotas  : disabled
 {{ end }}
-{{ if .Values.clusterversion.enabled }}
- - Cluster version enabled (channel {{ default "candidate" .Values.clusterversion.channel }}-{{ default "4.5" .Values.clusterversion.version }})
-  # oc describe ClusterVersion version 
+{{ if .Values.project.limits.enabled }}
+limits  : enabled
 {{ else }}
- - Cluster version disabled
+limits  : disabled
 {{ end }}
-{{ if .Values.alertmanager.enabled }}
- - Cluster alert-manager enabled (receiver {{ default "receiverName" .Values.alertmanager.receiverName }}  is of {{ default "api" .Values.alertmanager.type }} type)
-  # oc get secret alertmanager-main -n openshift-monitoring
+{{ if .Values.project.networkPolicy.enabled }}
+networkPolicy  : enabled
 {{ else }}
- - Cluster alert-manager disabled
+networkPolicy  : disabled
 {{ end }}
-{{ if .Values.imageprunner.enabled }}
- - Cluster image prunner enabled (scheduled every {{ default "30 * * * *" .Values.imageprunner.schedule }})
-  # oc describe ImagePruner cluster 
+{{ if .Values.project.rbac.enabled }}
+rbac  : enabled
 {{ else }}
- - Cluster image prunner disabled
+rbac  : disabled
 {{ end }}
-{{ if .Values.projecttemplate.enabled }}
- - Cluster project template enabled (with{{ if .Values.projecttemplate.rbac.enabled }}{{ else }}out{{ end }} RBAC, with{{ if .Values.projecttemplate.networkpolicy.enabled }}{{ else }}out{{ end }} NetworkPolicy)
-  # oc describe template project-request -n openshift-config
+
+{{ if .Values.operator.enabled }}
+-- Operator Configuration -----------
+operator : {{ .Values.operator.operator }}:{{ .Values.operator.version }}
+namespace : {{ .Values.operator.namespace }}
+marketplace : {{ .Values.operator.marketplace }}
+channel : {{ .Values.operator.channel }}
+{{ if .Values.manager.enabled }}
+manager  : enabled
 {{ else }}
- - Cluster project template disabled
+manager  : disabled
 {{ end }}
-{{ if .Values.redhat.enabled }}
- - Cluster redhat projects enabled (with{{ if .Values.redhat.operators }}{{ else }}out{{ end }} RH operators)
-  # oc describe ns openshift-operators-redhat
+{{ if .Values.rhn.enabled }}
+rhn  : enabled
 {{ else }}
- - Cluster project template disabled
+rhn  : disabled
+{{ end }}
 {{ end }}

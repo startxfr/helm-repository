@@ -1,0 +1,47 @@
+{{- if .Values.manager.enabled -}}
+kind: APIManager
+apiVersion: apps.3scale.net/v1alpha1
+metadata:
+  name: "startx"
+  namespace: {{ .Values.project.name | quote }}
+  annotations:
+    {{- include "cluster-3scale.annotations" . | nindent 4 }}
+  labels:
+    {{- include "cluster-3scale.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "startx-apimanager"
+spec:
+  wildcardDomain: "{{- .Values.project.name -}}.apps.{{- .Values.context.cluster -}}.startx.fr"
+  tenantName: 3scale
+  appLabel: 3scale-api-management
+  imageStreamTagImportInsecure: false
+  resourceRequirementsEnabled: true
+  system:
+    appSpec:
+      replicas: 1
+    sidekiqSpec:
+      replicas: 1
+    fileStorage:
+      persistentVolumeClaim:
+        storageClassName: ocs-fs-retain
+  zync:
+    appSpec:
+      replicas: 1
+    queSpec:
+      replicas: 1
+  backend:
+    cronSpec:
+      replicas: 1
+    listenerSpec:
+      replicas: 1
+    workerSpec:
+      replicas: 1
+  apicast:
+    managementAPI: status
+    openSSLVerify: false
+    registryURL: 'http://apicast-staging:8090/policies'
+    responseCodes: true
+    stagingSpec:
+      replicas: 1
+    productionSpec:
+      replicas: 1
+{{- end -}}
