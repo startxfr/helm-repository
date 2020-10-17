@@ -203,8 +203,7 @@ function routerChartTest {
     if [[ -r $chart_dir ]]; then
         echo -e "\e[33mTest\e[0m \e[1m$chart_name\e[0m helm chart"
         if [[ ! -r $test_dir ]]; then
-            echo -e "\e[33mTest\e[0m \e[1m\e[31mERROR\e[0m \e[1m$chart_name\e[0m helm chart \e[1mdoesn't have a test\e[0m script in $test_dir"
-            exit
+            echo -e "\e[33mTest\e[0m \e[1m\e[31mWARN\e[0m \e[1m$chart_name\e[0m helm chart \e[1mdoesn't have a test\e[0m script in $test_dir"
         fi
         echo -e "\e[33mTest\e[0m \e[1mGenerate template\e[0m for chart \e[1m$chart_name\e[0m"
         helm template $chart_name $chart_dir
