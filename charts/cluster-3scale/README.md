@@ -1,6 +1,6 @@
 # Helm-chart STARTX : cluster-3scale
 
-This helm chart used to configure cluster generic behaviours like image prunning and cluster auto-scaling capacity 
+This helm chart used to configure 3scale at the cluster level
 
 ## Install the repository
 
@@ -16,12 +16,8 @@ helm show chart startx/cluster-3scale
 
 ## Install this chart
 
-This chart is use as a package envelop for configuration of cluster ressources already existing
-It can't be use as a common helm-chart (using ```helm install```) but should be used the
-following way :
-
 ```bash
-helm template cluster-3scale startx/cluster-3scale | oc apply -f -
+helm install cluster-3scale startx/cluster-3scale
 ```
 
 ## Install specific values

@@ -1,0 +1,34 @@
+{{- if .Values.project.limits.enabled -}}
+kind: LimitRange
+apiVersion: v1
+metadata:
+  name: "{{- .Values.project.name -}}-limits"
+  namespace: {{ .Values.project.name | quote }}
+  labels:
+    {{- include "cluster-3scale.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-limits"
+  annotations:
+    {{- include "cluster-3scale.annotations" . | nindent 4 }}
+spec:
+  limits:
+    - type: "Pod"
+      min:
+        cpu: 50m
+        memory: 32Mi
+      max:
+        cpu: "10"
+        memory: 34Gi
+    - type: "Container"
+      default:
+        cpu: 400m
+        memory: 512Mi
+      defaultRequest:
+        cpu: 100m
+        memory: 128Mi
+      min:
+        cpu: 50m
+        memory: 32Mi
+      max:
+        cpu: "10"
+        memory: 32Gi
+{{- end -}}
