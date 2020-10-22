@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "startx.appName" . }}
+  labels:
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+    {{- include "example-sxapi.labels" . | nindent 4 }}
+    app: {{ include "startx.appName" . }}
+  annotations:
+    {{- include "example-sxapi.annotations" . | nindent 4 }}
+spec:
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: {{ include "startx.appName" . }}

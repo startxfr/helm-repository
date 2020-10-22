@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "startx.appName" . }}
+  name: {{ include "startx.appName" . }}-test
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
-    {{- include "demo-deployment.labels" . | nindent 4 }}
+    {{- include "example-sxapi.labels" . | nindent 4 }}
   annotations:
-    {{- include "demo-deployment.annotations" . | nindent 4 }}
+    {{- include "example-sxapi.annotations" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
@@ -20,10 +20,10 @@ spec:
   template:
     metadata:
       app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
-      {{- include "demo-deployment.labels" . | nindent 6 }}
+      {{- include "example-sxapi.labels" . | nindent 6 }}
       app: {{ include "startx.appName" . }}
     annotations:
-      {{- include "demo-deployment.annotations" . | nindent 6 }}
+      {{- include "example-sxapi.annotations" . | nindent 6 }}
     spec: 
       containers:
         - name: service
