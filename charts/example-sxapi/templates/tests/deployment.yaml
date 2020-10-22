@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "startx.appName" . }}-test
+  labels:
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+    {{- include "example-sxapi.labels" . | nindent 4 }}
+  annotations:
+    {{- include "example-sxapi.annotations" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "startx.appName" . }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+      {{- include "example-sxapi.labels" . | nindent 6 }}
+      app: {{ include "startx.appName" . }}
+    annotations:
+      {{- include "example-sxapi.annotations" . | nindent 6 }}
+    spec: 
+      containers:
+        - name: service
+          image: "{{- .Values.image }}"
+          env:
+            - name: SX_DEBUG
+              value: "{{- .Values.debug }}"
+            - name: SX_VERBOSE
+              value: "true"
+          command:
+            - "{{- .Values.command }}"
+          args:
+            - "{{- .Values.args }}"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "{{- .Values.command }}"
+                - isLive
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - "{{- .Values.command }}"
+                - isReady
+            initialDelaySeconds: 1
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: 200m
+              memory: 64Mi
+            requests:
+              cpu: 20m
+              memory: 32Mi
+          terminationMessagePath: "/dev/termination-log"
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}

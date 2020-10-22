@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "startx.appName" . }}
+  labels:
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+    {{- include "example-pod.labels" . | nindent 4 }}
+    app: {{ include "startx.appName" . }}
+  annotations:
+    {{- include "example-pod.annotations" . | nindent 4 }}
+spec:
+  containers:
+    - name: service
+      image: "{{- .Values.image }}"
+      env:
+        - name: SX_DEBUG
+          value: "{{- .Values.debug }}"
+        - name: SX_VERBOSE
+          value: "true"
+      command:
+        - "{{- .Values.command }}"
+      args:
+        - "{{- .Values.args }}"
+      livenessProbe:
+        exec:
+          command:
+            - "{{- .Values.command }}"
+            - isLive
+        initialDelaySeconds: 1
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
+      readinessProbe:
+        exec:
+          command:
+            - "{{- .Values.command }}"
+            - isReady
+        initialDelaySeconds: 1
+        timeoutSeconds: 1
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 3
+      resources:
+        limits:
+          cpu: 200m
+          memory: 64Mi
+        requests:
+          cpu: 20m
+          memory: 32Mi
+      terminationMessagePath: "/dev/termination-log"
+      imagePullPolicy: Always
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 30
+  dnsPolicy: ClusterFirst
+  securityContext: {}
