@@ -19,11 +19,12 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
-      {{- include "example-sxapi.labels" . | nindent 6 }}
-      app: {{ include "startx.appName" . }}
-    annotations:
-      {{- include "example-sxapi.annotations" . | nindent 6 }}
+      labels:
+        app.kubernetes.io/name: "{{ include "startx.appName" . }}-{{ include "startx.appVersion" . }}"
+        {{- include "example-sxapi.labels" . | nindent 8 }}
+        app: {{ include "startx.appName" . }}
+      annotations:
+        {{- include "example-sxapi.annotations" . | nindent 8 }}
     spec: 
       containers:
         - name: service
