@@ -43,23 +43,19 @@ spec:
             name: http
             protocol: TCP
           livenessProbe:
-            exec:
-              command:
-                - "/usr/bin/sx-nodejs"
-                - isLive
-            initialDelaySeconds: 1
-            timeoutSeconds: 1
-            periodSeconds: 10
+            initialDelaySeconds: 5
+            tcpSocket:
+              port: 8077
+            timeoutSeconds: 2
+            periodSeconds: 5
             successThreshold: 1
             failureThreshold: 3
           readinessProbe:
-            exec:
-              command:
-                - "/usr/bin/sx-nodejs"
-                - isReady
-            initialDelaySeconds: 1
-            timeoutSeconds: 1
-            periodSeconds: 10
+            initialDelaySeconds: 7
+            tcpSocket:
+              port: 8077
+            timeoutSeconds: 2
+            periodSeconds: 6
             successThreshold: 1
             failureThreshold: 3
           resources:
@@ -67,7 +63,7 @@ spec:
               cpu: 200m
               memory: 64Mi
             requests:
-              cpu: 20m
+              cpu: 50m
               memory: 32Mi
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
