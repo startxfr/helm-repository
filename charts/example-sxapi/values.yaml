@@ -1,9 +1,9 @@
 
 
 # # Use it to Overrride the helm-chart name
-#nameOverride: demo-deployment
+#nameOverride: example-sxapi
 # # Use it to Overrride the helm-chart version
-#versionOverride: 0.0.1
+#versionOverride: "0.0.1"
 
 # Application deployment context
 context: 
@@ -16,15 +16,13 @@ context:
 # Component name of this application (logical tenant)
  component: infra
 # Application name (functionnal tenant, default use Chart name)
- app: demo-deployment
+ app: example-sxapi
 # Version name of this application (default use Chart appVersion)
- version: 0.0.1
+ version: "0.0.1"
 
 # Image to run into the pod
-image: "quay.io/startx/apache:latest"
-# Command to run inside the container
-command: "/bin/sx-apache"
-# argunments to pass to the command exectuted inside the container
-args: run
+sxapi_version: "0.3.53"
+# Porfile to run inside the container
+profile: "prod:build"
 # Enable debuging of the container
 debug: true

@@ -1,4 +1,4 @@
-# Helm-chart STARTX : demo-pod
+# Helm-chart STARTX : example-pod
 
 This helm chart must have a description
 
@@ -11,11 +11,11 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ## Get information about this chart
 
 ```bash
-helm show chart startx/demo-pod
+helm show chart startx/example-pod
 ```
 
 ## Install this chart
 
 ```bash
-helm install startx/demo-pod
+helm install startx/example-pod
 ```

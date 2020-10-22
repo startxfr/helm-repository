@@ -1,13 +1,13 @@
 {{/* vim: set filetype=mustache: */}}
-{{/* STARTX demo-pod helpers */}}
+{{/* STARTX example-sxapi helpers */}}
 
 {{/* Common labels */}}
-{{- define "demo-pod.labels" -}}
+{{- define "example-sxapi.labels" -}}
 {{ include "startx.labelsInfra" . }}
 app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- end -}}
 
-{{/* Common demo-pod annotations */}}
-{{- define "demo-pod.annotations" -}}
+{{/* Common example-sxapi annotations */}}
+{{- define "example-sxapi.annotations" -}}
 {{- include "startx.annotationsInfra" . -}}
 {{- end -}}
