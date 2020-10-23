@@ -4,7 +4,7 @@ apiVersion: v1
 metadata:
   name: {{ include "startx.appName" . }}-app
   labels:
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-configmap"
     {{- include "demo-sxapi.labels" . | nindent 4 }}
   annotations:
     {{- include "demo-sxapi.annotations" . | nindent 4 }}
