@@ -30,19 +30,19 @@ networkpolicy:
   rules: 
   - id: allow-from-openshift-ingress
     spec: |
-      ingress:
-      - from:
-          - namespaceSelector:
-              matchLabels:
+      ingress: 
+      - from: 
+        - namespaceSelector: 
+            matchLabels: 
               network.openshift.io/policy-group: ingress
       podSelector: {}
       policyTypes:
       - Ingress
   - id: allow-from-same-namespace
     spec: |
-      podSelector:
-      ingress:
-      - from:
+      podSelector: {}
+      ingress: 
+      - from: 
         - podSelector: {}
 limits: 
   enabled: true
