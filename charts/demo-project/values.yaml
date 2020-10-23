@@ -1,0 +1,122 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: demo-project
+# # Use it to Overrride the helm-chart version
+#versionOverride: "0.0.1"
+
+# Application deployment context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: demo
+  # Application name (functionnal tenant, default use Chart name)
+  app: demo-project
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+# Project configuration
+project: 
+  # Type of project to create (namespace or project)
+  type: project
+  # Name of the project
+  name: example
+  # Display name of the project (only for project)
+  display_name: Example project
+  # Description of the project (only for project)
+  description: This is an example project created via Helm
+# Configure RBAC for project
+rbac: 
+  # Enable RBAC default for this project
+  enabled: true
+  # List group to create
+  groups: 
+  # Developper group ID
+  - id: dev
+    # Developper group name
+    name: dev
+    # Developper group role in this project
+    role: basic-user
+# Configure NetworkPolicy for project
+networkpolicy: 
+  # Enable NetworkPolicy default for this project
+  enabled: true
+  # List group to create
+  rules: 
+  # allow from external
+  - id: allow-from-openshift-ingress
+    # Specifications of this policy rule
+    spec: |
+      ingress:
+      - from:
+          - namespaceSelector:
+              matchLabels:
+              network.openshift.io/policy-group: ingress
+      podSelector: {}
+      policyTypes:
+      - Ingress
+  # allow from internal
+  - id: allow-from-same-namespace
+    # Specifications of this policy rule
+    spec: |
+      podSelector:
+      ingress:
+      - from:
+        - podSelector: {}
+# Configure NetworkPolicy for project
+limits: 
+  # Enable NetworkPolicy default for this project
+  enabled: true
+  # List group to create
+  rules:  |
+    limits:
+    - type: "Pod"
+      min:
+        cpu: "10m"
+        memory: "10Mi"
+      max:
+        cpu: 500m
+        memory: 700Mi
+    - type: "Container"
+      default:
+        cpu: 400m
+        memory: 512Mi
+      defaultRequest:
+        cpu: 20m
+        memory: 32Mi
+      min:
+        cpu: "10m"
+        memory: "10Mi"
+      max:
+        cpu: 400m
+        memory: 512Mi
+# Configure NetworkPolicy for project
+quotas: 
+  # Enable NetworkPolicy default for this project
+  enabled: true
+  # List group to create
+  rules:  |
+    hard:
+      limits.cpu: "1"
+      limits.memory: "1Gi"
+      requests.cpu: "300m"
+      requests.memory: "512Mi"
+      requests.storage: "0Gi"
+      persistentvolumeclaims: "0"
+      ephemeral-storage: "0" 
+      openshift.io/imagestreams: "0"
+      secrets: "20"
+      configmaps: "10"
+      count/daemonsets.apps: "0"
+      count/deployments.apps: "2"
+      count/replicasets.apps: "4"
+      replicationcontrollers: "2"
+      pods: "6"
+      services: "3"
+      services.loadbalancers: "0"
+      services.nodeports: "0"
