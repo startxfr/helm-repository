@@ -1,0 +1,14 @@
+{{- if .Values.limits.enabled -}}
+kind: LimitRange
+apiVersion: v1
+metadata:
+  name: "{{- .Values.project.name | default .Chart.Name -}}-limits"
+  namespace: "{{- .Values.project.name | default .Chart.Name -}}"
+  labels:
+    {{- include "demo-project.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-limits"
+  annotations:
+    {{- include "demo-project.annotations" . | nindent 4 }}
+spec: 
+  {{- .Values.limits.rules | nindent 2 }}
+{{- end -}}

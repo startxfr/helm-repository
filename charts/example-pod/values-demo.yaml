@@ -1,15 +1,15 @@
 
+
 # Default values for configuration of a dev demo
 # see values.yaml for explanation on each params
-nameOverride: demo-sxapi
-versionOverride: "0.0.2"
 context: 
  scope: startx
  cluster: localhost
  environment: demo
- component: sxapi
- app: demo-sxapi
- version: "0.0.2"
-sxapi_version: "0.3.53"
-profile: "dev:start"
+ component: helm
+ app: demo-helm-pod
+ version: 0.0.1
+image: "quay.io/startx/fedora:latest"
+command: "/bin/sx"
+args: run
 debug: true

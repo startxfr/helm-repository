@@ -1,15 +1,15 @@
 
 # Default values for configuration of a dev demo
 # see values.yaml for explanation on each params
-nameOverride: example-sxapi
-versionOverride: "0.0.2"
 context: 
- scope: startx
+ scope: default
  cluster: localhost
  environment: dev
  component: helm
- app: example-sxapi
- version: "0.0.2"
-sxapi_version: "0.3.53"
-profile: "dev:start"
+ app: example-deployment-apache
+ version: 0.0.1
+
+image: "quay.io/startx/apache:latest"
+command: "/bin/sx-apache"
+args: run
 debug: true
