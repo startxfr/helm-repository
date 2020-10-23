@@ -8,7 +8,7 @@ metadata:
   annotations:
     {{- include "example-sxapi.annotations" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{- .Values.replicas }}
   selector:
     matchLabels:
       app: {{ include "startx.appName" . }}
