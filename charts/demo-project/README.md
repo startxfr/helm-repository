@@ -97,3 +97,4 @@ helm install startx/demo-project -f https://raw.githubusercontent.com/startxfr/h
 | 0.1.22  | 2020-10-23 | add user support and update startx demo value example
 | 0.2.0   | 2020-10-24 | Improve cluster-rbac options
 | 0.2.1  | 2020-10-24 | publish stable update for the full repository
+| 0.2.2  | 2020-10-24 | Repository update with all chart release
