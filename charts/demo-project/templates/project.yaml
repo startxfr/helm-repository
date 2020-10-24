@@ -11,5 +11,8 @@ metadata:
     openshift.io/description: "{{- .Values.project.description | default "description" -}}"
     openshift.io/display-name: "{{- .Values.project.display_name | default .Values.project.name -}}"
     openshift.io/requester: "{{- .Chart.Name -}}"
+    helm.sh/hook: pre-install,pre-upgrade,post-delete
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: hook-failed
 spec: {}
 {{- end -}}
