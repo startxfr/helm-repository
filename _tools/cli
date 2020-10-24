@@ -121,6 +121,10 @@ function routerRelease {
             next_description="$nextDesc"
         fi
     fi
+    echo -e "\e[36mRelease\e[0m commit this release to all charts"
+    for chart in $(chartList); do
+        routerChartRelease $chart auto $next_release "$next_description"
+    done
     echo -e "\e[36mRelease\e[0m commit all change to $GITHUB_REPOSITORY respository"
     echo $next_release > $PROJECT_PATH/_tools/repo-release
     git add $PROJECT_PATH &>/dev/null
