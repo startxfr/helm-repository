@@ -56,6 +56,6 @@ helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/he
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.0.1   | 2020-10-04 | Initial commit
-| 0.1.22  | 2020-10-24 | add user support and update startx demo value example
-| 0.1.18   | 2020-10-24 | Improve documentation
+| 0.0.1   | 2020-10-01 | Initial commit
+| 0.1.0   | 2020-10-07 | Release 0.1 stable release for all charts
+| 0.1.18  | 2020-10-23 | Improve documentation
