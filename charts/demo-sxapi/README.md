@@ -74,3 +74,4 @@ helm install startx/demo-sxapi -f https://raw.githubusercontent.com/startxfr/hel
 | 0.0.1   | 2020-10-01 | Initial commit
 | 0.1.0   | 2020-10-07 | Release 0.1 stable release for all charts
 | 0.1.24  | 2020-10-23 | Improve documentation
+| 0.2.0  | 2020-10-24 | Improve cluster-rbac options
