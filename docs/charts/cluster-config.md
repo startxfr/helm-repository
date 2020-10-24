@@ -83,3 +83,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 0.2.1  | 2020-10-24 | publish stable update for the full repository
 | 0.2.2  | 2020-10-24 | Repository update with all chart release
 | 0.2.5  | 2020-10-24 | Unstable repository global update
+| 0.2.7  | 2020-10-24 | Unstable repository release
