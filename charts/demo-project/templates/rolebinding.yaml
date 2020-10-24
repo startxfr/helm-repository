@@ -23,4 +23,25 @@ subjects:
     apiGroup: rbac.authorization.k8s.io
     name: {{ .name | quote }}
 {{ end }}
+{{ range .Values.rbac.users }}
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ .id }}-{{ .role }}"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "demo-project.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ .id }}-{{ .role }}-rolebinding"
+  annotations:
+    {{- include "demo-project.annotations" $root | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .role | quote }}
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: {{ .name | quote }}
+{{ end }}
 {{ end }}

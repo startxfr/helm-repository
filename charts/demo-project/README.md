@@ -47,3 +47,4 @@ helm template demo-project startx/demo-project -v https://github.com/startxfr/he
 ```bash
 helm template demo-project startx/demo-project -v https://github.com/startxfr/helm-repository/blob/master/charts/demo-project/values-v0.0.2.yaml | oc apply -f -
 ```
+| 0.1.22   | 2020-10-24 | add user support and update startx demo value example
