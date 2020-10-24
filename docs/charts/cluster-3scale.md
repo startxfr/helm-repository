@@ -71,4 +71,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.1.0   | 2020-10-07 | Release 0.1 stable release for all charts
 | 0.1.21  | 2020-10-22 | add user support and update startx example value example
 | 0.1.22  | 2020-10-23 | Improve documentation
-| 0.2.0   | 2020-10-24 | Stable startx helm base config
+| 0.2.0  | 2020-10-24 | Stable startx helm base config

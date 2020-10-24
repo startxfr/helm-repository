@@ -25,6 +25,10 @@ rbac:
   - id: ops
     name: ops
     role: admin
+  users: 
+  - id: argocd-controller-sa
+    name: system:serviceaccount:startx-argocd:argocd-application-controller
+    role: edit
 networkpolicy: 
   enabled: false
   rules: []
