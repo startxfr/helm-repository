@@ -103,6 +103,7 @@ function routerRelease {
     local branch_origin="master"
     local next_description="publish stable update for the full repository"
     local current_release="$(cat $PROJECT_PATH/_tools/repo-release)"
+    local next_date="$(date +%Y-%m-%d)"
     local next_release=$(cat $PROJECT_PATH/_tools/repo-release | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
     if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
         branch_current="$BRANCH_NAME"
@@ -123,6 +124,8 @@ function routerRelease {
     fi
     echo -e "\e[36mRelease\e[0m commit all change to $GITHUB_REPOSITORY respository"
     echo $next_release > $PROJECT_PATH/_tools/repo-release
+    echo "| $next_release  | $next_date | Repo release : $next_description" >> $PROJECT_CHARTPATH/*/README.md
+    echo "| $next_release  | $next_date | Repo release : $next_description" >> $PROJECT_PATH/docs/charts/*.md
     git add $PROJECT_PATH &>/dev/null
     git commit -m "[docs] update repository content to $next_release" $PROJECT_PATH &>/dev/null
     git checkout $branch_origin &>/dev/null
