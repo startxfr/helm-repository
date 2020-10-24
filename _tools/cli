@@ -139,8 +139,7 @@ function routerRelease {
     git add $PROJECT_PATH &>/dev/null
     git commit -m "[docs] update repository content to $next_release" $PROJECT_PATH &>/dev/null
     git checkout $branch_origin &>/dev/null
-    git add $PROJECT_PATH &>/dev/null
-    git commit -m "[docs] update repository content" $PROJECT_PATH &>/dev/null
+    git merge $branch_current --commit
     echo -e "\e[36mRelease\e[0m Jump into \e[1m$current_release\e[0m"
     git checkout $current_release &>/dev/null
     echo -e "\e[36mRelease\e[0m Merge \e[1m$branch_origin\e[0m update to \e[1m$current_release\e[0m"
