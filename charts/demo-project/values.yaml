@@ -34,13 +34,21 @@ project:
 rbac: 
   # Enable RBAC default for this project
   enabled: true
-  # List group to create
+  # List groups to authorize on this project
   groups: 
-  # Developper group ID
-  - id: dev
-    # Developper group name
-    name: dev
-    # Developper group role in this project
+  # Example group ID
+  - id: mygroup
+    # Example group name
+    name: mygroup_example
+    # Example group role in this project
+    role: basic-user
+  # List users to authorize on this project
+  users: 
+  # Example user ID
+  - id: myuser
+    # Example user name
+    name: myuser_example
+    # Example user role in this project
     role: basic-user
 # Configure NetworkPolicy for project
 networkpolicy: 
