@@ -265,13 +265,15 @@ function routerChartRelease {
         echo "| $next_release   | $next_date | $next_description" >> $chart_dir/README.md
         sed -i "s/$current_release/$next_release/" $chart_dir/Chart.yaml
         git add $chart_dir
+        cp $chart_dir/README.md $PROJECT_PATH/docs/charts/${chart_name}.md &>/dev/null
+        git add $PROJECT_PATH/docs/packages/${chart_name}.md
         git commit -m "[chart/$chart_name] Upgrade release number, from $current_release to $next_release : $next_description" $chart_dir/Chart.yaml &>/dev/null
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m version $next_release"
         routerChartPackage $chart_name
         echo -e "\e[35mRelease\e[0m \e[1mmove $chart_name-$next_release.tgz\e[0m to \e[1m$REPO_PACKAGE_DIR\e[0m"
         mv $PROJECT_CHARTPATH/$chart_name-$next_release.tgz $PROJECT_PATH/$REPO_PACKAGE_DIR/$chart_name-$next_release.tgz
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name record v$next_release package\e[0m into git repository"
-        git add $PROJECT_PATH/$REPO_PACKAGE_DIR/$chart_name-$next_release.tgz &>/dev/null
+        git add $PROJECT_PATH/$REPO_PACKAGE_DIR/$chart_name-$next_release.tgz $PROJECT_PATH/docs/packages/${chart_name}.md &>/dev/null
         git commit -m "[chart/$chart_name] release package for version $next_release" $PROJECT_PATH/$REPO_PACKAGE_DIR &>/dev/null
     else
         echo -e "\e[35mRelease\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
@@ -325,9 +327,11 @@ function routerChartDelete {
                 publish_repository=no
             fi
         fi
+        rm -f $PROJECT_PATH/docs/charts/${chart_name}.md &>/dev/null
+        git add $kustomize_dir $PROJECT_PATH/docs/charts/${chart_name}.md &>/dev/null
         rm -rf $chart_dir &>/dev/null
         git add $chart_dir &>/dev/null
-        git commit -m "[chart/$chart_name] deleted chart $chart_name" $chart_dir &>/dev/null
+        git commit -m "[chart/$chart_name] deleted chart $chart_name" $chart_dir $PROJECT_PATH &>/dev/null
         if [[ "$remove_repository" == "yes" ]]; then
             rm -rf $PROJECT_PATH/docs/packages/$chart_name-*.tgz &>/dev/null
             git add $PROJECT_PATH/docs/packages/$chart_name-*.tgz &>/dev/null
