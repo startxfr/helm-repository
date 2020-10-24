@@ -1,49 +1,76 @@
-# Helm-chart STARTX : demo-sxapi
+# STARTX helm : demo-sxapi
 
-This helm chart must have a description
+This helm chart is used to create a deployment of a small an simple micro-service based on 
+sxapi engine running under nodejs engine.
 
-## Install the repository
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### Install the repository
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ```
 
-## Get information about this chart
+### Get information about this chart
 
 ```bash
 helm show chart startx/demo-sxapi
 ```
 
-## Install this chart
+### Install this chart
 
 ```bash
 helm install startx/demo-sxapi
 ```
 
-## Install specific values
+## Default values
 
-This chart is delivered with 4 values files :
+Complete deployment of a project with the following characteristics :
 
-### Default values
-
-```bash
-helm template demo-sxapi startx/demo-sxapi -v https://github.com/startxfr/helm-repository/blob/master/charts/demo-sxapi/values.yaml | oc apply -f -
-```
-
-### dev values
+- 1 **service** named **demo-sxapi** load balancing to pod deployed
+- 1 **deployment** named **demo-sxapi** deploying **1 pod** from version **0.3.53** sxapi image running the **prod:start** command with debug enabled
+- 2 **configMap** holding sxapi configuration and pod environmnet variable context
 
 ```bash
-helm template demo-sxapi startx/demo-sxapi -v https://github.com/startxfr/helm-repository/blob/master/charts/demo-sxapi/values-dev.yaml | oc apply -f -
+# base configuration running default configuration
+helm install startx/demo-sxapi
 ```
 
-### version 0.0.1 values
+## Others values availables
+
+- **dev** : Dev sxapi environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-sxapi/values-dev.yaml))
 
 ```bash
-helm template demo-sxapi startx/demo-sxapi -v https://github.com/startxfr/helm-repository/blob/master/charts/demo-sxapi/values-v0.0.1.yaml | oc apply -f -
+helm install startx/demo-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-sxapi/values-dev.yaml
 ```
 
-### version 0.0.2 values
+- **v0.0.1** : v0.0.1 production environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-sxapi/values-v0.0.1.yaml))
 
 ```bash
-helm template demo-sxapi startx/demo-sxapi -v https://github.com/startxfr/helm-repository/blob/master/charts/demo-sxapi/values-v0.0.2.yaml | oc apply -f -
+helm install startx/demo-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-sxapi/values-v0.0.1.yaml
 ```
+
+- **v0.0.2** : v0.0.2 production environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-sxapi/values-v0.0.2.yaml))
+
+```bash
+helm install startx/demo-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-sxapi/values-v0.0.2.yaml
+```
+
+## History
+
+| Release | Date       | Description
+| ------- | ---------- | -----------------------------------------------------
+| 0.0.1   | 2020-10-04 | Initial commit
+| 0.1.22  | 2020-10-24 | add user support and update startx demo value example
+| 0.1.24   | 2020-10-24 | Improve documentation
