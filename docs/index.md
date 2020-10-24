@@ -1,8 +1,33 @@
-# This repository
+# Welcome to STARTX helm repository
 
-This [helm repository](https://startxfr.github.io/helm-repository/packages/index.yaml) hold various helm-chart configuring Openshift cluster components
+## Helm list
 
-## Usage
+List of helm chart availables in this repository, and sample to deploy it under your current openshift cluster (must be logged with appropriate rights).
+
+- [cluster-config](charts/cluster-config.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config))***
+- [cluster-rbac](charts/cluster-rbac.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac))***
+- [cluster-3scale](charts/cluster-3scale.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale))***
+- [demo-project](charts/demo-project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/demo-project))***
+- [demo-sxapi](charts/demo-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/demo-sxapi))***
+- [example-deployment](charts/example-deployment.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment))***
+- [example-pod](charts/example-pod.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod))***
+- [example-sxapi](charts/example-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi))***
+
+## Examples
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm install startx/cluster-config
+helm install startx/cluster-rbac
+helm install startx/cluster-3scale
+helm install startx/demo-project
+helm install startx/demo-sxapi
+helm install startx/example-deployment
+helm install startx/example-pod
+helm install startx/example-sxapi
+```
+
+## Install this repository toolkit
 
 ### 1. Requirements
 
@@ -10,15 +35,10 @@ This [helm repository](https://startxfr.github.io/helm-repository/packages/index
 
 ```bash
 yum install yq -y
-```
-
-#### 1.2. install helm
-
-```bash
 yum install helm -y
 ```
 
-#### 1.3. Beiing connected to an openshift cluster
+#### 1.2. Connect to an openshift cluster
 
 ```bash
 oc login -t <my-token> <my-openshift-api>
@@ -32,39 +52,35 @@ run locally a simulated cluster.
 #### 2.1. Install this repository
 
 ```bash
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+git clone https://startxfr.github.io/helm-repository.git
+cd helm-repository
 ```
 
-#### 2.2. List all chart in this repository
+#### 2.2. List all helm packages
 
 ```bash
-helm search repo startx
+ls charts
 ```
 
-### 3. Install chart
-
-#### 3.1. Show chart detail
+### 3. Install a helm
 
 ```bash
-helm show chart startx/cluster-config
+# oc apply -k charts/<chart>
+helm install charts/cluster-config
+helm install charts/cluster-rbac
+helm install charts/cluster-3scale
+helm install charts/demo-project
+helm install charts/demo-sxapi
+helm install charts/example-deployment
+helm install charts/example-pod
+helm install charts/example-sxapi
 ```
 
-#### 3.2. Install chart into cluster
+## Install building environment
 
-```bash
-helm install startx/cluster-config
-```
+In order to get the full developement environment, you must follow the [install build environment guide](install-build)
 
-## Chart list
+## History and releases
 
-- [cluster-config](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config) ```helm show chart startx/cluster-config```
-- [cluster-rbac](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac) ```helm show chart startx/cluster-rbac```
-
-## Release
-
-Release naming and convention is described in the [release documentation](./releases.md).
-
-### History
-
-You can get a detailed list of this helm-chart releases in the [history documentation](./history.md).
-The current release is for theses helm-charts is 0.0.5. More information are available in [version 0.0 releases history](./history.md#version-00x-chanteix).
+Latest release of this repository is v0.0.1 released at 2020-10-13 10:00:00. Read history [traceback](history) for more information
+on change and released version. Complementary information could be found in the [release convention](releases)

@@ -34,13 +34,21 @@ project:
 rbac: 
   # Enable RBAC default for this project
   enabled: true
-  # List group to create
+  # List groups to authorize on this project
   groups: 
-  # Developper group ID
-  - id: dev
-    # Developper group name
-    name: dev
-    # Developper group role in this project
+  # Example group ID
+  - id: mygroup
+    # Example group name
+    name: mygroup_example
+    # Example group role in this project
+    role: basic-user
+  # List users to authorize on this project
+  users: 
+  # Example user ID
+  - id: myuser
+    # Example user name
+    name: myuser_example
+    # Example user role in this project
     role: basic-user
 # Configure NetworkPolicy for project
 networkpolicy: 
@@ -77,24 +85,18 @@ limits:
     limits:
     - type: "Pod"
       min:
-        cpu: "10m"
-        memory: "10Mi"
+        cpu: "20m"
+        memory: "20Mi"
       max:
-        cpu: 500m
-        memory: 700Mi
+        cpu: 200m
+        memory: 256Mi
     - type: "Container"
-      default:
-        cpu: 400m
-        memory: 512Mi
-      defaultRequest:
-        cpu: 20m
-        memory: 32Mi
       min:
         cpu: "10m"
         memory: "10Mi"
       max:
-        cpu: 400m
-        memory: 512Mi
+        cpu: 100m
+        memory: 128Mi
 # Configure NetworkPolicy for project
 quotas: 
   # Enable NetworkPolicy default for this project
@@ -102,21 +104,10 @@ quotas:
   # List group to create
   rules:  |
     hard:
-      limits.cpu: "1"
-      limits.memory: "1Gi"
-      requests.cpu: "300m"
+      limits.cpu: "800m"
+      limits.memory: "1024Mi"
+      requests.cpu: "400m"
       requests.memory: "512Mi"
-      requests.storage: "0Gi"
       persistentvolumeclaims: "0"
-      ephemeral-storage: "0" 
-      openshift.io/imagestreams: "0"
-      secrets: "20"
-      configmaps: "10"
-      count/daemonsets.apps: "0"
-      count/deployments.apps: "2"
-      count/replicasets.apps: "4"
-      replicationcontrollers: "2"
-      pods: "6"
-      services: "3"
-      services.loadbalancers: "0"
-      services.nodeports: "0"
+      pods: "4"
+      services: "2"
