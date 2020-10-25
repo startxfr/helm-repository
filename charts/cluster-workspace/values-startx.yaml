@@ -6,58 +6,41 @@ context:
   environment: dev
   component: infra
   app: startx-infra
-storageClasses:
-- id: aws-generic-retain
-  name: aws-generic-retain
-  provisioner: "kubernetes.io/aws-ebs"
-  parameters: |
-    encrypted: "true"
-    type: gp2
-  reclaimPolicy: Retain
-  allowVolumeExpansion: true
-  volumeBindingMode: WaitForFirstConsumer
-- id: aws-generic-delete
-  name: aws-generic-delete
-  provisioner: "kubernetes.io/aws-ebs"
-  parameters: |
-    encrypted: "true"
-    type: gp2
-  reclaimPolicy: Delete
-  allowVolumeExpansion: true
-  volumeBindingMode: WaitForFirstConsumer
-- id: aws-fast-retain
-  name: aws-fast-retain
-  provisioner: "kubernetes.io/aws-ebs"
-  parameters: |
-    encrypted: "false"
-    type: io1
-  reclaimPolicy: Retain
-  allowVolumeExpansion: true
-  volumeBindingMode: WaitForFirstConsumer
-- id: aws-fast-delete
-  name: aws-fast-delete
-  provisioner: "kubernetes.io/aws-ebs"
-  parameters: |
-    encrypted: "false"
-    type: io1
-  reclaimPolicy: Delete
-  allowVolumeExpansion: true
-  volumeBindingMode: WaitForFirstConsumer
-- id: aws-slow-retain
-  name: aws-slow-retain
-  provisioner: "kubernetes.io/aws-ebs"
-  parameters: |
-    encrypted: "true"
-    type: sc1
-  reclaimPolicy: Retain
-  allowVolumeExpansion: true
-  volumeBindingMode: WaitForFirstConsumer
-- id: aws-slow-delete
-  name: aws-slow-delete
-  provisioner: "kubernetes.io/aws-ebs"
-  parameters: |
-    encrypted: "true"
-    type: sc1
-  reclaimPolicy: Delete
-  allowVolumeExpansion: true
-  volumeBindingMode: WaitForFirstConsumer
+codeready:
+  version: "2.3.0"
+  operator: 
+    channel: latest
+    name: codeready-workspaces
+    csv: crwoperator
+    source: 
+      name: redhat-operators
+      namespace: openshift-marketplace
+project: 
+  context: 
+    scope: startx
+    cluster: localhost
+    environment: dev
+    component: infra
+    app: startx-infra
+  project: 
+    type: namespace
+    name: openshift-workspaces
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      role: view
+    - id: devops
+      name: devops
+      role: edit
+    - id: ops
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
