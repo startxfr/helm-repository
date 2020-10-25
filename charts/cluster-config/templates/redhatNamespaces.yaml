@@ -10,5 +10,5 @@ metadata:
     {{- include "cluster-config.annotations" . | nindent 4 }}
     openshift.io/description: "Red Hat operator namespace"
     openshift.io/display-name: "RedHat operator"
-    openshift.io/requester: ${PROJECT_REQUESTING_USER}
+    helm.sh/resource-policy: keep
 {{- end -}}
