@@ -47,6 +47,20 @@ spec:
 {{- else }}
   source: redhat-operators
 {{- end }}
+{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.source }}{{- if .Values.codeready.operator.source.namespace }}
+  sourceNamespace: {{ .Values.codeready.operator.source.namespace | quote }}
+{{- else }}
+  sourceNamespace: openshift-marketplace
+{{- end }}
+{{- else }}
+  sourceNamespace: openshift-marketplace
+{{- end }}
+{{- else }}
+  sourceNamespace: openshift-marketplace
+{{- end }}
+{{- else }}
+  sourceNamespace: openshift-marketplace
+{{- end }}
 {{- if .Values.codeready }}{{- if .Values.codeready.version }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.csv }}
   startingCSV: "{{ .Values.codeready.operator.csv }}.v{{ .Values.codeready.version }}"
 {{- else }}
