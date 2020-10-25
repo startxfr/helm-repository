@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-clusterversion-{{- include "startx.appVersion" . -}}"
   annotations:
     {{- include "cluster-config.annotations" . | nindent 4 }}
+    helm.sh/resource-policy: keep
 spec:
   channel: "{{- default "candidate" .Values.clusterversion.channel -}}-{{- default "4.5" .Values.clusterversion.version -}}"
 {{- end -}}
