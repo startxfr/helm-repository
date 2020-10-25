@@ -1,0 +1,15 @@
+---
+kind: OperatorGroup
+apiVersion: operators.coreos.com/v1
+metadata:
+  name: {{ .Values.project.project.name }}
+  namespace: {{ .Values.project.project.name }}
+  labels:
+    {{- include "cluster-pipeline.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.project.project.name }}-operatorgroup"
+  annotations:
+    {{- include "cluster-pipeline.annotations" . | nindent 4 }}
+    olm.providedAPIs: CheCluster.v1.org.eclipse.che
+spec:
+  targetNamespaces:
+    - {{ .Values.project.project.name }}

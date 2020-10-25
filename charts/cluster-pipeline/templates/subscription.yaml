@@ -1,0 +1,79 @@
+{{- if .Values.codeready }}{{- if .Values.codeready.enabled }}
+---
+kind: Subscription
+apiVersion: operators.coreos.com/v1alpha1
+metadata:
+  name: codeready-workspaces
+  namespace: {{ .Values.project.project.name }}
+  labels:
+    {{- include "cluster-pipeline.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "codeready-workspaces-subscription"
+  annotations:
+    {{- include "cluster-pipeline.annotations" . | nindent 4 }}
+spec:
+{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.channel }}
+  channel: {{ .Values.codeready.operator.channel | quote }}
+{{- else }}
+  channel: latest
+{{- end }}
+{{- else }}
+  channel: latest
+{{- end }}
+{{- else }}
+  channel: latest
+{{- end }}
+  installPlanApproval: Automatic
+{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.name }}
+  name: {{ .Values.codeready.operator.name | quote }}
+{{- else }}
+  name: codeready-workspaces
+{{- end }}
+{{- else }}
+  name: codeready-workspaces
+{{- end }}
+{{- else }}
+  name: codeready-workspaces
+{{- end }}
+{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.source }}{{- if .Values.codeready.operator.source.name }}
+  source: {{ .Values.codeready.operator.source.name | quote }}
+{{- else }}
+  source: redhat-operators
+{{- end }}
+{{- else }}
+  source: redhat-operators
+{{- end }}
+{{- else }}
+  source: redhat-operators
+{{- end }}
+{{- else }}
+  source: redhat-operators
+{{- end }}
+{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.source }}{{- if .Values.codeready.operator.source.namespace }}
+  sourceNamespace: {{ .Values.codeready.operator.source.namespace | quote }}
+{{- else }}
+  sourceNamespace: openshift-marketplace
+{{- end }}
+{{- else }}
+  sourceNamespace: openshift-marketplace
+{{- end }}
+{{- else }}
+  sourceNamespace: openshift-marketplace
+{{- end }}
+{{- else }}
+  sourceNamespace: openshift-marketplace
+{{- end }}
+{{- if .Values.codeready }}{{- if .Values.codeready.version }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.csv }}
+  startingCSV: "{{ .Values.codeready.operator.csv }}.v{{ .Values.codeready.version }}"
+{{- else }}
+  startingCSV: "crwoperator.v{{ .Values.codeready.version }}"
+{{- end }}
+{{- else }}
+  startingCSV: "crwoperator.v{{ .Values.codeready.version }}"
+{{- end }}
+{{- else }}
+  startingCSV: "crwoperator.v2.3.0"
+{{- end }}
+{{- else }}
+  startingCSV: "crwoperator.v2.3.0"
+{{- end }}
+{{- end }}{{- end }}

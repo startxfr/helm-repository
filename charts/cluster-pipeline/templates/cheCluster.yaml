@@ -1,0 +1,45 @@
+{{- if .Values.cheCluster }}{{- if .Values.cheCluster.enabled }}
+---
+apiVersion: org.eclipse.che/v1
+kind: CheCluster
+metadata:
+  name: {{ .Values.cheCluster.name | default "codeready-workspaces" | quote }}
+  namespace: {{ .Values.project.project.name }}
+  labels:
+    {{- include "cluster-pipeline.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "codeready-workspaces-checluster"
+  annotations:
+    {{- include "cluster-pipeline.annotations" . | nindent 4 }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: hook-failed
+spec:
+  auth:
+    externalIdentityProvider: false
+    openShiftoAuth: true
+    updateAdminPassword: false
+  database:
+    chePostgresDb: dbche
+    chePostgresHostName: postgres
+    chePostgresPort: '5432'
+    externalDb: false
+  k8s: {}
+  metrics:
+    enable: true
+  server:
+    cheLogLevel: INFO
+    externalDevfileRegistry: false
+    selfSignedCert: false
+    cheDebug: 'false'
+    tlsSupport: true
+    allowUserDefinedWorkspaceNamespaces: false
+    externalPluginRegistry: false
+    gitSelfSignedCert: false
+    cheFlavor: codeready
+  storage:
+    postgresPVCStorageClassName: {{ .Values.cheCluster.storageClass | default "gp2" | quote }}
+    preCreateSubPaths: true
+    pvcClaimSize: {{ .Values.cheCluster.storageSize | default "1Gi" | quote }}
+    pvcStrategy: common
+    workspacePVCStorageClassName: {{ .Values.cheCluster.storageClass | default "gp2" | quote }}
+{{- end }}{{- end }}
