@@ -91,3 +91,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.0  | 2020-10-25 | Improve cluster-workspace options
 | 0.2.11  | 2020-10-25 | publish stable update for the full repository
 | 0.2.12  | 2020-10-25 | Improve cluster-workspace options
+| 0.2.13  | 2020-10-25 | Improve cluster-workspace options
