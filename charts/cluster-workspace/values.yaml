@@ -1,0 +1,60 @@
+# Default values for cluster-workspace.
+
+# Application deployment context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: startx-infra
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Configuration of the codeready workspace
+codeready:
+  # name of the operator
+  version: "2.3.0"
+  # Configuration of the CRW operator
+  operator: 
+    # The CRW channel to use
+    channel: latest
+    # name of the operator
+    name: codeready-workspaces
+    # name of the CSV
+    csv: crwoperator
+    # source of the operator
+    source: 
+      # name of the operator source
+      name: redhat-operators
+      # name of the operator
+      namespace: openshift-marketplace
+
+# Configuration of the project namespace
+project: 
+  context: 
+    scope: default
+    cluster: localhost
+    environment: dev
+    component: infra
+    app: startx-infra
+  project: 
+    type: namespace
+    name: openshift-workspaces
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      role: view
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false

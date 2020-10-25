@@ -1,0 +1,46 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-infra
+codeready:
+  version: "2.3.0"
+  operator: 
+    channel: latest
+    name: codeready-workspaces
+    csv: crwoperator
+    source: 
+      name: redhat-operators
+      namespace: openshift-marketplace
+project: 
+  context: 
+    scope: startx
+    cluster: localhost
+    environment: dev
+    component: infra
+    app: startx-infra
+  project: 
+    type: namespace
+    name: openshift-workspaces
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      role: view
+    - id: devops
+      name: devops
+      role: edit
+    - id: ops
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
