@@ -1,3 +1,4 @@
+{{- if .Values.codeready }}{{- if .Values.codeready.enabled }}
 ---
 kind: Subscription
 apiVersion: operators.coreos.com/v1alpha1
@@ -75,3 +76,4 @@ spec:
 {{- else }}
   startingCSV: "crwoperator.v2.3.0"
 {{- end }}
+{{- end }}{{- end }}
