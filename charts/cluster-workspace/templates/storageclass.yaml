@@ -1,0 +1,29 @@
+{{- $root := . -}}
+{{ range .Values.storageClasses }}
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: "{{ .id }}"
+  labels:
+    {{- include "cluster-workspace.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .name }}-storageclass"
+  annotations:
+    {{- include "cluster-workspace.annotations" $root | nindent 4 }}
+provisioner: {{ .provisioner | default "kubernetes.io/aws-ebs" | quote }}
+{{- if .parameters }}
+parameters:
+  {{- .parameters | nindent 2 }}
+{{- else }}
+parameters: {}
+{{- end -}}
+{{- if .reclaimPolicy }}
+reclaimPolicy: {{ .reclaimPolicy | quote }}
+{{- end -}}
+{{- if .allowVolumeExpansion }}
+allowVolumeExpansion: {{ .allowVolumeExpansion }}
+{{- end -}}
+{{- if .volumeBindingMode }}
+volumeBindingMode: {{ .volumeBindingMode | quote }}
+{{- end -}}
+{{ end }}
