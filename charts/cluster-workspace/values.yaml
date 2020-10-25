@@ -17,6 +17,8 @@ context:
 
 # Configuration of the codeready workspace
 codeready:
+  # enable deployment of the codeready operator
+  enabled: true
   # name of the operator
   version: "2.3.0"
   # Configuration of the CRW operator
@@ -33,6 +35,17 @@ codeready:
       name: redhat-operators
       # name of the operator
       namespace: openshift-marketplace
+
+# Configuration of the codeready workspace
+cheCluster:
+  # enable deployment of the cheCluster
+  enabled: true
+  # name of the che cluster
+  name: "codeready-workspaces"
+  # Storage class to use for persistance
+  storageClass: "gp2"
+  # Size of the PVC used for storage persistance
+  storageSize: "1Gi"
 
 # Configuration of the project namespace
 project: 
