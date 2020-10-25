@@ -15,18 +15,20 @@ context:
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# Create groups if enabled
-groups:
-  # Enable the cluster groups creation
-  enabled: true
-  # List group to create
-  list: 
-  # Developper ID
-  - id: mygroup
-    # Developper name
-    name: mygroup_example
-    # Developper cluster role
-    clusterRole: basic-user
-    # user enrolled in this group
-    users: 
-    - myuser_example
+# List of storageClass to create
+storageClasses:
+  # Storage class ID to use
+- id: example-gp2
+  # Storage class name to use
+  name: example-gp2
+  # Provisionner for this storageClass
+  provisioner: "kubernetes.io/aws-ebs"
+  # Specific parameters according to the provisionner
+  parameters: |
+    encrypted: "true"
+  # Reclaim policy to use
+  reclaimPolicy: Delete
+  # Enable volume expansion for this storageClass
+  allowVolumeExpansion: true
+  # Binding mode strategy for this storageClass
+  volumeBindingMode: WaitForFirstConsumer
