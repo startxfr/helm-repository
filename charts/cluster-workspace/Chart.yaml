@@ -2,12 +2,18 @@ apiVersion: v2
 # Name of this Helm chart
 name: cluster-workspace
 # Description of this Helm chart
-description: Helm chart used to configure various storageClass
+description: Helm chart used to configure Code Reday Workspace at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 0.2.11
+version: 0.2.12
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 0.2.11
+appVersion: 0.2.12
 # Icon of this helm-chart
 icon: https://virtualmin.com/images/gears.svg
+
+dependencies:
+  - name: demo-project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.2.7
+    alias: project
