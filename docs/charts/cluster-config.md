@@ -76,17 +76,12 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.0.1   | 2020-10-01 | Initial commit
+| 0.0.1   | 2020-09-14 | Initial commit for this repository
 | 0.1.0   | 2020-10-07 | Release 0.1 stable release for all charts
 | 0.1.16  | 2020-10-23 | Improve cluster-config options
-| 0.2.0   | 2020-10-24 | Stable startx helm base config
-| 0.2.1  | 2020-10-24 | publish stable update for the full repository
-| 0.2.2  | 2020-10-24 | Repository update with all chart release
-| 0.2.5  | 2020-10-24 | Unstable repository global update
-| 0.2.7  | 2020-10-24 | Unstable repository release
-| 0.2.9  | 2020-10-24 | Update demo charts
-| 0.3.0  | 2020-10-25 | Improve cluster-config options
+| 0.2.0   | 2020-10-24 | Release 0.2 stable release for all charts
 | 0.2.11  | 2020-10-25 | publish stable update for the full repository
 | 0.2.12  | 2020-10-26 | Improve cluster-config options
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
+| 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
