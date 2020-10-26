@@ -322,7 +322,7 @@ function routerChartPublish {
         helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
         echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
         git add $PROJECT_PATH/docs/packages &>/dev/null
-        git commit -m "[docs] store chart \e[1m$chart_name v$current_release\e[0m package added in \e[1mindex.yaml\e[0m" $PROJECT_PATH/docs/packages &>/dev/null
+        git commit -m "[docs] store chart $chart_name v$current_release package added to repository index index.yaml" $PROJECT_PATH/docs/packages &>/dev/null
         git push origin $BRANCH_NAME
     else
         echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
