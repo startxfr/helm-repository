@@ -80,3 +80,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.2.13  | 2020-10-25 | Improve cluster-pipeline options
 | 0.2.14  | 2020-10-26 | Improve cluster-pipeline options
 | 0.2.15  | 2020-10-26 | Improve cluster-pipeline options
+| 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
