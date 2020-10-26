@@ -189,6 +189,7 @@ function routerChartCreate {
     local template_name=_sample_
     local template_dir=$PROJECT_CHARTPATH/$chart_template
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    local next_date="$(date +%Y-%m-%d)"
     if [[ -r $chart_dir ]]; then
         echo -e "\e[32mCreate\e[0m \e[1m\e[31mERROR\e[0m \e[1m$chart_name\e[0m helm chart \e[1malready exist\e[0m in $PROJECT_CHARTPATH"
         exit
@@ -203,8 +204,11 @@ function routerChartCreate {
     sed -i "s/$template_name/$chart_name/g" $(find $chart_dir -type f)
     rm $chart_dir/templates/$SHARED_TEMPLATE_NAME &>/dev/null
     ln -P $PROJECT_PATH/$SHARED_TEMPLATE $chart_dir/templates/$SHARED_TEMPLATE_NAME &>/dev/null
+    local chart_release=$(cat $chart_dir/Chart.yaml | yq -r .version)
+    local message="Create chart $chart_name from $template_name"
+    echo "| $chart_release  | $next_date | $message" >> $chart_dir/README.md
     git add $chart_dir &>/dev/null
-    git commit -m "[chart/$chart_name] Create from $template_name" $chart_dir &>/dev/null
+    git commit -m "[chart/$chart_name] $message" $chart_dir &>/dev/null
 }
 
 # router for chart test sub-command
