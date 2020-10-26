@@ -91,3 +91,4 @@ helm install startx/cluster-storage -f https://raw.githubusercontent.com/startxf
 | 0.3.0  | 2020-10-25 | Improve cluster-storage options
 | 0.2.11  | 2020-10-25 | publish stable update for the full repository
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
+| 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
