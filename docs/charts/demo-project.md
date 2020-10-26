@@ -103,3 +103,4 @@ helm install startx/demo-project -f https://raw.githubusercontent.com/startxfr/h
 | 0.2.8  | 2020-10-24 | Improve demo-project options
 | 0.2.9  | 2020-10-24 | Update demo charts
 | 0.2.11  | 2020-10-25 | publish stable update for the full repository
+| 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
