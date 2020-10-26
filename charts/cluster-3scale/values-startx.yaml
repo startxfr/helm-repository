@@ -6,23 +6,6 @@ context:
   environment: dev
   component: infra
   app: startx-infra
-project:
-  name: startx-3scale
-  quotas: 
-    enabled: true
-  limits: 
-    enabled: true
-  networkPolicy: 
-    enabled: true
-  rbac:
-    enabled: true
-    groups: 
-    - name: dev
-      clusterRole: basic-user
-    - name: devops
-      clusterRole: admin
-    - name: ops
-      clusterRole: admin
 operator:
   enabled: true
   namespace: openshift-operators
@@ -36,3 +19,110 @@ rhn:
   enabled: true
   user: startx_rhnuser
   pwd: startx_rhnpwd
+project: 
+  context: 
+    scope: default
+    cluster: localhost
+    environment: dev
+    component: infra
+    app: startx-infra
+  project: 
+    type: project
+    name: startx-3scale
+    display_name: STARTX Infra - 3SCALE
+    description: STARTX 3Scale enterprise api-management & control plane
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      clusterRole: basic-user
+    - id: devops
+      name: devops
+      clusterRole: admin
+    - id: ops
+      name: ops
+      clusterRole: admin
+  networkpolicy: 
+    enabled: true
+    rules: 
+    - id: allow-from-openshift-ingress
+      spec: |
+        podSelector:
+          matchLabels:
+            app: 3scale
+        ingress:
+          - from:
+              - namespaceSelector: {}
+  limits: 
+    enabled: true
+    rules:  |
+      limits:
+        - type: "Pod"
+          min:
+            cpu: 50m
+            memory: 32Mi
+          max:
+            cpu: "10"
+            memory: 34Gi
+        - type: "Container"
+          default:
+            cpu: 400m
+            memory: 512Mi
+          defaultRequest:
+            cpu: 100m
+            memory: 128Mi
+          min:
+            cpu: 50m
+            memory: 32Mi
+          max:
+            cpu: "10"
+            memory: 32Gi
+  quotas: 
+    enabled: true
+    rules:  |
+      hard:
+        limits.cpu: "25"
+        limits.memory: "120Gi"
+        requests.cpu: "6"
+        requests.memory: "10000Mi"
+        requests.storage: "30Gi"
+        persistentvolumeclaims: "10"
+        ephemeral-storage: "0" 
+        gp2.storageclass.storage.k8s.io/requests.storage: "20Gi"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "10"
+        aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "2Gi"
+        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        pods: "25"
+        services: "20"
+        services.loadbalancers: "0"
+        services.nodeports: "0"
+        secrets: "50"
+        configmaps: "16"
+        replicationcontrollers: "30"
+        openshift.io/imagestreams: "25"
+        count/daemonsets.apps: "0"
+        count/replicasets.apps: "6"
+        count/deployments.apps: "2"

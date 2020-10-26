@@ -11,7 +11,7 @@ Cluster configuration is deployed.
   version     : {{ include "startx.appVersion" . }}
 
 -- Project Configuration -----------
-project : {{ .Values.project.name }}
+project : {{ .Values.project.project.name }}
 {{ if .Values.project.quotas.enabled }}
 quotas  : enabled
 {{ else }}
@@ -22,7 +22,7 @@ limits  : enabled
 {{ else }}
 limits  : disabled
 {{ end }}
-{{ if .Values.project.networkPolicy.enabled }}
+{{ if .Values.project.networkpolicy.enabled }}
 networkPolicy  : enabled
 {{ else }}
 networkPolicy  : disabled
