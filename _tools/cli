@@ -139,7 +139,7 @@ function routerRelease {
     git add $PROJECT_PATH &>/dev/null
     git commit -m "[docs] update repository content to $next_release" $PROJECT_PATH &>/dev/null
     git checkout $branch_origin &>/dev/null
-    git merge $branch_current --commit
+    git merge $branch_current --commit --no-edit
     echo -e "\e[36mRelease\e[0m Jump into \e[1m$current_release\e[0m"
     git checkout $current_release &>/dev/null
     echo -e "\e[36mRelease\e[0m Merge \e[1m$branch_origin\e[0m update to \e[1m$current_release\e[0m"
@@ -241,6 +241,8 @@ function routerChartPackage {
         echo -e "\e[34mPackage\e[0m \e[1m$chart_name commit change\e[0m to git repository"
         git add $chart_name/* &>/dev/null
         git commit -m "[chart/$chart_name] package version $current_release" $chart_name &>/dev/null
+        echo -e "\e[34mPackage\e[0m \e[1mdownload dendencies\e[0m for chart \e[1m$chart_name\e[0m in $chart_dir/charts"
+        helm dependency update $chart_dir
         echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH"
         helm package $chart_name
         cd - &>/dev/null
@@ -272,14 +274,14 @@ function routerChartRelease {
         if [[ "auto" == "$auto_feature" || "-a" == "$auto_feature" ]]; then
             echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m auto-version $next_release"
         else
-            if [[ "" != "$force_version" ]]; then
+            if [[ "" == "$force_version" ]]; then
                 echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Set $chart_name next version [$next_release] : "
                 read nextRel
                 if [[ "$nextRel" != "" ]]; then
                     next_release=$nextRel
                 fi
             fi
-            if [[ "" != "$force_description" ]]; then
+            if [[ "" == "$force_description" ]]; then
                 echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Set $chart_name release description [$next_description] : "
                 read nextDesc
                 if [[ "$nextDesc" != "" ]]; then
@@ -293,14 +295,14 @@ function routerChartRelease {
         git add $chart_dir
         cp $chart_dir/README.md $PROJECT_PATH/docs/charts/${chart_name}.md &>/dev/null
         git add $PROJECT_PATH/docs/charts/${chart_name}.md
-        git commit -m "[chart/$chart_name] Upgrade release number, from $current_release to $next_release : $next_description" $chart_dir/Chart.yaml &>/dev/null
+        git commit -m "[chart/$chart_name] Upgrade release number, from $current_release to $next_release : $next_description" $chart_dir &>/dev/null
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m version $next_release"
         routerChartPackage $chart_name
         echo -e "\e[35mRelease\e[0m \e[1mmove $chart_name-$next_release.tgz\e[0m to \e[1m$REPO_PACKAGE_DIR\e[0m"
         mv $PROJECT_CHARTPATH/$chart_name-$next_release.tgz $PROJECT_PATH/$REPO_PACKAGE_DIR/$chart_name-$next_release.tgz
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name record v$next_release package\e[0m into git repository"
         git add $PROJECT_PATH/$REPO_PACKAGE_DIR/$chart_name-$next_release.tgz $PROJECT_PATH/docs/charts/${chart_name}.md &>/dev/null
-        git commit -m "[chart/$chart_name] release package for version $next_release" $PROJECT_PATH/$REPO_PACKAGE_DIR &>/dev/null
+        git commit -m "[chart/$chart_name] release package for version $next_release" $PROJECT_PATH/$REPO_PACKAGE_DIR $PROJECT_PATH/docs/charts &>/dev/null
     else
         echo -e "\e[35mRelease\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
         routerList
@@ -314,12 +316,13 @@ function routerChartPublish {
     local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
     local current_release=$(chartReadVersion $chart_name)
     if [[ -r $chart_dir ]]; then
+        routerChartRelease $chart_name
         echo -e "\e[36mPublish\e[0m \e[1m$chart_name\e[0m helm chart"
         echo -e "\e[36mPublish\e[0m Generate index for $repo_url"
         helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
         echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
         git add $PROJECT_PATH/docs/packages &>/dev/null
-        git commit -m "[docs] store chart $chart_name v$current_release package in docs" $PROJECT_PATH/docs/packages &>/dev/null
+        git commit -m "[docs] store chart \e[1m$chart_name v$current_release\e[0m package added in \e[1mindex.yaml\e[0m" $PROJECT_PATH/docs/packages &>/dev/null
         git push origin $BRANCH_NAME
     else
         echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
