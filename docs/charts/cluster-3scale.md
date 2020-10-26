@@ -67,22 +67,11 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.0.1   | 2020-10-01 | Initial commit
-| 0.1.0   | 2020-10-07 | Release 0.1 stable release for all charts
-| 0.1.21  | 2020-10-22 | add user support and update startx example value example
-| 0.1.22  | 2020-10-23 | Improve documentation
-| 0.2.0   | 2020-10-24 | Stable startx helm base config
-| 0.2.1  | 2020-10-24 | publish stable update for the full repository
-| 0.2.2  | 2020-10-24 | Repository update with all chart release
-| 0.2.5  | 2020-10-24 | Unstable repository global update
-| 0.2.7  | 2020-10-24 | Unstable repository release
-| 0.2.9  | 2020-10-24 | Update demo charts
-| 0.2.11  | 2020-10-25 | publish stable update for the full repository
-| 0.2.12  | 2020-10-26 | Use startx/demo-project helm chart dependency for project creation
-| 0.2.13  | 2020-10-26 | Improve cluster-3scale options
-| 0.2.14  | 2020-10-26 | Improve cluster-3scale options
-| 0.2.15  | 2020-10-26 | Improve cluster-3scale options
-| 0.2.16  | 2020-10-26 | Improve cluster-3scale options
-| 0.2.17  | 2020-10-26 | Improve cluster-3scale options
+| 0.0.1   | 2020-09-14 | Initial commit for this repository
+| 0.2.12  | 2020-10-26 | Create cluster-3scale form startx/demo-project helm chart
+| 0.2.13  | 2020-10-26 | Add startx/demo-project as dependency for cluster-3scale chart
+| 0.2.15  | 2020-10-26 | Improve cluster-3scale options for project
+| 0.2.17  | 2020-10-26 | Improve cluster-3scale options for global config
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
+| 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
