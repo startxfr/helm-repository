@@ -1,6 +1,6 @@
-# STARTX helm : cluster-workspace
+# STARTX helm : cluster-pipeline
 
-This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
+This helm chart is used to configure tekton via it's operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
 state orchestrated by gitops tools like ArgoCD.
 
@@ -26,57 +26,39 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ### Get information about this chart
 
 ```bash
-helm show chart startx/cluster-workspace
+helm show chart startx/cluster-pipeline
 ```
 
 ### Install this chart
 
 ```bash
-helm install startx/cluster-workspace
+helm install startx/cluster-pipeline
 ```
 
 ## Default values
 
-Deployment of codeready-workspace environment with :
+Deployment of tekton :
 
-- 1 **project** named **openshift-workspaces** with the following characteristics
-  - **rbac** set to **view** for group **dev**
-  - no limitRange
-  - no Quotas
-  - no NetworkPolicy
-- 1 **operatorGroup** named **openshift-workspaces** to enable codeready operator
 - 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
   - operator name is **codeready-workspaces**
   - operator version is **2.3.0**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **codeready-workspaces** with the following characteristics
-  - storage class **gp2**
-  - storage size defined to **1Gi**
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-workspace
+helm install startx/cluster-pipeline
 ```
 
 ## Others values availables
 
-- **startx** : Startx codeready-workspace configuration for Startx clusters (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml)) deploying the following environment
-  - 1 **project** named **openshift-workspaces** with the following characteristics
-    - **rbac** set to **view** for group **dev**
-    - no limitRange
-    - no Quotas
-    - no NetworkPolicy
-  - 1 **operatorGroup** named **openshift-workspaces** to enable codeready operator
+- **startx** : Startx tekton configuration for Startx clusters (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml)) deploying the following environment
   - 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
     - operator name is **codeready-workspaces**
     - operator version is **2.3.0**
     - operator catalog is **redhat-operators** located in **openshift-marketplace**
-  - 1 **cheCluster** named **codeready-workspaces** with the following characteristics
-    - storage class **aws-generic-retain**
-    - storage size defined to **1Gi**
 
 ```bash
-helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
+helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml
 ```
 
 ## History
@@ -92,9 +74,9 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.2.5   | 2020-10-24 | Unstable repository global update
 | 0.2.7   | 2020-10-24 | Unstable repository release
 | 0.2.9   | 2020-10-24 | Update demo charts
-| 0.3.0  | 2020-10-25 | Improve cluster-workspace options
+| 0.3.0  | 2020-10-25 | Improve cluster-pipeline options
 | 0.2.11  | 2020-10-25 | publish stable update for the full repository
-| 0.2.12  | 2020-10-25 | Improve cluster-workspace options
-| 0.2.13  | 2020-10-25 | Improve cluster-workspace options
-| 0.2.14  | 2020-10-26 | Improve cluster-workspace options
-| 0.2.15  | 2020-10-26 | Improve cluster-workspace options
+| 0.2.12  | 2020-10-25 | Improve cluster-pipeline options
+| 0.2.13  | 2020-10-25 | Improve cluster-pipeline options
+| 0.2.14  | 2020-10-26 | Improve cluster-pipeline options
+| 0.2.15  | 2020-10-26 | Improve cluster-pipeline options

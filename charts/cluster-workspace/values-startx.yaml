@@ -7,6 +7,7 @@ context:
   component: infra
   app: startx-infra
 codeready:
+  enabled: true
   version: "2.3.0"
   operator: 
     channel: latest
@@ -15,6 +16,11 @@ codeready:
     source: 
       name: redhat-operators
       namespace: openshift-marketplace
+cheCluster:
+  enabled: true
+  name: "codeready-workspaces"
+  storageClass: "aws-generic-retain"
+  storageSize: "1Gi"
 project: 
   context: 
     scope: startx
