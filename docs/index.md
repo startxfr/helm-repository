@@ -4,14 +4,16 @@
 
 List of helm chart availables in this repository, and sample to deploy it under your current openshift cluster (must be logged with appropriate rights).
 
-- [cluster-config](charts/cluster-config.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config))***
-- [cluster-rbac](charts/cluster-rbac.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac))***
-- [cluster-3scale](charts/cluster-3scale.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale))***
-- [demo-project](charts/demo-project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/demo-project))***
-- [demo-sxapi](charts/demo-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/demo-sxapi))***
-- [example-deployment](charts/example-deployment.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment))***
-- [example-pod](charts/example-pod.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod))***
-- [example-sxapi](charts/example-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi))***
+- [cluster-config](charts/cluster-config.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config))*** for global configuration of an openshift cluster
+- [cluster-rbac](charts/cluster-rbac.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac))*** to configure various RBAC aspects
+- [cluster-3scale](charts/cluster-3scale.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale))*** to deploy a 3Scale infrastructure at a cluster level
+- [cluster-pipeline](charts/cluster-pipeline.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline))*** to enable tekton pipeline at a cluster level
+- [cluster-workspace](charts/cluster-workspace.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace))*** to enable codeready workspace at a cluster level
+- [demo-project](charts/demo-project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/demo-project))*** to create a project with limits, quotas, networkpolicy and rbac set
+- [demo-sxapi](charts/demo-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/demo-sxapi))*** to deploy a small micro-service endpoint
+- [example-deployment](charts/example-deployment.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment))*** is a example on how to deploy simple applications using helm and a deployment
+- [example-pod](charts/example-pod.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod))*** is a example on how to deploy simple applications using helm and a pod
+- [example-sxapi](charts/example-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi))*** is a example on how to deploy simple micro-applications using helm and an sxapi toolkit
 
 ## Examples
 
@@ -20,6 +22,8 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 helm install startx/cluster-config
 helm install startx/cluster-rbac
 helm install startx/cluster-3scale
+helm install startx/cluster-pipeline
+helm install startx/cluster-workspace
 helm install startx/demo-project
 helm install startx/demo-sxapi
 helm install startx/example-deployment
@@ -69,6 +73,8 @@ ls charts
 helm install charts/cluster-config
 helm install charts/cluster-rbac
 helm install charts/cluster-3scale
+helm install charts/cluster-pipeline
+helm install charts/cluster-workspace
 helm install charts/demo-project
 helm install charts/demo-sxapi
 helm install charts/example-deployment
@@ -82,5 +88,4 @@ In order to get the full developement environment, you must follow the [install 
 
 ## History and releases
 
-Latest release of this repository is v0.0.1 released at 2020-10-13 10:00:00. Read history [traceback](history) for more information
-on change and released version. Complementary information could be found in the [release convention](releases)
+Read history [traceback](history) for more information on change and released version. Complementary information could be found in the [release convention](releases)
