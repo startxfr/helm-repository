@@ -1,6 +1,6 @@
 # STARTX helm : cluster-workspace
 
-This helm chart is used to create a list of storageClass available for the cluster.
+This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
 state orchestrated by gitops tools like ArgoCD.
 
@@ -37,14 +37,21 @@ helm install startx/cluster-workspace
 
 ## Default values
 
-Deployment of storage classes :
+Deployment of codeready-workspace environment with :
 
-- 1 **storageClass** named **example-gp2** with the following characteristics
-  - **provisioner** set to **kubernetes.io/aws-ebs**
-  - provisioner **encryption** specific parameters set to **true**
-  - storage class **reclaim policy** set to **Delete**
-  - storage class **volume expansion enabled**
-  - storage class **volume binding mode** set to **WaitForFirstConsumer**
+- 1 **project** named **openshift-workspaces** with the following characteristics
+  - **rbac** set to **view** for group **dev**
+  - no limitRange
+  - no Quotas
+  - no NetworkPolicy
+- 1 **operatorGroup** named **openshift-workspaces** to enable codeready operator
+- 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
+  - operator name is **codeready-workspaces**
+  - operator version is **2.3.0**
+  - operator catalog is **redhat-operators** located in **openshift-marketplace**
+- 1 **cheCluster** named **codeready-workspaces** with the following characteristics
+  - storage class **gp2**
+  - storage size defined to **1Gi**
 
 ```bash
 # base configuration running default configuration
@@ -53,26 +60,23 @@ helm install startx/cluster-workspace
 
 ## Others values availables
 
-- **startx** : Startx storage classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml)) creating the following storage classes
-  - **aws-generic-retain** (AWS EBS gp2 level with encryption and expansion enabled with retain policy)
-  - **aws-generic-delete** (AWS EBS gp2 level with encryption and expansion enabled with delete policy)
-  - **aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
-  - **aws-fast-delete** (AWS EBS io1 level without encryption and expansion enabled with delete policy)
-  - **aws-slow-retain** (AWS EBS sc1 level with encryption and expansion enabled with retain policy)
-  - **aws-slow-delete** (AWS EBS sc1 level with encryption and expansion enabled with delete policy)
+- **startx** : Startx codeready-workspace configuration for Startx clusters (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml)) deploying the following environment
+  - 1 **project** named **openshift-workspaces** with the following characteristics
+    - **rbac** set to **view** for group **dev**
+    - no limitRange
+    - no Quotas
+    - no NetworkPolicy
+  - 1 **operatorGroup** named **openshift-workspaces** to enable codeready operator
+  - 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
+    - operator name is **codeready-workspaces**
+    - operator version is **2.3.0**
+    - operator catalog is **redhat-operators** located in **openshift-marketplace**
+  - 1 **cheCluster** named **codeready-workspaces** with the following characteristics
+    - storage class **aws-generic-retain**
+    - storage size defined to **1Gi**
 
 ```bash
 helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
-```
-
-- **startx-ocs** : Startx storage classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx-ocs.yaml)) creating the following storage classes
-  - **ocs-generic-retain** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with retain policy and expansion enabled)
-  - **ocs-generic-delete** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with delete policy and expansion enabled)
-  - **ocs-fs-retain** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with retain policy)
-  - **ocs-fs-delete** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with delete policy)
-
-```bash
-helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx-ocs.yaml
 ```
 
 ## History
@@ -93,3 +97,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.2.12  | 2020-10-25 | Improve cluster-workspace options
 | 0.2.13  | 2020-10-25 | Improve cluster-workspace options
 | 0.2.14  | 2020-10-26 | Improve cluster-workspace options
+| 0.2.15  | 2020-10-26 | Improve cluster-workspace options
