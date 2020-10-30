@@ -1,0 +1,122 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: demo
+  component: helm
+  app: demo-helm
+  version: "0.0.1"
+operator: 
+  type: operator
+  name: demo-helm
+  display_name: Demo HELM
+  description: Various deployment examples deployed via an helm chart
+rbac: 
+  enabled: true
+  groups: 
+  - id: dev
+    name: dev
+    role: basic-user
+  - id: devops
+    name: devops
+    role: edit
+  - id: ops
+    name: ops
+    role: admin
+  users: 
+  - id: argocd-controller-sa
+    name: system:serviceaccount:startx-argocd:argocd-application-controller
+    role: edit
+networkpolicy: 
+  enabled: true
+  rules: 
+  - id: allow-from-openshift-ingress
+    spec: |
+      ingress: 
+      - from: 
+        - namespaceSelector: 
+            matchLabels: 
+              network.openshift.io/policy-group: ingress
+      podSelector: {}
+      policyTypes:
+      - Ingress
+  - id: allow-from-same-namespace
+    spec: |
+      podSelector: {}
+      ingress: 
+      - from: 
+        - podSelector: {}
+limits: 
+  enabled: true
+  rules:  |
+    limits:
+    - type: "Pod"
+      min:
+        cpu: "10m"
+        memory: "10Mi"
+      max:
+        cpu: 500m
+        memory: 700Mi
+    - type: "Container"
+      default:
+        cpu: 400m
+        memory: 512Mi
+      defaultRequest:
+        cpu: 20m
+        memory: 32Mi
+      min:
+        cpu: "10m"
+        memory: "10Mi"
+      max:
+        cpu: 400m
+        memory: 512Mi
+quotas: 
+  enabled: true
+  rules:  |
+    hard:
+      limits.cpu: "1500m"
+      limits.memory: "1800Mi"
+      requests.cpu: "300m"
+      requests.memory: "900Mi"
+      requests.storage: "8Gi"
+      persistentvolumeclaims: "1"
+      ephemeral-storage: "0" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "8Gi"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "1"
+      aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      pods: "10"
+      services.loadbalancers: "0"
+      services.nodeports: "0"
+      secrets: "50"
+      configmaps: "25"
+      replicationcontrollers: "5"
+      openshift.io/imagestreams: "5"
+      count/daemonsets.apps: "0"
+      count/replicasets.apps: "10"
+      count/deployments.apps: "5"
+      services: "5"

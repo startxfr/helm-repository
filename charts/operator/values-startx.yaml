@@ -1,0 +1,98 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: helm
+  app: demo-helm
+  version: "0.0.1"
+operator: 
+  type: operator
+  name: startx-operator
+  display_name: Startx default operator
+  description: This is adefault startx operator created via Helm
+rbac: 
+  enabled: true
+  groups: 
+  - id: dev
+    name: dev
+    role: basic-user
+  - id: devops
+    name: ops
+    role: edit
+  - id: ops
+    name: ops
+    role: admin
+  users: 
+  - id: dev
+    name: dev
+    role: basic-user
+networkpolicy: 
+  enabled: true
+  rules: 
+  - id: allow-from-openshift-ingress
+    spec: |
+      ingress:
+      - from:
+          - namespaceSelector:
+              matchLabels:
+              network.openshift.io/policy-group: ingress
+      podSelector: {}
+      policyTypes:
+      - Ingress
+  - id: allow-from-same-namespace
+    spec: |
+      podSelector:
+      ingress:
+      - from:
+        - podSelector: {}
+limits: 
+  enabled: true
+  rules:  |
+    limits:
+    - type: "Pod"
+      min:
+        cpu: "20m"
+        memory: "32Mi"
+      max:
+        cpu: 400m
+        memory: 512Mi
+    - type: "Container"
+      default:
+        cpu: 200m
+        memory: 256Mi
+      defaultRequest:
+        cpu: 50m
+        memory: 32Mi
+      min:
+        cpu: "20m"
+        memory: "32Mi"
+      max:
+        cpu: 200m
+        memory: 256Mi
+quotas: 
+  enabled: true
+  rules:  |
+    hard:
+      limits.cpu: "1500m"
+      limits.memory: "2000Mi"
+      requests.cpu: "300m"
+      requests.memory: "900Mi"
+      requests.storage: "0Gi"
+      persistentvolumeclaims: "0"
+      ephemeral-storage: "0" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "0Gi"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift.io/imagestreams: "0"
+      secrets: "20"
+      configmaps: "10"
+      count/daemonsets.apps: "0"
+      count/deployments.apps: "2"
+      count/replicasets.apps: "4"
+      replicationcontrollers: "2"
+      pods: "6"
+      services: "3"
+      services.loadbalancers: "0"
+      services.nodeports: "0"
