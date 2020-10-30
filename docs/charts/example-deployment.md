@@ -76,3 +76,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
+| 0.2.34  | 2020-10-30 | Update note and chart description
