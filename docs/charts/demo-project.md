@@ -1,4 +1,4 @@
-# STARTX helm : demo-project
+# STARTX helm : project
 
 This helm chart is used to create a project, or namespace, with various options constraint resources
 like networkPolicy, RoleBinding, LimitRange and Quotas.
@@ -25,13 +25,13 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ### Get information about this chart
 
 ```bash
-helm show chart startx/demo-project
+helm show chart startx/project
 ```
 
 ### Install this chart
 
 ```bash
-helm install startx/demo-project
+helm install startx/project
 ```
 
 ## Default values
@@ -59,33 +59,33 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/demo-project
+helm install startx/project
 ```
 
 ## Others values availables
 
-- **startx** : Default STARTX project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-project/values-startx.yaml))
+- **startx** : Default STARTX project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml))
 
 ```bash
-helm install startx/demo-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-project/values-startx.yaml
+helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
 ```
 
-- **demo-argocd** : Startx demo argocd project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-project/values-demo-argocd.yaml))
+- **demo-argocd** : Startx demo argocd project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml))
 
 ```bash
-helm install startx/demo-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-project/values-demo-argocd.yaml
+helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml
 ```
 
-- **demo-helm** : Startx demo helm project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-project/values-demo-helm.yaml))
+- **demo-helm** : Startx demo helm project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml))
 
 ```bash
-helm install startx/demo-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-project/values-demo-helm.yaml
+helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml
 ```
 
-- **demo-kustomize** : Startx demo kustomize project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-project/values-demo-kustomize.yaml))
+- **demo-kustomize** : Startx demo kustomize project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml))
 
 ```bash
-helm install startx/demo-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/demo-project/values-demo-kustomize.yaml
+helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml
 ```
 
 ## History
@@ -93,8 +93,8 @@ helm install startx/demo-project -f https://raw.githubusercontent.com/startxfr/h
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.0.1   | 2020-09-14 | Initial commit for this repository
-| 0.2.5   | 2020-10-23 | Create demo-project context
-| 0.2.8   | 2020-10-24 | Improve demo-project options
+| 0.2.5   | 2020-10-23 | Create project context
+| 0.2.8   | 2020-10-24 | Improve project options
 | 0.2.11  | 2020-10-25 | publish stable update for the full repository
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts

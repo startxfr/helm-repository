@@ -4,9 +4,9 @@ metadata:
   name: {{ include "startx.appName" . }}
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
-    {{- include "demo-sxapi.labels" . | nindent 4 }}
+    {{- include "sxapi.labels" . | nindent 4 }}
   annotations:
-    {{- include "demo-sxapi.annotations" . | nindent 4 }}
+    {{- include "sxapi.annotations" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas  }}
   selector:
@@ -21,10 +21,10 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: "{{ include "startx.appName" . }}-{{ include "startx.appVersion" . }}"
-        {{- include "demo-sxapi.labels" . | nindent 8 }}
+        {{- include "sxapi.labels" . | nindent 8 }}
         app: {{ include "startx.appName" . }}
       annotations:
-        {{- include "demo-sxapi.annotations" . | nindent 8 }}
+        {{- include "sxapi.annotations" . | nindent 8 }}
     spec: 
       containers:
         - name: service

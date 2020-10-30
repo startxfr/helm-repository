@@ -10,10 +10,10 @@ metadata:
   name: "{{ .id }}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "demo-project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-networkpolicy"
   annotations:
-    {{- include "demo-project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $root | nindent 4 }}
 spec: 
   {{- .spec | nindent 2 }}
 {{ end }}
