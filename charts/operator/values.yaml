@@ -1,0 +1,113 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: operator
+# # Use it to Overrride the helm-chart version
+#versionOverride: "0.0.1"
+
+# Application deployment context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: demo
+  # Application name (functionnal tenant, default use Chart name)
+  app: operator
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+# Project configuration
+operator: 
+  # Type of operator to create (namespace or operator)
+  type: operator
+  # Name of the operator
+  name: example
+  # Display name of the operator (only for operator)
+  display_name: Example operator
+  # Description of the operator (only for operator)
+  description: This is an example operator created via Helm
+# Configure RBAC for operator
+rbac: 
+  # Enable RBAC default for this operator
+  enabled: true
+  # List groups to authorize on this operator
+  groups: 
+  # Example group ID
+  - id: mygroup
+    # Example group name
+    name: mygroup_example
+    # Example group role in this operator
+    role: basic-user
+  # List users to authorize on this operator
+  users: 
+  # Example user ID
+  - id: myuser
+    # Example user name
+    name: myuser_example
+    # Example user role in this operator
+    role: basic-user
+# Configure NetworkPolicy for operator
+networkpolicy: 
+  # Enable NetworkPolicy default for this operator
+  enabled: true
+  # List group to create
+  rules: 
+  # allow from external
+  - id: allow-from-openshift-ingress
+    # Specifications of this policy rule
+    spec: |
+      ingress:
+      - from:
+          - namespaceSelector:
+              matchLabels:
+              network.openshift.io/policy-group: ingress
+      podSelector: {}
+      policyTypes:
+      - Ingress
+  # allow from internal
+  - id: allow-from-same-namespace
+    # Specifications of this policy rule
+    spec: |
+      podSelector:
+      ingress:
+      - from:
+        - podSelector: {}
+# Configure NetworkPolicy for operator
+limits: 
+  # Enable NetworkPolicy default for this operator
+  enabled: true
+  # List group to create
+  rules:  |
+    limits:
+    - type: "Pod"
+      min:
+        cpu: "20m"
+        memory: "20Mi"
+      max:
+        cpu: 200m
+        memory: 256Mi
+    - type: "Container"
+      min:
+        cpu: "10m"
+        memory: "10Mi"
+      max:
+        cpu: 100m
+        memory: 128Mi
+# Configure NetworkPolicy for operator
+quotas: 
+  # Enable NetworkPolicy default for this operator
+  enabled: true
+  # List group to create
+  rules:  |
+    hard:
+      limits.cpu: "800m"
+      limits.memory: "1024Mi"
+      requests.cpu: "400m"
+      requests.memory: "512Mi"
+      persistentvolumeclaims: "0"
+      pods: "4"
+      services: "2"

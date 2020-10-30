@@ -1,0 +1,47 @@
+{{- if .Values.rbac.enabled -}}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $ns := .Values.operator.name | default .Chart.Name -}}
+{{ range .Values.rbac.groups }}
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ .id }}-{{ .role }}"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "operator.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ .id }}-{{ .role }}-rolebinding"
+  annotations:
+    {{- include "operator.annotations" $root | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .role | quote }}
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: {{ .name | quote }}
+{{ end }}
+{{ range .Values.rbac.users }}
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ .id }}-{{ .role }}"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "operator.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ .id }}-{{ .role }}-rolebinding"
+  annotations:
+    {{- include "operator.annotations" $root | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .role | quote }}
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: {{ .name | quote }}
+{{ end }}
+{{ end }}
