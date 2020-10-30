@@ -10,10 +10,10 @@ metadata:
   name: "{{ .id }}-{{ .role }}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "demo-project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-{{ .role }}-rolebinding"
   annotations:
-    {{- include "demo-project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $root | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -31,10 +31,10 @@ metadata:
   name: "{{ .id }}-{{ .role }}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "demo-project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-{{ .role }}-rolebinding"
   annotations:
-    {{- include "demo-project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $root | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
