@@ -55,18 +55,6 @@ helm install startx/sxapi
 helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml
 ```
 
-- **v0.0.1** : v0.0.1 production environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-v0.0.1.yaml))
-
-```bash
-helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-v0.0.1.yaml
-```
-
-- **v0.0.2** : v0.0.2 production environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-v0.0.2.yaml))
-
-```bash
-helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-v0.0.2.yaml
-```
-
 ## History
 
 | Release | Date       | Description
