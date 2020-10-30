@@ -4,13 +4,22 @@
 nameOverride: example-sxapi-dev
 versionOverride: "0.0.2"
 context: 
- scope: startx
- cluster: localhost
- environment: dev
- component: helm
- app: example-sxapi-dev
- version: "0.0.2"
-sxapi_version: "0.3.53"
-profile: "dev:start"
-debug: true
-replicas: 1
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: helm
+  app: example-sxapi-dev
+  version: "0.0.2"
+sxapi:
+  context: 
+    scope: startx
+    cluster: localhost
+    environment: dev
+    component: helm
+    app: example-sxapi-dev
+    version: "0.0.2"
+  sxapi_version: "0.3.53"
+  profile: "dev:start"
+  debug: true
+  replicas: 1
+exampleValue: Example value comming from the value file dev

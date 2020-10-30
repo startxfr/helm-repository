@@ -9,6 +9,8 @@ metadata:
   annotations:
     {{- include "example-sxapi.annotations" . | nindent 4 }}
 data:
+  EXAMPLE_VALUE: "{{- if .Values.exampleValue }}{{ .Values.exampleValue }}{{- else }}default value form chart template{{- end }}"
+  EXAMPLE_TPL: example value hard-coded into the helm chart template
   SX_ID: {{ include "startx.appName" . }}-app
   SX_TYPE: app
   SX_COMPONENT: {{ include "startx.appComponent" . }}

@@ -7,24 +7,32 @@
 
 # Application deployment context
 context: 
-# Name of the global scope for this application (organisational tenant)
- scope: default
-# Name of the cluster running this application (plateform tenant)
- cluster: localhost
-# Name of the environement for this application (ex: dev, factory, preprod or prod)
- environment: dev
-# Component name of this application (logical tenant)
- component: helm
-# Application name (functionnal tenant, default use Chart name)
- app: example-sxapi
-# Version name of this application (default use Chart appVersion)
- version: "0.0.1"
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: helm
+  # Application name (functionnal tenant, default use Chart name)
+  app: example-sxapi
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
 
-# Image to run into the pod
-sxapi_version: "0.3.53"
-# Porfile to run inside the container
-profile: "prod:start"
-# Enable debuging of the container
-debug: true
-# Define the number of replicas for this sxapi instance
-replicas: 1
+# configuration of the sxapi helm chart. See sxapi helm documentation on https://startxfr.github.io/helm-repository
+sxapi:
+  context: 
+    scope: default
+    cluster: localhost
+    environment: dev
+    component: helm
+    app: example-sxapi
+    version: "0.0.1"
+  sxapi_version: "0.3.53"
+  profile: "prod:start"
+  debug: true
+  replicas: 1
+
+# Example value to show how to define and use a value from the helm value file
+exampleValue: Example value comming from the value file
