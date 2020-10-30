@@ -1,0 +1,39 @@
+# Default values for operator.
+
+# Application deployment context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: startx-infra
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Configuration of the tekton
+tekton:
+  # enable deployment of the tekton operator
+  enabled: true
+  # namespace used for deploying the operator
+  namespace: openshift-operators
+  # name of the operator
+  version: "1.0.1"
+  # Configuration of the tekton operator
+  operator: 
+    # The tekton channel to use
+    channel: ocp-4.5
+    # name of the operator
+    name: openshift-pipelines-operator-rh
+    # name of the CSV
+    csv: openshift-pipelines-operator
+    # source of the operator
+    source: 
+      # name of the operator source
+      name: redhat-operators
+      # name of the operator
+      namespace: openshift-marketplace
