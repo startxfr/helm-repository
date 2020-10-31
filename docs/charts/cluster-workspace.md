@@ -96,3 +96,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing the 0.3 release
 | 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing 0.3 release
 | 0.2.98  | 2020-10-31 | Stable version 0.2.98  preparing 0.3 release
+| 0.2.98  | 2020-10-31 | publish stable update for the full repository
