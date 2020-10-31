@@ -65,12 +65,10 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.0.1   | 2020-09-14 | Initial commit for this repository
-| 0.2.12  | 2020-10-25 | Add cluster-pipeline chrt
-| 0.2.13  | 2020-10-25 | Improve cluster-pipeline options
+| 0.2.13  | 2020-10-25 | Initial commit for this helm chart with default value example (removed)
 | 0.2.15  | 2020-10-26 | Improve cluster-pipeline options
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
-| 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency
+| 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency (removed)
 | 0.2.51  | 2020-10-31 | Common release for all chart
