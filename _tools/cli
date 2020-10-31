@@ -151,7 +151,8 @@ function routerRelease {
     git push origin $next_release
     git push origin $branch_origin
     git push origin $branch_current
-    git checkout $branch_current
+    git checkout $branch_origin
+    git checkout devel
 }
 
 # router for version sub-command
