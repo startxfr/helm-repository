@@ -67,3 +67,4 @@ helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/he
 | 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
 | 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
 | 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing the 0.3 release
+| 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing 0.3 release
