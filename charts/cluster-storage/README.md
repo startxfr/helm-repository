@@ -85,3 +85,4 @@ helm install startx/cluster-storage -f https://raw.githubusercontent.com/startxf
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
 | 0.2.51  | 2020-10-31 | Common release for all chart
+| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
