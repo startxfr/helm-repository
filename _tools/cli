@@ -7,7 +7,7 @@ SHARED_NAME=_sample_
 SHARED_SAMPLE=_tools/$SHARED_NAME
 SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
 REPO_PACKAGE_DIR=docs/packages
-BRANCH_NAME=devel
+BRANCH_NAME=master
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
 
@@ -95,7 +95,8 @@ function routerPublish {
         git checkout $branch_target &>/dev/null
         git merge --commit $branch_current
         echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m and \e[1m$branch_target\e[0m"
-        git push origin $branch_target $branch_current
+        git push origin $branch_target
+        git push origin $branch_current
         git checkout $branch_current
     else 
         echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m"
