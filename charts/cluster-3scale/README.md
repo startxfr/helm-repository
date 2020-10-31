@@ -75,11 +75,5 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency (removed)
 | 0.2.51  | 2020-10-31 | Common release for all chart
 | 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
-| 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
-| 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
-| 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing the 0.3 release
-| 0.2.97  | 2020-10-31 | Unstable release of the full repository
-| 0.2.995  | 2020-10-31 | publish stable update for the full repository
-| 0.2.996  | 2020-10-31 | publish stable update for the full repository
-| 0.2.997  | 2020-10-31 | publish stable update for the full repository
-| 0.2.999  | 2020-10-31 | publish stable update for the full repository
+| 0.2.996 | 2020-10-31 | publish stable update of this chart
+| 0.2.999 | 2020-10-31 | publish stable update for the full repository
