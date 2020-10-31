@@ -15,7 +15,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "operator.notes" -}}
--- Subscription --------
+-- Subscription --------------------
 {{- if .Values.subscription }}{{- if .Values.subscription.enabled }}
 {{- $name := .Values.subscription.name -}}
 {{- $namespace := .Values.operatorGroup.namespace -}}
@@ -39,7 +39,7 @@ subscription is disabled
 subscription is disabled
 {{- end }}
 
--- Operator group --------
+-- Operator group ------------------
 {{- if .Values.operatorGroup }}{{- if .Values.operatorGroup.enabled }}
 {{- $name := .Values.operatorGroup.name | default .Values.subscription.name -}}
 {{- $namespace := .Values.operatorGroup.namespace | default .Values.subscription.namespace -}}
