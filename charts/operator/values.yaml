@@ -15,59 +15,37 @@ context:
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# Configuration of the codeready workspace
-codeready:
-  # enable deployment of the codeready operator
+# Configuration of the subscription
+subscription:
+  # enable deployment of the subscription
   enabled: true
-  # name of the operator
+  # name of the subscription (mandatory)
+  name: "codeready-workspaces"
+  # namespace of the subscription (mandatory)
+  namespace: "openshift-workspaces"
+  # version of the operator to deploy (mandatory)
   version: "2.3.0"
   # Configuration of the CRW operator
   operator: 
-    # The CRW channel to use
+    # The CRW channel to use (default is 'latest')
     channel: latest
-    # name of the operator
+    # name of the operator (if not set, use the subscription name)
     name: codeready-workspaces
-    # name of the CSV
+    # name of the CSV (mandatory)
     csv: crwoperator
     # source of the operator
     source: 
-      # name of the operator source
+      # name of the operator source (default is 'redhat-operators')
       name: redhat-operators
-      # name of the operator
+      # name of the operator (default is 'openshift-marketplace')
       namespace: openshift-marketplace
-
-# Configuration of the codeready workspace
-cheCluster:
-  # enable deployment of the cheCluster
+# Configuration of the subscription
+operatorGroup:
+  # enable deployment of an operatorGroup for the subscription
   enabled: true
-  # name of the che cluster
+  # name of the operatorGroup (if not set, use the subscription name)
   name: "codeready-workspaces"
-  # Storage class to use for persistance
-  storageClass: "gp2"
-  # Size of the PVC used for storage persistance
-  storageSize: "1Gi"
-
-# Configuration of the project namespace
-project: 
-  context: 
-    scope: default
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
-  project: 
-    type: namespace
-    name: openshift-workspaces
-  rbac: 
-    enabled: true
-    groups: 
-    - id: dev
-      name: dev
-      role: view
-  networkpolicy: 
-    enabled: false
-    rules: []
-  limits: 
-    enabled: false
-  quotas: 
-    enabled: false
+  # namespace of the operatorGroup (if not set, use the subscription namespace)
+  namespace: "openshift-workspaces"
+  # List of the provided APIs (mandatory if enabled)
+  providedAPIs: "CheCluster.v1.org.eclipse.che"
