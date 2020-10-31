@@ -93,3 +93,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
 | 0.2.35  | 2020-10-26 | Move to startx/project version 0.2.33
 | 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency
+| 0.2.51  | 2020-10-31 | Common release for all chart
