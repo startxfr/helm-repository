@@ -67,3 +67,4 @@ helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/h
 | 0.2.51  | 2020-10-31 | Common release for all chart
 | 0.2.94  | 2020-10-31 | Align all startx charts version to 0.2.94. Preparing stable 0.3 release
 | 0.2.98  | 2020-10-31 | publish stable update for the full repository
+| 0.2.99  | 2020-10-31 | Prepare release 0.3.0
