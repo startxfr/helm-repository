@@ -93,11 +93,7 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.2.33  | 2020-10-31 | Initial commit for this helm chart with default value example
-| 0.2.51  | 2020-10-31 | Adding vlaues files for startx, kustomize, helm and argocd projects creation
-| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
-| 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
-| 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing the 0.3 release
-| 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing 0.3 release
-| 0.2.98  | 2020-10-31 | Stable version 0.2.98  preparing 0.3 release
+| 0.2.51  | 2020-10-31 | Adding values files for startx, kustomize, helm and argocd projects creation
+| 0.2.94  | 2020-10-31 | Align all startx charts version to 0.2.94. Preparing stable 0.3 release
 | 0.2.98  | 2020-10-31 | publish stable update for the full repository
-| 0.2.98  | 2020-10-31 | publish stable update for the full repository
+| 0.2.99  | 2020-10-31 | Prepare release 0.3.0
