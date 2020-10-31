@@ -68,3 +68,4 @@ helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/he
 | 0.2.98  | 2020-10-31 | publish stable update for the full repository
 | 0.2.99  | 2020-10-31 | Prepare release 0.3.0
 | 0.2.991  | 2020-10-31 | publish stable update for the full repository
+| 0.2.993  | 2020-10-31 | publish stable update for the full repository
