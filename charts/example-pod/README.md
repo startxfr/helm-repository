@@ -56,9 +56,8 @@ helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/he
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.0.1   | 2020-09-14 | Initial commit for this repository
-| 0.1.0   | 2020-10-07 | Release 0.1 stable release for all charts
-| 0.1.18  | 2020-10-23 | Improve documentation for example-pod
+| 0.1.0   | 2020-10-07 | Initial commit for this helm chart with default value example (removed)
+| 0.1.18  | 2020-10-23 | Improve documentation for example-pod (removed)
 | 0.2.11  | 2020-10-25 | publish stable update for the full repository
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts

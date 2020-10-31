@@ -70,13 +70,7 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.0.1   | 2020-09-14 | Initial commit for this repository
-| 0.1.0   | 2020-10-07 | Release 0.1 stable release for all charts
-| 0.2.0   | 2020-10-24 | Improve cluster-rbac options
-| 0.2.11  | 2020-10-25 | publish stable update for the full repository
+| 0.2.11  | 2020-10-25 | Initial commit for this helm chart with default value example
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
-| 0.2.34  | 2020-10-30 | Move to helm chart dependencies
-| 0.2.35  | 2020-10-30 | Update note
-| 0.2.51  | 2020-10-31 | Common release for all chart
