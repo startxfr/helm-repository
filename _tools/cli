@@ -143,7 +143,7 @@ function routerRelease {
     echo -e "\e[36mRelease\e[0m Jump into \e[1m$current_release\e[0m"
     git checkout $current_release &>/dev/null
     echo -e "\e[36mRelease\e[0m Merge \e[1m$branch_origin\e[0m update to \e[1m$current_release\e[0m"
-    git merge --commit $branch_origin &>/dev/null
+    git merge --commit $branch_origin
     echo -e "\e[36mRelease\e[0m Create \e[1m$next_release\e[0m tag"
     git tag $next_release -m "[release/$next_release] $next_description"
     echo -e "\e[36mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
