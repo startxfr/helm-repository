@@ -39,9 +39,9 @@ helm install startx/cluster-pipeline
 
 Deployment of tekton :
 
-- 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
-  - operator name is **codeready-workspaces**
-  - operator version is **2.3.0**
+- 1 **subscription** named **openshift-pipelines-operator-rh** to deploy codeready operator with the following characteristics
+  - operator name is **openshift-pipelines-operator-rh**
+  - operator version is **openshift-pipelines-operator.v1.0.1**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
 
 ```bash
@@ -52,9 +52,9 @@ helm install startx/cluster-pipeline
 ## Others values availables
 
 - **startx** : Startx tekton configuration for Startx clusters (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml)) deploying the following environment
-  - 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
-    - operator name is **codeready-workspaces**
-    - operator version is **2.3.0**
+  - 1 **subscription** named **openshift-pipelines-operator-rh** to deploy codeready operator with the following characteristics
+    - operator name is **openshift-pipelines-operator-rh**
+    - operator version is **openshift-pipelines-operator.v1.0.1**
     - operator catalog is **redhat-operators** located in **openshift-marketplace**
 
 ```bash
@@ -72,3 +72,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
+| 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency

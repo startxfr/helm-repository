@@ -1,0 +1,27 @@
+{{- if .Values.subscription }}{{- if .Values.subscription.enabled }}
+{{- $name := .Values.subscription.name -}}
+{{- $namespace := .Values.operatorGroup.namespace -}}
+{{- $version := .Values.subscription.version -}}
+---
+kind: Subscription
+apiVersion: operators.coreos.com/v1alpha1
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "operator.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-subscription"
+  annotations:
+    {{- include "operator.annotations" . | nindent 4 }}
+spec:
+  installPlanApproval: Automatic
+  {{- with .Values.subscription.operator }}
+  channel: {{ .channel | default "latest" | quote }}
+  name: {{ .name | default $name | quote }}
+  {{- with .source }}
+  source: {{ .name | default "redhat-operators" | quote }}
+  sourceNamespace: {{ .namespace | default "openshift-marketplace" | quote }}
+  {{- end }}
+  startingCSV: "{{ .csv }}.v{{ $version }}"
+  {{- end }}
+{{- end }}{{- end }}

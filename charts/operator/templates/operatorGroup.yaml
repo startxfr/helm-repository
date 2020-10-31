@@ -1,0 +1,20 @@
+{{- if .Values.operatorGroup }}{{- if .Values.operatorGroup.enabled }}
+{{- $name := .Values.operatorGroup.name | default .Values.subscription.name -}}
+{{- $namespace := .Values.operatorGroup.namespace | default .Values.subscription.namespace -}}
+{{- $providedAPIs := .Values.operatorGroup.providedAPIs -}}
+---
+kind: OperatorGroup
+apiVersion: operators.coreos.com/v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "operator.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-operatorgroup"
+  annotations:
+    {{- include "operator.annotations" . | nindent 4 }}
+    olm.providedAPIs: {{ $providedAPIs | quote }}
+spec:
+  targetNamespaces:
+    - {{ $namespace | quote }}
+{{- end }}{{- end }}

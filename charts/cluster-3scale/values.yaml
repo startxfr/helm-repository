@@ -15,20 +15,6 @@ context:
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# Operator configuration
-operator:
-  # Enable the configuration of the operator
-  enabled: true
-  # The operator namespace where objects goes to
-  namespace: openshift-operators
-  # The operator marketplace namespace where objects goes to
-  marketplace: openshift-marketplace
-  # Name of the channel in the operator marketplace
-  channel: threescale-2.9
-  # CSV base name
-  operator: 3scale-operator
-  # CSV version
-  version: "0.6.0" 
 # Deploy an API manager
 manager:
   # Enable the configuration of the API manager
@@ -43,7 +29,7 @@ rhn:
   pwd: rhnpwd
 
 
-# Configuration of the project namespace
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   context: 
     scope: default
@@ -53,69 +39,40 @@ project:
     app: startx-infra
   project: 
     type: project
-    name: startx-3scale
-    display_name: STARTX Infra - 3SCALE
-    description: STARTX 3Scale enterprise api-management & control plane
+    name: example-3scale
+    display_name: 3SCALE Example
+    description: 3Scale enterprise api-management & control plane example from STARTX
   rbac: 
-    enabled: true
-    groups: 
-    - id: dev
-      name: dev
-      role: view
+    enabled: false
   networkpolicy: 
-    enabled: true
-    rules: 
-    - id: allow-from-openshift-ingress
-      spec: |
-        podSelector:
-          matchLabels:
-            app: 3scale
-        ingress:
-          - from:
-              - namespaceSelector: {}
+    enabled: false
   limits: 
-    enabled: true
-    rules:  |
-      limits:
-        - type: "Pod"
-          min:
-            cpu: 50m
-            memory: 32Mi
-          max:
-            cpu: "10"
-            memory: 34Gi
-        - type: "Container"
-          default:
-            cpu: 400m
-            memory: 512Mi
-          defaultRequest:
-            cpu: 100m
-            memory: 128Mi
-          min:
-            cpu: 50m
-            memory: 32Mi
-          max:
-            cpu: "10"
-            memory: 32Gi
+    enabled: false
   quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  context: 
+    scope: default
+    cluster: localhost
+    environment: dev
+    component: infra
+    app: startx-infra
+  subscription:
     enabled: true
-    rules:  |
-      hard:
-        limits.cpu: "25"
-        limits.memory: "120Gi"
-        requests.cpu: "6"
-        requests.memory: "10000Mi"
-        requests.storage: "10Gi"
-        persistentvolumeclaims: "4"
-        ephemeral-storage: "0" 
-        pods: "25"
-        services: "20"
-        services.loadbalancers: "0"
-        services.nodeports: "0"
-        secrets: "50"
-        configmaps: "16"
-        replicationcontrollers: "30"
-        openshift.io/imagestreams: "25"
-        count/daemonsets.apps: "0"
-        count/replicasets.apps: "6"
-        count/deployments.apps: "2"
+    name: "3scale-operator"
+    namespace: "example-3scale"
+    version: "0.6.0"
+    operator: 
+      channel: threescale-2.9
+      name: 3scale-operator
+      csv: 3scale-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "3scale-operator"
+    namespace: "example-3scale"
+    providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"
