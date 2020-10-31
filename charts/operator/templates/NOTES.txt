@@ -1,6 +1,6 @@
 
 
-Cluster codeready-workspace is deployed.
+Your subscription is deployed with the following characteristics
 
 -- Context -------------------------
   scope       : {{ include "startx.appScope" . }}
@@ -10,80 +10,42 @@ Cluster codeready-workspace is deployed.
   app         : {{ include "startx.appName" . }}
   version     : {{ include "startx.appVersion" . }}
 
--- Cluster operator --------
-{{- if .Values.codeready }}{{- if .Values.codeready.enabled }}
-name: codeready-workspaces
-namespace: {{ .Values.project.project.name }}
-{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.channel }}
-channel: {{ .Values.codeready.operator.channel | quote }}
-{{- else }}
-channel: latest
+-- Subscription --------
+{{- if .Values.subscription }}{{- if .Values.subscription.enabled }}
+{{- $name := .Values.subscription.name -}}
+{{- $namespace := .Values.operatorGroup.namespace -}}
+{{- $version := .Values.subscription.version -}}
+name: {{ $name }}
+namespace: {{ $namespace }}
+{{- with .Values.subscription.operator }}
+{{- $operator := . -}}
+channel: {{ .channel | default "latest" }}
+name: {{ .name | default $name }}
+{{- with .source }}
+source: {{ .name | default "redhat-operators" }}
+sourceNamespace: {{ .namespace | default "openshift-marketplace" }}
+{{- end }}
+csv: "{{ .csv }}.v{{ $version }}"
 {{- end }}
 {{- else }}
-channel: latest
+subscription is disabled
 {{- end }}
 {{- else }}
-channel: latest
+subscription is disabled
 {{- end }}
-{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.name }}
-operator: {{ .Values.codeready.operator.name | quote }}
-{{- else }}
-operator: codeready-workspaces
-{{- end }}
-{{- else }}
-operator: codeready-workspaces
-{{- end }}
-{{- else }}
-operator: codeready-workspaces
-{{- end }}
-{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.source }}{{- if .Values.codeready.operator.source.name }}
-source: {{ .Values.codeready.operator.source.name | quote }}
-{{- else }}
-source: redhat-operators
-{{- end }}
-{{- else }}
-source: redhat-operators
-{{- end }}
-{{- else }}
-source: redhat-operators
-{{- end }}
-{{- else }}
-source: redhat-operators
-{{- end }}
-{{- if .Values.codeready }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.source }}{{- if .Values.codeready.operator.source.namespace }}
-sourceNamespace: {{ .Values.codeready.operator.source.namespace | quote }}
-{{- else }}
-sourceNamespace: openshift-marketplace
-{{- end }}
-{{- else }}
-sourceNamespace: openshift-marketplace
-{{- end }}
-{{- else }}
-sourceNamespace: openshift-marketplace
-{{- end }}
-{{- else }}
-sourceNamespace: openshift-marketplace
-{{- end }}
-{{- if .Values.codeready }}{{- if .Values.codeready.version }}{{- if .Values.codeready.operator }}{{- if .Values.codeready.operator.csv }}
-csv: "{{ .Values.codeready.operator.csv }}.v{{ .Values.codeready.version }}"
-{{- else }}
-csv: "crwoperator.v{{ .Values.codeready.version }}"
-{{- end }}
-{{- else }}
-csv: "crwoperator.v{{ .Values.codeready.version }}"
-{{- end }}
-{{- else }}
-csv: "crwoperator.v2.3.0"
-{{- end }}
-{{- else }}
-csv: "crwoperator.v2.3.0"
-{{- end }}
-{{- end }}{{- end }}
 
--- Che Cluster -------------
-{{- if .Values.cheCluster }}{{- if .Values.cheCluster.enabled }}
-name: {{ .Values.cheCluster.name | default "codeready-workspaces" | quote }}
-namespace: {{ .Values.project.project.name }}
-storage: {{ .Values.cheCluster.storageClass | default "gp2" | quote }}
-size:{{ .Values.cheCluster.storageSize | default "1Gi" | quote }}
-{{- end }}{{- end }}
+-- Operator group --------
+{{- if .Values.operatorGroup }}{{- if .Values.operatorGroup.enabled }}
+{{- $name := .Values.operatorGroup.name | default .Values.subscription.name -}}
+{{- $namespace := .Values.operatorGroup.namespace | default .Values.subscription.namespace -}}
+{{- $providedAPIs := .Values.operatorGroup.providedAPIs -}}
+name: {{ $name }}
+namespace: {{ $namespace }}
+providedAPIs: {{ $providedAPIs }}
+targetNamespace: {{ $namespace }}
+{{- else }}
+Operator group is disabled
+{{- end }}
+{{- else }}
+Operator group is disabled
+{{- end }}

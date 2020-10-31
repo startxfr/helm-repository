@@ -1,0 +1,25 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-infra
+subscription:
+  enabled: true
+  name: "codeready-workspaces"
+  namespace: "openshift-workspaces"
+  version: "2.3.0"
+  operator: 
+    channel: latest
+    name: codeready-workspaces
+    csv: crwoperator
+    source: 
+      name: redhat-operators
+      namespace: openshift-marketplace
+operatorGroup:
+  enabled: true
+  name: "codeready-workspaces"
+  namespace: "openshift-workspaces"
+  providedAPIs: "CheCluster.v1.org.eclipse.che"

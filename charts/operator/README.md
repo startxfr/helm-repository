@@ -1,8 +1,6 @@
 # STARTX helm : operator
 
-This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
-state orchestrated by gitops tools like ArgoCD.
+This helm chart is used to configure various operator using subscription (openshift) or CRD (k8s) ressources.
 
 ## Requirements and guidelines
 
@@ -93,3 +91,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
 | 0.2.35  | 2020-10-26 | Move to startx/project version 0.2.33
 | 0.2.35  | 2020-10-30 | Create chart operator from cluster-workspace
+| 0.2.36  | 2020-10-31 | Enable subscription and operatorGroup creation and add values file for tekton-1.0.1, crw-2.3.0 and scale-0.6.0 deployment
