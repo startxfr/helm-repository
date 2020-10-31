@@ -1,0 +1,30 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: sxapi
+# # Use it to Overrride the helm-chart version
+#versionOverride: "0.0.1"
+
+# Application deployment context
+context: 
+# Name of the global scope for this application (organisational tenant)
+ scope: default
+# Name of the cluster running this application (plateform tenant)
+ cluster: localhost
+# Name of the environement for this application (ex: dev, factory, preprod or prod)
+ environment: dev
+# Component name of this application (logical tenant)
+ component: demo
+# Application name (functionnal tenant, default use Chart name)
+ app: sxapi
+# Version name of this application (default use Chart appVersion)
+ version: "0.0.1"
+
+# Image to run into the pod
+sxapi_version: "0.3.53"
+# Profile to run inside the container
+profile: "prod:start"
+# Enable debuging of the container
+debug: true
+# Define the number of replicas for this sxapi instance
+replicas: 1

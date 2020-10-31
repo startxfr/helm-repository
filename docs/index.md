@@ -9,8 +9,8 @@ List of helm chart availables in this repository, and sample to deploy it under 
 - [cluster-3scale](charts/cluster-3scale.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale))*** to deploy a 3Scale infrastructure at a cluster level
 - [cluster-pipeline](charts/cluster-pipeline.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline))*** to enable tekton pipeline at a cluster level
 - [cluster-workspace](charts/cluster-workspace.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace))*** to enable codeready workspace at a cluster level
-- [demo-project](charts/demo-project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/demo-project))*** to create a project with limits, quotas, networkpolicy and rbac set
-- [demo-sxapi](charts/demo-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/demo-sxapi))*** to deploy a small micro-service endpoint
+- [project](charts/project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/project))*** to create a project with limits, quotas, networkpolicy and rbac set
+- [sxapi](charts/sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi))*** to deploy a small micro-service endpoint
 - [example-deployment](charts/example-deployment.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment))*** is a example on how to deploy simple applications using helm and a deployment
 - [example-pod](charts/example-pod.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod))*** is a example on how to deploy simple applications using helm and a pod
 - [example-sxapi](charts/example-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi))*** is a example on how to deploy simple micro-applications using helm and an sxapi toolkit
@@ -24,8 +24,8 @@ helm install startx/cluster-rbac
 helm install startx/cluster-3scale
 helm install startx/cluster-pipeline
 helm install startx/cluster-workspace
-helm install startx/demo-project
-helm install startx/demo-sxapi
+helm install startx/project
+helm install startx/sxapi
 helm install startx/example-deployment
 helm install startx/example-pod
 helm install startx/example-sxapi
@@ -75,8 +75,8 @@ helm install charts/cluster-rbac
 helm install charts/cluster-3scale
 helm install charts/cluster-pipeline
 helm install charts/cluster-workspace
-helm install charts/demo-project
-helm install charts/demo-sxapi
+helm install charts/project
+helm install charts/sxapi
 helm install charts/example-deployment
 helm install charts/example-pod
 helm install charts/example-sxapi

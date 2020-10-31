@@ -1,0 +1,27 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-infra
+subscription:
+  enabled: true
+  name: "3scale-operator"
+  namespace: "startx-3scale"
+  version: "0.6.0"
+  operator: 
+    channel: threescale-2.9
+    name: 3scale-operator
+    csv: 3scale-operator
+    source: 
+      name: redhat-operators
+      namespace: openshift-marketplace
+operatorGroup:
+  enabled: true
+  name: "3scale-operator"
+  namespace: "startx-3scale"
+  providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"
+
+

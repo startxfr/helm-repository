@@ -1,0 +1,51 @@
+# Default values for operator.
+
+# Application deployment context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: startx-infra
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Configuration of the subscription
+subscription:
+  # enable deployment of the subscription
+  enabled: true
+  # name of the subscription (mandatory)
+  name: "codeready-workspaces"
+  # namespace of the subscription (mandatory)
+  namespace: "openshift-workspaces"
+  # version of the operator to deploy (mandatory)
+  version: "2.3.0"
+  # Configuration of the CRW operator
+  operator: 
+    # The CRW channel to use (default is 'latest')
+    channel: latest
+    # name of the operator (if not set, use the subscription name)
+    name: codeready-workspaces
+    # name of the CSV (mandatory)
+    csv: crwoperator
+    # source of the operator
+    source: 
+      # name of the operator source (default is 'redhat-operators')
+      name: redhat-operators
+      # name of the operator (default is 'openshift-marketplace')
+      namespace: openshift-marketplace
+# Configuration of the subscription
+operatorGroup:
+  # enable deployment of an operatorGroup for the subscription
+  enabled: true
+  # name of the operatorGroup (if not set, use the subscription name)
+  name: "codeready-workspaces"
+  # namespace of the operatorGroup (if not set, use the subscription namespace)
+  namespace: "openshift-workspaces"
+  # List of the provided APIs (mandatory if enabled)
+  providedAPIs: "CheCluster.v1.org.eclipse.che"

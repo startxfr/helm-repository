@@ -68,11 +68,12 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.0.1   | 2020-09-14 | Initial commit for this repository
-| 0.2.12  | 2020-10-26 | Create cluster-3scale form startx/demo-project helm chart
-| 0.2.13  | 2020-10-26 | Add startx/demo-project as dependency for cluster-3scale chart
+| 0.2.12  | 2020-10-26 | Create cluster-3scale form startx/project helm chart
+| 0.2.13  | 2020-10-26 | Add startx/project as dependency for cluster-3scale chart
 | 0.2.15  | 2020-10-26 | Improve cluster-3scale options for project
 | 0.2.17  | 2020-10-26 | Improve cluster-3scale options for global config
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
-| 0.2.35  | 2020-10-26 | Move to startx/demo-project version 0.2.33
+| 0.2.35  | 2020-10-26 | Move to startx/project version 0.2.33
+| 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency

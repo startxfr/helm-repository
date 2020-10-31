@@ -1,0 +1,20 @@
+{{- if .Values.networkpolicy.enabled -}}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $ns := .Values.project.name | default .Chart.Name -}}
+{{ range .Values.networkpolicy.rules }} 
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: "{{ .id }}"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "project.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ .id }}-networkpolicy"
+  annotations:
+    {{- include "project.annotations" $root | nindent 4 }}
+spec: 
+  {{- .spec | nindent 2 }}
+{{ end }}
+{{ end }}
