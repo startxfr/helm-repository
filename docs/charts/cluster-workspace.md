@@ -83,14 +83,12 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.0.1   | 2020-09-14 | Initial commit for this repository
-| 0.3.0   | 2020-10-25 | Create cluster-workspace chart
-| 0.2.11  | 2020-10-25 | publish stable update for the full repository
-| 0.2.12  | 2020-10-25 | Add cluster-workspace project dependencies
+| 0.2.12  | 2020-10-25 | Initial commit for this helm chart with default value example (removed)
 | 0.2.15  | 2020-10-26 | Improve cluster-workspace operator config
 | 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
 | 0.2.35  | 2020-10-26 | Move to startx/project version 0.2.33
-| 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency
+| 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency (removed)
 | 0.2.51  | 2020-10-31 | Common release for all chart
+| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release

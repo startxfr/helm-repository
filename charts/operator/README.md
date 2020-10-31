@@ -101,3 +101,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.2.36  | 2020-10-31 | Initial commit for this helm chart with default value example
 | 0.2.37  | 2020-10-31 | Enable subscription and operatorGroup creation and add values file for tekton-1.0.1, crw-2.3.0 and scale-0.6.0 deployment
 | 0.2.51  | 2020-10-31 | Common release for all chart
+| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
