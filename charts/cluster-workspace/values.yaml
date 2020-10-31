@@ -16,27 +16,6 @@ context:
   # version: 0.0.3
 
 # Configuration of the codeready workspace
-codeready:
-  # enable deployment of the codeready operator
-  enabled: true
-  # name of the operator
-  version: "2.3.0"
-  # Configuration of the CRW operator
-  operator: 
-    # The CRW channel to use
-    channel: latest
-    # name of the operator
-    name: codeready-workspaces
-    # name of the CSV
-    csv: crwoperator
-    # source of the operator
-    source: 
-      # name of the operator source
-      name: redhat-operators
-      # name of the operator
-      namespace: openshift-marketplace
-
-# Configuration of the codeready workspace
 cheCluster:
   # enable deployment of the cheCluster
   enabled: true
@@ -47,7 +26,7 @@ cheCluster:
   # Size of the PVC used for storage persistance
   storageSize: "1Gi"
 
-# Configuration of the project namespace
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   context: 
     scope: default
@@ -71,3 +50,29 @@ project:
     enabled: false
   quotas: 
     enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  context: 
+    scope: default
+    cluster: localhost
+    environment: dev
+    component: infra
+    app: startx-infra
+  subscription:
+    enabled: true
+    name: "codeready-workspaces"
+    namespace: "openshift-workspaces"
+    version: "2.3.0"
+    operator: 
+      channel: latest
+      name: codeready-workspaces
+      csv: crwoperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "codeready-workspaces"
+    namespace: "openshift-workspaces"
+    providedAPIs: "CheCluster.v1.org.eclipse.che"
