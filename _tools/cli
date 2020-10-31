@@ -148,7 +148,8 @@ function routerRelease {
     echo -e "\e[36mRelease\e[0m Create \e[1m$next_release\e[0m tag"
     git tag $next_release -m "[release/$next_release] $next_description"
     echo -e "\e[36mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
-    git push origin $next_release $branch_origin
+    git push origin $next_release
+    git push origin $branch_origin
     git push origin $branch_current
     git checkout $branch_current
     routerPublish 

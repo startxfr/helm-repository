@@ -60,8 +60,15 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.2.51  | 2020-10-31 | Initial commit for this chart with default and dev value examples
+<<<<<<< HEAD
 | 0.2.94  | 2020-10-31 | Align all startx charts version to 0.2.94. Preparing stable 0.3 release
 | 0.2.98  | 2020-10-31 | publish stable update for the full repository
 | 0.2.99  | 2020-10-31 | Prepare release 0.3.0
 | 0.2.991  | 2020-10-31 | publish stable update for the full repository
 | 0.2.993  | 2020-10-31 | publish stable update for the full repository
+=======
+| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
+| 0.2.996 | 2020-10-31 | publish stable update of this chart
+| 0.2.999 | 2020-10-31 | publish stable update for the full repository
+| 0.3.0   | 2020-10-31 | Stable 0.3 release
+>>>>>>> devel
