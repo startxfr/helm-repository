@@ -149,6 +149,7 @@ function routerRelease {
     echo -e "\e[36mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
     git push origin $next_release $branch_origin $branch_current
     git checkout $branch_current
+    routerPublish 
 }
 
 # router for version sub-command
