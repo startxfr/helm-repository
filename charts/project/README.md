@@ -100,3 +100,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
 | 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
 | 0.2.33  | 2020-10-31 | First public release of project helm chart
+| 0.2.33  | 2020-10-31 | First public release of project helm chart
