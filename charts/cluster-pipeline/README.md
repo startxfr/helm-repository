@@ -73,3 +73,5 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency (removed)
 | 0.2.51  | 2020-10-31 | Common release for all chart
 | 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
+| 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
+| 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
