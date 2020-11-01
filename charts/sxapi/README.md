@@ -65,6 +65,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
 | 0.3.1   | 2020-11-01 | Move to go templates for notes generation and move app content to value property sxapi.data
 | 0.3.3   | 2020-11-01 | Test new scope for note template helper
-| 0.3.7   | 2020-11-01 | publish stable update for the full repository
-| 0.3.11  | 2020-11-01 | Test repository release
-| 0.3.17  | 2020-11-01 | publish stable update for the full repository
+| 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
