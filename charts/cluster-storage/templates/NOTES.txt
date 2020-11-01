@@ -10,7 +10,4 @@ Cluster storage classes are deployed.
   app         : {{ include "startx.appName" . }}
   version     : {{ include "startx.appVersion" . }}
 
--- Cluster Storages classes --------
-{{ range .Values.storageClasses }}
- - {{ .id }} provisionned with {{ .provisioner | default "kubernetes.io/aws-ebs" }}
-{{ end }}
+{{- include "cluster-storage.notes" .Values }}
