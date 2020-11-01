@@ -20,11 +20,51 @@ context:
 # Version name of this application (default use Chart appVersion)
  version: "0.0.1"
 
-# Image to run into the pod
-sxapi_version: "0.3.53"
-# Profile to run inside the container
-profile: "prod:start"
-# Enable debuging of the container
-debug: true
-# Define the number of replicas for this sxapi instance
-replicas: 1
+# Configuration of the sxapi application
+sxapi:
+  # configuration of the service
+  service:
+    # Enable service for this application
+    enabled: true
+  # Sxapi image version to run
+  version: "0.3.53"
+  # Profile to run inside the container
+  profile: "prod:start"
+  # Enable debuging of the container
+  debug: true
+  # Define the number of replicas for this sxapi instance
+  replicas: 1
+  # Files to load into the application
+  data: |
+    sxapi.yml: |-
+      name: {{ include "startx.appName" . }}
+      description: Description of {{ include "startx.appName" . }}
+      version: {{ include "startx.appVersion" . }}
+      debug: "{{- .Values.sxapi.debug }}"
+      resources:
+        serviceinfo-sample:
+          _class: serviceinfo
+      log:
+        filters:
+          level: '0,1,2,3,4'
+          type: debug,info,error,warn
+      server:
+        port: '8077'
+        endpoints:
+        - path: "/"
+          desc: Display welcome message (HTML)
+          body: |-
+              <html>
+              <head><title>Example application {{ include "startx.appName" . }}</title></head>
+              <body><h1>API {{ include "startx.appName" . }} is live !</h1></body>
+              </html>
+        - path: "/health"
+          resource: serviceinfo-sample
+          endpoint: health
+        - path: "/info"
+          resource: serviceinfo-sample
+          endpoint: info
+        - path: "/ping"
+          desc: Ping the application. Return a sample message in json
+          code: '200'
+          body: pong
