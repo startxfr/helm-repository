@@ -11,3 +11,20 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "sxapi.annotations" -}}
 {{- include "startx.annotationsInfra" . -}}
 {{- end -}}
+
+{{/* Common sxapi note */}}
+{{- define "sxapi.notes" -}}
+-- Application ----------------
+version: {{- .Values.sxapi.version -}}
+replicas: {{- .Values.sxapi.replicas -}}
+profile: {{- .Values.sxapi.profile -}}
+debug: {{- .Values.sxapi.debug -}}
+{{- if .Values.sxapi.service -}}{{- if .Values.sxapi.service.enabled -}}
+service: enabled
+{{- else -}}
+service: disabled
+{{- end -}}
+{{- else -}}
+service: disabled
+{{- end -}}
+{{- end -}}

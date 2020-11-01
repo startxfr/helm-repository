@@ -7,8 +7,9 @@ metadata:
     {{- include "sxapi.labels" . | nindent 4 }}
   annotations:
     {{- include "sxapi.annotations" . | nindent 4 }}
+    checksum/config: {{ include (print $.Template.BasePath "/cm-lib.yaml") . | sha256sum }}
 spec:
-  replicas: {{ .Values.replicas  }}
+  replicas: {{ .Values.sxapi.replicas  }}
   selector:
     matchLabels:
       app: {{ include "startx.appName" . }}
@@ -27,17 +28,17 @@ spec:
         {{- include "sxapi.annotations" . | nindent 8 }}
     spec: 
       containers:
-        - name: service
-          image: "startx/sxapi:{{- .Values.sxapi_version }}"
+        - name: sxapi
+          image: "startx/sxapi:{{- .Values.sxapi.version }}"
           env:
             - name: SX_DEBUG
-              value: "{{- .Values.debug }}"
+              value: "{{- .Values.sxapi.debug }}"
             - name: SX_VERBOSE
               value: "true"
           envFrom:
             - configMapRef:
                 name: {{ include "startx.appName" . }}-app
-          command: [ "npm" , "run", "{{- .Values.profile }}" ]
+          command: [ "npm" , "run", "{{- .Values.sxapi.profile }}" ]
           ports:
           - containerPort: 8077
             name: http
@@ -79,11 +80,6 @@ spec:
         - name: sxapi-deploy-conf
           configMap:
             name: "{{ include "startx.appName" . }}-lib"
-            items:
-            - key: sxapi.yml
-              path: sxapi.yml
-            - key: mylib.js
-              path: mylib.js
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
