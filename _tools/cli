@@ -7,7 +7,8 @@ SHARED_NAME=_sample_
 SHARED_SAMPLE=_tools/$SHARED_NAME
 SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
 REPO_PACKAGE_DIR=docs/packages
-BRANCH_NAME=master
+WORK_BRANCH=devel
+MASTER_BRANCH=master
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
 
@@ -79,44 +80,28 @@ function routerList {
 # router for publish command
 function routerPublish {
     local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
-    local branch_current="master"
-    local branch_target="master"
-    if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
-        branch_current="$BRANCH_NAME"
-    fi
     echo -e "\e[36mPublish\e[0m Generate index for $repo_url"
     helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
     echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
     git add $PROJECT_PATH/docs/packages &>/dev/null
     git commit -m "[docs] update repository index" $PROJECT_PATH/docs/packages &>/dev/null
-    git push origin $branch_current
-    if [[ "$branch_current" != "$branch_target" ]]; then
-        echo -e "\e[36mPublish\e[0m merge \e[1m$branch_current\e[0m into \e[1m$branch_target\e[0m"
-        git checkout $branch_target &>/dev/null
-        git merge --commit $branch_current
-        echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m and \e[1m$branch_target\e[0m"
-        git push origin $branch_target
-        git push origin $branch_current
-        git checkout $branch_current
-    else 
-        echo -e "\e[36mPublish\e[0m push \e[1m$branch_current\e[0m"
-        git push origin $branch_target
-    fi
+    git push origin $WORK_BRANCH
+    echo -e "\e[36mPublish\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
+    git checkout $MASTER_BRANCH &>/dev/null
+    git merge --commit --no-edit $WORK_BRANCH
+    echo -e "\e[36mPublish\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
+    git push origin $MASTER_BRANCH $WORK_BRANCH
+    git checkout $WORK_BRANCH
 }
 
 # router for release command
 function routerRelease {
     local auto_feature=$1
     local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
-    local branch_current="master"
-    local branch_origin="master"
     local next_description="publish stable update for the full repository"
     local current_release="$(cat $PROJECT_PATH/_tools/repo-release)"
     local next_date="$(date +%Y-%m-%d)"
     local next_release=$(cat $PROJECT_PATH/_tools/repo-release | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
-    if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
-        branch_current="$BRANCH_NAME"
-    fi
     if [[ "auto" == "$auto_feature" || "-a" == "$auto_feature" ]]; then
         echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m auto-version to $next_release"
     else
@@ -139,20 +124,17 @@ function routerRelease {
     echo $next_release > $PROJECT_PATH/_tools/repo-release
     git add $PROJECT_PATH &>/dev/null
     git commit -m "[docs] update repository content to $next_release" $PROJECT_PATH &>/dev/null
-    git checkout $branch_origin &>/dev/null
-    git merge $branch_current --commit --no-edit
+    git checkout $MASTER_BRANCH &>/dev/null
+    git merge $WORK_BRANCH --commit --no-edit
     echo -e "\e[36mRelease\e[0m Jump into \e[1m$current_release\e[0m"
     git checkout $current_release &>/dev/null
-    echo -e "\e[36mRelease\e[0m Merge \e[1m$branch_origin\e[0m update to \e[1m$current_release\e[0m"
-    git merge --commit $branch_origin
+    echo -e "\e[36mRelease\e[0m Merge \e[1m$MASTER_BRANCH\e[0m update to \e[1m$current_release\e[0m"
+    git merge --commit --no-edit $MASTER_BRANCH &>/dev/null
     echo -e "\e[36mRelease\e[0m Create \e[1m$next_release\e[0m tag"
     git tag $next_release -m "[release/$next_release] $next_description"
     echo -e "\e[36mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
-    git push origin $next_release
-    git push origin $branch_origin
-    git push origin $branch_current
-    git checkout $branch_current
-    routerPublish 
+    git push origin $next_release $MASTER_BRANCH $WORK_BRANCH
+    git checkout $WORK_BRANCH
 }
 
 # router for version sub-command
@@ -331,12 +313,7 @@ function routerChartPublish {
     if [[ -r $chart_dir ]]; then
         routerChartRelease $chart_name
         echo -e "\e[36mPublish\e[0m \e[1m$chart_name\e[0m helm chart"
-        echo -e "\e[36mPublish\e[0m Generate index for $repo_url"
-        helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
-        echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
-        git add $PROJECT_PATH/docs/packages &>/dev/null
-        git commit -m "[docs] store chart $chart_name v$current_release package added to repository index index.yaml" $PROJECT_PATH/docs/packages &>/dev/null
-        git push origin $branch_current
+        routerPublish
     else
         echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
         routerList
@@ -402,7 +379,7 @@ Usage:
 - Actions  :
   - list                           list all helm-chart managed
   - publish                        Publish all change into repository
-  - release                        Publish all change into repository and tag this release
+  - release                        Upgrade all charts, publish all change into repository and tag this release
   - version                        Get version of this tools
   - <chart-name>                   Use chart-named sub-command (see ./sx-helm chart-name help)
 
@@ -431,7 +408,7 @@ Usage:
   - test                           Test an helm chart
   - package                        Package an helm chart
   - release                        Release an helm chart
-  - publish                        Publish an helm chart into repository
+  - publish                        Release and publish an helm chart into repository
   - delete                         Delete an helm chart
 
 - Examples  :
