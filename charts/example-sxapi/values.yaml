@@ -29,10 +29,45 @@ sxapi:
     component: helm
     app: example-sxapi
     version: "0.0.1"
-  sxapi_version: "0.3.53"
-  profile: "prod:start"
-  debug: true
-  replicas: 1
-
+  sxapi:
+    service:
+      enabled: true
+    version: "0.3.53"
+    profile: "prod:start"
+    debug: true
+    replicas: 1
+    data: |
+      sxapi.yml: |-
+        name: {{ include "startx.appName" . }}
+        description: This is the description of {{ include "startx.appName" . }}
+        version: {{ include "startx.appVersion" . }}
+        debug: "{{- .Values.sxapi.debug }}"
+        resources:
+          serviceinfo-sample:
+            _class: serviceinfo
+        log:
+          filters:
+            level: '0,1,2,3,4'
+            type: debug,info,error,warn
+        server:
+          port: '8077'
+          endpoints:
+          - path: "/"
+            desc: Display welcome message (HTML)
+            body: |-
+              <html>
+              <head><title>Example application {{ include "startx.appName" . }}</title></head>
+              <body><h1>API {{ include "startx.appName" . }} is live !</h1></body>
+              </html>
+          - path: "/health"
+            resource: serviceinfo-sample
+            endpoint: health
+          - path: "/info"
+            resource: serviceinfo-sample
+            endpoint: info
+          - path: "/ping"
+            desc: Ping the application. Return a sample message in json
+            code: '200'
+            body: pong
 # Example value to show how to define and use a value from the helm value file
 exampleValue: Example value comming from the value file
