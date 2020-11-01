@@ -10,6 +10,7 @@ List of helm chart availables in this repository, and sample to deploy it under 
 - [cluster-pipeline](charts/cluster-pipeline.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline))*** to enable tekton pipeline at a cluster level
 - [cluster-workspace](charts/cluster-workspace.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace))*** to enable codeready workspace at a cluster level
 - [project](charts/project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/project))*** to create a project with limits, quotas, networkpolicy and rbac set
+- [operator](charts/operator.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/operator))*** to create an operator with subscription (openshift) or CRD (k8s)
 - [sxapi](charts/sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi))*** to deploy a small micro-service endpoint
 - [example-deployment](charts/example-deployment.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment))*** is a example on how to deploy simple applications using helm and a deployment
 - [example-pod](charts/example-pod.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod))*** is a example on how to deploy simple applications using helm and a pod
