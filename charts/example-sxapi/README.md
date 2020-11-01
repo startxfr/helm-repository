@@ -83,3 +83,4 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 | 0.3.9   | 2020-11-01 | debug
 | 0.3.9   | 2020-11-01 | Improve example-sxapi options
 | 0.3.11  | 2020-11-01 | Test repository release
+| 0.3.17  | 2020-11-01 | publish stable update for the full repository
