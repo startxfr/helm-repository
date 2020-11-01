@@ -71,3 +71,4 @@ helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.5   | 2020-11-01 | Update dependency to 0.3.3 release and improve Note display
 | 0.3.7   | 2020-11-01 | publish stable update for the full repository
 | 0.3.11  | 2020-11-01 | Test repository release
+| 0.3.17  | 2020-11-01 | publish stable update for the full repository
