@@ -16,13 +16,13 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{/* Common operator note */}}
 {{- define "operator.notes" -}}
 -- Subscription --------------------
-{{- if .Values.subscription }}{{- if .Values.subscription.enabled }}
-{{- $name := .Values.subscription.name -}}
-{{- $namespace := .Values.operatorGroup.namespace -}}
-{{- $version := .Values.subscription.version -}}
+{{- if .subscription }}{{- if .subscription.enabled }}
+{{- $name := .subscription.name -}}
+{{- $namespace := .operatorGroup.namespace -}}
+{{- $version := .subscription.version -}}
 name: {{ $name }}
 namespace: {{ $namespace }}
-{{- with .Values.subscription.operator }}
+{{- with .subscription.operator }}
 {{- $operator := . -}}
 channel: {{ .channel | default "latest" }}
 name: {{ .name | default $name }}
@@ -40,10 +40,10 @@ subscription is disabled
 {{- end }}
 
 -- Operator group ------------------
-{{- if .Values.operatorGroup }}{{- if .Values.operatorGroup.enabled }}
-{{- $name := .Values.operatorGroup.name | default .Values.subscription.name -}}
-{{- $namespace := .Values.operatorGroup.namespace | default .Values.subscription.namespace -}}
-{{- $providedAPIs := .Values.operatorGroup.providedAPIs -}}
+{{- if .operatorGroup }}{{- if .operatorGroup.enabled }}
+{{- $name := .operatorGroup.name | default .subscription.name -}}
+{{- $namespace := .operatorGroup.namespace | default .subscription.namespace -}}
+{{- $providedAPIs := .operatorGroup.providedAPIs -}}
 name: {{ $name }}
 namespace: {{ $namespace }}
 providedAPIs: {{ $providedAPIs }}
