@@ -10,11 +10,5 @@ Cluster RBAC is deployed.
   app         : {{ include "startx.appName" . }}
   version     : {{ include "startx.appVersion" . }}
 
--- Cluster RBAC --------------------
-{{ if .Values.groups.enabled }}
- - Groups enabled ({{ range .Values.groups.list }}{{ .id }},{{- end -}})
-   # oc get ClusterRoleBinding {{- if .Values.context.scope }} -l app.startx.fr/scope={{ include "startx.appScope" . }}{{- end }}
-   # oc get group {{- if .Values.context.scope }} -l app.startx.fr/scope={{ include "startx.appScope" . }}{{- end }}
-{{ else }}
- - Cluster RBAC group disabled
-{{ end }}
+{{- include "cluster-rbac.notes" .Values }}
+

@@ -15,31 +15,6 @@ context:
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# Configuration of the tekton
-tekton:
-  # enable deployment of the tekton operator
-  enabled: true
-  # namespace used for deploying the operator
-  namespace: openshift-operators
-  # name of the operator
-  version: "1.0.1"
-  # Configuration of the tekton operator
-  operator: 
-    # The tekton channel to use
-    channel: ocp-4.5
-    # name of the operator
-    name: openshift-pipelines-operator-rh
-    # name of the CSV
-    csv: openshift-pipelines-operator
-    # source of the operator
-    source: 
-      # name of the operator source
-      name: redhat-operators
-      # name of the operator
-      namespace: openshift-marketplace
-
-
-
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
   context: 

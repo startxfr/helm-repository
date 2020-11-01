@@ -11,3 +11,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "_sample_.annotations" -}}
 {{- include "startx.annotationsInfra" . -}}
 {{- end -}}
+
+{{/* Common _sample_ annotations */}}
+{{- define "_sample_.notes" -}}
+-- _sample_ --------------------
+{{- end -}}
