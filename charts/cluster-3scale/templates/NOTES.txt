@@ -1,6 +1,5 @@
 
-
-Cluster configuration is deployed.
+3scale operator is deployed with the following characteristics
 
 -- Context -------------------------
   scope       : {{ include "startx.appScope" . }}
@@ -10,43 +9,8 @@ Cluster configuration is deployed.
   app         : {{ include "startx.appName" . }}
   version     : {{ include "startx.appVersion" . }}
 
--- Project Configuration -----------
-project : {{ .Values.project.project.name }}
-{{ if .Values.project.quotas.enabled }}
-quotas  : enabled
-{{ else }}
-quotas  : disabled
-{{ end }}
-{{ if .Values.project.limits.enabled }}
-limits  : enabled
-{{ else }}
-limits  : disabled
-{{ end }}
-{{ if .Values.project.networkpolicy.enabled }}
-networkPolicy  : enabled
-{{ else }}
-networkPolicy  : disabled
-{{ end }}
-{{ if .Values.project.rbac.enabled }}
-rbac  : enabled
-{{ else }}
-rbac  : disabled
-{{ end }}
+{{- include "project.notes" .Values.project }}
 
-{{ if .Values.operator.enabled }}
--- Operator Configuration -----------
-operator : {{ .Values.operator.operator }}:{{ .Values.operator.version }}
-namespace : {{ .Values.operator.namespace }}
-marketplace : {{ .Values.operator.marketplace }}
-channel : {{ .Values.operator.channel }}
-{{ if .Values.manager.enabled }}
-manager  : enabled
-{{ else }}
-manager  : disabled
-{{ end }}
-{{ if .Values.rhn.enabled }}
-rhn  : enabled
-{{ else }}
-rhn  : disabled
-{{ end }}
-{{ end }}
+{{- include "operator.notes" .Values.operator }}
+
+{{- include "cluster-3scale.notes" .Values }}
