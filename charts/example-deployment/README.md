@@ -82,3 +82,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
 | 0.3.7   | 2020-11-01 | publish stable update for the full repository
 | 0.3.11  | 2020-11-01 | Test repository release
+| 0.3.17  | 2020-11-01 | publish stable update for the full repository
