@@ -64,3 +64,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.2.996 | 2020-10-31 | publish stable update of this chart
 | 0.2.999 | 2020-10-31 | publish stable update for the full repository
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
+| 0.3.1  | 2020-11-01 | Move to go templates for notes generation and move app content to value property sxapi.data
