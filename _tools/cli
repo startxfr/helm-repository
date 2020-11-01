@@ -90,8 +90,7 @@ function routerPublish {
     git checkout $MASTER_BRANCH &>/dev/null
     git merge --commit --no-edit $WORK_BRANCH
     echo -e "\e[36mPublish\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
-    git push origin $MASTER_BRANCH
-    git push origin $WORK_BRANCH
+    git push origin $MASTER_BRANCH $WORK_BRANCH
     git checkout $WORK_BRANCH
 }
 
@@ -309,12 +308,7 @@ function routerChartPublish {
     if [[ -r $chart_dir ]]; then
         routerChartRelease $chart_name
         echo -e "\e[36mPublish\e[0m \e[1m$chart_name\e[0m helm chart"
-        echo -e "\e[36mPublish\e[0m Generate index for $repo_url"
-        helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
-        echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
-        git add $PROJECT_PATH/docs/packages &>/dev/null
-        git commit -m "[docs] store chart $chart_name v$current_release package added to repository index index.yaml" $PROJECT_PATH/docs/packages &>/dev/null
-        git push origin $MASTER_BRANCH
+        routerPublish
     else
         echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
         routerList
@@ -380,7 +374,7 @@ Usage:
 - Actions  :
   - list                           list all helm-chart managed
   - publish                        Publish all change into repository
-  - release                        Publish all change into repository and tag this release
+  - release                        Upgrade all charts, publish all change into repository and tag this release
   - version                        Get version of this tools
   - <chart-name>                   Use chart-named sub-command (see ./sx-helm chart-name help)
 
@@ -409,7 +403,7 @@ Usage:
   - test                           Test an helm chart
   - package                        Package an helm chart
   - release                        Release an helm chart
-  - publish                        Publish an helm chart into repository
+  - publish                        Release and publish an helm chart into repository
   - delete                         Delete an helm chart
 
 - Examples  :
