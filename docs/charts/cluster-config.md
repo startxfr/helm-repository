@@ -88,9 +88,5 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
 | 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
 | 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing the 0.3 release
-| 0.2.97  | 2020-10-31 | Unstable release of the full repository
-| 0.2.995  | 2020-10-31 | publish stable update for the full repository
-| 0.2.996  | 2020-10-31 | publish stable update for the full repository
-| 0.2.997  | 2020-10-31 | publish stable update for the full repository
-| 0.2.999  | 2020-10-31 | publish stable update for the full repository
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
+| 0.3.5  | 2020-11-01 | Update dependency to 0.3.3 release and improve Note display
