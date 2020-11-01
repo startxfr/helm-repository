@@ -14,33 +14,33 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common project note */}}
 {{- define "project.notes" -}}
-{{- if eq .Values.project.type "project" -}}
+{{- if eq .project.type "project" -}}
 -- Project --------------------
-name: {{- .Values.project.name -}}
-description: {{- .Values.project.description | default "description" -}}
-display-name: {{- .Values.project.display_name | default .Values.project.name -}}
+name: {{- .project.name -}}
+description: {{- .project.description | default "description" -}}
+display-name: {{- .project.display_name | default .project.name -}}
 {{- else -}}
 -- Namespace ------------------
-name: {{- .Values.project.name -}}
+name: {{- .project.name -}}
 {{- end -}}
 
 -- LimitRange -----------------
-{{- if .Values.limits.enabled -}}
-{{- .Values.limits.rules }}
+{{- if .limits.enabled -}}
+{{- .limits.rules }}
 {{- else -}}
 no limit range defined
 {{- end -}}
 
 -- ResourceQuota --------------
-{{- if .Values.quotas.enabled -}}
-{{- .Values.quotas.rules }}
+{{- if .quotas.enabled -}}
+{{- .quotas.rules }}
 {{- else -}}
 no resource quota defined
 {{- end -}}
 
 -- NetworkPolicy --------------
-{{- if .Values.networkpolicy.enabled -}}
-{{ range .Values.networkpolicy.rules }} 
+{{- if .networkpolicy.enabled -}}
+{{ range .networkpolicy.rules }} 
 - {{ .id }}
 {{ end }}
 {{- else -}}
@@ -48,11 +48,11 @@ no network policy defined
 {{- end -}}
 
 -- RBAC -----------------------
-{{- if .Values.rbac.enabled -}}
-{{ range .Values.rbac.groups }}
+{{- if .rbac.enabled -}}
+{{ range .rbac.groups }}
 - group {{ .id }} has role {{ .role }}
 {{ end }}
-{{ range .Values.rbac.users }}
+{{ range .rbac.users }}
 - user {{ .id }} has role {{ .role }}
 {{ end }}
 {{- else -}}
