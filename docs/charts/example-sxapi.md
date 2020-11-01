@@ -80,3 +80,4 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 | 0.3.3  | 2020-11-01 | Update sxapi chart dependency to 0.3.1 and moving application data to value file
 | 0.3.5  | 2020-11-01 | Update dependency to 0.3.3 release
 | 0.3.7  | 2020-11-01 | publish stable update for the full repository
+| 0.3.9  | 2020-11-01 | debug
