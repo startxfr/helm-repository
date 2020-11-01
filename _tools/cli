@@ -279,6 +279,7 @@ function routerChartRelease {
                 fi
             fi
         fi
+        git checkout $WORK_BRANCH &>/dev/null
         echo -e "\e[35mRelease\e[0m Update \e[1m$chart_name\e[0m release number $next_release in $chart_name/Chart.yaml"
         echo "| $next_release  | $next_date | $next_description" >> $chart_dir/README.md
         sed -i "s/$current_release/$next_release/" $chart_dir/Chart.yaml
