@@ -1,0 +1,14 @@
+{{- if .Values.rhn.enabled -}}
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: "default"
+  namespace: {{ .Values.project.name | quote }}
+  labels:
+    {{- include "cluster-vault.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-default-serviceaccount"
+  annotations: 
+    {{- include "cluster-vault.annotations" . | nindent 4 }}
+imagePullSecrets:
+- name: "{{- .Values.project.name -}}-rhn"
+{{- end -}}
