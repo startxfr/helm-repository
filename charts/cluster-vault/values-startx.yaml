@@ -4,86 +4,80 @@ context:
   scope: startx
   cluster: localhost
   environment: dev
-  component: infra
-  app: startx-infra
-manager:
+  component: vault
+  app: startx-vault
+route: 
   enabled: true
-rhn:
-  enabled: true
-  user: startx_rhnuser
-  pwd: startx_rhnpwd
 project: 
   context: 
     scope: startx
     cluster: localhost
     environment: dev
-    component: infra
-    app: startx-infra
+    component: vault
+    app: startx-vault
   project: 
     type: project
-    name: startx-3scale
-    display_name: STARTX Infra - 3SCALE
-    description: STARTX 3Scale enterprise api-management & control plane
+    name: startx-vault
+    display_name: STARTX Infra - VAULT
+    description: STARTX Private Vault storage & control plane
   rbac: 
     enabled: true
     groups: 
     - id: dev
       name: dev
-      clusterRole: basic-user
+      clusterRole: view
     - id: devops
       name: devops
       clusterRole: admin
     - id: ops
       name: ops
       clusterRole: admin
+    user: 
+    - id: vault-sa
+      name: system:serviceaccount:startx-vault:vault
+      clusterRole: edit
+    - id: vault-agent-injector-sa
+      name: system:serviceaccount:startx-vault:vault-agent-injector
+      clusterRole: admin
   networkpolicy: 
-    enabled: true
-    rules: 
-    - id: allow-from-openshift-ingress
-      spec: |
-        podSelector:
-          matchLabels:
-            app: 3scale
-        ingress:
-          - from:
-              - namespaceSelector: {}
+    enabled: false
   limits: 
     enabled: true
     rules:  |
       limits:
         - type: "Pod"
           min:
-            cpu: 50m
+            cpu: 10m
             memory: 32Mi
           max:
-            cpu: "10"
-            memory: 34Gi
+            cpu: "500m"
+            memory: "512Mi"
         - type: "Container"
           default:
-            cpu: 400m
-            memory: 512Mi
+            cpu: 100m
+            memory: 64Mi
           defaultRequest:
             cpu: 100m
-            memory: 128Mi
+            memory: 64Mi
           min:
-            cpu: 50m
+            cpu: 10m
             memory: 32Mi
           max:
-            cpu: "10"
-            memory: 32Gi
+            cpu: "500m"
+            memory: "512Mi"
   quotas: 
     enabled: true
     rules:  |
       hard:
-        limits.cpu: "25"
-        limits.memory: "120Gi"
-        requests.cpu: "6"
-        requests.memory: "10000Mi"
-        requests.storage: "30Gi"
-        persistentvolumeclaims: "10"
+        limits.cpu: "2"
+        limits.memory: "1500Mi"
+        requests.cpu: "1"
+        requests.memory: "512Mi"
+        requests.storage: "0"
+        persistentvolumeclaims: "0"
         ephemeral-storage: "0" 
-        gp2.storageclass.storage.k8s.io/requests.storage: "20Gi"
-        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "10"
+        gp2.storageclass.storage.k8s.io/requests.storage: "0"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
         aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
@@ -102,44 +96,200 @@ project:
         ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
         ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "2Gi"
-        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
         ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
         openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        pods: "25"
-        services: "20"
+        pods: "6"
+        services: "5"
         services.loadbalancers: "0"
         services.nodeports: "0"
-        secrets: "50"
-        configmaps: "16"
-        replicationcontrollers: "30"
-        openshift.io/imagestreams: "25"
-        count/daemonsets.apps: "0"
-        count/replicasets.apps: "6"
+        secrets: "35"
+        configmaps: "0"
+        replicationcontrollers: "0"
+        openshift.io/imagestreams: "0"
+        count/replicasets.apps: "4"
+        count/daemonsets.apps: "2"
         count/deployments.apps: "2"
-operator:
-  context: 
-    scope: startx
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
-  subscription:
+vault:
+  global:
     enabled: true
-    name: "3scale-operator"
-    namespace: "startx-3scale"
-    version: "0.6.0"
-    operator: 
-      channel: threescale-2.9
-      name: 3scale-operator
-      csv: 3scale-operator
-      source: 
-        name: redhat-operators
-        namespace: openshift-marketplace
-  operatorGroup:
+    imagePullSecrets: []
+    tlsDisable: true
+  injector:
     enabled: true
-    name: "3scale-operator"
-    namespace: "startx-3scale"
-    providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"
+    image:
+      repository: "hashicorp/vault-k8s"
+      tag: "0.3.0"
+      pullPolicy: IfNotPresent
+    agentImage:
+      repository: "vault"
+      tag: "1.4.0"
+    authPath: "auth/kubernetes"
+    logLevel: "info"
+    logFormat: "standard"
+    revokeOnShutdown: false
+    namespaceSelector: {}
+    certs:
+      secretName: null
+      caBundle: ""
+      certName: tls.crt
+      keyName: tls.key
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 100m
+      limits:
+        memory: 256Mi
+        cpu: 250m
+    extraEnvironmentVars: {}
+    affinity: null
+    tolerations: null
+    nodeSelector: null
+  server:
+    image:
+      repository: "vault"
+      tag: "1.4.0"
+      pullPolicy: IfNotPresent
+    updateStrategyType: "OnDelete"
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 100m
+      limits:
+        memory: 256Mi
+        cpu: 250m
+    ingress:
+      enabled: false
+      labels: {}
+      annotations: {}
+      hosts:
+        - host: chart-example.local
+          paths: []
+      tls: []
+    authDelegator:
+      enabled: true
+    extraContainers: null
+    shareProcessNamespace: false
+    extraArgs: ""
+    readinessProbe:
+      enabled: true
+    livenessProbe:
+      enabled: true
+      path: "/v1/sys/health?standbyok=true"
+      initialDelaySeconds: 60
+    preStopSleepSeconds: 5
+    extraEnvironmentVars: {}
+    extraSecretEnvironmentVars: []
+    extraVolumes: []
+    affinity: |
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: {{ template "vault.name" . }}
+                app.kubernetes.io/instance: "{{ .Release.Name }}"
+                component: server
+            topologyKey: kubernetes.io/hostname
+    tolerations: {}
+    nodeSelector: {}
+    extraLabels: {}
+    annotations: {}
+    service:
+      enabled: true
+      clusterIP: None
+      type: ClusterIP
+      port: 8200
+      targetPort: 8200
+      annotations: {}
+    dataStorage:
+      enabled: true
+      size: 10Gi
+      storageClass: null
+      accessMode: ReadWriteOnce
+    auditStorage:
+      enabled: false
+      size: 10Gi
+      storageClass: null
+      accessMode: ReadWriteOnce
+    dev:
+      enabled: true
+    standalone:
+      enabled: "-"
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        storage "file" {
+          path = "/vault/data"
+        }
+
+        # Example configuration for using auto-unseal, using Google Cloud KMS. The
+        # GKMS keys must already exist, and the cluster must have a service account
+        # that is authorized to access GCP KMS.
+        #seal "gcpckms" {
+        #   project     = "vault-helm-dev"
+        #   region      = "global"
+        #   key_ring    = "vault-helm-unseal-kr"
+        #   crypto_key  = "vault-helm-unseal-key"
+        #}
+    ha:
+      enabled: false
+      replicas: 3
+      raft:
+        enabled: false
+        config: |
+          ui = true
+
+          listener "tcp" {
+            tls_disable = 1
+            address = "[::]:8200"
+            cluster_address = "[::]:8201"
+          }
+
+          storage "raft" {
+            path = "/vault/data"
+          }
+
+          service_registration "kubernetes" {}
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        storage "consul" {
+          path = "vault"
+          address = "HOST_IP:8500"
+        }
+
+        service_registration "kubernetes" {}
+
+        # Example configuration for using auto-unseal, using Google Cloud KMS. The
+        # GKMS keys must already exist, and the cluster must have a service account
+        # that is authorized to access GCP KMS.
+        #seal "gcpckms" {
+        #   project     = "vault-helm-dev-246514"
+        #   region      = "global"
+        #   key_ring    = "vault-helm-unseal-kr"
+        #   crypto_key  = "vault-helm-unseal-key"
+        #}
+      disruptionBudget:
+        enabled: true
+        maxUnavailable: null
+    serviceAccount:
+      annotations: {}
+  ui:
+    enabled: true
+    serviceType: "ClusterIP"
+    serviceNodePort: null
+    externalPort: 8200
+    annotations: {}

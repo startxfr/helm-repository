@@ -15,11 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-vault.notes" -}}
--- 3Scale --------------------------
-{{- if .manager }}{{- if .manager.enabled }}
-manager is enabled
-{{- end }}{{- end }}
-{{- if .rhn }}{{- if .rhn.enabled }}
-RHN is enabled with user {{- .rhn.user }}
+-- Hashicorp Vault -----------------
+{{- if .route }}{{- if .route.enabled }}
+route is enabled
 {{- end }}{{- end }}
 {{- end -}}
