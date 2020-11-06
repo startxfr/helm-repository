@@ -79,3 +79,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.5   | 2020-11-01 | Update dependency to 0.3.3 release and improve Note display
 | 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
 | 0.3.17  | 2020-11-04 | Create chart cluster-quay from cluster-3scale
+| 0.3.18  | 2020-11-06 | Add quay template to configure QuayEcosystem deployment

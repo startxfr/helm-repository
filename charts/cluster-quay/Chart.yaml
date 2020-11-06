@@ -2,13 +2,13 @@ apiVersion: v2
 # Name of this Helm chart
 name: cluster-quay
 # Description of this Helm chart
-description: Helm chart used to configure 3scale at the cluster level
+description: Helm chart used to configure Quay.io private registry at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 0.3.17
+version: 0.3.18
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 0.3.17
+appVersion: 0.3.18
 # Icon of this helm-chart
 icon: https://virtualmin.com/images/gears.svg
 
@@ -21,3 +21,7 @@ dependencies:
     repository: https://startxfr.github.io/helm-repository/packages/
     version: 0.3.3
     alias: operator
+  - name: operator
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.3.3
+    alias: operatorsec

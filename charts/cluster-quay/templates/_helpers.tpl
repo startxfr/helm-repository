@@ -15,9 +15,9 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-quay.notes" -}}
--- 3Scale --------------------------
-{{- if .manager }}{{- if .manager.enabled }}
-manager is enabled
+-- Quay registry -------------------
+{{- if .quay }}{{- if .quay.enabled }}
+quay is enabled
 {{- end }}{{- end }}
 {{- if .rhn }}{{- if .rhn.enabled }}
 RHN is enabled with user {{- .rhn.user }}

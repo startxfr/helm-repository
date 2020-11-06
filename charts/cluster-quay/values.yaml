@@ -1,7 +1,7 @@
 # Default values for cluster-quay.
 
 # Application deployment context
-context: 
+context:  &context
   # Name of the global scope for this application (organisational tenant)
   scope: default
   # Name of the cluster running this application (plateform tenant)
@@ -11,14 +11,10 @@ context:
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: startx-infra
+  app: default-quay
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# Deploy an API manager
-manager:
-  # Enable the configuration of the API manager
-  enabled: true
 # RHN informations for the container catalog
 rhn:
   # Enable the configuration of the rhn account for image pull
@@ -27,21 +23,76 @@ rhn:
   user: rhnuser
   # Redhat Network access password to the Rh container catalog
   pwd: rhnpwd
+# Deploy aroute to the quay registry
+route:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Enable the configuration of the API manager
+  name: registry
+# Deploy an API manager
+quay:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Image to use for the database deployment
+  image: 'quay.io/redhat/quay:v3.2.0'
+  # The size of the persistant volume to use form image layer storage
+  size: '10Gi'
+  # The storage class used for images persistance
+  storageClass: 'aws-generic-retain'
+  # The storage access mode used for registry recording
+  storageAccess: 'ReadWriteOnce'
+  # Enable pull secret using rhn credentials
+  pullSecretEnabled: true
+  # Configuration of the admin user
+  admin: 
+    # username of the admin user
+    username: "admin"
+    # password for the admin user
+    password: "mysecret123"
+    # email of the admin user
+    email: "mail@example.com"
+  # Configuration of the clair scanner
+  clair: 
+    # Enable the clair service
+    enabled: true
+    # Image to use for the database deployment
+    image: 'quay.io/redhat/clair-jwt:v3.2.0'
+    # The size of the persistant volume to use
+    size: '2Gi'
+  # Configuration of the database
+  db: 
+    # name of the database to use
+    name: "quay"
+    # Image to use for the database deployment
+    image: 'registry.access.redhat.com/rhscl/postgresql-96-rhel7:1'
+    # The size of the persistant volume to use
+    size: '2Gi'
+    # Credentials to use to get access to the database
+    creds:
+      # username used to get access to the database
+      username: "admin"
+      # password associated to the user
+      password: "secretdemerde"
+      # database root password (admin)
+      root-password: "S3cr3tDeQuay"
+  # Configuration of the redis cache
+  redis: 
+    # Image to use for the redis deployment
+    image: 'registry.access.redhat.com/rhscl/redis-32-rhel7:latest'
+    # Credentials to use to get access to the database
+    creds:
+      # password to use to access redis cache
+      password: "secretdemerde"
 
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   context: 
-    scope: default
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
+    <<: *context
   project: 
     type: project
-    name: example-3scale
-    display_name: 3SCALE Example
-    description: 3Scale enterprise api-management & control plane example from STARTX
+    name: "default-quay"
+    display_name: "Default QUAY"
   rbac: 
     enabled: false
   networkpolicy: 
@@ -54,25 +105,41 @@ project:
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
   context: 
-    scope: default
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
+    <<: *context
   subscription:
     enabled: true
-    name: "3scale-operator"
-    namespace: "example-3scale"
-    version: "0.6.0"
+    name: "quay-operator"
+    namespace: "default-quay"
+    version: "3.3.2-20200903"
     operator: 
-      channel: threescale-2.9
-      name: 3scale-operator
-      csv: 3scale-operator
+      channel: quay-v3.3
+      name: quay-operator
+      csv: red-hat-quay
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
-    name: "3scale-operator"
-    namespace: "example-3scale"
-    providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"
+    name: "default-quay"
+    namespace: "default-quay"
+    providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
+
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorsec:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "container-security-operator"
+    namespace: "openshift-operators"
+    version: "3.3.1"
+    operator: 
+      channel: quay-v3.3
+      name: container-security-operator
+      csv: container-security-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
