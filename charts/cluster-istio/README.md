@@ -1,6 +1,6 @@
 # STARTX helm : cluster-istio
 
-This helm chart is used to configure Metering at the cluster level.
+This helm chart is used to configure Istio at the cluster level.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
 state orchestrated by gitops tools like ArgoCD.
 
@@ -59,7 +59,8 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.19  | 2020-11-06 | Create chart cluster-istio from cluster-ocs
-| 0.3.20  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
-| 0.3.19  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
+| 0.3.20  | 2020-11-06 | Add project, operator subscription, istioConfig and reports support and example in values.yaml
+| 0.3.19  | 2020-11-06 | Add project, operator subscription, istioConfig and reports support and example in values.yaml
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
-| 0.3.21  | 2020-11-06 | Create chart cluster-istio from cluster-metering
+| 0.3.21  | 2020-11-06 | Create chart cluster-istio from cluster-istio
+| 0.3.21  | 2020-11-07 | Add ServiceMesh deployment with elastic,kiali and jager dependencies management. Could create a controlPlane and memberroll.

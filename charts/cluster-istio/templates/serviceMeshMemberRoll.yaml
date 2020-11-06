@@ -1,0 +1,20 @@
+{{- if .Values.istio.members -}}{{- if .Values.istio.members.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "default-istio" -}}
+{{- range .Values.istio.members.list }}
+---
+kind: ServiceMeshMemberRoll
+apiVersion: maistra.io/v1
+metadata:
+  name: {{ .name | default "default" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-istio.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "default" }}-servicemeshmemberroll"
+  annotations:
+    {{- include "cluster-istio.annotations" $root | nindent 4 }}
+spec:
+  members:
+    {{- .projects | nindent 4 }}
+{{- end }}
+{{- end -}}{{- end -}}
