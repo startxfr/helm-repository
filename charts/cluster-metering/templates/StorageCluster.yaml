@@ -1,0 +1,36 @@
+{{- if .Values.ocs.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "default-ocs" -}}
+kind: StorageCluster
+apiVersion: ocs.openshift.io/v1
+metadata:
+  name: {{ .Values.ocs.name | default "default" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-metering.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.ocs.name | default "default" }}-storagecluster"
+  annotations:
+    {{- include "cluster-metering.annotations" . | nindent 4 }}
+spec:
+  version: {{ .Values.ocs.version | default "4.5.0" | quote }}
+  externalStorage: {}
+  manageNodes: false
+  storageDeviceSets:
+{{- range .Values.ocs.storage }}
+    - name: {{ .name | default "default-deviceset" | quote }}
+      replica: {{ .replicas | default 3 | quote }}
+      count: 1
+      placement: {}
+      portable: true
+      resources: {}
+      dataPVCTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: {{ .size | default "512Gi" | quote }}
+          storageClassName: {{ .storageClass | default "gp2" | quote }}
+          volumeMode: Block
+{{- end }}
+{{- end -}}

@@ -1,0 +1,61 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-quay
+ocs:
+  enabled: true
+  name: startx-ocs
+  version: "4.5.0"
+  storage:
+  - name: ocs-deviceset
+    replicas: 3
+    size: 512Gi
+    storageClass: aws-generic-retain
+project: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "openshift-storage"
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      clusterRole: view
+    - id: devops
+      name: devops
+      clusterRole: view
+    - id: ops
+      name: ops
+      clusterRole: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "ocs-operator"
+    namespace: "openshift-storage"
+    version: "4.5.0"
+    operator: 
+      channel: stable-4.5
+      name: ocs-operator
+      csv: ocs-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "openshift-storage"
+    namespace: "openshift-storage"
+    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageClusterInitialization.v1.ocs.openshift.io"
