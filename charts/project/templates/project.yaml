@@ -6,6 +6,7 @@ metadata:
   labels:
     {{- include "project.labels" . | nindent 4 }}
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-project"
+    openshift.io/cluster-monitoring: "true"
   annotations:
     {{- include "project.annotations" . | nindent 4 }}
     openshift.io/description: "{{- .Values.project.description | default "description" -}}"

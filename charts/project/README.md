@@ -101,3 +101,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.1   | 2020-11-01 | Move to go templates for notes generation
 | 0.3.3   | 2020-11-01 | Test new scope for note template helper
 | 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
+| 0.3.18  | 2020-11-06 | Add default support for monitoring at the namespace or project level
