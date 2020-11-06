@@ -1,0 +1,73 @@
+# Default values for cluster-metering.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-ocs
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# configuration of the Storage service
+ocs:
+  # Enable the deployment of a OCS cluster
+  enabled: true
+  # Redhat Network access user to the RH container catalog
+  name: default-ocs
+  # Version of the OCS to use for this cluster
+  version: "4.5.0"
+  # Configure storage backend for this cluster
+  storage:
+    # Name of the storage pool
+  - name: ocs-deviceset
+    # Number of OSD replicas
+    replicas: 3
+    # Size of each OSD storage volume
+    size: 512Gi
+    # Storage class used to provision OSD storage
+    storageClass: aws-generic-retain
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "openshift-storage"
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "ocs-operator"
+    namespace: "openshift-storage"
+    version: "4.5.0"
+    operator: 
+      channel: stable-4.5
+      name: ocs-operator
+      csv: ocs-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "openshift-storage"
+    namespace: "openshift-storage"
+    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageClusterInitialization.v1.ocs.openshift.io"
