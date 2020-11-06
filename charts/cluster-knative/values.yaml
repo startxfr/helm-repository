@@ -1,0 +1,99 @@
+# Default values for cluster-knative.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-knative
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# configuration of the knative-serving service
+kServing:
+  # Enable the deployment of the knative-serving service
+  enabled: true
+  # name of the knative-serving service
+  name: "knative-serving"
+  # configuration of service HA
+  replicas: 2
+# configuration of the knative-eventing service
+kEventing:
+  # Enable the deployment of the knative-eventing service
+  enabled: true
+  # name of the knative-eventing service
+  name: "knative-eventing"
+
+
+# Configuration of the project for operator (see https://startxfr.github.io/helm-repository/charts/project)
+projectOperator: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "openshift-serverless"
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the project for knative serving (see https://startxfr.github.io/helm-repository/charts/project)
+projectKServing: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "knative-serving"
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the project for knative eventing (see https://startxfr.github.io/helm-repository/charts/project)
+projectKEventing: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "knative-eventing"
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "serverless-operator"
+    namespace: "openshift-serverless"
+    version: "v1.9.0"
+    operator: 
+      channel: "4.5"
+      name: serverless-operator
+      csv: serverless-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
