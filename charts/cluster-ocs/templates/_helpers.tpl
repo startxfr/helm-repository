@@ -15,11 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-ocs.notes" -}}
--- Quay registry -------------------
-{{- if .quay }}{{- if .quay.enabled }}
-quay is enabled
-{{- end }}{{- end }}
-{{- if .rhn }}{{- if .rhn.enabled }}
-RHN is enabled with user {{- .rhn.user }}
+-- Openshift Container Storage -----
+{{- if .ocs }}{{- if .ocs.enabled }}
+ocs is enabled
 {{- end }}{{- end }}
 {{- end -}}
