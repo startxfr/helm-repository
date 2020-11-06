@@ -9,6 +9,10 @@ List of helm chart availables in this repository, and sample to deploy it under 
 - [cluster-3scale](charts/cluster-3scale.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale))*** to deploy a 3Scale infrastructure at a cluster level
 - [cluster-pipeline](charts/cluster-pipeline.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline))*** to enable tekton pipeline at a cluster level
 - [cluster-workspace](charts/cluster-workspace.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace))*** to enable codeready workspace at a cluster level
+- [cluster-vault](charts/cluster-vault.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault))*** to enable hashicorp vault service at a cluster level
+- [cluster-quay](charts/cluster-quay.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay))*** to enable Quay.io private repository at a cluster level
+- [cluster-ocs](charts/cluster-ocs.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs))*** to enable Openshift Container Storage at a cluster level
+- [cluster-metering](charts/cluster-metering.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering))*** to enable Metering at a cluster level
 - [project](charts/project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/project))*** to create a project with limits, quotas, networkpolicy and rbac set
 - [operator](charts/operator.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/operator))*** to create an operator with subscription (openshift) or CRD (k8s)
 - [sxapi](charts/sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi))*** to deploy a small micro-service endpoint
