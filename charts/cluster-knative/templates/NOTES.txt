@@ -1,0 +1,16 @@
+
+3scale operator is deployed with the following characteristics
+
+-- Context -------------------------
+  scope       : {{ include "startx.appScope" . }}
+  cluster     : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+  component   : {{ include "startx.appComponent" . }}
+  app         : {{ include "startx.appName" . }}
+  version     : {{ include "startx.appVersion" . }}
+
+{{- include "project.notes" .Values.project }}
+
+{{- include "operator.notes" .Values.operator }}
+
+{{- include "cluster-knative.notes" .Values }}
