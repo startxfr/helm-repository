@@ -1,0 +1,19 @@
+{{- if .Values.metering.reports -}}{{- if .Values.metering.reports.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "default-metering" -}}
+{{- range .Values.metering.reports.list }}
+---
+kind: Report
+apiVersion: metering.openshift.io/v1
+metadata:
+  name: {{ .name | default "default-report" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-istio.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "default-report" }}-report"
+  annotations:
+    {{- include "cluster-istio.annotations" $root | nindent 4 }}
+spec:
+  {{- .spec | nindent 2 }}
+{{- end }}
+{{- end -}}{{- end -}}
