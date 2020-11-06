@@ -2,7 +2,7 @@ apiVersion: v2
 # Name of this Helm chart
 name: cluster-knative
 # Description of this Helm chart
-description: Helm chart used to configure Metering at the cluster level
+description: Helm chart used to configure Knative at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
@@ -16,7 +16,15 @@ dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
     version: 0.3.18
-    alias: project
+    alias: projectOperator
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.3.18
+    alias: projectKServing
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.3.18
+    alias: projectKEventing
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
     version: 0.3.18
