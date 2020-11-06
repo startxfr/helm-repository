@@ -97,3 +97,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
 | 0.3.5   | 2020-11-01 | Update dependency to 0.3.3 release and improve Note display
 | 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
+| 0.3.20  | 2020-11-06 | Add v prefix to the operator version
