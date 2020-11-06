@@ -60,3 +60,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.18  | 2020-11-06 | Create chart cluster-ocs from cluster-quay
 | 0.3.19  | 2020-11-06 | Add deployment of an OCS cluster using StorageCluster ressource
+| 0.3.19  | 2020-11-06 | Change the storageTemplate name and app name
