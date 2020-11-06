@@ -1,38 +1,66 @@
 # Default values for configuration of a STARTX cluster
 # see values.yaml for explanation on each params
-context: 
+context: &context
   scope: startx
   cluster: localhost
   environment: dev
   component: infra
-  app: startx-infra
-manager:
-  enabled: true
+  app: startx-quay
 rhn:
   enabled: true
   user: startx_rhnuser
   pwd: startx_rhnpwd
+route:
+  enabled: true
+  name: registry
+quay:
+  enabled: true
+  image: 'quay.io/redhat/quay:v3.2.0'
+  size: '10Gi'
+  storageClass: 'aws-generic-retain'
+  storageAccess: 'ReadWriteOnce'
+  pullSecretEnabled: true
+  admin: 
+    username: "admin"
+    password: "secretdemerde"
+    email: "cl@startx.fr"
+  clair: 
+    enabled: true
+    image: 'quay.io/redhat/clair-jwt:v3.2.0'
+    size: '2Gi'
+    creds:
+      username: "admin"
+      password: "secretdemerde"
+      root-password: "S3cr3tDeQuay"
+  db: 
+    name: "quay"
+    image: 'registry.access.redhat.com/rhscl/postgresql-96-rhel7:1'
+    size: '2Gi'
+    creds:
+      username: "admin"
+      password: "secretdemerde"
+      root-password: "S3cr3tDeQuay"
+  redis: 
+    image: 'registry.access.redhat.com/rhscl/redis-32-rhel7:latest'
+    creds:
+      password: "secretdemerde"
 project: 
   context: 
-    scope: startx
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
+    <<: *context
   project: 
     type: project
-    name: startx-3scale
-    display_name: STARTX Infra - 3SCALE
-    description: STARTX 3Scale enterprise api-management & control plane
+    name: "startx-quay"
+    display_name: "STARTX Infra - QUAY"
+    description: "STARTX Private Quay enterprise registry & control plane"
   rbac: 
     enabled: true
     groups: 
     - id: dev
       name: dev
-      clusterRole: basic-user
+      clusterRole: view
     - id: devops
       name: devops
-      clusterRole: admin
+      clusterRole: edit
     - id: ops
       name: ops
       clusterRole: admin
@@ -43,7 +71,9 @@ project:
       spec: |
         podSelector:
           matchLabels:
-            app: 3scale
+            app: quay-operator
+            quay-enterprise-component: app
+            quay-enterprise-cr: startx
         ingress:
           - from:
               - namespaceSelector: {}
@@ -54,38 +84,38 @@ project:
         - type: "Pod"
           min:
             cpu: 50m
-            memory: 32Mi
+            memory: 64Mi
           max:
-            cpu: "10"
-            memory: 34Gi
+            cpu: "1"
+            memory: "4096Mi"
         - type: "Container"
+          defaultRequest:
+            cpu: 200m
+            memory: 256Mi
           default:
             cpu: 400m
             memory: 512Mi
-          defaultRequest:
-            cpu: 100m
-            memory: 128Mi
           min:
             cpu: 50m
-            memory: 32Mi
+            memory: 64Mi
           max:
-            cpu: "10"
-            memory: 32Gi
+            cpu: "1"
+            memory: "4096Mi"
   quotas: 
     enabled: true
     rules:  |
       hard:
-        limits.cpu: "25"
-        limits.memory: "120Gi"
-        requests.cpu: "6"
-        requests.memory: "10000Mi"
-        requests.storage: "30Gi"
-        persistentvolumeclaims: "10"
-        ephemeral-storage: "0" 
-        gp2.storageclass.storage.k8s.io/requests.storage: "20Gi"
-        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "10"
-        aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        limits.cpu: "5"
+        limits.memory: "10Gi"
+        requests.cpu: "1600m"
+        requests.memory: "5000Mi"
+        requests.storage: "18Gi"
+        persistentvolumeclaims: "5"
+        ephemeral-storage: "0"
+        gp2.storageclass.storage.k8s.io/requests.storage: "8Gi"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
+        aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "10Gi"
+        aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "1"
         aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
         aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
@@ -102,44 +132,57 @@ project:
         ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
         ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "2Gi"
-        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
         ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
         openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        pods: "25"
-        services: "20"
+        pods: "10"
+        services: "10"
         services.loadbalancers: "0"
         services.nodeports: "0"
-        secrets: "50"
-        configmaps: "16"
-        replicationcontrollers: "30"
-        openshift.io/imagestreams: "25"
+        secrets: "35"
+        configmaps: "5"
+        replicationcontrollers: "0"
+        openshift.io/imagestreams: "0"
+        count/replicasets.apps: "10"
         count/daemonsets.apps: "0"
-        count/replicasets.apps: "6"
-        count/deployments.apps: "2"
+        count/deployments.apps: "10"
 operator:
   context: 
-    scope: startx
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
+    <<: *context
   subscription:
     enabled: true
-    name: "3scale-operator"
-    namespace: "startx-3scale"
-    version: "0.6.0"
+    name: "quay-operator"
+    namespace: "startx-quay"
+    version: "3.3.2-20200903"
     operator: 
-      channel: threescale-2.9
-      name: 3scale-operator
-      csv: 3scale-operator
+      channel: quay-v3.3
+      name: quay-operator
+      csv: red-hat-quay
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
-    name: "3scale-operator"
-    namespace: "startx-3scale"
-    providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"
+    name: "startx-quay"
+    namespace: "startx-quay"
+    providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
+operatorsec:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "container-security-operator"
+    namespace: "openshift-operators"
+    version: "3.3.1"
+    operator: 
+      channel: quay-v3.3
+      name: container-security-operator
+      csv: container-security-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
