@@ -11,111 +11,42 @@ context:  &context
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: default-metering
+  app: default-istio
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# configuration of the metering service
-metering:
-  # Enable the deployment of the metering service
+# configuration of the istio service
+istio:
+  # Enable the deployment of the istio service
   enabled: true
-  # configuration of the hive service
-  reportingOperator:
-    # Enable the deployment of the reporting-operator service
-    enabled: true
-    # Resource spec for reporting-operator pods
-    resources: |
-      limits:
-        cpu: 1
-        memory: 500Mi
-      requests:
-        cpu: 500m
-        memory: 100Mi
-  # configuration of the presto service
-  presto:
-    # Enable the deployment of the presto service
-    enabled: true
-    # Configuration of the coordinator deployment
-    coordinator:
-      # Resource spec for hive coordinator pods
-      resources: |
-        limits:
-          cpu: 4
-          memory: 4Gi
-        requests:
-          cpu: 2
-          memory: 2Gi
-    # Configuration of the worker deployment
-    worker:
-      # Resource spec for hive worker pods
-      resources: |
-        limits:
-          cpu: 8
-          memory: 8Gi
-        requests:
-          cpu: 4
-          memory: 2Gi
-  # configuration of the hive service
-  hive:
-    # Enable the deployment of the hive service
-    enabled: true
-    # Configuration of the server deployment
-    server:
-      # Resource spec for hive server pods
-      resources: |
-        limits:
-          cpu: 1
-          memory: 1Gi
-        requests:
-          cpu: 500m
-          memory: 500Mi
-    # Configuration of the metastore deployment
-    metastore:
-      # Resource spec for hive metastore pods
-      resources: |
-        limits:
-          cpu: 4
-          memory: 2Gi
-        requests:
-          cpu: 500m
-          memory: 650Mi
-    # Size of the hive storage volume
-    size: 5Gi
-    # Storage class used to provision hive storage (must be readWriteMany)
-    storageClass: gp2
+  # Name of the istio service
+  name: default
   # deploy a list of report ressources
-  reports:
-    # Enable the deployment of the hive service
+  members:
+    # Enable the deployment of MemberRoll
     enabled: true
-    # Size of the hive storage volume
+    # lst of various members roll
     list: 
-      # Name of the report
-    - name: namespace-cpu-usage-hourly
-      # Spec of the report
-      spec: |
-        query: "namespace-cpu-usage"
-        schedule:
-          period: "hourly"
-          hourly:
-            minute: 0
-            second: 0
+      # Name of the member group
+    - name: default
+      # Project part of this memberroll
+      projects: |
+        - "sxv4-dev-cl"
+        - "sxv4-factory"
+        - "sxv4-preprod"
+        - "sxv4-prod"
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   context: 
     <<: *context
   project: 
-    type: namespace
-    name: "openshift-metering"
+    type: project
+    name: "example-istio"
+    display_name: ISTIO Example
+    description: ISTIO System running tracing, monitoring, management and routing tools example from startx
   rbac: 
-    enabled: true
-    groups: 
-    - id: devops
-      name: devops
-      clusterRole: view
-    - id: ops
-      name: ops
-      clusterRole: admin
+    enabled: false
   networkpolicy: 
     enabled: false
   limits: 
@@ -123,24 +54,81 @@ project:
   quotas: 
     enabled: false
 
-# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
-operator:
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
   context: 
     <<: *context
   subscription:
     enabled: true
-    name: "metering-ocp"
-    namespace: "openshift-metering"
-    version: "4.5.0-202009120215.p0"
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "4.5.0-202009041228.p0"
     operator: 
       channel: "4.5"
-      name: metering-ocp
-      csv: metering-operator
+      name: elasticsearch-operator
+      csv: elasticsearch-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the kiali operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorKiali:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "kiali-ossm"
+    namespace: "openshift-operators"
+    version: "v1.12.15"
+    operator: 
+      channel: "stable"
+      name: kiali-ossm
+      csv: kiali-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the jaeger operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorJaeger:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "jaeger-product"
+    namespace: "openshift-operators"
+    version: "v1.17.6"
+    operator: 
+      channel: "stable"
+      name: jaeger-product
+      csv: jaeger-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the istio operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorIstio:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "servicemeshoperator"
+    namespace: "openshift-operators"
+    version: "v1.1.8"
+    operator: 
+      channel: "stable"
+      name: servicemeshoperator
+      csv: servicemeshoperator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
-    name: "openshift-metering"
-    namespace: "openshift-metering"
-    providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "Config.v1alpha1.operator.tekton.dev,Elasticsearch.v1.logging.openshift.io,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,Kibana.v1.logging.openshift.io,KnativeEventing.v1alpha1.operator.knative.dev,KnativeServing.v1alpha1.operator.knative.dev,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
