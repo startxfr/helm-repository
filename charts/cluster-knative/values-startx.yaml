@@ -1,0 +1,95 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-knative
+kServing:
+  enabled: true
+  name: "startx-kserving"
+  replicas: 2
+kEventing:
+  enabled: true
+  name: "startx-keventing"
+projectOperator: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "openshift-serverless"
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops
+      name: devops
+      clusterRole: edit
+    - id: ops
+      name: ops
+      clusterRole: edit
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+projectKServing: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "knative-serving"
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops
+      name: devops
+      clusterRole: edit
+    - id: ops
+      name: ops
+      clusterRole: edit
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+projectKEventing: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "knative-eventing"
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops
+      name: devops
+      clusterRole: edit
+    - id: ops
+      name: ops
+      clusterRole: edit
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "serverless-operator"
+    namespace: "openshift-serverless"
+    version: "v1.9.0"
+    operator: 
+      channel: "4.5"
+      name: serverless-operator
+      csv: serverless-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
