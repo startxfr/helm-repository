@@ -5,28 +5,86 @@ context: &context
   cluster: localhost
   environment: dev
   component: infra
-  app: startx-quay
-ocs:
+  app: startx-metering
+metering:
   enabled: true
-  name: startx-ocs
-  version: "4.5.0"
-  storage:
-  - name: ocs-deviceset
-    replicas: 3
-    size: 512Gi
-    storageClass: aws-generic-retain
+  reportingOperator:
+    enabled: true
+    resources: |
+      limits:
+        cpu: 1
+        memory: 500Mi
+      requests:
+        cpu: 500m
+        memory: 100Mi
+  presto:
+    enabled: true
+    coordinator:
+      resources: |
+        limits:
+          cpu: 4
+          memory: 4Gi
+        requests:
+          cpu: 2
+          memory: 2Gi
+    worker:
+      resources: |
+        limits:
+          cpu: 8
+          memory: 8Gi
+        requests:
+          cpu: 4
+          memory: 2Gi
+  hive:
+    enabled: true
+    size: 5Gi
+    storageClass: ocs-storagecluster-cephfs
+    server:
+      resources: |
+        limits:
+          cpu: 1
+          memory: 1Gi
+        requests:
+          cpu: 500m
+          memory: 500Mi
+    metastore:
+      resources: |
+        limits:
+          cpu: 4
+          memory: 2Gi
+        requests:
+          cpu: 500m
+          memory: 650Mi
+  reports:
+    enabled: true
+    list: 
+    - name: namespace-cpu-usage-hourly
+      spec: |
+        query: "namespace-cpu-usage"
+        schedule:
+          period: "hourly"
+          hourly:
+            minute: 0
+            second: 0
+    - name: namespace-memory-usage-hourly
+      spec: |
+        query: "namespace-memory-usage"
+        schedule:
+          period: "hourly"
+          hourly:
+            minute: 0
+            second: 0
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   context: 
     <<: *context
   project: 
     type: namespace
-    name: "openshift-storage"
+    name: "openshift-metering"
   rbac: 
     enabled: true
     groups: 
-    - id: dev
-      name: dev
-      clusterRole: view
     - id: devops
       name: devops
       clusterRole: view
@@ -39,23 +97,25 @@ project:
     enabled: false
   quotas: 
     enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
   context: 
     <<: *context
   subscription:
     enabled: true
-    name: "ocs-operator"
-    namespace: "openshift-storage"
-    version: "4.5.0"
+    name: "metering-ocp"
+    namespace: "openshift-metering"
+    version: "4.5.0-202009120215.p0"
     operator: 
-      channel: stable-4.5
-      name: ocs-operator
-      csv: ocs-operator
+      channel: "4.5"
+      name: metering-ocp
+      csv: metering-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
-    name: "openshift-storage"
-    namespace: "openshift-storage"
-    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageClusterInitialization.v1.ocs.openshift.io"
+    name: "openshift-metering"
+    namespace: "openshift-metering"
+    providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"

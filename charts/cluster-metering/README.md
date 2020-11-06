@@ -1,6 +1,6 @@
 # STARTX helm : cluster-metering
 
-This helm chart is used to configure Openshift Container Storage at the cluster level.
+This helm chart is used to configure Metering at the cluster level.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
 state orchestrated by gitops tools like ArgoCD.
 
@@ -58,6 +58,5 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.18  | 2020-11-06 | Create chart cluster-metering from cluster-quay
-| 0.3.19  | 2020-11-06 | Add deployment of an OCS cluster using StorageCluster ressource
 | 0.3.19  | 2020-11-06 | Create chart cluster-metering from cluster-ocs
+| 0.3.20  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
