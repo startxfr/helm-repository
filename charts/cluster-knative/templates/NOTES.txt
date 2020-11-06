@@ -9,7 +9,11 @@
   app         : {{ include "startx.appName" . }}
   version     : {{ include "startx.appVersion" . }}
 
-{{- include "project.notes" .Values.project }}
+{{- include "project.notes" .Values.projectOperator }}
+
+{{- include "project.notes" .Values.projectKServing }}
+
+{{- include "project.notes" .Values.projectKEventing }}
 
 {{- include "operator.notes" .Values.operator }}
 

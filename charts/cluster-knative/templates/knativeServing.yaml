@@ -1,0 +1,19 @@
+{{- if .Values.kServing }}{{- if .Values.kServing.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.projectKServing.project.name | default "default-knative" -}}
+kind: KnativeServing
+apiVersion: operator.knative.dev/v1alpha1
+metadata:
+  name: {{ .Values.kServing.name | default "knative-serving" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-knative.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.kServing.name | default "knative-serving" }}-knativeserving"
+  annotations:
+    {{- include "cluster-knative.annotations" . | nindent 4 }}
+spec:
+  cluster-local-gateway: {}
+  high-availability:
+    replicas: {{ .Values.kServing.replicas | default 2 }}
+  knative-ingress-gateway: {}
+{{- end }}{{- end }}

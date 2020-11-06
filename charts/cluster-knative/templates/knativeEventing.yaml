@@ -1,0 +1,15 @@
+{{- if .Values.kEventing }}{{- if .Values.kEventing.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.projectKEventing.project.name | default "default-knative" -}}
+kind: KnativeEventing
+apiVersion: operator.knative.dev/v1alpha1
+metadata:
+  name: {{ .Values.kEventing.name | default "knative-serving" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-knative.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.kEventing.name | default "knative-serving" }}-knativeeventing"
+  annotations:
+    {{- include "cluster-knative.annotations" . | nindent 4 }}
+spec: {}
+{{- end }}{{- end }}
