@@ -80,3 +80,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.3.11  | 2020-11-01 | Test repository release
 | 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
 | 0.3.20  | 2020-11-06 | Add v prefix to the operator version
+| 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
