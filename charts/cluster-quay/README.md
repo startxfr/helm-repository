@@ -61,3 +61,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.17  | 2020-11-04 | Create chart cluster-quay from cluster-3scale
 | 0.3.18  | 2020-11-06 | Add quay template to configure QuayEcosystem deployment
 | 0.3.20  | 2020-11-06 | Add v prefix to the operator version
+| 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
