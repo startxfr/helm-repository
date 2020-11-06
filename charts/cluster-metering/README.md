@@ -60,3 +60,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.19  | 2020-11-06 | Create chart cluster-metering from cluster-ocs
 | 0.3.20  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
+| 0.3.19  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
