@@ -107,3 +107,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.25  | 2020-11-07 | NOTES content is more accurate and detailed
 | 0.3.27  | 2020-11-07 | Stable notes
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
+| 0.3.29  | 2020-11-07 | Improve helm hook ordering cordinated with higher cluster-xxx helm chart depending on this chart
