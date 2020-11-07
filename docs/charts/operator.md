@@ -101,17 +101,12 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.2.36  | 2020-10-31 | Initial commit for this helm chart with default value example
 | 0.2.37  | 2020-10-31 | Enable subscription and operatorGroup creation and add values file for tekton-1.0.1, crw-2.3.0 and scale-0.6.0 deployment
 | 0.2.51  | 2020-10-31 | Common release for all chart
-| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
-| 0.2.996 | 2020-10-31 | publish stable update of this chart
-| 0.2.999 | 2020-10-31 | publish stable update for the full repository
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
 | 0.3.1   | 2020-11-01 | Move to go templates for notes generation
 | 0.3.3   | 2020-11-01 | Test new scope for note template helper
-| 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
-| 0.3.18  | 2020-11-06 | Move to a CSV name with 'v' version prefix moved to version property in values.yaml file
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.25  | 2020-11-07 | NOTES content is more accurate and detailed
 | 0.3.27  | 2020-11-07 | Stable notes
-| 0.3.33  | 2020-11-07 | publish stable update for the full repository
 | 0.3.29  | 2020-11-07 | Improve helm hook ordering cordinated with higher cluster-xxx helm chart depending on this chart
+| 0.3.30  | 2020-11-08 | Improve operator options
