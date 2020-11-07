@@ -63,3 +63,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.19  | 2020-11-06 | Change the storageTemplate name and app name
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
+| 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
