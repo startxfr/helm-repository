@@ -13,6 +13,9 @@ List of helm chart availables in this repository, and sample to deploy it under 
 - [cluster-quay](charts/cluster-quay.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay))*** to enable Quay.io private repository at a cluster level
 - [cluster-ocs](charts/cluster-ocs.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs))*** to enable Openshift Container Storage at a cluster level
 - [cluster-metering](charts/cluster-metering.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering))*** to enable Metering at a cluster level
+- [cluster-istio](charts/cluster-istio.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio))*** to enable ServiceMesh at the cluster level
+- [cluster-auth](charts/cluster-auth.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth))*** to configure Auth at the cluster level
+- [cluster-console](charts/cluster-console.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-console))*** to configure the openshift console at the cluster level
 - [project](charts/project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/project))*** to create a project with limits, quotas, networkpolicy and rbac set
 - [operator](charts/operator.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/operator))*** to create an operator with subscription (openshift) or CRD (k8s)
 - [sxapi](charts/sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi))*** to deploy a small micro-service endpoint
