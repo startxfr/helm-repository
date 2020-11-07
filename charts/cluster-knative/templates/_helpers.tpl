@@ -17,14 +17,14 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "cluster-knative.notes" -}}
 {{- if .kServing }}{{- if .kServing.enabled }}
 -- Knative Serving -----------------
-status: enabled
-name: {{ .kServing.name | default "knative-serving" | quote }} 
-namespace: {{- .projectKServing.project.name | default "default-knative" -}}
+       status : enabled
+         name : {{ .kServing.name | default "knative-serving" | quote }} 
+    namespace : {{ .projectKServing.project.name | default "default-knative" }}
 {{- end }}{{- end }}
 {{- if .kEventing }}{{- if .kEventing.enabled }}
 -- Knative Eventing ----------------
-status: enabled
-name: {{ .kEventing.name | default "knative-eventing" | quote }} 
-namespace: {{- .projectKEventing.project.name | default "default-knative" -}}
+       status : enabled
+         name : {{ .kEventing.name | default "knative-eventing" | quote }} 
+    namespace : {{ .projectKEventing.project.name | default "default-knative" }}
 {{- end }}{{- end }}
 {{- end -}}

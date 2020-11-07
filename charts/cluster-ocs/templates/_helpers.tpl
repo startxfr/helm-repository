@@ -17,6 +17,6 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "cluster-ocs.notes" -}}
 -- Openshift Container Storage -----
 {{- if .ocs }}{{- if .ocs.enabled }}
-ocs is enabled
+          OCS : enabled
 {{- end }}{{- end }}
 {{- end -}}

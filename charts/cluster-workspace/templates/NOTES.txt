@@ -3,15 +3,15 @@
 Cluster codeready-workspace is deployed.
 
 -- Context -------------------------
-  scope       : {{ include "startx.appScope" . }}
-  cluster     : {{ include "startx.appCluster" . }}
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
   environment : {{ include "startx.appEnvironment" . }}
-  component   : {{ include "startx.appComponent" . }}
-  app         : {{ include "startx.appName" . }}
-  version     : {{ include "startx.appVersion" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
 
-{{- include "project.notes" .Values.project }}
+{{ include "project.notes" .Values.project }}
 
-{{- include "operator.notes" .Values.operator }}
+{{ include "operator.notes" .Values.operator }}
 
-{{- include "cluster-workspace.notes" .Values.cheCluster }}
+{{ include "cluster-workspace.notes" .Values.cheCluster }}

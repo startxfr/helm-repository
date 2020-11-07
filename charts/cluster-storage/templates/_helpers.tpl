@@ -16,7 +16,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{/* Common operator note */}}
 {{- define "cluster-rbac.notes" -}}
 -- Cluster Storages classes --------
-{{ range .storageClasses }}
- - {{ .id }} provisionned with {{ .provisioner | default "kubernetes.io/aws-ebs" }}
-{{ end }}
+{{- range .storageClasses }}
+              - {{ .id }} provisionned with {{ .provisioner | default "kubernetes.io/aws-ebs" }}
+{{- end }}
 {{- end -}}
