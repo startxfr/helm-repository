@@ -5,33 +5,86 @@ context: &context
   cluster: localhost
   environment: dev
   component: infra
-  app: startx-auth
-auth:
+  app: startx-console
+console:
   enabled: true
   namespace: openshift-config
-  templates:
-    login: 
-      name: startx-login
-      tplFile: webtpl/startx-login.html
-    errors: 
-      name: startx-errors
-      tplFile: webtpl/startx-errors.html
-    providers: 
-      name: startx-providers
-      tplFile: webtpl/startx-providers.html
-  authBackend:
-    type: htpasswd
-    name: startx-htpasswd
-    comment: |
-      htpasswd -c -b _console/ocp.passwd admin secretdemerde
-      htpasswd -b _console/ocp.passwd dev dev
-      htpasswd -b _console/ocp.passwd devops devops
-      htpasswd -b _console/ocp.passwd ops ops
-      oc create secret generic htpass-secret --from-file=htpasswd=_console/ocp.passwd -n openshift-config
-      oc export secret ${SCOPE}-htpass-secret -n openshift-config
-    htpasswdContent: |
-      admin:$apr1$NF6RwJ2m$LZptFKgY.K.h7WKPG1X4w.
-      dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
-      devops:$apr1$V.QRjS8L$qsecQFnwOyaZ/coTqDZ9h/
-      ops:$apr1$LHdhpqJk$3qNVW4uqTR7sSnlZBP.9d/
-
+  state: Managed
+  customize:
+    name: STARTX Console
+    logo: 
+      name: startx-logo
+      tplFile: webtpl/startx-logo.svg
+  links:
+  - name: startx-link-all-namespaces-dashboard
+    spec: |
+      href: 'https://www.startx.fr'
+      location: NamespaceDashboard
+      text: STARTX website
+  - name: startx-consolelink-application-menu
+    spec: |
+      href: 'https://www.startx.fr'
+      location: ApplicationMenu
+      text: STARTX website
+      applicationMenu:
+        section: STARTX Content
+        imageURL: https://www.startx.fr/images/logo.startx.24x24.png
+  - name: startxgit-consolelink-application-menu
+    spec: |
+      href: 'https://github.com/startxfr'
+      location: ApplicationMenu
+      text: STARTX Github
+      applicationMenu:
+        section: STARTX Content
+        imageURL: https://www.n9ws.com/images/upload/github-040618081035.png
+  - name: startxgit-consolelink-help-menu
+    spec: |
+      href: 'https://github.com/startxfr'
+      location: HelpMenu
+      text: STARTX Github
+      HelpMenu:
+        section: STARTX help
+  - name: sxv4git-consolelink-help-menu
+    spec: |
+      href: 'https://github.com/startxfr/sxv4'
+      location: HelpMenu
+      text: SXV4 github
+      HelpMenu:
+        section: STARTX help
+  - name: sxv4git-addissue-consolelink-user-menu
+    spec: |
+      href: 'https://github.com/startxfr/sxv4/issues/new'
+      location: UserMenu
+      text: Create issue
+      UserMenu:
+        section: STARTX help
+  - name: sxv4git-addissue-consolelink-help-menu
+    spec: |
+      href: 'https://github.com/startxfr/sxv4/issues/new'
+      location: HelpMenu
+      text: Create issue
+      HelpMenu:
+        section: STARTX help
+  logLinks:
+  - name: startx-externallog
+    spec: |
+      hrefTemplate: >-
+        https://startx.fr/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: Show in STARTX central logs
+  notifications:
+  - name: demo-console-notification-top
+    spec: |
+      backgroundColor: 'green'
+      color: '#fff'
+      location: BannerTop 
+      text: Vous etes sur un cluster de demo
+  - name: demo-console-notification-bottom
+    spec: |
+      backgroundColor: 'red'
+      color: '#fff'
+      link:
+        href: 'https://github.com/startxfr/sxv4/issues/new'
+        text: creer un ticket d'incident
+      # location: BannerTopBottom
+      location: BannerBottom
+      text: En cas de probleme sur ce cluster, vous pouvez

@@ -15,24 +15,22 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-console.notes" -}}
--- Authentication ------------------
-{{- if .auth }}{{- if .auth.enabled }}
-{{- if .auth.templates -}}
-templates:
-{{- with .auth.templates.login -}}
-  login: "{{- .name | default "default-login" -}}-template"
-{{- end -}}
-{{- with .auth.templates.errors -}}
-  error: "{{- .name | default "default-errors" -}}-template"
-{{- end -}}
-{{- with .auth.templates.providers -}}
-  provider: "{{- .name | default "default-providers" -}}-template"
+-- Console customization -----------
+{{- if .console }}{{- if .console.enabled }}
+console customisation enabled
+{{- if .console.customize -}}
+{{- with .console.customize.logo -}}
+  logo: "{{- .name | default "default-logo" -}}"
 {{- end -}}
 {{- end -}}
-{{- if .auth.authBackend -}}{{-  if eq .auth.authBackend.type "htpasswd" -}}
-identity: "{{- .name | default "default-htpasswd" -}}_auth"
-  type: HTPasswd
-  secret: "{{- .name | default "default-htpasswd" -}}-auth"
-{{- end -}}{{- end -}}
+{{- range .console.links -}}
+-         link: "{{- .name | default "default-console-link" -}}"
+{{- end }}
+{{- range .console.logLinks -}}
+- console-link: "{{- .name | default "default-console-loglink" -}}"
+{{- end }}
+{{- range .console.notifications -}}
+- notification: "{{- .name | default "default-console-notification" -}}"
+{{- end }}
 {{- end }}{{- end }}
 {{- end -}}

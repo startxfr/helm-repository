@@ -1,6 +1,6 @@
 # STARTX helm : cluster-console
 
-This helm chart is used to configure Auth at the cluster level.
+This helm chart is used to configure openshift console at the cluster level.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
 state orchestrated by gitops tools like ArgoCD.
 
@@ -58,6 +58,5 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.21  | 2020-11-07 | Create chart cluster-console from cluster-console
-| 0.3.21  | 2020-11-07 | Add support for default and startx console oauth templates and enable htpasswd identity backend support
 | 0.3.21  | 2020-11-07 | Create chart cluster-console from cluster-auth
+| 0.3.21  | 2020-11-07 | Add logo customisation as well as notification, link and logLink
