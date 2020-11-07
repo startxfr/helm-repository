@@ -68,3 +68,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
 | 0.3.35  | 2020-11-07 | Debug rbac role property
+| 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
