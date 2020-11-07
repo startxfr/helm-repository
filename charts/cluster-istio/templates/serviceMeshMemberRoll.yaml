@@ -13,6 +13,9 @@ metadata:
     app.kubernetes.io/name: "{{ .name | default "default" }}-servicemeshmemberroll"
   annotations:
     {{- include "cluster-istio.annotations" $root | nindent 4 }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: hook-failed
 spec:
   members:
     {{- .projects | nindent 4 }}

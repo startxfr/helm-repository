@@ -9,7 +9,6 @@ metadata:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-projecttemplate-{{- include "startx.appVersion" . -}}"
   annotations:
     {{- include "cluster-config.annotations" . | nindent 4 }}
-    helm.sh/resource-policy: keep
 objects:
   - kind: Project
     apiVersion: project.openshift.io/v1
