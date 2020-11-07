@@ -58,10 +58,8 @@ helm install startx/cluster-knative -f https://raw.githubusercontent.com/startxf
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.21  | 2020-11-06 | Create chart cluster-knative from cluster-knative
-| 0.3.21  | 2020-11-06 | Add all knative required components knative support under openshift
+| 0.3.21  | 2020-11-06 | Create chart cluster-knative from cluster-knative (removed)
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
-| 0.3.33  | 2020-11-07 | publish stable update for the full repository
-| 0.3.35  | 2020-11-07 | Debug rbac role property
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
+| 0.3.38  | 2020-11-08 | Improve cluster-knative options
