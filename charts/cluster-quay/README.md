@@ -58,12 +58,9 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.17  | 2020-11-04 | Create chart cluster-quay from cluster-3scale
-| 0.3.18  | 2020-11-06 | Add quay template to configure QuayEcosystem deployment
-| 0.3.20  | 2020-11-06 | Add v prefix to the operator version
+| 0.3.17  | 2020-11-04 | Create chart cluster-quay from cluster-3scale (removed)
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
-| 0.3.33  | 2020-11-07 | publish stable update for the full repository
 | 0.3.35  | 2020-11-07 | Debug rbac role property
-| 0.3.35  | 2020-11-07 | Debug
+| 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
