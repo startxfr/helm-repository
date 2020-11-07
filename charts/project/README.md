@@ -106,3 +106,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.25  | 2020-11-07 | NOTES content is more accurate and detailed
 | 0.3.27  | 2020-11-07 | Stable notes
+| 0.3.33  | 2020-11-07 | publish stable update for the full repository
