@@ -67,3 +67,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
 | 0.3.35  | 2020-11-07 | Debug rbac role property
 | 0.3.35  | 2020-11-07 | Debug
+| 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
