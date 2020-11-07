@@ -7,7 +7,7 @@ context:
   component: vault
   app: startx-vault
 route: 
-  enabled: true
+  enabled: false
 project: 
   context: 
     scope: startx
@@ -21,7 +21,7 @@ project:
     display_name: STARTX Infra - VAULT
     description: STARTX Private Vault storage & control plane
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: dev
       name: dev
@@ -34,15 +34,15 @@ project:
       clusterRole: admin
     user: 
     - id: vault-sa
-      name: system:serviceaccount:startx-vault:vault
+      name: system:serviceaccount:startx-vault:{{ .Release.name }}
       clusterRole: edit
     - id: vault-agent-injector-sa
-      name: system:serviceaccount:startx-vault:vault-agent-injector
+      name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
       clusterRole: admin
   networkpolicy: 
     enabled: false
   limits: 
-    enabled: true
+    enabled: false
     rules:  |
       limits:
         - type: "Pod"
@@ -66,7 +66,7 @@ project:
             cpu: "500m"
             memory: "512Mi"
   quotas: 
-    enabled: true
+    enabled: false
     rules:  |
       hard:
         limits.cpu: "2"

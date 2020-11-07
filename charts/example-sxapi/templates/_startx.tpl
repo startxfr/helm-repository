@@ -87,7 +87,7 @@ openshift.io/generated-by: startx-helm-{{- .Chart.Name -}}
 
 {{/* Common labels */}}
 {{- define "startx.labelsCommon" -}}
-{{- if .Values.context }}
+{{- if .Values.context -}}
 {{- if .Values.context.scope }}
 app.startx.fr/scope: {{ include "startx.appScope" . | quote }}
 {{- end }}
@@ -111,7 +111,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service | quote  }}
 
 {{/* Common infrastructure labels */}}
 {{- define "startx.labelsInfra" -}}
-{{ include "startx.labelsCommon" . }}
+{{- include "startx.labelsCommon" . }}
 app.startx.fr/component: "infra"
 app.kubernetes.io/component: "infra"
 app.kubernetes.io/part-of: {{ include "startx.appCluster" . | quote }}

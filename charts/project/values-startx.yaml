@@ -38,13 +38,13 @@ networkpolicy:
       - from:
           - namespaceSelector:
               matchLabels:
-              network.openshift.io/policy-group: ingress
+                network.openshift.io/policy-group: ingress
       podSelector: {}
       policyTypes:
       - Ingress
   - id: allow-from-same-namespace
     spec: |
-      podSelector:
+      podSelector: {}
       ingress:
       - from:
         - podSelector: {}
@@ -52,26 +52,26 @@ limits:
   enabled: true
   rules:  |
     limits:
-    - type: "Pod"
-      min:
-        cpu: "20m"
-        memory: "32Mi"
-      max:
-        cpu: 400m
-        memory: 512Mi
-    - type: "Container"
-      default:
-        cpu: 200m
-        memory: 256Mi
-      defaultRequest:
-        cpu: 50m
-        memory: 32Mi
-      min:
-        cpu: "20m"
-        memory: "32Mi"
-      max:
-        cpu: 200m
-        memory: 256Mi
+      - type: "Pod"
+        min:
+          cpu: "20m"
+          memory: "32Mi"
+        max:
+          cpu: 400m
+          memory: 512Mi
+      - type: "Container"
+        default:
+          cpu: 200m
+          memory: 256Mi
+        defaultRequest:
+          cpu: 50m
+          memory: 32Mi
+        min:
+          cpu: "20m"
+          memory: "32Mi"
+        max:
+          cpu: 200m
+          memory: 256Mi
 quotas: 
   enabled: true
   rules:  |

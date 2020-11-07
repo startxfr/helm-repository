@@ -3,7 +3,7 @@
 
 {{/* Common labels */}}
 {{- define "project.labels" -}}
-{{ include "startx.labelsInfra" . }}
+{{- include "startx.labelsInfra" . }}
 app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- end -}}
 
@@ -14,48 +14,49 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common project note */}}
 {{- define "project.notes" -}}
-{{- if eq .project.type "project" -}}
+{{- if eq .project.type "project" }}
 -- Project --------------------
-name: {{- .project.name -}}
-description: {{- .project.description | default "description" -}}
-display-name: {{- .project.display_name | default .project.name -}}
-{{- else -}}
+         name : {{ .project.name }}
+  description : {{ .project.description | default "description" }}
+ display-name : {{ .project.display_name | default .project.name }}
+{{- else }}
 -- Namespace ------------------
-name: {{- .project.name -}}
-{{- end -}}
-
--- LimitRange -----------------
-{{- if .limits.enabled -}}
-{{- .limits.rules }}
-{{- else -}}
-no limit range defined
-{{- end -}}
-
--- ResourceQuota --------------
-{{- if .quotas.enabled -}}
-{{- .quotas.rules }}
-{{- else -}}
-no resource quota defined
-{{- end -}}
+         name : {{ .project.name }}
+{{- end }}
 
 -- NetworkPolicy --------------
-{{- if .networkpolicy.enabled -}}
-{{ range .networkpolicy.rules }} 
-- {{ .id }}
-{{ end }}
-{{- else -}}
+{{- if .networkpolicy.enabled }}
+{{- range .networkpolicy.rules }} 
+              - {{ .id }}
+{{- end }}
+{{- else }}
 no network policy defined
-{{- end -}}
+{{- end }}
 
 -- RBAC -----------------------
-{{- if .rbac.enabled -}}
-{{ range .rbac.groups }}
-- group {{ .id }} has role {{ .role }}
-{{ end }}
-{{ range .rbac.users }}
-- user {{ .id }} has role {{ .role }}
-{{ end }}
-{{- else -}}
+{{- if .rbac.enabled }}
+{{- range .rbac.groups }}
+              - group {{ .id }} has role {{ .role }}
+{{- end }}
+{{- range .rbac.users }}
+              - user {{ .id }} has role {{ .role }}
+{{- end }}
+{{- else }}
 no rbac defined
-{{- end -}}
+{{- end }}
+
+-- LimitRange -----------------
+{{- if .limits.enabled }}
+{{- .limits.rules | nindent 12 }}
+{{- else }}
+no limit range defined
+{{- end }}
+
+-- ResourceQuota --------------
+{{- if .quotas.enabled }}
+{{- .quotas.rules | nindent 12 }}
+{{- else }}
+no resource quota defined
+{{- end }}
+
 {{- end -}}

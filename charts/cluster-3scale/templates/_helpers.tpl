@@ -17,9 +17,9 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "cluster-3scale.notes" -}}
 -- 3Scale --------------------------
 {{- if .manager }}{{- if .manager.enabled }}
-manager is enabled
+      manager : enabled
 {{- end }}{{- end }}
 {{- if .rhn }}{{- if .rhn.enabled }}
-RHN is enabled with user {{- .rhn.user }}
+          RHN : enabled with user {{- .rhn.user }}
 {{- end }}{{- end }}
 {{- end -}}

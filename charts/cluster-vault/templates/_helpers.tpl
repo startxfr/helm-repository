@@ -17,6 +17,6 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "cluster-vault.notes" -}}
 -- Hashicorp Vault -----------------
 {{- if .route }}{{- if .route.enabled }}
-route is enabled
+        route : enabled
 {{- end }}{{- end }}
 {{- end -}}
