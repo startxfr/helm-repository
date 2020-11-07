@@ -110,3 +110,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
 | 0.3.18  | 2020-11-06 | Move to a CSV name with 'v' version prefix moved to version property in values.yaml file
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
+| 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information

@@ -62,3 +62,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.18  | 2020-11-06 | Add quay template to configure QuayEcosystem deployment
 | 0.3.20  | 2020-11-06 | Add v prefix to the operator version
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
+| 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
