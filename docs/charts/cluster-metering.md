@@ -62,3 +62,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.20  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
 | 0.3.19  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
+| 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
