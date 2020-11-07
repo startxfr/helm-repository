@@ -25,20 +25,20 @@ project:
     groups: 
     - id: dev
       name: dev
-      clusterRole: view
+      role: view
     - id: devops
       name: devops
-      clusterRole: admin
+      role: admin
     - id: ops
       name: ops
-      clusterRole: admin
+      role: admin
     user: 
     - id: vault-sa
       name: system:serviceaccount:startx-vault:{{ .Release.name }}
-      clusterRole: edit
+      role: edit
     - id: vault-agent-injector-sa
       name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
-      clusterRole: admin
+      role: admin
   networkpolicy: 
     enabled: false
   limits: 
