@@ -11,6 +11,7 @@ metadata:
     app.kubernetes.io/name: "cluster-oauth"
   annotations:
     {{- include "cluster-auth.annotations" $root | nindent 4 }}
+    helm.sh/resource-policy: keep
 spec:
   {{ if .Values.auth.templates }}
   templates:

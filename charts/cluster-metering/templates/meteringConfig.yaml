@@ -11,6 +11,9 @@ metadata:
     app.kubernetes.io/name: "{{ .Values.metering.name | default "default" }}-meteringconfig"
   annotations:
     {{- include "cluster-metering.annotations" . | nindent 4 }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: hook-failed
 spec:
   storage:
 {{- if .Values.metering.hive }}{{- if .Values.metering.hive.enabled }}
