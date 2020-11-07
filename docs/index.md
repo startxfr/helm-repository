@@ -80,15 +80,14 @@ helm install startx/example-pod
 helm install startx/example-sxapi
 ```
 
-## Install this repository toolkit
+## Install a local copy of this repository
 
 ### 1. Requirements
 
 #### 1.1. install cli dependencies
 
 ```bash
-yum install yq -y
-yum install helm -y
+yum install yq helm -y
 ```
 
 #### 1.2. Connect to an openshift cluster
@@ -100,22 +99,22 @@ oc login -t <my-token> <my-openshift-api>
 If you don't have access to an openshift cluster, consider using codeready-container to
 run locally a simulated cluster.
 
-### 2. Install repository
+### 2. Install repository copy
 
-#### 2.1. Install this repository
+#### 2.1. Clonning this repository
 
 ```bash
 git clone https://startxfr.github.io/helm-repository.git
 cd helm-repository
 ```
 
-#### 2.2. List all helm packages
+#### 2.2. List all charts
 
 ```bash
 ls charts
 ```
 
-### 3. Install a helm
+### 3. Install a local chart
 
 ```bash
 # oc apply -k charts/<chart>
@@ -142,8 +141,9 @@ helm install charts/example-sxapi
 
 ## Install building environment
 
-In order to get the full developement environment, you must follow the [install build environment guide](install-build)
+In order to contribute to this repository, you must get the full developement environment by following the [install build environment guide](install-build)
 
 ## History and releases
 
 Read history [traceback](history) for more information on change and released version. Complementary information could be found in the [release convention](releases)
+Notice that every chart in this repository follow it's own release lifecycle. You can refer to it by reading every chart documentation page.
