@@ -70,3 +70,4 @@ helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/
 | 0.3.17  | 2020-11-04 | Create chart cluster-vault from cluster-3scale
 | 0.3.18  | 2020-11-04 | Use hashicorp vault helm dependency version 0.7.0
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
+| 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
