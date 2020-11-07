@@ -1,0 +1,192 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-istio
+istio:
+  enabled: true
+  name: sxv4
+  members:
+    enabled: true
+    list: 
+    - name: sxv4-dev
+      projects: |
+        - "sxv4-dev-cl"
+        - "sxv4-factory"
+    - name: sxv4-prod
+      projects: |
+        - "sxv4-preprod"
+        - "sxv4-prod"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  context: 
+    <<: *context
+  project: 
+    type: project
+    name: "startx-istio"
+    display_name: STARTX Infra - ISTIO
+    description: STARTX Private ISTIO System running tracing, monitoring, management and routing tools
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      clusterRole: view
+    - id: devops
+      name: devops
+      clusterRole: edit
+    - id: ops
+      name: ops
+      clusterRole: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: true
+    rules:  |
+      limits:
+        - type: "Pod"
+          min:
+            cpu: 10m
+            memory: 128Mi
+          max:
+            cpu: "1600m"
+            memory: "6Gi"
+        - type: "Container"
+          default:
+            cpu: 200m
+            memory: 256Mi
+          defaultRequest:
+            cpu: 200m
+            memory: 256Mi
+          min:
+            cpu: 10m
+            memory: 128Mi
+          max:
+            cpu: "1600m"
+            memory: "6Gi"
+  quotas: 
+    enabled: true
+    rules:  |
+      hard:
+        limits.cpu: "10"
+        limits.memory: "18Gi"
+        requests.cpu: "4"
+        requests.memory: "7Gi"
+        requests.storage: "0"
+        persistentvolumeclaims: "0"
+        ephemeral-storage: "0" 
+        gp2.storageclass.storage.k8s.io/requests.storage: "0"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        pods: "20"
+        services: "20"
+        secrets: "80"
+        configmaps: "25"
+        replicationcontrollers: "0"
+        openshift.io/imagestreams: "0"
+
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "4.5.0-202009041228.p0"
+    operator: 
+      channel: "4.5"
+      name: elasticsearch-operator
+      csv: elasticsearch-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the kiali operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorKiali:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "kiali-ossm"
+    namespace: "openshift-operators"
+    version: "v1.12.15"
+    operator: 
+      channel: "stable"
+      name: kiali-ossm
+      csv: kiali-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the jaeger operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorJaeger:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "jaeger-product"
+    namespace: "openshift-operators"
+    version: "v1.17.6"
+    operator: 
+      channel: "stable"
+      name: jaeger-product
+      csv: jaeger-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the istio operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorIstio:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "servicemeshoperator"
+    namespace: "openshift-operators"
+    version: "v1.1.8"
+    operator: 
+      channel: "stable"
+      name: servicemeshoperator
+      csv: servicemeshoperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "Config.v1alpha1.operator.tekton.dev,Elasticsearch.v1.logging.openshift.io,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,Kibana.v1.logging.openshift.io,KnativeEventing.v1alpha1.operator.knative.dev,KnativeServing.v1alpha1.operator.knative.dev,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"

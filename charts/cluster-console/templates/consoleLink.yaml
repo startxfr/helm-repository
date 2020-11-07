@@ -1,0 +1,19 @@
+{{- if .Values.console.links -}}
+{{- $root := . -}}
+{{- $files := .Files }}
+{{- $namespace := .Values.console.namespace | default "openshift-config" -}}
+{{- range .Values.console.links -}}
+---
+kind: ConsoleLink
+apiVersion: console.openshift.io/v1
+metadata:
+  name: "{{- .name | default "default-console-link" -}}"
+  labels:
+    {{- include "cluster-console.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name | default "default-console-link" -}}-consolelink"
+  annotations:
+    {{- include "cluster-console.annotations" $root | nindent 4 }}
+spec:
+  {{ .spec | nindent  2 }}
+{{- end }}
+{{- end -}}

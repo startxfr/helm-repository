@@ -1,0 +1,25 @@
+{{- if .Values.console.enabled -}}{{- if .Values.console.customize -}}
+{{- $root := . -}}
+{{- $files := .Files }}
+{{- $namespace := .Values.console.namespace | default "openshift-config" -}}
+{{- with .Values.console.customize -}}
+---
+kind: Console
+apiVersion: operator.openshift.io/v1
+metadata:
+  name: cluster
+  labels:
+    {{- include "cluster-console.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "cluster-console"
+  annotations:
+    {{- include "cluster-console.annotations" $root | nindent 4 }}
+    release.openshift.io/create-only: "true"
+spec:
+  managementState: {{- $root.Values.console.state | default "Managed" -}}
+  customization:
+    customLogoFile:
+      key: "{{- .logo.name | default "default-logo" -}}.svg"
+      name: "{{- .logo.name | default "default-logo" -}}"
+    customProductName: "{{- .name | default "default console" -}}"
+{{- end }}
+{{- end -}}{{- end -}}

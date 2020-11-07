@@ -1,0 +1,134 @@
+# Default values for cluster-istio.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-istio
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# configuration of the istio service
+istio:
+  # Enable the deployment of the istio service
+  enabled: true
+  # Name of the istio service
+  name: default
+  # deploy a list of report ressources
+  members:
+    # Enable the deployment of MemberRoll
+    enabled: true
+    # lst of various members roll
+    list: 
+      # Name of the member group
+    - name: default
+      # Project part of this memberroll
+      projects: |
+        - "sxv4-dev-cl"
+        - "sxv4-factory"
+        - "sxv4-preprod"
+        - "sxv4-prod"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  context: 
+    <<: *context
+  project: 
+    type: project
+    name: "example-istio"
+    display_name: ISTIO Example
+    description: ISTIO System running tracing, monitoring, management and routing tools example from startx
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "4.5.0-202009041228.p0"
+    operator: 
+      channel: "4.5"
+      name: elasticsearch-operator
+      csv: elasticsearch-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the kiali operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorKiali:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "kiali-ossm"
+    namespace: "openshift-operators"
+    version: "v1.12.15"
+    operator: 
+      channel: "stable"
+      name: kiali-ossm
+      csv: kiali-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the jaeger operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorJaeger:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "jaeger-product"
+    namespace: "openshift-operators"
+    version: "v1.17.6"
+    operator: 
+      channel: "stable"
+      name: jaeger-product
+      csv: jaeger-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+
+# Configuration of the istio operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorIstio:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "servicemeshoperator"
+    namespace: "openshift-operators"
+    version: "v1.1.8"
+    operator: 
+      channel: "stable"
+      name: servicemeshoperator
+      csv: servicemeshoperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "Config.v1alpha1.operator.tekton.dev,Elasticsearch.v1.logging.openshift.io,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,Kibana.v1.logging.openshift.io,KnativeEventing.v1alpha1.operator.knative.dev,KnativeServing.v1alpha1.operator.knative.dev,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
