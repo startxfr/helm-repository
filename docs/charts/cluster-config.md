@@ -78,19 +78,10 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | ------- | ---------- | -----------------------------------------------------
 | 0.1.16  | 2020-10-23 | Initial commit for this helm chart with default value example (removed)
 | 0.2.0   | 2020-10-24 | Adding example value for start
-| 0.2.11  | 2020-10-25 | publish stable update for the full repository
-| 0.2.12  | 2020-10-26 | Improve cluster-config options
-| 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
-| 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
-| 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
 | 0.2.51  | 2020-10-31 | Common release for all chart
-| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
-| 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
-| 0.2.94  | 2020-10-31 | Aligned stable release of all startx charts
-| 0.2.96  | 2020-10-31 | Stable version 0.2.96 preparing the 0.3 release
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
 | 0.3.5   | 2020-11-01 | Update dependency to 0.3.3 release and improve Note display
-| 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
+| 0.3.34  | 2020-11-08 | Improve cluster-config options
