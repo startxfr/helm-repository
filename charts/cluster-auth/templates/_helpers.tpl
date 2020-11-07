@@ -15,25 +15,24 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-auth.notes" -}}
--- Metering ------------------------
-{{- if .metering }}{{- if .metering.enabled }}
-{{- $namespace := .project.project.name | default "default-metering" -}}
-metering is enabled in {{- $namespace -}}
-name: {{ .metering.name | default "default" | quote }}
-    {{- if .metering.hive }}{{- if .metering.hive.enabled }}
-        {{- with .metering.hive }}
-    storage class: {{ .storageClass | default "gp2" | quote }}
-    storage size: {{ .size | default "5Gi" | quote }}
-            {{- if .enabled }}
-    hive: enabled
-            {{- end }}
-        {{- end }}
-    {{- end }}{{- end }}
-    {{- if .metering.reportingOperator }}{{- if .metering.reportingOperator.enabled }}
-    reporting-operator: enabled
-    {{- end }}{{- end }}
-    {{- if .metering.presto }}{{- if .metering.presto.enabled }}
-    presto: enabled
-    {{- end }}{{- end }}
+-- Authentication ------------------
+{{- if .auth }}{{- if .auth.enabled }}
+{{- if .auth.templates -}}
+templates:
+{{- with .auth.templates.login -}}
+  login: "{{- .name | default "default-login" -}}-template"
+{{- end -}}
+{{- with .auth.templates.errors -}}
+  error: "{{- .name | default "default-errors" -}}-template"
+{{- end -}}
+{{- with .auth.templates.providers -}}
+  provider: "{{- .name | default "default-providers" -}}-template"
+{{- end -}}
+{{- end -}}
+{{- if .auth.authBackend -}}{{-  if eq .auth.authBackend.type "htpasswd" -}}
+identity: "{{- .name | default "default-htpasswd" -}}_auth"
+  type: HTPasswd
+  secret: "{{- .name | default "default-htpasswd" -}}-auth"
+{{- end -}}{{- end -}}
 {{- end }}{{- end }}
 {{- end -}}

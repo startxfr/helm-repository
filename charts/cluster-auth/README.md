@@ -1,6 +1,6 @@
 # STARTX helm : cluster-auth
 
-This helm chart is used to configure Metering at the cluster level.
+This helm chart is used to configure Auth at the cluster level.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
 state orchestrated by gitops tools like ArgoCD.
 
@@ -58,8 +58,5 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.19  | 2020-11-06 | Create chart cluster-auth from cluster-ocs
-| 0.3.20  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
-| 0.3.19  | 2020-11-06 | Add project, operator subscription, meteringConfig and reports support and example in values.yaml
-| 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
-| 0.3.21  | 2020-11-07 | Create chart cluster-auth from cluster-metering
+| 0.3.21  | 2020-11-07 | Create chart cluster-auth from cluster-auth
+| 0.3.21  | 2020-11-07 | Add support for default and startx console oauth templates and enable htpasswd identity backend support
