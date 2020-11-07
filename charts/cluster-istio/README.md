@@ -58,14 +58,7 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.19  | 2020-11-06 | Create chart cluster-istio from cluster-ocs
-| 0.3.20  | 2020-11-06 | Add project, operator subscription, istioConfig and reports support and example in values.yaml
-| 0.3.19  | 2020-11-06 | Add project, operator subscription, istioConfig and reports support and example in values.yaml
-| 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
-| 0.3.21  | 2020-11-06 | Create chart cluster-istio from cluster-istio
 | 0.3.21  | 2020-11-07 | Add ServiceMesh deployment with elastic,kiali and jager dependencies management. Could create a controlPlane and memberroll.
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
-| 0.3.33  | 2020-11-07 | publish stable update for the full repository
-| 0.3.35  | 2020-11-07 | Debug rbac role property
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
