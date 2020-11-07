@@ -60,14 +60,12 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.2.51  | 2020-10-31 | Initial commit for this chart with default and dev value examples
-| 0.2.94  | 2020-10-31 | Align all startx charts version to 0.2.94. Preparing stable 0.3 release
 | 0.2.99  | 2020-10-31 | Prepare release 0.3.0
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
 | 0.3.1   | 2020-11-01 | Move to go templates for notes generation and move app content to value property sxapi.data
 | 0.3.3   | 2020-11-01 | Test new scope for note template helper
-| 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.25  | 2020-11-07 | NOTES content is more accurate and detailed
 | 0.3.27  | 2020-11-07 | Stable notes
-| 0.3.33  | 2020-11-07 | publish stable update for the full repository
+| 0.3.29  | 2020-11-07 | Release aligned to basic 0.3.29 version
