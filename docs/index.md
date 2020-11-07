@@ -24,27 +24,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-auth](charts/cluster-auth.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth)      | configure Auth at the cluster level
 | **[cluster-console](charts/cluster-console.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-console)   | configure the openshift console at the cluster level
 
-### Basic Helm charts
-
-Helm chart without prefix are basic chart. Basic charts configure basic element and are mainly used as a dependency of more complex chart.
-
-| Chart                              | Source                                                                            | Description  
-| ---------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------
-| **[project](charts/project.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/project)  | create a project with limits, quotas, networkpolicy and rbac set
-| **[operator](charts/operator.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/operator) | create an operator with subscription (openshift) or CRD (k8s)
-| **[sxapi](charts/sxapi.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi)    | deploy a small micro-service endpoint
-
-### Example Helm charts
-
-Helm chart prefixed with `example-` are Example chart. Example are used in demo and various workshop to show how to use helm as part of a gitops toolchain.
-
-| Chart                                                  | Source                                                                                      | Description  
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------- | -------------------------------------
-| **[example-deployment](charts/example-deployment.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment) | An example on how to deploy simple applications using helm and a deployment
-| **[example-pod](charts/example-pod.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)        | An example on how to deploy simple applications using helm and a pod
-| **[example-sxapi](charts/example-sxapi.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)      | An example on how to deploy simple micro-applications using helm and an sxapi toolkit
-
-## Examples
+#### Use Cluster charts
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
@@ -60,9 +40,41 @@ helm install startx/cluster-metering
 helm install startx/cluster-istio
 helm install startx/cluster-auth
 helm install startx/cluster-console
+```
+
+### Basic Helm charts
+
+Helm chart without prefix are basic chart. Basic charts configure basic element and are mainly used as a dependency of more complex chart.
+
+| Chart                              | Source                                                                            | Description  
+| ---------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------
+| **[project](charts/project.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/project)  | create a project with limits, quotas, networkpolicy and rbac set
+| **[operator](charts/operator.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/operator) | create an operator with subscription (openshift) or CRD (k8s)
+| **[sxapi](charts/sxapi.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi)    | deploy a small micro-service endpoint
+
+#### Use Basic charts
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
 helm install startx/project
 helm install startx/operator
 helm install startx/sxapi
+```
+
+### Example Helm charts
+
+Helm chart prefixed with `example-` are Example chart. Example are used in demo and various workshop to show how to use helm as part of a gitops toolchain.
+
+| Chart                                                  | Source                                                                                      | Description  
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------- | -------------------------------------
+| **[example-deployment](charts/example-deployment.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment) | An example on how to deploy simple applications using helm and a deployment
+| **[example-pod](charts/example-pod.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)        | An example on how to deploy simple applications using helm and a pod
+| **[example-sxapi](charts/example-sxapi.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)      | An example on how to deploy simple micro-applications using helm and an sxapi toolkit
+
+#### Use Examples charts
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
 helm install startx/example-deployment
 helm install startx/example-pod
 helm install startx/example-sxapi
