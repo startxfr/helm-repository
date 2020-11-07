@@ -18,7 +18,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 -- Istio ---------------------------
 {{- if .istio }}{{- if .istio.enabled }}
 {{- $namespace := .project.project.name | default "default-istio" -}}
-istio is enabled in {{- $namespace -}}
-name: {{ .istio.name | default "default" | quote }}
+        istio : enabled in {{- $namespace -}}
+         name : {{ .istio.name | default "default" }}
 {{- end }}{{- end }}
 {{- end -}}

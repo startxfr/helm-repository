@@ -32,10 +32,10 @@ project:
     enabled: true
     user: 
     - id: vault-sa
-      name: system:serviceaccount:example-vault:vault
+      name: system:serviceaccount:example-vault:{{ .Release.name }}
       clusterRole: edit
     - id: vault-agent-injector-sa
-      name: system:serviceaccount:example-vault:vault-agent-injector
+      name: system:serviceaccount:example-vault:{{ .Release.name }}-agent-injector
       clusterRole: admin
   networkpolicy: 
     enabled: false

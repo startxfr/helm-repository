@@ -16,7 +16,7 @@ context:
   # Component name of this application (logical tenant)
   component: demo
   # Application name (functionnal tenant, default use Chart name)
-  app: project
+  app: example-project
   # Version name of this application (default use Chart appVersion)
   version: "0.0.1"
 
@@ -25,7 +25,7 @@ project:
   # Type of project to create (namespace or project)
   type: project
   # Name of the project
-  name: example
+  name: example-project
   # Display name of the project (only for project)
   display_name: Example project
   # Description of the project (only for project)
@@ -33,7 +33,7 @@ project:
 # Configure RBAC for project
 rbac: 
   # Enable RBAC default for this project
-  enabled: true
+  enabled: false
   # List groups to authorize on this project
   groups: 
   # Example group ID
@@ -53,7 +53,7 @@ rbac:
 # Configure NetworkPolicy for project
 networkpolicy: 
   # Enable NetworkPolicy default for this project
-  enabled: true
+  enabled: false
   # List group to create
   rules: 
   # allow from external
@@ -64,7 +64,7 @@ networkpolicy:
       - from:
           - namespaceSelector:
               matchLabels:
-              network.openshift.io/policy-group: ingress
+                network.openshift.io/policy-group: ingress
       podSelector: {}
       policyTypes:
       - Ingress
@@ -72,39 +72,33 @@ networkpolicy:
   - id: allow-from-same-namespace
     # Specifications of this policy rule
     spec: |
-      podSelector:
+      podSelector: {}
       ingress:
       - from:
         - podSelector: {}
 # Configure NetworkPolicy for project
 limits: 
   # Enable NetworkPolicy default for this project
-  enabled: true
+  enabled: false
   # List group to create
   rules:  |
     limits:
-    - type: "Pod"
-      min:
-        cpu: "20m"
-        memory: "20Mi"
-      max:
-        cpu: 200m
-        memory: 256Mi
-    - type: "Container"
-      min:
-        cpu: "10m"
-        memory: "10Mi"
-      max:
-        cpu: 100m
-        memory: 128Mi
+      - type: "Pod"
+        max:
+          cpu: 200m
+          memory: 256Mi
+      - type: "Container"
+        max:
+          cpu: 100m
+          memory: 128Mi
 # Configure NetworkPolicy for project
 quotas: 
   # Enable NetworkPolicy default for this project
-  enabled: true
+  enabled: false
   # List group to create
   rules:  |
     hard:
-      limits.cpu: "800m"
+      limits.cpu: "400m"
       limits.memory: "1024Mi"
       requests.cpu: "400m"
       requests.memory: "512Mi"
