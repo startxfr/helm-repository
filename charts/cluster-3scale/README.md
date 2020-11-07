@@ -76,3 +76,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.38  | 2020-11-08 | Improve cluster-3scale options
+| 0.3.39  | 2020-11-08 | Improve cluster-3scale options
