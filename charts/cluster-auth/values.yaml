@@ -1,0 +1,53 @@
+# Default values for cluster-auth.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-auth
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# configuration of the auth service
+auth:
+  # Enable the configuration of the auth service
+  enabled: true
+  # namespace were to deploy the auth artifacts
+  namespace: openshift-config
+  # configuration of the console templates
+  templates:
+    # Configure the login template
+    login: 
+      # Name of the template secret
+      name: default-login
+      # name of the template file (in webtpl)
+      tplFile: webtpl/default-login.html
+    # Configure the login template
+    errors: 
+      name: default-errors
+      tplFile: webtpl/default-errors.html
+    # Configure the login template
+    providers: 
+      name: default-providers
+      tplFile: webtpl/default-providers.html
+  # configuration of the authentication backend
+  authBackend:
+    # Type of auth backend
+    type: htpasswd
+    # Name of the auth secret secret
+    name: default-htpasswd
+    # Example of command to generate the htpasswd
+    comment: |
+      htpasswd -b _console/ocp.passwd dev dev
+      oc create secret generic htpass-secret --from-file=htpasswd=_console/ocp.passwd -n openshift-config
+      oc export secret startx-htpasswd-secret -n openshift-config
+    # Content of the htpasswd file secret
+    htpasswdContent: |
+      dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.

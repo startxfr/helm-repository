@@ -1,0 +1,63 @@
+# Default values for cluster-console.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-console
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# configuration of the console service
+console:
+  # Enable the configuration of the console service
+  enabled: true
+  # namespace were to deploy the console artifacts
+  namespace: openshift-config
+  # The state of the openshift cluster console operator
+  state: Managed
+  # configuration of the console templates
+  customize:
+    # Name of the console
+    name: Example Console
+    # Configure the login template
+    logo: 
+      # Name of the logo configMap
+      name: default-logo
+      # name of the logo template file (in webtpl)
+      tplFile: webtpl/default-logo.svg
+  # configuration of the console links
+  links:
+    # name of the console link
+  - name: startx-website-ns-dashboard
+    # spec of the console link
+    spec: |
+      href: 'https://www.startx.fr'
+      location: NamespaceDashboard
+      text: STARTX website
+  # configuration of the console links
+  logLinks:
+    # name of the console link
+  - name: startx-externallog
+    # spec of the console link
+    spec: |
+      hrefTemplate: >-
+        https://example.com/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: Show in STARTX central logs
+  # configuration of the console links
+  notifications:
+    # name of the console link
+  - name: example-notification-top
+    # spec of the console link
+    spec: |
+      backgroundColor: 'green'
+      color: '#fff'
+      location: BannerTop 
+      text: Top banner example deployed with helm chart startx/cluster-console

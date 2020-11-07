@@ -1,0 +1,92 @@
+{{- if .Values.istio.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "default-istio" -}}
+---
+kind: ServiceMeshControlPlane
+apiVersion: maistra.io/v1
+metadata:
+  name: {{ .Values.istio.name | default "default" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-istio.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.istio.name | default "default" }}-istioconfig"
+  annotations:
+    {{- include "cluster-istio.annotations" . | nindent 4 }}
+    startx.fr/help: https://docs.openshift.com/container-platform/4.5/service_mesh/service_mesh_install/customizing-installation-ossm.html
+spec:
+  istio:
+    global:
+      proxy:
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+      mtls:
+        enabled: true
+      disablePolicyChecks: false
+      policyCheckFailOpen: false
+    gateways:
+      istio-egressgateway:
+        autoscaleEnabled: false
+        autoscaleMin: 1
+        autoscaleMax: 3
+      istio-ingressgateway:
+        autoscaleEnabled: false
+        autoscaleMin: 1
+        autoscaleMax: 3
+    mixer:
+      enabled: true
+      policy:
+        autoscaleEnabled: false
+        autoscaleMin: 1
+        autoscaleMax: 3
+      telemetry:
+        autoscaleEnabled: false
+        autoscaleMin: 1
+        autoscaleMax: 3
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "1Gi"
+          limits:
+            cpu: "800m"
+            memory: "2Gi"
+    pilot:
+      autoscaleEnabled: false
+      autoscaleMin: 1
+      autoscaleMax: 3
+      traceSampling: 100
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
+    kiali:
+      enabled: true
+      dashboard:
+        viewOnlyMode: false
+      ingress:
+        enabled: true
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
+    grafana:
+      enabled: true
+      dashboard:
+        viewOnlyMode: false
+      ingress:
+        enabled: true
+    tracing:
+      enabled: true
+      jaeger:
+        template: all-in-one
+{{- end }}
