@@ -61,3 +61,4 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 | 0.3.21  | 2020-11-07 | Create chart cluster-console from cluster-auth
 | 0.3.21  | 2020-11-07 | Add logo customisation as well as notification, link and logLink
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
+| 0.3.33  | 2020-11-07 | publish stable update for the full repository
