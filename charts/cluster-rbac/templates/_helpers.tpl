@@ -17,9 +17,10 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "cluster-rbac.notes" -}}
 -- Cluster RBAC --------------------
 {{- if .groups.enabled }}
-              - Groups enabled ({{ range .groups.list }}{{ .id }},{{- end -}})
-   # oc get ClusterRoleBinding {{- if .context.scope }} -l app.startx.fr/scope={{ include "startx.appScope" . }}{{- end }}
-   # oc get group {{- if .context.scope }} -l app.startx.fr/scope={{ include "startx.appScope" . }}{{- end }}
+        group : enabled
+        {{- range .groups.list }}
+              - group {{ .id }}
+        {{- end -}}
 {{- else }}
  - Cluster RBAC group disabled
 {{- end }}

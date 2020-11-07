@@ -1,6 +1,7 @@
 {{- if .Values.ocs.enabled -}}
 {{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "default-ocs" -}}
+---
 kind: StorageCluster
 apiVersion: ocs.openshift.io/v1
 metadata:
@@ -11,6 +12,9 @@ metadata:
     app.kubernetes.io/name: "{{ .Values.ocs.name | default "default" }}-storagecluster"
   annotations:
     {{- include "cluster-ocs.annotations" . | nindent 4 }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: hook-failed
 spec:
   version: {{ .Values.ocs.version | default "4.5.0" | quote }}
   externalStorage: {}

@@ -11,5 +11,8 @@ metadata:
     app.kubernetes.io/name: "{{ .Values.kEventing.name | default "knative-serving" }}-knativeeventing"
   annotations:
     {{- include "cluster-knative.annotations" . | nindent 4 }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: hook-failed
 spec: {}
 {{- end }}{{- end }}
