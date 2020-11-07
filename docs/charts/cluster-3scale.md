@@ -68,20 +68,11 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.2.0   | 2020-10-24 | Initial commit for this helm chart with default value example
-| 0.2.13  | 2020-10-26 | Add startx/project as dependency for cluster-3scale chart (removed)
-| 0.2.15  | 2020-10-26 | Improve cluster-3scale options for project
-| 0.2.17  | 2020-10-26 | Improve cluster-3scale options for global config release
-| 0.2.35  | 2020-10-26 | Move operator management to the helm chart startx/project dependency
-| 0.2.36  | 2020-10-31 | Move operator management to the helm chart startx/operator dependency (removed)
 | 0.2.51  | 2020-10-31 | Common release for all chart
-| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
 | 0.3.5   | 2020-11-01 | Update dependency to 0.3.3 release and improve Note display
-| 0.3.17  | 2020-11-01 | Synchronize releases for all chart in the startx repository
-| 0.3.20  | 2020-11-06 | Add v prefix to the operator version
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
-| 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
-| 0.3.35  | 2020-11-07 | Debug rbac role property
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
+| 0.3.38  | 2020-11-08 | Improve cluster-3scale options
