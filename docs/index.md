@@ -1,27 +1,48 @@
 # Welcome to STARTX helm repository
 
-## Helm list
+## Helm repository content
 
-List of helm chart availables in this repository, and sample to deploy it under your current openshift cluster (must be logged with appropriate rights).
+This repository host various helm chart targeting the Openshift Container Platform environment. Charts could be
+divided into 3 main category
 
-- [cluster-config](charts/cluster-config.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config))*** for global configuration of an openshift cluster
-- [cluster-rbac](charts/cluster-rbac.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac))*** to configure various RBAC aspects
-- [cluster-3scale](charts/cluster-3scale.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale))*** to deploy a 3Scale infrastructure at a cluster level
-- [cluster-pipeline](charts/cluster-pipeline.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline))*** to enable tekton pipeline at a cluster level
-- [cluster-workspace](charts/cluster-workspace.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace))*** to enable codeready workspace at a cluster level
-- [cluster-vault](charts/cluster-vault.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault))*** to enable hashicorp vault service at a cluster level
-- [cluster-quay](charts/cluster-quay.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay))*** to enable Quay.io private repository at a cluster level
-- [cluster-ocs](charts/cluster-ocs.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs))*** to enable Openshift Container Storage at a cluster level
-- [cluster-metering](charts/cluster-metering.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering))*** to enable Metering at a cluster level
-- [cluster-istio](charts/cluster-istio.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio))*** to enable ServiceMesh at the cluster level
-- [cluster-auth](charts/cluster-auth.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth))*** to configure Auth at the cluster level
-- [cluster-console](charts/cluster-console.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-console))*** to configure the openshift console at the cluster level
-- [project](charts/project.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/project))*** to create a project with limits, quotas, networkpolicy and rbac set
-- [operator](charts/operator.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/operator))*** to create an operator with subscription (openshift) or CRD (k8s)
-- [sxapi](charts/sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi))*** to deploy a small micro-service endpoint
-- [example-deployment](charts/example-deployment.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment))*** is a example on how to deploy simple applications using helm and a deployment
-- [example-pod](charts/example-pod.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod))*** is a example on how to deploy simple applications using helm and a pod
-- [example-sxapi](charts/example-sxapi.md) ***([source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi))*** is a example on how to deploy simple micro-applications using helm and an sxapi toolkit
+### Cluster Helm charts
+
+Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure cluster configuration or enable cluster service.
+
+| Chart                                                | Source                                                                                     | Description  
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------
+| **[cluster-config](charts/cluster-config.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config)    | global configuration of an openshift cluster
+| **[cluster-rbac](charts/cluster-rbac.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac)      | configure various RBAC aspects
+| **[cluster-3scale](charts/cluster-3scale.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale)    | deploy a 3Scale infrastructure at a cluster level
+| **[cluster-pipeline](charts/cluster-pipeline.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline)  | enable tekton pipeline at a cluster level
+| **[cluster-workspace](charts/cluster-workspace.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace) | enable codeready workspace at a cluster level
+| **[cluster-vault](charts/cluster-vault.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault)     | enable hashicorp vault service at a cluster level
+| **[cluster-quay](charts/cluster-quay.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay)      | enable Quay.io private repository at a cluster level
+| **[cluster-ocs](charts/cluster-ocs.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs)       | enable Openshift Container Storage at a cluster level
+| **[cluster-metering](charts/cluster-metering.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering)  | enable Metering at a cluster level
+| **[cluster-istio](charts/cluster-istio.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio)     | enable ServiceMesh at the cluster level
+| **[cluster-auth](charts/cluster-auth.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth)      | configure Auth at the cluster level
+| **[cluster-console](charts/cluster-console.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-console)   | configure the openshift console at the cluster level
+
+### Basic Helm charts
+
+Helm chart without prefix are basic chart. Basic charts configure basic element and are mainly used as a dependency of more complex chart.
+
+| Chart                              | Source                                                                            | Description  
+| ---------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------
+| **[project](charts/project.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/project)  | create a project with limits, quotas, networkpolicy and rbac set
+| **[operator](charts/operator.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/operator) | create an operator with subscription (openshift) or CRD (k8s)
+| **[sxapi](charts/sxapi.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi)    | deploy a small micro-service endpoint
+
+### Example Helm charts
+
+Helm chart prefixed with `example-` are Example chart. Example are used in demo and various workshop to show how to use helm as part of a gitops toolchain.
+
+| Chart                                                  | Source                                                                                      | Description  
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------- | -------------------------------------
+| **[example-deployment](charts/example-deployment.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment) | An example on how to deploy simple applications using helm and a deployment
+| **[example-pod](charts/example-pod.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)        | An example on how to deploy simple applications using helm and a pod
+| **[example-sxapi](charts/example-sxapi.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)      | An example on how to deploy simple micro-applications using helm and an sxapi toolkit
 
 ## Examples
 
@@ -32,7 +53,15 @@ helm install startx/cluster-rbac
 helm install startx/cluster-3scale
 helm install startx/cluster-pipeline
 helm install startx/cluster-workspace
+helm install startx/cluster-vault
+helm install startx/cluster-quay
+helm install startx/cluster-ocs
+helm install startx/cluster-metering
+helm install startx/cluster-istio
+helm install startx/cluster-auth
+helm install startx/cluster-console
 helm install startx/project
+helm install startx/operator
 helm install startx/sxapi
 helm install startx/example-deployment
 helm install startx/example-pod
@@ -83,7 +112,16 @@ helm install charts/cluster-rbac
 helm install charts/cluster-3scale
 helm install charts/cluster-pipeline
 helm install charts/cluster-workspace
+helm install charts/cluster-workspace
+helm install charts/cluster-vault
+helm install charts/cluster-quay
+helm install charts/cluster-ocs
+helm install charts/cluster-metering
+helm install charts/cluster-istio
+helm install charts/cluster-auth
+helm install charts/cluster-console
 helm install charts/project
+helm install charts/operator
 helm install charts/sxapi
 helm install charts/example-deployment
 helm install charts/example-pod
