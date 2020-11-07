@@ -6,6 +6,9 @@ metadata:
   namespace: {{ .Values.project.name | quote }}
   annotations:
     {{- include "cluster-3scale.annotations" . | nindent 4 }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: hook-failed
   labels:
     {{- include "cluster-3scale.labels" . | nindent 4 }}
     app.kubernetes.io/name: "startx-apimanager"
