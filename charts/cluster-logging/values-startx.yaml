@@ -1,0 +1,121 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: openshift-metering
+metering:
+  enabled: true
+  reportingOperator:
+    enabled: true
+    resources: |
+      limits:
+        cpu: 1
+        memory: 500Mi
+      requests:
+        cpu: 500m
+        memory: 100Mi
+  presto:
+    enabled: true
+    coordinator:
+      resources: |
+        limits:
+          cpu: 4
+          memory: 4Gi
+        requests:
+          cpu: 2
+          memory: 2Gi
+    worker:
+      resources: |
+        limits:
+          cpu: 8
+          memory: 8Gi
+        requests:
+          cpu: 4
+          memory: 2Gi
+  hive:
+    enabled: true
+    size: 5Gi
+    storageClass: ocs-storagecluster-cephfs
+    server:
+      resources: |
+        limits:
+          cpu: 1
+          memory: 1Gi
+        requests:
+          cpu: 500m
+          memory: 500Mi
+    metastore:
+      resources: |
+        limits:
+          cpu: 4
+          memory: 2Gi
+        requests:
+          cpu: 500m
+          memory: 650Mi
+  reports:
+    enabled: true
+    list: 
+    - name: namespace-cpu-usage-hourly
+      spec: |
+        query: "namespace-cpu-usage"
+        schedule:
+          period: "hourly"
+          hourly:
+            minute: 0
+            second: 0
+    - name: namespace-memory-usage-hourly
+      spec: |
+        query: "namespace-memory-usage"
+        schedule:
+          period: "hourly"
+          hourly:
+            minute: 0
+            second: 0
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "openshift-metering"
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops
+      name: devops
+      role: view
+    - id: ops
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "metering-ocp"
+    namespace: "openshift-metering"
+    version: "4.5.0-202009120215.p0"
+    operator: 
+      channel: "4.5"
+      name: metering-ocp
+      csv: metering-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "openshift-metering"
+    namespace: "openshift-metering"
+    providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"
