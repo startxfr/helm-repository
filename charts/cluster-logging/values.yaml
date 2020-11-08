@@ -1,0 +1,146 @@
+# Default values for cluster-logging.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: openshift-metering
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# configuration of the metering service
+metering:
+  # Enable the deployment of the metering service
+  enabled: true
+  # configuration of the hive service
+  reportingOperator:
+    # Enable the deployment of the reporting-operator service
+    enabled: true
+    # Resource spec for reporting-operator pods
+    resources: |
+      limits:
+        cpu: 1
+        memory: 500Mi
+      requests:
+        cpu: 500m
+        memory: 100Mi
+  # configuration of the presto service
+  presto:
+    # Enable the deployment of the presto service
+    enabled: true
+    # Configuration of the coordinator deployment
+    coordinator:
+      # Resource spec for hive coordinator pods
+      resources: |
+        limits:
+          cpu: 4
+          memory: 4Gi
+        requests:
+          cpu: 2
+          memory: 2Gi
+    # Configuration of the worker deployment
+    worker:
+      # Resource spec for hive worker pods
+      resources: |
+        limits:
+          cpu: 8
+          memory: 8Gi
+        requests:
+          cpu: 4
+          memory: 2Gi
+  # configuration of the hive service
+  hive:
+    # Enable the deployment of the hive service
+    enabled: true
+    # Configuration of the server deployment
+    server:
+      # Resource spec for hive server pods
+      resources: |
+        limits:
+          cpu: 1
+          memory: 1Gi
+        requests:
+          cpu: 500m
+          memory: 500Mi
+    # Configuration of the metastore deployment
+    metastore:
+      # Resource spec for hive metastore pods
+      resources: |
+        limits:
+          cpu: 4
+          memory: 2Gi
+        requests:
+          cpu: 500m
+          memory: 650Mi
+    # Size of the hive storage volume
+    size: 5Gi
+    # Storage class used to provision hive storage (must be readWriteMany)
+    storageClass: gp2
+  # deploy a list of report ressources
+  reports:
+    # Enable the deployment of the hive service
+    enabled: true
+    # Size of the hive storage volume
+    list: 
+      # Name of the report
+    - name: namespace-cpu-usage-hourly
+      # Spec of the report
+      spec: |
+        query: "namespace-cpu-usage"
+        schedule:
+          period: "hourly"
+          hourly:
+            minute: 0
+            second: 0
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: "openshift-metering"
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops
+      name: devops
+      role: view
+    - id: ops
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "metering-ocp"
+    namespace: "openshift-metering"
+    version: "4.5.0-202009120215.p0"
+    operator: 
+      channel: "4.5"
+      name: metering-ocp
+      csv: metering-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "openshift-metering"
+    namespace: "openshift-metering"
+    providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"
