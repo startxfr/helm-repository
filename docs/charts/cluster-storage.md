@@ -85,8 +85,5 @@ helm install startx/cluster-storage -f https://raw.githubusercontent.com/startxf
 | 0.3.0   | 2020-10-31 | Stable 0.3 release
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
-| 0.3.34  | 2020-11-08 | Improve cluster-storage options
-| 0.3.35  | 2020-11-08 | Improve cluster-storage options
-| 0.3.36  | 2020-11-08 | Improve cluster-storage options
-| 0.3.45  | 2020-11-08 | Align all helm charts to version 0.3.45
-| 0.3.47  | 2020-11-08 | publish stable update for the full repository
+| 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
+| 0.3.48  | 2020-11-08 | publish stable update for the full repository
