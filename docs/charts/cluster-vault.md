@@ -73,4 +73,4 @@ helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
 | 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
-| 0.3.48  | 2020-11-08 | publish stable update for the full repository
+| 0.3.50  | 2020-11-08 | publish stable update for the full repository
