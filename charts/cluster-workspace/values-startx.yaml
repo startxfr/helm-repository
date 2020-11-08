@@ -1,18 +1,14 @@
 # Default values for configuration of a STARTX cluster
 # see values.yaml for explanation on each params
-context: 
+context: &context
   scope: startx
   cluster: localhost
   environment: dev
   component: infra
-  app: startx-infra
+  app: openshift-workspaces
 project: 
   context: 
-    scope: startx
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
+    <<: *context
   project: 
     type: namespace
     name: openshift-workspaces
@@ -37,11 +33,7 @@ project:
     enabled: false
 operator:
   context: 
-    scope: startx
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
+    <<: *context
   subscription:
     enabled: true
     name: "codeready-workspaces"

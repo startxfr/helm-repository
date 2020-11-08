@@ -87,3 +87,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 0.3.34  | 2020-11-08 | Improve cluster-config options
 | 0.3.35  | 2020-11-08 | Improve cluster-config options
 | 0.3.36  | 2020-11-08 | Improve cluster-config options
+| 0.3.37  | 2020-11-08 | Improve cluster-config options
