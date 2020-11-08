@@ -3,7 +3,7 @@ kind: APIManager
 apiVersion: apps.3scale.net/v1alpha1
 metadata:
   name: "startx"
-  namespace: {{ .Values.project.name | quote }}
+  namespace: {{ .Values.project.project.name | quote }}
   annotations:
     {{- include "cluster-3scale.annotations" . | nindent 4 }}
     helm.sh/hook: post-install,post-upgrade,post-delete
@@ -13,7 +13,7 @@ metadata:
     {{- include "cluster-3scale.labels" . | nindent 4 }}
     app.kubernetes.io/name: "startx-apimanager"
 spec:
-  wildcardDomain: "{{- .Values.project.name -}}.apps.{{- .Values.context.cluster -}}.startx.fr"
+  wildcardDomain: "{{- .Values.project.project.name -}}.apps.{{- .Values.context.cluster -}}.startx.fr"
   tenantName: 3scale
   appLabel: 3scale-api-management
   imageStreamTagImportInsecure: false
