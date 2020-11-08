@@ -99,3 +99,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.45  | 2020-11-08 | Align all basic helm chart to 0.3.45 release
 | 0.3.50  | 2020-11-08 | publish stable update for the full repository
+| 0.3.51  | 2020-11-08 | Improve sxapi options

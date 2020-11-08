@@ -141,3 +141,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.29  | 2020-11-07 | Improve helm hook ordering cordinated with higher cluster-xxx helm chart depending on this chart
 | 0.3.45  | 2020-11-08 | Align all basic helm chart to 0.3.45 release
 | 0.3.50  | 2020-11-08 | publish stable update for the full repository
+| 0.3.51  | 2020-11-08 | Improve operator options
