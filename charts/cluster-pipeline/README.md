@@ -73,3 +73,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
 | 0.3.34  | 2020-11-08 | Improve cluster-pipeline options
+| 0.3.35  | 2020-11-08 | Improve cluster-pipeline options

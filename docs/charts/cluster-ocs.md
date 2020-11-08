@@ -11,25 +11,25 @@ more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
 
-### Connect to your Openshift cluster
+### 1. Connect to your Openshift cluster
 
 ```bash
 oc login -t <token> <cluster-url>
 ```
 
-### Install the repository
+### 2. Install the repository
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ```
 
-### Get information about this chart
+### 3. Get information about this chart
 
 ```bash
 helm show chart startx/cluster-ocs
 ```
 
-### Install this chart
+### 4. Install this chart
 
 ```bash
 helm install startx/cluster-ocs
@@ -65,3 +65,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.38  | 2020-11-08 | Improve cluster-ocs options
+| 0.3.39  | 2020-11-08 | Improve cluster-ocs options

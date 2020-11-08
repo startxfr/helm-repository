@@ -33,12 +33,6 @@ helm show chart startx/operator
 helm install startx/operator
 ```
 
-
-
-
-
-
-
 ## Values dictionary
 
 ### context values dictionary
@@ -148,3 +142,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.27  | 2020-11-07 | Stable notes
 | 0.3.29  | 2020-11-07 | Improve helm hook ordering cordinated with higher cluster-xxx helm chart depending on this chart
 | 0.3.30  | 2020-11-08 | Improve operator options
+| 0.3.31  | 2020-11-08 | Improve operator options

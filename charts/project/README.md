@@ -198,3 +198,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.27  | 2020-11-07 | Stable notes
 | 0.3.29  | 2020-11-07 | Release aligned to basic 0.3.29 version
 | 0.3.30  | 2020-11-08 | Improve project options
+| 0.3.31  | 2020-11-08 | Improve project options
