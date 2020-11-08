@@ -76,11 +76,11 @@ networkpolicy:
       ingress:
       - from:
         - podSelector: {}
-# Configure NetworkPolicy for project
+# Configure limitRange for project
 limits: 
-  # Enable NetworkPolicy default for this project
+  # Enable limitRange default for this project
   enabled: false
-  # List group to create
+  # Specification of the limitRange ressource
   rules:  |
     limits:
       - type: "Pod"
@@ -91,11 +91,11 @@ limits:
         max:
           cpu: 100m
           memory: 128Mi
-# Configure NetworkPolicy for project
+# Configure quotas for project
 quotas: 
-  # Enable NetworkPolicy default for this project
+  # Enable quotas default for this project
   enabled: false
-  # List group to create
+  # Specification of the quotas ressource
   rules:  |
     hard:
       limits.cpu: "400m"
