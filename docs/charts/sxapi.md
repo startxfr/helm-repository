@@ -10,31 +10,57 @@ more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
 
-### Connect to your Openshift cluster
+### 1. Connect to your Openshift cluster
 
 ```bash
 oc login -t <token> <cluster-url>
 ```
 
-### Install the repository
+### 2. Install the repository
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ```
 
-### Get information about this chart
+### 3. Get information about this chart
 
 ```bash
 helm show chart startx/sxapi
 ```
 
-### Install this chart
+### 4. Install this chart
 
 ```bash
 helm install startx/sxapi
 ```
 
-## Default values
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description
+| ------------------- | --------- | -----------------------------------------------------
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)
+| context.component   | demo      | Component name of this application (logical tenant)
+| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)
+
+### sxapi values dictionary
+
+| Key                   | Default    | Description
+| --------------------- | ---------- | -----------------------------------------------------
+| sxapi.service.enabled | false      | Enable service for this application
+| sxapi.version         | 0.3.53     | Sxapi image version to run
+| sxapi.profile         | prod:start | Profile to run inside the container
+| sxapi.debug           | true       | Enable debuging of the container
+| sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance
+| sxapi.data            | string     | Files to load into the application
+
+## Values files
+
+## Default values file (values.yaml)
 
 Complete deployment of a project with the following characteristics :
 
@@ -47,7 +73,7 @@ Complete deployment of a project with the following characteristics :
 helm install startx/sxapi
 ```
 
-## Others values availables
+## Others values files
 
 - **dev** : Dev sxapi environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml))
 
