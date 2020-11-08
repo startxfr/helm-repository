@@ -82,3 +82,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.42  | 2020-11-08 | Improve cluster-3scale options
 | 0.3.45  | 2020-11-08 | Align all helm charts to version 0.3.45
 | 0.3.47  | 2020-11-08 | publish stable update for the full repository
+| 0.3.47  | 2020-11-08 | publish stable update for the full repository
