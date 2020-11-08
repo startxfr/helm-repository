@@ -119,3 +119,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.50  | 2020-11-08 | publish stable update for the full repository
 | 0.3.53  | 2020-11-08 | publish stable update for the full repository
+| 0.3.59  | 2020-11-08 | publish stable update for the full repository

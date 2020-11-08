@@ -3,7 +3,7 @@ kind: ServiceAccount
 apiVersion: v1
 metadata:
   name: "default"
-  namespace: {{ .Values.project.name | quote }}
+  namespace: {{ .Values.project.project.name | quote }}
   labels:
     {{- include "cluster-3scale.labels" . | nindent 4 }}
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-default-serviceaccount"
