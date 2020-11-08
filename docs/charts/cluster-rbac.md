@@ -11,25 +11,25 @@ more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
 
-### Connect to your Openshift cluster
+### 1. Connect to your Openshift cluster
 
 ```bash
 oc login -t <token> <cluster-url>
 ```
 
-### Install the repository
+### 2. Install the repository
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ```
 
-### Get information about this chart
+### 3. Get information about this chart
 
 ```bash
 helm show chart startx/cluster-rbac
 ```
 
-### Install this chart
+### 4. Install this chart
 
 ```bash
 helm install startx/cluster-rbac
@@ -67,3 +67,4 @@ helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.35  | 2020-11-07 | Debug rbac role property
 | 0.3.36  | 2020-11-08 | Improve cluster-rbac options
+| 0.3.37  | 2020-11-08 | Improve cluster-rbac options
