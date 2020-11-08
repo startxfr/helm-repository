@@ -121,3 +121,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 0.3.34  | 2020-11-08 | Improve example-deployment options
 | 0.3.35  | 2020-11-08 | Improve example-deployment options
 | 0.3.36  | 2020-11-08 | Improve example-deployment options
+| 0.3.45  | 2020-11-08 | Align all helm charts to version 0.3.45
