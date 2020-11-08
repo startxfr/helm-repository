@@ -1,6 +1,6 @@
 # Default values for configuration of a STARTX cluster
 # see values.yaml for explanation on each params
-context: 
+context: &context
   scope: startx
   cluster: localhost
   environment: dev
@@ -10,11 +10,7 @@ route:
   enabled: false
 project: 
   context: 
-    scope: startx
-    cluster: localhost
-    environment: dev
-    component: vault
-    app: startx-vault
+    <<: *context
   project: 
     type: project
     name: startx-vault

@@ -1,7 +1,7 @@
 # Default values for cluster-vault.
 
 # Application deployment context
-context: 
+context: &context
   # Name of the global scope for this application (organisational tenant)
   scope: default
   # Name of the cluster running this application (plateform tenant)
@@ -18,11 +18,7 @@ context:
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   context: 
-    scope: default
-    cluster: localhost
-    environment: dev
-    component: vault
-    app: startx-vault
+    <<: *context
   project: 
     type: project
     name: example-vault

@@ -1,6 +1,6 @@
 # Default values for configuration of a STARTX cluster
 # see values.yaml for explanation on each params
-context: 
+context: &context
   scope: startx
   cluster: localhost
   environment: dev
@@ -14,11 +14,7 @@ rhn:
   pwd: startx_rhnpwd
 project: 
   context: 
-    scope: startx
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
+    <<: *context
   project: 
     type: project
     name: startx-3scale
@@ -121,11 +117,7 @@ project:
         count/deployments.apps: "2"
 operator:
   context: 
-    scope: startx
-    cluster: localhost
-    environment: dev
-    component: infra
-    app: startx-infra
+    <<: *context
   subscription:
     enabled: true
     name: "3scale-operator"
