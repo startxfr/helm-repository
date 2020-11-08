@@ -75,11 +75,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
-| 0.3.38  | 2020-11-08 | Improve cluster-3scale options
-| 0.3.39  | 2020-11-08 | Improve cluster-3scale options
-| 0.3.40  | 2020-11-08 | Improve cluster-3scale options
-| 0.3.41  | 2020-11-08 | Improve cluster-3scale options
-| 0.3.42  | 2020-11-08 | Improve cluster-3scale options
-| 0.3.45  | 2020-11-08 | Align all helm charts to version 0.3.45
-| 0.3.47  | 2020-11-08 | publish stable update for the full repository
-| 0.3.47  | 2020-11-08 | publish stable update for the full repository
+| 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
