@@ -60,24 +60,29 @@ helm install startx/sxapi
 
 ## Values files
 
-## Default values file (values.yaml)
+### Default values file (values.yaml)
 
 Complete deployment of a project with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.53** sxapi image running the **prod:start** command with debug enabled
-- 2 **configMap** holding sxapi configuration and pod environmnet variable context
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.53** sxapi image running the **prod:start** command with debug disabled
+- 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
 # base configuration running default configuration
 helm install startx/sxapi
 ```
 
-## Others values files
+### Dev values file (values-dev.yaml)
 
-- **dev** : Dev sxapi environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml))
+Complete deployment of a project with the following characteristics :
+
+- 1 **service** named **sxapi** load balancing to pod deployed
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.53** sxapi image running the **dev:start** command with debug enabled
+- 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
+# base configuration running dev configuration
 helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml
 ```
 

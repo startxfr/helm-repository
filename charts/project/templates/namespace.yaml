@@ -2,7 +2,7 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: "{{- .Values.project.name | default .Chart.Name -}}"
+  name: "{{- .Values.project.name | default "default" -}}"
   labels:
     {{- include "project.labels" . | nindent 4 }}
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-project"

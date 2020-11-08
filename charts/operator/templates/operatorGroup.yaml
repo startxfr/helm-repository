@@ -6,8 +6,8 @@
 kind: OperatorGroup
 apiVersion: operators.coreos.com/v1
 metadata:
-  name: {{ $name | quote }}
-  namespace: {{ $namespace | quote }}
+  name: {{ $name | default "default" | quote }}
+  namespace: {{ $namespace | default "default" | quote }}
   labels:
     {{- include "operator.labels" . | nindent 4 }}
     app.kubernetes.io/name: "{{ $name }}-operatorgroup"
@@ -19,5 +19,5 @@ metadata:
     helm.sh/hook-delete-policy: hook-failed
 spec:
   targetNamespaces:
-    - {{ $namespace | quote }}
+    - {{ $namespace | default "default" | quote }}
 {{- end }}{{- end }}
