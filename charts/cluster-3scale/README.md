@@ -79,3 +79,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.39  | 2020-11-08 | Improve cluster-3scale options
 | 0.3.40  | 2020-11-08 | Improve cluster-3scale options
 | 0.3.41  | 2020-11-08 | Improve cluster-3scale options
+| 0.3.42  | 2020-11-08 | Improve cluster-3scale options
