@@ -67,3 +67,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.39  | 2020-11-08 | Improve cluster-metering options
 | 0.3.40  | 2020-11-08 | Improve cluster-metering options
 | 0.3.45  | 2020-11-08 | Align all helm charts to version 0.3.45
+| 0.3.47  | 2020-11-08 | publish stable update for the full repository
