@@ -16,6 +16,6 @@ metadata:
     {{- include "cluster-console.annotations" $root | nindent 4 }}
 data:
   {{ .name | default "default-logo" -}}.svg: |-
-    {{ $files.Get .tplFile | nindent 4 }}
+    {{- $files.Get .tplFile | nindent 4 }}
 {{- end }}
 {{- end -}}{{- end -}}{{- end -}}
