@@ -68,3 +68,4 @@ helm install startx/cluster-logging -f https://raw.githubusercontent.com/startxf
 | 0.3.40  | 2020-11-08 | Improve cluster-logging options
 | 0.3.40  | 2020-11-08 | Create chart cluster-logging from cluster-metering
 | 0.3.45  | 2020-11-08 | Align all helm charts to version 0.3.45
+| 0.3.47  | 2020-11-08 | publish stable update for the full repository
