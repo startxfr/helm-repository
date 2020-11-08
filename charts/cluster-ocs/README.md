@@ -67,3 +67,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.38  | 2020-11-08 | Improve cluster-ocs options
 | 0.3.39  | 2020-11-08 | Improve cluster-ocs options
 | 0.3.40  | 2020-11-08 | Improve cluster-ocs options
+| 0.3.45  | 2020-11-08 | Align all helm charts to version 0.3.45
