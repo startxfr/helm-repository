@@ -94,3 +94,4 @@ helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
 | 0.3.34  | 2020-11-08 | Improve example-pod options
 | 0.3.35  | 2020-11-08 | Improve example-pod options
+| 0.3.36  | 2020-11-08 | Improve example-pod options
