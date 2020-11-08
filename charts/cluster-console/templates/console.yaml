@@ -16,7 +16,7 @@ metadata:
     release.openshift.io/create-only: "true"
     helm.sh/resource-policy: keep
 spec:
-  managementState: {{- $root.Values.console.state | default "Managed" -}}
+  managementState: {{ $root.Values.console.state | default "Managed" | quote }}
   customization:
     customLogoFile:
       key: "{{- .logo.name | default "default-logo" -}}.svg"
