@@ -67,3 +67,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
 | 0.3.50  | 2020-11-08 | publish stable update for the full repository
 | 0.3.53  | 2020-11-08 | publish stable update for the full repository
+| 0.3.59  | 2020-11-08 | publish stable update for the full repository
