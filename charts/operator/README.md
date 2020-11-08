@@ -33,12 +33,6 @@ helm show chart startx/operator
 helm install startx/operator
 ```
 
-
-
-
-
-
-
 ## Values dictionary
 
 ### context values dictionary

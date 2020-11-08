@@ -33,23 +33,51 @@ helm show chart startx/example-pod
 helm install startx/example-pod
 ```
 
-## Default values
+## Values dictionary
 
-Complete deployment of a project with the following characteristics :
+### context values dictionary
 
-- 1 **pod** named **example-pod** from image **startx/fedora:latest**
+| Key                 | Default   | Description
+| ------------------- | --------- | -----------------------------------------------------
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)
+| context.component   | demo      | Component name of this application (logical tenant)
+| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)
+
+### example-pod values dictionary
+
+| Key       | Default       | Description
+| --------- | ------------- | -----------------------------------------------------
+| image     | fedora:latest | Image to run into the pod
+| command   | /bin/sx       | Command to run inside the container
+| args      | run           | argunments to pass to the command exectuted inside the container
+| debug     | true          | Enable debuging of the container
+
+
+## Values files
+
+### Default values file (values.yaml)
+
+Simple pod deployment of a container image with the following characteristics :
+
+- 1 **pod** named **example-pod** running **quay.io/startx/fedora:latest** image
 
 ```bash
 # base configuration running default configuration
 helm install startx/example-pod
 ```
 
-## Others values availables
+### Development values file (values-demo.yaml)
 
-- **demo** : Deployment of 1 fedora pod (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-pod/values-demo.yaml))
+Demo pod deployment of a container image with the following characteristics :
+
+- 1 **pod** named **demo-helm-pod** running **quay.io/startx/fedora:latest** image
 
 ```bash
-helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-pod/values-demo.yaml
+# base configuration running demo configuration
+helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
 ## History

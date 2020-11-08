@@ -33,36 +33,77 @@ helm show chart startx/example-deployment
 helm install startx/example-deployment
 ```
 
-## Default values
+## Values dictionary
 
-Complete deployment of a project with the following characteristics :
+### context values dictionary
 
-- 1 **service** named **example-deployment** load balancing to pod deployed
-- 1 **deployment** named **example-deployment** deploying **1 pod** from image **startx/apache:latest**
+| Key                 | Default   | Description
+| ------------------- | --------- | -----------------------------------------------------
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)
+| context.component   | demo      | Component name of this application (logical tenant)
+| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)
+
+### example-deployment values dictionary
+
+| Key       | Default       | Description
+| --------- | ------------- | -----------------------------------------------------
+| image     | fedora:latest | Image to run into the pod
+| command   | /bin/sx       | Command to run inside the container
+| args      | run           | argunments to pass to the command exectuted inside the container
+| debug     | true          | Enable debuging of the container
+| replicas  | 1             | Define the number of replicas for this sxapi instance
+
+## Values files
+
+### Default values file (values.yaml)
+
+Simple deployment of a container image with the following characteristics :
+
+- 1 **deployment** named **example-deployment** of **1 pod** running **quay.io/startx/fedora:latest** image
+- 1 **service** named **example-deployment**
 
 ```bash
 # base configuration running default configuration
 helm install startx/example-deployment
 ```
 
-## Others values availables
+### Demo values file (values-demo.yaml)
 
-- **demo** : Deployment of 2 apache pod (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-demo.yaml))
+Deployment of an demo container image with the following characteristics :
+
+- 1 **pod** named **demo-helm-deployment** of **2 pods**  running **quay.io/startx/apache:latest** image
+- 1 **service** named **demo-helm-deployment**
 
 ```bash
-helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-demo.yaml
+# Configuration running demo example configuration
+helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
-- **apache** : Deployment of 2 apache pod (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-apache.yaml))
+### Apache values file (values-apache.yaml)
+
+Deployment of an apache container image with the following characteristics :
+
+- 1 **pod** named **example-deployment-apache** of **2 pods**  running **quay.io/startx/apache:latest** image
+- 1 **service** named **example-deployment-apache**
 
 ```bash
-helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-apache.yaml
+# Configuration running apache example configuration
+helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
 ```
 
-- **mariadb** : Deployment of 1 mariadb pod (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-mariadb.yaml))
+### MariaDB values file (values-mariadb.yaml)
+
+Deployment of an mariadb container image with the following characteristics :
+
+- 1 **pod** named **example-deployment-mariadb** of **2 pods**  running **quay.io/startx/mariadb:latest** image
+- 1 **service** named **example-deployment-mariadb**
 
 ```bash
-helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-mariadb.yaml
+# Configuration running mariadb example configuration
+helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
 ## History
