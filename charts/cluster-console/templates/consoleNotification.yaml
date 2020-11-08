@@ -2,7 +2,7 @@
 {{- $root := . -}}
 {{- $files := .Files }}
 {{- $namespace := .Values.console.namespace | default "openshift-config" -}}
-{{- range .Values.console.notifications -}}
+{{- range .Values.console.notifications }}
 ---
 kind: ConsoleNotification
 apiVersion: console.openshift.io/v1
@@ -14,6 +14,6 @@ metadata:
   annotations:
     {{- include "cluster-console.annotations" $root | nindent 4 }}
 spec:
-  {{ .spec | nindent  2 }}
+  {{- .spec | nindent  2 }}
 {{- end }}
 {{- end -}}
