@@ -11,25 +11,25 @@ more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
 
-### Connect to your Openshift cluster
+### 1. Connect to your Openshift cluster
 
 ```bash
 oc login -t <token> <cluster-url>
 ```
 
-### Install the repository
+### 2. Install the repository
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ```
 
-### Get information about this chart
+### 3. Get information about this chart
 
 ```bash
 helm show chart startx/cluster-config
 ```
 
-### Install this chart
+### 4. Install this chart
 
 ```bash
 helm install startx/cluster-config
@@ -86,3 +86,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository
 | 0.3.34  | 2020-11-08 | Improve cluster-config options
 | 0.3.35  | 2020-11-08 | Improve cluster-config options
+| 0.3.36  | 2020-11-08 | Improve cluster-config options
