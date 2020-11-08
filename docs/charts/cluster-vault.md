@@ -75,3 +75,4 @@ helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/
 | 0.3.35  | 2020-11-07 | Debug rbac role property
 | 0.3.36  | 2020-11-08 | Improve cluster-vault options
 | 0.3.37  | 2020-11-08 | Improve cluster-vault options
+| 0.3.38  | 2020-11-08 | Improve cluster-vault options
