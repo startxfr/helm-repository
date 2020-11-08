@@ -7,17 +7,17 @@
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: "{{ .id }}-{{ .role }}"
+  name: "{{ .id }}-{{ .role | default "view" }}"
   namespace: "{{- $ns -}}"
   labels:
     {{- include "project.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{ .id }}-{{ .role }}-rolebinding"
+    app.kubernetes.io/name: "{{ .id }}-{{ .role | default "view" }}-rolebinding"
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .role | quote }}
+  name: {{ .role | default "view" | quote }}
 subjects:
   - kind: Group
     apiGroup: rbac.authorization.k8s.io
@@ -28,17 +28,17 @@ subjects:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: "{{ .id }}-{{ .role }}"
+  name: "{{ .id }}-{{ .role | default "view" }}"
   namespace: "{{- $ns -}}"
   labels:
     {{- include "project.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{ .id }}-{{ .role }}-rolebinding"
+    app.kubernetes.io/name: "{{ .id }}-{{ .role | default "view" }}-rolebinding"
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .role | quote }}
+  name: {{ .role | default "view" | quote }}
 subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io

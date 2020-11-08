@@ -33,64 +33,102 @@ helm show chart startx/operator
 helm install startx/operator
 ```
 
-## Default values
 
-Deployment of codeready-workspace subscription with :
 
-- 1 **operatorGroup** named **codeready-workspaces** with the following characteristics
-  - deployed in namespace **openshift-workspaces**
-  - provide API **CheCluster.v1.org.eclipse.che**
-- 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
-  - operator name is **codeready-workspaces**
-  - operator version is **2.3.0**
-  - operator catalog is **redhat-operators** located in **openshift-marketplace**
+
+
+
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description
+| ------------------- | --------- | -----------------------------------------------------
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)
+| context.component   | demo      | Component name of this application (logical tenant)
+| context.app         | operator   | Application name (functionnal tenant, default use Chart name)
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)
+
+### operator values dictionary
+
+| Key                                    | Default               | Description
+| -------------------------------------- | --------------------- | -----------------------------------------------------
+| subscription.enabled                   | true                  | Enable deployment of the subscription
+| subscription.name                      | default               | name of the subscription (mandatory)
+| subscription.namespace                 | default               | namespace of the subscription
+| subscription.version                   | v0.1.0                | version of the operator to deploy (mandatory)
+| subscription.operator                  | object                | Configuration of the CRW operator
+| subscription.operator.channel          | latest                | The CRW channel to use
+| subscription.operator.name             | default               | name of the operator (if not set, use the subscription name)
+| subscription.operator.csv              | default               | name of the CSV (if not set, use the subscription name)
+| subscription.operator.source.name      | redhat-operators      | name of the operator source
+| subscription.operator.source.namespace | openshift-marketplace | Namespace of the operator source
+| operatorGroup.enabled                  | true                  | Enable deployment of an operatorGroup for the subscription
+| operatorGroup.name                     | default               | name of the operatorGroup (if not set, use the subscription name)
+| operatorGroup.namespace                | default               | namespace of the operatorGroup (if not set, use the subscription namespace)
+| operatorGroup.providedAPIs             | default.local         | ist of the provided APIs (mandatory if enabled)
+
+## Values files
+
+### Default values file (values.yaml)
+
+Complete deployment of an operator with the following characteristics :
+
+- 1 **subscription** named **codeready-workspaces** in namespace **openshift-workspaces**
+  - operator named **codeready-workspaces**
+  - version **2.3.0** of **crwoperator** CSV
+  - source is **redhat-operators** from **openshift-marketplace** namespace
+- 1 **operatorGroup** named **codeready-workspaces** in namespace **openshift-workspaces**
 
 ```bash
 # base configuration running default configuration
 helm install startx/operator
 ```
 
-## Others values availables
+### Tekton v1.0.1 values file (values-tekton-1.0.1.yaml)
 
-- **values-crw-2.3.0** : Startx codeready-workspace operator version 2.3.0 (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.3.0.yaml)) deploying the following environment
-  - 1 **operatorGroup** named **codeready-workspaces** with the following characteristics
-    - deployed in namespace **openshift-workspaces**
-    - provide API **CheCluster.v1.org.eclipse.che**
-  - 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
-    - operator name is **codeready-workspaces**
-    - operator version is **2.3.0**
-    - operator catalog is **redhat-operators** located in **openshift-marketplace**
+Complete deployment of a tekton v1.0.1 operator with the following characteristics :
+
+- 1 **subscription** named **openshift-pipelines-operator-rh** in namespace **openshift-workspaces**
+  - operator named **openshift-pipelines-operator-rh**
+  - version **1.0.1** of **openshift-pipelines-operator** CSV
+  - source is **redhat-operators** from **openshift-marketplace** namespace
 
 ```bash
-helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.3.0.yaml
-```
-
-- **values-tekton-1.0.1** : Startx codeready-workspace operator version 2.3.0 (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.0.1.yaml)) deploying the following environment
-  - 1 **subscription** named **openshift-pipelines-operator-rh** to deploy tekton operator with the following characteristics
-    - operator name is **openshift-pipelines-operator-rh**
-    - operator is deployed in the **openshift-operators** namespace
-    - operator version is **1.0.1**
-    - operator catalog is **redhat-operators** located in **openshift-marketplace**
-    - operator channel is **ocp-4.5**
-    - operator custom provider is **openshift-pipelines-operator**
-
-```bash
+# base configuration running tekton v1.0.1 configuration
 helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.0.1.yaml
 ```
 
-- **values-3scale-0.6.0** : Startx 3scale operator version 0.6.0 (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml)) deploying the following environment
-  - 1 **operatorGroup** named **3scale-operator** with the following characteristics
-    - deployed in namespace **startx-3scale**
-    - provide all 3scale API
-  - 1 **subscription** named **3scale-operator** to deploy codeready operator with the following characteristics
-    - operator name is **3scale-operator**
-    - operator is deployed in the **startx-3scale** namespace
-    - operator version is **0.6.0**
-    - operator catalog is **redhat-operators** located in **openshift-marketplace**
-    - operator channel is **threescale-2.9**
-    - operator custom provider is **3scale-operator**
+### CRW v2.3.0 values file (values-crw-2.3.0.yaml)
+
+Complete deployment of a CRW v2.3.0 operator with the following characteristics :
+
+- 1 **subscription** named **codeready-workspaces** in namespace **openshift-workspaces**
+  - operator named **codeready-workspaces**
+  - version **2.3.0** of **crwoperator** CSV
+  - source is **redhat-operators** from **openshift-marketplace** namespace
+- 1 **operatorGroup** named **codeready-workspaces** in namespace **openshift-workspaces**
 
 ```bash
+# base configuration running CRW v2.3.0 configuration
+helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.3.0.yaml
+```
+
+### 3scale v0.6.0 values file (values-3scale-0.6.0.yaml)
+
+Complete deployment of a 3scale v0.6.0 operator with the following characteristics :
+
+- 1 **subscription** named **3scale-operator** in namespace **startx-3scale**
+  - operator named **3scale-operator**
+  - version **0.6.0** of **3scale-operator** CSV
+  - source is **redhat-operators** from **openshift-marketplace** namespace
+- 1 **operatorGroup** named **3scale-operator** in namespace **startx-3scale**
+
+```bash
+# base configuration running 3scale v0.6.0 configuration
 helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml
 ```
 

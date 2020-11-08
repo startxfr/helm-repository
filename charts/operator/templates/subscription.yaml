@@ -6,8 +6,8 @@
 kind: Subscription
 apiVersion: operators.coreos.com/v1alpha1
 metadata:
-  name: {{ $name | quote }}
-  namespace: {{ $namespace | quote }}
+  name: {{ $name | default "default" | quote }}
+  namespace: {{ $namespace | default "default" | quote }}
   labels:
     {{- include "operator.labels" . | nindent 4 }}
     app.kubernetes.io/name: "{{ $name }}-subscription"
@@ -25,6 +25,6 @@ spec:
   source: {{ .name | default "redhat-operators" | quote }}
   sourceNamespace: {{ .namespace | default "openshift-marketplace" | quote }}
   {{- end }}
-  startingCSV: "{{ .csv }}.{{ $version }}"
+  startingCSV: "{{ .csv | default $name }}.{{ $version | default "v0.1.0" }}"
   {{- end }}
 {{- end }}{{- end }}
