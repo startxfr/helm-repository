@@ -64,3 +64,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.38  | 2020-11-08 | Improve cluster-metering options
+| 0.3.39  | 2020-11-08 | Improve cluster-metering options
