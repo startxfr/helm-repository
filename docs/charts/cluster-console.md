@@ -63,3 +63,4 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 | 0.3.34  | 2020-11-08 | Improve cluster-console options
 | 0.3.35  | 2020-11-08 | Improve cluster-console options
 | 0.3.36  | 2020-11-08 | Improve cluster-console options
+| 0.3.37  | 2020-11-08 | Improve cluster-console options
