@@ -63,3 +63,4 @@ helm install startx/cluster-knative -f https://raw.githubusercontent.com/startxf
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.38  | 2020-11-08 | Improve cluster-knative options
+| 0.3.39  | 2020-11-08 | Improve cluster-knative options

@@ -33,36 +33,81 @@ helm show chart startx/example-sxapi
 helm install startx/example-sxapi
 ```
 
-## Default values
+## Values dictionary
 
-Complete deployment of a project with the following characteristics :
+### context values dictionary
+
+| Key                 | Default   | Description
+| ------------------- | --------- | -----------------------------------------------------
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)
+| context.component   | demo      | Component name of this application (logical tenant)
+| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)
+
+### example-sxapi values dictionary
+
+| Key                   | Default    | Description
+| --------------------- | ---------- | -----------------------------------------------------
+| sxapi.service.enabled | false      | Enable service for this application
+| sxapi.version         | 0.3.53     | Sxapi image version to run
+| sxapi.profile         | prod:start | Profile to run inside the container
+| sxapi.debug           | true       | Enable debuging of the container
+| sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance
+| sxapi.data            | string     | Files to load into the application
+
+## Values files
+
+### Default values file (values.yaml)
+
+Complete deployment of an sxapi application with the following characteristics :
 
 - 1 **service** named **example-sxapi** load balancing to pod deployed
-- 1 **deployment** named **example-sxapi** deploying **1 pod** from version **0.3.53** sxapi image running the **prod:start** command with debug enabled
-- 2 **configMap** holding sxapi configuration and pod environmnet variable context
+- 1 **deployment** named **example-sxapi** deploying **1 pod** from version **0.3.53** sxapi image running the **prod:start** command with debug disabled
+- 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
 # base configuration running default configuration
 helm install startx/example-sxapi
 ```
 
-## Others values availables
+### Development values file (values-dev.yaml)
 
-- **dev** : Dev sxapi environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml))
+Complete deployment of a sxapi development application with the following characteristics :
+
+- 1 **service** named **example-sxapi-dev** load balancing to pod deployed
+- 1 **deployment** named **example-sxapi-dev** deploying **1 pod** from version **0.3.53** sxapi image running the **dev:start** command with debug disabled
+- 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
+# base configuration running tekton v1.0.1 configuration
 helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml
 ```
 
-- **v0.0.1** : v0.0.1 production environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.1.yaml))
+### Version 0.0.1 values file (values-v0.0.1.yaml)
+
+Complete deployment of a sxapi production application (v0.0.1) with the following characteristics :
+
+- 1 **service** named **example-sxapi-prod** load balancing to pod deployed
+- 1 **deployment** named **example-sxapi-prod** deploying **1 pod** from version **0.3.52** sxapi image running the **prod:start** command with debug disabled
+- 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
+# base configuration running tekton v1.0.1 configuration
 helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.1.yaml
 ```
 
-- **v0.0.2** : v0.0.2 production environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml))
+### Version 0.0.2 values file (values-v0.0.2.yaml)
+
+Complete deployment of a sxapi production application (v0.0.2) with the following characteristics :
+
+- 1 **service** named **example-sxapi-prod** load balancing to pod deployed
+- 1 **deployment** named **example-sxapi-prod** deploying **1 pod** from version **0.3.53** sxapi image running the **prod:start** command with debug disabled
+- 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
+# base configuration running tekton v1.0.1 configuration
 helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml
 ```
 
@@ -77,3 +122,4 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.33  | 2020-11-07 | publish stable update for the full repository with note improvements
 | 0.3.34  | 2020-11-08 | Improve example-sxapi options
+| 0.3.35  | 2020-11-08 | Improve example-sxapi options

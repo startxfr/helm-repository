@@ -101,3 +101,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.27  | 2020-11-07 | Stable notes
 | 0.3.29  | 2020-11-07 | Release aligned to basic 0.3.29 version
 | 0.3.30  | 2020-11-08 | Improve sxapi options
+| 0.3.31  | 2020-11-08 | Improve sxapi options
