@@ -26,6 +26,8 @@ project:
   type: project
   # Name of the project
   name: example-project
+  # Project or namespace is started as an helm hook (default is false)
+  hooked: false
   # Display name of the project (only for project)
   display_name: Example project
   # Description of the project (only for project)
@@ -34,48 +36,48 @@ project:
 rbac: 
   # Enable RBAC default for this project
   enabled: false
-  # List groups to authorize on this project
-  groups: 
-  # Example group ID
-  - id: mygroup
-    # Example group name
-    name: mygroup_example
-    # Example group role in this project
-    role: basic-user
-  # List users to authorize on this project
-  users: 
-  # Example user ID
-  - id: myuser
-    # Example user name
-    name: myuser_example
-    # Example user role in this project
-    role: basic-user
+  # # List groups to authorize on this project
+  # groups: 
+  # # Example group ID
+  # - id: mygroup
+  #   # Example group name
+  #   name: mygroup_example
+  #   # Example group role in this project
+  #   role: basic-user
+  # # List users to authorize on this project
+  # users: 
+  # # Example user ID
+  # - id: myuser
+  #   # Example user name
+  #   name: myuser_example
+  #   # Example user role in this project
+  #   role: basic-user
 # Configure NetworkPolicy for project
 networkpolicy: 
   # Enable NetworkPolicy default for this project
   enabled: false
-  # List group to create
-  rules: 
-  # allow from external
-  - id: allow-from-openshift-ingress
-    # Specifications of this policy rule
-    spec: |
-      ingress:
-      - from:
-          - namespaceSelector:
-              matchLabels:
-                network.openshift.io/policy-group: ingress
-      podSelector: {}
-      policyTypes:
-      - Ingress
-  # allow from internal
-  - id: allow-from-same-namespace
-    # Specifications of this policy rule
-    spec: |
-      podSelector: {}
-      ingress:
-      - from:
-        - podSelector: {}
+  # # List group to create
+  # rules: 
+  # # allow from external
+  # - id: allow-from-openshift-ingress
+  #   # Specifications of this policy rule
+  #   spec: |
+  #     ingress:
+  #     - from:
+  #         - namespaceSelector:
+  #             matchLabels:
+  #               network.openshift.io/policy-group: ingress
+  #     podSelector: {}
+  #     policyTypes:
+  #     - Ingress
+  # # allow from internal
+  # - id: allow-from-same-namespace
+  #   # Specifications of this policy rule
+  #   spec: |
+  #     podSelector: {}
+  #     ingress:
+  #     - from:
+  #       - podSelector: {}
 # Configure limitRange for project
 limits: 
   # Enable limitRange default for this project
