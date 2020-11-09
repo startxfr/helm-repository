@@ -1,7 +1,7 @@
 # Default values for cluster-kubevirt.
 
 # Application deployment context
-context:  &context
+context: &context
   # Name of the global scope for this application (organisational tenant)
   scope: default
   # Name of the cluster running this application (plateform tenant)
@@ -11,20 +11,25 @@ context:  &context
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: openshift-workspaces
+  app: kubevirt
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# Configuration of the codeready workspace
-cheCluster:
-  # enable deployment of the cheCluster
+# Configuration of the hyperconverged cluster
+hyperconvergedCluster:
+  # enable deployment of the hyperconverged cluster
   enabled: true
-  # name of the che cluster
-  name: "codeready-workspaces"
-  # Storage class to use for persistance
-  storageClass: "gp2"
-  # Size of the PVC used for storage persistance
-  storageSize: "1Gi"
+  # name of the hyperconverged cluster
+  name: "example-cluster"
+
+# Configuration of VM to deploy
+vms:
+  # enable deployment of VMs
+  enabled: false
+  # List of VM to deploy
+  list: 
+      # Name of the VM to configure
+    - name: "example-vm"
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -32,13 +37,9 @@ project:
     <<: *context
   project: 
     type: namespace
-    name: openshift-workspaces
+    name: openshift-cnv
   rbac: 
-    enabled: true
-    groups: 
-    - id: dev
-      name: dev
-      role: view
+    enabled: false
   networkpolicy: 
     enabled: false
     rules: []
@@ -53,18 +54,18 @@ operator:
     <<: *context
   subscription:
     enabled: true
-    name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
-    version: "v2.3.0"
+    name: "kubevirt-hyperconverged"
+    namespace: "openshift-cnv"
+    version: "v2.4.1"
     operator: 
-      channel: latest
-      name: codeready-workspaces
-      csv: crwoperator
+      channel: "2.4"
+      name: kubevirt-hyperconverged
+      csv: kubevirt-hyperconverged
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
-    name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
-    providedAPIs: "CheCluster.v1.org.eclipse.che"
+    name: "kubevirt"
+    namespace: "openshift-cnv"
+    providedAPIs: "CDI.v1alpha1.cdi.kubevirt.io,HostPathProvisioner.v1alpha1.hostpathprovisioner.kubevirt.io,HyperConverged.v1alpha1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.kubevirt.io,KubevirtMetricsAggregation.v1.kubevirt.io,KubevirtNodeLabellerBundle.v1.kubevirt.io,KubevirtTemplateValidator.v1.kubevirt.io,NetworkAddonsConfig.v1alpha1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1alpha1.kubevirt.io,V2VVmware.v1alpha1.kubevirt.io"
