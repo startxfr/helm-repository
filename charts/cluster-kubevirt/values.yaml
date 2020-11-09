@@ -1,0 +1,70 @@
+# Default values for cluster-kubevirt.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: infra
+  # Application name (functionnal tenant, default use Chart name)
+  app: openshift-workspaces
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Configuration of the codeready workspace
+cheCluster:
+  # enable deployment of the cheCluster
+  enabled: true
+  # name of the che cluster
+  name: "codeready-workspaces"
+  # Storage class to use for persistance
+  storageClass: "gp2"
+  # Size of the PVC used for storage persistance
+  storageSize: "1Gi"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: openshift-workspaces
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      role: view
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "codeready-workspaces"
+    namespace: "openshift-workspaces"
+    version: "v2.3.0"
+    operator: 
+      channel: latest
+      name: codeready-workspaces
+      csv: crwoperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "codeready-workspaces"
+    namespace: "openshift-workspaces"
+    providedAPIs: "CheCluster.v1.org.eclipse.che"

@@ -1,0 +1,58 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: openshift-workspaces
+project: 
+  context: 
+    <<: *context
+  project: 
+    type: namespace
+    name: openshift-workspaces
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      role: view
+    - id: devops
+      name: devops
+      role: edit
+    - id: ops
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "codeready-workspaces"
+    namespace: "openshift-workspaces"
+    version: "v2.3.0"
+    operator: 
+      channel: latest
+      name: codeready-workspaces
+      csv: crwoperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "codeready-workspaces"
+    namespace: "openshift-workspaces"
+    providedAPIs: "CheCluster.v1.org.eclipse.che"
+cheCluster:
+  enabled: true
+  name: "codeready-workspaces"
+  storageClass: "aws-generic-retain"
+  storageSize: "1Gi"
