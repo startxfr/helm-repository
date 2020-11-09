@@ -105,3 +105,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.59  | 2020-11-08 | publish stable update for the full repository
 | 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
 | 0.3.65  | 2020-11-09 | Align sxapi to same release as basic helm chart in startx repository
+| 0.3.69  | 2020-11-10 | Move to helm v3 version
