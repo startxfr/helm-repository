@@ -35,31 +35,52 @@ helm show chart startx/cluster-vault
 helm install startx/cluster-vault
 ```
 
-## Default values
+## Values files
 
-Complete deployment of a project with the following characteristics :
+### Default values file (values.yaml)
+
+Deployment of a vault environment with the following characteristics :
 
 - 1 **project:** named **startx-vault** with the following properties
-  - 1 **LimitRange:** defined for this projet
-  - 1 **Quotas:** defined for this projet
-  - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
-- 1 **operator:** named **vault-operator** configured with
-  - The **threescale-2.9** channel
-  - The **0.6.0** version
-  - Deployed under the **openshift-operators** project
-  - The **manager** deployed
-- 1 **Secret:** named **startx-vault-rhn** that hold rhn credentials used fo image pulling
+  - **rbac** set to :
+    - **edit** for service account **startx-vault**
+    - **admin** for service account **startx-vault-agent-injector**
+  - **limitRange** disabled
+  - **quotas** disabled
+  - **networkPolicy** disabled
+- 1 **helm:** named **vault** configured with
+  - container image **vault:1.4.0** for server
+  - container image **hashicorp/vault-k8s:0.3.0** for injector
+  - container image **vault:1.4.0** for agent
+- 1 **route:** named **startx-vault**
 
 ```bash
 # base configuration running default configuration
 helm install startx/cluster-vault
 ```
 
-## Others values availables
+### Startx values file (values-startx.yaml)
 
-- **startx** : Startx vault cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml))
+Deployment of a vault environment with the following characteristics :
+
+- 1 **project:** named **startx-vault** with the following properties
+  - **rbac** set to :
+    - **view** for group **dev**
+    - **admin** for group **devops**
+    - **admin** for group **ops**
+    - **edit** for service account **startx-vault**
+    - **admin** for service account **startx-vault-agent-injector**
+  - **limitRange** enabled
+  - **quotas** enabled
+  - **networkPolicy** enabled
+- 1 **helm:** named **vault** configured with
+  - container image **vault:1.4.0** for server
+  - container image **hashicorp/vault-k8s:0.3.0** for injector
+  - container image **vault:1.4.0** for agent
+- 1 **route:** named **startx-vault**
 
 ```bash
+# base configuration running startx configuration
 helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml
 ```
 
