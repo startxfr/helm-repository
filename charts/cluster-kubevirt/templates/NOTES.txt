@@ -1,0 +1,20 @@
+
+
+Cluster codeready-workspace is deployed.
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+{{ include "project.notes" .Values.project }}
+
+{{ include "operator.notes" .Values.operator }}
+
+{{ include "cluster-kubevirt.notes" .Values.cheCluster }}
+{{- if .Values.cheCluster }}{{- if .Values.cheCluster.enabled }}
+    namespace : {{ .Values.project.project.name }}
+{{- end }}{{- end }}
