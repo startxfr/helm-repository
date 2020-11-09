@@ -1,0 +1,145 @@
+{{- if .Values.vms }}{{- if .Values.vms.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name -}}
+{{ range .Values.vms.list }}
+{{- $name := .name | default "default-vm" -}}
+{{- $hostname := .hostname | default "default-vm.local" -}}
+---
+kind: VirtualMachine
+apiVersion: kubevirt.io/v1alpha3
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-kubevirt.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-virtualmachine"
+    flavor.template.kubevirt.io/medium: 'true'
+    os.template.kubevirt.io/centos7.0: 'true'
+    vm.kubevirt.io/template: medium-centos7-server
+    vm.kubevirt.io/template-namespace: ${NS}
+    vm.kubevirt.io/template.revision: '1'
+    vm.kubevirt.io/template.version: v0.8.2
+    workload.template.kubevirt.io/server: 'true'
+  annotations:
+    {{- include "cluster-kubevirt.annotations" $root | nindent 4 }}
+    helm.sh/hook: post-install,post-upgrade,pre-delete
+    helm.sh/hook-weight: "50"
+    helm.sh/hook-delete-policy: hook-failed
+    kubevirt.io/latest-observed-api-version: v1alpha3
+    kubevirt.io/storage-observed-api-version: v1alpha3
+    name.os.template.kubevirt.io/centos7.0: CentOS 7
+  finalizers:
+    - k8s.v1.cni.cncf.io/kubeMacPool
+spec:
+  dataVolumeTemplates:
+    - metadata:
+        name: "{{- $name -}}-rootdisk"
+      spec:
+        pvc:
+          storageClassName: aws-generic-delete
+          volumeMode: Filesystem
+          accessModes:
+            - ReadWriteOnce
+          dataSource: null
+          resources:
+            requests:
+              storage: 10Gi
+        source:
+          http:
+            url: >-
+              https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2
+      status: {}
+    - metadata:
+        name: "{{- $name -}}-disk0"
+      spec:
+        pvc:
+          storageClassName: aws-generic-delete
+          volumeMode: Filesystem
+          accessModes:
+            - ReadWriteOnce
+          dataSource: null
+          resources:
+            requests:
+              storage: 10Gi
+        source:
+          blank: {}
+      status: {}
+  running: true
+  template:
+    metadata:
+      labels:
+        {{- include "cluster-kubevirt.labels" $root | nindent 8 }}
+        app.kubernetes.io/name: "{{- $name -}}-vminstance"
+        app.kubernetes.io/part-of: "{{- $name -}}"
+        kubevirt.io/domain: "{{- $name -}}"
+        kubevirt.io/size: medium
+        vm.kubevirt.io/name: "{{- $name -}}"
+      annotations:
+        {{- include "cluster-kubevirt.annotations" $root | nindent 8 }}
+    spec:
+      hostname: {{ $hostname | quote }}
+      evictionStrategy: LiveMigrate
+      domain:
+        machine:
+          type: ''
+        resources:
+          requests:
+            memory: 2Gi
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - bootOrder: 1
+              disk:
+                bus: virtio
+              name: rootdisk
+            - bootOrder: 3
+              disk:
+                bus: virtio
+              name: disk0
+            - bootOrder: 4
+              disk:
+                bus: virtio
+              name: cloudinitdisk
+          interfaces:
+            - bootOrder: 2
+              masquerade: {}
+              model: virtio
+              name: nic0
+          networkInterfaceMultiqueue: true
+          rng: {}
+      networks:
+        - name: nic0
+          pod: {}
+      volumes:
+        - name: rootdisk
+          dataVolume:
+            name: "{{- $name -}}-rootdisk"
+        - name: disk0
+          dataVolume:
+            name: "{{- $name -}}-disk0"
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              name: default
+              hostname: "{{- $name -}}"
+              ssh-authorized-keys:
+                - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
+                users:
+                  - name: demo
+                    primary_group: root
+                    lock_passwd: false
+                    # demo user password is : demo123
+                    passwd: $6$mUQY9Uxn4/FqcGPh$/tlE1cdA9rGU59MzhtK./U7gze19FlNetVdGroOrhdsQnHlJh/IR4zdX8xeICb9frlQFWvKUFaykFbWMq7tLM0
+                    sudo: ALL=(ALL) NOPASSWD:ALL
+                    groups: users, admin
+                    ssh_authorized_keys:
+                      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
+                    ssh_import_id: None
+                    lock_passwd: true
+      terminationGracePeriodSeconds: 0
+{{ end }}
+{{- end }}{{- end }}
