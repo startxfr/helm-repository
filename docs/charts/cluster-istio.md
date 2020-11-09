@@ -67,3 +67,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 0.3.59  | 2020-11-08 | publish stable update for the full repository
 | 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
 | 0.3.73  | 2020-11-10 | publish stable update for the full repository
+| 0.3.75  | 2020-11-10 | publish stable update for the full repository
