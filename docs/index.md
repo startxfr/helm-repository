@@ -13,16 +13,20 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------
 | **[cluster-config](charts/cluster-config.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config)    | global configuration of an openshift cluster
 | **[cluster-rbac](charts/cluster-rbac.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac)      | configure various RBAC aspects
-| **[cluster-3scale](charts/cluster-3scale.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale)    | deploy a 3Scale infrastructure at a cluster level
-| **[cluster-pipeline](charts/cluster-pipeline.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline)  | enable tekton pipeline at a cluster level
-| **[cluster-workspace](charts/cluster-workspace.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace) | enable codeready workspace at a cluster level
-| **[cluster-vault](charts/cluster-vault.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault)     | enable hashicorp vault service at a cluster level
-| **[cluster-quay](charts/cluster-quay.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay)      | enable Quay.io private repository at a cluster level
-| **[cluster-ocs](charts/cluster-ocs.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs)       | enable Openshift Container Storage at a cluster level
-| **[cluster-metering](charts/cluster-metering.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering)  | enable Metering at a cluster level
-| **[cluster-istio](charts/cluster-istio.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio)     | enable ServiceMesh at the cluster level
 | **[cluster-auth](charts/cluster-auth.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth)      | configure Auth at the cluster level
 | **[cluster-console](charts/cluster-console.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-console)   | configure the openshift console at the cluster level
+| **[cluster-storage](charts/cluster-storage.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-storage)       | enable StoragesClass at the cluster level
+| **[cluster-logging](charts/cluster-logging.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-logging)    | deploy a EFK (puit de log) at the cluster level
+| **[cluster-pipeline](charts/cluster-pipeline.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline)  | enable tekton pipeline at the cluster level
+| **[cluster-metering](charts/cluster-metering.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering)  | enable Metering at the cluster level
+| **[cluster-istio](charts/cluster-istio.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio)     | enable ServiceMesh at the cluster level
+| **[cluster-knative](charts/cluster-knative.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-knative)  | enable Serverless (knative) at the cluster level
+| **[cluster-ocs](charts/cluster-ocs.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs)       | enable Openshift Container Storage at the cluster level
+| **[cluster-kubevirt](charts/cluster-kubevirt.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubevirt)  | enable kubevirt at the cluster level
+| **[cluster-vault](charts/cluster-vault.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault)     | enable hashicorp vault service at the cluster level
+| **[cluster-quay](charts/cluster-quay.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay)      | enable Quay.io private repository at the cluster level
+| **[cluster-3scale](charts/cluster-3scale.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale)    | deploy a 3Scale infrastructure at the cluster level
+| **[cluster-workspace](charts/cluster-workspace.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace) | enable codeready workspace at the cluster level
 
 #### Use Cluster charts
 
@@ -30,16 +34,20 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
 helm install startx/cluster-config
 helm install startx/cluster-rbac
-helm install startx/cluster-3scale
-helm install startx/cluster-pipeline
-helm install startx/cluster-workspace
-helm install startx/cluster-vault
-helm install startx/cluster-quay
-helm install startx/cluster-ocs
-helm install startx/cluster-metering
-helm install startx/cluster-istio
 helm install startx/cluster-auth
 helm install startx/cluster-console
+helm install startx/cluster-storage
+helm install startx/cluster-logging
+helm install startx/cluster-pipeline
+helm install startx/cluster-metering
+helm install startx/cluster-istio
+helm install startx/cluster-knative
+helm install startx/cluster-ocs
+helm install startx/cluster-kubevirt
+helm install startx/cluster-vault
+helm install startx/cluster-quay
+helm install startx/cluster-3scale
+helm install startx/cluster-workspace
 ```
 
 ### Basic Helm charts
@@ -120,17 +128,20 @@ ls charts
 # oc apply -k charts/<chart>
 helm install charts/cluster-config
 helm install charts/cluster-rbac
-helm install charts/cluster-3scale
-helm install charts/cluster-pipeline
-helm install charts/cluster-workspace
-helm install charts/cluster-workspace
-helm install charts/cluster-vault
-helm install charts/cluster-quay
-helm install charts/cluster-ocs
-helm install charts/cluster-metering
-helm install charts/cluster-istio
 helm install charts/cluster-auth
 helm install charts/cluster-console
+helm install charts/cluster-storage
+helm install charts/cluster-logging
+helm install charts/cluster-pipeline
+helm install charts/cluster-metering
+helm install charts/cluster-istio
+helm install charts/cluster-knative
+helm install charts/cluster-ocs
+helm install charts/cluster-kubevirt
+helm install charts/cluster-vault
+helm install charts/cluster-quay
+helm install charts/cluster-3scale
+helm install charts/cluster-workspace
 helm install charts/project
 helm install charts/operator
 helm install charts/sxapi
