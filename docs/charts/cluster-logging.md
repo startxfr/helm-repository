@@ -41,30 +41,15 @@ Complete deployment of a project with the following characteristics :
 
 xxxx to do xxxxxx
 
-```bash
-# base configuration running default configuration
-helm install startx/cluster-logging
-```
-
-## Others values availables
-
-- **startx** : Startx 3scale cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-startx.yaml))
-
-```bash
-helm install startx/cluster-logging -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-startx.yaml
-```
-
 ## History
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.19  | 2020-11-06 | Create chart cluster-logging from cluster-ocs (removed)
+| 0.3.19  | 2020-11-06 | Create chart cluster-logging from cluster-metering (removed)
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21 (removed)
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information (removed)
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies (removed)
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
-| 0.3.50  | 2020-11-08 | publish stable update for the full repository
-| 0.3.53  | 2020-11-08 | publish stable update for the full repository
-| 0.3.59  | 2020-11-08 | publish stable update for the full repository
 | 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
+| 0.3.73  | 2020-11-10 | publish stable update for the full repository
