@@ -45,3 +45,4 @@ xxxx  to do xxxxxxxx
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.59  | 2020-11-09 | Create chart cluster-kubevirt from cluster-kubevirt
 | 0.3.61  | 2020-11-09 | Add deployment of Hyperconverged cluster via HCO operator and multiple VM via the VirtualMachine resources
+| 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
