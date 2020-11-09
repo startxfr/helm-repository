@@ -16,12 +16,12 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{/* Common operator note */}}
 {{- define "cluster-logging.notes" -}}
 -- Metering ------------------------
-{{- if .metering }}{{- if .metering.enabled }}
-{{- $namespace := .project.project.name | default "default-metering" }}
-     metering : enabled in {{ $namespace }}
-         name : {{ .metering.name | default "default" | quote }}
-    {{- if .metering.hive }}{{- if .metering.hive.enabled }}
-        {{- with .metering.hive }}
+{{- if .logging }}{{- if .logging.enabled }}
+{{- $namespace := .project.project.name | default "default-logging" }}
+     logging : enabled in {{ $namespace }}
+         name : {{ .logging.name | default "default" | quote }}
+    {{- if .logging.hive }}{{- if .logging.hive.enabled }}
+        {{- with .logging.hive }}
 storage class : {{ .storageClass | default "gp2" | quote }}
  storage size : {{ .size | default "5Gi" | quote }}
             {{- if .enabled }}
@@ -29,10 +29,10 @@ storage class : {{ .storageClass | default "gp2" | quote }}
             {{- end }}
         {{- end }}
     {{- end }}{{- end }}
-    {{- if .metering.reportingOperator }}{{- if .metering.reportingOperator.enabled }}
+    {{- if .logging.reportingOperator }}{{- if .logging.reportingOperator.enabled }}
     reporting : enabled
     {{- end }}{{- end }}
-    {{- if .metering.presto }}{{- if .metering.presto.enabled }}
+    {{- if .logging.presto }}{{- if .logging.presto.enabled }}
        presto : enabled
     {{- end }}{{- end }}
 {{- end }}{{- end }}
