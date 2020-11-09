@@ -5,22 +5,19 @@ context: &context
   cluster: localhost
   environment: dev
   component: infra
-  app: openshift-workspaces
+  app: kubevirt
 project: 
   context: 
     <<: *context
   project: 
     type: namespace
-    name: openshift-workspaces
+    name: openshift-cnv
   rbac: 
     enabled: true
     groups: 
-    - id: dev
-      name: dev
-      role: view
     - id: devops
       name: devops
-      role: edit
+      role: admin
     - id: ops
       name: ops
       role: admin
@@ -36,23 +33,25 @@ operator:
     <<: *context
   subscription:
     enabled: true
-    name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
-    version: "v2.3.0"
+    name: "kubevirt-hyperconverged"
+    namespace: "openshift-cnv"
+    version: "v2.4.1"
     operator: 
-      channel: latest
-      name: codeready-workspaces
-      csv: crwoperator
+      channel: "2.4"
+      name: kubevirt-hyperconverged
+      csv: kubevirt-hyperconverged
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
-    name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
-    providedAPIs: "CheCluster.v1.org.eclipse.che"
-cheCluster:
+    name: "kubevirt"
+    namespace: "openshift-cnv"
+    providedAPIs: "CDI.v1alpha1.cdi.kubevirt.io,HostPathProvisioner.v1alpha1.hostpathprovisioner.kubevirt.io,HyperConverged.v1alpha1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.kubevirt.io,KubevirtMetricsAggregation.v1.kubevirt.io,KubevirtNodeLabellerBundle.v1.kubevirt.io,KubevirtTemplateValidator.v1.kubevirt.io,NetworkAddonsConfig.v1alpha1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1alpha1.kubevirt.io,V2VVmware.v1alpha1.kubevirt.io"
+hyperconvergedCluster:
   enabled: true
-  name: "codeready-workspaces"
-  storageClass: "aws-generic-retain"
-  storageSize: "1Gi"
+  name: "startx-cluster"
+vms:
+  enabled: true
+  list: 
+    - name: "startx-example-vm"

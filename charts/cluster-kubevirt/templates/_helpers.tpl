@@ -13,12 +13,23 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- include "startx.annotationsInfra" . -}}
 {{- end -}}
 
-{{/* Common operator note */}}
+{{/* Common operator note for cluster config */}}
 {{- define "cluster-kubevirt.notes" -}}
--- Che Cluster ---------------------
+-- HyperConverged Cluster ----------
 {{- if . }}{{- if .enabled }}
-         name : {{ .name | default "codeready-workspaces" }}
-      storage : {{ .storageClass | default "gp2" }}
-         size : {{ .storageSize | default "1Gi" }}
+        state : enabled
+         name : {{ .name | default "kubevirt-cluster" }}
+{{- end }}{{- end }}
+{{- end -}}
+
+{{/* Common operator note for VM configuration */}}
+{{- define "cluster-kubevirt.notesVms" -}}
+-- Virtual Machines ----------------
+{{- if . }}{{- if .enabled }}
+        state : enabled
+         VM's : 
+{{ range .list }}
+              - {{ .name | default "default-vm" }}
+{{ end }}
 {{- end }}{{- end }}
 {{- end -}}

@@ -1,6 +1,6 @@
 
 
-Cluster codeready-workspace is deployed.
+Cluster codeready-kubevirt is deployed.
 
 -- Context -------------------------
         scope : {{ include "startx.appScope" . }}
@@ -14,7 +14,6 @@ Cluster codeready-workspace is deployed.
 
 {{ include "operator.notes" .Values.operator }}
 
-{{ include "cluster-kubevirt.notes" .Values.cheCluster }}
-{{- if .Values.cheCluster }}{{- if .Values.cheCluster.enabled }}
-    namespace : {{ .Values.project.project.name }}
-{{- end }}{{- end }}
+{{ include "cluster-kubevirt.notes" .Values.hyperconvergedCluster }}
+
+{{ include "cluster-kubevirt.notesVms" .Values.vms }}
