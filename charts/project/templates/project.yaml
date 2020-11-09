@@ -12,8 +12,10 @@ metadata:
     openshift.io/description: "{{- .Values.project.description | default .Values.project.name -}}"
     openshift.io/display-name: "{{- .Values.project.display_name | default .Values.project.name -}}"
     openshift.io/requester: "{{- .Chart.Name -}}"
+    {{- if .Values.project.hooked }}
     helm.sh/hook: pre-install,pre-upgrade,post-delete
     helm.sh/hook-weight: "-5"
     helm.sh/hook-delete-policy: hook-failed
+    {{- end }}
 spec: {}
 {{- end -}}
