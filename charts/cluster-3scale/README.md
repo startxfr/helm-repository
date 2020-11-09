@@ -57,6 +57,9 @@ helm install startx/cluster-3scale
 
 ## Others values availables
 
+### Default values
+
+
 - **startx** : Startx 3scale cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml))
 
 ```bash
