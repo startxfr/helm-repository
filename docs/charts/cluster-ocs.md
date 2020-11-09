@@ -48,7 +48,7 @@ helm install startx/cluster-ocs
 
 ## Others values availables
 
-- **startx** : Startx 3scale cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml))
+- **startx** : Startx OCS cluster wide service configuration using OCS operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml))
 
 ```bash
 helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml
@@ -69,3 +69,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.53  | 2020-11-08 | publish stable update for the full repository
 | 0.3.59  | 2020-11-08 | publish stable update for the full repository
 | 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
+| 0.3.73  | 2020-11-10 | publish stable update for the full repository
