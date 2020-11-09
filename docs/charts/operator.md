@@ -145,3 +145,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.53  | 2020-11-08 | publish stable update for the full repository
 | 0.3.57  | 2020-11-08 | Improve operator options
 | 0.3.59  | 2020-11-08 | publish stable update for the full repository
+| 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
