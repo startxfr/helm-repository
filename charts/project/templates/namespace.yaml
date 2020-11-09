@@ -9,8 +9,10 @@ metadata:
     openshift.io/cluster-monitoring: "true"
   annotations:
     {{- include "project.annotations" . | nindent 4 }}
+    {{- if .Values.project.hooked }}
     helm.sh/hook: pre-install,pre-upgrade,post-delete
     helm.sh/hook-weight: "-5"
     helm.sh/hook-delete-policy: hook-failed
+    {{- end }}
 spec: {}
 {{- end -}}

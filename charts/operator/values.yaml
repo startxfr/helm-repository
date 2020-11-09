@@ -23,6 +23,8 @@ subscription:
   name: "codeready-workspaces"
   # namespace of the subscription (mandatory)
   namespace: "openshift-workspaces"
+  # subscription is started as an helm hook (default is false)
+  hooked: false
   # version of the operator to deploy (mandatory)
   version: "v2.3.0"
   # Configuration of the CRW operator
@@ -45,6 +47,8 @@ operatorGroup:
   enabled: false
   # name of the operatorGroup (if not set, use the subscription name)
   name: "codeready-workspaces"
+  # operatorGroup is started as an helm hook (default is false)
+  hooked: false
   # namespace of the operatorGroup (if not set, use the subscription namespace)
   namespace: "openshift-workspaces"
   # List of the provided APIs (mandatory if enabled)

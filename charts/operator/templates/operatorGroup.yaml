@@ -14,9 +14,11 @@ metadata:
   annotations:
     {{- include "operator.annotations" . | nindent 4 }}
     olm.providedAPIs: {{ $providedAPIs | quote }}
+    {{- if .Values.operatorGroup.hooked }}
     helm.sh/hook: pre-install,pre-upgrade,post-delete
     helm.sh/hook-weight: "0"
     helm.sh/hook-delete-policy: hook-failed
+    {{- end }}
 spec:
   targetNamespaces:
     - {{ $namespace | default "default" | quote }}

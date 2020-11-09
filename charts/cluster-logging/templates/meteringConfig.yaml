@@ -1,14 +1,14 @@
-{{- if .Values.metering.enabled }}
+{{- if .Values.logging.enabled }}
 {{- $root := . -}}
-{{- $namespace := .Values.project.project.name | default "default-metering" -}}
+{{- $namespace := .Values.project.project.name | default "default-logging" -}}
 kind: MeteringConfig
-apiVersion: metering.openshift.io/v1
+apiVersion: logging.openshift.io/v1
 metadata:
-  name: {{ .Values.metering.name | default "default" | quote }}
+  name: {{ .Values.logging.name | default "default" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-logging.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{ .Values.metering.name | default "default" }}-meteringconfig"
+    app.kubernetes.io/name: "{{ .Values.logging.name | default "default" }}-loggingconfig"
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
     helm.sh/hook: post-install,post-upgrade,post-delete
@@ -16,69 +16,69 @@ metadata:
     helm.sh/hook-delete-policy: hook-failed
 spec:
   storage:
-{{- if .Values.metering.hive }}{{- if .Values.metering.hive.enabled }}
+{{- if .Values.logging.hive }}{{- if .Values.logging.hive.enabled }}
     type: "hive"
     hive:
       type: "sharedPVC"
       sharedPVC:
         createPVC: true
-{{- with .Values.metering.hive }}
+{{- with .Values.logging.hive }}
         storageClass: {{ .storageClass | default "gp2" | quote }}
         size: {{ .size | default "5Gi" | quote }}
 {{- end }}
 {{- end }}{{- end }}
-{{- if .Values.metering.reportingOperator }}{{- if .Values.metering.reportingOperator.enabled }}
+{{- if .Values.logging.reportingOperator }}{{- if .Values.logging.reportingOperator.enabled }}
   reporting-operator:
     spec:
-      {{- if .Values.metering.reportingOperator.resources }}
+      {{- if .Values.logging.reportingOperator.resources }}
       resources:
-        {{- .Values.metering.reportingOperator.resources | nindent 8 -}}
+        {{- .Values.logging.reportingOperator.resources | nindent 8 -}}
       {{- end }}
 {{- end }}{{- end }}
-{{- if .Values.metering.presto }}{{- if .Values.metering.presto.enabled }}
+{{- if .Values.logging.presto }}{{- if .Values.logging.presto.enabled }}
   presto:
     spec:
-      {{- if .Values.metering.presto.coordinator }}
+      {{- if .Values.logging.presto.coordinator }}
       coordinator:
-        {{- if .Values.metering.presto.coordinator.resources }}
+        {{- if .Values.logging.presto.coordinator.resources }}
         resources:
-          {{- .Values.metering.presto.coordinator.resources | nindent 10 -}}
+          {{- .Values.logging.presto.coordinator.resources | nindent 10 -}}
         {{- end }}
       {{- else }}
       coordinator: {}
       {{- end }}
-      {{- if .Values.metering.presto.worker }}
+      {{- if .Values.logging.presto.worker }}
       worker:
         replicas: 0
-        {{- if .Values.metering.presto.worker.resources }}
+        {{- if .Values.logging.presto.worker.resources }}
         resources:
-          {{- .Values.metering.presto.worker.resources | nindent 10 -}}
+          {{- .Values.logging.presto.worker.resources | nindent 10 -}}
         {{- end }}
       {{- end }}
 {{- end }}{{- end }}
-{{- if .Values.metering.hive }}{{- if .Values.metering.hive.enabled }}
+{{- if .Values.logging.hive }}{{- if .Values.logging.hive.enabled }}
   hive:
     spec:
-      {{- if .Values.metering.hive.metastore }}
+      {{- if .Values.logging.hive.metastore }}
       metastore:
-        {{- if .Values.metering.hive.metastore.resources }}
+        {{- if .Values.logging.hive.metastore.resources }}
         resources:
-          {{- .Values.metering.hive.metastore.resources | nindent 10 -}}
+          {{- .Values.logging.hive.metastore.resources | nindent 10 -}}
         {{- end }}
       {{- else }}
       metastore: {}
       {{- end }}
         storage:
           create: true
-          {{- with .Values.metering.hive }}
+          {{- with .Values.logging.hive }}
           class: {{ .storageClass | default "gp2" | quote }}
           size: {{ .size | default "5Gi" | quote }}
           {{- end }}
-      {{- if .Values.metering.hive.server }}
+      {{- if .Values.logging.hive.server }}
       server:
-        {{- if .Values.metering.hive.server.resources }}
+        {{- if .Values.logging.hive.server.resources }}
         resources:
-          {{- .Values.metering.hive.server.resources | nindent 10 -}}
+          {{- .Values.logging.hive.server.resources | nindent 10 -}}
         {{- end }}
       {{- else }}
       server: {}

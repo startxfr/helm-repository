@@ -35,15 +35,17 @@ helm show chart startx/cluster-workspace
 helm install startx/cluster-workspace
 ```
 
-## Default values
+## Values files
 
-Deployment of codeready-workspace environment with :
+### Default values file (values.yaml)
 
-- 1 **project** named **openshift-workspaces** with the following characteristics
-  - **rbac** set to **view** for group **dev**
-  - no limitRange
-  - no Quotas
-  - no NetworkPolicy
+Deployment of a codeready workspace environment with the following characteristics :
+
+- 1 **namespace** named **openshift-workspaces** with the following characteristics
+  - **rbac** disabled
+  - **limitRange** disabled
+  - **quotas** disabled
+  - **networkPolicy** disabled
 - 1 **operatorGroup** named **openshift-workspaces** to enable codeready operator
 - 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
   - operator name is **codeready-workspaces**
@@ -58,24 +60,29 @@ Deployment of codeready-workspace environment with :
 helm install startx/cluster-workspace
 ```
 
-## Others values availables
+### Startx values file (values-startx.yaml)
 
-- **startx** : Startx codeready-workspace configuration for Startx clusters (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml)) deploying the following environment
-  - 1 **project** named **openshift-workspaces** with the following characteristics
-    - **rbac** set to **view** for group **dev**
-    - no limitRange
-    - no Quotas
-    - no NetworkPolicy
-  - 1 **operatorGroup** named **openshift-workspaces** to enable codeready operator
-  - 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
-    - operator name is **codeready-workspaces**
-    - operator version is **2.3.0**
-    - operator catalog is **redhat-operators** located in **openshift-marketplace**
-  - 1 **cheCluster** named **codeready-workspaces** with the following characteristics
-    - storage class **aws-generic-retain**
-    - storage size defined to **1Gi**
+Deployment of a codeready workspace environment with the following characteristics :
+
+- 1 **project** named **openshift-workspaces** with the following characteristics
+  - **rbac** set to :
+    - **view** for group **dev**
+    - **edit** for group **devops**
+    - **admin** for group **ops**
+  - **limitRange** disabled
+  - **quotas** disabled
+  - **networkPolicy** disabled
+- 1 **operatorGroup** named **openshift-workspaces** to enable codeready operator
+- 1 **subscription** named **codeready-workspaces** to deploy codeready operator with the following characteristics
+  - operator name is **codeready-workspaces**
+  - operator version is **2.3.0**
+  - operator catalog is **redhat-operators** located in **openshift-marketplace**
+- 1 **cheCluster** named **codeready-workspaces** with the following characteristics
+  - storage class **aws-generic-retain**
+  - storage size defined to **2Gi**
 
 ```bash
+# base configuration running startx configuration
 helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
 ```
 
