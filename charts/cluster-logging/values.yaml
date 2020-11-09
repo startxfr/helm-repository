@@ -11,13 +11,13 @@ context:  &context
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: openshift-metering
+  app: openshift-logging
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# configuration of the metering service
-metering:
-  # Enable the deployment of the metering service
+# configuration of the logging service
+logging:
+  # Enable the deployment of the logging service
   enabled: true
   # configuration of the hive service
   reportingOperator:
@@ -106,7 +106,7 @@ project:
     <<: *context
   project: 
     type: namespace
-    name: "openshift-metering"
+    name: "openshift-logging"
   rbac: 
     enabled: true
     groups: 
@@ -129,18 +129,18 @@ operator:
     <<: *context
   subscription:
     enabled: true
-    name: "metering-ocp"
-    namespace: "openshift-metering"
+    name: "logging-ocp"
+    namespace: "openshift-logging"
     version: "4.5.0-202009120215.p0"
     operator: 
       channel: "4.5"
-      name: metering-ocp
-      csv: metering-operator
+      name: logging-ocp
+      csv: logging-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
-    name: "openshift-metering"
-    namespace: "openshift-metering"
-    providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"
+    name: "openshift-logging"
+    namespace: "openshift-logging"
+    providedAPIs: "HiveTable.v1.logging.openshift.io,MeteringConfig.v1.logging.openshift.io,PrestoTable.v1.logging.openshift.io,Report.v1.logging.openshift.io,ReportDataSource.v1.logging.openshift.io,ReportQuery.v1.logging.openshift.io,StorageLocation.v1.logging.openshift.io"

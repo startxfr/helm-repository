@@ -1,10 +1,10 @@
-{{- if .Values.metering.reports -}}{{- if .Values.metering.reports.enabled -}}
+{{- if .Values.logging.reports -}}{{- if .Values.logging.reports.enabled -}}
 {{- $root := . -}}
-{{- $namespace := .Values.project.project.name | default "default-metering" -}}
-{{- range .Values.metering.reports.list }}
+{{- $namespace := .Values.project.project.name | default "default-logging" -}}
+{{- range .Values.logging.reports.list }}
 ---
 kind: Report
-apiVersion: metering.openshift.io/v1
+apiVersion: logging.openshift.io/v1
 metadata:
   name: {{ .name | default "default-report" | quote }}
   namespace: "{{- $namespace -}}"
