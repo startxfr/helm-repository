@@ -47,3 +47,4 @@ xxxx  to do xxxxxxxx
 | 0.3.61  | 2020-11-09 | Add deployment of Hyperconverged cluster via HCO operator and multiple VM via the VirtualMachine resources
 | 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
 | 0.3.73  | 2020-11-10 | publish stable update for the full repository
+| 0.3.75  | 2020-11-10 | publish stable update for the full repository
