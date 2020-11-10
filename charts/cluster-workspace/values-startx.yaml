@@ -6,31 +6,22 @@ context: &context
   environment: dev
   component: infra
   app: openshift-workspaces
-# project: 
-#   context: 
-#     <<: *context
-#   project: 
-#     type: namespace
-#     name: openshift-workspaces
-#   rbac: 
-#     enabled: true
-#     groups: 
-#     - id: dev
-#       name: dev
-#       role: view
-#     - id: devops
-#       name: devops
-#       role: edit
-#     - id: ops
-#       name: ops
-#       role: admin
-#   networkpolicy: 
-#     enabled: false
-#     rules: []
-#   limits: 
-#     enabled: false
-#   quotas: 
-#     enabled: false
+project: 
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    type: namespace
+    name: openshift-workspaces
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
 operator:
   context: 
     <<: *context
