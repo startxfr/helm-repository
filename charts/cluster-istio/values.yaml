@@ -38,10 +38,11 @@ istio:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: project
     name: "example-istio"
     display_name: ISTIO Example
@@ -60,7 +61,7 @@ operatorElastic:
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
     version: "4.5.0-202009041228.p0"
@@ -79,7 +80,7 @@ operatorKiali:
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "kiali-ossm"
     namespace: "openshift-operators"
     version: "v1.12.15"
@@ -98,7 +99,7 @@ operatorJaeger:
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "jaeger-product"
     namespace: "openshift-operators"
     version: "v1.17.6"
@@ -117,7 +118,7 @@ operatorIstio:
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "servicemeshoperator"
     namespace: "openshift-operators"
     version: "v1.1.8"
@@ -129,7 +130,7 @@ operatorIstio:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     name: "global-operators"
     namespace: "openshift-operators"
     providedAPIs: "Config.v1alpha1.operator.tekton.dev,Elasticsearch.v1.logging.openshift.io,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,Kibana.v1.logging.openshift.io,KnativeEventing.v1alpha1.operator.knative.dev,KnativeServing.v1alpha1.operator.knative.dev,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"

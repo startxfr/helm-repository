@@ -87,10 +87,11 @@ quay:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: project
     name: "default-quay"
     display_name: "Default QUAY"
@@ -105,10 +106,11 @@ project:
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "quay-operator"
     namespace: "default-quay"
     version: "v3.3.2-20200903"
@@ -120,7 +122,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     name: "default-quay"
     namespace: "default-quay"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
@@ -131,7 +133,7 @@ operatorsec:
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "container-security-operator"
     namespace: "openshift-operators"
     version: "v3.3.1"

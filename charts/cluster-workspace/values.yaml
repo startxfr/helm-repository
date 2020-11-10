@@ -28,29 +28,21 @@ cheCluster:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
+  enabled: true
   context: 
     <<: *context
   project: 
     enabled: true
     type: namespace
     name: openshift-workspaces
-    hooked: true
-  rbac: 
-    enabled: false
-  networkpolicy: 
-    enabled: false
-    rules: []
-  limits: 
-    enabled: false
-  quotas: 
-    enabled: false
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
+  enabled: true
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     hooked: true
     name: "codeready-workspaces"
     namespace: "openshift-workspaces"

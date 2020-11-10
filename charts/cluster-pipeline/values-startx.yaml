@@ -7,10 +7,11 @@ context: &context
   component: infra
   app: startx-infra
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "openshift-pipelines-operator-rh"
     namespace: "openshift-operators"
     version: "v1.0.1"
