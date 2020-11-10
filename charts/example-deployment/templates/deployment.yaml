@@ -7,6 +7,7 @@ metadata:
     {{- include "example-deployment.labels" . | nindent 4 }}
   annotations:
     {{- include "example-deployment.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   replicas: {{ .Values.replicas }}
   selector:
