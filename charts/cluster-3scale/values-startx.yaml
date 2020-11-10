@@ -13,16 +13,17 @@ rhn:
   user: startx_rhnuser
   pwd: startx_rhnpwd
 project: 
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: project
     name: startx-3scale
     display_name: STARTX Infra - 3SCALE
     description: STARTX 3Scale enterprise api-management & control plane
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: dev
       name: dev
@@ -34,7 +35,7 @@ project:
       name: ops
       role: admin
   networkpolicy: 
-    enabled: true
+    enabled: false
     rules: 
     - id: allow-from-openshift-ingress
       spec: |
@@ -45,7 +46,7 @@ project:
           - from:
               - namespaceSelector: {}
   limits: 
-    enabled: true
+    enabled: false
     rules:  |
       limits:
         - type: "Pod"
@@ -69,7 +70,7 @@ project:
             cpu: "10"
             memory: 32Gi
   quotas: 
-    enabled: true
+    enabled: false
     rules:  |
       hard:
         limits.cpu: "25"
@@ -117,10 +118,11 @@ project:
         count/replicasets.apps: "6"
         count/deployments.apps: "2"
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "3scale-operator"
     namespace: "startx-3scale"
     version: "v0.6.0"
@@ -132,7 +134,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     name: "3scale-operator"
     namespace: "startx-3scale"
     providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"

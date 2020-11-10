@@ -1,4 +1,4 @@
-{{- if .Values.limits.enabled -}}
+{{- if .Values.enabled }}{{- if .Values.limits }}{{- if .Values.limits.enabled -}}
 kind: LimitRange
 apiVersion: v1
 metadata:
@@ -11,4 +11,4 @@ metadata:
     {{- include "project.annotations" . | nindent 4 }}
 spec: 
   {{- .Values.limits.rules | nindent 2 }}
-{{- end -}}
+{{- end }}{{- end }}{{- end }}

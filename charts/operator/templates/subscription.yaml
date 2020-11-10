@@ -1,4 +1,4 @@
-{{- if .Values.subscription }}{{- if .Values.subscription.enabled }}
+{{- if .Values.enabled }}{{- if .Values.subscription }}{{- if .Values.subscription.enabled }}
 {{- $name := .Values.subscription.name -}}
 {{- $namespace := .Values.subscription.namespace -}}
 {{- $version := .Values.subscription.version -}}
@@ -29,4 +29,4 @@ spec:
   {{- end }}
   startingCSV: "{{ .csv | default $name }}.{{ $version | default "v0.1.0" }}"
   {{- end }}
-{{- end }}{{- end }}
+{{- end }}{{- end }}{{- end }}

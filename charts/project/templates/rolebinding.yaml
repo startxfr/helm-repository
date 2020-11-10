@@ -1,4 +1,4 @@
-{{- if .Values.rbac.enabled -}}
+{{- if .Values.enabled }}{{- if .Values.rbac }}{{- if .Values.rbac.enabled -}}
 {{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.name | default .Chart.Name -}}
@@ -43,5 +43,4 @@ subjects:
   - kind: User
     apiGroup: rbac.authorization.k8s.io
     name: {{ .name | quote }}
-{{ end }}
-{{ end }}
+{{- end -}}{{- end -}}{{- end }}

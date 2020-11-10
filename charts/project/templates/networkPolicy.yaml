@@ -1,4 +1,4 @@
-{{- if .Values.networkpolicy.enabled -}}
+{{- if .Values.enabled }}{{- if .Values.networkpolicy }}{{- if .Values.networkpolicy.enabled -}}
 {{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.name | default .Chart.Name -}}
@@ -16,5 +16,4 @@ metadata:
     {{- include "project.annotations" $root | nindent 4 }}
 spec: 
   {{- .spec | nindent 2 }}
-{{ end }}
-{{ end }}
+{{- end }}{{- end }}{{- end }}

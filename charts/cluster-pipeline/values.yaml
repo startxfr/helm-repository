@@ -17,10 +17,11 @@ context: &context
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "openshift-pipelines-operator-rh"
     namespace: "openshift-operators"
     version: "v1.0.1"
