@@ -152,3 +152,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.77  | 2020-11-10 | publish stable update for the full repository
 | 0.3.81  | 2020-11-10 | Improve operator options
 | 0.3.83  | 2020-11-10 | publish stable update for the full repository
+| 0.3.91  | 2020-11-10 | align all basic charts to the 0.3.91 release
