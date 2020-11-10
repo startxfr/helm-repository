@@ -1,0 +1,33 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: demo
+  component: workspaces
+  app: startx-workspaces
+  version: "0.0.1"
+project: 
+  enabled: true
+  type: namespace
+  name: openshift-workspaces
+rbac: 
+  enabled: true
+  groups: 
+  - id: dev
+    name: dev
+    role: view
+  - id: devops
+    name: devops
+    role: edit
+  - id: ops
+    name: ops
+    role: admin
+networkpolicy: 
+  enabled: false
+  rules: []
+limits: 
+  enabled: false
+quotas: 
+  enabled: false
