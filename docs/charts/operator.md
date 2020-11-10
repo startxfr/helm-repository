@@ -150,3 +150,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.69  | 2020-11-10 | Move to helm v3 version
 | 0.3.73  | 2020-11-10 | publish stable update for the full repository
 | 0.3.77  | 2020-11-10 | publish stable update for the full repository
+| 0.3.81  | 2020-11-10 | Improve operator options

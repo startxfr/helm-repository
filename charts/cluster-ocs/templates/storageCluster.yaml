@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/name: "{{ .Values.ocs.name | default "default" }}-storagecluster"
   annotations:
     {{- include "cluster-ocs.annotations" . | nindent 4 }}
-    helm.sh/hook: post-install,post-upgrade,post-delete
+    helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed
 spec:
