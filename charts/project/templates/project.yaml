@@ -1,4 +1,4 @@
-{{- if eq .Values.project.type "project" -}}
+{{- if .Values.project.enabled -}}{{- if eq .Values.project.type "project" -}}
 kind: Project
 apiVersion: project.openshift.io/v1
 metadata:
@@ -16,6 +16,9 @@ metadata:
     helm.sh/hook: crd-install
     helm.sh/hook-weight: "-5"
     helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "-5"
+    argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
 spec: {}
-{{- end -}}
+{{- end -}}{{- end -}}

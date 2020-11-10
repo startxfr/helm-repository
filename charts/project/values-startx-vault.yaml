@@ -5,71 +5,72 @@ context:
   scope: startx
   cluster: localhost
   environment: demo
-  component: argocd
-  app: demo-argocd
-  version: "0.0.1"
+  component: vault
+  app: startx-vault
+  version: "0.0.1"  
 project: 
   enabled: true
   type: project
-  name: demo-argocd
-  hooked: true
-  display_name: Demo ARGOCD
-  description: Various deployment examples deployed via ArgoCD
+  name: startx-vault
+  display_name: STARTX Infra - VAULT
+  description: STARTX Private Vault storage & control plane
 rbac: 
-  enabled: true
+  enabled: false
   groups: 
   - id: dev
     name: dev
     role: view
   - id: devops
     name: devops
-    role: edit
+    role: admin
   - id: ops
     name: ops
     role: admin
-  users: 
-  - id: argocd-controller-sa
-    name: system:serviceaccount:startx-argocd:argocd-application-controller
+  user: 
+  - id: vault-sa
+    name: system:serviceaccount:startx-vault:{{ .Release.name }}
     role: edit
+  - id: vault-agent-injector-sa
+    name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
+    role: admin
 networkpolicy: 
   enabled: false
-  rules: []
 limits: 
-  enabled: true
+  enabled: false
   rules:  |
     limits:
       - type: "Pod"
         min:
-          cpu: "10m"
-          memory: "10Mi"
+          cpu: 10m
+          memory: 32Mi
         max:
-          cpu: 1400m
-          memory: 1424Mi
+          cpu: "500m"
+          memory: "512Mi"
       - type: "Container"
         default:
-          cpu: 500m
-          memory: 512Mi
+          cpu: 100m
+          memory: 64Mi
         defaultRequest:
-          cpu: 20m
-          memory: 32Mi
+          cpu: 100m
+          memory: 64Mi
         min:
-          cpu: "10m"
-          memory: "10Mi"
+          cpu: 10m
+          memory: 32Mi
         max:
-          cpu: 1000m
-          memory: 1024Mi
+          cpu: "500m"
+          memory: "512Mi"
 quotas: 
-  enabled: true
+  enabled: false
   rules:  |
     hard:
-      limits.cpu: "3000m"
-      limits.memory: "3500Mi"
-      requests.cpu: "900m"
-      requests.memory: "1600Mi"
-      requests.storage: "8Gi"
-      persistentvolumeclaims: "8"
+      limits.cpu: "2"
+      limits.memory: "1500Mi"
+      requests.cpu: "1"
+      requests.memory: "512Mi"
+      requests.storage: "0"
+      persistentvolumeclaims: "0"
       ephemeral-storage: "0" 
-      gp2.storageclass.storage.k8s.io/requests.storage: "0Gi"
+      gp2.storageclass.storage.k8s.io/requests.storage: "0"
       gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
       aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
@@ -77,12 +78,12 @@ quotas:
       aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
       aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "2Gi"
-      aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+      aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
       aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "6Gi"
-      aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "6"
+      aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
@@ -96,13 +97,13 @@ quotas:
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       pods: "6"
+      services: "5"
       services.loadbalancers: "0"
       services.nodeports: "0"
-      secrets: "20"
-      configmaps: "10"
-      replicationcontrollers: "2"
-      openshift.io/imagestreams: "3"
-      count/daemonsets.apps: "0"
-      count/replicasets.apps: "2"
-      count/deployments.apps: "4"
-      services: "5"
+      secrets: "35"
+      configmaps: "0"
+      replicationcontrollers: "0"
+      openshift.io/imagestreams: "0"
+      count/replicasets.apps: "4"
+      count/daemonsets.apps: "2"
+      count/deployments.apps: "2"
