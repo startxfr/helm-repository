@@ -49,3 +49,4 @@ xxxx  to do xxxxxxxx
 | 0.3.73  | 2020-11-10 | publish stable update for the full repository
 | 0.3.75  | 2020-11-10 | publish stable update for the full repository
 | 0.3.77  | 2020-11-10 | publish stable update for the full repository
+| 0.3.83  | 2020-11-10 | publish stable update for the full repository
