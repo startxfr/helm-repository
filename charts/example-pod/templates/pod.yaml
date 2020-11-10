@@ -8,6 +8,7 @@ metadata:
     app: {{ include "startx.appName" . }}
   annotations:
     {{- include "example-pod.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   containers:
     - name: service
