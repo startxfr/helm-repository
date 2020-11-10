@@ -1,4 +1,4 @@
-{{- if eq .Values.project.type "project" -}}
+{{- if .Values.project.enabled -}}{{- if eq .Values.project.type "project" -}}
 kind: Project
 apiVersion: project.openshift.io/v1
 metadata:
@@ -21,4 +21,4 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
 spec: {}
-{{- end -}}
+{{- end -}}{{- end -}}
