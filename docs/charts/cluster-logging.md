@@ -56,3 +56,4 @@ xxxx to do xxxxxx
 | 0.3.75  | 2020-11-10 | publish stable update for the full repository
 | 0.3.77  | 2020-11-10 | publish stable update for the full repository
 | 0.3.83  | 2020-11-10 | publish stable update for the full repository
+| 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
