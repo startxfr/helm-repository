@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Values.project.project.name | quote }}
   annotations:
     {{- include "cluster-3scale.annotations" . | nindent 4 }}
-    helm.sh/hook: post-install,post-upgrade,post-delete
+    helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed
   labels:
