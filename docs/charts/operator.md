@@ -156,3 +156,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
 | 0.3.95  | 2020-11-11 | Align basic chart to 0.3.95
 | 0.3.97  | 2020-11-11 | publish stable update for the full repository
+| 0.3.101  | 2020-11-11 | publish stable update for the full repository
