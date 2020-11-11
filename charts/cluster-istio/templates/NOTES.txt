@@ -9,14 +9,24 @@ Service-mesh (istio) is enabled, at the cluster level, with the following charac
           app : {{ include "startx.appName" . }}
       version : {{ include "startx.appVersion" . }}
 
+{{- if .Values.project }}{{- if .Values.project.enabled }}
 {{ include "project.notes" .Values.project }}
+{{- end }}{{- end }}
 
+{{- if .Values.operatorElastic }}{{- if .Values.operatorElastic.enabled }}
 {{ include "operator.notes" .Values.operatorElastic }}
+{{- end }}{{- end }}
 
+{{- if .Values.operatorKiali }}{{- if .Values.operatorKiali.enabled }}
 {{ include "operator.notes" .Values.operatorKiali }}
+{{- end }}{{- end }}
 
+{{- if .Values.operatorJaeger }}{{- if .Values.operatorJaeger.enabled }}
 {{ include "operator.notes" .Values.operatorJaeger }}
+{{- end }}{{- end }}
 
+{{- if .Values.operatorIstio }}{{- if .Values.operatorIstio.enabled }}
 {{ include "operator.notes" .Values.operatorIstio }}
+{{- end }}{{- end }}
 
 {{ include "cluster-istio.notes" .Values }}

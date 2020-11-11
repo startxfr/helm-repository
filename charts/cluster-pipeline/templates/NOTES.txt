@@ -9,4 +9,6 @@ Continuous Integration and pipeline (tekton) is enabled, at the cluster level, w
           app : {{ include "startx.appName" . }}
       version : {{ include "startx.appVersion" . }}
 
+{{- if .Values.operator }}{{- if .Values.operator.enabled }}
 {{ include "operator.notes" .Values.operator }}
+{{- end }}{{- end }}
