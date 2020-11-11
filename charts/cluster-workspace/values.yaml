@@ -28,11 +28,11 @@ cheCluster:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: namespace
     name: openshift-workspaces
 
@@ -42,7 +42,7 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     hooked: true
     name: "codeready-workspaces"
     namespace: "openshift-workspaces"
