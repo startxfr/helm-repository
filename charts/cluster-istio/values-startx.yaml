@@ -116,10 +116,11 @@ project:
 
 # Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorElastic:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
     version: "4.5.0-202009041228.p0"
@@ -135,10 +136,11 @@ operatorElastic:
 
 # Configuration of the kiali operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorKiali:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     name: "kiali-ossm"
     namespace: "openshift-operators"
     version: "v1.12.15"
@@ -154,10 +156,11 @@ operatorKiali:
 
 # Configuration of the jaeger operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorJaeger:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     name: "jaeger-product"
     namespace: "openshift-operators"
     version: "v1.17.6"
@@ -173,10 +176,11 @@ operatorJaeger:
 
 # Configuration of the istio operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorIstio:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     name: "servicemeshoperator"
     namespace: "openshift-operators"
     version: "v1.1.8"
@@ -188,7 +192,7 @@ operatorIstio:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     name: "global-operators"
     namespace: "openshift-operators"
     providedAPIs: "Config.v1alpha1.operator.tekton.dev,Elasticsearch.v1.logging.openshift.io,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,Kibana.v1.logging.openshift.io,KnativeEventing.v1alpha1.operator.knative.dev,KnativeServing.v1alpha1.operator.knative.dev,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"

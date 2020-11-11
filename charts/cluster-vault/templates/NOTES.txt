@@ -9,6 +9,8 @@ Vault (hashicorp) is enabled, at the cluster level, with the following character
           app : {{ include "startx.appName" . }}
       version : {{ include "startx.appVersion" . }}
 
+{{- if .Values.project }}{{- if .Values.project.enabled }}
 {{ include "project.notes" .Values.project }}
+{{- end }}{{- end }}
 
 {{ include "cluster-vault.notes" .Values }}
