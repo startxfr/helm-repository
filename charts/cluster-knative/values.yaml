@@ -18,7 +18,7 @@ context:  &context
 # configuration of the knative-serving service
 kServing:
   # Enable the deployment of the knative-serving service
-  enabled: true
+  enabled: false
   # name of the knative-serving service
   name: "knative-serving"
   # configuration of service HA
@@ -26,7 +26,7 @@ kServing:
 # configuration of the knative-eventing service
 kEventing:
   # Enable the deployment of the knative-eventing service
-  enabled: true
+  enabled: false
   # name of the knative-eventing service
   name: "knative-eventing"
 
@@ -36,6 +36,7 @@ projectOperator:
   context: 
     <<: *context
   project: 
+    enabled: false
     type: namespace
     name: "openshift-serverless"
   rbac: 
@@ -52,6 +53,7 @@ projectKServing:
   context: 
     <<: *context
   project: 
+    enabled: false
     type: namespace
     name: "knative-serving"
   rbac: 
@@ -68,6 +70,7 @@ projectKEventing:
   context: 
     <<: *context
   project: 
+    enabled: false
     type: namespace
     name: "knative-eventing"
   rbac: 
@@ -81,10 +84,11 @@ projectKEventing:
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "serverless-operator"
     namespace: "openshift-serverless"
     version: "v1.9.0"

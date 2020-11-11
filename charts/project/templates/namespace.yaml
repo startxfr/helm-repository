@@ -1,4 +1,4 @@
-{{- if .Values.project.enabled -}}{{- if eq .Values.project.type "namespace" -}}
+{{- if .Values.enabled }}{{- if .Values.project.enabled -}}{{- if eq .Values.project.type "namespace" -}}
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -18,4 +18,4 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
 spec: {}
-{{- end -}}{{- end -}}
+{{- end -}}{{- end -}}{{- end }}

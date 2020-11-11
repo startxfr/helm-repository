@@ -17,16 +17,17 @@ context: &context
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: project
     name: example-vault
     display_name: VAULT Example
     description: Vault storage & control plane example from STARTX
   rbac: 
-    enabled: true
+    enabled: false
     user: 
     - id: vault-sa
       name: system:serviceaccount:example-vault:{{ .Release.name }}

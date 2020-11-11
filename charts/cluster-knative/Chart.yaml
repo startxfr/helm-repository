@@ -35,15 +35,19 @@ dependencies:
     repository: https://startxfr.github.io/helm-repository/packages/
     version: 0.3.91
     alias: projectOperator
+    condition: projectOperator.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
     version: 0.3.91
     alias: projectKServing
+    condition: projectKServing.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
     version: 0.3.91
     alias: projectKEventing
+    condition: projectKEventing.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
     version: 0.3.91
     alias: operator
+    condition: operator.enabled

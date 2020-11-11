@@ -33,10 +33,11 @@ vms:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: namespace
     name: openshift-cnv
   rbac: 
@@ -51,10 +52,11 @@ project:
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "kubevirt-hyperconverged"
     namespace: "openshift-cnv"
     version: "v2.4.1"
@@ -66,7 +68,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     name: "kubevirt"
     namespace: "openshift-cnv"
     providedAPIs: "CDI.v1alpha1.cdi.kubevirt.io,HostPathProvisioner.v1alpha1.hostpathprovisioner.kubevirt.io,HyperConverged.v1alpha1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.kubevirt.io,KubevirtMetricsAggregation.v1.kubevirt.io,KubevirtNodeLabellerBundle.v1.kubevirt.io,KubevirtTemplateValidator.v1.kubevirt.io,NetworkAddonsConfig.v1alpha1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1alpha1.kubevirt.io,V2VVmware.v1alpha1.kubevirt.io"

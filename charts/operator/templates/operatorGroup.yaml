@@ -1,4 +1,4 @@
-{{- if .Values.operatorGroup }}{{- if .Values.operatorGroup.enabled }}
+{{- if .Values.enabled }}{{- if .Values.operatorGroup }}{{- if .Values.operatorGroup.enabled }}
 {{- $name := .Values.operatorGroup.name | default .Values.subscription.name -}}
 {{- $namespace := .Values.operatorGroup.namespace | default .Values.subscription.namespace -}}
 {{- $providedAPIs := .Values.operatorGroup.providedAPIs -}}
@@ -25,4 +25,4 @@ metadata:
 spec:
   targetNamespaces:
     - {{ $namespace | default "default" | quote }}
-{{- end }}{{- end }}
+{{- end }}{{- end }}{{- end }}

@@ -1,4 +1,4 @@
-{{- if .Values.quotas.enabled -}}
+{{- if .Values.enabled }}{{- if .Values.quotas }}{{- if .Values.quotas.enabled -}}
 kind: ResourceQuota
 apiVersion: v1
 metadata:
@@ -11,4 +11,4 @@ metadata:
     {{- include "project.annotations" . | nindent 4 }}
 spec: 
   {{- .Values.quotas.rules | nindent 2 }}
-{{- end -}}
+{{- end }}{{- end }}{{- end }}

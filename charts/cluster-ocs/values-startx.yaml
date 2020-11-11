@@ -16,16 +16,15 @@ ocs:
     size: 512Gi
     storageClass: aws-generic-retain
 project: 
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
-    enabled: true
-    enabled: true
+    enabled: false
     type: namespace
     name: "openshift-storage"
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: dev
       name: dev
@@ -43,10 +42,11 @@ project:
   quotas: 
     enabled: false
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "ocs-operator"
     namespace: "openshift-storage"
     version: "v4.5.0"
@@ -58,7 +58,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     name: "openshift-storage"
     namespace: "openshift-storage"
     providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageClusterInitialization.v1.ocs.openshift.io"
