@@ -15,11 +15,11 @@ project:
     type: namespace
     name: openshift-workspaces
 operator:
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     name: "codeready-workspaces"
     namespace: "openshift-workspaces"
     version: "v2.3.0"
@@ -31,7 +31,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     name: "codeready-workspaces"
     namespace: "openshift-workspaces"
     providedAPIs: "CheCluster.v1.org.eclipse.che"
