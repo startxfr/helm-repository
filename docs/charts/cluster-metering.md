@@ -74,3 +74,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
 | 0.3.97  | 2020-11-11 | publish stable update for the full repository
 | 0.3.101  | 2020-11-11 | publish stable update for the full repository
+| 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release

@@ -116,3 +116,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.97  | 2020-11-11 | publish stable update for the full repository
 | 0.3.101  | 2020-11-11 | publish stable update for the full repository
 | 0.3.103  | 2020-11-11 | Align basic release to 0.3.103
+| 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
