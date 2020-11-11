@@ -102,14 +102,15 @@ logging:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: namespace
     name: "openshift-logging"
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: devops
       name: devops
@@ -126,10 +127,11 @@ project:
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "logging-ocp"
     namespace: "openshift-logging"
     version: "4.5.0-202009120215.p0"
@@ -141,7 +143,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     name: "openshift-logging"
     namespace: "openshift-logging"
     providedAPIs: "HiveTable.v1.logging.openshift.io,MeteringConfig.v1.logging.openshift.io,PrestoTable.v1.logging.openshift.io,Report.v1.logging.openshift.io,ReportDataSource.v1.logging.openshift.io,ReportQuery.v1.logging.openshift.io,StorageLocation.v1.logging.openshift.io"

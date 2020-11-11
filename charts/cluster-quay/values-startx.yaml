@@ -45,16 +45,17 @@ quay:
     creds:
       password: "secretdemerde"
 project: 
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: project
     name: "startx-quay"
     display_name: "STARTX Infra - QUAY"
     description: "STARTX Private Quay enterprise registry & control plane"
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: dev
       name: dev
@@ -66,7 +67,7 @@ project:
       name: ops
       role: admin
   networkpolicy: 
-    enabled: true
+    enabled: false
     rules: 
     - id: allow-from-openshift-ingress
       spec: |
@@ -79,7 +80,7 @@ project:
           - from:
               - namespaceSelector: {}
   limits: 
-    enabled: true
+    enabled: false
     rules:  |
       limits:
         - type: "Pod"
@@ -103,7 +104,7 @@ project:
             cpu: "1"
             memory: "4096Mi"
   quotas: 
-    enabled: true
+    enabled: false
     rules:  |
       hard:
         limits.cpu: "5"
@@ -151,10 +152,11 @@ project:
         count/daemonsets.apps: "0"
         count/deployments.apps: "10"
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "quay-operator"
     namespace: "startx-quay"
     version: "v3.3.2-20200903"
@@ -166,7 +168,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     name: "startx-quay"
     namespace: "startx-quay"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
@@ -174,7 +176,7 @@ operatorsec:
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "container-security-operator"
     namespace: "openshift-operators"
     version: "v3.3.1"

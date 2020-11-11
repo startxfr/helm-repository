@@ -7,20 +7,21 @@ context: &context
   component: infra
   app: startx-knative
 kServing:
-  enabled: true
+  enabled: false
   name: "startx-kserving"
   replicas: 2
 kEventing:
-  enabled: true
+  enabled: false
   name: "startx-keventing"
 projectOperator: 
   context: 
     <<: *context
   project: 
+    enabled: false
     type: namespace
     name: "openshift-serverless"
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: devops
       name: devops
@@ -38,10 +39,11 @@ projectKServing:
   context: 
     <<: *context
   project: 
+    enabled: false
     type: namespace
     name: "knative-serving"
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: devops
       name: devops
@@ -59,10 +61,11 @@ projectKEventing:
   context: 
     <<: *context
   project: 
+    enabled: false
     type: namespace
     name: "knative-eventing"
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: devops
       name: devops
@@ -77,10 +80,11 @@ projectKEventing:
   quotas: 
     enabled: false
 operator:
+  enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     name: "serverless-operator"
     namespace: "openshift-serverless"
     version: "v1.9.0"
