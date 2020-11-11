@@ -51,113 +51,14 @@ project:
     <<: *context
   project: 
     enabled: false
-    type: project
     name: "startx-quay"
-    display_name: "STARTX Infra - QUAY"
-    description: "STARTX Private Quay enterprise registry & control plane"
-  rbac: 
-    enabled: false
-    groups: 
-    - id: dev
-      name: dev
-      role: view
-    - id: devops
-      name: devops
-      role: edit
-    - id: ops
-      name: ops
-      role: admin
-  networkpolicy: 
-    enabled: false
-    rules: 
-    - id: allow-from-openshift-ingress
-      spec: |
-        podSelector:
-          matchLabels:
-            app: quay-operator
-            quay-enterprise-component: app
-            quay-enterprise-cr: startx
-        ingress:
-          - from:
-              - namespaceSelector: {}
-  limits: 
-    enabled: false
-    rules:  |
-      limits:
-        - type: "Pod"
-          min:
-            cpu: 50m
-            memory: 64Mi
-          max:
-            cpu: "1"
-            memory: "4096Mi"
-        - type: "Container"
-          defaultRequest:
-            cpu: 200m
-            memory: 256Mi
-          default:
-            cpu: 400m
-            memory: 512Mi
-          min:
-            cpu: 50m
-            memory: 64Mi
-          max:
-            cpu: "1"
-            memory: "4096Mi"
-  quotas: 
-    enabled: false
-    rules:  |
-      hard:
-        limits.cpu: "5"
-        limits.memory: "10Gi"
-        requests.cpu: "1600m"
-        requests.memory: "5000Mi"
-        requests.storage: "18Gi"
-        persistentvolumeclaims: "5"
-        ephemeral-storage: "0"
-        gp2.storageclass.storage.k8s.io/requests.storage: "8Gi"
-        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
-        aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "10Gi"
-        aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "1"
-        aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
-        openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        pods: "10"
-        services: "10"
-        services.loadbalancers: "0"
-        services.nodeports: "0"
-        secrets: "35"
-        configmaps: "5"
-        replicationcontrollers: "0"
-        openshift.io/imagestreams: "0"
-        count/replicasets.apps: "10"
-        count/daemonsets.apps: "0"
-        count/deployments.apps: "10"
 operator:
   enabled: false
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
+    hooked: false
     name: "quay-operator"
     namespace: "startx-quay"
     version: "v3.3.2-20200903"
@@ -169,7 +70,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
     name: "startx-quay"
     namespace: "startx-quay"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
@@ -177,7 +79,8 @@ operatorsec:
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
+    hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
     version: "v3.3.1"
