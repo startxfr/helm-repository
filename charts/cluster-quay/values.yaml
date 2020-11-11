@@ -94,17 +94,10 @@ project:
     <<: *context
   project: 
     enabled: false
+    hooked: false
     type: project
     name: "default-quay"
     display_name: "Default QUAY"
-  rbac: 
-    enabled: false
-  networkpolicy: 
-    enabled: false
-  limits: 
-    enabled: false
-  quotas: 
-    enabled: false
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
@@ -113,6 +106,7 @@ operator:
     <<: *context
   subscription:
     enabled: false
+    hooked: false
     name: "quay-operator"
     namespace: "default-quay"
     version: "v3.3.2-20200903"
@@ -125,6 +119,7 @@ operator:
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
+    hooked: false
     name: "default-quay"
     namespace: "default-quay"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
@@ -136,6 +131,7 @@ operatorsec:
     <<: *context
   subscription:
     enabled: false
+    hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
     version: "v3.3.1"
