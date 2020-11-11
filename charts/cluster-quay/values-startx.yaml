@@ -14,7 +14,7 @@ route:
   enabled: true
   name: registry
 quay:
-  enabled: true
+  enabled: false
   hooked: false
   image: 'quay.io/redhat/quay:v3.2.0'
   size: '10Gi'
@@ -53,7 +53,7 @@ project:
     enabled: false
     name: "startx-quay"
 operator:
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   subscription:
@@ -76,6 +76,7 @@ operator:
     namespace: "startx-quay"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
 operatorsec:
+  enabled: true
   context: 
     <<: *context
   subscription:
