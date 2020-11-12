@@ -108,12 +108,12 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     type: namespace
     name: "openshift-metering"
     hooked: true
   rbac: 
-    enabled: false
+    enabled: true
     groups: 
     - id: devops
       name: devops
@@ -134,7 +134,7 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     hooked: true
     name: "metering-ocp"
     namespace: "openshift-metering"
@@ -147,7 +147,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: true
     name: "openshift-metering"
     namespace: "openshift-metering"

@@ -10,10 +10,34 @@ project:
   enabled: false
   context: 
     <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: openshift-workspaces
 operator:
   enabled: false
   context: 
     <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "codeready-workspaces"
+    namespace: "openshift-workspaces"
+    version: "v2.3.0"
+    operator: 
+      channel: latest
+      name: codeready-workspaces
+      csv: crwoperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "codeready-workspaces"
+    namespace: "openshift-workspaces"
+    providedAPIs: "CheCluster.v1.org.eclipse.che"
 cheCluster:
   enabled: true
   hooked: false

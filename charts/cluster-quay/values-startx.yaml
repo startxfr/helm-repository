@@ -50,10 +50,11 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     name: "startx-quay"
+    display_name: "Default QUAY"
 operator:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
@@ -70,7 +71,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "startx-quay"
     namespace: "startx-quay"
