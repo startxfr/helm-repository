@@ -9,12 +9,23 @@ context: &context
 route: 
   enabled: false
 project: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     name: startx-vault
+    display_name: STARTX Vault
+    description: Vault storage & control plane for STARTX
+  rbac: 
+    enabled: true
+    user: 
+    - id: vault-sa
+      name: system:serviceaccount:example-vault:{{ .Release.name }}
+      role: edit
+    - id: vault-agent-injector-sa
+      name: system:serviceaccount:example-vault:{{ .Release.name }}-agent-injector
+      role: admin
 vault:
   global:
     enabled: true
