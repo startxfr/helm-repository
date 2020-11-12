@@ -7,9 +7,10 @@ context: &context
   component: infra
   app: startx-ocs
 ocs:
-  enabled: true
+  enabled: false
+  hooked: false
   name: startx-ocs
-  version: "4.5.0"
+  version: "4.5.2"
   storage:
   - name: ocs-deviceset
     replicas: 3
@@ -20,11 +21,12 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
+    hooked: false
     type: namespace
     name: "openshift-storage"
   rbac: 
-    enabled: false
+    enabled: true
     groups: 
     - id: dev
       name: dev
@@ -42,14 +44,15 @@ project:
   quotas: 
     enabled: false
 operator:
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
+    hooked: false
     name: "ocs-operator"
     namespace: "openshift-storage"
-    version: "v4.5.0"
+    version: "v4.5.2"
     operator: 
       channel: stable-4.5
       name: ocs-operator
@@ -58,7 +61,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
     name: "openshift-storage"
     namespace: "openshift-storage"
     providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageClusterInitialization.v1.ocs.openshift.io"

@@ -8,6 +8,7 @@ context: &context
   app: startx-istio
 istio:
   enabled: true
+  hooked: false
   name: sxv4
   members:
     enabled: true
@@ -27,13 +28,13 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     type: project
     name: "startx-istio"
     display_name: STARTX Infra - ISTIO
     description: STARTX Private ISTIO System running tracing, monitoring, management and routing tools
   rbac: 
-    enabled: false
+    enabled: true
     groups: 
     - id: dev
       name: dev
@@ -47,7 +48,7 @@ project:
   networkpolicy: 
     enabled: false
   limits: 
-    enabled: false
+    enabled: true
     rules:  |
       limits:
         - type: "Pod"
@@ -71,7 +72,7 @@ project:
             cpu: "1600m"
             memory: "6Gi"
   quotas: 
-    enabled: false
+    enabled: true
     rules:  |
       hard:
         limits.cpu: "10"

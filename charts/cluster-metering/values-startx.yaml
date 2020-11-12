@@ -8,6 +8,7 @@ context: &context
   app: openshift-metering
 metering:
   enabled: true
+  hooked: false
   reportingOperator:
     enabled: true
     resources: |
@@ -81,11 +82,11 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     type: namespace
     name: "openshift-metering"
   rbac: 
-    enabled: false
+    enabled: true
     groups: 
     - id: devops
       name: devops
@@ -106,7 +107,7 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     name: "metering-ocp"
     namespace: "openshift-metering"
     version: "4.5.0-202009120215.p0"
@@ -118,7 +119,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     name: "openshift-metering"
     namespace: "openshift-metering"
     providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"
