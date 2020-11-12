@@ -25,7 +25,7 @@ spec:
   storageDeviceSets:
 {{- range .Values.ocs.storage }}
     - name: {{ .name | default "default-deviceset" | quote }}
-      replica: {{ .replicas | default 3 | quote }}
+      replica: {{ int .replicas | default 3 }}
       count: 1
       placement: {}
       portable: true
