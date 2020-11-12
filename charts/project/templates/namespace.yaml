@@ -9,8 +9,15 @@ metadata:
     openshift.io/cluster-monitoring: "true"
   annotations:
     {{- include "project.annotations" . | nindent 4 }}
+    {{- if .Values.project.description }}
+    openshift.io/description: "{{- .Values.project.description -}}"
+    {{- end }}
+    {{- if .Values.project.display_name }}
+    openshift.io/display-name: "{{- .Values.project.display_name -}}"
+    {{- end }}
+    openshift.io/requester: "helm-startx-{{- .Chart.Name -}}"
     {{- if .Values.project.hooked }}
-    helm.sh/hook: crd-install
+    helm.sh/hook: pre-install,post-delete
     helm.sh/hook-weight: "-5"
     helm.sh/hook-delete-policy: hook-failed
     argocd.argoproj.io/hook: PreSync
