@@ -41,7 +41,7 @@ Deployment of tekton :
 
 - 1 **subscription** named **openshift-pipelines-operator-rh** to deploy codeready operator with the following characteristics
   - operator name is **openshift-pipelines-operator-rh**
-  - operator version is **openshift-pipelines-operator.v1.0.1**
+  - operator version is **openshift-pipelines-operator.v1.1.1**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
 
 ```bash
@@ -54,7 +54,7 @@ helm install startx/cluster-pipeline
 - **startx** : Startx tekton configuration for Startx clusters (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml)) deploying the following environment
   - 1 **subscription** named **openshift-pipelines-operator-rh** to deploy codeready operator with the following characteristics
     - operator name is **openshift-pipelines-operator-rh**
-    - operator version is **openshift-pipelines-operator.v1.0.1**
+    - operator version is **openshift-pipelines-operator.v1.1.1**
     - operator catalog is **redhat-operators** located in **openshift-marketplace**
 
 ```bash
@@ -84,3 +84,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.3.97  | 2020-11-11 | publish stable update for the full repository
 | 0.3.101  | 2020-11-11 | publish stable update for the full repository
 | 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
+| 0.3.109  | 2020-11-12 | publish stable update for the full repository

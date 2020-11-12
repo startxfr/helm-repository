@@ -10,9 +10,11 @@ metadata:
     app.kubernetes.io/name: "codeready-workspaces-checluster"
   annotations:
     {{- include "cluster-workspace.annotations" . | nindent 4 }}
+    {{- if .Values.cheCluster.hooked }}
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed
+    {{- end }}
     argocd.argoproj.io/sync-wave: "10"
 spec:
   auth:

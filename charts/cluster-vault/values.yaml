@@ -21,13 +21,13 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     type: project
     name: example-vault
     display_name: VAULT Example
     description: Vault storage & control plane example from STARTX
   rbac: 
-    enabled: false
+    enabled: true
     user: 
     - id: vault-sa
       name: system:serviceaccount:example-vault:{{ .Release.name }}
@@ -62,6 +62,7 @@ vault:
     #   - name: image-pull-secret
     # TLS for end-to-end encrypted transport
     tlsDisable: true
+    openshift: true
 
   injector:
     # True if you want to enable vault agent injection.

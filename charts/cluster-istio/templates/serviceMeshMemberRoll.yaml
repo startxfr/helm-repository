@@ -1,4 +1,4 @@
-{{- if .Values.istio.members -}}{{- if .Values.istio.members.enabled -}}
+{{- if .Values.istio.enabled -}}{{- if .Values.istio.members -}}{{- if .Values.istio.members.enabled -}}
 {{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "default-istio" -}}
 {{- range .Values.istio.members.list }}
@@ -13,12 +13,14 @@ metadata:
     app.kubernetes.io/name: "{{ .name | default "default" }}-servicemeshmemberroll"
   annotations:
     {{- include "cluster-istio.annotations" $root | nindent 4 }}
+    {{- if .Values.istio.hooked }}
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed
+    {{- end }}
     argocd.argoproj.io/sync-wave: "10"
 spec:
   members:
     {{- .projects | nindent 4 }}
 {{- end }}
-{{- end -}}{{- end -}}
+{{- end -}}{{- end -}}{{- end -}}

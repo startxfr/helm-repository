@@ -33,6 +33,8 @@ route:
 quay:
   # Enable the configuration of the API manager
   enabled: true
+  # Activate the manager as a helm hook
+  hooked: true
   # Image to use for the database deployment
   image: 'quay.io/redhat/quay:v3.2.0'
   # The size of the persistant volume to use form image layer storage
@@ -92,17 +94,10 @@ project:
     <<: *context
   project: 
     enabled: false
+    hooked: false
     type: project
     name: "default-quay"
     display_name: "Default QUAY"
-  rbac: 
-    enabled: false
-  networkpolicy: 
-    enabled: false
-  limits: 
-    enabled: false
-  quotas: 
-    enabled: false
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
@@ -111,6 +106,7 @@ operator:
     <<: *context
   subscription:
     enabled: false
+    hooked: false
     name: "quay-operator"
     namespace: "default-quay"
     version: "v3.3.2-20200903"
@@ -123,6 +119,7 @@ operator:
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
+    hooked: false
     name: "default-quay"
     namespace: "default-quay"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
@@ -130,10 +127,12 @@ operator:
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorsec:
+  enabled: false
   context: 
     <<: *context
   subscription:
     enabled: false
+    hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
     version: "v3.3.1"
