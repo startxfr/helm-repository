@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: {{ include "startx.appName" . }}
   labels:
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-service"
     {{- include "sxapi.labels" . | nindent 4 }}
     app: {{ include "startx.appName" . }}
   annotations:

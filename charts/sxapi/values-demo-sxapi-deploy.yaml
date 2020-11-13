@@ -7,24 +7,26 @@ context:
   scope: startx
   cluster: localhost
   environment: demo
-  component: example
-  app: default-sxapi-dev
-  version: "0.0.2"
+  component: demo-sxapi
+  app: demo-sxapi-deploy
+  version: "0.0.1"
 sxapi:
   service:
     enabled: true
   expose:
-    enabled: false
-  version: "0.3.53"
+    enabled: true
+    kind: "route"
+  version: "latest"
+  # version: "0.3.53"
   profile: "dev:start"
   debug: true
-  replicas: 1
+  replicas: 2
   data: |
     sxapi.yml: |-
-      name: {{ include "startx.appName" . }}
-      description: This is the description of {{ include "startx.appName" . }}
-      version: {{ include "startx.appVersion" . }}
-      debug: "{{- .Values.sxapi.debug }}"
+      name: sxapi-example
+      description: sxapi example
+      version: 0.0.1
+      debug: true
       resources:
         serviceinfo-sample:
           _class: serviceinfo
@@ -39,16 +41,19 @@ sxapi:
           desc: Display welcome message (HTML)
           body: |-
               <html>
-              <head><title>Application {{ include "startx.appName" . }}</title></head>
+              <head><title>Application {{name}}</title></head>
               <link rel="stylesheet" href="https://goo.gl/4kFNLH">
               <body><div class="container">
-              <h1><span class="glyphicon glyphicon-eye-open"></span> Your API {{ include "startx.appName" . }} is
+              <h1><span class="glyphicon glyphicon-eye-open"></span> Your API {{name}} is
               live !</h1>
-              <div class="alert alert-success" role="alert"><p>This API is {{ include "startx.appName" . }} (<b>v{{ include "startx.appVersion" . }}</b>)</p></div>
-              <div class="alert alert-info" role="alert"><p>The application signature is <b>{{ include "startx.appNameVersion" . }}</b>.</p></div>
+              <div class="alert alert-success" role="alert"><p>This API is {{description}}
+              running on <b>{{hostname}}</b> with current release <b>v{{version}}</b></p></div>
+              <div class="alert alert-info" role="alert"><p>The application signature is <b>{{appsign}}</b>
+              and corespond to the example API using micro-service framework <b>{{package.name}}
+              v{{package.version}}</b>.</p></div>
               <h1>Demo de deploiement</h1>
               <nav class="navbar navbar-default navbar-fixed-bottom"><div class="container">
-              Microservice engine is <b>{{ include "startx.appName" . }} v{{ include "startx.appVersion" . }}</b></div></nav>
+              Microservice engine is <b>{{package.name}} v{{package.version}}</b>. {{package.description}}</div></nav>
               </div></body>
               </html>
         - path: "/health"
@@ -70,11 +75,14 @@ sxapi:
           task: myCronFunction
     mylib.js: |-
       /* global $log, module */
+
       //'use strict';
+
       var mylib = {
         myCronFunction: function (config) {
           var moment = require('moment');
           $log.info("cron task " + config.id + " executed at " + moment().format('YYYY-MM-DD HH:mm:ss'));
         }
       };
+
       module.exports = mylib;
