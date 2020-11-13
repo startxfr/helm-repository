@@ -217,3 +217,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.109  | 2020-11-12 | publish stable update for the full repository
 | 0.3.115  | 2020-11-12 | Release basic chart stability updates
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
+| 0.3.119  | 2020-11-13 | Add demo-hpa and demo-sxapi values examples
