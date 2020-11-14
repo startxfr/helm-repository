@@ -165,3 +165,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.119  | 2020-11-14 | Add target option for the operator group to define if targetNamespace should be local to the project or global (no namespace)
 | 0.3.125  | 2020-11-14 | publish stable update for the full repository
 | 0.3.131  | 2020-11-14 | Stable values examples
+| 0.3.133  | 2020-11-14 | publish stable update for the full repository

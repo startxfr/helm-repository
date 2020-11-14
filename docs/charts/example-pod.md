@@ -105,3 +105,4 @@ helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.109  | 2020-11-12 | publish stable update for the full repository
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.125  | 2020-11-14 | publish stable update for the full repository
+| 0.3.133  | 2020-11-14 | publish stable update for the full repository
