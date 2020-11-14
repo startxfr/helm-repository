@@ -34,7 +34,6 @@ metadata:
   labels:
     {{- include "cluster-quay.labels" . | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-service"
-    app: quay-operator
     quay-enterprise-component: app
     quay-enterprise-cr: startx
 spec:
@@ -43,7 +42,6 @@ spec:
       port: 443
       targetPort: 8443
   selector:
-    app: quay-operator
     quay-enterprise-component: app
     quay-enterprise-cr: startx
   type: ClusterIP

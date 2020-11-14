@@ -5,7 +5,7 @@ context: &context
   cluster: localhost
   environment: dev
   component: infra
-  app: startx-infra
+  app: startx-3scale
 manager:
   enabled: true
   hooked: false
@@ -43,7 +43,7 @@ project:
       spec: |
         podSelector:
           matchLabels:
-            app: 3scale
+            app: startx-3scale
         ingress:
           - from:
               - namespaceSelector: {}

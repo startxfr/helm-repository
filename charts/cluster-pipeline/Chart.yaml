@@ -31,6 +31,11 @@ sources:
 maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
 
 dependencies:
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.3.119
+    alias: projectOperator
+    condition: projectOperator.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
     version: 0.3.119

@@ -11,7 +11,7 @@ context:  &context
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: openshift-workspaces
+  app: default-workspaces
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
@@ -35,8 +35,10 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: namespace
-    name: openshift-workspaces
+    type: project
+    name: workspaces-operator
+    display_name: Operator WORKSPACES
+    description: CodeReady Workspace configured by STARTX
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
@@ -47,7 +49,7 @@ operator:
     enabled: true
     hooked: true
     name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
+    namespace: "workspaces-operator"
     version: "v2.3.0"
     operator: 
       channel: latest
@@ -55,10 +57,10 @@ operator:
       csv: crwoperator
       source: 
         name: redhat-operators
-        namespace: openshift-marketplace
+        namespace: example-marketplace
   operatorGroup:
     enabled: true
     hooked: true
     name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
+    namespace: "workspaces-operator"
     providedAPIs: "CheCluster.v1.org.eclipse.che"

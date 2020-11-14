@@ -11,7 +11,7 @@ context:  &context
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: openshift-logging
+  app: default-logging
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
@@ -110,7 +110,9 @@ project:
   project: 
     enabled: false
     type: namespace
-    name: "openshift-logging"
+    name: "logging-operator"
+    display_name: Operator LOGGING
+    description: LOGGING operators configured by startx
   rbac: 
     enabled: false
     groups: 
@@ -135,7 +137,7 @@ operator:
   subscription:
     enabled: false
     name: "logging-ocp"
-    namespace: "openshift-logging"
+    namespace: "logging-operator"
     version: "4.5.0-202009120215.p0"
     operator: 
       channel: "4.5"
@@ -146,6 +148,6 @@ operator:
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
-    name: "openshift-logging"
-    namespace: "openshift-logging"
+    name: "logging-operator"
+    namespace: "logging-operator"
     providedAPIs: "HiveTable.v1.logging.openshift.io,MeteringConfig.v1.logging.openshift.io,PrestoTable.v1.logging.openshift.io,Report.v1.logging.openshift.io,ReportDataSource.v1.logging.openshift.io,ReportQuery.v1.logging.openshift.io,StorageLocation.v1.logging.openshift.io"
