@@ -51,8 +51,10 @@ project:
     <<: *context
   project: 
     enabled: true
+    hooked: false
     name: "startx-quay"
-    display_name: "Default QUAY"
+    display_name: "Startx QUAY"
+    description: Quay enterprise registry configured by STARTX
 operator:
   enabled: false
   context: 
@@ -71,7 +73,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     name: "startx-quay"
     namespace: "startx-quay"

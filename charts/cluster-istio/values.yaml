@@ -29,14 +29,12 @@ istio:
     enabled: true
     # lst of various members roll
     list: 
-      # Name of the member group
-    - name: default
-      # Project part of this memberroll
-      projects: |
-        - "sxv4-dev-cl"
-        - "sxv4-factory"
-        - "sxv4-preprod"
-        - "sxv4-prod"
+      # Name of the member namespace
+    - namespace: default
+      # Name of the control plane to register
+      controlePlane: default
+      # Namespace where the control plane is deployed
+      controlePlaneNS: default-istio
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -46,9 +44,29 @@ project:
   project: 
     enabled: true
     type: project
-    name: "example-istio"
+    name: "default-istio"
     display_name: ISTIO Example
     description: ISTIO System running tracing, monitoring, management and routing tools example from startx
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the projectOperator (see https://startxfr.github.io/helm-repository/charts/project)
+projectOperator: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: "istio-operators"
+    display_name: Operator ISTIO
+    description: ISTIO operators configured by startx
   rbac: 
     enabled: false
   networkpolicy: 
@@ -86,7 +104,7 @@ operatorKiali:
   subscription:
     enabled: true
     name: "kiali-ossm"
-    namespace: "openshift-operators"
+    namespace: "istio-operators"
     version: "v1.12.15"
     operator: 
       channel: "stable"
@@ -106,7 +124,7 @@ operatorJaeger:
   subscription:
     enabled: true
     name: "jaeger-product"
-    namespace: "openshift-operators"
+    namespace: "istio-operators"
     version: "v1.17.6"
     operator: 
       channel: "stable"
@@ -126,7 +144,7 @@ operatorIstio:
   subscription:
     enabled: true
     name: "servicemeshoperator"
-    namespace: "openshift-operators"
+    namespace: "istio-operators"
     version: "v1.1.8"
     operator: 
       channel: "stable"
@@ -138,5 +156,5 @@ operatorIstio:
   operatorGroup:
     enabled: true
     name: "istio-operators"
-    namespace: "openshift-operators"
+    namespace: "istio-operators"
     providedAPIs: "Elasticsearch.v1.logging.openshift.io,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,Kibana.v1.logging.openshift.io,KnativeEventing.v1alpha1.operator.knative.dev,KnativeServing.v1alpha1.operator.knative.dev,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
