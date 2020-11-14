@@ -43,8 +43,10 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: namespace
-    name: "openshift-storage"
+    type: project
+    name: "ocs-operator"
+    display_name: Operator OCS
+    description: Openshift Container Storage operators configured by startx
   rbac: 
     enabled: false
   networkpolicy: 
@@ -62,7 +64,7 @@ operator:
   subscription:
     enabled: true
     name: "ocs-operator"
-    namespace: "openshift-storage"
+    namespace: "ocs-operator"
     version: "v4.5.2"
     operator: 
       channel: stable-4.5
@@ -70,9 +72,9 @@ operator:
       csv: ocs-operator
       source: 
         name: redhat-operators
-        namespace: openshift-marketplace
+        namespace: default-marketplace
   operatorGroup:
     enabled: true
     name: "openshift-storage"
-    namespace: "openshift-storage"
+    namespace: "ocs-operator"
     providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageClusterInitialization.v1.ocs.openshift.io"

@@ -11,7 +11,7 @@ context:  &context
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: openshift-metering
+  app: default-metering
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
@@ -109,9 +109,11 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: namespace
-    name: "openshift-metering"
     hooked: true
+    type: namespace
+    name: "metering-operator"
+    display_name: Operator METERING
+    description: METERING operators configured by startx
   rbac: 
     enabled: true
     groups: 
@@ -137,7 +139,7 @@ operator:
     enabled: true
     hooked: true
     name: "metering-ocp"
-    namespace: "openshift-metering"
+    namespace: "metering-operator"
     version: "4.5.0-202009120215.p0"
     operator: 
       channel: "4.5"
@@ -149,6 +151,6 @@ operator:
   operatorGroup:
     enabled: true
     hooked: true
-    name: "openshift-metering"
-    namespace: "openshift-metering"
+    name: "metering-operator"
+    namespace: "metering-operator"
     providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"

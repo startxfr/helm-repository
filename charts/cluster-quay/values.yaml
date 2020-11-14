@@ -96,8 +96,9 @@ project:
     enabled: false
     hooked: false
     type: project
-    name: "default-quay"
-    display_name: "Default QUAY"
+    name: "quay-operator"
+    display_name: Operator QUAY
+    description: Quay enterprise registry configured by STARTX
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
@@ -108,7 +109,7 @@ operator:
     enabled: false
     hooked: false
     name: "quay-operator"
-    namespace: "default-quay"
+    namespace: "quay-operator"
     version: "v3.3.2-20200903"
     operator: 
       channel: quay-v3.3
@@ -120,8 +121,8 @@ operator:
   operatorGroup:
     enabled: false
     hooked: false
-    name: "default-quay"
-    namespace: "default-quay"
+    name: "quay-operator"
+    namespace: "quay-operator"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
 
 

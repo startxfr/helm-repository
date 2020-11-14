@@ -11,7 +11,7 @@ context: &context
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: startx-infra
+  app: default-3scale
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
@@ -51,6 +51,26 @@ project:
   quotas: 
     enabled: false
 
+# Configuration of the projectOperator (see https://startxfr.github.io/helm-repository/charts/project)
+projectOperator: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: "3scale-operators"
+    display_name: Operator 3SCALE
+    description: 3SCALE operators configured by startx
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
   enabled: false
@@ -59,7 +79,7 @@ operator:
   subscription:
     enabled: true
     name: "3scale-operator"
-    namespace: "example-3scale"
+    namespace: "3scale-operators"
     version: "v0.6.0"
     operator: 
       channel: threescale-2.9
@@ -71,5 +91,5 @@ operator:
   operatorGroup:
     enabled: true
     name: "3scale-operator"
-    namespace: "example-3scale"
+    namespace: "3scale-operators"
     providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"

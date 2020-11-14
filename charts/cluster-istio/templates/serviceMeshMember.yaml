@@ -1,16 +1,16 @@
 {{- if .Values.istio.enabled -}}{{- if .Values.istio.members -}}{{- if .Values.istio.members.enabled -}}
 {{- $root := . -}}
-{{- $namespace := .Values.project.project.name | default "default-istio" -}}
 {{- range .Values.istio.members.list }}
+{{- $namespace := .namespace | default "default" -}}
 ---
-kind: ServiceMeshMemberRoll
+kind: ServiceMeshMember
 apiVersion: maistra.io/v1
 metadata:
-  name: {{ .name | default "default" | quote }}
+  name: default
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-istio.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{ .name | default "default" }}-servicemeshmemberroll"
+    app.kubernetes.io/name: "default-{{ $namespace }}-servicemeshmember"
   annotations:
     {{- include "cluster-istio.annotations" $root | nindent 4 }}
     {{- if $root.Values.istio.hooked }}
@@ -22,7 +22,8 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "10"
 spec:
-  members:
-    {{- .projects | nindent 4 }}
+  controlPlaneRef:
+    name: {{ .controlePlane | default "basic-install" | quote }}
+    namespace: {{ .controlePlaneNS | default "istio-system" | quote }} 
 {{- end }}
 {{- end -}}{{- end -}}{{- end -}}
