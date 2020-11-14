@@ -221,3 +221,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.119  | 2020-11-14 | Improve project options
 | 0.3.119  | 2020-11-14 | Add demo values for hpa, affinity and istio
 | 0.3.125  | 2020-11-14 | publish stable update for the full repository
+| 0.3.131  | 2020-11-14 | Stable values examples
