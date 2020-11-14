@@ -4,12 +4,12 @@ metadata:
   name: {{ include "startx.appName" . }}
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-deployment"
-    {{- include "sxapi.labels" . | nindent 4 }}
+    {{- include "example-php.labels" . | nindent 4 }}
   annotations:
-    {{- include "sxapi.annotations" . | nindent 4 }}
+    {{- include "example-php.annotations" . | nindent 4 }}
     checksum/config: {{ include (print $.Template.BasePath "/cm-lib.yaml") . | sha256sum }}
 spec:
-  replicas: {{ .Values.sxapi.replicas  }}
+  replicas: {{ .Values.php.replicas  }}
   selector:
     matchLabels:
       app: {{ include "startx.appName" . }}
@@ -22,62 +22,69 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: "{{ include "startx.appName" . }}-{{ include "startx.appVersion" . }}-pod"
-        {{- include "sxapi.labels" . | nindent 8 }}
+        {{- include "example-php.labels" . | nindent 8 }}
         app: {{ include "startx.appName" . }}
       annotations:
-        {{- include "sxapi.annotations" . | nindent 8 }}
+        {{- include "example-php.annotations" . | nindent 8 }}
     spec: 
       containers:
-        - name: sxapi
-          image: "startx/sxapi:{{- .Values.sxapi.version }}"
+        - name: application
+          image: "quay.io/startx/php:{{- .Values.php.version }}"
+          command:
+            - "/bin/sx-apache"
+          args:
+            - run
           env:
             - name: SX_DEBUG
-              value: "{{- .Values.sxapi.debug }}"
+              value: "{{- .Values.php.debug }}"
             - name: SX_VERBOSE
               value: "true"
           envFrom:
             - configMapRef:
                 name: {{ include "startx.appName" . }}-app
-          command: [ "npm" , "run", "{{- .Values.sxapi.profile }}" ]
           ports:
-          - containerPort: 8077
-            name: http
-            protocol: TCP
+            - containerPort: 8080
+              protocol: TCP
           livenessProbe:
-            initialDelaySeconds: 5
-            tcpSocket:
-              port: 8077
-            timeoutSeconds: 2
-            periodSeconds: 5
+            exec:
+              command:
+                - "/bin/sx-apache"
+                - isLive
+            initialDelaySeconds: 1
+            timeoutSeconds: 3
+            periodSeconds: 15
             successThreshold: 1
-            failureThreshold: 3
+            failureThreshold: 2
           readinessProbe:
-            initialDelaySeconds: 7
-            tcpSocket:
-              port: 8077
-            timeoutSeconds: 2
-            periodSeconds: 6
+            exec:
+              command:
+                - "/bin/sx-apache"
+                - isReady
+            initialDelaySeconds: 2
+            timeoutSeconds: 3
+            periodSeconds: 10
             successThreshold: 1
-            failureThreshold: 3
+            failureThreshold: 2
           resources:
             limits:
-              cpu: 200m
-              memory: 64Mi
+              cpu: 250m
+              memory: 128Mi
             requests:
-              cpu: 50m
-              memory: 32Mi
+              cpu: 100m
+              memory: 64Mi
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
-            - name: "sxapi-deploy-log"
+            - name: "php-deploy-log"
               mountPath: "/var/log/httpd"
-            - name: sxapi-deploy-conf
-              mountPath: "/conf"
+            - name: php-deploy-conf
+              mountPath: "/app"
+              readOnly: true
       volumes:
-        - name: "sxapi-deploy-log"
+        - name: "php-deploy-log"
           emptyDir:
             medium: ""
-        - name: sxapi-deploy-conf
+        - name: php-deploy-conf
           configMap:
             name: "{{ include "startx.appName" . }}-lib"
       restartPolicy: Always

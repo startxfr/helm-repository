@@ -5,8 +5,8 @@ metadata:
   name: {{ include "startx.appName" . }}-lib
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-lib-cm"
-    {{- include "sxapi.labels" . | nindent 4 }}
+    {{- include "example-php.labels" . | nindent 4 }}
   annotations:
-    {{- include "sxapi.annotations" . | nindent 4 }}
+    {{- include "example-php.annotations" . | nindent 4 }}
 data:
-  {{- .Values.sxapi.data | nindent 2 }}
+  {{- .Values.php.data | nindent 2 }}
