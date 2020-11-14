@@ -33,4 +33,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    target: "all-ns"
+    name: "pipeline-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "Config.v1alpha1.operator.tekton.dev"
