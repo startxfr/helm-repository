@@ -29,14 +29,12 @@ istio:
     enabled: true
     # lst of various members roll
     list: 
-      # Name of the member group
-    - name: default
-      # Project part of this memberroll
-      projects: |
-        - "sxv4-dev-cl"
-        - "sxv4-factory"
-        - "sxv4-preprod"
-        - "sxv4-prod"
+      # Name of the member namespace
+    - namespace: default
+      # Name of the control plane to register
+      controlePlane: default
+      # Namespace where the control plane is deployed
+      controlePlaneNS: default-istio
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -46,7 +44,7 @@ project:
   project: 
     enabled: true
     type: project
-    name: "example-istio"
+    name: "default-istio"
     display_name: ISTIO Example
     description: ISTIO System running tracing, monitoring, management and routing tools example from startx
   rbac: 
