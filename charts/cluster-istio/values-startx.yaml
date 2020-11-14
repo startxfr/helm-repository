@@ -13,14 +13,18 @@ istio:
   members:
     enabled: true
     list: 
-    - name: sxv4-dev
-      projects: |
-        - "sxv4-dev-cl"
-        - "sxv4-factory"
-    - name: sxv4-prod
-      projects: |
-        - "sxv4-preprod"
-        - "sxv4-prod"
+    - namespace: sxv4-dev-cl
+      controlePlane: sxv4
+      controlePlaneNS: startx-istio
+    - namespace: sxv4-factory
+      controlePlane: sxv4
+      controlePlaneNS: startx-istio
+    - namespace: sxv4-preprod
+      controlePlane: sxv4
+      controlePlaneNS: startx-istio
+    - namespace: sxv4-prod
+      controlePlane: sxv4
+      controlePlaneNS: startx-istio
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
