@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "startx.appName" . }}
   labels:
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-deployment"
     {{- include "sxapi.labels" . | nindent 4 }}
   annotations:
     {{- include "sxapi.annotations" . | nindent 4 }}
@@ -21,7 +21,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: "{{ include "startx.appName" . }}-{{ include "startx.appVersion" . }}"
+        app.kubernetes.io/name: "{{ include "startx.appName" . }}-{{ include "startx.appVersion" . }}-pod"
         {{- include "sxapi.labels" . | nindent 8 }}
         app: {{ include "startx.appName" . }}
       annotations:
