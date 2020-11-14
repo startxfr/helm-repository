@@ -47,7 +47,15 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
          name : {{ $name }}
     namespace : {{ $namespace }}
  providedAPIs : {{ $providedAPIs }}
+{{- if .operatorGroup.target }}
+  {{- if eq .operatorGroup.target "all-ns" }}
+    target NS : ALL
+  {{- else }}
     target NS : {{ $namespace }}
+  {{- end }}
+{{- else }}
+    target NS : {{ $namespace }}
+{{- end }}
 {{- else }}
 OperatorGroup : disabled
 {{- end }}
