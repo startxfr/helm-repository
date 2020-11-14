@@ -11,3 +11,19 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "example-php.annotations" -}}
 {{- include "startx.annotationsInfra" . -}}
 {{- end -}}
+
+{{/* Common example-php note */}}
+{{- define "example-php.notes" -}}
+-- Application ----------------
+      version : {{ .version }}
+     replicas : {{ .replicas }}
+        debug : {{ .debug }}
+{{- if .service -}}{{- if .service.enabled }}
+      service : enabled
+{{- else }}
+      service : disabled
+{{- end }}
+{{- else }}
+      service : disabled
+{{- end }}
+{{- end -}}

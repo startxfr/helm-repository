@@ -4,16 +4,15 @@ apiVersion: v1
 metadata:
   name: {{ include "startx.appName" . }}-app
   labels:
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-app-cm"
     {{- include "example-php.labels" . | nindent 4 }}
   annotations:
     {{- include "example-php.annotations" . | nindent 4 }}
 data:
-  EXAMPLE_VALUE: "{{- if .Values.exampleValue }}{{ .Values.exampleValue }}{{- else }}default value form chart template{{- end }}"
-  EXAMPLE_TPL: example value hard-coded into the helm chart template
   SX_ID: {{ include "startx.appName" . }}-app
   SX_TYPE: app
   SX_COMPONENT: {{ include "startx.appComponent" . }}
   SX_NAME: Startx {{ include "startx.appComponent" . }} application
   SX_SUMMARY: Startx {{ include "startx.appComponent" . }} application based on apache container
   SX_VERSION: {{ include "startx.appEnvironment" . }}
+  EXAMPLE_VALUE: "{{- if .Values.exampleValue }}{{ .Values.exampleValue }}{{- else }}default value form chart template{{- end }}"
