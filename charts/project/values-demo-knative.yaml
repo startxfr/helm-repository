@@ -1,74 +1,68 @@
 
 # Default values for configuration of a dev demo
-# see values.yaml for explanation on each params
+# see values.knative for explanation on each params
 context: 
   scope: startx
   cluster: localhost
   environment: demo
-  component: vault
-  app: startx-vault
+  component: demo-knative
+  app: demo-knative-project
   version: "0.0.1"  
 enabled: true
 project: 
   enabled: true
   hooked: false
   type: project
-  name: startx-vault
-  display_name: Startx VAULT
-  description: STARTX Private Vault storage & control plane
+  name: "demo-knative"
+  display_name: "Demo KNATIVE"
+  description: "Demo on serverless capacities using knative"
 rbac: 
-  enabled: false
+  enabled: true
   groups: 
   - id: dev
     name: dev
     role: view
   - id: devops
     name: devops
-    role: admin
+    role: edit
   - id: ops
     name: ops
     role: admin
-  user: 
-  - id: vault-sa
-    name: system:serviceaccount:startx-vault:{{ .Release.name }}
-    role: edit
-  - id: vault-agent-injector-sa
-    name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
-    role: admin
 networkpolicy: 
   enabled: false
+  rules: []
 limits: 
-  enabled: false
+  enabled: true
   rules:  |
     limits:
       - type: "Pod"
         min:
-          cpu: 10m
-          memory: 32Mi
+          cpu: "10m"
+          memory: "16Mi"
         max:
-          cpu: "500m"
-          memory: "512Mi"
+          cpu: 400m
+          memory: 512Mi
       - type: "Container"
         default:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
         defaultRequest:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
         min:
-          cpu: 10m
-          memory: 32Mi
+          cpu: "0"
+          memory: "0"
         max:
-          cpu: "500m"
-          memory: "512Mi"
+          cpu: 200m
+          memory: 256Mi
 quotas: 
-  enabled: false
+  enabled: true
   rules:  |
     hard:
-      limits.cpu: "2"
-      limits.memory: "1500Mi"
-      requests.cpu: "1"
-      requests.memory: "512Mi"
+      limits.cpu: "400m"
+      limits.memory: "800Mi"
+      requests.cpu: "180m"
+      requests.memory: "280Mi"
       requests.storage: "0"
       persistentvolumeclaims: "0"
       ephemeral-storage: "0" 
@@ -98,14 +92,14 @@ quotas:
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      pods: "6"
-      services: "5"
+      pods: "5"
       services.loadbalancers: "0"
       services.nodeports: "0"
-      secrets: "35"
+      secrets: "20"
       configmaps: "0"
       replicationcontrollers: "0"
       openshift.io/imagestreams: "0"
+      count/daemonsets.apps: "0"
       count/replicasets.apps: "4"
-      count/daemonsets.apps: "2"
-      count/deployments.apps: "2"
+      count/deployments.apps: "4"
+      services: "5"
