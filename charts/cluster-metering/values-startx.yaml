@@ -83,8 +83,11 @@ project:
     <<: *context
   project: 
     enabled: true
+    hooked: false
     type: namespace
     name: "openshift-metering"
+    display_name: "Startx METERING"
+    description: Openshift Metering configured by STARTX
   rbac: 
     enabled: true
     groups: 
@@ -108,6 +111,7 @@ operator:
     <<: *context
   subscription:
     enabled: true
+    hooked: false
     name: "metering-ocp"
     namespace: "openshift-metering"
     version: "4.5.0-202009120215.p0"
@@ -119,7 +123,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
+    hooked: false
     name: "openshift-metering"
     namespace: "openshift-metering"
     providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"

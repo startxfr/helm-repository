@@ -21,6 +21,7 @@ projectOperator:
     <<: *context
   project: 
     enabled: true
+    hooked: false
     type: namespace
     name: "openshift-serverless"
   rbac: 
@@ -44,6 +45,7 @@ projectKServing:
     <<: *context
   project: 
     enabled: true
+    hooked: false
     type: namespace
     name: "knative-serving"
   rbac: 
@@ -67,8 +69,11 @@ projectKEventing:
     <<: *context
   project: 
     enabled: true
+    hooked: false
     type: namespace
     name: "knative-eventing"
+    display_name: "Startx SERVERLESS"
+    description: Knative serverless features configured by STARTX
   rbac: 
     enabled: true
     groups: 
@@ -90,6 +95,7 @@ operator:
     <<: *context
   subscription:
     enabled: true
+    hooked: false
     name: "serverless-operator"
     namespace: "openshift-serverless"
     version: "v1.10.0"
