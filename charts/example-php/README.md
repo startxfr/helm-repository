@@ -135,3 +135,4 @@ helm install startx/example-php -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.117  | 2020-11-13 | Create chart example-php from example-php
 | 0.3.121  | 2020-11-14 | Add full example of php application deployed with content served from configmaps
+| 0.3.125  | 2020-11-14 | publish stable update for the full repository
