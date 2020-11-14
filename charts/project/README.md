@@ -219,3 +219,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.119  | 2020-11-13 | Add demo-hpa and demo-sxapi values examples
 | 0.3.119  | 2020-11-14 | Improve project options
+| 0.3.119  | 2020-11-14 | Add demo values for hpa, affinity and istio
