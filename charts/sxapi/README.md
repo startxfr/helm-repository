@@ -121,3 +121,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.115  | 2020-11-12 | Align sxapi basic chart to 0.3.115 release
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.119  | 2020-11-13 | Add route support with expose proerties in the values files[6~
+| 0.3.119  | 2020-11-14 | Improve sxapi options
