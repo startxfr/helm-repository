@@ -163,3 +163,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.115  | 2020-11-12 | Release basic chart stability updates
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.119  | 2020-11-14 | Add target option for the operator group to define if targetNamespace should be local to the project or global (no namespace)
+| 0.3.125  | 2020-11-14 | publish stable update for the full repository
