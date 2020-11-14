@@ -1,0 +1,48 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-php
+# # Use it to Overrride the helm-chart version
+#versionOverride: "0.0.1"
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: helm
+  # Application name (functionnal tenant, default use Chart name)
+  app: example-php
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+# configuration of the php helm chart. See php helm documentation on https://startxfr.github.io/helm-repository
+php:
+  # configuration of the service
+  service:
+    # Enable service for this application
+    enabled: true
+  # configuration of the expose service
+  expose:
+    # Enable exposition for this application
+    enabled: false
+    # Kind of backend used for exposing application
+    kind: "route"
+  version: "alpine3"
+  debug: true 
+  replicas: 1
+  data: |
+    index.html: |-
+      <h1>go to <a href="./info.php"><b>info.php</b></a></h1>
+    index.php: |-
+      <h1>go to <a href="./info.php"><b>info.php</b></a></h1>
+    info.php: |-
+      <?php
+      phpinfo();
+      ?>
+# Example value to show how to define and use a value from the helm value file
+exampleValue: Example value comming from the value file

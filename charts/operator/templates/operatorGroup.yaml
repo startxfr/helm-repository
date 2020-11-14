@@ -22,7 +22,17 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
     argocd.argoproj.io/sync-wave: "-3"
-spec:
+{{- if .Values.operatorGroup.target }}
+  {{- if eq .Values.operatorGroup.target "all-ns" }}
+spec: {}
+  {{- else }}
+  spec: 
+    targetNamespaces:
+      - {{ $namespace | default "default" | quote }}
+  {{- end }}
+{{- else }}
+spec: 
   targetNamespaces:
     - {{ $namespace | default "default" | quote }}
+{{- end }}
 {{- end }}{{- end }}{{- end }}

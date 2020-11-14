@@ -15,7 +15,7 @@ operator:
     hooked: false
     name: "openshift-pipelines-operator-rh"
     namespace: "openshift-operators"
-    version: "v1.1.1"
+    version: "v1.1.2"
     operator: 
       channel: ocp-4.5
       name: openshift-pipelines-operator-rh
@@ -24,4 +24,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    target: "all-ns"
+    name: "pipeline-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "Config.v1alpha1.operator.tekton.dev"

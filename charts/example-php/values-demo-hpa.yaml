@@ -1,0 +1,41 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: helm
+  app: hpa-app
+  version: "0.0.2"
+php:
+  service:
+    enabled: true
+  expose:
+    enabled: false
+    kind: "route"
+  version: "alpine3"
+  debug: true 
+  replicas: 1
+  data: |
+    index.html: |-
+      <h1>try <a href="./stress.php"><b>stress.php</b></a> for intense CPU usage.</h1>
+    index.php: |-
+      <h1>try <a href="./stress.php"><b>stress.php</b></a> for intense CPU usage.</h1>
+    stress.php: |-
+      <?php
+      // timer start
+      $time_start = microtime(true);
+      $a = "";
+      // loop to generate cpu usage
+      for($i = 0; $i < 300000000; $i++) {
+        $a += $i;
+        //echo "interation $i<br>";
+      }
+      // timer stop
+      $time = microtime(true) - $time_start;
+
+      echo "<h1>Stress test ended (duration: $time)</h1>";
+      phpinfo();
+      ?>
+exampleValue: Example value comming from the demo hpa value file
