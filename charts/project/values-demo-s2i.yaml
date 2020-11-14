@@ -1,74 +1,68 @@
 
 # Default values for configuration of a dev demo
-# see values.yaml for explanation on each params
+# see values.s2i for explanation on each params
 context: 
   scope: startx
   cluster: localhost
   environment: demo
-  component: vault
-  app: startx-vault
+  component: demo-s2i
+  app: demo-s2i-project
   version: "0.0.1"  
 enabled: true
 project: 
   enabled: true
   hooked: false
   type: project
-  name: startx-vault
-  display_name: Startx VAULT
-  description: STARTX Private Vault storage & control plane
+  name: "demo-s2i"
+  display_name: "Demo S2I"
+  description: "Demo on pipeline capabilities offered by tekton"
 rbac: 
-  enabled: false
+  enabled: true
   groups: 
   - id: dev
     name: dev
     role: view
   - id: devops
     name: devops
-    role: admin
+    role: edit
   - id: ops
     name: ops
     role: admin
-  user: 
-  - id: vault-sa
-    name: system:serviceaccount:startx-vault:{{ .Release.name }}
-    role: edit
-  - id: vault-agent-injector-sa
-    name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
-    role: admin
 networkpolicy: 
   enabled: false
+  rules: []
 limits: 
-  enabled: false
+  enabled: true
   rules:  |
     limits:
       - type: "Pod"
         min:
-          cpu: 10m
-          memory: 32Mi
+          cpu: "20m"
+          memory: "32Mi"
         max:
-          cpu: "500m"
-          memory: "512Mi"
+          cpu: 800m
+          memory: 800Mi
       - type: "Container"
         default:
-          cpu: 100m
-          memory: 64Mi
+          cpu: 200m
+          memory: 256Mi
         defaultRequest:
-          cpu: 100m
-          memory: 64Mi
-        min:
-          cpu: 10m
+          cpu: 20m
           memory: 32Mi
+        min:
+          cpu: "10m"
+          memory: "16Mi"
         max:
-          cpu: "500m"
-          memory: "512Mi"
+          cpu: 600m
+          memory: 712Mi
 quotas: 
-  enabled: false
+  enabled: true
   rules:  |
     hard:
-      limits.cpu: "2"
-      limits.memory: "1500Mi"
-      requests.cpu: "1"
-      requests.memory: "512Mi"
+      limits.cpu: "4500m"
+      limits.memory: "4600Mi"
+      requests.cpu: "1700m"
+      requests.memory: "2500Mi"
       requests.storage: "0"
       persistentvolumeclaims: "0"
       ephemeral-storage: "0" 
@@ -98,14 +92,14 @@ quotas:
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      pods: "6"
-      services: "5"
+      pods: "10"
       services.loadbalancers: "0"
       services.nodeports: "0"
-      secrets: "35"
-      configmaps: "0"
-      replicationcontrollers: "0"
-      openshift.io/imagestreams: "0"
-      count/replicasets.apps: "4"
-      count/daemonsets.apps: "2"
-      count/deployments.apps: "2"
+      secrets: "20"
+      configmaps: "30"
+      replicationcontrollers: "10"
+      openshift.io/imagestreams: "3"
+      count/daemonsets.apps: "0"
+      count/replicasets.apps: "0"
+      count/deployments.apps: "0"
+      services: "3"

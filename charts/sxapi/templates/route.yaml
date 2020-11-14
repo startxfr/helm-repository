@@ -1,5 +1,5 @@
 {{- if .Values.sxapi.expose -}}{{- if .Values.sxapi.expose.enabled -}}{{- if eq .Values.sxapi.expose.kind "route" -}}
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: {{ include "startx.appName" . }}
@@ -10,7 +10,7 @@ metadata:
   annotations:
     {{- include "sxapi.annotations" . | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
-    haproxy.router.openshift.io/disable_cookies: true
+    haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
 spec:
   tls:
