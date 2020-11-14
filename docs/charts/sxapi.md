@@ -125,3 +125,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.119  | 2020-11-14 | Debug expose usage and resource naming
 | 0.3.125  | 2020-11-14 | publish stable update for the full repository
 | 0.3.131  | 2020-11-14 | Debug route apiVersion
+| 0.3.133  | 2020-11-14 | publish stable update for the full repository
