@@ -1,0 +1,105 @@
+
+# Default values for configuration of a dev demo
+# see values.taintoleration for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: demo
+  component: demo-taintoleration
+  app: demo-taintoleration-project
+  version: "0.0.1"  
+enabled: true
+project: 
+  enabled: true
+  hooked: false
+  type: project
+  name: "demo-taintoleration"
+  display_name: "Demo TAIN-TOLERATION"
+  description: "Demo on tain and toleration"
+rbac: 
+  enabled: true
+  groups: 
+  - id: dev
+    name: dev
+    role: view
+  - id: devops
+    name: devops
+    role: edit
+  - id: ops
+    name: ops
+    role: admin
+networkpolicy: 
+  enabled: false
+  rules: []
+limits: 
+  enabled: true
+  rules:  |
+    limits:
+      - type: "Pod"
+        min:
+          cpu: "10m"
+          memory: "16Mi"
+        max:
+          cpu: 200m
+          memory: 256Mi
+      - type: "Container"
+        default:
+          cpu: 100m
+          memory: 128Mi
+        defaultRequest:
+          cpu: 20m
+          memory: 64Mi
+        min:
+          cpu: "10m"
+          memory: "16Mi"
+        max:
+          cpu: 200m
+          memory: 256Mi
+quotas: 
+  enabled: true
+  rules:  |
+    hard:
+      limits.cpu: "620m"
+      limits.memory: "800Mi"
+      requests.cpu: "130m"
+      requests.memory: "390Mi"
+      requests.storage: "0"
+      persistentvolumeclaims: "0"
+      ephemeral-storage: "0" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      pods: "6"
+      services.loadbalancers: "0"
+      services.nodeports: "0"
+      secrets: "10"
+      configmaps: "4"
+      replicationcontrollers: "0"
+      openshift.io/imagestreams: "0"
+      count/daemonsets.apps: "0"
+      count/replicasets.apps: "4"
+      count/deployments.apps: "2"
+      services: "2"
