@@ -11,7 +11,7 @@ context: &context
   # Component name of this application (logical tenant)
   component: infra
   # Application name (functionnal tenant, default use Chart name)
-  app: kubevirt
+  app: default-kubevirt
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
@@ -41,7 +41,9 @@ project:
   project: 
     enabled: true
     type: namespace
-    name: openshift-cnv
+    name: kubevirt-operator
+    display_name: Operator KUBEVIRT
+    description: KUBEVIRT operators configured by startx
   rbac: 
     enabled: false
   networkpolicy: 
@@ -60,7 +62,7 @@ operator:
   subscription:
     enabled: true
     name: "kubevirt-hyperconverged"
-    namespace: "openshift-cnv"
+    namespace: "kubevirt-operator"
     version: "v2.4.1"
     operator: 
       channel: "2.4"
@@ -72,5 +74,5 @@ operator:
   operatorGroup:
     enabled: true
     name: "kubevirt"
-    namespace: "openshift-cnv"
+    namespace: "kubevirt-operator"
     providedAPIs: "CDI.v1alpha1.cdi.kubevirt.io,HostPathProvisioner.v1alpha1.hostpathprovisioner.kubevirt.io,HyperConverged.v1alpha1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.kubevirt.io,KubevirtMetricsAggregation.v1.kubevirt.io,KubevirtNodeLabellerBundle.v1.kubevirt.io,KubevirtTemplateValidator.v1.kubevirt.io,NetworkAddonsConfig.v1alpha1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1alpha1.kubevirt.io,V2VVmware.v1alpha1.kubevirt.io"
