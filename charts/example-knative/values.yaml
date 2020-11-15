@@ -1,10 +1,5 @@
 
 
-# # Use it to Overrride the helm-chart name
-#nameOverride: example-knative
-# # Use it to Overrride the helm-chart version
-#versionOverride: "0.0.1"
-
 # Application deployment context
 context: &context
   # Name of the global scope for this application (organisational tenant)
@@ -20,49 +15,29 @@ context: &context
   # Version name of this application (default use Chart appVersion)
   version: "0.0.1"
 
-# configuration of the sxapi helm chart. See sxapi helm documentation on https://startxfr.github.io/helm-repository
-sxapi:
-  context: 
-    <<: *context
-  sxapi:
-    service:
+# Version name of this application (default use Chart appVersion)
+knativeServing:
+  # enable the creation of knative services
+  enabled: false
+  # list of the services to create
+  services: 
+      # name of the service to create
+    - name: webserver
+      # namespace where the service must be created
+      namespace: default
+      # enable the creation of this knative service
       enabled: true
-    version: "0.3.53"
-    profile: "prod:start"
-    debug: true
-    replicas: 1
-    data: |
-      sxapi.yml: |-
-        name: {{ include "startx.appName" . }}
-        description: This is the description of {{ include "startx.appName" . }}
-        version: {{ include "startx.appVersion" . }}
-        debug: "{{- .Values.sxapi.debug }}"
-        resources:
-          serviceinfo-sample:
-            _class: serviceinfo
-        log:
-          filters:
-            level: '0,1,2,3,4'
-            type: debug,info,error,warn
-        server:
-          port: '8077'
-          endpoints:
-          - path: "/"
-            desc: Display welcome message (HTML)
-            body: |-
-              <html>
-              <head><title>Example application {{ include "startx.appName" . }}</title></head>
-              <body><h1>API {{ include "startx.appName" . }} is live !</h1></body>
-              </html>
-          - path: "/health"
-            resource: serviceinfo-sample
-            endpoint: health
-          - path: "/info"
-            resource: serviceinfo-sample
-            endpoint: info
-          - path: "/ping"
-            desc: Ping the application. Return a sample message in json
-            code: '200'
-            body: pong
-# Example value to show how to define and use a value from the helm value file
-exampleValue: Example value comming from the value file
+      # the display name to use for this service
+      displayName: simple webserver with default homepage
+      # the specifications of this service
+      spec: |
+        containers:
+          - image: quay.io/startx/php:latest
+            imagePullPolicy: IfNotPresent
+            resources:
+              limits:
+                cpu: 80m
+                memory: 128Mi
+              requests:
+                cpu: "30m"
+                memory: "64Mi"
