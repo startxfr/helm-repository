@@ -1,0 +1,29 @@
+
+Example of a basic application deployed using imagestreams description packaged into helm chart. 
+The deployed imagestreams have the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+-- Images streams ------------------
+
+{{- if .Values.enabled }}{{- if .Values.imagestreams }}
+{{ range .Values.imagestreams }} 
+{{- $is := . -}}
+{{- if $is.enabled }}
+              - {{ $is.name | default "default" | quote }} in {{ $is.namespace | default "openshift" | quote }}
+                {{- range $is.tags }} 
+                {{- $ist := . -}}
+                {{- if $ist.enabled }}
+                - {{ $ist.name | default "latest" | quote }}
+                {{- end }}
+                {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}{{- end }}
+
