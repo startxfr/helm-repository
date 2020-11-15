@@ -10,4 +10,12 @@ The deployment have the following characteristics :
           app : {{ include "startx.appName" . }}
       version : {{ include "startx.appVersion" . }}
 
-{{ include "sxapi.notes" .Values.sxapi }}
+-- Knative serving -----------------
+
+{{- if .Values.knativeServing }}{{- if .Values.knativeServing.enabled }}
+{{ range .Values.knativeServing.services }} 
+{{- if .enabled }}
+              - {{ .name | default "default" | quote }} in {{ .namespace | default "default" }}
+{{- end }}
+{{- end }}
+{{- end }}{{- end }}
