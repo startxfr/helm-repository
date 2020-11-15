@@ -75,7 +75,10 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 
 | Chart                                                  | Source                                                                                      | Description  
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------- | -------------------------------------
+| **[example-imagestreams](charts/example-imagestreams.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-imagestreams) | An example on how to deploy multiple image streams using helm
+| **[example-knative](charts/example-knative.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-knative) | An example on how to deploy application using serverless
 | **[example-deployment](charts/example-deployment.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment) | An example on how to deploy simple applications using helm and a deployment
+| **[example-php](charts/example-php.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-php) | An example on how to deploy PHP application
 | **[example-pod](charts/example-pod.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)        | An example on how to deploy simple applications using helm and a pod
 | **[example-sxapi](charts/example-sxapi.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)      | An example on how to deploy simple micro-applications using helm and an sxapi toolkit
 
@@ -83,7 +86,10 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm install startx/example-imagestreams
+helm install startx/example-knative
 helm install startx/example-deployment
+helm install startx/example-php
 helm install startx/example-pod
 helm install startx/example-sxapi
 ```
