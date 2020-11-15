@@ -8,16 +8,16 @@ context:
   component: example
   app: startx-project
   version: "0.0.1"
-enabled: true
+enabled: false
 project: 
-  enabled: true
+  enabled: false
   type: project
   name: startx-project
   hooked: true
   display_name: Startx default project
   description: This is a example of a startx project created via Helm
 rbac: 
-  enabled: true
+  enabled: false
   groups: 
   - id: dev
     name: dev
@@ -33,7 +33,7 @@ rbac:
     name: dev
     role: basic-user
 networkpolicy: 
-  enabled: true
+  enabled: false
   rules: 
   - id: allow-from-openshift-ingress
     spec: |
@@ -52,7 +52,7 @@ networkpolicy:
       - from:
         - podSelector: {}
 limits: 
-  enabled: true
+  enabled: false
   rules:  |
     limits:
       - type: "Pod"
@@ -76,7 +76,7 @@ limits:
           cpu: 200m
           memory: 256Mi
 quotas: 
-  enabled: true
+  enabled: false
   rules:  |
     hard:
       limits.cpu: "1500m"
