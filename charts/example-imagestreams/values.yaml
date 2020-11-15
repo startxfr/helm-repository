@@ -1,0 +1,67 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-imagestreams
+# # Use it to Overrride the helm-chart version
+#versionOverride: 0.0.1
+
+# Application deployment context
+context: 
+# Name of the global scope for this application (organisational tenant)
+ scope: default
+# Name of the cluster running this application (plateform tenant)
+ cluster: localhost
+# Name of the environement for this application (ex: dev, factory, preprod or prod)
+ environment: dev
+# Component name of this application (logical tenant)
+ component: helm
+# Application name (functionnal tenant, default use Chart name)
+ app: example-imagestreams
+# Version name of this application (default use Chart appVersion)
+ version: 0.0.1
+
+# enable the basic chart globally
+enabled: false
+# List of images streams
+imagestreams:
+  # Image stream name
+- name: default
+  # enable the image stream
+  enabled: true
+  # Namespace were imagestream must resid
+  namespace: "openshift"
+  # Display name of the image stream
+  displayName: Default image
+  # Labels for the image stream
+  labels: |
+    technology: linux
+  # List of availables tags for this image stream
+  tags: 
+      # tag name
+    - name: dev
+      # enable the image stream tag
+      enabled: true
+      # description of the image stream
+      desc:
+        # icon class to use for this image and tags
+        iconClass: icon-fedora
+        # icon class to use for this image and tags
+        provider: 'STARTX'
+        # Display name of this tag
+        displayName: Default linux
+        # desription of this tag
+        description: Default linux running a fedora OS
+        # list of tags for this IST
+        tags: builder,startx,linux,fedora
+        # supported service
+        supports: linux
+        # sample repository
+        sampleRepo: https://github.com/startxfr/docker-images-example-bash.git
+      # source for this image stream tag
+      source:
+        # kind of source for this tag (is or docker, default is docker)
+        kind: docker
+        # Image source (from repository or image streams) (mandatory)
+        image: quay.io/startx/fedora:latest
+        # # Image source namespace
+        # namespace: openshift
