@@ -1,0 +1,17 @@
+
+Example of a basic application deployed using pod description packaged into helm chart. 
+The deployed pod have the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+-- Example -------------------------
+
+Deployment of your pod example named {{ include "startx.appName" . }} is done
+
+you can execute `kubectl get pod {{ include "startx.appName" . }}` to get detail about this deployment
