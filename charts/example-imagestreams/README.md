@@ -1,6 +1,6 @@
 # STARTX helm : example-imagestreams
 
-This helm chart is used to create a simple pod with various application images according to the values file.
+This helm chart is used to used to load imagestreams into a given namespace.
 
 ## Requirements and guidelines
 
@@ -50,19 +50,18 @@ helm install startx/example-imagestreams
 
 | Key       | Default       | Description
 | --------- | ------------- | -----------------------------------------------------
-| image     | fedora:latest | Image to run into the pod
+| image     | fedora:latest | Image to run into the imagestreams
 | command   | /bin/sx       | Command to run inside the container
 | args      | run           | argunments to pass to the command exectuted inside the container
 | debug     | true          | Enable debuging of the container
-
 
 ## Values files
 
 ### Default values file (values.yaml)
 
-Simple pod deployment of a container image with the following characteristics :
+Simple imagestreams deployment of a container image with the following characteristics :
 
-- 1 **pod** named **example-imagestreams** running **quay.io/startx/fedora:latest** image
+- 1 **imagestreams** named **example-imagestreams** running **quay.io/startx/fedora:latest** image
 
 ```bash
 # base configuration running default configuration
@@ -71,9 +70,9 @@ helm install startx/example-imagestreams
 
 ### Development values file (values-demo.yaml)
 
-Demo pod deployment of a container image with the following characteristics :
+Demo imagestreams deployment of a container image with the following characteristics :
 
-- 1 **pod** named **demo-helm-pod** running **quay.io/startx/fedora:latest** image
+- 1 **imagestreams** named **demo-helm-imagestreams** running **quay.io/startx/fedora:latest** image
 
 ```bash
 # base configuration running demo configuration
@@ -106,4 +105,5 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.125  | 2020-11-14 | publish stable update for the full repository
 | 0.3.133  | 2020-11-14 | publish stable update for the full repository
-| 0.3.133  | 2020-11-15 | Create chart example-imagestreams from example-pod
+| 0.3.133  | 2020-11-15 | Create chart example-imagestreams from example-imagestreams
+| 0.3.135  | 2020-11-15 | Add support for loading startx and sxv4 images streams into the openshift catalog
