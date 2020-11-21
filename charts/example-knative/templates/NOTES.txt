@@ -1,0 +1,21 @@
+
+Example of a simple codeless application scalable and packaged into an helm chart. 
+The deployment have the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+-- Knative serving -----------------
+
+{{- if .Values.knativeServing }}{{- if .Values.knativeServing.enabled }}
+{{ range .Values.knativeServing.services }} 
+{{- if .enabled }}
+              - {{ .name | default "default" | quote }} in {{ .namespace | default "default" }}
+{{- end }}
+{{- end }}
+{{- end }}{{- end }}

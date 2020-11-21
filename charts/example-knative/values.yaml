@@ -1,0 +1,43 @@
+
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: helm
+  # Application name (functionnal tenant, default use Chart name)
+  app: example-knative
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+# Version name of this application (default use Chart appVersion)
+knativeServing:
+  # enable the creation of knative services
+  enabled: false
+  # list of the services to create
+  services: 
+      # name of the service to create
+    - name: webserver
+      # namespace where the service must be created
+      namespace: default
+      # enable the creation of this knative service
+      enabled: true
+      # the display name to use for this service
+      displayName: simple webserver with default homepage
+      # the specifications of this service
+      spec: |
+        containers:
+          - image: quay.io/startx/php:latest
+            imagePullPolicy: IfNotPresent
+            resources:
+              limits:
+                cpu: 80m
+                memory: 128Mi
+              requests:
+                cpu: "30m"
+                memory: "64Mi"

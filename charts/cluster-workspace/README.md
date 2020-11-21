@@ -99,18 +99,6 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
-| 0.3.50  | 2020-11-08 | publish stable update for the full repository
-| 0.3.53  | 2020-11-08 | publish stable update for the full repository
-| 0.3.59  | 2020-11-08 | publish stable update for the full repository
-| 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
-| 0.3.73  | 2020-11-10 | publish stable update for the full repository
-| 0.3.77  | 2020-11-10 | publish stable update for the full repository
-| 0.3.83  | 2020-11-10 | publish stable update for the full repository
 | 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
-| 0.3.97  | 2020-11-11 | publish stable update for the full repository
-| 0.3.101  | 2020-11-11 | publish stable update for the full repository
 | 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
-| 0.3.109  | 2020-11-12 | publish stable update for the full repository
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
-| 0.3.125  | 2020-11-14 | publish stable update for the full repository
-| 0.3.133  | 2020-11-14 | publish stable update for the full repository
