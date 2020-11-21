@@ -122,6 +122,8 @@ function routerRelease {
     done
     echo -e "\e[36mRelease\e[0m commit all change to $GITHUB_REPOSITORY respository"
     echo $next_release > $PROJECT_PATH/_tools/repo-release
+    sed -i "s/latest-$current_release/latest-$next_release/" $PROJECT_PATH/README.md
+    sed -i "s/latest-$current_release/latest-$next_release/" $PROJECT_PATH/docs/index.md
     git add $PROJECT_PATH &>/dev/null
     git commit -m "[docs] update repository content to $next_release" $PROJECT_PATH &>/dev/null
     git checkout $MASTER_BRANCH &>/dev/null

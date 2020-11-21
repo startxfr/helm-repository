@@ -1,9 +1,9 @@
-# Welcome to STARTX helm repository
+# STARTX helm repository [![startx helm repository](https://img.shields.io/badge/latest-v0.3.133-blue.svg)](https://github.com/startxfr/helm-repository)
 
 ## Helm repository content
 
 This repository host various helm chart targeting the Openshift Container Platform environment. Charts could be
-divided into 3 main category
+divided into 3 main category ([basic charts](index.md#basic-helm-charts), [cluster charts](index.md#cluster-helm-charts) and [examples charts](index.md#examples-helm-charts))
 
 ### Cluster Helm charts
 
@@ -69,7 +69,7 @@ helm install startx/operator
 helm install startx/sxapi
 ```
 
-### Example Helm charts
+### Examples Helm charts
 
 Helm chart prefixed with `example-` are Example chart. Example are used in demo and various workshop to show how to use helm as part of a gitops toolchain.
 
