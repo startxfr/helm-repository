@@ -1,0 +1,54 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-istio
+istio:
+  enabled: false
+  hooked: false
+  name: sxv4
+  members:
+    enabled: true
+    list: 
+    - namespace: sxv4-prod
+      controlePlane: sxv4
+      controlePlaneNS: startx-istio
+project: 
+  enabled: false
+  project: 
+    enabled: false
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operatorElastic:
+  enabled: false
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
+operatorKiali:
+  enabled: false
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
+operatorJaeger:
+  enabled: false
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
+operatorIstio:
+  enabled: false
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false

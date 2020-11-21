@@ -1,0 +1,38 @@
+
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: default
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: helm
+  # Application name (functionnal tenant, default use Chart name)
+  app: example-helloworld-go
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+knativeServing:
+  enabled: true
+  services: 
+    - name: helloworld-go 
+      namespace: demo-knative
+      enabled: true
+      displayName: helloworld GO example based on google knative sample helloworld-go
+      spec: |
+        containers:
+          - image: gcr.io/knative-samples/helloworld-go 
+            imagePullPolicy: IfNotPresent
+            resources:
+              limits:
+                cpu: 80m
+                memory: 128Mi
+              requests:
+                cpu: "30m"
+                memory: "32Mi"
+            env:
+              - name: TARGET 
+                value: "Go Sample v1"
