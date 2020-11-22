@@ -72,43 +72,17 @@ Complete deployment of an php application with the following characteristics :
 helm install startx/example-php
 ```
 
-### Development values file (values-dev.yaml)
+### Development values file (values-demo-hpa.yaml)
 
-Complete deployment of a php development application with the following characteristics :
+Complete deployment of a php demo application for stress test (used in HPA test) with the following characteristics :
 
-- 1 **service** named **example-php-dev** load balancing to pod deployed
-- 1 **deployment** named **example-php-dev** deploying **1 pod** from version **0.3.53** php image running the **dev:start** command with debug disabled
+- 1 **service** named **hpa-app** load balancing to pod deployed
+- 1 **deployment** named **hpa-app** deploying **2 pod** from version **alpine3** php image running with debug disabled
 - 2 **configMap** holding php configuration and pod environment variable context
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-php -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-php/values-dev.yaml
-```
-
-### Version 0.0.1 values file (values-v0.0.1.yaml)
-
-Complete deployment of a php production application (v0.0.1) with the following characteristics :
-
-- 1 **service** named **example-php-prod** load balancing to pod deployed
-- 1 **deployment** named **example-php-prod** deploying **1 pod** from version **0.3.52** php image running the **prod:start** command with debug disabled
-- 2 **configMap** holding php configuration and pod environment variable context
-
-```bash
-# base configuration running tekton v1.0.1 configuration
-helm install startx/example-php -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-php/values-v0.0.1.yaml
-```
-
-### Version 0.0.2 values file (values-v0.0.2.yaml)
-
-Complete deployment of a php production application (v0.0.2) with the following characteristics :
-
-- 1 **service** named **example-php-prod** load balancing to pod deployed
-- 1 **deployment** named **example-php-prod** deploying **1 pod** from version **0.3.53** php image running the **prod:start** command with debug disabled
-- 2 **configMap** holding php configuration and pod environment variable context
-
-```bash
-# base configuration running tekton v1.0.1 configuration
-helm install startx/example-php -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-php/values-v0.0.2.yaml
+helm install startx/example-php -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-php/values-demo-hpa.yaml
 ```
 
 ## History
