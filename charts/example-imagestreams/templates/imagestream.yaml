@@ -51,7 +51,7 @@ spec:
       {{- if eq $ist.source.kind "is" }}
       from:
         kind: ImageStreamTag
-        name: {{ $ist.source.image | default "php:latest" | quote }}
+        name: {{ $ist.source.image | default "fedora:latest" | quote }}
         {{- if $ist.source.namespace }}
         namespace: {{ $ist.source.namespace | default "openshift" | quote }}
         {{- end }}
