@@ -61,54 +61,35 @@ helm install startx/example-knative
 
 ### Default values file (values.yaml)
 
-Complete deployment of an knative application with the following characteristics :
+Serverless service with the following characteristics (deployment is disable) :
 
-- 1 **service** named **example-knative** load balancing to pod deployed
-- 1 **deployment** named **example-knative** deploying **1 pod** from version **0.3.53** knative image running the **prod:start** command with debug disabled
-- 2 **configMap** holding knative configuration and pod environment variable context
+- 1 **knative service** named **webserver** in namespace **default** deploying image **quay.io/startx/php:latest** with restricted ressources
 
 ```bash
 # base configuration running default configuration
 helm install startx/example-knative
 ```
 
-### Development values file (values-dev.yaml)
+### Development values file (values-demo-sxapi-knative.yaml)
 
 Complete deployment of a knative development application with the following characteristics :
 
-- 1 **service** named **example-knative-dev** load balancing to pod deployed
-- 1 **deployment** named **example-knative-dev** deploying **1 pod** from version **0.3.53** knative image running the **dev:start** command with debug disabled
-- 2 **configMap** holding knative configuration and pod environment variable context
+- 1 **knative service** named **example-sxapi-knative** in namespace **demo-sxapi** deploying image **startx/sxapi:latest** with restricted ressources and debug enabled
 
 ```bash
-# base configuration running tekton v1.0.1 configuration
-helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-dev.yaml
+# base configuration running  demo sxapi with a knative configuration
+helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-sxapi-knative.yaml
 ```
 
-### Version 0.0.1 values file (values-v0.0.1.yaml)
+### Development values file (values-demo-knative-helloworld-go.yaml)
 
-Complete deployment of a knative production application (v0.0.1) with the following characteristics :
+Complete deployment of a knative development application with the following characteristics :
 
-- 1 **service** named **example-knative-prod** load balancing to pod deployed
-- 1 **deployment** named **example-knative-prod** deploying **1 pod** from version **0.3.52** knative image running the **prod:start** command with debug disabled
-- 2 **configMap** holding knative configuration and pod environment variable context
+- 1 **knative service** named **example-helloworld-go** in namespace **demo-knative** deploying image **gcr.io/knative-samples/helloworld-go** with restricted ressources
 
 ```bash
-# base configuration running tekton v1.0.1 configuration
-helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-v0.0.1.yaml
-```
-
-### Version 0.0.2 values file (values-v0.0.2.yaml)
-
-Complete deployment of a knative production application (v0.0.2) with the following characteristics :
-
-- 1 **service** named **example-knative-prod** load balancing to pod deployed
-- 1 **deployment** named **example-knative-prod** deploying **1 pod** from version **0.3.53** knative image running the **prod:start** command with debug disabled
-- 2 **configMap** holding knative configuration and pod environment variable context
-
-```bash
-# base configuration running tekton v1.0.1 configuration
-helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-v0.0.2.yaml
+# base configuration running  demo sxapi with a knative configuration
+helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-knative-helloworld-go.yaml
 ```
 
 ## History
