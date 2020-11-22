@@ -55,7 +55,6 @@ helm install startx/example-pod
 | args      | run           | argunments to pass to the command exectuted inside the container
 | debug     | true          | Enable debuging of the container
 
-
 ## Values files
 
 ### Default values file (values.yaml)
