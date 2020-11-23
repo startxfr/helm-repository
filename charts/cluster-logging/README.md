@@ -51,3 +51,4 @@ xxxx to do xxxxxx
 | 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies (removed)
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
+| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
