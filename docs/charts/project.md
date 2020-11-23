@@ -195,31 +195,11 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.45  | 2020-11-08 | Align all basic helm chart to 0.3.45 release
-| 0.3.50  | 2020-11-08 | publish stable update for the full repository
-| 0.3.51  | 2020-11-08 | Improve project options
-| 0.3.53  | 2020-11-08 | publish stable update for the full repository
-| 0.3.57  | 2020-11-08 | Improve project options
-| 0.3.59  | 2020-11-08 | publish stable update for the full repository
-| 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
 | 0.3.65  | 2020-11-09 | Add hooked option to enable/disable use of helm hook (default is disabled)
-| 0.3.69  | 2020-11-10 | Move to helm v3 version
-| 0.3.73  | 2020-11-10 | publish stable update for the full repository
-| 0.3.77  | 2020-11-10 | publish stable update for the full repository
 | 0.3.81  | 2020-11-10 | Improve project options
-| 0.3.83  | 2020-11-10 | publish stable update for the full repository
 | 0.3.91  | 2020-11-10 | Add enable option to enable the creation of a project (default false)
-| 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
 | 0.3.95  | 2020-11-11 | networkPolicy and roleBinding update
-| 0.3.97  | 2020-11-11 | publish stable update for the full repository
-| 0.3.101  | 2020-11-11 | publish stable update for the full repository
-| 0.3.103  | 2020-11-11 | Test default option
-| 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
-| 0.3.109  | 2020-11-12 | publish stable update for the full repository
 | 0.3.115  | 2020-11-12 | Release basic chart stability updates
-| 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
-| 0.3.119  | 2020-11-13 | Add demo-hpa and demo-sxapi values examples
-| 0.3.119  | 2020-11-14 | Improve project options
 | 0.3.119  | 2020-11-14 | Add demo values for hpa, affinity and istio
-| 0.3.125  | 2020-11-14 | publish stable update for the full repository
 | 0.3.131  | 2020-11-14 | Stable values examples
-| 0.3.133  | 2020-11-14 | publish stable update for the full repository
+| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
