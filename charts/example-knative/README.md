@@ -97,3 +97,4 @@ helm install startx/example-knative -f https://raw.githubusercontent.com/startxf
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.133  | 2020-11-15 | Create chart example-knative from example-knative
+| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
