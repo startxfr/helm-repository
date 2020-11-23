@@ -18,11 +18,11 @@ context:  &context
 # Configuration of the codeready workspace
 cheCluster:
   # enable deployment of the cheCluster
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
   hooked: true
   # name of the che cluster
-  name: "codeready-workspaces"
+  name: "default"
   # Storage class to use for persistance
   storageClass: "gp2"
   # Size of the PVC used for storage persistance
@@ -36,20 +36,20 @@ project:
   project: 
     enabled: true
     type: project
-    name: workspaces-operator
+    name: example-workspaces
     display_name: Operator WORKSPACES
     description: CodeReady Workspace configured by STARTX
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
     enabled: true
     hooked: true
     name: "codeready-workspaces"
-    namespace: "workspaces-operator"
+    namespace: "default-workspaces"
     version: "v2.3.0"
     operator: 
       channel: latest
@@ -57,10 +57,10 @@ operator:
       csv: crwoperator
       source: 
         name: redhat-operators
-        namespace: example-marketplace
+        namespace: default-marketplace
   operatorGroup:
     enabled: true
     hooked: true
     name: "codeready-workspaces"
-    namespace: "workspaces-operator"
+    namespace: "default-workspaces"
     providedAPIs: "CheCluster.v1.org.eclipse.che"
