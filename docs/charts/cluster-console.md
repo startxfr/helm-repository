@@ -61,19 +61,7 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 | 0.3.21  | 2020-11-07 | Create chart cluster-console from cluster-auth with logo customisation as well as notification, link and logLink
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
-| 0.3.50  | 2020-11-08 | publish stable update for the full repository
-| 0.3.53  | 2020-11-08 | publish stable update for the full repository
-| 0.3.59  | 2020-11-08 | publish stable update for the full repository
-| 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
-| 0.3.73  | 2020-11-10 | publish stable update for the full repository
-| 0.3.75  | 2020-11-10 | publish stable update for the full repository
-| 0.3.77  | 2020-11-10 | publish stable update for the full repository
-| 0.3.83  | 2020-11-10 | publish stable update for the full repository
 | 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
-| 0.3.97  | 2020-11-11 | publish stable update for the full repository
-| 0.3.101  | 2020-11-11 | publish stable update for the full repository
 | 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
-| 0.3.109  | 2020-11-12 | publish stable update for the full repository
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
-| 0.3.125  | 2020-11-14 | publish stable update for the full repository
-| 0.3.133  | 2020-11-14 | publish stable update for the full repository
+| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
