@@ -202,3 +202,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.115  | 2020-11-12 | Release basic chart stability updates
 | 0.3.119  | 2020-11-14 | Add demo values for hpa, affinity and istio
 | 0.3.131  | 2020-11-14 | Stable values examples
+| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
