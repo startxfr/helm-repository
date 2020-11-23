@@ -65,4 +65,4 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.61  | 2020-11-09 | Improve repository documentation and new chart for kubevirt management
 | 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
 | 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
-| 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
+| 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
