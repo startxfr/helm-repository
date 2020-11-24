@@ -3,7 +3,7 @@
 context: &context
   scope: startx
   cluster: localhost
-  environment: dev
+  environment: infra
   component: vault
   app: startx-vault
 route: 
@@ -21,10 +21,10 @@ project:
     enabled: true
     user: 
     - id: vault-sa
-      name: system:serviceaccount:example-vault:{{ .Release.name }}
+      name: system:serviceaccount:startx-vault:{{ .Release.name }}
       role: edit
     - id: vault-agent-injector-sa
-      name: system:serviceaccount:example-vault:{{ .Release.name }}-agent-injector
+      name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
       role: admin
 vault:
   global:
