@@ -103,3 +103,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.119  | 2020-11-13 | Add route support with expose proerties in the values files
 | 0.3.131  | 2020-11-14 | Debug route apiVersion
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.141 | 2020-11-24 | publish stable update for the full repository
