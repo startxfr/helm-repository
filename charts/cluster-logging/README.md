@@ -52,3 +52,4 @@ xxxx to do xxxxxx
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.141 | 2020-11-24 | publish stable update for the full repository
