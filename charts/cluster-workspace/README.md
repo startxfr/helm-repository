@@ -35,7 +35,6 @@ helm show chart startx/cluster-workspace
 helm install startx/cluster-workspace
 ```
 
-
 ## Values dictionary
 
 ### context values dictionary
@@ -51,14 +50,14 @@ helm install startx/cluster-workspace
 
 ### cheCluster values dictionary
 
-| Key          | Default | Description                             |
-| ------------ | ------- | --------------------------------------- |
-| cheCluster      | {}   | Object holding the cheCluster instance to configure
-| cheCluster.enabled      | true   | Enable the creation of the cheCluster
-| cheCluster.hooked      | true   | Activate the manager as a helm hook
-| cheCluster.name      | codeready-workspaces   | name of the che cluster
-| cheCluster.storageClass      | gp2   | Storage class to use for persistance
-| cheCluster.storageSize      | 1Gi   | Size of the PVC used for storage persistance
+| Key                     | Default              | Description                                         |
+| ----------------------- | -------------------- | --------------------------------------------------- |
+| cheCluster              | {}                   | Object holding the cheCluster instance to configure |
+| cheCluster.enabled      | true                 | Enable the creation of the cheCluster               |
+| cheCluster.hooked       | true                 | Activate the manager as a helm hook                 |
+| cheCluster.name         | codeready-workspaces | name of the che cluster                             |
+| cheCluster.storageClass | gp2                  | Storage class to use for persistance                |
+| cheCluster.storageSize  | 1Gi                  | Size of the PVC used for storage persistance        |
 
 #### cheCluster values example
 
@@ -176,18 +175,18 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 
 ## History
 
-| Release | Date       | Description
-| ------- | ---------- | -----------------------------------------------------
-| 0.2.12  | 2020-10-25 | Initial commit for this helm chart with default value example (removed)
-| 0.2.15  | 2020-10-26 | Improve cluster-workspace operator config
-| 0.2.51  | 2020-10-31 | Common release for all chart
-| 0.3.0   | 2020-10-31 | Stable 0.3 release
-| 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21
-| 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
-| 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies
-| 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
-| 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
-| 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
-| 0.3.105 | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
-| 0.3.117 | 2020-11-12 | Move to 0.3.115 basic chart dependencies
-| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
+| Release | Date       | Description                                                                                            |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
+| 0.2.12  | 2020-10-25 | Initial commit for this helm chart with default value example (removed)                                |
+| 0.2.15  | 2020-10-26 | Improve cluster-workspace operator config                                                              |
+| 0.2.51  | 2020-10-31 | Common release for all chart                                                                           |
+| 0.3.0   | 2020-10-31 | Stable 0.3 release                                                                                     |
+| 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21                                                      |
+| 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information |
+| 0.3.29  | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies                                                   |
+| 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies                                                |
+| 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release                                                                    |
+| 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository                        |
+| 0.3.105 | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release                                              |
+| 0.3.117 | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                               |
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts                                                          |
