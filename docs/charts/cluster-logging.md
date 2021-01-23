@@ -56,3 +56,4 @@ xxxx to do xxxxxx
 | 0.3.151 | 2021-01-23 | Upgrade lo Logging verison 4.6.0
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
 | 0.3.153 | 2021-01-23 | publish stable update for the full repository
+| 0.3.165 | 2021-01-23 | Upgrade all chart dependencies
