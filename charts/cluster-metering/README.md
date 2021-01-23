@@ -70,3 +70,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.151 | 2021-01-23 | Upgrade to Metering version 4.6.0
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
+| 0.3.153 | 2021-01-23 | publish stable update for the full repository
