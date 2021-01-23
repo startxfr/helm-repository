@@ -82,13 +82,14 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     type: namespace
     name: "openshift-logging"
     display_name: "Startx LOGGING"
+    requester: startx
     description: Openshift logging configured by STARTX
   rbac: 
-    enabled: false
+    enabled: true
     groups: 
     - id: devops
       name: devops
@@ -109,19 +110,20 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: false
-    name: "logging-ocp"
+    enabled: true
+    name: "cluster-logging"
     namespace: "openshift-logging"
-    version: "4.5.0-202009120215.p0"
+    version: "4.6.0-202011221454.p0"
     operator: 
-      channel: "4.5"
-      name: logging-ocp
-      csv: logging-operator
+      channel: "4.6"
+      name: cluster-logging
+      csv: clusterlogging
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
     name: "openshift-logging"
     namespace: "openshift-logging"
-    providedAPIs: "HiveTable.v1.logging.openshift.io,MeteringConfig.v1.logging.openshift.io,PrestoTable.v1.logging.openshift.io,Report.v1.logging.openshift.io,ReportDataSource.v1.logging.openshift.io,ReportQuery.v1.logging.openshift.io,StorageLocation.v1.logging.openshift.io"
+    providedAPIs: "ClusterLogForwarder.v1.logging.openshift.io,ClusterLogging.v1.logging.openshift.io"
