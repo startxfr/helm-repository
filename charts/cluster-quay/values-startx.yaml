@@ -54,6 +54,7 @@ project:
     hooked: false
     name: "startx-quay"
     display_name: "Startx QUAY"
+    requester: startx
     description: Quay enterprise registry configured by STARTX
 operator:
   enabled: false
@@ -64,7 +65,7 @@ operator:
     hooked: false
     name: "quay-operator"
     namespace: "startx-quay"
-    version: "v3.3.2-20200903"
+    version: "v3.3.4"
     operator: 
       channel: quay-v3.3
       name: quay-operator
@@ -73,13 +74,13 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "startx-quay"
     namespace: "startx-quay"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io"
 operatorsec:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
@@ -87,7 +88,7 @@ operatorsec:
     hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
-    version: "v3.3.1"
+    version: "v3.3.4"
     operator: 
       channel: quay-v3.3
       name: container-security-operator
@@ -96,4 +97,35 @@ operatorsec:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
+    name: "container-security-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "ImageManifestVuln.v1alpha1.secscan.quay.redhat.com"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# - apiVersion: operators.coreos.com/v1
+#   kind: OperatorGroup
+#   metadata:
+#     annotations:
+#       olm.providedAPIs: Config.v1alpha1.operator.tekton.dev
+#     name: global-operators
+#     namespace: ImageManifestVuln.v1alpha1.secscan.quay.redhat.com
+
+# KnativeEventing.v1alpha1.operator.knative.dev,KnativeServing.v1alpha1.operator.knative.dev
