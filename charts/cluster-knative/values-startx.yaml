@@ -25,6 +25,7 @@ projectOperator:
     type: namespace
     name: "openshift-serverless"
     display_name: "Startx SERVERLESS"
+    requester: startx
     description: Knative serverless operator configured by STARTX
   rbac: 
     enabled: true
@@ -51,6 +52,7 @@ projectKServing:
     type: namespace
     name: "knative-serving"
     display_name: "Startx SERVERLESS Serv"
+    requester: startx
     description: Knative serverless features configured by STARTX
   rbac: 
     enabled: true
@@ -77,6 +79,7 @@ projectKEventing:
     type: namespace
     name: "knative-eventing"
     display_name: "Startx SERVERLESS Event"
+    requester: startx
     description: Knative eventing bus features configured by STARTX
   rbac: 
     enabled: true
@@ -102,7 +105,7 @@ operator:
     hooked: false
     name: "serverless-operator"
     namespace: "openshift-serverless"
-    version: "v1.10.0"
+    version: "v1.12.0"
     operator: 
       channel: "4.6"
       name: serverless-operator
@@ -111,4 +114,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
+    name: "serverless-operator"
+    namespace: "openshift-serverless"
+    providedAPIs: "KnativeEventing.v1alpha1.operator.knative.dev,KnativeKafka.v1alpha1.operator.serverless.openshift.io,KnativeServing.v1alpha1.operator.knative.dev"
