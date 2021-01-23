@@ -14,5 +14,11 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common cluster-acm annotations */}}
 {{- define "cluster-acm.notes" -}}
--- cluster-acm --------------------
+-- Advanced Cluster Management -----
+{{- if .acm.enabled }}{{- if .acm.mch }}{{- if .acm.mch.enabled }}
+{{- $root := . -}}
+{{- $namespace := .project.project.name | default "open-cluster-management" -}}
+     logging : enabled in {{ $namespace }}
+         name : {{ .acm.mch.name | default "multiclusterhub" }}
+{{- end }}{{- end }}{{- end }}
 {{- end -}}
