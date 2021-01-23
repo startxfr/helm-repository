@@ -69,3 +69,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 0.3.135  | 2020-11-15 | Add multiple value (istio member only) and enable ServiceMeshMember only for this chart
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
+| 0.3.151 | 2021-01-23 | Upgrade istio to version 2.0.0.2
