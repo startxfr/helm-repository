@@ -11,4 +11,12 @@ Description of cluster-acm deployment result.
 
 -- Example -------------------------
 
-Put here description of the specific chart actions
+{{- if .Values.project }}{{- if .Values.project.enabled }}
+{{ include "project.notes" .Values.project }}
+{{- end }}{{- end }}
+
+{{- if .Values.operator }}{{- if .Values.operator.enabled }}
+{{ include "operator.notes" .Values.operator }}
+{{- end }}{{- end }}
+
+{{ include "cluster-acm.notes" .Values }}
