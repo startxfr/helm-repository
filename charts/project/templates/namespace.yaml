@@ -15,7 +15,11 @@ metadata:
     {{- if .Values.project.display_name }}
     openshift.io/display-name: "{{- .Values.project.display_name -}}"
     {{- end }}
-    openshift.io/requester: "helm-startx-{{- .Chart.Name -}}"
+    {{- if .Values.project.requester }}
+      openshift.io/requester: "{{- .Values.project.requester -}}"
+    {{- else }}
+      openshift.io/requester: "startx-helm-{{- .Chart.Name -}}"
+    {{- end }}
     {{- if .Values.project.hooked }}
     helm.sh/hook: pre-install,post-delete
     helm.sh/hook-weight: "-5"
