@@ -21,3 +21,4 @@ helm install startx/cluster-acm
 ```
 | 0.0.1  | 2021-01-23 | Create chart cluster-acm from _sample_
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
+| 0.3.153 | 2021-01-23 | publish stable update for the full repository
