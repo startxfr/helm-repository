@@ -126,3 +126,4 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
+| 0.3.153 | 2021-01-23 | publish stable update for the full repository
