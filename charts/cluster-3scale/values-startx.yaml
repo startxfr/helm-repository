@@ -23,6 +23,7 @@ project:
     type: project
     name: startx-3scale
     display_name: "Startx 3SCALE"
+    requester: startx
     description: 3Scale enterprise api-management & control plane configured by STARTX
   rbac: 
     enabled: true
@@ -128,7 +129,7 @@ operator:
     hooked: false
     name: "3scale-operator"
     namespace: "startx-3scale"
-    version: "v0.6.0"
+    version: "v0.6.1"
     operator: 
       channel: threescale-2.9
       name: 3scale-operator
@@ -137,8 +138,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "3scale-operator"
     namespace: "startx-3scale"
-    providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"
+    providedAPIs: "APIManager.v1alpha1.apps.3scale.net,APIManagerBackup.v1alpha1.apps.3scale.net,APIManagerRestore.v1alpha1.apps.3scale.net,Backend.v1beta1.capabilities.3scale.net,Product.v1beta1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"
