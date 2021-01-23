@@ -9,12 +9,12 @@ context: &context
 istio:
   enabled: true
   hooked: false
-  name: sxv4
+  name: startx
   members:
     enabled: false
     list: 
     - namespace: default
-      controlePlane: sxv4
+      controlePlane: startx
       controlePlaneNS: startx-istio
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
@@ -28,6 +28,7 @@ project:
     type: project
     name: "startx-istio"
     display_name: "Startx ISTIO"
+    requester: startx
     description: Service mesh using ISTIO System running tracing, monitoring, management and routing tools configured by STARTX
   rbac: 
     enabled: true
@@ -121,16 +122,20 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "4.5.0-202010301114.p0"
+    version: "4.6.0-202011221454.p0"
     operator: 
-      channel: "4.5"
+      channel: "4.6"
       name: elasticsearch-operator
       csv: elasticsearch-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
 
 # Configuration of the kiali operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorKiali:
@@ -142,7 +147,7 @@ operatorKiali:
     hooked: false
     name: "kiali-ossm"
     namespace: "openshift-operators"
-    version: "v1.24.2"
+    version: "v1.24.4"
     operator: 
       channel: "stable"
       name: kiali-ossm
@@ -151,7 +156,12 @@ operatorKiali:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
+    name: "kiali-ossm"
+    namespace: "openshift-operators"
+    providedAPIs: "Kiali.v1alpha1.kiali.io,MonitoringDashboard.v1alpha1.monitoring.kiali.io"
+
 
 # Configuration of the jaeger operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorJaeger:
@@ -163,7 +173,7 @@ operatorJaeger:
     hooked: false
     name: "jaeger-product"
     namespace: "openshift-operators"
-    version: "v1.17.6"
+    version: "v1.20.2"
     operator: 
       channel: "stable"
       name: jaeger-product
@@ -172,7 +182,11 @@ operatorJaeger:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
+    name: "jaeger-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "Jaeger.v1.jaegertracing.io"
 
 # Configuration of the istio operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorIstio:
@@ -193,8 +207,8 @@ operatorIstio:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "istio-operators"
     namespace: "openshift-operators"
-    providedAPIs: "Elasticsearch.v1.logging.openshift.io,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,Kibana.v1.logging.openshift.io,KnativeEventing.v1alpha1.operator.knative.dev,KnativeServing.v1alpha1.operator.knative.dev,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
