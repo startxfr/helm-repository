@@ -146,3 +146,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.131  | 2020-11-14 | Stable values examples
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
+| 0.3.142 | 2021-01-23 | Update for OCP 4.6.13
