@@ -87,3 +87,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.151 | 2021-01-23 | Upgrade to 3Scale version 0.6.1
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
 | 0.3.153 | 2021-01-23 | publish stable update for the full repository
+| 0.3.165 | 2021-01-23 | Upgrade all chart dependencies
