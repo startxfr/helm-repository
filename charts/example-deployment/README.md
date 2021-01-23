@@ -122,3 +122,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
+| 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
