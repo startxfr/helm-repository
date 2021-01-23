@@ -16,6 +16,7 @@ project:
     type: namespace
     name: openshift-workspaces
     display_name: "Startx WORKSPACES"
+    requester: startx
     description: CodeReady Workspace configured by STARTX
 operator:
   enabled: false
@@ -26,7 +27,7 @@ operator:
     hooked: false
     name: "codeready-workspaces"
     namespace: "openshift-workspaces"
-    version: "v2.3.0"
+    version: "v2.5.1"
     operator: 
       channel: latest
       name: codeready-workspaces
@@ -35,7 +36,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "codeready-workspaces"
     namespace: "openshift-workspaces"
