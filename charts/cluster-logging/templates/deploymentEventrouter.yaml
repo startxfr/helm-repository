@@ -1,0 +1,110 @@
+{{- if .Values.eventrouter.enabled }}
+{{- $root := . -}}
+{{- $name := .Values.eventrouter.name | default "eventrouter" -}}
+{{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
+---
+kind: ServiceAccount 
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-sa"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+---
+kind: ClusterRole 
+apiVersion: v1
+metadata:
+  name: event-reader
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "event-reader-clusterrole"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+rules:
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["get", "watch", "list"]
+---
+kind: ClusterRoleBinding  
+apiVersion: v1
+metadata:
+  name: event-reader-binding
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "event-reader-binding-clusterrolebinding"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+subjects:
+- kind: ServiceAccount
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+roleRef:
+  kind: ClusterRole
+  name: event-reader
+---
+kind: ConfigMap 
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-cm"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+data:
+  config.json: |-
+    {
+      "sink": "stdout"
+    }
+---
+kind: Deployment 
+apiVersion: apps/v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-deployment"
+    component: {{ $name | quote }}
+    logging-infra: {{ $name | quote }}
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  selector:
+    matchLabels:
+      component: {{ $name | quote }}
+      logging-infra: {{ $name | quote }}
+  replicas: {{ .Values.eventrouter.replicas | default 1 }}
+  template:
+    metadata:
+      labels:
+        component: {{ $name | quote }}
+        logging-infra: {{ $name | quote }}
+      name: {{ $name | quote }}
+    spec:
+      serviceAccount: {{ $name | quote }}
+      containers:
+        - name: kube-eventrouter
+          image: "registry.redhat.io/openshift4/ose-logging-eventrouter:latest"
+          imagePullPolicy: IfNotPresent
+          {{- if .Values.eventrouter.resources }}
+          resources:
+            {{- .Values.eventrouter.resources | nindent 12 -}}
+          {{- end }}
+          volumeMounts:
+          - name: config-volume
+            mountPath: /etc/eventrouter
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ $name | quote }}
+{{- end }}
