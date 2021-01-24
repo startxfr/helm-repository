@@ -210,3 +210,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.155 | 2021-01-23 | Debug requester creation
 | 0.3.155 | 2021-01-23 | Debug requester creation
 | 0.3.165 | 2021-01-23 | Upgrade all chart dependencies
+| 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments
