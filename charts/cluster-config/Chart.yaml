@@ -6,7 +6,7 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 0.3.169
+version: 0.3.173
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.6.13
 # Version of Openshift 
@@ -29,3 +29,11 @@ sources:
   - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config
 # Main maintainer contact for this helm chart
 maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
+
+
+dependencies:
+  - name: operator
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.3.171
+    alias: operatorElastic
+    # condition: operatorElastic.enabled

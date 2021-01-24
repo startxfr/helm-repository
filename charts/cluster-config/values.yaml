@@ -1,7 +1,7 @@
 # Default values for cluster-config.
 
 # Application deployment context
-context: 
+context: &context
   # Name of the global scope for this application (organisational tenant)
   scope: myscope
   # Name of the cluster running this application (plateform tenant)
@@ -97,3 +97,30 @@ projecttemplate:
 redhat:
   # Enable redhat operator namespace
   operators: true
+
+
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "4.6.0-202011221454.p0"
+    operator: 
+      channel: "4.6"
+      name: elasticsearch-operator
+      csv: elasticsearch-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
