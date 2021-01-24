@@ -109,3 +109,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.153 | 2021-01-23 | publish stable update for the full repository
 | 0.3.155 | 2021-01-23 | Align sxapi chart to 0.3.155 release
 | 0.3.165 | 2021-01-23 | Upgrade all chart dependencies
+| 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments
