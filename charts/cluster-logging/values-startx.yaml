@@ -8,73 +8,57 @@ context: &context
   app: openshift-logging
 logging:
   enabled: true
-  hooked: false
-  reportingOperator:
+  managementState: "Managed"
+  elasticsearch:
+    enabled: true
+    replicas: 3
+    resources: |
+      limits:
+        memory: 16Gi
+      requests:
+        cpu: 500m
+        memory: 16Gi
+    storage:
+      class: "gp2"
+      size: "200G"
+  kibana:
+    enabled: true
+    replicas: 1
+    resources: |
+      limits:
+        memory: 736Mi
+      requests:
+        cpu: 100m
+        memory: 736Mi
+  curation:
+    enabled: true
+    schedule: "30 3 * * *"
+    resources: |
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  fluentd:
     enabled: true
     resources: |
       limits:
-        cpu: 1
-        memory: 500Mi
+        memory: 736Mi
       requests:
-        cpu: 500m
-        memory: 100Mi
-  presto:
-    enabled: true
-    coordinator:
-      resources: |
-        limits:
-          cpu: 4
-          memory: 4Gi
-        requests:
-          cpu: 2
-          memory: 2Gi
-    worker:
-      resources: |
-        limits:
-          cpu: 8
-          memory: 8Gi
-        requests:
-          cpu: 4
-          memory: 2Gi
-  hive:
-    enabled: true
-    size: 5Gi
-    storageClass: ocs-storagecluster-cephfs
-    server:
-      resources: |
-        limits:
-          cpu: 1
-          memory: 1Gi
-        requests:
-          cpu: 500m
-          memory: 500Mi
-    metastore:
-      resources: |
-        limits:
-          cpu: 4
-          memory: 2Gi
-        requests:
-          cpu: 500m
-          memory: 650Mi
-  reports:
-    enabled: true
-    list: 
-    - name: namespace-cpu-usage-hourly
-      spec: |
-        query: "namespace-cpu-usage"
-        schedule:
-          period: "hourly"
-          hourly:
-            minute: 0
-            second: 0
-    - name: namespace-memory-usage-hourly
-      spec: |
-        query: "namespace-memory-usage"
-        schedule:
-          period: "hourly"
-          hourly:
-            minute: 0
-            second: 0
+        cpu: 100m
+        memory: 736Mi
+eventrouter:
+  enabled: false
+  replicas: 1
+  resources: |
+    limits:
+      cpu: 400m
+      memory: 512Mi
+    requests:
+      cpu: "100m"
+      memory: 128Mi
+logforwarder:
+  enabled: false
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -98,12 +82,20 @@ project:
       name: ops
       role: admin
   networkpolicy: 
-    enabled: false
+    enabled: true
+    rules: 
+    - id: allow-openshift-operators-redhat
+      spec: |
+        ingress:
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                project: openshift-operators-redhat
   limits: 
     enabled: false
   quotas: 
     enabled: false
-
+    
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
   enabled: false
@@ -127,3 +119,30 @@ operator:
     name: "openshift-logging"
     namespace: "openshift-logging"
     providedAPIs: "ClusterLogForwarder.v1.logging.openshift.io,ClusterLogging.v1.logging.openshift.io"
+
+
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "4.6.0-202011221454.p0"
+    operator: 
+      channel: "4.6"
+      name: elasticsearch-operator
+      csv: elasticsearch-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"

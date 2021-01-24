@@ -17,6 +17,7 @@ objects:
       labels:
         {{- include "cluster-config.labels" . | nindent 8 }}
         app.kubernetes.io/name: ${PROJECT_NAME}-project
+        openshift.io/cluster-monitoring: "true"
       annotations:
         {{- include "cluster-config.annotations" . | nindent 8 }}
         openshift.io/description: ${PROJECT_DESCRIPTION}

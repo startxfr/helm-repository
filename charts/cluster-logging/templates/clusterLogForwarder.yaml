@@ -1,0 +1,48 @@
+{{- if .Values.logforwarder.enabled }}
+{{- $root := . -}}
+{{- $name := .Values.eventrouter.name | default "instance" -}}
+{{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
+---
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-clusterlogforwarder"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  pipelines: 
+  - name: all-to-default
+    inputRefs:
+    - infrastructure
+    - application
+    - audit
+    outputRefs:
+    - default
+{{- end }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
