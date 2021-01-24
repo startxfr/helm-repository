@@ -21,11 +21,15 @@ logging:
   enabled: true
   # Activate the manager as a helm hook
   hooked: true
-  # configuration of the hive service
-  reportingOperator:
-    # Enable the deployment of the reporting-operator service
+  # set the management state to use
+  managementState: "Managed"
+  # configuration of the elasticsearch service
+  elasticsearch:
+    # Enable the deployment of the elasticsearch service
     enabled: true
-    # Resource spec for reporting-operator pods
+    # number of elasticsearch instances
+    replicas: 3
+    # Resource spec for elasticsearch pods
     resources: |
       limits:
         cpu: 1
@@ -33,74 +37,60 @@ logging:
       requests:
         cpu: 500m
         memory: 100Mi
-  # configuration of the presto service
-  presto:
-    # Enable the deployment of the presto service
+    # configuration of the storage
+    storage: 
+      # name of the storageclass to use
+      class: gp2
+      # the size of the storage to provision
+      size: "200G"
+  # configuration of the kibana service
+  kibana:
+    # Enable the deployment of the kibana service
     enabled: true
-    # Configuration of the coordinator deployment
-    coordinator:
-      # Resource spec for hive coordinator pods
-      resources: |
-        limits:
-          cpu: 4
-          memory: 4Gi
-        requests:
-          cpu: 2
-          memory: 2Gi
-    # Configuration of the worker deployment
-    worker:
-      # Resource spec for hive worker pods
-      resources: |
-        limits:
-          cpu: 8
-          memory: 8Gi
-        requests:
-          cpu: 4
-          memory: 2Gi
-  # configuration of the hive service
-  hive:
-    # Enable the deployment of the hive service
+    # number of kibana instances
+    replicas: 3
+    # Resource spec for kibana pods
+    resources: |
+      limits:
+        cpu: 1
+        memory: 500Mi
+      requests:
+        cpu: 500m
+        memory: 100Mi
+  # configuration of the curation service
+  curation:
+    # Enable the deployment of the curation service
     enabled: true
-    # Configuration of the server deployment
-    server:
-      # Resource spec for hive server pods
-      resources: |
-        limits:
-          cpu: 1
-          memory: 1Gi
-        requests:
-          cpu: 500m
-          memory: 500Mi
-    # Configuration of the metastore deployment
-    metastore:
-      # Resource spec for hive metastore pods
-      resources: |
-        limits:
-          cpu: 4
-          memory: 2Gi
-        requests:
-          cpu: 500m
-          memory: 650Mi
-    # Size of the hive storage volume
-    size: 5Gi
-    # Storage class used to provision hive storage (must be readWriteMany)
-    storageClass: gp2
-  # deploy a list of report ressources
-  reports:
-    # Enable the deployment of the hive service
+    # Configuration the schedulling of curator
+    schedule: "30 3 * * *"
+    # Resource spec for curation pods
+    resources: {}
+  # configuration of the fluentd service
+  fluentd:
+    # Enable the deployment of the fluentd service
     enabled: true
-    # Size of the hive storage volume
-    list: 
-      # Name of the report
-    - name: namespace-cpu-usage-hourly
-      # Spec of the report
-      spec: |
-        query: "namespace-cpu-usage"
-        schedule:
-          period: "hourly"
-          hourly:
-            minute: 0
-            second: 0
+    # Resource spec for fluentd pods
+    resources: {}
+
+# configuration of the eventrouter service
+eventrouter:
+  # Enable the deployment of the eventrouter service
+  enabled: false
+  # number of eventrouter instances
+  replicas: 1
+  # Resource spec for eventrouter pods
+  resources: |
+    limits:
+      cpu: 400m
+      memory: 512Mi
+    requests:
+      cpu: "100m"
+      memory: 128Mi
+
+# configuration of the logforwarder service
+logforwarder:
+  # Enable the deployment of the logforwarder service
+  enabled: false
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -151,3 +141,30 @@ operator:
     name: "logging-operator"
     namespace: "logging-operator"
     providedAPIs: "HiveTable.v1.logging.openshift.io,MeteringConfig.v1.logging.openshift.io,PrestoTable.v1.logging.openshift.io,Report.v1.logging.openshift.io,ReportDataSource.v1.logging.openshift.io,ReportQuery.v1.logging.openshift.io,StorageLocation.v1.logging.openshift.io"
+
+
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "4.6.0-202011221454.p0"
+    operator: 
+      channel: "4.6"
+      name: elasticsearch-operator
+      csv: elasticsearch-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
