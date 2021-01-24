@@ -153,3 +153,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.165 | 2021-01-23 | Upgrade all chart dependencies
 | 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments
 | 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies
+| 0.3.171 | 2021-01-24 | Align basic chart release to 0.3.171
