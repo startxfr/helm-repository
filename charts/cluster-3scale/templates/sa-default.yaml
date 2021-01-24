@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-default-serviceaccount"
   annotations: 
     {{- include "cluster-3scale.annotations" . | nindent 4 }}
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
 imagePullSecrets:
 - name: "{{- .Values.project.project.name -}}-rhn"
 {{- end -}}
