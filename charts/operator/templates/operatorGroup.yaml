@@ -16,12 +16,12 @@ metadata:
     olm.providedAPIs: {{ $providedAPIs | quote }}
     {{- if .Values.operatorGroup.hooked }}
     helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-weight: "-3"
+    helm.sh/hook-weight: "-6"
     helm.sh/hook-delete-policy: hook-failed
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "-3"
+    argocd.argoproj.io/sync-wave: "-6"
 {{- if .Values.operatorGroup.target }}
   {{- if eq .Values.operatorGroup.target "all-ns" }}
 spec: {}
