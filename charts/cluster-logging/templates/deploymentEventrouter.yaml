@@ -15,8 +15,8 @@ metadata:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "2"
 ---
-kind: ClusterRole 
-apiVersion: v1
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: event-reader
   labels:
@@ -26,12 +26,17 @@ metadata:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "2"
 rules:
-- apiGroups: [""]
-  resources: ["events"]
-  verbs: ["get", "watch", "list"]
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - get
+  - watch
+  - list
 ---
-kind: ClusterRoleBinding  
-apiVersion: v1
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: event-reader-binding
   labels:
@@ -45,6 +50,7 @@ subjects:
   name: {{ $name | quote }}
   namespace: "{{- $namespace -}}"
 roleRef:
+  apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: event-reader
 ---

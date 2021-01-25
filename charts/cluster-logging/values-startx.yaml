@@ -82,10 +82,11 @@ project:
       name: ops
       role: admin
   networkpolicy: 
-    enabled: true
+    enabled: false
     rules: 
     - id: allow-openshift-operators-redhat
       spec: |
+        podSelector: null
         ingress:
         - from:
           - namespaceSelector:
