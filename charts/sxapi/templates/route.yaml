@@ -12,6 +12,7 @@ metadata:
     haproxy.router.openshift.io/balance: roundrobin
     haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   tls:
     insecureEdgeTerminationPolicy: Allow

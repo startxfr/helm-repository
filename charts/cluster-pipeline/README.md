@@ -85,3 +85,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments
 | 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies
 | 0.3.173 | 2021-01-24 | Move all dependencies to 0.3.171 and improve cluster-logging component
+| 0.3.175 | 2021-01-25 | publish stable update for the full repository

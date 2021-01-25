@@ -214,3 +214,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies
 | 0.3.171 | 2021-01-24 | Reduce argocd wave level
 | 0.3.173 | 2021-01-24 | Move all dependencies to 0.3.171 and improve cluster-logging component
+| 0.3.175 | 2021-01-25 | publish stable update for the full repository
