@@ -8,6 +8,7 @@ metadata:
   annotations:
     {{- include "example-php.annotations" . | nindent 4 }}
     checksum/config: {{ include (print $.Template.BasePath "/cm-lib.yaml") . | sha256sum }}
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   replicas: {{ .Values.php.replicas  }}
   selector:
