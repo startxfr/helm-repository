@@ -156,3 +156,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.171 | 2021-01-24 | Align basic chart release to 0.3.171
 | 0.3.173 | 2021-01-24 | Move all dependencies to 0.3.171 and improve cluster-logging component
 | 0.3.175 | 2021-01-25 | publish stable update for the full repository
+| 0.3.176 | 2021-01-25 | publish stable update for the full repository
