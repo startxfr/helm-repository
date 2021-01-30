@@ -159,6 +159,7 @@ operatorKiali:
   operatorGroup:
     enabled: false
     hooked: false
+    target: "all-ns"
     name: "kiali-ossm"
     namespace: "openshift-operators"
     providedAPIs: "Kiali.v1alpha1.kiali.io,MonitoringDashboard.v1alpha1.monitoring.kiali.io"
@@ -185,6 +186,7 @@ operatorJaeger:
   operatorGroup:
     enabled: false
     hooked: false
+    target: "all-ns"
     name: "jaeger-operator"
     namespace: "openshift-operators"
     providedAPIs: "Jaeger.v1.jaegertracing.io"
@@ -210,6 +212,7 @@ operatorIstio:
   operatorGroup:
     enabled: true
     hooked: false
+    target: "all-ns"
     name: "global-operators"
     namespace: "openshift-operators"
     providedAPIs: "Config.v1alpha1.operator.tekton.dev,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,MonitoringDashboard.v1alpha1.monitoring.kiali.io,Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
