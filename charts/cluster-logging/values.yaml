@@ -121,26 +121,24 @@ project:
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
-  enabled: false
-  context: 
-    <<: *context
   subscription:
-    enabled: false
-    name: "logging-ocp"
-    namespace: "logging-operator"
-    version: "4.5.0-202009120215.p0"
+    enabled: true
+    name: "cluster-logging"
+    namespace: "openshift-logging"
+    version: "4.6.0-202101162152.p0"
     operator: 
-      channel: "4.5"
-      name: logging-ocp
-      csv: logging-operator
+      channel: "4.6"
+      name: cluster-logging
+      csv: clusterlogging
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
-    name: "logging-operator"
-    namespace: "logging-operator"
-    providedAPIs: "HiveTable.v1.logging.openshift.io,MeteringConfig.v1.logging.openshift.io,PrestoTable.v1.logging.openshift.io,Report.v1.logging.openshift.io,ReportDataSource.v1.logging.openshift.io,ReportQuery.v1.logging.openshift.io,StorageLocation.v1.logging.openshift.io"
+    enabled: true
+    hooked: false
+    name: "openshift-logging"
+    namespace: "openshift-logging"
+    providedAPIs: "ClusterLogForwarder.v1.logging.openshift.io,ClusterLogging.v1.logging.openshift.io"
 
 
 # Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
