@@ -17,18 +17,18 @@ operator:
     hooked: false
     name: "openshift-pipelines-operator-rh"
     namespace: "openshift-operators"
-    version: "v1.2.2"
+    version: "v1.2.3"
     operator: 
-      channel: ocp-4.6
+      channel: preview
       name: openshift-pipelines-operator-rh
       csv: redhat-openshift-pipelines-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     target: "all-ns" 
-    name: "pipeline-operators"
+    name: "global-operators"
     namespace: "openshift-operators"
     providedAPIs: "Config.v1alpha1.operator.tekton.dev"
