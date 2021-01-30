@@ -81,3 +81,4 @@ helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.173 | 2021-01-24 | Move all dependencies to 0.3.171 and improve cluster-logging component
 | 0.3.175 | 2021-01-25 | publish stable update for the full repository
 | 0.3.176 | 2021-01-25 | publish stable update for the full repository
+| 0.3.179 | 2021-01-30 | publish stable update for the full repository
