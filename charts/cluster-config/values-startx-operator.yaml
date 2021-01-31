@@ -1,0 +1,39 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context:  &context
+  scope: startx
+  cluster: localhost
+  environment: infra
+  component: config
+  app: startx-config
+autoscaling:
+  enabled: false
+clusterversion:
+  enabled: false
+alertmanager:
+  enabled: false
+imageprunner:
+  enabled: false
+projecttemplate:
+  enabled: false
+redhat:
+  operators: false
+
+operatorElastic:
+  enabled: false
+
+# Configuration of the istio operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorGlobal:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+    hooked: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "Config.v1alpha1.operator.tekton.dev,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
