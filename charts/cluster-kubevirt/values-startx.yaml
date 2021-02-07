@@ -73,12 +73,12 @@ vms:
         signature: "centos7.0"
         image: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
       storage:
-        boot_size: 15Go
+        boot_size: 15G
         boot_storageclass: aws-generic-delete
         disks: 
         - name: disk0
           storageclass: aws-generic-delete
-          size: 10Go
+          size: 10G
           boot_order: 3
       cloudInit: |
         #cloud-config
@@ -107,7 +107,7 @@ vms:
       storage:
         boot_image: "kubevirt/cirros-registry-disk-demo"
         boot_type: "containerDisk"
-        boot_size: 5Go
+        boot_size: 5G
         boot_storageclass: aws-generic-delete
       cloudInit: |
         #cloud-config
