@@ -84,9 +84,10 @@ project:
   project: 
     enabled: true
     type: namespace
-    name: kubevirt-operator
-    display_name: Operator KUBEVIRT
-    description: KUBEVIRT operators configured by startx
+    name: openshift-cnv
+    display_name: "Startx KUBEVIRT"
+    requester: startx
+    description: Kubevirt and hyperconverged features configured by STARTX
   rbac: 
     enabled: false
   networkpolicy: 
@@ -104,18 +105,21 @@ operator:
     <<: *context
   subscription:
     enabled: true
+    hooked: false
     name: "kubevirt-hyperconverged"
-    namespace: "kubevirt-operator"
-    version: "v2.4.1"
+    namespace: "openshift-cnv"
+    version: "v2.5.3"
     operator: 
-      channel: "2.4"
+      channel: "stable"
       name: kubevirt-hyperconverged
-      csv: kubevirt-hyperconverged
+      csv: kubevirt-hyperconverged-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
+    hooked: false
     name: "kubevirt"
-    namespace: "kubevirt-operator"
-    providedAPIs: "CDI.v1alpha1.cdi.kubevirt.io,HostPathProvisioner.v1alpha1.hostpathprovisioner.kubevirt.io,HyperConverged.v1alpha1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.kubevirt.io,KubevirtMetricsAggregation.v1.kubevirt.io,KubevirtNodeLabellerBundle.v1.kubevirt.io,KubevirtTemplateValidator.v1.kubevirt.io,NetworkAddonsConfig.v1alpha1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1alpha1.kubevirt.io,V2VVmware.v1alpha1.kubevirt.io"
+    namespace: "openshift-cnv"
+    providedAPIs: "CDI.v1beta1.cdi.kubevirt.io,HostPathProvisioner.v1beta1.hostpathprovisioner.kubevirt.io,HyperConverged.v1beta1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.ssp.kubevirt.io,KubevirtMetricsAggregation.v1.ssp.kubevirt.io,KubevirtNodeLabellerBundle.v1.ssp.kubevirt.io,KubevirtTemplateValidator.v1.ssp.kubevirt.io,NetworkAddonsConfig.v1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1beta1.nodemaintenance.kubevirt.io,OVirtProvider.v1alpha1.v2v.kubevirt.io,V2VVmware.v1alpha1.v2v.kubevirt.io,VMImportConfig.v1beta1.v2v.kubevirt.io"
+    
