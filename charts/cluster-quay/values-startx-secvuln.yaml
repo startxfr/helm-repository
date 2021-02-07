@@ -14,12 +14,12 @@ quay:
   enabled: false
   hooked: false
 project: 
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   project: 
-    enabled: true
     hooked: false
+    enabled: true
     type: project
     name: "startx-quaysecvuln"
     display_name: "Startx QUAYSEC"
@@ -47,9 +47,8 @@ operatorsec:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
-    target: "all-ns"
-    name: "container-security-operator"
-    namespace: "startx-quaysecvuln"
+    name: "global-operators"
+    namespace: "openshift-operators"
     providedAPIs: "ImageManifestVuln.v1alpha1.secscan.quay.redhat.com"
