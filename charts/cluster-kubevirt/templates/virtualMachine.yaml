@@ -48,7 +48,6 @@ spec:
           volumeMode: Filesystem
           accessModes:
             - ReadWriteOnce
-          dataSource: {}
           resources:
             requests:
               storage: {{ $disk_boot_size }}
@@ -62,21 +61,21 @@ spec:
     {{- $disk_name := .name | default "disk0" -}}
     {{- $disk_storageclass := .storageclass | default "gp2" -}}
     {{- $disk_size := .size | default "2G" -}}
-    - metadata:
+    - apiVersion: cdi.kubevirt.io/v1alpha1
+      kind: DataVolume
+      metadata:
         name: "{{- $name -}}-{{- $disk_name -}}"
       spec:
         pvc:
-          storageClassName: {{ $disk_storageclass | quote }}
-          volumeMode: Filesystem
           accessModes:
             - ReadWriteOnce
-          dataSource: {}
           resources:
             requests:
               storage: {{ $disk_size }}
+          storageClassName: {{ $disk_storageclass | quote }}
+          volumeMode: Filesystem
         source:
           blank: {}
-      status: {}
     {{- end }}
   {{ else }}
   dataVolumeTemplates: []
