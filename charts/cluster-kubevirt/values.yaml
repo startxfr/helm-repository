@@ -27,11 +27,54 @@ hyperconvergedCluster:
 # Configuration of VM to deploy
 vms:
   # enable deployment of VMs
-  enabled: false
+  enabled: true
   # List of VM to deploy
   list: 
       # Name of the VM to configure
     - name: "example-vm"
+      # Namespace where to deploy this VM (default is project)
+      namespace: "kubevirt-operator"
+      # hostname of this VM (default is <name>.local)
+      hostname: "example-vm.local"
+      # Operating system configuration
+      os: 
+        # Display name of the OS (default is the signature)
+        name: "CentOS 7"
+        # The signature of the OS (default is centos7.0)
+        signature: "centos7.0"
+        # The image used to boot this VM (default is https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2)
+        image: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
+      # Configuration of the storage
+      storage:
+        # Size of the root disk (default is 10Go)
+        boot_size: 15Go
+        # Storageclass to use for the root disk (default is gp2)
+        boot_storageclass: aws-generic-delete
+        # Storageclass to use for the root disk (default is gp2)
+        disks: 
+          # Unique name of the additionnal disk (default is disk0)
+        - name: disk0
+          # Storageclass to use for this disk (default is gp2)
+          storageclass: aws-generic-delete
+          # Size of the additionnal disk (default is 2Go)
+          size: 10Go
+          # Order of this disk in the boot sequence, must be > 2 (default is 3)
+          boot_order: 3
+      # Configuration of the initialisation
+      cloudInit: |
+        #cloud-config
+        name: default
+        hostname: "startx-example-vm.local"
+        users:
+          - name: demo
+            primary_group: root
+            lock_passwd: false
+            # demo user password is : demo123
+            passwd: $6$mUQY9Uxn4/FqcGPh$/tlE1cdA9rGU59MzhtK./U7gze19FlNetVdGroOrhdsQnHlJh/IR4zdX8xeICb9frlQFWvKUFaykFbWMq7tLM0
+            sudo: ALL=(ALL) NOPASSWD:ALL
+            groups: users, admin
+        
+      
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
