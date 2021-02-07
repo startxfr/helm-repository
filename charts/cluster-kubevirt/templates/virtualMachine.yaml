@@ -48,7 +48,7 @@ spec:
           volumeMode: Filesystem
           accessModes:
             - ReadWriteOnce
-          dataSource: null
+          dataSource: {}
           resources:
             requests:
               storage: {{ $disk_boot_size }}
@@ -70,7 +70,7 @@ spec:
           volumeMode: Filesystem
           accessModes:
             - ReadWriteOnce
-          dataSource: null
+          dataSource: {}
           resources:
             requests:
               storage: {{ $disk_size }}
@@ -94,7 +94,7 @@ spec:
       annotations:
         {{- include "cluster-kubevirt.annotations" $root | nindent 8 }}
     spec:
-      hostname: {{ $hostname | quote }}
+      hostname: {{ $name | quote }}
       evictionStrategy: LiveMigrate
       domain:
         machine:
