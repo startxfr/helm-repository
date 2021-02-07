@@ -37,6 +37,7 @@ metadata:
   finalizers:
     - k8s.v1.cni.cncf.io/kubeMacPool
 spec:
+  {{- if or (eq $disk_boot_type "dataVolume") .storage.disks }}
   dataVolumeTemplates:
     {{- if eq $disk_boot_type "dataVolume" }}
     - metadata:
@@ -77,6 +78,9 @@ spec:
           blank: {}
       status: {}
     {{- end }}
+  {{ else }}
+  dataVolumeTemplates: {}
+  {{- end }}
   running: true
   template:
     metadata:
