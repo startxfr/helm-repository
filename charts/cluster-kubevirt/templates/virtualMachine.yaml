@@ -8,7 +8,8 @@
 {{- $namespace := .namespace | default $defaultns -}}
 {{- $os_signature := .os.signature | default "centos7.0" -}}
 {{- $os_name := .os.name | default $os_signature -}}
-{{- $os_image := .os.image | default "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2" -}}
+{{- $disk_boot_type := .storage.boot_type | default "dataVolume" -}}
+{{- $disk_boot_image := .storage.boot_image | default "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2" -}}
 {{- $disk_boot_size := .storage.boot_size | default "10Go" -}}
 {{- $disk_boot_storageclass := .storage.boot_storageclass | default "gp2" -}}
 ---
@@ -37,6 +38,7 @@ metadata:
     - k8s.v1.cni.cncf.io/kubeMacPool
 spec:
   dataVolumeTemplates:
+    {{- if eq $disk_boot_type "dataVolume" }}
     - metadata:
         name: "{{- $name -}}-rootdisk"
       spec:
@@ -52,8 +54,9 @@ spec:
         source:
           http:
             url: >-
-              {{- $os_image | nindent 14 }}
+              {{- $disk_boot_image | nindent 14 }}
       status: {}
+    {{- end }}
     {{ range .storage.disks }}
     {{- $disk_name := .name | default "disk0" -}}
     {{- $disk_storageclass := .storageclass | default "gp2" -}}
@@ -94,7 +97,7 @@ spec:
           type: ''
         resources:
           requests:
-            memory: 2Gi
+            memory: 1Gi
         cpu:
           cores: 1
           sockets: 1
@@ -118,19 +121,25 @@ spec:
               disk:
                 bus: virtio
           interfaces:
-            - bootOrder: 2
+            - name: nic0
+              bootOrder: 2
               masquerade: {}
               model: virtio
-              name: nic0
           networkInterfaceMultiqueue: true
           rng: {}
       networks:
         - name: nic0
           pod: {}
       volumes:
+        {{- if eq $disk_boot_type "dataVolume" }}
         - name: rootdisk
           dataVolume:
             name: "{{- $name -}}-rootdisk"
+        {{- else }}
+        - name: rootdisk
+          containerDiskxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:
+            image: {{- $disk_boot_image | quote }}
+        {{- end }}
         {{ range .storage.disks }}
         {{- $disk_name := .name | default "disk0" -}}
         - name: "{{- $disk_name -}}"
