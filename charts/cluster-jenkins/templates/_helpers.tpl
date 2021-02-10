@@ -15,8 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-jenkins.notes" -}}
--- Keycloak ------------------------
-{{- if .keycloak }}{{- if .keycloak.enabled }}
-         keycloak : enabled
+-- Jenkins -------------------------
+{{- if .jenkins }}{{- if .jenkins.enabled }}
+         jenkins : enabled
 {{- end }}{{- end }}
 {{- end -}}
