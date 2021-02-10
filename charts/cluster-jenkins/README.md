@@ -1,6 +1,6 @@
 # STARTX helm : cluster-jenkins
 
-This helm chart is used to deploy Keycloak instances managed by a dedicated operator.
+This helm chart is used to deploy Jenkins instances managed by a dedicated operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -47,7 +47,7 @@ helm install startx/cluster-jenkins
 
 ## Others values availables
 
-- **startx** : Keycloak operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-jenkins/values-startx.yaml))
+- **startx** : Jenkins operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-jenkins/values-startx.yaml))
 
 ```bash
 helm install startx/cluster-jenkins -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-jenkins/values-startx.yaml
@@ -60,3 +60,4 @@ helm install startx/cluster-jenkins -f https://raw.githubusercontent.com/startxf
 | 0.3.179 | 2021-02-10 | Create chart cluster-jenkins from cluster-ptp
 | 0.3.179 | 2021-02-10 | Improve cluster-jenkins options
 | 0.3.179  | 2021-02-10 | Create chart cluster-jenkins from cluster-keycloak
+| 0.3.179 | 2021-02-10 | Improve cluster-jenkins options

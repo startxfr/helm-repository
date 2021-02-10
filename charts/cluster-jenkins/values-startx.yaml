@@ -4,9 +4,9 @@ context: &context
   scope: startx
   cluster: localhost
   environment: infra
-  component: keycloak
-  app: startx-keycloak
-keycloak:
+  component: jenkins
+  app: startx-jenkins
+jenkins:
   enabled: false
   hooked: false
   name: default
@@ -16,7 +16,7 @@ keycloak:
     # profile:
     # - name: "profile1"
     #   interface: "enp134s0f0"
-    #   keycloak4lOpts: "-s -2"
+    #   jenkins4lOpts: "-s -2"
     #   phc2sysOpts: "-a -r"
     # recommend:
     # - profile: "profile1"
@@ -31,10 +31,10 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "openshift-keycloak"
-    display_name: "Startx KEYCLOAK"
+    name: "openshift-jenkins"
+    display_name: "Startx JENKINS"
     requester: startx
-    description: Keycloak configured by STARTX
+    description: Jenkins configured by STARTX
 operator:
   enabled: false
   context: 
@@ -42,19 +42,19 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "keycloak-operator"
-    namespace: "openshift-keycloak"
+    name: "jenkins-operator"
+    namespace: "openshift-jenkins"
     version: "v3.3.4"
     operator: 
-      channel: keycloak-v3.3
-      name: keycloak-operator
-      csv: red-hat-keycloak
+      channel: jenkins-v3.3
+      name: jenkins-operator
+      csv: red-hat-jenkins
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: false
-    name: "startx-keycloak"
-    namespace: "openshift-keycloak"
-    providedAPIs: "PtpConfig.v1.keycloak.openshift.io"
+    name: "startx-jenkins"
+    namespace: "openshift-jenkins"
+    providedAPIs: "PtpConfig.v1.jenkins.openshift.io"
