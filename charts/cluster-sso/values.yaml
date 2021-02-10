@@ -11,19 +11,19 @@ context:  &context
   # Component name of this application (logical tenant)
   component: mycomponent
   # Application name (functionnal tenant, default use Chart name)
-  app: default-keycloak
+  app: default-sso
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
 # Deploy an API manager
-keycloak:
+sso:
   # Enable the configuration of the API manager
   enabled: true
   # Activate the manager as a helm hook
   hooked: true
-  # Name of the deployed instance of KeycloakConfig
+  # Name of the deployed instance of Redhat-SSOConfig
   name: default
-  # The applyed Keycloak config specifications
+  # The applyed Redhat-SSO config specifications
   spec: |
     daemonNodeSelector:
       node-role.kubernetes.io/worker: ""
@@ -38,9 +38,9 @@ project:
     enabled: false
     hooked: false
     type: project
-    name: "keycloak-operator"
-    display_name: Operator KEYCLOAK
-    description: Keycloak configured by STARTX
+    name: "sso-operator"
+    display_name: Operator SSO
+    description: Redhat-SSO configured by STARTX
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
@@ -50,20 +50,20 @@ operator:
   subscription:
     enabled: false
     hooked: false
-    name: "keycloak-operator"
-    namespace: "keycloak-operator"
+    name: "sso-operator"
+    namespace: "sso-operator"
     version: "v3.3.2-20200903"
     operator: 
-      channel: keycloak-v3.3
-      name: keycloak-operator
-      csv: red-hat-keycloak
+      channel: sso-v3.3
+      name: sso-operator
+      csv: red-hat-sso
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "keycloak-operator"
-    namespace: "openshift-keycloak"
-    providedAPIs: "PtpConfig.v1.keycloak.openshift.io"
+    name: "sso-operator"
+    namespace: "openshift-sso"
+    providedAPIs: "PtpConfig.v1.sso.openshift.io"
 

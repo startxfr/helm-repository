@@ -15,8 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-sso.notes" -}}
--- Keycloak ------------------------
-{{- if .keycloak }}{{- if .keycloak.enabled }}
-         keycloak : enabled
+-- Redhat-SSO ----------------------
+{{- if .sso }}{{- if .sso.enabled }}
+         sso : enabled
 {{- end }}{{- end }}
 {{- end -}}
