@@ -1,0 +1,25 @@
+{{- if .Values.ptp.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-ptp" -}}
+{{- $spec := .Values.ptp.spec | default "{}" -}}
+apiVersion: ptp.openshift.io/v1
+kind: PtpConfig
+metadata:
+  name: {{ .Values.ptp.name | default "quote" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-ptp.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.ptp.name | default "quote" -}}-ptpconfig"
+  annotations:
+    {{- include "cluster-ptp.annotations" . | nindent 4 }}
+    {{- if .Values.ptp.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}
