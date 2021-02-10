@@ -15,8 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-compliance.notes" -}}
--- Keycloak ------------------------
-{{- if .keycloak }}{{- if .keycloak.enabled }}
-         keycloak : enabled
+-- Compliance ----------------------
+{{- if .compliance }}{{- if .compliance.enabled }}
+         compliance : enabled
 {{- end }}{{- end }}
 {{- end -}}
