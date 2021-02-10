@@ -1,0 +1,43 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-jenkins
+# Description of this Helm chart
+description: Helm chart used to configure Keycloak at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 0.3.179
+# Version name of the keycloak operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 3.3.4
+# Version of Openshift 
+engineVersion: 4.6.13
+# Icon of this helm-chart
+icon: https://virtualmin.com/images/gears.svg
+# category associated to this package
+category: cluster
+# tags
+tags: infra,cluster,keycloak,authentification
+# Kube minimum version
+kubeVersion: ">=1.1.19"
+# Keyword list for this chart
+keywords: ["startx","cluster","keycloak","authentification"]
+# STARTX helm chart repository homepage
+home: https://startxfr.github.io/helm-repository
+# Sources and documentation for this chart
+sources:
+  - https://startxfr.github.io/helm-repository/charts/cluster-jenkins
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-jenkins
+# Main maintainer contact for this helm chart
+maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
+
+dependencies:
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.3.171
+    alias: project
+    # condition: project.enabled
+  - name: operator
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.3.171
+    alias: operator
+    # condition: operator.enabled
