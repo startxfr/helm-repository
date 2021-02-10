@@ -1,5 +1,5 @@
 
-Prrecision Time Protocol (ptp) is enabled, at the cluster level, with the following characteristics :
+Keycloak (Authentification backend) is enabled, at the cluster level, with the following characteristics :
 
 -- Context -------------------------
         scope : {{ include "startx.appScope" . }}
@@ -15,10 +15,6 @@ Prrecision Time Protocol (ptp) is enabled, at the cluster level, with the follow
 
 {{- if .Values.operator }}{{- if .Values.operator.enabled }}
 {{ include "operator.notes" .Values.operator }}
-{{- end }}{{- end }}
-
-{{- if .Values.operatorsec }}{{- if .Values.operatorsec.enabled }}
-{{ include "operator.notes" .Values.operatorsec }}
 {{- end }}{{- end }}
 
 {{ include "cluster-keycloak.notes" .Values }}

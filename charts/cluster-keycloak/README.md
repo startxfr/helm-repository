@@ -1,6 +1,6 @@
 # STARTX helm : cluster-keycloak
 
-This helm chart is used to deploy an operator based on Precision Time Protocol.
+This helm chart is used to deploy Keycloak instances managed by a dedicated operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -47,7 +47,7 @@ helm install startx/cluster-keycloak
 
 ## Others values availables
 
-- **startx** : PTP operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-keycloak/values-startx.yaml))
+- **startx** : Keycloak operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-keycloak/values-startx.yaml))
 
 ```bash
 helm install startx/cluster-keycloak -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-keycloak/values-startx.yaml
@@ -57,7 +57,5 @@ helm install startx/cluster-keycloak -f https://raw.githubusercontent.com/startx
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.179 | 2021-02-09 | Create chart cluster-keycloak from cluster-quay 
-| 0.3.179 | 2021-02-10 | Create from cluster-quay
+| 0.3.179 | 2021-02-10 | Create chart cluster-keycloak from cluster-ptp
 | 0.3.179 | 2021-02-10 | Improve cluster-keycloak options
-| 0.3.179  | 2021-02-10 | Create chart cluster-keycloak from cluster-ptp

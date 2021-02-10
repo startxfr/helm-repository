@@ -1,18 +1,18 @@
-{{- if .Values.ptp.enabled -}}
+{{- if .Values.keycloak.enabled -}}
 {{- $root := . -}}
-{{- $namespace := .Values.project.project.name | default "openshift-ptp" -}}
-{{- $spec := .Values.ptp.spec | default "{}" -}}
-apiVersion: ptp.openshift.io/v1
+{{- $namespace := .Values.project.project.name | default "openshift-keycloak" -}}
+{{- $spec := .Values.keycloak.spec | default "{}" -}}
+apiVersion: keycloak.openshift.io/v1
 kind: PtpConfig
 metadata:
-  name: {{ .Values.ptp.name | default "quote" | quote }}
+  name: {{ .Values.keycloak.name | default "quote" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-keycloak.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.ptp.name | default "quote" -}}-ptpconfig"
+    app.kubernetes.io/name: "{{- .Values.keycloak.name | default "quote" -}}-keycloakconfig"
   annotations:
     {{- include "cluster-keycloak.annotations" . | nindent 4 }}
-    {{- if .Values.ptp.hooked }}
+    {{- if .Values.keycloak.hooked }}
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed
