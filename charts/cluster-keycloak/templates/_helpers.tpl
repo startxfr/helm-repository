@@ -15,8 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-keycloak.notes" -}}
--- Precision Time Protocol ---------
-{{- if .ptp }}{{- if .ptp.enabled }}
-         ptp : enabled
+-- Keycloak ------------------------
+{{- if .keycloak }}{{- if .keycloak.enabled }}
+         keycloak : enabled
 {{- end }}{{- end }}
 {{- end -}}
