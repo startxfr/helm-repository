@@ -1,8 +1,7 @@
 # STARTX helm : cluster-rbac
 
 This helm chart is used to create a RBAC cluster configuration with group and user required as a default config fo the targeted cluster.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
-state orchestrated by gitops tools like ArgoCD.
+This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
