@@ -61,3 +61,4 @@ helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.179 | 2021-02-10 | Improve cluster-vpa options
 | 0.3.179  | 2021-02-11 | Create chart cluster-vpa from cluster-vpa
 | 0.3.179 | 2021-02-11 | Improve cluster-vpa options
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository
