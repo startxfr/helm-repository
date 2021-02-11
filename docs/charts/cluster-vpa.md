@@ -1,6 +1,6 @@
 # STARTX helm : cluster-vpa
 
-This helm chart is used to deploy VerticalPodAutoscaler instances managed by a dedicated operator.
+This helm chart is used to deploy VerticalPodAutoscaler pod managed by a dedicated operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -61,3 +61,4 @@ helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.179 | 2021-02-10 | Improve cluster-vpa options
 | 0.3.179  | 2021-02-11 | Create chart cluster-vpa from cluster-vpa
 | 0.3.179 | 2021-02-11 | Improve cluster-vpa options
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository
