@@ -59,3 +59,4 @@ helm install startx/cluster-keycloak -f https://raw.githubusercontent.com/startx
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.179 | 2021-02-10 | Create chart cluster-keycloak from cluster-ptp
 | 0.3.179 | 2021-02-10 | Improve cluster-keycloak options
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository
