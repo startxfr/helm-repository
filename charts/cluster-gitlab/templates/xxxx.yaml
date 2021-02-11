@@ -1,18 +1,18 @@
-{{- if .Values.keycloak.enabled -}}
+{{- if .Values.gitlab.enabled -}}
 {{- $root := . -}}
-{{- $namespace := .Values.project.project.name | default "openshift-keycloak" -}}
-{{- $spec := .Values.keycloak.spec | default "{}" -}}
-apiVersion: keycloak.openshift.io/v1
+{{- $namespace := .Values.project.project.name | default "openshift-gitlab" -}}
+{{- $spec := .Values.gitlab.spec | default "{}" -}}
+apiVersion: gitlab.openshift.io/v1
 kind: PtpConfig
 metadata:
-  name: {{ .Values.keycloak.name | default "quote" | quote }}
+  name: {{ .Values.gitlab.name | default "quote" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-gitlab.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.keycloak.name | default "quote" -}}-keycloakconfig"
+    app.kubernetes.io/name: "{{- .Values.gitlab.name | default "quote" -}}-gitlabconfig"
   annotations:
     {{- include "cluster-gitlab.annotations" . | nindent 4 }}
-    {{- if .Values.keycloak.hooked }}
+    {{- if .Values.gitlab.hooked }}
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed
