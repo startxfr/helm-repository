@@ -61,3 +61,4 @@ helm install startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/
 | 0.3.179 | 2021-02-10 | Improve cluster-nexus options
 | 0.3.179  | 2021-02-11 | Create chart cluster-nexus from cluster-keycloak
 | 0.3.179 | 2021-02-11 | Improve cluster-nexus options
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository
