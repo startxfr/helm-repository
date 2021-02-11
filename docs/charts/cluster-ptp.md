@@ -1,6 +1,6 @@
 # STARTX helm : cluster-ptp
 
-This helm chart is used to deploy an operator based on Precision Time Protocol.
+This helm chart is used to deploy Precision Time Protocol handled by an operator to configure node NTP configuration.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -60,3 +60,4 @@ helm install startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.179 | 2021-02-09 | Create chart cluster-ptp from cluster-quay 
 | 0.3.179 | 2021-02-10 | Create from cluster-quay
 | 0.3.179 | 2021-02-10 | Improve cluster-ptp options
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository
