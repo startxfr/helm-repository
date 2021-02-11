@@ -15,8 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-vpa.notes" -}}
--- Keycloak ------------------------
-{{- if .keycloak }}{{- if .keycloak.enabled }}
-         keycloak : enabled
+-- VerticalPodAutoscaler -----------
+{{- if .vpa }}{{- if .vpa.enabled }}
+         vpa : enabled
 {{- end }}{{- end }}
 {{- end -}}
