@@ -15,8 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-nexus.notes" -}}
--- Keycloak ------------------------
-{{- if .keycloak }}{{- if .keycloak.enabled }}
-         keycloak : enabled
+-- Nexus ---------------------------
+{{- if .nexus }}{{- if .nexus.enabled }}
+         nexus : enabled
 {{- end }}{{- end }}
 {{- end -}}

@@ -11,19 +11,19 @@ context:  &context
   # Component name of this application (logical tenant)
   component: mycomponent
   # Application name (functionnal tenant, default use Chart name)
-  app: default-keycloak
+  app: default-nexus
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
 # Deploy an API manager
-keycloak:
+nexus:
   # Enable the configuration of the API manager
   enabled: true
   # Activate the manager as a helm hook
   hooked: true
-  # Name of the deployed instance of KeycloakConfig
+  # Name of the deployed instance of NexusConfig
   name: default
-  # The applyed Keycloak config specifications
+  # The applyed Nexus config specifications
   spec: |
     daemonNodeSelector:
       node-role.kubernetes.io/worker: ""
@@ -38,9 +38,9 @@ project:
     enabled: false
     hooked: false
     type: project
-    name: "keycloak-operator"
-    display_name: Operator KEYCLOAK
-    description: Keycloak configured by STARTX
+    name: "nexus-operator"
+    display_name: Operator NEXUS
+    description: Nexus configured by STARTX
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
@@ -50,20 +50,20 @@ operator:
   subscription:
     enabled: false
     hooked: false
-    name: "keycloak-operator"
-    namespace: "keycloak-operator"
+    name: "nexus-operator"
+    namespace: "nexus-operator"
     version: "v3.3.2-20200903"
     operator: 
-      channel: keycloak-v3.3
-      name: keycloak-operator
-      csv: red-hat-keycloak
+      channel: nexus-v3.3
+      name: nexus-operator
+      csv: red-hat-nexus
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "keycloak-operator"
-    namespace: "openshift-keycloak"
-    providedAPIs: "PtpConfig.v1.keycloak.openshift.io"
+    name: "nexus-operator"
+    namespace: "openshift-nexus"
+    providedAPIs: "PtpConfig.v1.nexus.openshift.io"
 

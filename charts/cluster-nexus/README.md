@@ -1,6 +1,6 @@
 # STARTX helm : cluster-nexus
 
-This helm chart is used to deploy Keycloak instances managed by a dedicated operator.
+This helm chart is used to deploy Nexus instances managed by a dedicated operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -47,7 +47,7 @@ helm install startx/cluster-nexus
 
 ## Others values availables
 
-- **startx** : Keycloak operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml))
+- **startx** : Nexus operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml))
 
 ```bash
 helm install startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml
@@ -60,3 +60,4 @@ helm install startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/
 | 0.3.179 | 2021-02-10 | Create chart cluster-nexus from cluster-ptp
 | 0.3.179 | 2021-02-10 | Improve cluster-nexus options
 | 0.3.179  | 2021-02-11 | Create chart cluster-nexus from cluster-keycloak
+| 0.3.179 | 2021-02-11 | Improve cluster-nexus options
