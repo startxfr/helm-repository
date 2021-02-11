@@ -1,8 +1,7 @@
 # STARTX helm : cluster-workspace
 
 This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
-state orchestrated by gitops tools like ArgoCD.
+This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 

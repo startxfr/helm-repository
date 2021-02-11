@@ -1,8 +1,7 @@
 # STARTX helm : cluster-knative
 
 This helm chart is used to configure Knative at the cluster level.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
-state orchestrated by gitops tools like ArgoCD.
+This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
