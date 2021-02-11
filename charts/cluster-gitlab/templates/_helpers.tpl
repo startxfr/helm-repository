@@ -15,8 +15,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-gitlab.notes" -}}
--- Keycloak ------------------------
-{{- if .keycloak }}{{- if .keycloak.enabled }}
-         keycloak : enabled
+-- Gitlab --------------------------
+{{- if .gitlab }}{{- if .gitlab.enabled }}
+         gitlab : enabled
 {{- end }}{{- end }}
 {{- end -}}
