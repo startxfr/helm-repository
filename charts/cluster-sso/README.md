@@ -61,3 +61,4 @@ helm install startx/cluster-sso -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.179 | 2021-02-10 | Improve cluster-sso options
 | 0.3.179  | 2021-02-10 | Create chart cluster-sso from cluster-keycloak
 | 0.3.179 | 2021-02-10 | Improve cluster-sso options
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository
