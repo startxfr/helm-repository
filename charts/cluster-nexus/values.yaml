@@ -48,22 +48,23 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     hooked: false
-    name: "nexus-operator"
-    namespace: "nexus-operator"
-    version: "v3.3.2-20200903"
+    name: "nxrm-operator-certified"
+    namespace: "startx-nexus"
+    version: "v3.27.0-1"
     operator: 
-      channel: nexus-v3.3
-      name: nexus-operator
-      csv: red-hat-nexus
+      channel: stable
+      name: nxrm-operator-certified
+      csv: nxrm-operator-certified
       source: 
-        name: redhat-operators
+        name: certified-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "nexus-operator"
-    namespace: "openshift-nexus"
-    providedAPIs: "PtpConfig.v1.nexus.openshift.io"
+    target: "all-ns"
+    name: "startx-nexus"
+    namespace: "startx-nexus" 
+    providedAPIs: "NexusRepo.v1alpha1.sonatype.com"
 

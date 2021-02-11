@@ -48,22 +48,21 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     hooked: false
     name: "ptp-operator"
-    namespace: "ptp-operator"
-    version: "v3.3.2-20200903"
+    namespace: "openshift-ptp"
+    version: "4.6.0-202101300140.p0"
     operator: 
-      channel: ptp-v3.3
+      channel: "4.6"
       name: ptp-operator
-      csv: red-hat-ptp
+      csv: ptp-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "ptp-operator"
+    name: "openshift-ptp"
     namespace: "openshift-ptp"
-    providedAPIs: "PtpConfig.v1.ptp.openshift.io"
-
+    providedAPIs: "NodePtpDevice.v1.ptp.openshift.io,PtpConfig.v1.ptp.openshift.io,PtpOperatorConfig.v1.ptp.openshift.io"
