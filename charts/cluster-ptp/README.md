@@ -60,3 +60,4 @@ helm install startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.179 | 2021-02-09 | Create chart cluster-ptp from cluster-quay 
 | 0.3.179 | 2021-02-10 | Create from cluster-quay
 | 0.3.179 | 2021-02-10 | Improve cluster-ptp options
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository
