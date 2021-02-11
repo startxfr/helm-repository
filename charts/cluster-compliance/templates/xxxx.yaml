@@ -1,0 +1,25 @@
+{{- if .Values.compliance.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-compliance" -}}
+{{- $spec := .Values.compliance.spec | default "{}" -}}
+apiVersion: compliance.openshift.io/v1
+kind: PtpConfig
+metadata:
+  name: {{ .Values.compliance.name | default "quote" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-compliance.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.compliance.name | default "quote" -}}-complianceconfig"
+  annotations:
+    {{- include "cluster-compliance.annotations" . | nindent 4 }}
+    {{- if .Values.compliance.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}

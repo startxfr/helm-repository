@@ -1,0 +1,60 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: infra
+  component: vpa
+  app: startx-vpa
+vpa:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   vpa4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "openshift-vpa"
+    display_name: "Startx VPA"
+    requester: startx
+    description: VerticalPodAutoscaler configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "vpa-operator"
+    namespace: "openshift-vpa"
+    version: "v3.3.4"
+    operator: 
+      channel: vpa-v3.3
+      name: vpa-operator
+      csv: red-hat-vpa
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-vpa"
+    namespace: "openshift-vpa"
+    providedAPIs: "PtpConfig.v1.vpa.openshift.io"

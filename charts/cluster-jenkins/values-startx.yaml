@@ -1,0 +1,60 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: infra
+  component: jenkins
+  app: startx-jenkins
+jenkins:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   jenkins4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "openshift-jenkins"
+    display_name: "Startx JENKINS"
+    requester: startx
+    description: Jenkins configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "jenkins-operator"
+    namespace: "openshift-jenkins"
+    version: "v3.3.4"
+    operator: 
+      channel: jenkins-v3.3
+      name: jenkins-operator
+      csv: red-hat-jenkins
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-jenkins"
+    namespace: "openshift-jenkins"
+    providedAPIs: "PtpConfig.v1.jenkins.openshift.io"
