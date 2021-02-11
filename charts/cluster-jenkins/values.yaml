@@ -38,7 +38,7 @@ project:
     enabled: false
     hooked: false
     type: project
-    name: "jenkins-operator"
+    name: "startx-jenkins"
     display_name: Operator JENKINS
     description: Jenkins configured by STARTX
 
@@ -50,20 +50,20 @@ operator:
   subscription:
     enabled: false
     hooked: false
-    name: "jenkins-operator"
-    namespace: "jenkins-operator"
-    version: "v3.3.2-20200903"
+    name: "openshift-jenkins-operator"
+    namespace: "startx-jenkins"
+    version: "0.7.1"
     operator: 
-      channel: jenkins-v3.3
-      name: jenkins-operator
-      csv: red-hat-jenkins
+      channel: alpha
+      name: openshift-jenkins-operator
+      csv: jenkins-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "jenkins-operator"
-    namespace: "openshift-jenkins"
-    providedAPIs: "PtpConfig.v1.jenkins.openshift.io"
+    name: "startx-jenkins"
+    namespace: "startx-jenkins"
+    providedAPIs: "Backup.v1alpha2.jenkins.io,BackupConfig.v1alpha2.jenkins.io,Jenkins.v1alpha2.jenkins.io,JenkinsImage.v1alpha2.jenkins.io,Restore.v1alpha2.jenkins.io"
 
