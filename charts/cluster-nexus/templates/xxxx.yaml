@@ -1,0 +1,25 @@
+{{- if .Values.nexus.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-nexus" -}}
+{{- $spec := .Values.nexus.spec | default "{}" -}}
+apiVersion: nexus.openshift.io/v1
+kind: PtpConfig
+metadata:
+  name: {{ .Values.nexus.name | default "quote" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-nexus.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.nexus.name | default "quote" -}}-nexusconfig"
+  annotations:
+    {{- include "cluster-nexus.annotations" . | nindent 4 }}
+    {{- if .Values.nexus.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}

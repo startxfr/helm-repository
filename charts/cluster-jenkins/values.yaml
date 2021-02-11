@@ -1,0 +1,69 @@
+# Default values for cluster-jenkins.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-jenkins
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Deploy an API manager
+jenkins:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: true
+  # Name of the deployed instance of JenkinsConfig
+  name: default
+  # The applyed Jenkins config specifications
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: project
+    name: "jenkins-operator"
+    display_name: Operator JENKINS
+    description: Jenkins configured by STARTX
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+    hooked: false
+    name: "jenkins-operator"
+    namespace: "jenkins-operator"
+    version: "v3.3.2-20200903"
+    operator: 
+      channel: jenkins-v3.3
+      name: jenkins-operator
+      csv: red-hat-jenkins
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "jenkins-operator"
+    namespace: "openshift-jenkins"
+    providedAPIs: "PtpConfig.v1.jenkins.openshift.io"
+

@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![startx helm repository](https://img.shields.io/badge/latest-v0.3.179-blue.svg)](https://github.com/startxfr/helm-repository)
+[![startx helm repository](https://img.shields.io/badge/latest-v0.3.181-blue.svg)](https://github.com/startxfr/helm-repository)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 For more informations and access to the helm index, you can visit the [startx helm-repository homepage](https://startxfr.github.io/helm-repository).
@@ -20,18 +20,26 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-rbac](charts/cluster-rbac.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac)      | configure various RBAC aspects
 | **[cluster-auth](charts/cluster-auth.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth)      | configure Auth at the cluster level
 | **[cluster-console](charts/cluster-console.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-console)   | configure the openshift console at the cluster level
-| **[cluster-storage](charts/cluster-storage.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-storage)       | enable StoragesClass at the cluster level
-| **[cluster-logging](charts/cluster-logging.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-logging)    | deploy a EFK (puit de log) at the cluster level
+| **[cluster-storage](charts/cluster-storage.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-storage)   | enable StoragesClass at the cluster level
+| **[cluster-logging](charts/cluster-logging.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-logging)   | deploy a EFK (puit de log) at the cluster level
 | **[cluster-pipeline](charts/cluster-pipeline.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline)  | enable tekton pipeline at the cluster level
 | **[cluster-metering](charts/cluster-metering.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering)  | enable Metering at the cluster level
 | **[cluster-istio](charts/cluster-istio.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio)     | enable ServiceMesh at the cluster level
-| **[cluster-knative](charts/cluster-knative.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-knative)  | enable Serverless (knative) at the cluster level
+| **[cluster-knative](charts/cluster-knative.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-knative)   | enable Serverless (knative) at the cluster level
 | **[cluster-ocs](charts/cluster-ocs.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs)       | enable Openshift Container Storage at the cluster level
 | **[cluster-kubevirt](charts/cluster-kubevirt.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubevirt)  | enable kubevirt at the cluster level
 | **[cluster-vault](charts/cluster-vault.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault)     | enable hashicorp vault service at the cluster level
 | **[cluster-quay](charts/cluster-quay.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay)      | enable Quay.io private repository at the cluster level
 | **[cluster-3scale](charts/cluster-3scale.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale)    | deploy a 3Scale infrastructure at the cluster level
 | **[cluster-workspace](charts/cluster-workspace.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace) | enable codeready workspace at the cluster level
+| **[cluster-vpa](charts/cluster-vpa.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vpa)       | enable VerticalPodAutoscaler at the cluster level
+| **[cluster-sso](charts/cluster-sso.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-sso)       | enable Redhat-SSO at the cluster level
+| **[cluster-ptp](charts/cluster-ptp.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ptp)       | enable Precision Time Protocol at the cluster level
+| **[cluster-nexus](charts/cluster-nexus.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nexus)     | enable Nexus at the cluster level
+| **[cluster-keycloak](charts/cluster-keycloak.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-keycloak)  | enable Keycloak at the cluster level
+| **[cluster-jenkins](charts/cluster-jenkins.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-jenkins)   | enable Jenkins at the cluster level
+| **[cluster-gitlab](charts/cluster-gitlab.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-gitlab)    | enable Gitlab at the cluster level
+| **[cluster-compliance](charts/cluster-compliance.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-compliance) | enable Compliance at the cluster level
 
 #### Use Cluster charts
 
@@ -53,6 +61,14 @@ helm install startx/cluster-vault
 helm install startx/cluster-quay
 helm install startx/cluster-3scale
 helm install startx/cluster-workspace
+helm install startx/cluster-vpa
+helm install startx/cluster-sso
+helm install startx/cluster-ptp
+helm install startx/cluster-nexus
+helm install startx/cluster-keycloak
+helm install startx/cluster-jenkins
+helm install startx/cluster-gitlab
+helm install startx/cluster-compliance
 ```
 
 ### Basic Helm charts
@@ -153,6 +169,14 @@ helm install charts/cluster-vault
 helm install charts/cluster-quay
 helm install charts/cluster-3scale
 helm install charts/cluster-workspace
+helm install startx/cluster-vpa
+helm install startx/cluster-sso
+helm install startx/cluster-ptp
+helm install startx/cluster-nexus
+helm install startx/cluster-keycloak
+helm install startx/cluster-jenkins
+helm install startx/cluster-gitlab
+helm install startx/cluster-compliance
 helm install charts/project
 helm install charts/operator
 helm install charts/sxapi

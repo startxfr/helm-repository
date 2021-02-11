@@ -22,16 +22,92 @@ hyperconvergedCluster:
   # Activate the manager as a helm hook
   hooked: true
   # name of the hyperconverged cluster
-  name: "example-cluster"
+  name: "kubevirt-hyperconverged"
+  # name of the local storage class used as default storage
+  storageClass: "gp2-csi" 
 
 # Configuration of VM to deploy
 vms:
   # enable deployment of VMs
-  enabled: false
+  enabled: true
   # List of VM to deploy
   list: 
       # Name of the VM to configure
     - name: "example-vm"
+      # Namespace where to deploy this VM (default is project)
+      namespace: "openshift-cnv"
+      # hostname of this VM (default is <name>.local)
+      hostname: "example-vm.local"
+      # Operating system configuration
+      os: 
+        # Display name of the OS (default is the signature)
+        name: "CentOS 7"
+        # The signature of the OS (default is centos7.0)
+        signature: "centos7.0"
+      # Configuration of the storage
+      storage:
+        # The image used to boot this VM (default is https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2)
+        boot_image: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
+        # The booting type (dataVolume or containerDisk)
+        boot_type: "dataVolume"
+        # Size of the root disk (default is 10G)
+        boot_size: 15G
+        # Storageclass to use for the root disk (default is gp2)
+        boot_storageclass: aws-generic-delete
+        # Storageclass to use for the root disk (default is gp2)
+        disks: 
+          # Unique name of the additionnal disk (default is disk0)
+        - name: disk0
+          # Storageclass to use for this disk (default is gp2)
+          storageclass: aws-generic-delete
+          # Size of the additionnal disk (default is 2G)
+          size: 10G
+          # Order of this disk in the boot sequence, must be > 2 (default is 3)
+          boot_order: 3
+      # Configuration of the initialisation
+      cloudInit: |
+        #cloud-config
+        name: default
+        hostname: "startx-example-vm.local"
+        ssh_authorized_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
+        users:
+          - name: admin
+            primary_group: root
+            lock_passwd: false
+            # demo user password is : admin123
+            passwd: $6$rounds=4096$EsonsH3w1NVzaDem$w4CMlcvte6Ef.nJA95euy12/YvA.h2JWKuNbB9kXNfzQH.YpfpuKxPEBby2cvTHdjFpD0xFbHx9S.sm58jmwQ0
+            sudo: ALL=(ALL) NOPASSWD:ALL
+            ssh_authorized_keys:
+              - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
+            ssh_import_id: None
+    - name: "startx-example2-vm"
+      namespace: "openshift-cnv"
+      hostname: "startx-example2-vm.local"
+      os: 
+        name: "Fedora 31"
+        signature: "fc31.0"
+      storage:
+        boot_image: "kubevirt/cirros-registry-disk-demo"
+        boot_type: "containerDisk"
+        boot_size: 5G
+        boot_storageclass: aws-generic-delete
+      cloudInit: |
+        #cloud-config
+        name: default
+        hostname: "startx-example2-vm.local"
+        ssh_authorized_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
+        users:
+          - name: demo
+            primary_group: root
+            lock_passwd: false
+            # demo user password is : demo123
+            passwd: $6$mUQY9Uxn4/FqcGPh$/tlE1cdA9rGU59MzhtK./U7gze19FlNetVdGroOrhdsQnHlJh/IR4zdX8xeICb9frlQFWvKUFaykFbWMq7tLM0
+            sudo: ALL=(ALL) NOPASSWD:ALL
+            ssh_authorized_keys:
+              - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
+            ssh_import_id: None
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -41,9 +117,10 @@ project:
   project: 
     enabled: true
     type: namespace
-    name: kubevirt-operator
-    display_name: Operator KUBEVIRT
-    description: KUBEVIRT operators configured by startx
+    name: openshift-cnv
+    display_name: "Startx KUBEVIRT"
+    requester: startx
+    description: Kubevirt and hyperconverged features configured by STARTX
   rbac: 
     enabled: false
   networkpolicy: 
@@ -61,18 +138,20 @@ operator:
     <<: *context
   subscription:
     enabled: true
+    hooked: false
     name: "kubevirt-hyperconverged"
-    namespace: "kubevirt-operator"
-    version: "v2.4.1"
+    namespace: "openshift-cnv"
+    version: "v2.5.3"
     operator: 
-      channel: "2.4"
+      channel: "stable"
       name: kubevirt-hyperconverged
-      csv: kubevirt-hyperconverged
+      csv: kubevirt-hyperconverged-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
+    hooked: false
     name: "kubevirt"
-    namespace: "kubevirt-operator"
-    providedAPIs: "CDI.v1alpha1.cdi.kubevirt.io,HostPathProvisioner.v1alpha1.hostpathprovisioner.kubevirt.io,HyperConverged.v1alpha1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.kubevirt.io,KubevirtMetricsAggregation.v1.kubevirt.io,KubevirtNodeLabellerBundle.v1.kubevirt.io,KubevirtTemplateValidator.v1.kubevirt.io,NetworkAddonsConfig.v1alpha1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1alpha1.kubevirt.io,V2VVmware.v1alpha1.kubevirt.io"
+    namespace: "openshift-cnv"
+    providedAPIs: "CDI.v1beta1.cdi.kubevirt.io,HostPathProvisioner.v1beta1.hostpathprovisioner.kubevirt.io,HyperConverged.v1beta1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.ssp.kubevirt.io,KubevirtMetricsAggregation.v1.ssp.kubevirt.io,KubevirtNodeLabellerBundle.v1.ssp.kubevirt.io,KubevirtTemplateValidator.v1.ssp.kubevirt.io,NetworkAddonsConfig.v1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1beta1.nodemaintenance.kubevirt.io,OVirtProvider.v1alpha1.v2v.kubevirt.io,V2VVmware.v1alpha1.v2v.kubevirt.io,VMImportConfig.v1beta1.v2v.kubevirt.io"

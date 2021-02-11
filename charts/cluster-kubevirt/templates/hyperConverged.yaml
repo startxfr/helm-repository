@@ -1,13 +1,14 @@
 {{- if .Values.hyperconvergedCluster }}{{- if .Values.hyperconvergedCluster.enabled }}
 ---
 kind: HyperConverged
-apiVersion: hco.kubevirt.io/v1alpha1
+apiVersion: hco.kubevirt.io/v1beta1
 metadata:
-  name: {{ .Values.hyperconvergedCluster.name | default "kubevirt-cluster" | quote }}
+  name: {{ .Values.hyperconvergedCluster.name | default "kubevirt-hyperconverged" | quote }}
   namespace: {{ .Values.project.project.name }}
   labels:
     {{- include "cluster-kubevirt.labels" . | nindent 4 }}
     app.kubernetes.io/name: "{{- .Values.hyperconvergedCluster.name | default "kubevirt-cluster" -}}-hyperconverged"
+    app: {{ .Values.hyperconvergedCluster.name | default "kubevirt-hyperconverged" | quote }}
   annotations:
     {{- include "cluster-kubevirt.annotations" . | nindent 4 }}
     {{- if .Values.hyperconvergedCluster.hooked }}
@@ -19,5 +20,29 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "10"
 spec:
-  BareMetalPlatform: false
+  bareMetalPlatform: true
+  infra: {}
+  localStorageClassName: {{ .Values.hyperconvergedCluster.storageClass | default "gp2-csi" | quote }}
+  version: {{ .Values.operator.subscription.version | default "v2.5.3" | quote }}
+  workloads: {}
 {{- end }}{{- end }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

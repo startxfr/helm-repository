@@ -1,8 +1,7 @@
 # STARTX helm : cluster-config
 
 This helm chart is used to create a personnalized cluster configuration with various cluster level components configured as required.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
-state orchestrated by gitops tools like ArgoCD.
+This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
@@ -99,3 +98,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 0.3.175 | 2021-01-25 | publish stable update for the full repository
 | 0.3.176 | 2021-01-25 | publish stable update for the full repository
 | 0.3.179 | 2021-01-30 | publish stable update for the full repository
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository

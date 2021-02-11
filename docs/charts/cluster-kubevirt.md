@@ -1,8 +1,7 @@
 # STARTX helm : cluster-kubevirt
 
 This helm chart is used to configure code ready kubevirt via it's operator and deploy a VM into Openshift.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
-state orchestrated by gitops tools like ArgoCD.
+This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
@@ -60,3 +59,4 @@ xxxx  to do xxxxxxxx
 | 0.3.175 | 2021-01-25 | publish stable update for the full repository
 | 0.3.176 | 2021-01-25 | publish stable update for the full repository
 | 0.3.179 | 2021-01-30 | publish stable update for the full repository
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository

@@ -1,8 +1,7 @@
 # STARTX helm : cluster-quay
 
 This helm chart is used to create an operator based deployment of Quay Enterprise registry.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration
-state orchestrated by gitops tools like ArgoCD.
+This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
@@ -79,3 +78,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.175 | 2021-01-25 | publish stable update for the full repository
 | 0.3.176 | 2021-01-25 | publish stable update for the full repository
 | 0.3.179 | 2021-01-30 | publish stable update for the full repository
+| 0.3.181 | 2021-02-11 | publish stable update for the full repository
