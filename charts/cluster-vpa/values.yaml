@@ -48,22 +48,21 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     hooked: false
-    name: "vpa-operator"
-    namespace: "vpa-operator"
-    version: "v3.3.2-20200903"
+    name: "vertical-pod-autoscaler"
+    namespace: "openshift-vertical-pod-autoscaler"
+    version: "4.6.0-202101300140.p0"
     operator: 
-      channel: vpa-v3.3
-      name: vpa-operator
-      csv: red-hat-vpa
+      channel: "4.6"
+      name: vertical-pod-autoscaler
+      csv: verticalpodautoscaler
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
-    name: "vpa-operator"
-    namespace: "openshift-vpa"
-    providedAPIs: "PtpConfig.v1.vpa.openshift.io"
-
+    name: "openshift-vpa"
+    namespace: "openshift-vertical-pod-autoscaler"
+    providedAPIs: "VerticalPodAutoscaler.v1.autoscaling.k8s.io,VerticalPodAutoscalerCheckpoint.v1.autoscaling.k8s.io,VerticalPodAutoscalerController.v1.autoscaling.openshift.io"

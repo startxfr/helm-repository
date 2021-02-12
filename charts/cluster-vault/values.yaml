@@ -43,6 +43,31 @@ project:
     enabled: false
 
 
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+    hooked: false
+    name: "vault-helm"
+    namespace: "startx-vault"
+    version: "v0.0.2"
+    operator: 
+      channel: alpha
+      name: vault-helm
+      csv: vault-helm
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "startx-vault"
+    namespace: "startx-vault"
+    providedAPIs: ""
+
 # Configuration of the route
 route: 
   # Enable creating a route to expose vault gui

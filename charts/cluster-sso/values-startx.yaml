@@ -31,7 +31,7 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "openshift-sso"
+    name: "startx-sso"
     display_name: "Startx SSO"
     requester: startx
     description: Redhat-SSO configured by STARTX
@@ -40,21 +40,21 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: true
+    enabled: false
     hooked: false
-    name: "sso-operator"
-    namespace: "openshift-sso"
-    version: "v3.3.4"
+    name: "rhsso-operator"
+    namespace: "startx-sso"
+    version: "7.4.5"
     operator: 
-      channel: sso-v3.3
-      name: sso-operator
-      csv: red-hat-sso
+      channel: alpha
+      name: rhsso-operator
+      csv: rhsso-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     name: "startx-sso"
-    namespace: "openshift-sso"
-    providedAPIs: "PtpConfig.v1.sso.openshift.io"
+    namespace: "startx-sso"
+    providedAPIs: "Keycloak.v1alpha1.keycloak.org,KeycloakBackup.v1alpha1.keycloak.org,KeycloakClient.v1alpha1.keycloak.org,KeycloakRealm.v1alpha1.keycloak.org,KeycloakUser.v1alpha1.keycloak.org"

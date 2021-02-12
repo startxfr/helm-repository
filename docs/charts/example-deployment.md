@@ -132,3 +132,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 0.3.176 | 2021-01-25 | publish stable update for the full repository
 | 0.3.179 | 2021-01-30 | publish stable update for the full repository
 | 0.3.181 | 2021-02-11 | publish stable update for the full repository
+| 0.3.183 | 2021-02-12 | Unstable release for all cluster charts
