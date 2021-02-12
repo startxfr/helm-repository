@@ -27,6 +27,29 @@ project:
     - id: vault-agent-injector-sa
       name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
       role: admin
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+    hooked: false
+    name: "vault-helm"
+    namespace: "startx-vault"
+    version: "v0.0.2"
+    operator: 
+      channel: alpha
+      name: vault-helm
+      csv: vault-helm
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "startx-vault"
+    namespace: "startx-vault"
+    providedAPIs: ""
 vault:
   global:
     enabled: true
