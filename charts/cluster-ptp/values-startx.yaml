@@ -44,11 +44,11 @@ operator:
     hooked: false
     name: "ptp-operator"
     namespace: "openshift-ptp"
-    version: "v3.3.4"
+    version: "4.6.0-202101300140.p0"
     operator: 
-      channel: ptp-v3.3
+      channel: "4.6"
       name: ptp-operator
-      csv: red-hat-ptp
+      csv: ptp-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -57,4 +57,4 @@ operator:
     hooked: false
     name: "startx-ptp"
     namespace: "openshift-ptp"
-    providedAPIs: "PtpConfig.v1.ptp.openshift.io"
+    providedAPIs: "NodePtpDevice.v1.ptp.openshift.io,PtpConfig.v1.ptp.openshift.io,PtpOperatorConfig.v1.ptp.openshift.io"

@@ -51,19 +51,18 @@ operator:
     enabled: false
     hooked: false
     name: "compliance-operator"
-    namespace: "compliance-operator"
-    version: "v3.3.2-20200903"
+    namespace: "openshift-compliance"
+    version: "v0.1.24"
     operator: 
-      channel: compliance-v3.3
+      channel: "4.6"
       name: compliance-operator
-      csv: red-hat-compliance
+      csv: compliance-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "compliance-operator"
+    name: "startx-compliance"
     namespace: "openshift-compliance"
-    providedAPIs: "PtpConfig.v1.compliance.openshift.io"
-
+    providedAPIs: "ComplianceCheckResult.v1alpha1.compliance.openshift.io,ComplianceRemediation.v1alpha1.compliance.openshift.io,ComplianceScan.v1alpha1.compliance.openshift.io,ComplianceSuite.v1alpha1.compliance.openshift.io,Profile.v1alpha1.compliance.openshift.io,ProfileBundle.v1alpha1.compliance.openshift.io,Rule.v1alpha1.compliance.openshift.io,ScanSetting.v1alpha1.compliance.openshift.io,ScanSettingBinding.v1alpha1.compliance.openshift.io,TailoredProfile.v1alpha1.compliance.openshift.io,Variable.v1alpha1.compliance.openshift.io"

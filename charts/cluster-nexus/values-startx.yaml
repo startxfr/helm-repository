@@ -31,7 +31,7 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "openshift-nexus"
+    name: "startx-nexus"
     display_name: "Startx NEXUS"
     requester: startx
     description: Nexus configured by STARTX
@@ -42,19 +42,19 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "nexus-operator"
-    namespace: "openshift-nexus"
-    version: "v3.3.4"
+    name: "nxrm-operator-certified"
+    namespace: "startx-nexus"
+    version: "v3.27.0-1"
     operator: 
-      channel: nexus-v3.3
-      name: nexus-operator
-      csv: red-hat-nexus
+      channel: stable
+      name: nxrm-operator-certified
+      csv: nxrm-operator-certified
       source: 
-        name: redhat-operators
+        name: certified-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: false
     name: "startx-nexus"
-    namespace: "openshift-nexus"
-    providedAPIs: "PtpConfig.v1.nexus.openshift.io"
+    namespace: "startx-nexus"
+    providedAPIs: "NexusRepo.v1alpha1.sonatype.com"
