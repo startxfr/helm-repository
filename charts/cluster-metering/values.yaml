@@ -111,7 +111,7 @@ project:
     enabled: true
     hooked: true
     type: namespace
-    name: "metering-operator"
+    name: "openshift-metering"
     display_name: Operator METERING
     description: METERING operators configured by startx
   rbac: 
@@ -137,10 +137,10 @@ operator:
     <<: *context
   subscription:
     enabled: true
-    hooked: true
+    hooked: false
     name: "metering-ocp"
-    namespace: "metering-operator"
-    version: "4.6.0-202101190643.p0"
+    namespace: "openshift-metering"
+    version: "4.6.0-202101301510.p0"
     operator: 
       channel: "4.6"
       name: metering-ocp
@@ -150,7 +150,7 @@ operator:
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
-    hooked: true
-    name: "metering-operator"
-    namespace: "metering-operator"
+    hooked: false
+    name: "openshift-metering"
+    namespace: "openshift-metering"
     providedAPIs: "HiveTable.v1.metering.openshift.io,MeteringConfig.v1.metering.openshift.io,PrestoTable.v1.metering.openshift.io,Report.v1.metering.openshift.io,ReportDataSource.v1.metering.openshift.io,ReportQuery.v1.metering.openshift.io,StorageLocation.v1.metering.openshift.io"
