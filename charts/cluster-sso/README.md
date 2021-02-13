@@ -59,3 +59,4 @@ helm install startx/cluster-sso -f https://raw.githubusercontent.com/startxfr/he
 | ------- | ---------- | ----------------------------------------- |
 | 0.3.179 | 2021-02-10 | Create chart cluster-sso from cluster-ptp |
 | 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187    |
+| 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
