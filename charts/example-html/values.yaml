@@ -1,0 +1,74 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-html
+# # Use it to Overrride the helm-chart version
+#versionOverride: "0.0.1"
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: helm
+  # Application name (functionnal tenant, default use Chart name)
+  app: example-html
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+# configuration of the html helm chart. See html helm documentation on https://startxfr.github.io/helm-repository
+html:
+  # configuration of the service
+  service:
+    # Enable service for this application
+    enabled: true
+  # configuration of the expose service
+  expose:
+    # Enable exposition for this application
+    enabled: false
+    # Kind of backend used for exposing application
+    kind: "route"
+  # version of the image to use (available version are alpine3, ubi8, centos6, centos7, centos8, fc33 to fc26)
+  version: "alpine3"
+  debug: true 
+  replicas: 1
+  data: |
+    index.html: |-
+      <!DOCTYPE html>
+      <html lang="en-us">
+        <head>
+          <title>Default helm page</title>
+        </head>
+        <body>
+          <h1>This is the default page defined into the helm chart</h1> 
+          <h1>Information</h1> 
+          <p>
+            To change this page, read 
+            <a href="https://startxfr.github.io/helm-repository/charts/html">how to use Startx example-html chart</a>.
+          </p> 
+          <p>More informations will be provided in <a href="about.html">the about section</a>.</p> 
+        </body>
+      </html>
+    about.html: |-
+      <!DOCTYPE html>
+      <html lang="en-us">
+        <head>
+          <title>Default helm about page</title>
+        </head>
+        <body>
+          <h1>This is the default about page</h1> 
+          <h1>Information</h1> 
+          <p>
+            This page show that you can load multiple page when using the 
+            <a href="https://startxfr.github.io/helm-repository/charts/html">startx example-html helm chart</a>
+          </p> 
+          <p>
+            You can contact <a href="https://startx.fr">Startx company</a> 
+            or go to the <a href="https://startxfr.github.io/helm-repository">to get more helm chart and examples</a>.
+          </p> 
+        </body>
+      </html>

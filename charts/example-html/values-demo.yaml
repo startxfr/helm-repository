@@ -1,0 +1,57 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: helm
+  app: hpa-app
+  version: "0.0.2"
+html:
+  service:
+    enabled: true
+  expose:
+    enabled: false
+    kind: "route"
+  version: "alpine3"
+  debug: true 
+  replicas: 2
+  data: |
+    index.html: |-
+      <!DOCTYPE html>
+      <html lang="en-us">
+        <head>
+          <title>Demo helm page</title>
+        </head>
+        <body>
+          <h1>This is the demo page defined into the helm chart</h1> 
+          <h1>Information</h1> 
+          <p>
+            To change this page, read 
+            <a href="https://startxfr.github.io/helm-repository/charts/html">how to use Startx example-html chart</a>
+            and especially the values-demo.yaml configuration.
+          </p> 
+          <p>More informations will be provided in <a href="about.html">the about section</a>.</p> 
+        </body>
+      </html>
+    about.html: |-
+      <!DOCTYPE html>
+      <html lang="en-us">
+        <head>
+          <title>Default helm about page</title>
+        </head>
+        <body>
+          <h1>This is the demo about page</h1> 
+          <h1>Information</h1> 
+          <p>
+            This page show that you can load multiple page when using the 
+            <a href="https://startxfr.github.io/helm-repository/charts/html">startx example-html helm chart</a>
+            and especially the values-demo.yaml configuration.
+          </p> 
+          <p>
+            You can contact <a href="https://startx.fr">Startx company</a> 
+            or go to the <a href="https://startxfr.github.io/helm-repository">to get more helm chart and examples</a>.
+          </p> 
+        </body>
+      </html>
