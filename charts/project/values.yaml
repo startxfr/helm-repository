@@ -112,11 +112,12 @@ quotas:
       pods: "4"
       services: "2"
 
-# Configuration of the manpage using example-html helm chart (see https://startxfr.github.io/helm-repository/charts/example-html)
+# Configuration of the manpage of the project using example-html helm chart (see https://startxfr.github.io/helm-repository/charts/example-html)
 manpage:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
+    app: manpage
   html:
     namespace: default-project
     data: |
