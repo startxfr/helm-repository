@@ -22,20 +22,19 @@ context: &context
 
 # configuration of the html helm chart. See html helm documentation on https://startxfr.github.io/helm-repository
 html:
-  # configuration of the service
-  service:
-    # Enable service for this application
-    enabled: true
   # configuration of the expose service
   expose:
     # Enable exposition for this application
-    enabled: false
+    enabled: true
     # Kind of backend used for exposing application
     kind: "route"
+  # name of the namespace where to deploy the weserver (default is appName)
+  # namespace: "default"
   # version of the image to use (available version are alpine3, ubi8, centos6, centos7, centos8, fc33 to fc26)
   version: "alpine3"
-  debug: true 
+  # number of replicas (default is 1)
   replicas: 1
+  # files to server as content for the webserver
   data: |
     index.html: |-
       <!DOCTYPE html>
