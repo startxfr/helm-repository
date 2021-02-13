@@ -220,3 +220,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.181 | 2021-02-11 | publish stable update for the full repository
 | 0.3.183 | 2021-02-12 | Unstable release for all cluster charts
 | 0.3.181 | 2021-02-13 | Basic chart upgrade
+| 0.3.185 | 2021-02-13 | Improve project options
