@@ -31,3 +31,4 @@ helm install startx/cluster-acm
 | 0.3.177 | 2021-01-26 | Remove example from cluster-acm
 | 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187
 
+| 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
