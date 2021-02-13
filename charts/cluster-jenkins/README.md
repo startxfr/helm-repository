@@ -58,4 +58,4 @@ helm install startx/cluster-jenkins -f https://raw.githubusercontent.com/startxf
 | Release | Date       | Description                                   |
 | ------- | ---------- | --------------------------------------------- |
 | 0.3.179 | 2021-02-10 | Create chart cluster-jenkins from cluster-ptp |
-| 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187        |
+| 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187        || 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
