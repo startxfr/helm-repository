@@ -55,12 +55,7 @@ helm install startx/cluster-jenkins -f https://raw.githubusercontent.com/startxf
 
 ## History
 
-| Release | Date       | Description
-| ------- | ---------- | -----------------------------------------------------
-| 0.3.179 | 2021-02-10 | Create chart cluster-jenkins from cluster-ptp
-| 0.3.179 | 2021-02-10 | Improve cluster-jenkins options
-| 0.3.179  | 2021-02-10 | Create chart cluster-jenkins from cluster-keycloak
-| 0.3.179 | 2021-02-10 | Improve cluster-jenkins options
-| 0.3.181 | 2021-02-11 | publish stable update for the full repository
-| 0.3.183 | 2021-02-12 | Unstable release for all cluster charts
-| 0.3.187 | 2021-02-13 | publish stable update for the full repository
+| Release | Date       | Description                                   |
+| ------- | ---------- | --------------------------------------------- |
+| 0.3.179 | 2021-02-10 | Create chart cluster-jenkins from cluster-ptp |
+| 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187        |

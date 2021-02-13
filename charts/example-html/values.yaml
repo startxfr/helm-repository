@@ -1,0 +1,57 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-html
+# # Use it to Overrride the helm-chart version
+#versionOverride: "0.0.1"
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: helm
+  # Application name (functionnal tenant, default use Chart name)
+  app: example-html
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+# configuration of the html helm chart. See html helm documentation on https://startxfr.github.io/helm-repository
+html:
+  # namespace where application should be deployed (default use the context.app name)
+  namespace: default
+  # configuration of the expose service
+  expose:
+    # Enable exposition for this application
+    enabled: true
+    # Kind of backend used for exposing application
+    kind: "route"
+  # version of the webserver (could be alpine3, cento6, centos7, centos8, ubi8, fc27 to fc33)
+  version: "alpine3"
+  # number of replicas to deploy
+  replicas: 1
+  # list of file to expose
+  data: |
+    index.html: |-
+      <!DOCTYPE html>
+      <html lang="en-us">
+        <head>
+          <title>Default example of static page</title>
+        </head>
+        <body>
+          <h1>This is the default example static page helm chart</h1> 
+          <h1>Information</h1> 
+          <p>
+            To change this page, read 
+            <a href="https://startxfr.github.io/helm-repository/charts/example-html">how to use Startx example-html chart</a>.
+          </p> 
+          <p>
+            You can contact <a href="https://startx.fr">Startx company</a> 
+            or go to the <a href="https://startxfr.github.io/helm-repository">to get more helm chart and examples</a>.
+          </p> 
+        </body>
+      </html>
