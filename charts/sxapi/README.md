@@ -102,7 +102,7 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.81  | 2020-11-10 | Improve sxapi options
 | 0.3.119  | 2020-11-13 | Add route support with expose proerties in the values files
 | 0.3.131  | 2020-11-14 | Debug route apiVersion
-| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.142 | 2021-01-23 | Update for OCP 4.6.13
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
@@ -112,12 +112,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments
 | 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies
 | 0.3.171 | 2021-01-24 | Align basic chart release to 0.3.171
-| 0.3.173 | 2021-01-24 | Move all dependencies to 0.3.171 and improve cluster-logging component
-| 0.3.175 | 2021-01-25 | publish stable update for the full repository
-| 0.3.176 | 2021-01-25 | publish stable update for the full repository
-| 0.3.179 | 2021-01-30 | publish stable update for the full repository
-| 0.3.181 | 2021-02-11 | publish stable update for the full repository
-| 0.3.183 | 2021-02-12 | Unstable release for all cluster charts
-| 0.3.181 | 2021-02-13 | Basic chart upgrade
-| 0.3.185 | 2021-02-13 | Improve sxapi options
-| 0.3.187 | 2021-02-13 | publish stable update for the full repository
+| 0.3.187 | 2021-02-13 | Align basic chart release to 0.3.187
