@@ -1,6 +1,6 @@
 # STARTX helm : example-html
 
-This helm chart is used to create a deployment of a small an simple micro-service based on [html helm chart](https://startxfr.github.io/helm-repository/charts/html)
+This helm chart is used to create a deployment of a small webserver based on [startx apache image](https://quay.io/startx/apache)
 
 ## Requirements and guidelines
 
@@ -43,7 +43,7 @@ helm install startx/example-html
 | context.cluster     | localhost | Name of the cluster running this application (plateform tenant)
 | context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)
 | context.component   | demo      | Component name of this application (logical tenant)
-| context.app         | html      | Application name (functionnal tenant, default use Chart name)
+| context.app         | html     | Application name (functionnal tenant, default use Chart name)
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)
 
 ### example-html values dictionary
@@ -89,6 +89,14 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
-| 0.3.183 | 2021-02-13 | Create chart example-html from example-php
-| 0.3.179 | 2021-02-13 | Improve example-html options
-| 0.3.183 | 2021-02-13 | Improve example-html options
+| 0.3.117  | 2020-11-13 | Create chart example-html from example-html
+| 0.3.121  | 2020-11-14 | Add full example of html application deployed with content served from configmaps
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.141 | 2020-11-24 | publish stable update for the full repository
+| 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
+| 0.3.153 | 2021-01-23 | publish stable update for the full repository
+| 0.3.165 | 2021-01-23 | Upgrade all chart dependencies
+| 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments
+| 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies
+| 0.3.187 | 2021-02-13 | Align example chart release to 0.3.187
+| 0.3.187 | 2021-02-13 | Create from example-php
