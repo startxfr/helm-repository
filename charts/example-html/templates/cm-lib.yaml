@@ -1,0 +1,15 @@
+
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.html.namespace | default $appName -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ $appName }}-lib
+  namespace: {{ $namespace | quote }}
+  labels:
+    app.kubernetes.io/name: "{{- $appName -}}-{{- include "startx.appVersion" . -}}-lib-cm"
+    {{- include "example-html.labels" . | nindent 4 }}
+  annotations:
+    {{- include "example-html.annotations" . | nindent 4 }}
+data:
+  {{- .Values.html.data | nindent 2 }}
