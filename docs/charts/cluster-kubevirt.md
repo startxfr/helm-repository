@@ -45,9 +45,9 @@ xxxx  to do xxxxxxxx
 | 0.3.59  | 2020-11-09 | Create chart cluster-kubevirt from cluster-kubevirt
 | 0.3.61  | 2020-11-09 | Add deployment of Hyperconverged cluster via HCO operator and multiple VM via the VirtualMachine resources
 | 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
-| 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
-| 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
-| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.105 | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
+| 0.3.117 | 2020-11-12 | Move to 0.3.115 basic chart dependencies
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.151 | 2021-01-23 | Upgrade to OCP version 4.6.0
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13

@@ -198,11 +198,11 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.65  | 2020-11-09 | Add hooked option to enable/disable use of helm hook (default is disabled)
 | 0.3.81  | 2020-11-10 | Improve project options
 | 0.3.91  | 2020-11-10 | Add enable option to enable the creation of a project (default false)
-| 0.3.95  | 2020-11-11 | networkPolicy and roleBinding update
-| 0.3.115  | 2020-11-12 | Release basic chart stability updates
+| 0.3.95 | 2020-11-11 | networkPolicy and roleBinding update
+| 0.3.115 | 2020-11-12 | Release basic chart stability updates
 | 0.3.119  | 2020-11-14 | Add demo values for hpa, affinity and istio
 | 0.3.131  | 2020-11-14 | Stable values examples
-| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.142 | 2021-01-23 | Update for OCP 4.6.13
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
