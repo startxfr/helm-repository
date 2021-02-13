@@ -140,11 +140,11 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information
 | 0.3.29  | 2020-11-07 | Improve helm hook ordering cordinated with higher cluster-xxx helm chart depending on this chart
 | 0.3.65  | 2020-11-09 | Add hooked option to enable/disable use of helm hook (default is disabled)
-| 0.3.115  | 2020-11-12 | Release basic chart stability updates
-| 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
+| 0.3.115 | 2020-11-12 | Release basic chart stability updates
+| 0.3.117 | 2020-11-12 | Move to 0.3.115 basic chart dependencies
 | 0.3.119  | 2020-11-14 | Add target option for the operator group to define if targetNamespace should be local to the project or global (no namespace)
 | 0.3.131  | 2020-11-14 | Stable values examples
-| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.142 | 2021-01-23 | Update for OCP 4.6.13
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
@@ -154,11 +154,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments
 | 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies
 | 0.3.171 | 2021-01-24 | Align basic chart release to 0.3.171
-| 0.3.173 | 2021-01-24 | Move all dependencies to 0.3.171 and improve cluster-logging component
-| 0.3.175 | 2021-01-25 | publish stable update for the full repository
-| 0.3.176 | 2021-01-25 | publish stable update for the full repository
-| 0.3.179 | 2021-01-30 | publish stable update for the full repository
-| 0.3.181 | 2021-02-11 | publish stable update for the full repository
-| 0.3.183 | 2021-02-12 | Unstable release for all cluster charts
-| 0.3.185 | 2021-02-13 | Improve operator options
-| 0.3.187 | 2021-02-13 | publish stable update for the full repository
+| 0.3.187 | 2021-02-13 | Align basic chart release to 0.3.187
