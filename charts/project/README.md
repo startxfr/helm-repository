@@ -215,3 +215,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.171 | 2021-01-24 | Reduce argocd wave level
 | 0.3.187 | 2021-02-13 | Align basic chart release to 0.3.187
 | 0.3.189 | 2021-02-13 | remove manpage
+| 0.3.189 | 2021-02-13 | Align all basic charts to 0.3.189
