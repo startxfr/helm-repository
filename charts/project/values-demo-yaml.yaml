@@ -106,3 +106,26 @@ quotas:
       count/replicasets.apps: "0"
       count/daemonsets.apps: "0"
       count/deployments.apps: "0"
+
+manpage:
+  enabled: true
+  context: 
+    <<: *context
+    app: manpage
+  html:
+    namespace: startx-demo-yaml
+    data: |
+      index.html: |-
+        <!DOCTYPE html>
+        <html lang="en-us">
+          <head>
+            <title>Manpage of the YAML demo</title>
+          </head>
+          <body>
+            <h1>Manpage of the YAML demo</h1> 
+            <h1>Information</h1> 
+            <p>
+              Content TO DO
+            </p> 
+          </body>
+        </html>

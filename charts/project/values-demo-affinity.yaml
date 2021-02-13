@@ -106,3 +106,26 @@ quotas:
       count/replicasets.apps: "8"
       count/deployments.apps: "4"
       services: "4"
+
+manpage:
+  enabled: true
+  context: 
+    <<: *context
+    app: manpage
+  html:
+    namespace: startx-demo-affinity
+    data: |
+      index.html: |-
+        <!DOCTYPE html>
+        <html lang="en-us">
+          <head>
+            <title>Manpage of the Affinity demo</title>
+          </head>
+          <body>
+            <h1>Manpage of the Affinity demo</h1> 
+            <h1>Information</h1> 
+            <p>
+              Content TO DO
+            </p> 
+          </body>
+        </html>

@@ -102,3 +102,26 @@ quotas:
       count/replicasets.apps: "12"
       count/deployments.apps: "6"
       services: "6"
+
+manpage:
+  enabled: true
+  context: 
+    <<: *context
+    app: manpage
+  html:
+    namespace: startx-demo-sxapi
+    data: |
+      index.html: |-
+        <!DOCTYPE html>
+        <html lang="en-us">
+          <head>
+            <title>Manpage of the SXAPI demo</title>
+          </head>
+          <body>
+            <h1>Manpage of the SXAPI demo</h1> 
+            <h1>Information</h1> 
+            <p>
+              Content TO DO
+            </p> 
+          </body>
+        </html>
