@@ -1,0 +1,28 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: localhost
+  environment: dev
+  component: infra
+  app: startx-infra-couchbase
+enabled: true
+subscription:
+  enabled: true
+  hooked: true
+  name: "couchbase-enterprise-certified"
+  namespace: "demo-couchbase"
+  version: "v1.2.2"
+  operator: 
+    channel: stable
+    name: couchbase-enterprise-certified
+    csv: couchbase-operator
+    source: 
+      name: certified-operators
+      namespace: openshift-marketplace
+operatorGroup:
+  enabled: true
+  hooked: true
+  name: "couchbase-operator"
+  namespace: "demo-couchbase"
+  providedAPIs: "CouchbaseCluster.v1.couchbase.com"
