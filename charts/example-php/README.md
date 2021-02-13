@@ -1,6 +1,6 @@
 # STARTX helm : example-php
 
-This helm chart is used to create a deployment of a small an simple micro-service based on [php helm chart](https://startxfr.github.io/helm-repository/charts/php)
+This helm chart is used to create a deployment of a small PHP webserver based on [startx apache PHP image](https://quay.io/startx/php)
 
 ## Requirements and guidelines
 
