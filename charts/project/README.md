@@ -223,3 +223,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.185 | 2021-02-13 | Improve project options
 | 0.3.185 | 2021-02-13 | Improve project options
 | 0.3.185 | 2021-02-13 | Improve project options
+| 0.3.187 | 2021-02-13 | publish stable update for the full repository

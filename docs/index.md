@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![startx helm repository](https://img.shields.io/badge/latest-v0.3.183-blue.svg)](https://github.com/startxfr/helm-repository)
+[![startx helm repository](https://img.shields.io/badge/latest-v0.3.187-blue.svg)](https://github.com/startxfr/helm-repository)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 For more informations and access to the helm index, you can visit the [startx helm-repository homepage](https://startxfr.github.io/helm-repository).
@@ -99,6 +99,7 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 | **[example-imagestreams](charts/example-imagestreams.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-imagestreams) | An example on how to deploy multiple image streams using helm
 | **[example-knative](charts/example-knative.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-knative) | An example on how to deploy application using serverless
 | **[example-deployment](charts/example-deployment.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment) | An example on how to deploy simple applications using helm and a deployment
+| **[example-html](charts/example-html.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-html) | An example on how to deploy webserver using helm and a deployment
 | **[example-php](charts/example-php.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-php) | An example on how to deploy PHP application
 | **[example-pod](charts/example-pod.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)        | An example on how to deploy simple applications using helm and a pod
 | **[example-sxapi](charts/example-sxapi.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)      | An example on how to deploy simple micro-applications using helm and an sxapi toolkit
@@ -107,9 +108,10 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm install startx/example-deployment
+helm install startx/example-html
 helm install startx/example-imagestreams
 helm install startx/example-knative
-helm install startx/example-deployment
 helm install startx/example-php
 helm install startx/example-pod
 helm install startx/example-sxapi
@@ -181,6 +183,10 @@ helm install charts/project
 helm install charts/operator
 helm install charts/sxapi
 helm install charts/example-deployment
+helm install startx/example-html
+helm install startx/example-imagestreams
+helm install startx/example-knative
+helm install startx/example-php
 helm install charts/example-pod
 helm install charts/example-sxapi
 ```
