@@ -183,3 +183,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.179 | 2021-01-30 | publish stable update for the full repository
 | 0.3.181 | 2021-02-11 | publish stable update for the full repository
 | 0.3.183 | 2021-02-12 | Unstable release for all cluster charts
+| 0.3.187 | 2021-02-13 | publish stable update for the full repository
