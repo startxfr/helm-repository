@@ -1,0 +1,68 @@
+# Default values for cluster-couchbase.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-couchbase
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Deploy an API manager
+couchbase:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: true
+  # Name of the deployed instance of CouchbaseConfig
+  name: default
+  # The applyed Couchbase config specifications
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: project
+    name: "startx-couchbase"
+    display_name: Operator COUCHBASE
+    description: Couchbase configured by STARTX
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "couchbase-enterprise-certified"
+    namespace: "demo-couchbase"
+    version: "v1.2.2"
+    operator: 
+      channel: stable
+      name: couchbase-enterprise-certified
+      csv: couchbase-operator
+      source: 
+        name: certified-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    # target: "all-ns"
+    name: "startx-couchbase"
+    namespace: "startx-couchbase" 
+    providedAPIs: "CouchbaseCluster.v1.couchbase.com"
