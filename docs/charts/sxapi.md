@@ -114,3 +114,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.171 | 2021-01-24 | Align basic chart release to 0.3.171                                                                   |
 | 0.3.187 | 2021-02-13 | Align basic chart release to 0.3.187                                                                   |
 | 0.3.189 | 2021-02-13 | Align all basic charts to 0.3.189
+| 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
