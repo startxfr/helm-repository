@@ -1,19 +1,21 @@
-apiVersion: apps/v1
+{{- $appName := include "startx.appName" . -}}
+piVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "startx.appName" . }}
+  name: {{ $appName }}
+  namespace: {{ .Values.html.namespace | default $appName }}
   labels:
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-deployment"
+    app.kubernetes.io/name: "{{- $appName -}}-{{- include "startx.appVersion" . -}}-deployment"
     {{- include "example-html.labels" . | nindent 4 }}
   annotations:
     {{- include "example-html.annotations" . | nindent 4 }}
     checksum/config: {{ include (print $.Template.BasePath "/cm-lib.yaml") . | sha256sum }}
     argocd.argoproj.io/sync-wave: "30"
 spec:
-  replicas: {{ .Values.html.replicas  }}
+  replicas: {{ .Values.html.replicas | default "1"  }}
   selector:
     matchLabels:
-      app: {{ include "startx.appName" . }}
+      app: {{ $appName }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -22,9 +24,9 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: "{{ include "startx.appName" . }}-{{ include "startx.appVersion" . }}-pod"
+        app.kubernetes.io/name: "{{ $appName }}-{{ include "startx.appVersion" . }}-pod"
         {{- include "example-html.labels" . | nindent 8 }}
-        app: {{ include "startx.appName" . }}
+        app: {{ $appName }}
       annotations:
         {{- include "example-html.annotations" . | nindent 8 }}
     spec: 
@@ -42,7 +44,7 @@ spec:
               value: "true"
           envFrom:
             - configMapRef:
-                name: {{ include "startx.appName" . }}-app
+                name: {{ $appName }}-app
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -87,7 +89,7 @@ spec:
             medium: ""
         - name: html-deploy-conf
           configMap:
-            name: "{{ include "startx.appName" . }}-lib"
+            name: "{{ $appName }}-lib"
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst

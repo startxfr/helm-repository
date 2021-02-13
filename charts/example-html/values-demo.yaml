@@ -6,17 +6,9 @@ context: &context
   cluster: localhost
   environment: dev
   component: helm
-  app: hpa-app
+  app: html-app
   version: "0.0.2"
 html:
-  service:
-    enabled: true
-  expose:
-    enabled: false
-    kind: "route"
-  version: "alpine3"
-  debug: true 
-  replicas: 2
   data: |
     index.html: |-
       <!DOCTYPE html>
