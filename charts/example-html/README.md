@@ -90,3 +90,4 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 | Release | Date       | Description
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.183 | 2021-02-13 | Create chart example-html from example-php
+| 0.3.179 | 2021-02-13 | Improve example-html options
