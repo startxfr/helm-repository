@@ -102,7 +102,7 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.81  | 2020-11-10 | Improve sxapi options
 | 0.3.119  | 2020-11-13 | Add route support with expose proerties in the values files
 | 0.3.131  | 2020-11-14 | Debug route apiVersion
-| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.142 | 2021-01-23 | Update for OCP 4.6.13
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13

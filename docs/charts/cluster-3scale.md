@@ -79,9 +79,9 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.37  | 2020-11-07 | Improve helm hook ordering cordinated with dependencies
 | 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release
 | 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository
-| 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
-| 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies
-| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.105 | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release
+| 0.3.117 | 2020-11-12 | Move to 0.3.115 basic chart dependencies
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.151 | 2021-01-23 | Upgrade to 3Scale version 0.6.1
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
