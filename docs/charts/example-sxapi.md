@@ -131,9 +131,5 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 | 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments
 | 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies
 | 0.3.173 | 2021-01-24 | Move all dependencies to 0.3.171 and improve cluster-logging component
-| 0.3.175 | 2021-01-25 | publish stable update for the full repository
-| 0.3.176 | 2021-01-25 | publish stable update for the full repository
-| 0.3.179 | 2021-01-30 | publish stable update for the full repository
-| 0.3.181 | 2021-02-11 | publish stable update for the full repository
-| 0.3.183 | 2021-02-12 | Unstable release for all cluster charts
-| 0.3.187 | 2021-02-13 | publish stable update for the full repository
+| 0.3.187 | 2021-02-13 | Align example chart release to 0.3.187
+| 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
