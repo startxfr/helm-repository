@@ -165,7 +165,7 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | ------- | ---------- | --------------------------------------------------------------------------------- |
 | 0.3.133 | 2020-11-15 | Create chart example-imagestreams from example-imagestreams                       |
 | 0.3.135 | 2020-11-15 | Add support for loading startx and sxv4 images streams into the openshift catalog |
-| 0.3.135  | 2020-11-23 | Improve documentation for all examples charts
+| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts
 | 0.3.141 | 2020-11-24 | publish stable update for the full repository
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13
 | 0.3.153 | 2021-01-23 | publish stable update for the full repository
