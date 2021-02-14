@@ -1,7 +1,7 @@
-{{- if .Values.html.expose -}}{{- if .Values.html.expose.enabled -}}{{- if eq .Values.html.expose.kind "route" -}}
+{{- if .Values.html.expose -}}{{- if .Values.html.expose.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.html.namespace | default $appName -}}
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: {{ $appName }}
@@ -25,4 +25,4 @@ spec:
     kind: Service
     name: {{ $appName | quote }}
     weight: 100
-{{- end -}}{{- end -}}{{- end -}}
+{{- end -}}{{- end -}}
