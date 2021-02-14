@@ -4,12 +4,12 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ $appName }}
+  name: {{ $appName | quote }}
   namespace: {{ $namespace | quote }}
   labels:
     app.kubernetes.io/name: "{{- $appName -}}-{{- include "startx.appVersion" . -}}-route"
     {{- include "example-html.labels" . | nindent 4 }}
-    app: {{ $appName }}
+    app: {{ $appName | quote }}
   annotations:
     {{- include "example-html.annotations" . | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
