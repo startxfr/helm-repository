@@ -68,8 +68,11 @@ spec:
             successThreshold: 1
             failureThreshold: 2
           resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
             requests:
-              cpu: 50m
+              cpu: 25m
               memory: 32Mi
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
