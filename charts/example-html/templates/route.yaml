@@ -1,19 +1,19 @@
-{{- if .Values.html.expose -}}{{- if .Values.html.expose.enabled -}}{{- if eq .Values.html.expose.kind "route" -}}
+{{- if .Values.html.expose -}}{{- if .Values.html.expose.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.html.namespace | default $appName -}}
-apiVersion: v1
+apiVersion: "route.openshift.io/v1"
 kind: Route
 metadata:
-  name: {{ $appName }}
+  name: {{ $appName | quote }}
   namespace: {{ $namespace | quote }}
   labels:
     app.kubernetes.io/name: "{{- $appName -}}-{{- include "startx.appVersion" . -}}-route"
     {{- include "example-html.labels" . | nindent 4 }}
-    app: {{ $appName }}
+    app: {{ $appName | quote }}
   annotations:
     {{- include "example-html.annotations" . | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
-    haproxy.router.openshift.io/disable_cookies: true
+    haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
     argocd.argoproj.io/sync-wave: "30"
 spec:
@@ -25,4 +25,4 @@ spec:
     kind: Service
     name: {{ $appName | quote }}
     weight: 100
-{{- end -}}{{- end -}}{{- end -}}
+{{- end -}}{{- end -}}

@@ -15,18 +15,178 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# Deploy an API manager
-couchbase:
-  # Enable the configuration of the API manager
+# Configure the couchbase envionment
+couchbaseConfig:
+  # Enable the configuration of the couchbase environement
+  enabled: false
+  # Configuration of the serviceAccount for pod deployment
+  saPods: 
+    # Enable existence of the serviceAccount for pod deployment
+    enabled: false
+    # name of the serviceAccount for pod deployment
+    name: couchbase-pods
+  # Configuration of the serviceAccount for backup jobs
+  saBackup: 
+    # Enable existence of the serviceAccount for backup deployment
+    enabled: false
+    # name of the serviceAccount for backup deployment
+    name: couchbase-backup
+  # Configuration of the imagePull credentials
+  imageCredentials:
+    # Enable existence of the secret for imagePull credentials
+    enabled: false
+    # Registry to use for theses credentials
+    registry: registry.connect.redhat.com
+    # name of the RHN user used to pull images from redhat registry
+    username: username
+    # name of the RHN password used to pull images from redhat registry
+    password: password
+    # email associated to the RHN account used to pull images from redhat registry
+    email: my@example.com
+
+
+# Configure the couchbase envionment
+cluster:
+  # Enable the configuration of the couchbase environement
   enabled: true
-  # Activate the manager as a helm hook
-  hooked: true
-  # Name of the deployed instance of CouchbaseConfig
-  name: default
-  # The applyed Couchbase config specifications
-  spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
+  # List of cluster to deploy
+  list: 
+    # name of the cluster
+  - name: default-cluster
+    # Enable the creation and deployment of this cluster
+    enabled: true
+    # administration credentials
+    admin:
+      # administrator username
+      username: "administrator"
+      # administrator username
+      password: "administrator123"
+    # configure how to expose the web-console 
+    expose:
+      # Enable the exposure of the web-console using the router
+      enabled: true
+    # spec of the cluster configuration
+    spec: |
+      image: registry.connect.redhat.com/couchbase/server:6.5.1
+      paused: false
+      antiAffinity: true
+      softwareUpdateNotifications: true
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+      security:
+        adminSecret: default-cluster-admin-auth
+        rbac:
+          managed: true
+          selector:
+            matchLabels:
+              cluster: default-cluster
+      networking:
+        exposeAdminConsole: true
+        adminConsoleServices:
+        - data
+      buckets:
+        managed: true
+        selector:
+          matchLabels:
+            cluster: default-cluster
+      logging:
+        logRetentionTime: 604800s
+        logRetentionCount: 20
+      backup:
+        managed: false
+      volumeClaimTemplates:
+      - metadata:
+          name: couchbase
+        spec:
+          storageClassName: "gp2"
+          resources:
+            requests:
+              storage: 2Gi
+      cluster:
+        clusterName: default-cluster
+        dataServiceMemoryQuota: 750Mi
+        indexServiceMemoryQuota: 256Mi
+        searchServiceMemoryQuota: 256Mi
+        eventingServiceMemoryQuota: 256Mi
+        analyticsServiceMemoryQuota: 1Gi
+        indexStorageSetting: memory_optimized
+        autoFailoverTimeout: 120s
+        autoFailoverMaxCount: 3
+        autoFailoverOnDataDiskIssues: true
+        autoFailoverOnDataDiskIssuesTimePeriod: 120s
+        autoFailoverServerGroup: false
+      servers:
+      - name: all_services
+        size: 3
+        services:
+        - data
+        - index
+        - query
+        - search
+        - eventing
+        - analytics
+        volumeMounts:
+          default: couchbase
+          data:  couchbase
+          index: couchbase
+          analytics:
+          - couchbase
+          - couchbase
+        pod:
+          metadata:
+            labels:
+              couchbase_services: all
+            annotations:
+              couchbase.startx.fr: default
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: couchbase-pods
+            containers: []
+            imagePullSecrets:
+              - name: "startx-couchbase-rhn"
+    buckets: 
+      # name of the bucket
+    - name: "default-bucket"
+      # kind of bucket (could be couchbase, ephemeral or memcached)
+      kind: couchbase
+      # spec of the cluster configuration
+      spec: |
+        memoryQuota: 128Mi
+        replicas: 2
+        ioPriority: low
+        evictionPolicy: valueOnly
+        conflictResolution: lww
+        enableFlush: true
+        enableIndexReplica: true
+        compressionMode: passive
+    - name: "yellow-bucket"
+      kind: couchbase
+      spec: |
+        memoryQuota: 128Mi
+        replicas: 2
+        ioPriority: low
+        evictionPolicy: valueOnly
+        conflictResolution: lww
+        enableFlush: true
+        enableIndexReplica: true
+        compressionMode: passive
+    - name: "orange-back-bucket"
+      kind: ephemeral
+      spec: |
+        memoryQuota: 100Mi
+        replicas: 2
+        ioPriority: low
+        evictionPolicy: noEviction
+        conflictResolution: lww
+        enableFlush: false
+        compressionMode: passive
+    - name: "black-bucket"
+      kind: memcached
+      spec: |
+        memoryQuota: 100Mi
+        enableFlush: false
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -34,12 +194,12 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: project
-    name: "startx-couchbase"
-    display_name: Operator COUCHBASE
-    description: Couchbase configured by STARTX
+    name: "demo-couchbase"
+    display_name: "Demo COUCHBASE"
+    description: Demo Couchbase configured by STARTX
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
@@ -51,7 +211,7 @@ operator:
     hooked: false
     name: "couchbase-enterprise-certified"
     namespace: "demo-couchbase"
-    version: "v1.2.2"
+    version: "v2.1.0"
     operator: 
       channel: stable
       name: couchbase-enterprise-certified
@@ -60,9 +220,9 @@ operator:
         name: certified-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
-    # target: "all-ns"
-    name: "startx-couchbase"
-    namespace: "startx-couchbase" 
-    providedAPIs: "CouchbaseCluster.v1.couchbase.com"
+    name: "couchbase-operator-v2"
+    namespace: "demo-couchbase"
+    providedAPIs: "CouchbaseAutoscaler.v2.couchbase.com,CouchbaseBackup.v2.couchbase.com,CouchbaseBackupRestore.v2.couchbase.com,CouchbaseBucket.v2.couchbase.com,CouchbaseCluster.v2.couchbase.com,CouchbaseEphemeralBucket.v2.couchbase.com,CouchbaseGroup.v2.couchbase.com,CouchbaseMemcachedBucket.v2.couchbase.com,CouchbaseReplication.v2.couchbase.com,CouchbaseRoleBinding.v2.couchbase.com,CouchbaseUser.v2.couchbase.com"
+
