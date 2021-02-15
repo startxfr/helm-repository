@@ -59,3 +59,4 @@ helm install startx/cluster-couchbase -f https://raw.githubusercontent.com/start
 | ------- | ---------- | ------------------------------------------- |
 | 0.3.187 | 2021-02-13 | Create cluster-couchbase skeleton from cluster-vault
 | 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
+| 0.3.193 | 2021-02-16 | Support for couchbase cluster deployment
