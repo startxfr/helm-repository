@@ -1,0 +1,128 @@
+{{- if .Values.couchbaseConfig }}{{- if .Values.couchbaseConfig.enabled }}{{- if .Values.couchbaseConfig.saBackup -}}{{- if .Values.couchbaseConfig.saBackup.enabled }}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $name := .Values.couchbaseConfig.saBackup.name | default "couchbase-backup" -}}
+{{- $ns := .Values.project.project.name | default .Chart.Name -}}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+rules:
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  - cronjobs
+  verbs:
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - couchbase.com
+  resources:
+  - couchbaseclusters
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+- apiGroups:
+  - couchbase.com
+  resources:
+  - couchbasebuckets
+  - couchbaseephemeralbuckets
+  - couchbasememcachedbuckets
+  - couchbasereplications
+  - couchbaseusers
+  - couchbasegroups
+  - couchbaserolebindings
+  - couchbasebackups
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - couchbase.com
+  resources:
+  - couchbasebackuprestores
+  verbs:
+  - list
+  - watch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - create
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - persistentvolumeclaims
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - list
+  - create
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - get
+  - create
+  - delete
+  - list
+  - watch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "{{- $name -}}"
+subjects:
+- kind: ServiceAccount
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+{{- end -}}{{- end -}}{{- end -}}{{- end }}

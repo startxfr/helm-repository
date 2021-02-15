@@ -15,7 +15,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-couchbase.notes" -}}
--- Couchbase ---------------------------
+-- Couchbase -----------------------
 {{- if .couchbase }}{{- if .couchbase.enabled }}
          couchbase : enabled
 {{- end }}{{- end }}
