@@ -138,7 +138,7 @@ cluster:
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
     buckets: 
-    - name: "yellow-back-bucket"
+    - name: "purple-bucket"
       kind: couchbase
       spec: |
         memoryQuota: 128Mi
@@ -148,16 +148,6 @@ cluster:
         conflictResolution: lww
         enableFlush: true
         enableIndexReplica: true
-        compressionMode: passive
-    - name: "orange-bucket"
-      kind: ephemeral
-      spec: |
-        memoryQuota: 100Mi
-        replicas: 2
-        ioPriority: low
-        evictionPolicy: noEviction
-        conflictResolution: lww
-        enableFlush: false
         compressionMode: passive
 
 project: 
