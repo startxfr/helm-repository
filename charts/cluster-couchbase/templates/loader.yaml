@@ -1,0 +1,42 @@
+{{- if .Values.loader }}{{- if .Values.loader.enabled }}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $ns := .Values.project.project.name | default .Chart.Name -}}
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: "{{- $ns -}}-loader"
+  namespace: "{{- $ns -}}"
+spec:
+  restartPolicy: Never
+{{- if .Values.couchbaseConfig.saPods -}}{{- if .Values.couchbaseConfig.saPods.enabled }}
+{{- $name := .Values.couchbaseConfig.saPods.name | default "couchbase-pods" -}}
+  serviceAccountName: "{{- $name -}}"
+  serviceAccount: "{{- $name -}}"
+{{- end -}}{{- end }}
+{{- if .Values.couchbaseConfig.imageCredentials -}}{{- if .Values.couchbaseConfig.imageCredentials.enabled }}
+  imagePullSecrets:
+    - name: "{{- $ns -}}-rhn"
+{{- end -}}{{- end }}
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+    fsGroup: 1000
+  containers:
+    - name: loader
+      image: registry.connect.redhat.com/couchbase/server
+      imagePullPolicy: IfNotPresent
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+{{- .Values.loader.command | nindent 10 }}
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 512Mi
+        requests:
+          cpu: 50m
+          memory: 256Mi
+{{- end -}}{{- end }}

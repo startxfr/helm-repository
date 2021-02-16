@@ -22,6 +22,25 @@ couchbaseConfig:
     password: 8password
     email: cl@startx.fr
 
+loader:
+  enabled: false
+  command: | 
+    #!/bin/bash
+    WORKLOAD_CONF=" --threads=2 -r .9 -i 100000 -s 100"
+    CREDS=" -u administrator -p administrator123"
+    CLUSTER=venus-cluster
+    BUCKET=yellow-back-bucket
+    echo "Load $CLUSTER : Bucket $BUCKET"
+    cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+    BUCKET=orange-bucket
+    echo "Load $CLUSTER : Bucket $BUCKET"
+    cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+    CLUSTER=mercury-cluster
+    BUCKET=yellow-bucket
+    echo "Load $CLUSTER : Bucket $BUCKET"
+    cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+    exit 0;
+
 cluster:
   enabled: false
   list: []
