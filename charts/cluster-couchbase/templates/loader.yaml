@@ -11,7 +11,7 @@ metadata:
 spec:
   restartPolicy: Never
 {{- if .Values.couchbaseConfig.saPods -}}{{- if .Values.couchbaseConfig.saPods.enabled }}
-{{- $name := .Values.couchbaseConfig.saPods.name | default "couchbase-pods" -}}
+{{- $name := .Values.couchbaseConfig.saPods.name | default "couchbase-pods" }}
   serviceAccountName: "{{- $name -}}"
   serviceAccount: "{{- $name -}}"
 {{- end -}}{{- end }}
