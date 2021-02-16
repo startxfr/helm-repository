@@ -25,7 +25,7 @@ couchbaseConfig:
 cluster:
   enabled: true
   list: 
-  - name: mars-cluster
+  - name: startx-dev-cluster
     enabled: true
     admin:
       username: "administrator"
@@ -46,12 +46,12 @@ cluster:
         runAsNonRoot: true
         fsGroup: 1000
       security:
-        adminSecret: mars-cluster-admin-auth
+        adminSecret: startx-dev-cluster-admin-auth
         rbac:
           managed: true
           selector:
             matchLabels:
-              cluster: mars-cluster
+              cluster: startx-dev-cluster
       networking:
         exposeAdminConsole: true
         adminConsoleServices:
@@ -60,7 +60,7 @@ cluster:
         managed: true
         selector:
           matchLabels:
-            cluster: mars-cluster
+            cluster: startx-dev-cluster
       logging:
         logRetentionTime: 604800s
         logRetentionCount: 20
@@ -74,7 +74,7 @@ cluster:
             memory: 100Mi
         selector:
           matchLabels:
-            cluster: mars-cluster
+            cluster: startx-dev-cluster
       volumeClaimTemplates:
       - metadata:
           name: couchbase
@@ -84,7 +84,7 @@ cluster:
             requests:
               storage: 2Gi
       cluster:
-        clusterName: mars-cluster
+        clusterName: startx-dev-cluster
         dataServiceMemoryQuota: 750Mi
         indexServiceMemoryQuota: 256Mi
         searchServiceMemoryQuota: 256Mi
@@ -142,7 +142,7 @@ cluster:
             labels:
               couchbase_services: all
             annotations:
-              couchbase.startx.fr: mars
+              couchbase.startx.fr: startx-dev
           spec:
             automountServiceAccountToken: false
             serviceAccountName: couchbase-pods
@@ -176,7 +176,7 @@ cluster:
       spec: |
         memoryQuota: 100Mi
         enableFlush: false
-  - name: venus-cluster
+  - name: startx-prod-cluster
     enabled: true
     admin:
       username: "administrator"
@@ -197,12 +197,12 @@ cluster:
         runAsNonRoot: true
         fsGroup: 1000
       security:
-        adminSecret: venus-cluster-admin-auth
+        adminSecret: startx-prod-cluster-admin-auth
         rbac:
           managed: true
           selector:
             matchLabels:
-              cluster: venus-cluster
+              cluster: startx-prod-cluster
       networking:
         exposeAdminConsole: true
         adminConsoleServices:
@@ -211,7 +211,7 @@ cluster:
         managed: true
         selector:
           matchLabels:
-            cluster: venus-cluster
+            cluster: startx-prod-cluster
       logging:
         logRetentionTime: 604800s
         logRetentionCount: 20
@@ -225,7 +225,7 @@ cluster:
             memory: 100Mi
         selector:
           matchLabels:
-            cluster: venus-cluster
+            cluster: startx-prod-cluster
       volumeClaimTemplates:
       - metadata:
           name: couchbase
@@ -235,7 +235,7 @@ cluster:
             requests:
               storage: 2Gi
       cluster:
-        clusterName: venus-cluster
+        clusterName: startx-prod-cluster
         dataServiceMemoryQuota: 512Mi
         indexServiceMemoryQuota: 256Mi
         searchServiceMemoryQuota: 256Mi
@@ -293,7 +293,7 @@ cluster:
             labels:
               couchbase_services: all
             annotations:
-              couchbase.startx.fr: venus
+              couchbase.startx.fr: startx-prod
           spec:
             automountServiceAccountToken: false
             serviceAccountName: couchbase-pods

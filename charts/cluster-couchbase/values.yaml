@@ -50,117 +50,117 @@ cluster:
   # Enable the configuration of the couchbase environement
   enabled: false
   # List of cluster to deploy
-  list: 
-    # name of the cluster
-  - name: default-cluster
-    # Enable the creation and deployment of this cluster
-    enabled: true
-    # administration credentials
-    admin:
-      # administrator username
-      username: "administrator"
-      # administrator username
-      password: "administrator123"
-    # configure how to expose the web-console 
-    expose:
-      # Enable the exposure of the web-console using the router
-      enabled: true
-    # spec of the cluster configuration
-    spec: |
-      image: registry.connect.redhat.com/couchbase/server:6.5.1
-      paused: false
-      antiAffinity: true
-      softwareUpdateNotifications: true
-      securityContext:
-        runAsUser: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
-      security:
-        adminSecret: default-cluster-admin-auth
-        rbac:
-          managed: true
-          selector:
-            matchLabels:
-              cluster: default-cluster
-      networking:
-        exposeAdminConsole: true
-        adminConsoleServices:
-        - data
-      buckets:
-        managed: true
-        selector:
-          matchLabels:
-            cluster: default-cluster
-      logging:
-        logRetentionTime: 604800s
-        logRetentionCount: 20
-      backup:
-        managed: false
-      volumeClaimTemplates:
-      - metadata:
-          name: couchbase
-        spec:
-          storageClassName: "gp2"
-          resources:
-            requests:
-              storage: 2Gi
-      cluster:
-        clusterName: default-cluster
-        dataServiceMemoryQuota: 750Mi
-        indexServiceMemoryQuota: 256Mi
-        searchServiceMemoryQuota: 256Mi
-        eventingServiceMemoryQuota: 256Mi
-        analyticsServiceMemoryQuota: 1Gi
-        indexStorageSetting: memory_optimized
-        autoFailoverTimeout: 120s
-        autoFailoverMaxCount: 3
-        autoFailoverOnDataDiskIssues: true
-        autoFailoverOnDataDiskIssuesTimePeriod: 120s
-        autoFailoverServerGroup: false
-      servers:
-      - name: all_services
-        size: 3
-        services:
-        - data
-        - index
-        - query
-        - search
-        - eventing
-        - analytics
-        volumeMounts:
-          default: couchbase
-          data:  couchbase
-          index: couchbase
-          analytics:
-          - couchbase
-          - couchbase
-        pod:
-          metadata:
-            labels:
-              couchbase_services: all
-            annotations:
-              couchbase.startx.fr: default
-          spec:
-            automountServiceAccountToken: false
-            serviceAccountName: couchbase-pods
-            containers: []
-            imagePullSecrets:
-              - name: "startx-couchbase-rhn"
-    buckets: 
-      # name of the bucket
-    - name: "default-bucket"
-      # kind of bucket (could be couchbase, ephemeral or memcached)
-      kind: couchbase
-      # spec of the cluster configuration
-      spec: |
-        memoryQuota: 128Mi
-        replicas: 2
-        ioPriority: low
-        evictionPolicy: valueOnly
-        conflictResolution: lww
-        enableFlush: true
-        enableIndexReplica: true
-        compressionMode: passive
+  list: []
+  #   # name of the cluster
+  # - name: default-cluster
+  #   # Enable the creation and deployment of this cluster
+  #   enabled: true
+  #   # administration credentials
+  #   admin:
+  #     # administrator username
+  #     username: "administrator"
+  #     # administrator username
+  #     password: "administrator123"
+  #   # configure how to expose the web-console 
+  #   expose:
+  #     # Enable the exposure of the web-console using the router
+  #     enabled: true
+  #   # spec of the cluster configuration
+  #   spec: |
+  #     image: registry.connect.redhat.com/couchbase/server:6.5.1
+  #     paused: false
+  #     antiAffinity: true
+  #     softwareUpdateNotifications: true
+  #     securityContext:
+  #       runAsUser: 1000
+  #       runAsNonRoot: true
+  #       fsGroup: 1000
+  #     security:
+  #       adminSecret: default-cluster-admin-auth
+  #       rbac:
+  #         managed: true
+  #         selector:
+  #           matchLabels:
+  #             cluster: default-cluster
+  #     networking:
+  #       exposeAdminConsole: true
+  #       adminConsoleServices:
+  #       - data
+  #     buckets:
+  #       managed: true
+  #       selector:
+  #         matchLabels:
+  #           cluster: default-cluster
+  #     logging:
+  #       logRetentionTime: 604800s
+  #       logRetentionCount: 20
+  #     backup:
+  #       managed: false
+  #     volumeClaimTemplates:
+  #     - metadata:
+  #         name: couchbase
+  #       spec:
+  #         storageClassName: "gp2"
+  #         resources:
+  #           requests:
+  #             storage: 2Gi
+  #     cluster:
+  #       clusterName: default-cluster
+  #       dataServiceMemoryQuota: 750Mi
+  #       indexServiceMemoryQuota: 256Mi
+  #       searchServiceMemoryQuota: 256Mi
+  #       eventingServiceMemoryQuota: 256Mi
+  #       analyticsServiceMemoryQuota: 1Gi
+  #       indexStorageSetting: memory_optimized
+  #       autoFailoverTimeout: 120s
+  #       autoFailoverMaxCount: 3
+  #       autoFailoverOnDataDiskIssues: true
+  #       autoFailoverOnDataDiskIssuesTimePeriod: 120s
+  #       autoFailoverServerGroup: false
+  #     servers:
+  #     - name: all_services
+  #       size: 3
+  #       services:
+  #       - data
+  #       - index
+  #       - query
+  #       - search
+  #       - eventing
+  #       - analytics
+  #       volumeMounts:
+  #         default: couchbase
+  #         data:  couchbase
+  #         index: couchbase
+  #         analytics:
+  #         - couchbase
+  #         - couchbase
+  #       pod:
+  #         metadata:
+  #           labels:
+  #             couchbase_services: all
+  #           annotations:
+  #             couchbase.startx.fr: default
+  #         spec:
+  #           automountServiceAccountToken: false
+  #           serviceAccountName: couchbase-pods
+  #           containers: []
+  #           imagePullSecrets:
+  #             - name: "startx-couchbase-rhn"
+  #   buckets: 
+  #     # name of the bucket
+  #   - name: "default-bucket"
+  #     # kind of bucket (could be couchbase, ephemeral or memcached)
+  #     kind: couchbase
+  #     # spec of the cluster configuration
+  #     spec: |
+  #       memoryQuota: 128Mi
+  #       replicas: 2
+  #       ioPriority: low
+  #       evictionPolicy: valueOnly
+  #       conflictResolution: lww
+  #       enableFlush: true
+  #       enableIndexReplica: true
+  #       compressionMode: passive
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
