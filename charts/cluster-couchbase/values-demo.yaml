@@ -8,7 +8,7 @@ context: &context
   app: demo-couchbase
 
 couchbaseConfig:
-  enabled: true
+  enabled: false
   saPods: 
     enabled: true
     name: couchbase-pods
@@ -36,9 +36,20 @@ loader:
     echo "Load $CLUSTER : Bucket $BUCKET"
     cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
     CLUSTER=mercury-cluster
+    BUCKET=purple-bucket
+    echo "Load $CLUSTER : Bucket $BUCKET"
+    cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+    CLUSTER=jupiter-cluster
+    BUCKET=orange-back-bucket
+    echo "Load $CLUSTER : Bucket $BUCKET"
+    cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
     BUCKET=yellow-bucket
     echo "Load $CLUSTER : Bucket $BUCKET"
     cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+    BUCKET=black-bucket
+    echo "Load $CLUSTER : Bucket $BUCKET"
+    cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+    echo "End of the workload test"
     exit 0;
 
 cluster:
