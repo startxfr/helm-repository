@@ -44,6 +44,15 @@ couchbaseConfig:
     # email associated to the RHN account used to pull images from redhat registry
     email: my@example.com
 
+# Configure the loader pod
+loader:
+  # Enable the configuration of the couchbase workloader
+  enabled: false
+  # Command to execute for the test
+  command: | 
+    #!/bin/bash
+    echo "write your workload script..." 
+    exit 0;
 
 # Configure the couchbase envionment
 cluster:
