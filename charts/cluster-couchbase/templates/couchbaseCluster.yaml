@@ -8,19 +8,20 @@
 {{- range .Values.cluster.list }}
 {{- $name := .name | default "default-cluster" -}}
 {{- if .enabled -}}
+
 {{/* Create the admin secret if credentials are set */}}
 {{- if .admin -}}{{- if .admin.username }}{{- if .admin.password }}
-{{- $username := .admin.username | default "admin" -}}
-{{- $password := .admin.password | default "password123" -}}
+{{- $username := .admin.username | default "admin" }}
+{{- $password := .admin.password | default "password123" }}
 ---
 kind: Secret
 apiVersion: v1
 metadata:
-  name: "{{- $ns -}}-rhn"
+  name: "{{- $name -}}-admin-auth"
   namespace: "{{- $ns -}}"
   labels:
     {{- include "cluster-couchbase.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- $ns -}}-rhn-secret"
+    app.kubernetes.io/name: "{{- $name -}}-admin-auth-secret"
   annotations:
     {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
     template.openshift.io/expose-username: "{.data['username']}"
