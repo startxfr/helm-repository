@@ -161,32 +161,6 @@ cluster:
         enableFlush: true
         enableIndexReplica: true
         compressionMode: passive
-    - name: "yellow-bucket"
-      kind: couchbase
-      spec: |
-        memoryQuota: 128Mi
-        replicas: 2
-        ioPriority: low
-        evictionPolicy: valueOnly
-        conflictResolution: lww
-        enableFlush: true
-        enableIndexReplica: true
-        compressionMode: passive
-    - name: "orange-back-bucket"
-      kind: ephemeral
-      spec: |
-        memoryQuota: 100Mi
-        replicas: 2
-        ioPriority: low
-        evictionPolicy: noEviction
-        conflictResolution: lww
-        enableFlush: false
-        compressionMode: passive
-    - name: "black-bucket"
-      kind: memcached
-      spec: |
-        memoryQuota: 100Mi
-        enableFlush: false
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
