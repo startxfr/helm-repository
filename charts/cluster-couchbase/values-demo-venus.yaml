@@ -101,15 +101,42 @@ cluster:
             abortCompactionOutsideWindow: true
           tombstonePurgeInterval: 72h
       servers:
-      - name: all_services
+      - name: data
         size: 3
         services:
         - data
+        serverGroups:
+        - eu-west-2a
+        - eu-west-2b
+        - eu-west-2c
+        resources:
+          limits:
+            cpu: "800m"
+            memory: 3Gi
+          requests:
+            cpu: "200m"
+            memory: 1Gi
+        volumeMounts:
+          default: couchbase
+          data:  couchbase
+        pod:
+          metadata:
+            labels:
+              couchbase_services: data
+            annotations:
+              couchbase.startx.fr: venus
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: couchbase-pods
+            containers: []
+            imagePullSecrets:
+              - name: "startx-couchbase-rhn"
+      - name: advanced
+        size: 3
+        services:
         - index
         - query
-        - search
         - eventing
-        - analytics
         serverGroups:
         - eu-west-2a
         - eu-west-2b
@@ -117,21 +144,17 @@ cluster:
         resources:
           limits:
             cpu: "1500m"
-            memory: 5Gi
+            memory: 2Gi
           requests:
             cpu: "400m"
-            memory: 3Gi
+            memory: 1Gi
         volumeMounts:
           default: couchbase
-          data:  couchbase
           index: couchbase
-          analytics:
-          - couchbase
-          - couchbase
         pod:
           metadata:
             labels:
-              couchbase_services: all
+              couchbase_services: index,query,eventing
             annotations:
               couchbase.startx.fr: venus
           spec:
