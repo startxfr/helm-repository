@@ -54,18 +54,9 @@ cluster:
             cluster: mercury-cluster
       logging:
         logRetentionTime: 604800s
-        logRetentionCount: 20
+        logRetentionCount: 10
       backup:
-        managed: true
-        image: couchbase/operator-backup:6.5.0
-        serviceAccountName: couchbase-backup
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        selector:
-          matchLabels:
-            cluster: mercury-cluster
+        managed: false
       volumeClaimTemplates:
       - metadata:
           name: couchbase
@@ -101,37 +92,28 @@ cluster:
             abortCompactionOutsideWindow: true
           tombstonePurgeInterval: 72h
       servers:
-      - name: all_services
+      - name: data
         size: 3
         services:
         - data
-        - index
-        - query
-        - search
-        - eventing
-        - analytics
         serverGroups:
         - eu-west-2a
         - eu-west-2b
         - eu-west-2c
         resources:
           limits:
-            cpu: "800m"
-            memory: 3Gi
+            cpu: "600m"
+            memory: 1Gi
           requests:
-            cpu: "300m"
-            memory: 2Gi
+            cpu: "200m"
+            memory: 512Mi
         volumeMounts:
           default: couchbase
           data:  couchbase
-          index: couchbase
-          analytics:
-          - couchbase
-          - couchbase
         pod:
           metadata:
             labels:
-              couchbase_services: all
+              couchbase_services: data
             annotations:
               couchbase.startx.fr: mercury
           spec:
@@ -144,8 +126,8 @@ cluster:
     - name: "purple-bucket"
       kind: couchbase
       spec: |
-        memoryQuota: 128Mi
-        replicas: 2
+        memoryQuota: 250Mi
+        replicas: 1
         ioPriority: low
         evictionPolicy: valueOnly
         conflictResolution: lww
