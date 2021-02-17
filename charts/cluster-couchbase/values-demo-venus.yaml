@@ -111,10 +111,10 @@ cluster:
         - eu-west-2c
         resources:
           limits:
-            cpu: "800m"
+            cpu: "3000m"
             memory: 3Gi
           requests:
-            cpu: "200m"
+            cpu: "300m"
             memory: 1Gi
         volumeMounts:
           default: couchbase
@@ -136,6 +136,7 @@ cluster:
         services:
         - index
         - query
+        - search
         - eventing
         serverGroups:
         - eu-west-2a
