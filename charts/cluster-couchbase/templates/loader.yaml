@@ -2,20 +2,28 @@
 {{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.project.name | default .Chart.Name -}}
+{{- range .Values.loader.list }}
+{{- $name := .name | default "default" -}}
 ---
 kind: Pod
 apiVersion: v1
 metadata:
-  name: "{{- $ns -}}-loader"
+  name: "{{- $name -}}-loader"
   namespace: "{{- $ns -}}"
+  labels:
+    {{- include "cluster-couchbase.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-loader-pod"
+    cluster: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
 spec:
   restartPolicy: Never
-{{- if .Values.couchbaseConfig.saPods -}}{{- if .Values.couchbaseConfig.saPods.enabled }}
-{{- $name := .Values.couchbaseConfig.saPods.name | default "couchbase-pods" }}
-  serviceAccountName: "{{- $name -}}"
-  serviceAccount: "{{- $name -}}"
+{{- if $root.Values.couchbaseConfig.saPods -}}{{- if $root.Values.couchbaseConfig.saPods.enabled }}
+{{- $sa := $root.Values.couchbaseConfig.saPods.name | default "couchbase-pods" }}
+  serviceAccountName: "{{- $sa -}}"
+  serviceAccount: "{{- $sa -}}"
 {{- end -}}{{- end }}
-{{- if .Values.couchbaseConfig.imageCredentials -}}{{- if .Values.couchbaseConfig.imageCredentials.enabled }}
+{{- if $root.Values.couchbaseConfig.imageCredentials -}}{{- if $root.Values.couchbaseConfig.imageCredentials.enabled }}
   imagePullSecrets:
     - name: "{{- $ns -}}-rhn"
 {{- end -}}{{- end }}
@@ -31,12 +39,12 @@ spec:
         - "/bin/bash"
         - "-c"
         - |-
-{{- .Values.loader.command | nindent 10 }}
+{{- .command | nindent 10 }}
       resources:
         limits:
           cpu: 400m
           memory: 128Mi
         requests:
-          cpu: 100m
+          cpu: 200m
           memory: 64Mi
-{{- end -}}{{- end }}
+{{- end -}}{{- end -}}{{- end }}
