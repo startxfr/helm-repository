@@ -101,29 +101,85 @@ cluster:
             abortCompactionOutsideWindow: true
           tombstonePurgeInterval: 72h
       servers:
-      - name: all_services
+      - name: data
         size: 3
         services:
         - data
-        - index
-        - query
-        - search
-        - eventing
-        - analytics
         serverGroups:
         - eu-west-2a
         - eu-west-2b
         - eu-west-2c
         resources:
           limits:
-            cpu: "2000m"
-            memory: 6Gi
-          requests:
-            cpu: "500m"
+            cpu: "800m"
             memory: 3Gi
+          requests:
+            cpu: "200m"
+            memory: 1Gi
         volumeMounts:
           default: couchbase
           data:  couchbase
+        pod:
+          metadata:
+            labels:
+              couchbase_services: data
+            annotations:
+              couchbase.startx.fr: jupiter
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: couchbase-pods
+            containers: []
+            imagePullSecrets:
+              - name: "startx-couchbase-rhn"
+      - name: n1ql
+        size: 2
+        services:
+        - index
+        - query
+        serverGroups:
+        - eu-west-2a
+        - eu-west-2b
+        - eu-west-2c
+        resources:
+          limits:
+            cpu: "1500m"
+            memory: 2Gi
+          requests:
+            cpu: "400m"
+            memory: 1Gi
+        volumeMounts:
+          default: couchbase
+          index: couchbase
+        pod:
+          metadata:
+            labels:
+              couchbase_services: index,query
+            annotations:
+              couchbase.startx.fr: jupiter
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: couchbase-pods
+            containers: []
+            imagePullSecrets:
+              - name: "startx-couchbase-rhn"
+      - name: ftsevent
+        size: 2
+        services:
+        - search
+        - eventing
+        serverGroups:
+        - eu-west-2a
+        - eu-west-2b
+        - eu-west-2c
+        resources:
+          limits:
+            cpu: "1500m"
+            memory: 2Gi
+          requests:
+            cpu: "400m"
+            memory: 1Gi
+        volumeMounts:
+          default: couchbase
           index: couchbase
           analytics:
           - couchbase
@@ -131,7 +187,39 @@ cluster:
         pod:
           metadata:
             labels:
-              couchbase_services: all
+              couchbase_services: search,eventing
+            annotations:
+              couchbase.startx.fr: jupiter
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: couchbase-pods
+            containers: []
+            imagePullSecrets:
+              - name: "startx-couchbase-rhn"
+      - name: analytics
+        size: 2
+        services:
+        - analytics
+        serverGroups:
+        - eu-west-2a
+        - eu-west-2b
+        - eu-west-2c
+        resources:
+          limits:
+            cpu: "1200m"
+            memory: 4Gi
+          requests:
+            cpu: "200m"
+            memory: 2Gi
+        volumeMounts:
+          default: couchbase
+          analytics:
+          - couchbase
+          - couchbase
+        pod:
+          metadata:
+            labels:
+              couchbase_services: analytics
             annotations:
               couchbase.startx.fr: jupiter
           spec:
