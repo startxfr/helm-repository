@@ -82,7 +82,7 @@ project:
   enabled: true
   context:
     scope: default
-    cluster: localhost
+    cluster: default
     environment: dev
     component: infra
     app: default-workspaces
@@ -107,7 +107,7 @@ operator:
   enabled: true
   context:
     scope: default
-    cluster: localhost
+    cluster: default
     environment: dev
     component: infra
     app: default-workspaces
@@ -197,3 +197,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments                            |
 | 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies                                                                           |
 | 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187                                                                 || 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
+| 0.3.199 | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts
