@@ -2,7 +2,7 @@
 # see values.yaml for explanation on each params
 context: &context
   scope: startx
-  cluster: localhost
+  cluster: default
   environment: infra
   component: gitlab
   app: startx-gitlab
@@ -31,7 +31,7 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "openshift-gitlab"
+    name: "startx-gitlab"
     display_name: "Startx GITLAB"
     requester: startx
     description: Gitlab configured by STARTX
@@ -43,7 +43,7 @@ operator:
     enabled: true
     hooked: false
     name: "gitlab-operator"
-    namespace: "openshift-gitlab"
+    namespace: "startx-gitlab"
     version: "v3.3.4"
     operator: 
       channel: gitlab-v3.3
@@ -56,5 +56,5 @@ operator:
     enabled: true
     hooked: false
     name: "startx-gitlab"
-    namespace: "openshift-gitlab"
+    namespace: "startx-gitlab"
     providedAPIs: "PtpConfig.v1.gitlab.openshift.io"

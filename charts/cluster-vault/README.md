@@ -74,7 +74,7 @@ project:
   enabled: true
   context:
     scope: default
-    cluster: localhost
+    cluster: default
     environment: dev
     component: infra
     app: default-vault

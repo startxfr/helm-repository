@@ -217,3 +217,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.189 | 2021-02-13 | remove manpage
 | 0.3.189 | 2021-02-13 | Align all basic charts to 0.3.189
 | 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
+| 0.3.193 | 2021-02-20 | Stable base helm-chart
