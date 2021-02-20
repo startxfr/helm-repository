@@ -2,13 +2,13 @@
 # see values.yaml for explanation on each params
 context: &context
   scope: startx
-  cluster: localhost
+  cluster: default
   environment: infra
   component: couchbase
   app: demo-couchbase
 
 couchbaseConfig:
-  enabled: true
+  enabled: false
   saPods: 
     enabled: true
     name: couchbase-pods
@@ -16,312 +16,61 @@ couchbaseConfig:
     enabled: true
     name: couchbase-backup
   imageCredentials:
-    enabled: false
+    enabled: true
     registry: registry.connect.redhat.com
     username: startx_cl
     password: 8password
     email: cl@startx.fr
 
+loader:
+  enabled: false
+  list:
+  - name: venus
+    command: | 
+      #!/bin/bash
+      WORKLOAD_CONF=" --threads=5 -r .6 -i 300000 -s 1000"
+      CREDS=" -u administrator -p administrator123"
+      CLUSTER=venus-cluster
+      BUCKET=yellow-back-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      BUCKET=orange-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      echo "End of the ${CLUSTER} workload test"
+      exit 0;
+  - name: jupiter
+    command: | 
+      #!/bin/bash
+      WORKLOAD_CONF=" --threads=5 -r .6 -i 300000 -s 1000"
+      CREDS=" -u administrator -p administrator123"
+      CLUSTER=jupiter-cluster
+      BUCKET=orange-back-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      BUCKET=yellow-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      BUCKET=black-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      echo "End of the ${CLUSTER} workload test"
+      exit 0;
+  - name: mercury
+    command: | 
+      #!/bin/bash
+      WORKLOAD_CONF=" --threads=1 -r .6 -i 300000 -s 1000"
+      CREDS=" -u administrator -p administrator123"
+      CLUSTER=mercury-cluster
+      BUCKET=purple-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      echo "End of the ${CLUSTER} workload test"
+      exit 0;
+
 cluster:
-  enabled: true
-  list: 
-  - name: mars-cluster
-    enabled: true
-    admin:
-      username: "administrator"
-      password: "administrator123"
-    expose:
-      enabled: true
-    spec: |
-      image: registry.connect.redhat.com/couchbase/server:6.5.1
-      paused: false
-      antiAffinity: true
-      softwareUpdateNotifications: true
-      serverGroups:
-        - eu-west-3a
-        - eu-west-3b
-        - eu-west-3c
-      securityContext:
-        runAsUser: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
-      security:
-        adminSecret: mars-cluster-admin-auth
-        rbac:
-          managed: true
-          selector:
-            matchLabels:
-              cluster: mars-cluster
-      networking:
-        exposeAdminConsole: true
-        adminConsoleServices:
-        - data
-      buckets:
-        managed: true
-        selector:
-          matchLabels:
-            cluster: mars-cluster
-      logging:
-        logRetentionTime: 604800s
-        logRetentionCount: 20
-      backup:
-        managed: true
-        image: couchbase/operator-backup:6.5.0
-        serviceAccountName: couchbase-backup
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        selector:
-          matchLabels:
-            cluster: mars-cluster
-      volumeClaimTemplates:
-      - metadata:
-          name: couchbase
-        spec:
-          storageClassName: "gp2"
-          resources:
-            requests:
-              storage: 2Gi
-      cluster:
-        clusterName: mars-cluster
-        dataServiceMemoryQuota: 750Mi
-        indexServiceMemoryQuota: 256Mi
-        searchServiceMemoryQuota: 256Mi
-        eventingServiceMemoryQuota: 256Mi
-        analyticsServiceMemoryQuota: 1Gi
-        indexStorageSetting: memory_optimized
-        autoFailoverTimeout: 120s
-        autoFailoverMaxCount: 3
-        autoFailoverOnDataDiskIssues: true
-        autoFailoverOnDataDiskIssuesTimePeriod: 120s
-        autoFailoverServerGroup: false
-        autoCompaction:
-          databaseFragmentationThreshold:
-            percent: 30
-            size: 1Gi
-          viewFragmentationThreshold:
-            percent: 30
-            size: 1Gi
-          parallelCompaction: false
-          timeWindow:
-            start: 02:00
-            end: 06:00
-            abortCompactionOutsideWindow: true
-          tombstonePurgeInterval: 72h
-      servers:
-      - name: all_services
-        size: 3
-        services:
-        - data
-        - index
-        - query
-        - search
-        - eventing
-        - analytics
-        serverGroups:
-        - eu-west-3a
-        - eu-west-3b
-        - eu-west-3c
-        resources:
-          limits:
-            cpu: "4"
-            memory: 6Gi
-          requests:
-            cpu: "2"
-            memory: 4Gi
-        volumeMounts:
-          default: couchbase
-          data:  couchbase
-          index: couchbase
-          analytics:
-          - couchbase
-          - couchbase
-        pod:
-          metadata:
-            labels:
-              couchbase_services: all
-            annotations:
-              couchbase.startx.fr: mars
-          spec:
-            automountServiceAccountToken: false
-            serviceAccountName: couchbase-pods
-            containers: []
-            imagePullSecrets:
-              - name: "startx-couchbase-rhn"
-    buckets: 
-    - name: "yellow-bucket"
-      kind: couchbase
-      spec: |
-        memoryQuota: 128Mi
-        replicas: 2
-        ioPriority: low
-        evictionPolicy: valueOnly
-        conflictResolution: lww
-        enableFlush: true
-        enableIndexReplica: true
-        compressionMode: passive
-    - name: "orange-back-bucket"
-      kind: ephemeral
-      spec: |
-        memoryQuota: 100Mi
-        replicas: 2
-        ioPriority: low
-        evictionPolicy: noEviction
-        conflictResolution: lww
-        enableFlush: false
-        compressionMode: passive
-    - name: "black-bucket"
-      kind: memcached
-      spec: |
-        memoryQuota: 100Mi
-        enableFlush: false
-  - name: venus-cluster
-    enabled: true
-    admin:
-      username: "administrator"
-      password: "administrator123"
-    expose:
-      enabled: true
-    spec: |
-      image: registry.connect.redhat.com/couchbase/server:6.5.1
-      paused: false
-      antiAffinity: true
-      softwareUpdateNotifications: true
-      serverGroups:
-        - eu-west-3a
-        - eu-west-3b
-        - eu-west-3c
-      securityContext:
-        runAsUser: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
-      security:
-        adminSecret: venus-cluster-admin-auth
-        rbac:
-          managed: true
-          selector:
-            matchLabels:
-              cluster: venus-cluster
-      networking:
-        exposeAdminConsole: true
-        adminConsoleServices:
-        - data
-      buckets:
-        managed: true
-        selector:
-          matchLabels:
-            cluster: venus-cluster
-      logging:
-        logRetentionTime: 604800s
-        logRetentionCount: 20
-      backup:
-        managed: true
-        image: couchbase/operator-backup:6.5.0
-        serviceAccountName: couchbase-backup
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        selector:
-          matchLabels:
-            cluster: venus-cluster
-      volumeClaimTemplates:
-      - metadata:
-          name: couchbase
-        spec:
-          storageClassName: "gp2"
-          resources:
-            requests:
-              storage: 2Gi
-      cluster:
-        clusterName: venus-cluster
-        dataServiceMemoryQuota: 512Mi
-        indexServiceMemoryQuota: 256Mi
-        searchServiceMemoryQuota: 256Mi
-        eventingServiceMemoryQuota: 256Mi
-        analyticsServiceMemoryQuota: 1Gi
-        indexStorageSetting: memory_optimized
-        autoFailoverTimeout: 120s
-        autoFailoverMaxCount: 3
-        autoFailoverOnDataDiskIssues: true
-        autoFailoverOnDataDiskIssuesTimePeriod: 120s
-        autoFailoverServerGroup: false
-        autoCompaction:
-          databaseFragmentationThreshold:
-            percent: 30
-            size: 1Gi
-          viewFragmentationThreshold:
-            percent: 30
-            size: 1Gi
-          parallelCompaction: false
-          timeWindow:
-            start: 02:00
-            end: 06:00
-            abortCompactionOutsideWindow: true
-          tombstonePurgeInterval: 72h
-      servers:
-      - name: all_services
-        size: 3
-        services:
-        - data
-        - index
-        - query
-        - search
-        - eventing
-        - analytics
-        serverGroups:
-        - eu-west-3a
-        - eu-west-3b
-        - eu-west-3c
-        resources:
-          limits:
-            cpu: "3"
-            memory: 5Gi
-          requests:
-            cpu: "1500"
-            memory: 3Gi
-        volumeMounts:
-          default: couchbase
-          data:  couchbase
-          index: couchbase
-          analytics:
-          - couchbase
-          - couchbase
-        pod:
-          metadata:
-            labels:
-              couchbase_services: all
-            annotations:
-              couchbase.startx.fr: venus
-          spec:
-            automountServiceAccountToken: false
-            serviceAccountName: couchbase-pods
-            containers: []
-            imagePullSecrets:
-              - name: "startx-couchbase-rhn"
-    buckets: 
-    - name: "yellow-back-bucket"
-      kind: couchbase
-      spec: |
-        memoryQuota: 128Mi
-        replicas: 2
-        ioPriority: low
-        evictionPolicy: valueOnly
-        conflictResolution: lww
-        enableFlush: true
-        enableIndexReplica: true
-        compressionMode: passive
-    - name: "orange-bucket"
-      kind: ephemeral
-      spec: |
-        memoryQuota: 100Mi
-        replicas: 2
-        ioPriority: low
-        evictionPolicy: noEviction
-        conflictResolution: lww
-        enableFlush: false
-        compressionMode: passive
+  enabled: false
+  list: []
 
 project: 
   enabled: false
@@ -335,6 +84,7 @@ project:
     display_name: "Demo COUCHBASE"
     requester: startx
     description: Demo Couchbase configured by STARTX
+
 operator:
   enabled: false
   context: 

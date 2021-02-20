@@ -1,0 +1,51 @@
+{{- if .Values.loader }}{{- if .Values.loader.enabled }}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $ns := .Values.project.project.name | default .Chart.Name -}}
+{{- range .Values.loader.list }}
+{{- $name := .name | default "default" -}}
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: "{{- $name -}}-loader"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "cluster-couchbase.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-loader-pod"
+    cluster: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
+spec:
+  restartPolicy: Never
+{{- if $root.Values.couchbaseConfig.saPods -}}{{- if $root.Values.couchbaseConfig.saPods.enabled }}
+{{- $sa := $root.Values.couchbaseConfig.saPods.name | default "couchbase-pods" }}
+  serviceAccountName: "{{- $sa -}}"
+  serviceAccount: "{{- $sa -}}"
+{{- end -}}{{- end }}
+{{- if $root.Values.couchbaseConfig.imageCredentials -}}{{- if $root.Values.couchbaseConfig.imageCredentials.enabled }}
+  imagePullSecrets:
+    - name: "{{- $ns -}}-rhn"
+{{- end -}}{{- end }}
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+    fsGroup: 1000
+  containers:
+    - name: loader
+      image: registry.connect.redhat.com/couchbase/server
+      imagePullPolicy: IfNotPresent
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+{{- .command | nindent 10 }}
+      resources:
+        limits:
+          cpu: 800m
+          memory: 128Mi
+        requests:
+          cpu: 400m
+          memory: 64Mi
+{{ end }}
+{{- end -}}{{- end }}
