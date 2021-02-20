@@ -80,3 +80,4 @@ helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxf
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 0.3.191 | 2021-02-20 | Create chart cluster-machine from cluster-machine
 | 0.3.199 | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts
+| 0.3.201 | 2021-02-20 | Update icon and image for charts

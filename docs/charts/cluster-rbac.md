@@ -80,3 +80,4 @@ helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187                                                                 |
 | 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
 | 0.3.199 | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts
+| 0.3.201 | 2021-02-20 | Update icon and image for charts
