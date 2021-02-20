@@ -1,6 +1,6 @@
 # STARTX helm : cluster-machine
 
-This helm chart is used to create a list of storageClass available for the cluster.
+This helm chart is used to configure the Machine api of your cluster.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -36,14 +36,14 @@ helm install startx/cluster-machine
 
 ## Default values
 
-Deployment of storage classes :
+Deployment of machine classes :
 
-- 1 **storageClass** named **example-gp2** with the following characteristics
+<!-- - 1 **machineSet** named **example-gp2** with the following characteristics
   - **provisioner** set to **kubernetes.io/aws-ebs**
   - provisioner **encryption** specific parameters set to **true**
-  - storage class **reclaim policy** set to **Delete**
-  - storage class **volume expansion enabled**
-  - storage class **volume binding mode** set to **WaitForFirstConsumer**
+  - machine class **reclaim policy** set to **Delete**
+  - machine class **volume expansion enabled**
+  - machine class **volume binding mode** set to **WaitForFirstConsumer** -->
 
 ```bash
 # base configuration running default configuration
@@ -52,7 +52,7 @@ helm install startx/cluster-machine
 
 ## Others values availables
 
-- **startx** : Startx storage classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml)) creating the following storage classes
+<!-- - **startx** : Startx machine classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml)) creating the following machine classes
   - **aws-generic-retain** (AWS EBS gp2 level with encryption and expansion enabled with retain policy)
   - **aws-generic-delete** (AWS EBS gp2 level with encryption and expansion enabled with delete policy)
   - **aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
@@ -64,38 +64,18 @@ helm install startx/cluster-machine
 helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml
 ```
 
-- **startx-ocs** : Startx storage classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml)) creating the following storage classes
-  - **ocs-generic-retain** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with retain policy and expansion enabled)
-  - **ocs-generic-delete** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with delete policy and expansion enabled)
-  - **ocs-fs-retain** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with retain policy)
-  - **ocs-fs-delete** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with delete policy)
+- **startx-ocs** : Startx machine classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml)) creating the following machine classes
+  - **ocs-generic-retain** (OCS provisionned via openshift-machine.rbd.csi.ceph.com in cluster openshift-machine with retain policy and expansion enabled)
+  - **ocs-generic-delete** (OCS provisionned via openshift-machine.rbd.csi.ceph.com in cluster openshift-machine with delete policy and expansion enabled)
+  - **ocs-fs-retain** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with retain policy)
+  - **ocs-fs-delete** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with delete policy)
 
 ```bash
 helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml
-```
+``` -->
 
 ## History
 
 | Release | Date       | Description                                                                                            |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 0.2.0   | 2020-10-23 | Initial commit for this helm chart with default value example (removed)                                |
-| 0.2.51  | 2020-10-31 | Common release for all chart                                                                           |
-| 0.2.93  | 2020-10-31 | Align all startx charts version to 0.2.93. Preparing stable 0.3 release                                |
-| 0.3.0   | 2020-10-31 | Stable 0.3 release                                                                                     |
-| 0.3.21  | 2020-11-06 | Align all charts on the repository release 0.3.21                                                      |
-| 0.3.23  | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information |
-| 0.3.47  | 2020-11-08 | Update dependency to 0.3.45 release                                                                    |
-| 0.3.93  | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository                        |
-| 0.3.105 | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release                                              |
-| 0.3.117 | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                               |
-| 0.3.135 | 2020-11-23 | Improve documentation for all examples charts                                                          |
-| 0.3.141 | 2020-11-24 | publish stable update for the full repository                                                          |
-| 0.3.151 | 2021-01-23 | Upgrade to OCP version 4.6.13                                                                          |
-| 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                    |
-| 0.3.153 | 2021-01-23 | publish stable update for the full repository                                                          |
-| 0.3.165 | 2021-01-23 | Upgrade all chart dependencies                                                                         |
-| 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments                            |
-| 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies                                                                           |
-| 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187                                                                 |
-| 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189
-| 0.3.191  | 2021-02-20 | Create chart cluster-machine from cluster-storage
+| 0.3.191 | 2021-02-20 | Create chart cluster-machine from cluster-machine
