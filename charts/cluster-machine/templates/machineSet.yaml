@@ -1,13 +1,16 @@
+{{- if .Values.machineSet.enabled }}
 {{- $root := . -}}
-{{ range .Values.storageClasses }}
+{{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
+{{- $region := .Values.cluster.region | default "eu-west-3" -}}
+{{ range .Values.machineSet.list }}
 ---
 kind: StorageClass
-apiVersion: storage.k8s.io/v1
+apiVersion: machine.k8s.io/v1
 metadata:
   name: "{{ .id }}"
   labels:
     {{- include "cluster-machine.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .name }}-storageclass"
+    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .name }}-machineclass"
   annotations:
     {{- include "cluster-machine.annotations" $root | nindent 4 }}
 provisioner: {{ .provisioner | default "kubernetes.io/aws-ebs" | quote }}
@@ -26,4 +29,5 @@ allowVolumeExpansion: {{ .allowVolumeExpansion }}
 {{- if .volumeBindingMode }}
 volumeBindingMode: {{ .volumeBindingMode | quote }}
 {{- end -}}
+{{ end }}
 {{ end }}

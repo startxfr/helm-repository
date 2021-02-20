@@ -15,8 +15,28 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-machine.notes" -}}
--- Cluster Storages classes --------
-{{- range .storageClasses }}
-              - {{ .id }} provisionned with {{ .provisioner | default "kubernetes.io/aws-ebs" }}
-{{- end }}
+-- Cluster MachineSet --------------
+{{- if .machineSet.enabled }}
+{{ range .machineSet.list }}
+              - {{ .name }} 
+{{ end }}
+{{ else }}
+            no machineSet defined
+{{ end }}
+-- Cluster MachineHealthCheck ------
+{{- if .machineHealthCheck.enabled }}
+{{ range .machineHealthCheck.list }}
+              - {{ .name }} 
+{{ end }}
+{{ else }}
+            no machineHealthCheck defined
+{{ end }}
+-- Cluster machineAutoscaler -------
+{{- if .machineAutoscaler.enabled }}
+{{ range .machineAutoscaler.list }}
+              - {{ .name }} 
+{{ end }}
+{{ else }}
+            no machineAutoscaler defined
+{{ end }}
 {{- end -}}
