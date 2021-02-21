@@ -187,6 +187,33 @@ cluster:
         enableFlush: false
         compressionMode: passive
 
+clusterRbac:
+  enabled: true
+  groups: 
+    - name: "venus-admin"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: yellow-back-bucket
+        - name: bucket_admin
+          bucket: orange-bucket
+    - name: "orange-app"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: orange-bucket
+  users: 
+    - name: "venus-admin"
+      password: venus-admin123
+      fullName: "Venus ADMIN"
+      backend: local
+      group: "venus-admin"
+    - name: "orange-app"
+      password: orange-app123
+      fullName: "Orange APPLICATION"
+      backend: local
+      group: "orange-app"
+
 project: 
   enabled: false
   context: 
