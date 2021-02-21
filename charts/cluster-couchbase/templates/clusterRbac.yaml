@@ -6,16 +6,15 @@
 
 {{/* Loop over the group list */}}
 {{- if .Values.clusterRbac.groups }}{{- range .Values.clusterRbac.groups }}
-{{- $name := .name | default "default-group" -}}
 --- 
 kind: CouchbaseGroup
 apiVersion: couchbase.com/v2
 metadata:
-  name: "{{- $name -}}"
+  name: "{{- .name | default "default-group" -}}"
   namespace: "{{- $ns -}}"
   labels:
     {{- include "cluster-couchbase.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- $name -}}-couchbasegroup"
+    app.kubernetes.io/name: "{{- .name | default "default-group" -}}-couchbasegroup"
   annotations:
     {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
 spec:
