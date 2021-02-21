@@ -175,6 +175,33 @@ cluster:
   #       enableIndexReplica: true
   #       compressionMode: passive
 
+
+# Configure the couchbase RBAC
+clusterRbac:
+  # Enable the configuration of the couchbase RBAC
+  enabled: false
+  # List of group and associated role
+  groups: []
+  #   # name of the group
+  # - name: default-group
+  #   # Specification of the group (roles)
+  #   spec: |
+  #     roles:
+  #     - name: bucket_admin
+  #       bucket: default
+  # List of group and associated role
+  users: []
+  #   # name of the user
+  # - name: user
+  #   # password of the user
+  #   password: secret123
+  #   # Full name of the user
+  #   fullName: "Default USER"
+  #   # name of the authDomain (default to local)
+  #   backend: local
+  #   # Group associated to this user
+  #   group: default-group
+
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   enabled: false
