@@ -4,8 +4,8 @@
 {{- $kservice := . -}}
 {{- if $kservice.enabled }}
 ---
+apiVersion: serving.knative.dev/v1
 kind: Service
-apiVersion: serving.knative.dev/v1alpha1 
 metadata:
   name: {{ $kservice.name | default "default" | quote }}
   namespace: {{ $kservice.namespace | default "default" | quote }}
