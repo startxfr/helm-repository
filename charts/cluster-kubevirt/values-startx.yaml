@@ -54,6 +54,7 @@ operator:
   operatorGroup:
     enabled: true
     hooked: false
+    target: "all-ns"
     name: "kubevirt"
     namespace: "openshift-cnv"
     providedAPIs: "CDI.v1beta1.cdi.kubevirt.io,HostPathProvisioner.v1beta1.hostpathprovisioner.kubevirt.io,HyperConverged.v1beta1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.ssp.kubevirt.io,KubevirtMetricsAggregation.v1.ssp.kubevirt.io,KubevirtNodeLabellerBundle.v1.ssp.kubevirt.io,KubevirtTemplateValidator.v1.ssp.kubevirt.io,NetworkAddonsConfig.v1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1beta1.nodemaintenance.kubevirt.io,OVirtProvider.v1alpha1.v2v.kubevirt.io,V2VVmware.v1alpha1.v2v.kubevirt.io,VMImportConfig.v1beta1.v2v.kubevirt.io"
@@ -63,39 +64,8 @@ hyperconvergedCluster:
   name: "kubevirt-hyperconverged" 
   storageClass: "gp2-csi" 
 vms:
-  enabled: true
+  enabled: false
   list: 
-    - name: "startx-centos7-vm"
-      namespace: "openshift-cnv"
-      hostname: "startx-centos7-vm.local"
-      os: 
-        name: "CentOS 7"
-        signature: "centos7.0"
-        image: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
-      storage:
-        boot_size: 15G
-        boot_storageclass: ocs-generic-delete
-        disks: 
-        - name: disk0
-          storageclass: ocs-generic-delete
-          size: 10G
-          boot_order: 3
-      cloudInit: |
-        #cloud-config
-        name: centos7
-        hostname: "centos7-vm.local"
-        ssh_authorized_keys:
-          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
-        users:
-          - name: admin
-            primary_group: root
-            lock_passwd: false
-            # admin user password is : secretdemerde
-            passwd: $6$rounds=4096$JnxzALRiq8YtBpUS$G5eFZCw1Ega9r7hbSxeE74WRzsUjfwG/mhbmSUhQNhLnzNPnaOZOQ7zlogCqwYzvYRSU223Py3SGwEksWX4zJ/
-            sudo: ALL=(ALL) NOPASSWD:ALL
-            ssh_authorized_keys:
-              - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
-            ssh_import_id: None
     - name: "startx-fedora33-vm"
       namespace: "openshift-cnv"
       hostname: "startx-fedora33-vm.local"
@@ -115,33 +85,6 @@ vms:
         #cloud-config
         name: fedora33
         hostname: "fedora33-vm.local"
-        ssh_authorized_keys:
-          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
-        users:
-          - name: admin
-            primary_group: root
-            lock_passwd: false
-            # admin user password is : secretdemerde
-            passwd: $6$rounds=4096$JnxzALRiq8YtBpUS$G5eFZCw1Ega9r7hbSxeE74WRzsUjfwG/mhbmSUhQNhLnzNPnaOZOQ7zlogCqwYzvYRSU223Py3SGwEksWX4zJ/
-            sudo: ALL=(ALL) NOPASSWD:ALL
-            ssh_authorized_keys:
-              - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
-            ssh_import_id: None
-    - name: "startx-cirros-vm"
-      namespace: "openshift-cnv"
-      hostname: "startx-cirros-vm.local"
-      os: 
-        name: "Cirros OS"
-        signature: "fc31.0"
-      storage:
-        boot_image: "kubevirt/cirros-registry-disk-demo"
-        boot_type: "containerDisk"
-        boot_size: 5G
-        boot_storageclass: aws-generic-delete
-      cloudInit: |
-        #cloud-config
-        name: cirros
-        hostname: "startx-cirros-vm.local"
         ssh_authorized_keys:
           - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
         users:
