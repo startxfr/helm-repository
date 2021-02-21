@@ -132,13 +132,14 @@ cluster:
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: n1ql
-        size: 2
+        size: 3
         services:
         - index
         - query
         serverGroups:
         - eu-west-3a
         - eu-west-3b
+        - eu-west-3c
         resources:
           limits:
             cpu: "1500m"
@@ -162,11 +163,12 @@ cluster:
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: ftsevent
-        size: 2
+        size: 3
         services:
         - search
         - eventing
         serverGroups:
+        - eu-west-3a
         - eu-west-3b
         - eu-west-3c
         resources:
@@ -195,11 +197,12 @@ cluster:
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: analytics
-        size: 2
+        size: 3
         services:
         - analytics
         serverGroups:
         - eu-west-3a
+        - eu-west-3b
         - eu-west-3c
         resources:
           limits:
