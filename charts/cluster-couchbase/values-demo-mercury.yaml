@@ -139,11 +139,13 @@ clusterRbac:
   enabled: true
   groups: 
     - name: "mercury-admin"
+      cluster: "mercury-cluster"
       spec: |
         roles:
         - name: bucket_admin
           bucket: purple-bucket
     - name: "purple-app"
+      cluster: "mercury-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -151,11 +153,13 @@ clusterRbac:
   users: 
     - name: "mercury-admin"
       password: mercury-admin123
+      cluster: "mercury-cluster"
       fullName: "Mercury ADMIN"
       backend: local
       group: "mercury-admin"
     - name: "purple-app"
       password: purple-app123
+      cluster: "mercury-cluster"
       fullName: "Purple APPLICATION"
       backend: local
       group: "purple-app"

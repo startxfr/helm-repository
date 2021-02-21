@@ -191,6 +191,7 @@ clusterRbac:
   enabled: true
   groups: 
     - name: "venus-admin"
+      cluster: "venus-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -198,6 +199,7 @@ clusterRbac:
         - name: bucket_admin
           bucket: orange-bucket
     - name: "orange-app"
+      cluster: "venus-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -205,11 +207,13 @@ clusterRbac:
   users: 
     - name: "venus-admin"
       password: venus-admin123
+      cluster: "venus-cluster"
       fullName: "Venus ADMIN"
       backend: local
       group: "venus-admin"
     - name: "orange-app"
       password: orange-app123
+      cluster: "venus-cluster"
       fullName: "Orange APPLICATION"
       backend: local
       group: "orange-app"

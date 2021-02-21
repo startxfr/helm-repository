@@ -45,6 +45,7 @@ metadata:
     {{- include "cluster-couchbase.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{- $ns -}}-admin-route"
     couchbase_cluster: "{{- $name -}}"
+    cluster: "{{- $name -}}"
   annotations:
     {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
 spec:
