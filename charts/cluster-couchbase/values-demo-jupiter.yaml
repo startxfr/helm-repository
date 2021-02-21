@@ -256,6 +256,35 @@ cluster:
         memoryQuota: 100Mi
         enableFlush: false
 
+clusterRbac:
+  enabled: true
+  groups: 
+    - name: "jupiter-admin"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: orange-back-bucket
+        - name: bucket_admin
+          bucket: yellow-bucket
+        - name: bucket_admin
+          bucket: black-bucket
+    - name: "yellow-app"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: yellow-bucket
+  users: 
+    - name: "jupiter-admin"
+      password: jupiter-admin123
+      fullName: "Venus ADMIN"
+      backend: local
+      group: "jupiter-admin"
+    - name: "yellow-app"
+      password: yellow-app123
+      fullName: "Yellow APPLICATION"
+      backend: local
+      group: "yellow-app"
+
 project: 
   enabled: false
   context: 
