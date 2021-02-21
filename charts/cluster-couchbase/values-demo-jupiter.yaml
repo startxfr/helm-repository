@@ -115,7 +115,7 @@ cluster:
             memory: 3Gi
           requests:
             cpu: "300m"
-            memory: 1Gi
+            memory: 2Gi
         volumeMounts:
           default: couchbase
           data:  couchbase
@@ -132,7 +132,7 @@ cluster:
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: n1ql
-        size: 3
+        size: 2
         services:
         - index
         - query
@@ -142,11 +142,11 @@ cluster:
         - eu-west-3c
         resources:
           limits:
-            cpu: "1500m"
-            memory: 2Gi
+            cpu: "1600m"
+            memory: 3Gi
           requests:
-            cpu: "400m"
-            memory: 1Gi
+            cpu: "800m"
+            memory: 2Gi
         volumeMounts:
           default: couchbase
           index: couchbase
@@ -163,7 +163,7 @@ cluster:
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: ftsevent
-        size: 3
+        size: 2
         services:
         - search
         - eventing
@@ -173,11 +173,11 @@ cluster:
         - eu-west-3c
         resources:
           limits:
-            cpu: "1200m"
-            memory: 2Gi
+            cpu: "1600m"
+            memory: 3Gi
           requests:
-            cpu: "400m"
-            memory: 1Gi
+            cpu: "800m"
+            memory:2Gi
         volumeMounts:
           default: couchbase
           index: couchbase
@@ -197,7 +197,7 @@ cluster:
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: analytics
-        size: 3
+        size: 2
         services:
         - analytics
         serverGroups:
@@ -209,7 +209,7 @@ cluster:
             cpu: "1200m"
             memory: 4Gi
           requests:
-            cpu: "200m"
+            cpu: "600m"
             memory: 2Gi
         volumeMounts:
           default: couchbase
