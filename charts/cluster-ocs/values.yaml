@@ -24,7 +24,7 @@ ocs:
   # Redhat Network access user to the RH container catalog
   name: default-ocs
   # Version of the OCS to use for this cluster
-  version: "4.5.2"
+  version: "4.6.2"
   # Configure storage backend for this cluster
   storage:
     # Name of the storage pool
@@ -44,7 +44,7 @@ project:
   project: 
     enabled: true
     type: project
-    name: "ocs-operator"
+    name: "openshift-storage"
     display_name: Operator OCS
     description: Openshift Container Storage operators configured by startx
   rbac: 
@@ -64,10 +64,10 @@ operator:
   subscription:
     enabled: true
     name: "ocs-operator"
-    namespace: "ocs-operator"
-    version: "v4.5.2"
+    namespace: "openshift-storage"
+    version: "v4.6.2"
     operator: 
-      channel: stable-4.5
+      channel: stable-4.6
       name: ocs-operator
       csv: ocs-operator
       source: 
@@ -76,5 +76,5 @@ operator:
   operatorGroup:
     enabled: true
     name: "openshift-storage"
-    namespace: "ocs-operator"
+    namespace: "openshift-storage"
     providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageClusterInitialization.v1.ocs.openshift.io"
