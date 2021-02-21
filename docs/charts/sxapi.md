@@ -118,3 +118,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.193 | 2021-02-20 | Stable base helm-chart
 | 0.3.199 | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts
 | 0.3.201 | 2021-02-20 | Update icon and image for charts
+| 0.3.203 | 2021-02-21 | Upgrade chart release informations
