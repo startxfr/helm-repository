@@ -63,3 +63,5 @@ helm install startx/cluster-couchbase -f https://raw.githubusercontent.com/start
 | 0.3.199 | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts
 | 0.3.201 | 2021-02-20 | Update icon and image for charts
 | 0.3.203 | 2021-02-21 | Upgrade chart release informations
+| 0.3.205 | 2021-02-21 | Add support for couchbase RBAC
+| 0.3.206 | 2021-02-21 | Improve cluster-couchbase options

@@ -135,6 +135,31 @@ cluster:
         enableIndexReplica: true
         compressionMode: passive
 
+clusterRbac:
+  enabled: true
+  groups: 
+    - name: "mercury-admin"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: purple-bucket
+    - name: "purple-app"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: purple-bucket
+  users: 
+    - name: "mercury-admin"
+      password: mercury-admin123
+      fullName: "Mercury ADMIN"
+      backend: local
+      group: "mercury-admin"
+    - name: "purple-app"
+      password: purple-app123
+      fullName: "Purple APPLICATION"
+      backend: local
+      group: "purple-app"
+
 project: 
   enabled: false
   context: 
