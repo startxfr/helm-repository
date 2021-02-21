@@ -257,6 +257,7 @@ clusterRbac:
   enabled: true
   groups: 
     - name: "jupiter-admin"
+      cluster: "jupiter-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -266,6 +267,7 @@ clusterRbac:
         - name: bucket_admin
           bucket: black-bucket
     - name: "yellow-app"
+      cluster: "jupiter-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -273,11 +275,13 @@ clusterRbac:
   users: 
     - name: "jupiter-admin"
       password: jupiter-admin123
+      cluster: "jupiter-cluster"
       fullName: "Venus ADMIN"
       backend: local
       group: "jupiter-admin"
     - name: "yellow-app"
       password: yellow-app123
+      cluster: "jupiter-cluster"
       fullName: "Yellow APPLICATION"
       backend: local
       group: "yellow-app"
