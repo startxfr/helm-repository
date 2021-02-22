@@ -2,13 +2,13 @@ apiVersion: v2
 # Name of this Helm chart
 name: example-couchbase
 # Description of this Helm chart
-description: Helm chart used to deploy an example of a small an simple micro-service based on the php application helm chart.
+description: Helm chart used to deploy an example of a simple micro-service using the couchbase backend helm chart.
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
 version: 0.3.203
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 0.3.203
+appVersion: 0.3.57
 # Version of Openshift 
 engineVersion: 4.6.13
 # Icon of this helm-chart
@@ -16,11 +16,11 @@ icon: https://startxfr.github.io/helm-repository/img/example-couchbase.svg
 # category associated to this package
 category: example
 # tags
-tags: infra,example,php
+tags: infra,example,couchbase
 # Kube minimum version
 kubeVersion: ">=1.1.19"
 # Keyword list for this chart
-keywords: ["startx","example","php"]
+keywords: ["startx","example","couchbase"]
 # STARTX helm chart repository homepage
 home: https://startxfr.github.io/helm-repository
 # Sources and documentation for this chart
@@ -30,3 +30,8 @@ sources:
 # Main maintainer contact for this helm chart
 maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
 
+dependencies:
+  - name: sxapi
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 0.3.193
+    alias: application
