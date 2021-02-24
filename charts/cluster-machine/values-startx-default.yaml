@@ -2,7 +2,7 @@
 # see values.yaml for explanation on each params
 context: 
   scope: startx
-  cluster: default
+  cluster: startx-default
   environment: infra
   component: config
   app: startx-machine
@@ -11,7 +11,7 @@ cluster:
   id: startx-xyzab
   region: eu-west-1
   autoscaler: 
-    enabled: false
+    enabled: true
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
@@ -37,7 +37,7 @@ cluster:
         unneededTime: 60s 
 
 machineHealthCheck:
-  enabled: false
+  enabled: true
   list: 
   - name: master
     type: master
@@ -57,7 +57,7 @@ machineHealthCheck:
     timeouts: 300s
 
 machineAutoscaler: 
-  enabled: false
+  enabled: true
   list: 
   - name: a
     minReplicas: 1
