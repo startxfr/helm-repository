@@ -2,7 +2,7 @@
 # see values.yaml for explanation on each params
 context: 
   scope: startx
-  cluster: default
+  cluster: startx-hecto
   environment: infra
   component: config
   app: startx-machine
@@ -11,17 +11,17 @@ cluster:
   id: startx-xyzab
   region: eu-west-1
   autoscaler: 
-    enabled: false
+    enabled: true
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
         maxNodesTotal: 6
         cores:
-          min: 6
-          max: 24
+          min: 24
+          max: 48
         memory:
-          min: 12
-          max: 48 
+          min: 96
+          max: 192
         gpus:
           - type: nvidia.com/gpu 
             min: 0 
@@ -37,7 +37,7 @@ cluster:
         unneededTime: 60s 
 
 machineHealthCheck:
-  enabled: false
+  enabled: true
   list: 
   - name: master
     type: master
@@ -57,14 +57,14 @@ machineHealthCheck:
     timeouts: 300s
 
 machineAutoscaler: 
-  enabled: false
+  enabled: true
   list: 
   - name: a
-    minReplicas: 1
-    maxReplicas: 2
+    minReplicas: 2
+    maxReplicas: 4
   - name: b
-    minReplicas: 1
-    maxReplicas: 2
+    minReplicas: 2
+    maxReplicas: 4
   - name: c
-    minReplicas: 1
-    maxReplicas: 2
+    minReplicas: 2
+    maxReplicas: 4
