@@ -1,0 +1,48 @@
+{{- if .Values.hyperconvergedCluster }}{{- if .Values.hyperconvergedCluster.enabled }}
+---
+kind: HyperConverged
+apiVersion: hco.kubevirt.io/v1beta1
+metadata:
+  name: {{ .Values.hyperconvergedCluster.name | default "kubevirt-hyperconverged" | quote }}
+  namespace: {{ .Values.project.project.name }}
+  labels:
+    {{- include "cluster-argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.hyperconvergedCluster.name | default "kubevirt-cluster" -}}-hyperconverged"
+    app: {{ .Values.hyperconvergedCluster.name | default "kubevirt-hyperconverged" | quote }}
+  annotations:
+    {{- include "cluster-argocd.annotations" . | nindent 4 }}
+    {{- if .Values.hyperconvergedCluster.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  bareMetalPlatform: true
+  infra: {}
+  localStorageClassName: {{ .Values.hyperconvergedCluster.storageClass | default "gp2-csi" | quote }}
+  version: {{ .Values.operator.subscription.version | default "v2.5.4" | quote }}
+  workloads: {}
+{{- end }}{{- end }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
