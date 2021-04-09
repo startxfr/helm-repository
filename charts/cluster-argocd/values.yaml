@@ -1,0 +1,130 @@
+# Default values for cluster-argocd.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-kubevirt
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Configuration of the hyperconverged cluster
+hyperconvergedCluster:
+  # enable deployment of the hyperconverged cluster
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: true
+  # name of the hyperconverged cluster
+  name: "kubevirt-hyperconverged"
+  # name of the local storage class used as default storage
+  storageClass: "gp2-csi" 
+
+# Configuration of VM to deploy
+vms:
+  # enable deployment of VMs
+  enabled: true
+  # List of VM to deploy
+  list: 
+      # Name of the VM to configure
+    - name: "example-vm"
+      # Namespace where to deploy this VM (default is project)
+      namespace: "openshift-cnv"
+      # hostname of this VM (default is <name>.local)
+      hostname: "example-vm.local"
+      # Operating system configuration
+      os: 
+        # Display name of the OS (default is the signature)
+        name: "CentOS 7"
+        # The signature of the OS (default is centos7.0)
+        signature: "centos7.0"
+      # Configuration of the storage
+      storage:
+        # The image used to boot this VM (default is https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2)
+        boot_image: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
+        # The booting type (dataVolume or containerDisk)
+        boot_type: "dataVolume"
+        # Size of the root disk (default is 10G)
+        boot_size: 15G
+        # Storageclass to use for the root disk (default is gp2)
+        boot_storageclass: aws-generic-delete
+        # Storageclass to use for the root disk (default is gp2)
+        disks: 
+          # Unique name of the additionnal disk (default is disk0)
+        - name: disk0
+          # Storageclass to use for this disk (default is gp2)
+          storageclass: aws-generic-delete
+          # Size of the additionnal disk (default is 2G)
+          size: 10G
+          # Order of this disk in the boot sequence, must be > 2 (default is 3)
+          boot_order: 3
+      # Configuration of the initialisation
+      cloudInit: |
+        #cloud-config
+        name: default
+        hostname: "startx-example-vm.local"
+        # ssh_authorized_keys:
+        #   - ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        users:
+          - name: admin
+            primary_group: root
+            lock_passwd: false
+            # demo user password is : admin123
+            passwd: $6$rounds=4096$EsonsH3w1NVzaDem$w4CMlcvte6Ef.nJA95euy12/YvA.h2JWKuNbB9kXNfzQH.YpfpuKxPEBby2cvTHdjFpD0xFbHx9S.sm58jmwQ0
+            sudo: ALL=(ALL) NOPASSWD:ALL
+            # ssh_authorized_keys:
+            #   - ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            ssh_import_id: None
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: openshift-cnv
+    display_name: "Startx KUBEVIRT"
+    requester: startx
+    description: Kubevirt and hyperconverged features configured by STARTX
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "kubevirt-hyperconverged"
+    namespace: "openshift-cnv"
+    version: "v2.5.4"
+    operator: 
+      channel: "stable"
+      name: kubevirt-hyperconverged
+      csv: kubevirt-hyperconverged-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "kubevirt"
+    namespace: "openshift-cnv"
+    providedAPIs: "CDI.v1beta1.cdi.kubevirt.io,HostPathProvisioner.v1beta1.hostpathprovisioner.kubevirt.io,HyperConverged.v1beta1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.ssp.kubevirt.io,KubevirtMetricsAggregation.v1.ssp.kubevirt.io,KubevirtNodeLabellerBundle.v1.ssp.kubevirt.io,KubevirtTemplateValidator.v1.ssp.kubevirt.io,NetworkAddonsConfig.v1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1beta1.nodemaintenance.kubevirt.io,OVirtProvider.v1alpha1.v2v.kubevirt.io,V2VVmware.v1alpha1.v2v.kubevirt.io,VMImportConfig.v1beta1.v2v.kubevirt.io"
