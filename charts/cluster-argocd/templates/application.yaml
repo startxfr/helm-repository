@@ -48,6 +48,11 @@ spec:
   {{- else }}
   syncPolicy: {}
   {{- end }}
-
+  {{- if .ignoreDifferences }}
+  ignoreDifferences: 
+    {{- .ignoreDifferences | nindent 4 }}
+  {{- else }}
+  ignoreDifferences: []
+  {{- end }}
 {{- end }}
 {{- end }}{{- end }}
