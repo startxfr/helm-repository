@@ -29,9 +29,9 @@ cluster:
       antiAffinity: true
       softwareUpdateNotifications: true
       serverGroups:
-        - eu-west-2a
-        - eu-west-2b
-        - eu-west-2c
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
       securityContext:
         runAsUser: 1000
         runAsNonRoot: true
@@ -106,16 +106,16 @@ cluster:
         services:
         - data
         serverGroups:
-        - eu-west-2a
-        - eu-west-2b
-        - eu-west-2c
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
         resources:
           limits:
             cpu: "3000m"
             memory: 3Gi
           requests:
-            cpu: "300m"
-            memory: 1Gi
+            cpu: "500m"
+            memory: 2Gi
         volumeMounts:
           default: couchbase
           data:  couchbase
@@ -139,16 +139,16 @@ cluster:
         - search
         - eventing
         serverGroups:
-        - eu-west-2a
-        - eu-west-2b
-        - eu-west-2c
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
         resources:
           limits:
             cpu: "1500m"
-            memory: 2Gi
+            memory: 3Gi
           requests:
-            cpu: "400m"
-            memory: 1Gi
+            cpu: "800m"
+            memory: 2Gi
         volumeMounts:
           default: couchbase
           index: couchbase
@@ -191,6 +191,7 @@ clusterRbac:
   enabled: true
   groups: 
     - name: "venus-admin"
+      cluster: "venus-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -198,6 +199,7 @@ clusterRbac:
         - name: bucket_admin
           bucket: orange-bucket
     - name: "orange-app"
+      cluster: "venus-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -205,11 +207,13 @@ clusterRbac:
   users: 
     - name: "venus-admin"
       password: venus-admin123
+      cluster: "venus-cluster"
       fullName: "Venus ADMIN"
       backend: local
       group: "venus-admin"
     - name: "orange-app"
       password: orange-app123
+      cluster: "venus-cluster"
       fullName: "Orange APPLICATION"
       backend: local
       group: "orange-app"

@@ -29,9 +29,9 @@ cluster:
       antiAffinity: true
       softwareUpdateNotifications: true
       serverGroups:
-        - eu-west-2a
-        - eu-west-2b
-        - eu-west-2c
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
       securityContext:
         runAsUser: 1000
         runAsNonRoot: true
@@ -106,16 +106,16 @@ cluster:
         services:
         - data
         serverGroups:
-        - eu-west-2a
-        - eu-west-2b
-        - eu-west-2c
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
         resources:
           limits:
             cpu: "3000m"
             memory: 3Gi
           requests:
             cpu: "300m"
-            memory: 1Gi
+            memory: 2Gi
         volumeMounts:
           default: couchbase
           data:  couchbase
@@ -137,16 +137,16 @@ cluster:
         - index
         - query
         serverGroups:
-        - eu-west-2a
-        - eu-west-2b
-        - eu-west-2c
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
         resources:
           limits:
-            cpu: "1500m"
-            memory: 2Gi
+            cpu: "1600m"
+            memory: 3Gi
           requests:
-            cpu: "400m"
-            memory: 1Gi
+            cpu: "800m"
+            memory: 2Gi
         volumeMounts:
           default: couchbase
           index: couchbase
@@ -168,16 +168,16 @@ cluster:
         - search
         - eventing
         serverGroups:
-        - eu-west-2a
-        - eu-west-2b
-        - eu-west-2c
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
         resources:
           limits:
-            cpu: "1200m"
-            memory: 2Gi
+            cpu: "1600m"
+            memory: 3Gi
           requests:
-            cpu: "400m"
-            memory: 1Gi
+            cpu: "800m"
+            memory:2Gi
         volumeMounts:
           default: couchbase
           index: couchbase
@@ -201,15 +201,15 @@ cluster:
         services:
         - analytics
         serverGroups:
-        - eu-west-2a
-        - eu-west-2b
-        - eu-west-2c
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
         resources:
           limits:
             cpu: "1200m"
             memory: 4Gi
           requests:
-            cpu: "200m"
+            cpu: "600m"
             memory: 2Gi
         volumeMounts:
           default: couchbase
@@ -260,6 +260,7 @@ clusterRbac:
   enabled: true
   groups: 
     - name: "jupiter-admin"
+      cluster: "jupiter-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -269,6 +270,7 @@ clusterRbac:
         - name: bucket_admin
           bucket: black-bucket
     - name: "yellow-app"
+      cluster: "jupiter-cluster"
       spec: |
         roles:
         - name: bucket_admin
@@ -276,11 +278,13 @@ clusterRbac:
   users: 
     - name: "jupiter-admin"
       password: jupiter-admin123
+      cluster: "jupiter-cluster"
       fullName: "Venus ADMIN"
       backend: local
       group: "jupiter-admin"
     - name: "yellow-app"
       password: yellow-app123
+      cluster: "jupiter-cluster"
       fullName: "Yellow APPLICATION"
       backend: local
       group: "yellow-app"

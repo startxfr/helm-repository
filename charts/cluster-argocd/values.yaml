@@ -1,0 +1,160 @@
+# Default values for cluster-argocd.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-argocd
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Configuration of the argocd cluster
+argocd:
+  # enable deployment of the argocd cluster
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: true
+  # name of the argocd cluster
+  name: "startx-argocd"
+
+# Configuration of VM to deploy
+application:
+  # enable deployment of application
+  enabled: false
+  # List of application to deploy
+  list: 
+      # Name of the application to configure
+    - name: "example-application"
+      # Namespace where to deploy this application (default is project)
+      namespace: "startx-argocd"
+      # enable argocd finalizer for this application
+      finalizer: true
+      # name of the destination server (default is https://kubernetes.default.svc) 
+      server: "https://kubernetes.default.svc"
+      # name of the parent project (default is cluster-admin) 
+      project: "cluster-admin"
+      # Application source
+      source: 
+        # repository URL to the application code (default is https://github.com/startxfr/helm-repository.git)
+        repo: "https://github.com/startxfr/helm-repository.git"
+        # revision to use for this source-code (default is master) 
+        rev: "devel"
+        # path to the application code (default is charts/example-html/)
+        path: "charts/example-html/"
+      # Configuration of the helm chart
+      helm: | 
+        valueFiles:
+          - values-startx.yaml
+        parameters:
+          - name: context.scope
+            value: "${SCOPE}"
+          - name: context.cluster
+            value: "${CLUSTER}"
+          - name: context.environment
+            value: "${ENV}"
+          - name: context.version
+            value: "${VERSION}"
+          - name: context.app
+            value: "startx-infra"
+          - name: autoscaling.enabled
+            value: "false"
+          - name: clusterversion.enabled
+            value: "false"
+          - name: alertmanager.enabled
+            value: "false"
+          - name: alertmanager.pagerDutty.key
+            value: "_pager_dutty_startx_key_"
+          - name: alertmanager.api.endpoint
+            value: "_startx_api_endpoint_"
+          - name: imageprunner.enabled
+            value: "true"
+          - name: imageprunner.schedule
+            value: "30 * * * *"
+          - name: imageprunner.suspend
+            value: "false" 
+          - name: projecttemplate.enabled
+            value: "true" 
+          - name: redhat.operators
+            value: "false" 
+          - name: operatorElastic.enabled
+            value: "false" 
+          - name: operatorGlobal.enabled
+            value: "false" 
+          - name: helm_reposistory.enabled
+            value: "true" 
+      # Configuration of the syncPolicy property
+      syncPolicy: | 
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+      # Configuration of the ignoreDifferences list
+      ignoreDifferences: | 
+        - group: "apps"
+          kind: Secret
+          namespace: "openshift-authentication"
+          jsonPointers:
+            - /
+
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: startx-argocd
+    display_name: "Startx ARGOCD"
+    requester: startx
+    description: ArgoCD and gitops features configured by STARTX
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "argocd-operator"
+    namespace: "startx-argocd"
+    version: "v0.0.14"
+    operator: 
+      channel: "alpha"
+      name: argocd-operator
+      csv: argocd-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "argocd"
+    namespace: "startx-argocd"
+    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,ArgoCDExport.v1alpha1.argoproj.io"

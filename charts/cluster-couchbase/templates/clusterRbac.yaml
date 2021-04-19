@@ -6,16 +6,16 @@
 
 {{/* Loop over the group list */}}
 {{- if .Values.clusterRbac.groups }}{{- range .Values.clusterRbac.groups }}
-{{- $name := .name | default "default-group" -}}
 --- 
 kind: CouchbaseGroup
 apiVersion: couchbase.com/v2
 metadata:
-  name: "{{- $name -}}"
+  name: "{{- .name | default "default-group" -}}"
   namespace: "{{- $ns -}}"
   labels:
     {{- include "cluster-couchbase.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- $name -}}-couchbasegroup"
+    app.kubernetes.io/name: "{{- .name | default "default-group" -}}-couchbasegroup"
+    cluster: "{{- .cluster | default "default-cluster" -}}"
   annotations:
     {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
 spec:
@@ -38,6 +38,7 @@ metadata:
   labels:
     {{- include "cluster-couchbase.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-couchbaseuser"
+    cluster: "{{- .cluster | default "default-cluster" -}}"
   annotations:
     {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
 spec:
@@ -53,6 +54,7 @@ metadata:
   labels:
     {{- include "cluster-couchbase.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-password-secret"
+    cluster: "{{- .cluster | default "default-cluster" -}}"
   annotations:
     {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
     template.openshift.io/expose-password: "{.data['password']}"
@@ -69,6 +71,7 @@ metadata:
   labels:
     {{- include "cluster-couchbase.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-{{- .group -}}-couchbaserolebinding"
+    cluster: "{{- .cluster | default "default-cluster" -}}"
   annotations:
     {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
 spec:

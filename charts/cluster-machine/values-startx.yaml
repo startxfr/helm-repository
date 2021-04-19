@@ -15,20 +15,20 @@ cluster:
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
-        maxNodesTotal: 15
+        maxNodesTotal: 6
         cores:
-          min: 22
-          max: 600
+          min: 6
+          max: 24
         memory:
-          min: 72
-          max: 1200 
+          min: 12
+          max: 48 
         gpus:
           - type: nvidia.com/gpu 
             min: 0 
-            max: 2
+            max: 0
           - type: amd.com/gpu 
             min: 0 
-            max: 2 
+            max: 0
       scaleDown: 
         enabled: true 
         delayAfterAdd: 5m 
@@ -60,11 +60,11 @@ machineAutoscaler:
   enabled: false
   list: 
   - name: a
-    minReplicas: 2
-    maxReplicas: 6
+    minReplicas: 1
+    maxReplicas: 2
   - name: b
-    minReplicas: 2
-    maxReplicas: 6
+    minReplicas: 1
+    maxReplicas: 2
   - name: c
-    minReplicas: 2
-    maxReplicas: 6
+    minReplicas: 1
+    maxReplicas: 2

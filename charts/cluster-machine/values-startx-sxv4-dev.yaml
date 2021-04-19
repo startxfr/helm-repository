@@ -1,0 +1,70 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: startx-sxv4-dev
+  environment: infra
+  component: config
+  app: startx-machine
+
+cluster:
+  id: startx-xyzab
+  region: eu-west-1
+  autoscaler: 
+    enabled: true
+    spec: |
+      podPriorityThreshold: -10 
+      resourceLimits:
+        maxNodesTotal: 6
+        cores:
+          min: 6
+          max: 24
+        memory:
+          min: 12
+          max: 48 
+        gpus:
+          - type: nvidia.com/gpu 
+            min: 0 
+            max: 0
+          - type: amd.com/gpu 
+            min: 0 
+            max: 0
+      scaleDown: 
+        enabled: true 
+        delayAfterAdd: 5m 
+        delayAfterDelete: 3m 
+        delayAfterFailure: 40s 
+        unneededTime: 60s 
+
+machineHealthCheck:
+  enabled: false
+  list: 
+  - name: master
+    type: master
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: a
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: b
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: c
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+
+machineAutoscaler: 
+  enabled: true
+  list: 
+  - name: a
+    minReplicas: 1
+    maxReplicas: 2
+  - name: b
+    minReplicas: 1
+    maxReplicas: 2
+  - name: c
+    minReplicas: 1
+    maxReplicas: 2
