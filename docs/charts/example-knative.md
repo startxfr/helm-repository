@@ -51,7 +51,7 @@ helm install startx/example-knative
 | Key                   | Default    | Description
 | --------------------- | ---------- | -----------------------------------------------------
 | knative.service.enabled | false      | Enable service for this application
-| knative.version         | 0.3.53     | Sxapi image version to run
+| knative.version         | 0.3.57     | Sxapi image version to run
 | knative.profile         | prod:start | Profile to run inside the container
 | knative.debug           | true       | Enable debuging of the container
 | knative.replicas        | 1          | Define the number of replicas for this knative instance
@@ -109,3 +109,4 @@ helm install startx/example-knative -f https://raw.githubusercontent.com/startxf
 | 0.3.199 | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts
 | 0.3.201 | 2021-02-20 | Update icon and image for charts
 | 0.3.203 | 2021-02-21 | Upgrade chart release informations
+| 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205
