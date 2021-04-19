@@ -1,0 +1,242 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: argocd
+  app: startx-argocd
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: startx-argocd
+    display_name: "Startx ARGOCD"
+    requester: startx
+    description: ArgoCD and gitops features configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops
+      name: devops
+      role: appprojects.argoproj.io-v1alpha1-admin
+    - id: devops-edit
+      name: devops
+      role: edit
+    - id: "system:cluster-admins"
+      name: "system:cluster-admins"
+      role: appprojects.argoproj.io-v1alpha1-admin
+    - id: dev
+      name: dev
+      role: appprojects.argoproj.io-v1alpha1-view
+    - id: dev
+      name: dev
+      role: appprojects.argoproj.io-v1alpha1-view
+    users: 
+    - id: argocd-application-controller-sa
+      name: system:serviceaccount:startx-argocd:argocd-application-controller
+      type: cluster
+      role: cluster-admin
+  networkpolicy: 
+    enabled: true
+    rules: 
+      - id: registry-allow-all-ns
+        spec: |
+          podSelector:
+            matchLabels:
+              app: argocd-operator
+              argocd-enterprise-component: app
+              argocd-enterprise-cr: startx
+          ingress:
+            - from:
+                - namespaceSelector: {}
+  limits: 
+    enabled: true
+    rules:  |
+      limits:
+        - type: "Pod"
+          min:
+            cpu: 20m
+            memory: 32Mi
+          max:
+            cpu: "6000m"
+            ephemeral-storage: 712Mi
+            memory: "4Gi"
+        - type: "Container"
+          defaultRequest:
+            cpu: 100m
+            memory: 128Mi
+          default:
+            cpu: 200m
+            memory: 256Mi
+          min:
+            cpu: 20m
+            # ephemeral-storage: 32Mi
+            memory: 32Mi
+          max:
+            cpu: "6000m"
+            ephemeral-storage: 512Mi
+            memory: "4Gi"
+  quotas: 
+    enabled: true
+    rules:  |
+      hard:
+        limits.cpu: "12000m"
+        limits.memory: "12Gi"
+        requests.cpu: "2500m"
+        requests.memory: "4Gi"
+        requests.storage: "0"
+        persistentvolumeclaims: "0"
+        ephemeral-storage: "10Gi"
+        gp2.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        pods: "15"
+        services: "15"
+        services.loadbalancers: "0"
+        services.nodeports: "0"
+        secrets: "45"
+        configmaps: "40"
+        replicationcontrollers: "0"
+        openshift.io/imagestreams: "0"
+        count/replicasets.apps: "30"
+        count/daemonsets.apps: "0"
+        count/deployments.apps: "15"
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "argocd-operator"
+    namespace: "startx-argocd"
+    version: "v0.0.14"
+    operator: 
+      channel: "alpha"
+      name: argocd-operator
+      csv: argocd-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "argocd"
+    namespace: "startx-argocd"
+    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,ArgoCDExport.v1alpha1.argoproj.io"
+argocd:
+  enabled: true
+  hooked: false
+  name: "startx-argocd" 
+application:
+  enabled: false
+  list: 
+    - name: "example-application"
+      # Namespace where to deploy this VM (default is project)
+      namespace: "startx-argocd"
+      # enable argocd finalizer for this application
+      finalizer: true
+      # name of the destination server (default is https://kubernetes.default.svc) 
+      server: "https://kubernetes.default.svc"
+      # name of the parent project (default is cluster-admin) 
+      project: "cluster-admin"
+      # Application source
+      source: 
+        # repository URL to the application code (default is https://github.com/startxfr/helm-repository.git)
+        repo: "https://github.com/startxfr/helm-repository.git"
+        # revision to use for this source-code (default is master) 
+        rev: "devel"
+        # path to the application code (default is charts/example-html/)
+        path: "charts/example-html/"
+      # Configuration of the helm chart
+      helm: | 
+        valueFiles:
+          - values-startx.yaml
+        parameters:
+          - name: context.scope
+            value: "${SCOPE}"
+          - name: context.cluster
+            value: "${CLUSTER}"
+          - name: context.environment
+            value: "${ENV}"
+          - name: context.version
+            value: "${VERSION}"
+          - name: context.app
+            value: "startx-infra"
+          - name: autoscaling.enabled
+            value: "false"
+          - name: clusterversion.enabled
+            value: "false"
+          - name: alertmanager.enabled
+            value: "false"
+          - name: alertmanager.pagerDutty.key
+            value: "_pager_dutty_startx_key_"
+          - name: alertmanager.api.endpoint
+            value: "_startx_api_endpoint_"
+          - name: imageprunner.enabled
+            value: "true"
+          - name: imageprunner.schedule
+            value: "30 * * * *"
+          - name: imageprunner.suspend
+            value: "false" 
+          - name: projecttemplate.enabled
+            value: "true" 
+          - name: redhat.operators
+            value: "false" 
+          - name: operatorElastic.enabled
+            value: "false" 
+          - name: operatorGlobal.enabled
+            value: "false" 
+          - name: helm_reposistory.enabled
+            value: "true" 
+      # Configuration of the syncPolicy chart
+      syncPolicy: | 
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+      ignoreDifferences: | 
+        - group: "apps"
+          kind: Secret
+          namespace: "openshift-authentication"
+          jsonPointers:
+            - /
+
+
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)

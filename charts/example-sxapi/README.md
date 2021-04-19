@@ -51,7 +51,7 @@ helm install startx/example-sxapi
 | Key                   | Default    | Description
 | --------------------- | ---------- | -----------------------------------------------------
 | sxapi.service.enabled | false      | Enable service for this application
-| sxapi.version         | 0.3.53     | Sxapi image version to run
+| sxapi.version         | 0.3.57     | Sxapi image version to run
 | sxapi.profile         | prod:start | Profile to run inside the container
 | sxapi.debug           | true       | Enable debuging of the container
 | sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance
@@ -64,7 +64,7 @@ helm install startx/example-sxapi
 Complete deployment of an sxapi application with the following characteristics :
 
 - 1 **service** named **example-sxapi** load balancing to pod deployed
-- 1 **deployment** named **example-sxapi** deploying **1 pod** from version **0.3.53** sxapi image running the **prod:start** command with debug disabled
+- 1 **deployment** named **example-sxapi** deploying **1 pod** from version **0.3.57** sxapi image running the **prod:start** command with debug disabled
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
@@ -77,7 +77,7 @@ helm install startx/example-sxapi
 Complete deployment of a sxapi development application with the following characteristics :
 
 - 1 **service** named **example-sxapi-dev** load balancing to pod deployed
-- 1 **deployment** named **example-sxapi-dev** deploying **1 pod** from version **0.3.53** sxapi image running the **dev:start** command with debug disabled
+- 1 **deployment** named **example-sxapi-dev** deploying **1 pod** from version **0.3.57** sxapi image running the **dev:start** command with debug disabled
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
@@ -103,7 +103,7 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 Complete deployment of a sxapi production application (v0.0.2) with the following characteristics :
 
 - 1 **service** named **example-sxapi-prod** load balancing to pod deployed
-- 1 **deployment** named **example-sxapi-prod** deploying **1 pod** from version **0.3.53** sxapi image running the **prod:start** command with debug disabled
+- 1 **deployment** named **example-sxapi-prod** deploying **1 pod** from version **0.3.57** sxapi image running the **prod:start** command with debug disabled
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash

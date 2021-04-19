@@ -1,0 +1,53 @@
+{{- if .Values.application }}{{- if .Values.application.enabled }}
+{{- $root := . -}}
+{{- $defaultns := .Values.project.project.name -}}
+{{ range .Values.application.list }}
+{{- $name := .name | default "default-application" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $server := .server | default "https://kubernetes.default.svc" -}}
+{{- $project := .project | default "cluster-admin" -}}
+---
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-argocd.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-application"
+  annotations:
+    {{- include "cluster-argocd.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "50"
+  {{- if .finalizer }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  {{- end }}
+spec:
+  destination:
+    namespace:  {{ $namespace | quote }}
+    server: {{ $server | quote }}
+  info:
+    - name: teammail
+      value: dev@startx.fr
+  project: {{ $project | quote }}
+  source:
+    {{- with .source }} 
+    path: {{ .path | default "charts/example-html/" | quote }}
+    repoURL: {{ .repo | default "https://github.com/startxfr/helm-repository.git" | quote }}
+    targetRevision: {{ .rev | default "master" | quote }}
+    {{- end }}
+    {{- if .helm }}
+    helm: 
+      {{- .helm | nindent 6 }}
+    {{- else }}
+    helm: {}
+    {{- end }}
+  {{- if .syncPolicy }}
+  syncPolicy: 
+    {{- .syncPolicy | nindent 4 }}
+  {{- else }}
+  syncPolicy: {}
+  {{- end }}
+
+{{- end }}
+{{- end }}{{- end }}

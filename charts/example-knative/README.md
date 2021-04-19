@@ -51,7 +51,7 @@ helm install startx/example-knative
 | Key                   | Default    | Description
 | --------------------- | ---------- | -----------------------------------------------------
 | knative.service.enabled | false      | Enable service for this application
-| knative.version         | 0.3.53     | Sxapi image version to run
+| knative.version         | 0.3.57     | Sxapi image version to run
 | knative.profile         | prod:start | Profile to run inside the container
 | knative.debug           | true       | Enable debuging of the container
 | knative.replicas        | 1          | Define the number of replicas for this knative instance

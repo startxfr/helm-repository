@@ -51,7 +51,7 @@ helm install startx/example-html
 | Key                   | Default    | Description
 | --------------------- | ---------- | -----------------------------------------------------
 | html.service.enabled | false      | Enable service for this application
-| html.version         | 0.3.53     | Sxapi image version to run
+| html.version         | 0.3.57     | Sxapi image version to run
 | html.profile         | prod:start | Profile to run inside the container
 | html.debug           | true       | Enable debuging of the container
 | html.replicas        | 1          | Define the number of replicas for this html instance
@@ -64,7 +64,7 @@ helm install startx/example-html
 Complete deployment of an html application with the following characteristics :
 
 - 1 **service** named **example-html** load balancing to pod deployed
-- 1 **deployment** named **example-html** deploying **1 pod** from version **0.3.53** html image running the **prod:start** command with debug disabled
+- 1 **deployment** named **example-html** deploying **1 pod** from version **0.3.57** html image running the **prod:start** command with debug disabled
 - 2 **configMap** holding html configuration and pod environment variable context
 
 ```bash

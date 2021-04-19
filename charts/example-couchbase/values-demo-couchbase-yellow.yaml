@@ -1,0 +1,91 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: dev
+  component: helm
+  app: demo-couchbase-yellow
+  version: "0.0.2"
+application:
+  context: 
+    <<: *context
+  sxapi:
+    service:
+      enabled: true
+    version: "0.3.57"
+    profile: "dev:start"
+    debug: true
+    replicas: 1
+    data: |
+      sxapi.yml: |-
+        name: {{ include "startx.appName" . }}
+        description: This is the description of {{ include "startx.appName" . }}
+        version: {{ include "startx.appVersion" . }}
+        debug: "{{- .Values.sxapi.debug }}"
+        resources:
+          serviceinfo-sample:
+            _class: serviceinfo
+        couchbase-yellow:
+          _class: serviceinfo
+          cluster: http://jupiter:8091
+          bucket: yelllow-back
+          user: yelllow-app
+          password: yelllow-app123
+        log:
+          filters:
+            level: '0,1,2,3,4'
+            type: debug,info,error,warn
+        server:
+          port: '8077'
+          endpoints:
+        - path: "/yellow"
+          method: ROUTER
+          resource: redis-sample
+          endpoints:
+          - path: "/"
+            desc: Display welcome message (HTML)
+            body: |-
+                <html>
+                <head><title>Application {{ include "startx.appName" . }}</title></head>
+                <link rel="stylesheet" href="https://goo.gl/4kFNLH">
+                <body><div class="container">
+                <h1><span class="glyphicon glyphicon-eye-open"></span> Your API {{ include "startx.appName" . }} is
+                live !</h1>
+                <div class="alert alert-success" role="alert"><p>This API is {{ include "startx.appName" . }} (<b>v{{ include "startx.appVersion" . }}</b>)</p></div>
+                <div class="alert alert-info" role="alert"><p>The application signature is <b>{{ include "startx.appNameVersion" . }}</b>.</p></div>
+                <h1>Demo de deploiement</h1>
+                <nav class="navbar navbar-default navbar-fixed-bottom"><div class="container">
+                Microservice engine is <b>{{ include "startx.appName" . }} v{{ include "startx.appVersion" . }}</b></div></nav>
+                </div></body>
+                </html>
+          - path: "/health"
+            resource: serviceinfo-sample
+            endpoint: health
+          - path: "/info"
+            resource: serviceinfo-sample
+            endpoint: info
+          - path: "/ping"
+            desc: Ping the application. Return a sample message in json
+            code: '200'
+            body: pong
+          - path: "/yellow"
+            method: ROUTER
+            resource: couchbase-yellow
+            endpoints:
+            - path: "/yellow"
+              method: POST
+              endpoint: create
+            - path: "/yellow/:id"
+              method: POST
+              endpoint: create
+            - path: "/yellow/:id"
+              method: GET
+              endpoint: get
+            - path: "/yellow/:id"
+              method: PUT
+              endpoint: update
+            - path: "/yellow/:id"
+              method: DELETE
+              endpoint: delete
