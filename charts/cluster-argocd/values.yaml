@@ -11,76 +11,106 @@ context: &context
   # Component name of this application (logical tenant)
   component: mycomponent
   # Application name (functionnal tenant, default use Chart name)
-  app: default-kubevirt
+  app: default-argocd
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
-# Configuration of the hyperconverged cluster
-hyperconvergedCluster:
-  # enable deployment of the hyperconverged cluster
+# Configuration of the argocd cluster
+argocd:
+  # enable deployment of the argocd cluster
   enabled: true
   # Activate the manager as a helm hook
   hooked: true
-  # name of the hyperconverged cluster
-  name: "kubevirt-hyperconverged"
-  # name of the local storage class used as default storage
-  storageClass: "gp2-csi" 
+  # name of the argocd cluster
+  name: "startx-argocd"
 
 # Configuration of VM to deploy
-vms:
-  # enable deployment of VMs
-  enabled: true
-  # List of VM to deploy
+application:
+  # enable deployment of application
+  enabled: false
+  # List of application to deploy
   list: 
-      # Name of the VM to configure
-    - name: "example-vm"
-      # Namespace where to deploy this VM (default is project)
-      namespace: "openshift-cnv"
-      # hostname of this VM (default is <name>.local)
-      hostname: "example-vm.local"
-      # Operating system configuration
-      os: 
-        # Display name of the OS (default is the signature)
-        name: "CentOS 7"
-        # The signature of the OS (default is centos7.0)
-        signature: "centos7.0"
-      # Configuration of the storage
-      storage:
-        # The image used to boot this VM (default is https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2)
-        boot_image: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
-        # The booting type (dataVolume or containerDisk)
-        boot_type: "dataVolume"
-        # Size of the root disk (default is 10G)
-        boot_size: 15G
-        # Storageclass to use for the root disk (default is gp2)
-        boot_storageclass: aws-generic-delete
-        # Storageclass to use for the root disk (default is gp2)
-        disks: 
-          # Unique name of the additionnal disk (default is disk0)
-        - name: disk0
-          # Storageclass to use for this disk (default is gp2)
-          storageclass: aws-generic-delete
-          # Size of the additionnal disk (default is 2G)
-          size: 10G
-          # Order of this disk in the boot sequence, must be > 2 (default is 3)
-          boot_order: 3
-      # Configuration of the initialisation
-      cloudInit: |
-        #cloud-config
-        name: default
-        hostname: "startx-example-vm.local"
-        # ssh_authorized_keys:
-        #   - ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        users:
-          - name: admin
-            primary_group: root
-            lock_passwd: false
-            # demo user password is : admin123
-            passwd: $6$rounds=4096$EsonsH3w1NVzaDem$w4CMlcvte6Ef.nJA95euy12/YvA.h2JWKuNbB9kXNfzQH.YpfpuKxPEBby2cvTHdjFpD0xFbHx9S.sm58jmwQ0
-            sudo: ALL=(ALL) NOPASSWD:ALL
-            # ssh_authorized_keys:
-            #   - ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            ssh_import_id: None
+      # Name of the application to configure
+    - name: "example-application"
+      # Namespace where to deploy this application (default is project)
+      namespace: "startx-argocd"
+      # enable argocd finalizer for this application
+      finalizer: true
+      # name of the destination server (default is https://kubernetes.default.svc) 
+      server: "https://kubernetes.default.svc"
+      # name of the parent project (default is cluster-admin) 
+      project: "cluster-admin"
+      # Application source
+      source: 
+        # repository URL to the application code (default is https://github.com/startxfr/helm-repository.git)
+        repo: "https://github.com/startxfr/helm-repository.git"
+        # revision to use for this source-code (default is master) 
+        rev: "devel"
+        # path to the application code (default is charts/example-html/)
+        path: "charts/example-html/"
+      # Configuration of the helm chart
+      helm: | 
+        valueFiles:
+          - values-startx.yaml
+        parameters:
+          - name: context.scope
+            value: "${SCOPE}"
+          - name: context.cluster
+            value: "${CLUSTER}"
+          - name: context.environment
+            value: "${ENV}"
+          - name: context.version
+            value: "${VERSION}"
+          - name: context.app
+            value: "startx-infra"
+          - name: autoscaling.enabled
+            value: "false"
+          - name: clusterversion.enabled
+            value: "false"
+          - name: alertmanager.enabled
+            value: "false"
+          - name: alertmanager.pagerDutty.key
+            value: "_pager_dutty_startx_key_"
+          - name: alertmanager.api.endpoint
+            value: "_startx_api_endpoint_"
+          - name: imageprunner.enabled
+            value: "true"
+          - name: imageprunner.schedule
+            value: "30 * * * *"
+          - name: imageprunner.suspend
+            value: "false" 
+          - name: projecttemplate.enabled
+            value: "true" 
+          - name: redhat.operators
+            value: "false" 
+          - name: operatorElastic.enabled
+            value: "false" 
+          - name: operatorGlobal.enabled
+            value: "false" 
+          - name: helm_reposistory.enabled
+            value: "true" 
+      # Configuration of the syncPolicy property
+      syncPolicy: | 
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+      # Configuration of the ignoreDifferences list
+      ignoreDifferences: | 
+        - group: "apps"
+          kind: Secret
+          namespace: "openshift-authentication"
+          jsonPointers:
+            - /
+
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -90,10 +120,10 @@ project:
   project: 
     enabled: true
     type: namespace
-    name: openshift-cnv
-    display_name: "Startx KUBEVIRT"
+    name: startx-argocd
+    display_name: "Startx ARGOCD"
     requester: startx
-    description: Kubevirt and hyperconverged features configured by STARTX
+    description: ArgoCD and gitops features configured by STARTX
   rbac: 
     enabled: false
   networkpolicy: 
@@ -112,19 +142,19 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "kubevirt-hyperconverged"
-    namespace: "openshift-cnv"
-    version: "v2.5.4"
+    name: "argocd-operator"
+    namespace: "startx-argocd"
+    version: "v0.0.14"
     operator: 
-      channel: "stable"
-      name: kubevirt-hyperconverged
-      csv: kubevirt-hyperconverged-operator
+      channel: "alpha"
+      name: argocd-operator
+      csv: argocd-operator
       source: 
-        name: redhat-operators
+        name: community-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: false
-    name: "kubevirt"
-    namespace: "openshift-cnv"
-    providedAPIs: "CDI.v1beta1.cdi.kubevirt.io,HostPathProvisioner.v1beta1.hostpathprovisioner.kubevirt.io,HyperConverged.v1beta1.hco.kubevirt.io,KubeVirt.v1alpha3.kubevirt.io,KubevirtCommonTemplatesBundle.v1.ssp.kubevirt.io,KubevirtMetricsAggregation.v1.ssp.kubevirt.io,KubevirtNodeLabellerBundle.v1.ssp.kubevirt.io,KubevirtTemplateValidator.v1.ssp.kubevirt.io,NetworkAddonsConfig.v1.networkaddonsoperator.network.kubevirt.io,NodeMaintenance.v1beta1.nodemaintenance.kubevirt.io,OVirtProvider.v1alpha1.v2v.kubevirt.io,V2VVmware.v1alpha1.v2v.kubevirt.io,VMImportConfig.v1beta1.v2v.kubevirt.io"
+    name: "argocd"
+    namespace: "startx-argocd"
+    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,ArgoCDExport.v1alpha1.argoproj.io"

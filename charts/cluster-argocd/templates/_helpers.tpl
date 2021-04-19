@@ -15,21 +15,21 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note for cluster config */}}
 {{- define "cluster-argocd.notes" -}}
--- HyperConverged Cluster ----------
+-- ArgoCD Cluster ------------------
 {{- if . }}{{- if .enabled }}
         state : enabled
-         name : {{ .name | default "kubevirt-cluster" }}
+         name : {{ .name | default "argocd-cluster" }}
 {{- end }}{{- end }}
 {{- end -}}
 
 {{/* Common operator note for VM configuration */}}
-{{- define "cluster-argocd.notesVms" -}}
--- Virtual Machines ----------------
+{{- define "cluster-argocd.notesApplication" -}}
+-- Application ---------------------
 {{- if . }}{{- if .enabled }}
         state : enabled
-         VM's : 
+  Application : 
 {{ range .list }}
-              - {{ .name | default "default-vm" }}
+              - {{ .name | default "default-application" }}
 {{ end }}
 {{- end }}{{- end }}
 {{- end -}}
