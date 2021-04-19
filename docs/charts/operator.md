@@ -160,3 +160,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.199 | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts
 | 0.3.201 | 2021-02-20 | Update icon and image for charts
 | 0.3.203 | 2021-02-21 | Upgrade chart release informations
+| 0.3.205 | 2021-04-19 | Align release of core charts
