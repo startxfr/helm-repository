@@ -1,5 +1,5 @@
 
-Hyper-convergence (kubevirt) is enabled, at the cluster level, with the following characteristics :
+Hyper-convergence (argocd) is enabled, at the cluster level, with the following characteristics :
 
 -- Context -------------------------
         scope : {{ include "startx.appScope" . }}
@@ -17,6 +17,6 @@ Hyper-convergence (kubevirt) is enabled, at the cluster level, with the followin
 {{ include "operator.notes" .Values.operator }}
 {{- end }}{{- end }}
 
-{{ include "cluster-argocd.notes" .Values.hyperconvergedCluster }}
+{{ include "cluster-argocd.notes" .Values.argocd }}
 
-{{ include "cluster-argocd.notesVms" .Values.vms }}
+{{ include "cluster-argocd.notesApplication" .Values.application }}

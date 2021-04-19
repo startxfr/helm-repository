@@ -1,0 +1,152 @@
+{{- if .Values.argocd }}{{- if .Values.argocd.enabled }}
+---
+kind: ArgoCD
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: {{ .Values.argocd.name | default "startx-argocd" | quote }}
+  namespace: {{ .Values.project.project.name }}
+  labels:
+    {{- include "cluster-argocd.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.argocd.name | default "argocd-cluster" -}}-argocd"
+    app: {{ .Values.argocd.name | default "startx-argocd" | quote }}
+  annotations:
+    {{- include "cluster-argocd.annotations" . | nindent 4 }}
+    {{- if .Values.argocd.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec: 
+  applicationInstanceLabelKey: argocd.argoproj.io/instance
+  # resourceCustomizations: |
+  #   PersistentVolumeClaim:
+  #     health.lua: |
+  #       hs = {}
+  #       if obj.status ~= nil then
+  #         if obj.status.phase ~= nil then
+  #           if obj.status.phase == "Pending" then
+  #             hs.status = "Healthy"
+  #             hs.message = obj.status.phase
+  #             return hs
+  #           end
+  #           if obj.status.phase == "Bound" then
+  #             hs.status = "Healthy"
+  #             hs.message = obj.status.phase
+  #             return hs
+  #           end
+  #         end
+  #       end
+  #       hs.status = "Progressing"
+  #       hs.message = "Waiting for certificate"
+  #       return hs
+  # resourceExclusions: |
+  #   - apiGroups:
+  #     - repositories.stash.appscode.com
+  #     kinds:
+  #     - Snapshot
+  #     clusters:
+  #     - "*"
+  server:
+    autoscale:
+      enabled: true
+      hpa:
+        maxReplicas: 4
+        minReplicas: 2
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: startx-server
+        targetCPUUtilizationPercentage: 60
+    insecure: true
+    resources:
+      limits:
+        cpu: 300m
+        ephemeral-storage: 100Mi
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        ephemeral-storage: 10Mi
+        memory: 64Mi
+    route:
+      enabled: true
+      tls:
+        termination: edge
+  statusBadgeEnabled: true
+  helpChatText: Chat with ops-team
+  helpChatURL: 'https://startx-france.slack.com/chatops'
+  usersAnonymousEnabled: false
+  controller:
+    appSync: 120s
+    processors:
+      operation: 10
+      status: 25
+    resources:
+      limits:
+        cpu: 6000m
+        ephemeral-storage: 256Mi
+        memory: 4Gi
+      requests:
+        cpu: 1200m
+        ephemeral-storage: 64Mi
+        memory: 2Gi
+  ha:
+    enabled: false
+  redis:
+    resources:
+      limits:
+        cpu: 300m
+        ephemeral-storage: 50Mi
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 10Mi
+        memory: 128Mi
+  dex:
+    openShiftOAuth: true
+    resources:
+      limits:
+        cpu: 200m
+        ephemeral-storage: 100Mi
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 50Mi
+        memory: 64Mi
+  rbac:
+    defaultPolicy: edit
+  grafana:
+    enabled: true
+    size: 2
+    resources:
+      limits:
+        cpu: 200m
+        ephemeral-storage: 100Mi
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        ephemeral-storage: 50Mi
+        memory: 64Mi
+    route:
+      enabled: true
+    ingress:
+      enabled: false
+  prometheus:
+    enabled: true
+    size: 2
+    route:
+      enabled: true
+  repo:
+    mountsatoken: true
+    resources:
+      limits:
+        cpu: 300m
+        ephemeral-storage: 500Mi
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        ephemeral-storage: 100Mi
+        memory: 128Mi
+{{- end }}{{- end }}
