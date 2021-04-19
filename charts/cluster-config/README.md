@@ -100,3 +100,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 0.3.201 | 2021-02-20 | Update icon and image for charts
 | 0.3.101 | 2021-02-20 | add support of helm chart catalog
 | 0.3.203 | 2021-02-21 | Upgrade chart release informations
+| 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205
