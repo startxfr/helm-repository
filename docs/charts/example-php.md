@@ -51,7 +51,7 @@ helm install startx/example-php
 | Key                   | Default    | Description
 | --------------------- | ---------- | -----------------------------------------------------
 | php.service.enabled | false      | Enable service for this application
-| php.version         | 0.3.53     | Sxapi image version to run
+| php.version         | 8.0.2      | Sxapi image version to run
 | php.profile         | prod:start | Profile to run inside the container
 | php.debug           | true       | Enable debuging of the container
 | php.replicas        | 1          | Define the number of replicas for this php instance
@@ -64,7 +64,7 @@ helm install startx/example-php
 Complete deployment of an php application with the following characteristics :
 
 - 1 **service** named **example-php** load balancing to pod deployed
-- 1 **deployment** named **example-php** deploying **1 pod** from version **0.3.53** php image running the **prod:start** command with debug disabled
+- 1 **deployment** named **example-php** deploying **1 pod** from version **8.0.2** php image running the **prod:start** command with debug disabled
 - 2 **configMap** holding php configuration and pod environment variable context
 
 ```bash
@@ -103,3 +103,4 @@ helm install startx/example-php -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.199 | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts
 | 0.3.201 | 2021-02-20 | Update icon and image for charts
 | 0.3.203 | 2021-02-21 | Upgrade chart release informations
+| 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205
