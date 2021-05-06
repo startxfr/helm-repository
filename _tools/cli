@@ -202,7 +202,8 @@ function routerChartCreate {
 # router for chart test sub-command
 function routerChartTest {
     local chart_name=$1
-    local enable_dep=$2
+    local enable_dep=$3
+    local valuesExample=${2:-values.yaml}
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
     local test_dir=$chart_dir/templates/tests
     if [[ -r $chart_dir ]]; then
@@ -215,7 +216,7 @@ function routerChartTest {
             helm dependency update $chart_dir
         fi
         echo -e "\e[33mTest\e[0m \e[1mGenerate template\e[0m for chart \e[1m$chart_name\e[0m"
-        helm template $chart_name $chart_dir
+        helm template $chart_name $chart_dir -f $chart_dir/$valuesExample
         echo -e "\e[33mTest\e[0m \e[1mLint\e[0m for chart \e[1m$chart_name\e[0m"
         helm lint $chart_dir
     else
