@@ -224,3 +224,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.205 | 2021-04-19 | Align release of core charts
 | 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
+| 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
