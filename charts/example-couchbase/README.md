@@ -91,3 +91,4 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.203  | 2021-02-22 | Create chart example-couchbase from example-sxapi
 | 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205
+| 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
