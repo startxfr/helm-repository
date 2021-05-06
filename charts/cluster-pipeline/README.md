@@ -89,3 +89,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.3.201 | 2021-02-20 | Update icon and image for charts
 | 0.3.203 | 2021-02-21 | Upgrade chart release informations
 | 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205
+| 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
