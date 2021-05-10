@@ -70,3 +70,4 @@ xxxx to do xxxxxx
 | 0.3.217 | 2021-05-06 | Move to elastic operator version 5.0.2-18 (OCP 4.7 compat)
 | 0.3.219 | 2021-05-06 | Move to elastic operator version 5.0.3-6 (OCP 4.7 compat)
 | 0.3.221 | 2021-05-06 | Move to logging operator version 5.0.3-6 (OCP 4.7 compat)
+| 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming

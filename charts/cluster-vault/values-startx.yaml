@@ -21,10 +21,10 @@ project:
   rbac: 
     enabled: true
     user: 
-    - id: vault-sa
+    - id: vault-sa-edit
       name: system:serviceaccount:startx-vault:{{ .Release.name }}
       role: edit
-    - id: vault-agent-injector-sa
+    - id: vault-agent-injector-sa-admin
       name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
       role: admin
 operator:

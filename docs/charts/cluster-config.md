@@ -105,3 +105,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.217 | 2021-05-06 | Move to elastic operator version 5.0.2-18 (OCP 4.7 compat)
 | 0.3.219 | 2021-05-06 | Move to elastic operator version 5.0.3-6 (OCP 4.7 compat)
+| 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming

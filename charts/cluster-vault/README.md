@@ -87,10 +87,10 @@ project:
   rbac: 
     enabled: true
     user: 
-    - id: vault-sa
+    - id: vault-sa-edit
       name: "system:serviceaccount:default-vault:{{ .Release.name }}"
       role: edit
-    - id: vault-agent-injector-sa
+    - id: vault-agent-injector-sa-admin
       name: "system:serviceaccount:default-vault:{{ .Release.name }}-agent-injector"
       role: admin
 
@@ -185,3 +185,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
+| 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
