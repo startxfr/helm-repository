@@ -20,23 +20,20 @@ project:
   rbac: 
     enabled: true
     groups: 
-    - id: devops
+    - id: devops-argocd-admin
       name: devops
       role: appprojects.argoproj.io-v1alpha1-admin
-    - id: devops-edit
+    - id: devops-argocd-edit
       name: devops
       role: edit
-    - id: "system:cluster-admins"
+    - id: "cluster-admins-argocd-admin"
       name: "system:cluster-admins"
       role: appprojects.argoproj.io-v1alpha1-admin
-    - id: dev
-      name: dev
-      role: appprojects.argoproj.io-v1alpha1-view
-    - id: dev
+    - id: dev-argocd-view
       name: dev
       role: appprojects.argoproj.io-v1alpha1-view
     users: 
-    - id: argocd-application-controller-sa
+    - id: argocd-application-controller-cluster-admin
       name: system:serviceaccount:startx-argocd:argocd-application-controller
       type: cluster
       role: cluster-admin
