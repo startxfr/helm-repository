@@ -51,7 +51,7 @@ application:
       # Configuration of the helm chart
       helm: | 
         valueFiles:
-          - values-startx.yaml
+          - values.yaml
         parameters:
           - name: context.scope
             value: "${SCOPE}"
@@ -62,33 +62,11 @@ application:
           - name: context.version
             value: "${VERSION}"
           - name: context.app
-            value: "startx-infra"
-          - name: autoscaling.enabled
-            value: "false"
-          - name: clusterversion.enabled
-            value: "false"
-          - name: alertmanager.enabled
-            value: "false"
-          - name: alertmanager.pagerDutty.key
-            value: "_pager_dutty_startx_key_"
-          - name: alertmanager.api.endpoint
-            value: "_startx_api_endpoint_"
-          - name: imageprunner.enabled
+            value: "exemple-html-helm"
+          - name: html.expose.enabled
             value: "true"
-          - name: imageprunner.schedule
-            value: "30 * * * *"
-          - name: imageprunner.suspend
-            value: "false" 
-          - name: projecttemplate.enabled
-            value: "true" 
-          - name: redhat.operators
-            value: "false" 
-          - name: operatorElastic.enabled
-            value: "false" 
-          - name: operatorGlobal.enabled
-            value: "false" 
-          - name: helm_reposistory.enabled
-            value: "true" 
+          - name: html.namespace
+            value: "default"
       # Configuration of the syncPolicy property
       syncPolicy: | 
         automated:
@@ -107,7 +85,7 @@ application:
       ignoreDifferences: | 
         - group: "apps"
           kind: Secret
-          namespace: "openshift-authentication"
+          namespace: "default"
           jsonPointers:
             - /
 
