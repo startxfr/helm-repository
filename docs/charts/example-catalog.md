@@ -91,3 +91,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | ------- | ---------- | -----------------------------------------------------
 | 0.3.225 | 2021-05-29 | Create chart example-catalog from example-sxapi
 | 0.3.227 | 2021-05-29 | Add the storage_context demo resources
+| 0.3.228 | 2021-05-29 | Add storage block and context demo
