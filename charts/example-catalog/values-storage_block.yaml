@@ -1,0 +1,18 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+nameOverride: example-catalog-storage_block
+versionOverride: "0.0.2"
+block: &context
+  scope: startx
+  cluster: default
+  environment: dev
+  component: helm
+  app: example-catalog-storage_block
+  version: "0.0.2"
+
+demo:
+  storage_block: 
+    <<: *context
+    enabled: true 
+    namespace: demo-storage
