@@ -1,0 +1,517 @@
+{{- if .Values.demo }}{{- if .Values.demo.storage_context }}{{- if .Values.demo.storage_context.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.demo.storage_context.namespace | default "demo-storage" -}}
+{{- with .Values.demo.storage_context -}}
+---
+kind: SecurityContextConstraints
+apiVersion: security.openshift.io/v1
+metadata:
+  name: privileged-demo-storage
+  labels:
+    app.kubernetes.io/name: "privileged-demo-storage-scc"
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    kubernetes.io/description: 'allows privileged access to host'
+    release.openshift.io/create-only: "true"
+allowHostDirVolumePlugin: true
+allowHostIPC: true
+allowHostNetwork: true
+allowHostPID: true
+allowHostPorts: true
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities:
+- '*'
+allowedUnsafeSysctls:
+- '*'
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities: null
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+seccompProfiles:
+- '*'
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:{{- $namespace -}}:run-privileged
+volumes:
+- '*'
+---
+kind: SecurityContextConstraints
+apiVersion: security.openshift.io/v1
+metadata:
+  name: anyuid-demo-storage
+  labels:
+    app.kubernetes.io/name: "anyuid-demo-storage-scc"
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    kubernetes.io/description: allow to run with any UID and any GID.
+    release.openshift.io/create-only: "true"
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: false
+allowedCapabilities: null
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+priority: 10
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+- MKNOD
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:{{- $namespace -}}:run-anyuid
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: run-privileged
+  namespace: {{ $namespace | quote }}
+  labels:
+    app.kubernetes.io/name: "run-privileged-sa"
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: run-anyuid
+  namespace: {{ $namespace | quote }}
+  labels:
+    app.kubernetes.io/name: "run-anyuid-sa"
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "storage-library"
+  namespace: {{ $namespace | quote }}
+  labels:
+    app.kubernetes.io/name: "storage-library-cm"
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+data:
+  common.lib: |-
+    #!/bin/bash
+    DEBUG_PREFIX="DBG : "
+
+    # echo if debug if activated
+    function echoDebug {
+        if [[ "$SX_DEBUG" == true || "$SX_DEBUG" == "true" ]] ; then
+            echo "$DEBUG_PREFIX$@"
+        fi
+    }
+
+    # create a large file by reading multiples blocks from urandom
+    # ex : createDummyLargeFile /tmp/dummy 1M 10 # generating a 10M dummy file 
+    function createDummyLargeFile {
+        local path=$1
+        local size=$2
+        local count=$3
+        if [ -z "$path" ]
+        then
+                path=$(generateUUIDFilename dummy_ .txt)
+        fi
+        if [ -z "$size" ]
+        then
+                size="1M"
+        fi
+        if [ -z "$count" ]
+        then
+                count=1
+        fi
+        echoDebug "createDummyLargeFile : $path of $count x $size"
+        dd if=/dev/zero of=$path bs=$size count=$count &>/dev/null
+    }
+
+    # create a file with the given size filed of random data
+    # ex : createDummySizedFile /tmp/dummy 2M # generating a 2M dummy file 
+    function createDummySizedFile {
+        local path=$1
+        local size=$2
+        if [ -z "$path" ]
+        then
+                path=$(generateUUIDFilename dummy_ .txt)
+        fi
+        if [ -z "$size" ]
+        then
+                size="1M"
+        fi
+        echoDebug "createDummySizedFile : $path ($size)"
+        dd if=/dev/zero of=$path bs=$size count=1 &>/dev/null
+    }
+
+    # create a file with random data
+    # ex : createDummyFile /tmp/dummy # generating a 1M dummy file 
+    function createDummyFile {
+        local path=$1
+        if [ -z "$path" ]
+        then
+                path=$(generateUUIDFilename dummy_ .txt)
+        fi
+        echoDebug "createDummyFile : $path"
+        createDummySizedFile $path 1M
+    }
+
+    # create x dummy files into a directory
+    # ex : createDummyFiles /tmp prefix_ _suffix 2M # generating 10 x 2M dummy file in /tmp
+    function createDummyFiles {
+        local path=$1
+        local size=$4
+        local prefix=$2
+        local suffix=$3
+        local filename=""
+        if [ -z "$path" ]
+        then
+                path=/tmp
+        fi
+        if [ -z "$size" ]
+        then
+                size=1M
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=dummy_
+        fi
+        if [ -z "$suffix" ]
+        then
+                suffix=.txt
+        fi
+        echoDebug "createDummyFiles : 10 files of $size in $path (name : ${prefix}xxxx${suffix})"
+        for i in {1..10}; do 
+          filename=$(generateUUIDFilename $path/$prefix${i}_ $suffix)
+          createDummySizedFile $filename $size
+        done
+    }
+
+    # create dummy data into a device
+    # ex : createDummyRawData /dev/xvda 100 # generating 100M dummy data in /dev/xvda
+    function createDummyRawData {
+        local device=$1
+        local nb=$2
+        local filename=""
+        if [ -z "$device" ]
+        then
+                device=/dev/xvda
+        fi
+        if [ -z "$nb" ]
+        then
+                nb=100
+        fi
+        echoDebug "createDummyRawData : $nb x 1M in $device"
+        dd if=/dev/zero of=$device bs=1M count=$nb &> /dev/null
+    }
+
+    # generate a uniquefilename
+    # ex : generateUUIDFilename prefix_ _suffix # generating a unique filename
+    function generateUUIDFilename {
+        echo $1$(echo "console.log(require('uuid').v1())" | node)$2
+    }
+
+    # execute the nodejs application
+    # ex : execNodejsApp # start the nodejs application
+    function execNodejsApp {
+        exec /bin/sx-nodejs run
+    }
+
+    # Create block data into the given path
+    # ex : createDummyBlocks /dev/xvda 1024 # generating 1Gi into /dev/xvda
+    function createDummyBlocks {
+        local path=$1
+        local nb=$2
+        if [ -z "$path" ]
+        then
+                path=/dev/xvda
+        fi
+        if [ -z "$nb" ]
+        then
+                nb=1024
+        fi
+        echoDebug "createDummyBlocks : generating ${nb}Mi into $path"
+        dd if=/dev/zero of=$path bs=1M count=$nb &> /dev/null
+    }
+
+    # Create 10 dummy files via the application API
+    # ex : createDummyFilesViaApplication http://localhost:8077/storage dummy .txt 2048 # generating 10 files named dummy<uuid>.txt of 2k pushed to http://localhost:8077/storage api endpoint
+    function createDummyFilesViaApplication {
+        local url=$1
+        local size=$4
+        local prefix=$2
+        local suffix=$3
+        local filename=""
+        if [ -z "$url" ]
+        then
+                url=http://localhost:8077/storage
+        fi
+        if [ -z "$size" ]
+        then
+                size=1024
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=dummy_
+        fi
+        if [ -z "$suffix" ]
+        then
+                suffix=.txt
+        fi
+        echoDebug "createDummyFilesViaApplication : 10 files of $size in $url (name : ${prefix}xxxx${suffix})"
+        for i in {1..10}; do 
+          createDummyFileViaApplication $url "$prefix${i}_" $suffix $size
+        done
+    }
+    
+    # Create a dummy file using the application API
+    # ex : createDummyFileViaApplication http://localhost:8077/storage dummy .txt 2048 # generating dummy.txt of 2k pushed to http://localhost:8077/storage api endpoint
+    function createDummyFileViaApplication {
+        local url=$1
+        local size=$4
+        local prefix=$2
+        local suffix=$3
+        local filename=""
+        if [ -z "$url" ]
+        then
+                url="http://localhost:8077/storage"
+        fi
+        if [ -z "$size" ]
+        then
+                size=1024
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=dummy_
+        fi
+        if [ -z "$suffix" ]
+        then
+                suffix=.txt
+        fi
+        filename=$(generateUUIDFilename $prefix $suffix)
+        echoDebug "createDummyFileViaApplication : create file $filename of $size in $url"
+        curl -s -d $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c $size) -X POST -k $url/$filename
+        echo ""
+    }
+    
+    echoDebug "loaded common lib"
+  fs.lib: |-
+    #!/bin/bash
+
+    # Create X dummy file into default directory
+    # ex : fsCreateDummyFiles /tmp prefix_ _suffix # generating 5 x 1M dummy files into /tmp
+    function fsCreateDummyFiles {
+        local path=$1
+        local prefix=$2
+        local suffix=$3
+        if [ -z "$path" ]
+        then
+                path=/my-data
+        fi
+        if [ -z "$size" ]
+        then
+                size=1M
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=${HOSTNAME}_
+        fi
+        if [ -z "$suffix" ]
+        then
+                suffix=.txt
+        fi
+        echoDebug "fsCreateDummyFiles : 10 files of $size in $path (name : ${prefix}xxxx${suffix})"
+        createDummyFiles $path $prefix $suffix $size
+    }
+
+    # Create X dummy file into default directory
+    # ex : fsCreateEmptydirDummyFiles /tmp prefix_ # generating prefix_ prefixed dummy files in /tmp directory
+    function fsCreateEmptydirDummyFiles {
+        local path=$1
+        local prefix=$2
+        if [ -z "$path" ]
+        then
+                path=/my-data
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=${HOSTNAME}_emptydir_
+        fi
+        echoDebug "fsCreateEmptydirDummyFiles : 10 files in $path prefixed with ${prefix}"
+        fsCreateDummyFiles $path $prefix
+    }
+
+    # Create dummy files into a hostpath directory
+    # ex : fsCreateHostpathDummyFiles /tmp prefix_ # generating prefix_ prefixed dummy files in /tmp directory
+    function fsCreateHostpathDummyFiles {
+        local path=$1
+        local prefix=$2
+        if [ -z "$path" ]
+        then
+                path=/my-data
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=${HOSTNAME}_hostpath_
+        fi
+        echoDebug "fsCreateHostpathDummyFiles : 10 files in $path prefixed with ${prefix}"
+        fsCreateDummyFiles $path $prefix
+    }
+
+    # Create dummy files into the given path
+    # ex : fsCreateEBSDummyFiles /dev/xvda 1024 # generating 1Gi into /dev/xvda
+    function fsCreateEBSDummyFiles {
+        local path=$1
+        local prefix=$2
+        if [ -z "$path" ]
+        then
+                path=/my-data
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=${HOSTNAME}_ebs_
+        fi
+        echoDebug "fsCreateEBSDummyFiles : 10 files in $path prefixed with ${prefix}"
+        fsCreateDummyFiles $path $prefix
+    }
+
+    # Create 10 dummy files via the application API
+    # ex : fsCreateDummyFilesViaApi http://localhost:8077/storage # generating 10 files named dummy_hostname_<uuid>.txt of 1k pushed to http://localhost:8077/storage api endpoint
+    function fsCreateDummyFilesViaApi {
+        local url=$1
+        local prefix=$2
+        if [ -z "$url" ]
+        then
+                url=http://localhost:8077/storage
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=fs_${HOSTNAME}_
+        fi
+        echoDebug "fsCreateDummyFilesViaApi : waiting 10sec for application startup..."
+        sleep 10
+        echoDebug "fsCreateDummyFilesViaApi : generating 10 files into $url"
+        createDummyFilesViaApplication $url $prefix .txt 128
+    }
+
+    echoDebug "load fs lib"
+  obj.lib: |-
+    #!/bin/bash
+
+    # Create 10 dummy files via the application API
+    # ex : objectCreateDummyFilesViaApi http://localhost:8077/storage # generating 10 files named dummy_hostname_<uuid>.txt of 1k pushed to http://localhost:8077/storage api endpoint
+    function objectCreateDummyFilesViaApi {
+        local url=$1
+        local prefix=$2
+        if [ -z "$url" ]
+        then
+                url=http://localhost:8077/storage
+        fi
+        if [ -z "$prefix" ]
+        then
+                prefix=object_${HOSTNAME}_
+        fi
+        echoDebug "objectCreateDummyFilesViaApi : waiting 10sec for application startup..."
+        sleep 10
+        echoDebug "objectCreateDummyFilesViaApi : generating 10 files into $url"
+        createDummyFilesViaApplication $url $prefix .txt 128
+    }
+    
+    echoDebug "load obj lib"
+  block.lib: |-
+      #!/bin/bash
+
+      # write dummy data into EBS block storage
+      # ex : blockCreateEBSDummyData /dev/xvdb 2048 # generating 2Gb into /dev/xvdb
+      function blockCreateEBSDummyData {
+          local path=$1
+          local nb=$2
+          if [ -z "$path" ]
+          then
+                  path=/dev/xvda
+          fi
+          if [ -z "$nb" ]
+          then
+                  nb=1024
+          fi
+          echoDebug "blockCreateEBSDummyData : generating $nb x 1M of raw data into $path"
+          createDummyBlocks $path $nb
+      }
+
+      # Create dummy files into the given path
+      # ex : blockCreateDummyFiles /my-data prefix suffix # generating 10 files into /my-data
+      function blockCreateDummyFiles {
+          local path=$1
+          local prefix=$2
+          local suffix=$3
+          local size=$4
+          if [ -z "$path" ]
+          then
+                  path=/my-data
+          fi
+          if [ -z "$size" ]
+          then
+                  size=1M
+          fi
+          if [ -z "$prefix" ]
+          then
+                  prefix=${HOSTNAME}_
+          fi
+          if [ -z "$suffix" ]
+          then
+                  suffix=.txt
+          fi
+          echoDebug "blockCreateDummyFiles : 10 files of $size in $path (name : ${prefix}xxxx${suffix})"
+          createDummyFiles $path $prefix $suffix $size
+      }
+
+      # Create 10 dummy files via the application API
+      # ex : blockCreateDummyFilesViaApi http://localhost:8077/storage # generating 10 files named dummy_hostname_<uuid>.txt of 1k pushed to http://localhost:8077/storage api endpoint
+      function blockCreateDummyFilesViaApi {
+          local url=$1
+          local prefix=$2
+          if [ -z "$url" ]
+          then
+                  url=http://localhost:8077/storage
+          fi
+          if [ -z "$prefix" ]
+          then
+                  prefix=block_${HOSTNAME}_
+          fi
+          echoDebug "blockCreateDummyFilesViaApi : waiting 10sec for application startup..."
+          sleep 10
+          echoDebug "blockCreateDummyFilesViaApi : generating 10 files into $url"
+          createDummyFilesViaApplication $url $prefix .txt 128
+      }
+
+      echoDebug "load block lib"
+
+{{- end }}
+{{- end }}{{- end }}{{- end }}
