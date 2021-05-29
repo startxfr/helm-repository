@@ -20,6 +20,12 @@ context: &context
   # Version name of this application (default use Chart appVersion)
   version: "0.0.1"
 
+demo:
+  storage_context: 
+    <<: *context
+    enabled: false 
+    namespace: demo-storage
+
 # configuration of the sxapi helm chart. See sxapi helm documentation on https://startxfr.github.io/helm-repository
 sxapi:
   context: 
