@@ -94,3 +94,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.228 | 2021-05-29 | Add storage block and context demo
 | 0.3.229 | 2021-05-29 | Debug block example
 | 0.3.231 | 2021-05-30 | Add storage demo to the example catalog
+| 0.3.232 | 2021-05-30 | Add various demo to catalog
