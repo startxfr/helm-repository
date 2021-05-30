@@ -29,14 +29,31 @@ demo:
     <<: *context
     enabled: false 
     namespace: demo-storage
+  storage_fs: 
+    <<: *context
+    enabled: false 
+    namespace: demo-storage
+  storage_obj: 
+    <<: *context
+    enabled: false 
+    namespace: demo-storage
+  storage_ocs_context:
+    <<: *context
+    enabled: false 
+    namespace: demo-storage
+    namespace_ocs: openshift-storage
+  storage_ocs_apps:
+    <<: *context
+    enabled: false 
+    namespace: demo-storage
 
-# # configuration of the sxapi helm chart. See sxapi helm documentation on https://startxfr.github.io/helm-repository
-# sxapi:
-#   context: 
-#     <<: *context
-#   sxapi:
-#     service:
-#       enabled: false
+# configuration of the sxapi helm chart. See sxapi helm documentation on https://startxfr.github.io/helm-repository
+sxapi:
+  context: 
+    <<: *context
+  sxapi:
+    service:
+      enabled: false
 #     version: "0.3.57"
 #     profile: "prod:start"
 #     debug: true

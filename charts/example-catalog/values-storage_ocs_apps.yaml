@@ -1,18 +1,22 @@
 
 # Default values for configuration of a dev demo
 # see values.yaml for explanation on each params
-nameOverride: example-catalog-storage_block
+nameOverride: example-catalog-storage_ocs_apps
 versionOverride: "0.0.2"
 context: &context
   scope: startx
   cluster: default
   environment: dev
   component: helm
-  app: example-catalog-storage_block
+  app: example-catalog-storage_ocs_apps
   version: "0.0.2"
 
 demo:
-  storage_block: 
+  storage_ocs_apps: 
     <<: *context
     enabled: true 
     namespace: demo-storage
+    # aws_access_id: myAWSAccessID
+    # aws_access_key: myAWSAccessKey
+    # aws_region: eu-west-3
+    # aws_bucket: ocp-demo-storage-awss3-direct

@@ -1,0 +1,243 @@
+{{- if .Values.demo }}{{- if .Values.demo.storage_ocs_context }}{{- if .Values.demo.storage_ocs_context.enabled -}}
+{{- $root := . -}}
+{{- with .Values.demo.storage_ocs_context -}}
+{{- $namespace := .namespace | default "demo-storage" -}}
+{{- $scope := .scope | default "startx" -}}
+{{- $cluster := .cluster | default "default" -}}
+{{- $env := .environment | default "dev" -}}
+{{- $component := .component | default "helm" -}}
+{{- $version := .version | default "0.0.0-beta" -}}
+{{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
+# OCS specific vars
+{{- $namespace_ocs := .namespace_ocs | default "openshift-storage" -}}
+# AWS specific vars
+{{- $aws_access_id := .aws_access_id | default "xxx_access_id_xxx" -}}
+{{- $aws_access_key := .aws_access_key | default "xxx_access_key_xxx" -}}
+{{- $aws_region := .aws_region | default "eu-west-3" -}}
+{{- $aws_bucket := .aws_bucket | default $namespace -}}
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: noobaa-aws-creds
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "noobaa-aws-creds-secret"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+stringData:
+  aws_access_key_id: "{{- $aws_access_id -}}"
+  aws_secret_access_key: "{{- $aws_access_key -}}"
+type: Opaque
+---
+kind: BackingStore
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "dedicated-k8s-store"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "dedicated-k8s-store-backingstore"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  type: pv-pool
+  pvPool:
+    numVolumes: 2
+    resources:
+      requests:
+        storage: 16Gi
+    storageClass: aws-generic-delete
+  ssl: false
+---
+kind: BackingStore
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "mirrored-k8s-store"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "mirrored-k8s-store-backingstore"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  type: pv-pool
+  pvPool:
+    numVolumes: 2
+    resources:
+      requests:
+        storage: 16Gi
+    storageClass: aws-generic-delete
+  ssl: false
+---
+kind: BackingStore
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "spreaded-k8s-store"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "spreaded-k8s-store-backingstore"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  type: pv-pool
+  pvPool:
+    numVolumes: 2
+    resources:
+      requests:
+        storage: 16Gi
+    storageClass: aws-generic-delete
+  ssl: false
+---
+kind: BackingStore
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "dedicated-awss3-store"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "dedicated-awss3-store-backingstore"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  type: aws-s3
+  awsS3:
+    region: "{{- $aws_region -}}"
+    secret:
+      name: noobaa-aws-creds
+      namespace: {{ $namespace_ocs | quote }}
+    targetBucket: ocp-demo-storage-noobaa-dedicated
+  ssl: false
+---
+kind: BackingStore
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "mirrored-awss3-store"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "mirrored-awss3-store-backingstore"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  awsS3:
+    region: "{{- $aws_region -}}"
+    secret:
+      name: noobaa-aws-creds
+      namespace: {{ $namespace_ocs | quote }}
+    targetBucket: ocp-demo-storage-noobaa-mirrored
+  ssl: false
+  type: aws-s3
+---
+kind: BackingStore
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "spreaded-awss3-store"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "spreaded-awss3-store-backingstore"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  awsS3:
+    region: "{{- $aws_region -}}"
+    secret:
+      name: noobaa-aws-creds
+      namespace: {{ $namespace_ocs | quote }}
+    targetBucket: ocp-demo-storage-noobaa-spreaded
+  ssl: false
+  type: aws-s3
+---
+kind: BucketClass
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "dedicated-k8s-bucketclass"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "dedicated-k8s-bucketclass"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  placementPolicy:
+    tiers:
+      - backingStores:
+          - dedicated-k8s-store
+---
+kind: BucketClass
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "dedicated-awss3-bucketclass"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "dedicated-awss3-bucketclass"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  placementPolicy:
+    tiers:
+      - backingStores:
+          - dedicated-awss3-store
+---
+kind: BucketClass
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "noobaa-mirrored-bucketclass"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "noobaa-mirrored-bucketclass"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  placementPolicy:
+    tiers:
+      - backingStores:
+          - mirrored-k8s-store
+      - backingStores:
+          - mirrored-awss3-store
+  # placementPolicy:
+  #   tiers:
+  #     - tier:
+  #         mirrors:
+  #           - mirror:
+  #               spread:
+  #                 - mirrored-k8s-store
+  #           - mirror:
+  #               spread:
+  #                 - mirrored-awss3-store
+---
+kind: BucketClass
+apiVersion: noobaa.io/v1alpha1
+metadata:
+  name: "noobaa-spreaded-bucketclass"
+  namespace: {{ $namespace_ocs | quote }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app: "noobaa-demo"
+    app.kubernetes.io/name: "noobaa-spreaded-bucketclass"
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+spec:
+  placementPolicy:
+    tiers:
+      - placement: Spread
+        backingStores:
+          - spreaded-k8s-store
+          - spreaded-awss3-store
+{{- end }}
+{{- end }}{{- end }}{{- end }}

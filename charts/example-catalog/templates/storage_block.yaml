@@ -7,7 +7,8 @@
 {{- $env := .environment | default "dev" -}}
 {{- $component := .component | default "helm" -}}
 {{- $version := .version | default "0.0.0-beta" -}}
-{{- $randrun := randAlphaNum 8 | nospace -}}
+{{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
+
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -294,10 +295,10 @@ spec:
   template:
     metadata:
       annotations:
-        <<: *basic_annotations
+        {{- include "example-catalog.annotations" $root | nindent 8 }}
         sidecar.istio.io/inject: "false"
       labels:
-        <<: *basic_labels
+        {{- include "example-catalog.labels" $root | nindent 8 }}
         app: "block-ebs-block-rwo"
         app.kubernetes.io/name: "block-ebs-block-rwo-deployment"
         deployment: "block-ebs-block-rwo"
@@ -481,10 +482,10 @@ spec:
   template:
     metadata:
       annotations:
-        <<: *basic_annotations
+        {{- include "example-catalog.annotations" $root | nindent 8 }}
         sidecar.istio.io/inject: "false"
       labels:
-        <<: *basic_labels
+        {{- include "example-catalog.labels" $root | nindent 8 }}
         app: "block-ebs-fs-rwo"
         app.kubernetes.io/name: "block-ebs-fs-rwo-deployment"
         deployment: "block-ebs-fs-rwo"
@@ -640,7 +641,7 @@ spec:
 kind: Job
 apiVersion: batch/v1
 metadata:
-  name: block-load-{{- $randrun -}}
+  name: "block-load-{{- $randrun -}}"
   namespace: {{ $namespace | quote }}
   labels:
     app.kubernetes.io/name: "block-load-job"
@@ -650,14 +651,14 @@ metadata:
 spec:
   template:
     metadata:
-      annotations:
-        <<: *basic_annotations
-        sidecar.istio.io/inject: "false"
       labels:
-        <<: *basic_labels
+        {{- include "example-catalog.labels" $root | nindent 8 }}
         app: "block-load"
         app.kubernetes.io/name: "block-load-deployment"
         deployment: "block-load"
+      annotations:
+        {{- include "example-catalog.annotations" $root | nindent 8 }}
+        sidecar.istio.io/inject: "false"
     spec:
       containers:
         - name: "loader-block-ebs-fs-rwo"
