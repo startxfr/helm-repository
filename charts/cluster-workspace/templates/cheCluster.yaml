@@ -20,27 +20,39 @@ metadata:
     argocd.argoproj.io/sync-wave: "10"
 spec:
   auth:
-    externalIdentityProvider: false
     openShiftoAuth: true
+    identityProviderImage: ""
+    externalIdentityProvider: false
+    identityProviderURL: ""
+    identityProviderRealm: "codeready"
+    identityProviderClientId: "codeready-public"
     updateAdminPassword: false
+    identityProviderPostgresPassword: DPYk6Cg14U76
+    identityProviderPassword: xh6zPMBQRBp8
+    identityProviderAdminUserName: admin
   database:
-    chePostgresDb: dbche
-    chePostgresHostName: postgres
-    chePostgresPort: '5432'
     externalDb: false
+    chePostgresHostName: postgres
+    chePostgresPort: "5432"
+    chePostgresUser: pgche
+    chePostgresPassword: 6OywNH2H6xBF
+    chePostgresDb: dbche
   k8s: {}
   metrics:
     enable: true
   server:
     cheLogLevel: INFO
-    externalDevfileRegistry: false
-    selfSignedCert: false
-    cheDebug: 'false'
-    tlsSupport: true
-    allowUserDefinedWorkspaceNamespaces: false
-    externalPluginRegistry: false
-    gitSelfSignedCert: false
+    cheImageTag: ""
     cheFlavor: codeready
+    cheDebug: 'false'
+    externalDevfileRegistry: false
+    devfileRegistryImage: ""
+    externalPluginRegistry: false
+    pluginRegistryImage: ""
+    tlsSupport: true
+    selfSignedCert: false
+    gitSelfSignedCert: false
+    allowUserDefinedWorkspaceNamespaces: false
   storage:
     postgresPVCStorageClassName: {{ .Values.cheCluster.storageClass | default "gp2" | quote }}
     preCreateSubPaths: true
