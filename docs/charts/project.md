@@ -1,4 +1,4 @@
-# STARTX helm : project
+# project
 
 This helm chart is used to create a project, or namespace, with various options constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
 

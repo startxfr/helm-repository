@@ -1,4 +1,4 @@
-# STARTX helm : example-deployment
+# example-deployment
 
 This helm chart is used to create a deployment of various application images according to the values file.
 

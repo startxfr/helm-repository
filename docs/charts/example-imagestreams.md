@@ -1,4 +1,4 @@
-# STARTX helm : example-imagestreams
+# example-imagestreams
 
 This helm chart is used to used to load imagestreams into a given namespace.
 
