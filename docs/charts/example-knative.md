@@ -1,4 +1,4 @@
-# STARTX helm : example-knative
+# example-knative
 
 This helm chart is used to create various serverless application based on [knative helm chart](https://startxfr.github.io/helm-repository/charts/knative)
 
