@@ -1,4 +1,4 @@
-# Helm-chart STARTX : cluster-acm
+# cluster-acm
 
 This helm chart must have a description
 
