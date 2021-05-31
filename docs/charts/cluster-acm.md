@@ -1,4 +1,4 @@
-# cluster-acm
+# Cluster acm
 
 This helm chart must have a description
 
