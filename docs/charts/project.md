@@ -229,3 +229,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.217 | 2021-05-10 | Move RBAC naming to unique id
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.226 | 2021-05-31 | Add values files for various demo
+| 0.3.227 | 2021-05-31 | Add demo compliance values
