@@ -1,4 +1,4 @@
-# example-html
+# Example html
 
 This helm chart is used to create a deployment of a small webserver based on [startx apache image](https://quay.io/startx/apache)
 
