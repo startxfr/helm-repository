@@ -1,4 +1,4 @@
-# STARTX helm : operator
+# operator
 
 This helm chart is used to configure various operator using subscription (openshift) or CRD (k8s) ressources.
 

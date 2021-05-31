@@ -1,4 +1,4 @@
-# STARTX helm : example-php
+# example-php
 
 This helm chart is used to create a deployment of a small PHP webserver based on [startx apache PHP image](https://quay.io/startx/php)
 

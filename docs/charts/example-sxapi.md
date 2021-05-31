@@ -1,4 +1,4 @@
-# STARTX helm : example-sxapi
+# example-sxapi
 
 This helm chart is used to create a deployment of a small an simple micro-service based on [sxapi helm chart](https://startxfr.github.io/helm-repository/charts/sxapi)
 
