@@ -105,6 +105,7 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 | **[example-php](charts/example-php.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-php) | An example on how to deploy PHP application
 | **[example-pod](charts/example-pod.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)        | An example on how to deploy simple applications using helm and a pod
 | **[example-sxapi](charts/example-sxapi.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)      | An example on how to deploy simple micro-applications using helm and an sxapi toolkit
+| **[example-catalog](charts/example-catalog.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-catalog)      | Various demo examples
 
 #### Use Examples charts
 
