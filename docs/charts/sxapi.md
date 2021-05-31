@@ -1,4 +1,4 @@
-# sxapi
+# Basic sxapi
 
 This helm chart is used to create a deployment of a small an simple micro-service based on
 sxapi engine running under nodejs engine.
