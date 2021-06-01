@@ -82,7 +82,7 @@ Complete deployment of a sxapi development application with the following charac
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml
+helm install startx/example-sxapi -f https://bit.ly/HelmRepo/example-sxapi/values-dev.yaml
 ```
 
 ### Version 0.0.1 values file (values-v0.0.1.yaml)
@@ -95,7 +95,7 @@ Complete deployment of a sxapi production application (v0.0.1) with the followin
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.1.yaml
+helm install startx/example-sxapi -f https://bit.ly/HelmRepo/example-sxapi/values-v0.0.1.yaml
 ```
 
 ### Version 0.0.2 values file (values-v0.0.2.yaml)
@@ -108,7 +108,7 @@ Complete deployment of a sxapi production application (v0.0.2) with the followin
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml
+helm install startx/example-sxapi -f https://bit.ly/HelmRepo/example-sxapi/values-v0.0.2.yaml
 ```
 
 ## History
