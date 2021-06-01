@@ -144,7 +144,7 @@ Configuration of startx properties with the following characteristics :
 
 ```bash
 # base configuration running startx configuration
-helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
+helm install startx/cluster-workspace -f https://bit.ly/HelmRepo/cluster-workspace/values-startx.yaml
 ```
 
 

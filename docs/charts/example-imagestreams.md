@@ -130,7 +130,7 @@ Imagestreams of startx public images hosted on quay.io and dockerhub. Theses str
 
 ```bash
 # configuration for the startx public images
-helm install startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-startx.yaml
+helm install startx/example-imagestreams -f https://bit.ly/HelmRepo/example-sxapi/values-startx.yaml
 ```
 
 ### SXV4 values file (values-sxv4.yaml)
@@ -156,7 +156,7 @@ Imagestreams of container image used in the sxv4 project (depend on the sxtartx 
 
 ```bash
 # configuration for the sxv4 project
-helm install startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-sxv4.yaml
+helm install startx/example-imagestreams -f https://bit.ly/HelmRepo/example-sxapi/values-sxv4.yaml
 ```
 
 ## History

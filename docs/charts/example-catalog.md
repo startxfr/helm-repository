@@ -82,7 +82,7 @@ Complete deployment of a sxapi development application with the following charac
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-catalog -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-dev.yaml
+helm install startx/example-catalog -f https://bit.ly/HelmRepo/example-catalog/values-dev.yaml
 ```
 
 ## History
