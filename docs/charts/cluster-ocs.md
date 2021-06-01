@@ -47,10 +47,10 @@ helm install startx/cluster-ocs
 
 ## Others values availables
 
-- **startx** : Startx OCS cluster wide service configuration using OCS operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml))
+- **startx** : Startx OCS cluster wide service configuration using OCS operator (see [values-startx.yaml](https://bit.ly/HelmRepo/cluster-ocs/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml
+helm install startx/cluster-ocs -f https://bit.ly/HelmRepo/cluster-ocs/values-startx.yaml
 ```
 
 ## History

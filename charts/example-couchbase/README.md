@@ -82,7 +82,7 @@ Complete deployment of a couchbase demo application for stress test (used in HPA
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-hpa.yaml
+helm install startx/example-couchbase -f https://bit.ly/HelmRepo/example-couchbase/values-demo-hpa.yaml
 ```
 
 ## History

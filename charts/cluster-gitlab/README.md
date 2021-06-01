@@ -47,10 +47,10 @@ helm install startx/cluster-gitlab
 
 ## Others values availables
 
-- **startx** : Gitlab operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml))
+- **startx** : Gitlab operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-gitlab/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml
+helm install startx/cluster-gitlab -f https://bit.ly/HelmRepo/cluster-gitlab/values-startx.yaml
 ```
 
 ## History
