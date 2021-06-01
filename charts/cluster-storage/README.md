@@ -52,7 +52,7 @@ helm install startx/cluster-storage
 
 ## Others values availables
 
-- **startx** : Startx storage classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx.yaml)) creating the following storage classes
+- **startx** : Startx storage classes running under AWS infrastructure (see [values.yaml](https://bit.ly/HelmRepo/cluster-storage/values-startx.yaml)) creating the following storage classes
   - **aws-generic-retain** (AWS EBS gp2 level with encryption and expansion enabled with retain policy)
   - **aws-generic-delete** (AWS EBS gp2 level with encryption and expansion enabled with delete policy)
   - **aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
@@ -61,17 +61,17 @@ helm install startx/cluster-storage
   - **aws-slow-delete** (AWS EBS sc1 level with encryption and expansion enabled with delete policy)
 
 ```bash
-helm install startx/cluster-storage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx.yaml
+helm install startx/cluster-storage -f https://bit.ly/HelmRepo/cluster-storage/values-startx.yaml
 ```
 
-- **startx-ocs** : Startx storage classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-ocs.yaml)) creating the following storage classes
+- **startx-ocs** : Startx storage classes for OCS infrastructure (see [values.yaml](https://bit.ly/HelmRepo/cluster-storage/values-startx-ocs.yaml)) creating the following storage classes
   - **ocs-generic-retain** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with retain policy and expansion enabled)
   - **ocs-generic-delete** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with delete policy and expansion enabled)
   - **ocs-fs-retain** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with retain policy)
   - **ocs-fs-delete** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with delete policy)
 
 ```bash
-helm install startx/cluster-storage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-ocs.yaml
+helm install startx/cluster-storage -f https://bit.ly/HelmRepo/cluster-storage/values-startx-ocs.yaml
 ```
 
 ## History
