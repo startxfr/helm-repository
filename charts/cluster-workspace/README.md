@@ -169,7 +169,7 @@ Configuration of startx properties with the following characteristics :
 
 ```bash
 # base configuration running startx configuration
-helm install startx/cluster-workspace -f https://bit.ly/HelmRepo/cluster-workspace/values-startx.yaml
+helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
 ```
 
 ## History
@@ -205,3 +205,4 @@ helm install startx/cluster-workspace -f https://bit.ly/HelmRepo/cluster-workspa
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.226 | 2021-05-31 | Add demo-che example values
+| 0.3.227 | 2021-06-02 | Upgrade to CRW version 2.8.0
