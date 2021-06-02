@@ -68,3 +68,4 @@ helm install startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.226 | 2021-06-02 | Update to gitlab-runner operator version 1.0.0
+| 0.3.227 | 2021-06-02 | Debug the ProvidedAPI in OperatorGroup
