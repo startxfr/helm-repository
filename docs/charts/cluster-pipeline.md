@@ -93,3 +93,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.226 | 2021-06-02 | Update tekton operator to version 1.4.1
+| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
