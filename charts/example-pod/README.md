@@ -76,7 +76,7 @@ Demo pod deployment of a container image with the following characteristics :
 
 ```bash
 # base configuration running demo configuration
-helm install startx/example-pod -f https://bit.ly/HelmRepo/example-sxapi/values-demo.yaml
+helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
 ## History

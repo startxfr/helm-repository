@@ -47,10 +47,10 @@ helm install startx/cluster-vpa
 
 ## Others values availables
 
-- **startx** : VerticalPodAutoscaler operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-vpa/values-startx.yaml))
+- **startx** : VerticalPodAutoscaler operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-vpa -f https://bit.ly/HelmRepo/cluster-vpa/values-startx.yaml
+helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml
 ```
 
 ## History
