@@ -1,4 +1,4 @@
-# STARTX helm : cluster-workspace
+# Cworkspace
 
 This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -206,3 +206,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.226 | 2021-05-31 | Add demo-che example values
 | 0.3.227 | 2021-06-02 | Upgrade to CRW version 2.8.0
+| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
