@@ -87,3 +87,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.227 | 2021-05-27 | Update elastic operator to 5.0.4-21
 | 0.3.228 | 2021-06-02 | Upgrade servicemesh operator to 2.0.5.1
+| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
