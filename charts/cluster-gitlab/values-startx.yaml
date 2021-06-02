@@ -5,7 +5,7 @@ context: &context
   cluster: default
   environment: infra
   component: gitlab
-  app: startx-gitlab
+  app: startx-gitlab-runner
 gitlab:
   enabled: false
   hooked: false
@@ -31,7 +31,7 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "startx-gitlab"
+    name: "startx-gitlab-runner"
     display_name: "Startx GITLAB"
     requester: startx
     description: Gitlab configured by STARTX
@@ -42,19 +42,19 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "gitlab-operator"
-    namespace: "startx-gitlab"
-    version: "v3.3.4"
+    name: "gitlab-runner-operator"
+    namespace: "startx-gitlab-runner"
+    version: "v1.0.0"
     operator: 
-      channel: gitlab-v3.3
-      name: gitlab-operator
-      csv: red-hat-gitlab
+      channel: stable
+      name: gitlab-runner-operator
+      csv: gitlab-runner-operator
       source: 
-        name: redhat-operators
+        name: certified-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: false
-    name: "startx-gitlab"
-    namespace: "startx-gitlab"
+    name: "startx-gitlab-runner"
+    namespace: "startx-gitlab-runner"
     providedAPIs: "PtpConfig.v1.gitlab.openshift.io"
