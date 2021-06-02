@@ -47,10 +47,10 @@ helm install startx/cluster-ptp
 
 ## Others values availables
 
-- **startx** : PTP operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-ptp/values-startx.yaml))
+- **startx** : PTP operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-ptp -f https://bit.ly/HelmRepo/cluster-ptp/values-startx.yaml
+helm install startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml
 ```
 
 ## History
@@ -69,3 +69,4 @@ helm install startx/cluster-ptp -f https://bit.ly/HelmRepo/cluster-ptp/values-st
 | 0.3.221 | 2021-05-06 | Move to PTP operator version 5.0.3-6 (OCP 4.7 compat)
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.227 | 2021-05-27 | Update ptp operator to 4.7.0
+| 0.3.228 | 2021-06-02 | Update operator to version 4.7.0

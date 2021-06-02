@@ -1,4 +1,4 @@
-# Cluster sso
+# STARTX helm : cluster-sso
 
 This helm chart is used to deploy Redhat-SSO instances managed by a dedicated operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -47,10 +47,10 @@ helm install startx/cluster-sso
 
 ## Others values availables
 
-- **startx** : Redhat-SSO operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-sso/values-startx.yaml))
+- **startx** : Redhat-SSO operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-sso/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-sso -f https://bit.ly/HelmRepo/cluster-sso/values-startx.yaml
+helm install startx/cluster-sso -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-sso/values-startx.yaml
 ```
 
 ## History
@@ -67,3 +67,4 @@ helm install startx/cluster-sso -f https://bit.ly/HelmRepo/cluster-sso/values-st
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.226 | 2021-06-02 | Update operator to version 7.4.7

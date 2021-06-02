@@ -50,14 +50,14 @@ helm install startx/cluster-pipeline
 
 ## Others values availables
 
-- **startx** : Startx tekton configuration for Startx clusters (see [values.yaml](https://bit.ly/HelmRepo/cluster-pipeline/values-startx.yaml)) deploying the following environment
+- **startx** : Startx tekton configuration for Startx clusters (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml)) deploying the following environment
   - 1 **subscription** named **openshift-pipelines-operator-rh** to deploy codeready operator with the following characteristics
     - operator name is **openshift-pipelines-operator-rh**
     - operator version is **openshift-pipelines-operator.v1.1.1**
     - operator catalog is **redhat-operators** located in **openshift-marketplace**
 
 ```bash
-helm install startx/cluster-pipeline -f https://bit.ly/HelmRepo/cluster-pipeline/values-startx.yaml
+helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml
 ```
 
 ## History
@@ -92,3 +92,4 @@ helm install startx/cluster-pipeline -f https://bit.ly/HelmRepo/cluster-pipeline
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.226 | 2021-06-02 | Update tekton operator to version 1.4.1

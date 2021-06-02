@@ -47,10 +47,10 @@ helm install startx/cluster-vpa
 
 ## Others values availables
 
-- **startx** : VerticalPodAutoscaler operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-vpa/values-startx.yaml))
+- **startx** : VerticalPodAutoscaler operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-vpa -f https://bit.ly/HelmRepo/cluster-vpa/values-startx.yaml
+helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml
 ```
 
 ## History
@@ -69,3 +69,4 @@ helm install startx/cluster-vpa -f https://bit.ly/HelmRepo/cluster-vpa/values-st
 | 0.3.221 | 2021-05-06 | Move to VPA operator version 5.0.3-6 (OCP 4.7 compat)
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.227 | 2021-05-27 | Update vpa operator to 4.7.0
+| 0.3.228 | 2021-06-02 | Update operator to version 4.7.0

@@ -1,4 +1,4 @@
-# Cluster quay
+# STARTX helm : cluster-quay
 
 This helm chart is used to create an operator based deployment of Quay Enterprise registry.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -47,10 +47,10 @@ helm install startx/cluster-quay
 
 ## Others values availables
 
-- **startx** : Quay operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-quay/values-startx.yaml))
+- **startx** : Quay operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-quay -f https://bit.ly/HelmRepo/cluster-quay/values-startx.yaml
+helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx.yaml
 ```
 
 ## History
@@ -83,3 +83,4 @@ helm install startx/cluster-quay -f https://bit.ly/HelmRepo/cluster-quay/values-
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.226 | 2021-06-02 | Update operator to version 3.5.1

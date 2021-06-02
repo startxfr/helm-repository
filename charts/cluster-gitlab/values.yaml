@@ -11,7 +11,7 @@ context:  &context
   # Component name of this application (logical tenant)
   component: mycomponent
   # Application name (functionnal tenant, default use Chart name)
-  app: default-gitlab
+  app: default-gitlab-runner
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
@@ -38,7 +38,7 @@ project:
     enabled: false
     hooked: false
     type: project
-    name: "gitlab-operator"
+    name: "gitlab-runner-operator"
     display_name: Operator GITLAB
     description: Gitlab configured by STARTX
 
@@ -50,20 +50,19 @@ operator:
   subscription:
     enabled: false
     hooked: false
-    name: "gitlab-operator"
-    namespace: "gitlab-operator"
-    version: "v3.3.4"
+    name: "gitlab-runner-operator"
+    namespace: "gitlab-runner-operator"
+    version: "v1.0.0"
     operator: 
-      channel: gitlab-v3.3
-      name: gitlab-operator
-      csv: red-hat-gitlab
+      channel: stable
+      name: gitlab-runner-operator
+      csv: gitlab-runner-operator
       source: 
-        name: redhat-operators
+        name: certified-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "gitlab-operator"
+    name: "gitlab-runner-operator"
     namespace: "openshift-gitlab"
-    providedAPIs: "PtpConfig.v1.gitlab.openshift.io"
-
+    providedAPIs: "Runner.v1beta2.apps.gitlab.com"
