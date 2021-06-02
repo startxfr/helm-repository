@@ -1,4 +1,4 @@
-# Cluster metering
+# STARTX helm : cluster-metering
 
 This helm chart is used to configure Metering at the cluster level.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -82,3 +82,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.226 | 2021-06-02 | Update metering operator (end of active support) to version 4.7.0
