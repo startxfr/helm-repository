@@ -1,4 +1,4 @@
-# Example sxapi
+# Example-sxapi
 
 This helm chart is used to create a deployment of a small an simple micro-service based on [sxapi helm chart](https://startxfr.github.io/helm-repository/charts/sxapi)
 
@@ -141,3 +141,4 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.227 | 2021-05-29 | Debug naming of config map
+| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303

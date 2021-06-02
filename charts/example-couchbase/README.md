@@ -1,4 +1,4 @@
-# STARTX helm : example-couchbase
+# Example-couchbase
 
 This helm chart is used to create a deployment of a small PHP webserver based on [startx apache PHP image](https://quay.io/startx/couchbase)
 
@@ -94,3 +94,4 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303

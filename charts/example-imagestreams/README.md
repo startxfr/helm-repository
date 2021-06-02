@@ -1,4 +1,4 @@
-# STARTX helm : example-imagestreams
+# Example-imagestreams
 
 This helm chart is used to used to load imagestreams into a given namespace.
 
@@ -181,3 +181,4 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
