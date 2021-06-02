@@ -47,10 +47,10 @@ helm install startx/cluster-keycloak
 
 ## Others values availables
 
-- **startx** : Keycloak operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-keycloak/values-startx.yaml))
+- **startx** : Keycloak operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-keycloak/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-keycloak -f https://bit.ly/HelmRepo/cluster-keycloak/values-startx.yaml
+helm install startx/cluster-keycloak -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-keycloak/values-startx.yaml
 ```
 
 ## History

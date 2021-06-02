@@ -48,10 +48,10 @@ helm install startx/cluster-rbac
 
 ## Others values availables
 
-- **startx** : Startx RBAC default context with dev, devops, ops and admin groups (see [values.yaml](https://bit.ly/HelmRepo/cluster-rbac/values-startx.yaml))
+- **startx** : Startx RBAC default context with dev, devops, ops and admin groups (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-rbac -f https://bit.ly/HelmRepo/cluster-rbac/values-startx.yaml
+helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml
 ```
 
 ## History

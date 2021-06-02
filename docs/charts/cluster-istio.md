@@ -47,10 +47,10 @@ helm install startx/cluster-istio
 
 ## Others values availables
 
-- **startx** : Startx Istio service configuration using service-mesh operator (see [values-startx.yaml](https://bit.ly/HelmRepo/cluster-istio/values-startx.yaml))
+- **startx** : Startx Istio service configuration using service-mesh operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-istio/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-istio -f https://bit.ly/HelmRepo/cluster-istio/values-startx.yaml
+helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-istio/values-startx.yaml
 ```
 
 ## History

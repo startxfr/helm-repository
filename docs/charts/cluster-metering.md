@@ -47,10 +47,10 @@ helm install startx/cluster-metering
 
 ## Others values availables
 
-- **startx** : metering cluster wide service configuration using metering operator (see [values-startx.yaml](https://bit.ly/HelmRepo/cluster-metering/values-startx.yaml))
+- **startx** : metering cluster wide service configuration using metering operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-metering/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-metering -f https://bit.ly/HelmRepo/cluster-metering/values-startx.yaml
+helm install startx/cluster-metering -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-metering/values-startx.yaml
 ```
 
 ## History
