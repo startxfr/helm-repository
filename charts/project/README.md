@@ -1,4 +1,4 @@
-# STARTX helm : project
+# Basic project
 
 This helm chart is used to create a project, or namespace, with various options constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
 
@@ -230,3 +230,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.226 | 2021-05-31 | Add values files for various demo
 | 0.3.227 | 2021-05-31 | Add demo compliance values
+| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
