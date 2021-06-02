@@ -1,4 +1,4 @@
-# STARTX helm : operator
+# Basic operator
 
 This helm chart is used to configure various operator using subscription (openshift) or CRD (k8s) ressources.
 
@@ -166,3 +166,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.217 | 2021-05-10 | Align basic chart to release 0.3.217
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
