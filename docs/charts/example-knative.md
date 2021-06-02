@@ -78,7 +78,7 @@ Complete deployment of a knative development application with the following char
 
 ```bash
 # base configuration running  demo sxapi with a knative configuration
-helm install startx/example-knative -f https://bit.ly/HelmRepo/example-knative/values-demo-sxapi-knative.yaml
+helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-sxapi-knative.yaml
 ```
 
 ### Development values file (values-demo-knative-helloworld-go.yaml)
@@ -89,7 +89,7 @@ Complete deployment of a knative development application with the following char
 
 ```bash
 # base configuration running  demo sxapi with a knative configuration
-helm install startx/example-knative -f https://bit.ly/HelmRepo/example-knative/values-demo-knative-helloworld-go.yaml
+helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-knative-helloworld-go.yaml
 ```
 
 ## History

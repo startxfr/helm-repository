@@ -47,10 +47,10 @@ helm install startx/cluster-knative
 
 ## Others values availables
 
-- **startx** : Startx knative cluster wide service configuration using serverless operator (see [values-startx.yaml](https://bit.ly/HelmRepo/cluster-knative/values-startx.yaml))
+- **startx** : Startx knative cluster wide service configuration using serverless operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-knative/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-knative -f https://bit.ly/HelmRepo/cluster-knative/values-startx.yaml
+helm install startx/cluster-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-knative/values-startx.yaml
 ```
 
 ## History

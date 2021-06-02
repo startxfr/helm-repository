@@ -82,7 +82,7 @@ Complete deployment of a php demo application for stress test (used in HPA test)
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-php -f https://bit.ly/HelmRepo/example-php/values-demo-hpa.yaml
+helm install startx/example-php -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-php/values-demo-hpa.yaml
 ```
 
 ## History
