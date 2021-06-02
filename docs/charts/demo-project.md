@@ -64,28 +64,28 @@ helm install startx/project
 
 ## Others values availables
 
-- **startx** : Default STARTX project environment (see [values.yaml](https://bit.ly/HelmRepo/project/values-startx.yaml))
+- **startx** : Default STARTX project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml))
 
 ```bash
-helm install startx/project -f https://bit.ly/HelmRepo/project/values-startx.yaml
+helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
 ```
 
-- **demo-argocd** : Startx demo argocd project environment (see [values.yaml](https://bit.ly/HelmRepo/project/values-demo-argocd.yaml))
+- **demo-argocd** : Startx demo argocd project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml))
 
 ```bash
-helm install startx/project -f https://bit.ly/HelmRepo/project/values-demo-argocd.yaml
+helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml
 ```
 
-- **demo-helm** : Startx demo helm project environment (see [values.yaml](https://bit.ly/HelmRepo/project/values-demo-helm.yaml))
+- **demo-helm** : Startx demo helm project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml))
 
 ```bash
-helm install startx/project -f https://bit.ly/HelmRepo/project/values-demo-helm.yaml
+helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml
 ```
 
-- **demo-kustomize** : Startx demo kustomize project environment (see [values.yaml](https://bit.ly/HelmRepo/project/values-demo-kustomize.yaml))
+- **demo-kustomize** : Startx demo kustomize project environment (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml))
 
 ```bash
-helm install startx/project -f https://bit.ly/HelmRepo/project/values-demo-kustomize.yaml
+helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml
 ```
 
 ## History

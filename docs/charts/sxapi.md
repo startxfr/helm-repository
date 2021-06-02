@@ -83,7 +83,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running dev configuration
-helm install startx/sxapi -f https://bit.ly/HelmRepo/sxapi/values-dev.yaml
+helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml
 ```
 
 ## History

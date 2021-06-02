@@ -79,7 +79,7 @@ Deployment of an demo container image with the following characteristics :
 
 ```bash
 # Configuration running demo example configuration
-helm install startx/example-deployment -f https://bit.ly/HelmRepo/example-sxapi/values-demo.yaml
+helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
 ### Apache values file (values-apache.yaml)
@@ -91,7 +91,7 @@ Deployment of an apache container image with the following characteristics :
 
 ```bash
 # Configuration running apache example configuration
-helm install startx/example-deployment -f https://bit.ly/HelmRepo/example-sxapi/values-apache.yaml
+helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
 ```
 
 ### MariaDB values file (values-mariadb.yaml)
@@ -103,7 +103,7 @@ Deployment of an mariadb container image with the following characteristics :
 
 ```bash
 # Configuration running mariadb example configuration
-helm install startx/example-deployment -f https://bit.ly/HelmRepo/example-sxapi/values-mariadb.yaml
+helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
 ## History

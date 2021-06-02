@@ -1,4 +1,4 @@
-# Cluster 3scale
+# STARTX helm : cluster-3scale
 
 This helm chart is used to create a deployment of a 3scale, operator based, deployment of 3Scale API management tools.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -59,10 +59,10 @@ helm install startx/cluster-3scale
 ### Default values
 
 
-- **startx** : Startx 3scale cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://bit.ly/HelmRepo/cluster-3scale/values-startx.yaml))
+- **startx** : Startx 3scale cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-3scale -f https://bit.ly/HelmRepo/cluster-3scale/values-startx.yaml
+helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml
 ```
 
 ## History
@@ -98,3 +98,4 @@ helm install startx/cluster-3scale -f https://bit.ly/HelmRepo/cluster-3scale/val
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.226 | 2021-06-02 | Update the 3scale operator to version 0.7.0

@@ -47,10 +47,10 @@ helm install startx/cluster-couchbase
 
 ## Others values availables
 
-- **startx** : Couchbase operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-couchbase/values-startx.yaml))
+- **startx** : Couchbase operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-couchbase -f https://bit.ly/HelmRepo/cluster-couchbase/values-startx.yaml
+helm install startx/cluster-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml
 ```
 
 ## History

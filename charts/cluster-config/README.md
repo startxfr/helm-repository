@@ -65,10 +65,10 @@ helm install startx/cluster-config
 
 ## Others values availables
 
-- **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://bit.ly/HelmRepo/cluster-config/values-startx.yaml))
+- **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-config -f https://bit.ly/HelmRepo/cluster-config/values-startx.yaml
+helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml
 ```
 
 ## History

@@ -47,10 +47,10 @@ helm install startx/cluster-auth
 
 ## Others values availables
 
-- **startx** : Startx cluster auth user (dev, devops and ops) (see [values-startx.yaml](https://bit.ly/HelmRepo/cluster-auth/values-startx.yaml))
+- **startx** : Startx cluster auth user (dev, devops and ops) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://bit.ly/HelmRepo/cluster-auth/values-startx.yaml
+helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml
 ```
 
 ## History

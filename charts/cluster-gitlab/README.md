@@ -47,10 +47,10 @@ helm install startx/cluster-gitlab
 
 ## Others values availables
 
-- **startx** : Gitlab operator (see [values.yaml](https://bit.ly/HelmRepo/cluster-gitlab/values-startx.yaml))
+- **startx** : Gitlab operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-gitlab -f https://bit.ly/HelmRepo/cluster-gitlab/values-startx.yaml
+helm install startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml
 ```
 
 ## History
@@ -67,3 +67,5 @@ helm install startx/cluster-gitlab -f https://bit.ly/HelmRepo/cluster-gitlab/val
 | 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
 | 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
+| 0.3.226 | 2021-06-02 | Update to gitlab-runner operator version 1.0.0
+| 0.3.227 | 2021-06-02 | Debug the ProvidedAPI in OperatorGroup
