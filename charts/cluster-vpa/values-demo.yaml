@@ -1,0 +1,60 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: vpa
+  app: startx-vpa
+vpa:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   vpa4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "demo-vertical-pod-autoscaler"
+    display_name: "Demo VPA"
+    requester: startx
+    description: Demo of VerticalPodAutoscaler configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "vertical-pod-autoscaler"
+    namespace: "demo-vertical-pod-autoscaler"
+    version: "4.7.0-202105210300.p0"
+    operator: 
+      channel: "4.7"
+      name: vertical-pod-autoscaler
+      csv: verticalpodautoscaler
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-vpa"
+    namespace: "demo-vertical-pod-autoscaler"
+    providedAPIs: "VerticalPodAutoscaler.v1.autoscaling.k8s.io,VerticalPodAutoscalerCheckpoint.v1.autoscaling.k8s.io,VerticalPodAutoscalerController.v1.autoscaling.openshift.io"
