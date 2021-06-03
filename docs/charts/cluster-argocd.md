@@ -71,3 +71,4 @@ xxxx  to do xxxxxxxx
 | 0.3.304 | 2021-06-03 | Align cluster chart to version 0.3.311
 | 0.3.304 | 2021-06-03 | Align cluster chart to version 0.3.311
 | 0.3.304 | 2021-06-03 | Align cluster chart to version 0.3.311
+| 0.3.304 | 2021-06-03 | Align cluster chart to version 0.3.311
