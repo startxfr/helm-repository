@@ -96,3 +96,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.231 | 2021-05-30 | Add storage demo to the example catalog
 | 0.3.232 | 2021-05-30 | Add various demo to catalog
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
+| 0.3.311 | 2021-06-03 | Align example chart to 0.3.311
