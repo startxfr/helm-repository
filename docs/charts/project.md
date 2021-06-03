@@ -231,3 +231,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.226 | 2021-05-31 | Add values files for various demo
 | 0.3.227 | 2021-05-31 | Add demo compliance values
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
+| 0.2.299 | 2021-06-03 | Update multiple demo project
