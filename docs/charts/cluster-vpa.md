@@ -71,3 +71,6 @@ helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.227 | 2021-05-27 | Update vpa operator to 4.7.0
 | 0.3.228 | 2021-06-02 | Update operator to version 4.7.0
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
+| 0.3.304 | 2021-06-03 | update startx values configuration
+| 0.3.305 | 2021-06-03 | update startx values configuration
+| 0.3.311 | 2021-06-03 | Align cluster chart to version 0.3.311

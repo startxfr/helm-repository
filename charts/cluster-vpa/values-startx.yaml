@@ -30,8 +30,8 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: namespace
-    name: "openshift-vertical-pod-autoscaler"
+    type: project
+    name: "startx-vertical-pod-autoscaler"
     display_name: "Startx VPA"
     requester: startx
     description: VerticalPodAutoscaler configured by STARTX
@@ -43,7 +43,7 @@ operator:
     enabled: true
     hooked: false
     name: "vertical-pod-autoscaler"
-    namespace: "openshift-vertical-pod-autoscaler"
+    namespace: "startx-vertical-pod-autoscaler"
     version: "4.7.0-202105210300.p0"
     operator: 
       channel: "4.7"
@@ -56,5 +56,5 @@ operator:
     enabled: true
     hooked: false
     name: "startx-vpa"
-    namespace: "openshift-vertical-pod-autoscaler"
+    namespace: "startx-vertical-pod-autoscaler"
     providedAPIs: "VerticalPodAutoscaler.v1.autoscaling.k8s.io,VerticalPodAutoscalerCheckpoint.v1.autoscaling.k8s.io,VerticalPodAutoscalerController.v1.autoscaling.openshift.io"

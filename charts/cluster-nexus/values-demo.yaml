@@ -1,0 +1,60 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: nexus
+  app: demo-nexus
+nexus:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   nexus4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "demo-nexus"
+    display_name: "Demo NEXUS"
+    requester: startx
+    description: Demo Nexus configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "nxrm-operator-certified"
+    namespace: "demo-nexus"
+    version: "v3.27.0-1"
+    operator: 
+      channel: stable
+      name: nxrm-operator-certified
+      csv: nxrm-operator-certified
+      source: 
+        name: certified-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "demo-nexus"
+    namespace: "demo-nexus"
+    providedAPIs: "NexusRepo.v1alpha1.sonatype.com"
