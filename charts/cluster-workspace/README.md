@@ -207,4 +207,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.226 | 2021-05-31 | Add demo-che example values
 | 0.3.227 | 2021-06-02 | Upgrade to CRW version 2.8.0
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
-| 0.3.311 | 2021-06-03 | Align cluster chart to version 0.3.311
+| 0.3.311 | 2021-06-03 | | 03.311 | 2021-06-03 | Align cluster chart to version 0.3.311
