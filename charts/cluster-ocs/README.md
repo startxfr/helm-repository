@@ -86,3 +86,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
 | 0.3.226 | 2021-06-02 | Update the OCS operator to version 4.7.0
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
+| 0.3.311 | 2021-06-03 | Align cluster chart to version 0.3.311
