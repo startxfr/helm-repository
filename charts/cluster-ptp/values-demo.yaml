@@ -5,7 +5,7 @@ context: &context
   cluster: default
   environment: infra
   component: ptp
-  app: startx-ptp
+  app: demo-ptp
 ptp:
   enabled: false
   hooked: false
@@ -31,10 +31,10 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "startx-ptp"
-    display_name: "Startx PTP"
+    name: "demo-ptp"
+    display_name: "Demo PTP"
     requester: startx
-    description: Precision Time Protocol configured by STARTX
+    description: Demo of Precision Time Protocol configured by STARTX
 operator:
   enabled: false
   context: 
@@ -43,7 +43,7 @@ operator:
     enabled: true
     hooked: false
     name: "ptp-operator"
-    namespace: "startx-ptp"
+    namespace: "demo-ptp"
     version: "4.7.0-202105210300.p0"
     operator: 
       channel: "4.7"
@@ -55,6 +55,6 @@ operator:
   operatorGroup:
     enabled: true
     hooked: false
-    name: "startx-ptp"
-    namespace: "startx-ptp"
+    name: "demo-ptp"
+    namespace: "demo-ptp"
     providedAPIs: "NodePtpDevice.v1.ptp.openshift.io,PtpConfig.v1.ptp.openshift.io,PtpOperatorConfig.v1.ptp.openshift.io"
