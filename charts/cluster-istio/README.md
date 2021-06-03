@@ -89,3 +89,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 0.3.228 | 2021-06-02 | Upgrade servicemesh operator to 2.0.5.1
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
 | 0.3.304 | 2021-06-03 | Align cluster chart to version 0.3.311
+| 0.3.304 | 2021-06-03 | Align cluster chart to version 0.3.311
