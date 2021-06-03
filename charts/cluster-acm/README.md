@@ -43,3 +43,4 @@ helm install startx/cluster-acm
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
 | 0.3.304 | 2021-06-03 | update startx values configuration
 | 0.3.304 | 2021-06-03 | | 0.3.304 | 2021-06-03 | | 0.3.304 | 2021-06-03 | | 0.3.304 | 2021-06-03 | | 0.3.304 | 2021-06-03 | | 0.3.304 | 2021-06-03 | Align cluster chart to version 0.3.311
+| 0.3.312 | 2021-06-03 | Stable charts
