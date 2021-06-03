@@ -19,6 +19,7 @@ The objectif of this release is to add more content to the helm repository catal
 
 | Release                                                                     | Date       | Description                                                                                            |
 | --------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------ |
+| [0.3.311](https://github.com/startxfr/helm-repository/releases/tag/0.3.311) | 2021-06-03 | Stable demo and cluster resource configurations                                                        |
 | [0.3.203](https://github.com/startxfr/helm-repository/releases/tag/0.3.203) | 2021-02-21 | Upgrade chart release informations                                                                     |
 | [0.3.151](https://github.com/startxfr/helm-repository/releases/tag/0.3.151) | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                    |
 | [0.3.93](https://github.com/startxfr/helm-repository/releases/tag/0.3.93)   | 2020-11-10 | Stable basic and cluster-xxx charts in the startx repository                                           |
