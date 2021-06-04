@@ -1,4 +1,4 @@
-# Cvpa
+# Cluster vpa
 
 This helm chart is used to deploy VerticalPodAutoscaler pod managed by a dedicated operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -74,3 +74,4 @@ helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.304 | 2021-06-03 | update startx values configuration
 | 0.3.305 | 2021-06-03 | update startx values configuration
 | 0.3.311 | 2021-06-03 | | 0.3.311 | 2021-06-03 | | 0.3.311 | 2021-06-03 | | 0.3.305 | 2021-06-04 | publish stable update for the full repository
+| 0.3.315 | 2021-06-04 | Stable documentation for all charts
