@@ -111,3 +111,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | version: 0.3.311Align cluster chart to version 0.3.311
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository
 | 0.3.315 | 2021-06-04 | Stable documentation for all charts
+| 0.3.317 | 2021-06-04 | Improve documentation
