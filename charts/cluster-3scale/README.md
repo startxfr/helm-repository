@@ -104,3 +104,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.312 | 2021-06-03 | Stable charts                                                                                          |
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository
 | 0.3.315 | 2021-06-04 | Stable documentation for all charts
+| 0.3.317 | 2021-06-04 | Improve documentation
