@@ -1,4 +1,4 @@
-# Cvpa
+# Cluster vpa
 
 This helm chart is used to deploy VerticalPodAutoscaler pod managed by a dedicated operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.

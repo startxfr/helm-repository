@@ -1,4 +1,4 @@
-# Example-catalog
+# Example catalog
 
 This helm chart is chart used to deploy various example of application used in Startx demo and mostly based on [sxapi helm chart](https://startxfr.github.io/helm-repository/charts/sxapi) microservice framework.
 
