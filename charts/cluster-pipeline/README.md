@@ -1,4 +1,4 @@
-# Cpipeline
+# Cluster pipeline
 
 This helm chart is used to configure tekton via it's operator.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
