@@ -1,4 +1,4 @@
-# Ckubevirt
+# Cluster kubevirt
 
 This helm chart is used to configure code ready kubevirt via it's operator and deploy a VM into Openshift.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -69,3 +69,4 @@ xxxx  to do xxxxxxxx
 | 0.3.304 | 2021-06-03 | update demo value configuration
 | 0.3.311 | 2021-06-03 | Align cluster chart to version 0.3.311
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository
+| 0.3.315 | 2021-06-04 | Stable documentation for all charts
