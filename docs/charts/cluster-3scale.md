@@ -1,4 +1,4 @@
-# C3scale
+# Cluster 3scale
 
 This helm chart is used to create a deployment of a 3scale, operator based, deployment of 3Scale API management tools.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -103,3 +103,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.311 | 2021-06-03 | Align cluster chart to version 0.3.311                                                                 |
 | 0.3.312 | 2021-06-03 | Stable charts                                                                                          |
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository
+| 0.3.315 | 2021-06-04 | Stable documentation for all charts
