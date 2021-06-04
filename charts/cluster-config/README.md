@@ -1,4 +1,4 @@
-# Cconfig
+# Cluster config
 
 This helm chart is used to create a personnalized cluster configuration with various cluster level components configured as required.
 This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
