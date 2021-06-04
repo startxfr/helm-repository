@@ -235,3 +235,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.2.301 | 2021-06-03 | Stable basic chart aligned to 0.2.301
 | 0.3.301 | 2021-06-03 | Stable basic chart aligned to 0.3.301
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository
+| 0.3.315 | 2021-06-04 | Stable documentation for all charts
