@@ -71,3 +71,4 @@ helm install startx/cluster-compliance -f https://raw.githubusercontent.com/star
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
 | version: 0.3.3110.3.304 | 2021-06-03 | Align cluster chart to version 0.3.311
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository
+| 0.3.315 | 2021-06-04 | Stable documentation for all charts
