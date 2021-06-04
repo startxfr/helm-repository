@@ -1,4 +1,4 @@
-# Example-pod
+# Example pod
 
 This helm chart is used to create a simple pod with various application images according to the values file.
 
