@@ -103,3 +103,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.320 | 2021-06-05 | Update basic chart dependencies to 0.3.318
 | 0.3.321 | 2021-06-05 | publish stable update for the full repository
 | 0.3.322 | 2021-06-05 | Add the hugo demo to the example catalog
+| 0.3.323 | 2021-06-05 | Add the keycloak  demo to the example catalog
