@@ -11,7 +11,7 @@ context:  &context
   # Component name of this application (logical tenant)
   component: mycomponent
   # Application name (functionnal tenant, default use Chart name)
-  app: default-workspaces
+  app: openshift-workspaces
   # Version name of this application (default use Chart appVersion)
   # version: 0.0.3
 
@@ -36,7 +36,7 @@ project:
   project: 
     enabled: true
     type: project
-    name: example-workspaces
+    name: openshift-workspaces
     display_name: Operator WORKSPACES
     description: CodeReady Workspace configured by STARTX
 
@@ -49,7 +49,7 @@ operator:
     enabled: true
     hooked: true
     name: "codeready-workspaces"
-    namespace: "default-workspaces"
+    namespace: "openshift-workspaces"
     version: "v2.8.0"
     operator: 
       channel: latest
@@ -62,5 +62,5 @@ operator:
     enabled: true
     hooked: true
     name: "codeready-workspaces"
-    namespace: "default-workspaces"
+    namespace: "openshift-workspaces"
     providedAPIs: "CheCluster.v1.org.eclipse.che"
