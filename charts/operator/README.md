@@ -171,3 +171,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository
 | 0.3.315 | 2021-06-04 | Stable documentation for all charts
 | 0.3.317 | 2021-06-04 | Improve documentation
+| 0.3.318 | 2021-06-05 | Disable operator default to force configuration before applying
