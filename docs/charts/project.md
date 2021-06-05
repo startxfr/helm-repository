@@ -239,3 +239,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.317 | 2021-06-04 | Improve documentation
 | 0.3.318 | 2021-06-05 | Change limit in demo hpa project
 | 0.3.320 | 2021-06-05 | Update basic chart dependencies to 0.3.318
+| 0.3.321 | 2021-06-05 | publish stable update for the full repository
