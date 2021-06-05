@@ -75,3 +75,4 @@ helm install startx/cluster-sso -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.317 | 2021-06-04 | Improve documentation
 | 0.3.320 | 2021-06-05 | Update basic chart dependencies to 0.3.318
 | 0.3.321 | 2021-06-05 | publish stable update for the full repository
+| 0.3.327 | 2021-06-06 | publish stable update for the full repository
