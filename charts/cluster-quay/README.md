@@ -93,3 +93,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.321 | 2021-06-05 | publish stable update for the full repository
 | 0.3.322 | 2021-06-05 | Debug operator csv name
 | 0.3.323 | 2021-06-05 | Debug values for outofsync argocd deployment
+| 0.3.327 | 2021-06-06 | publish stable update for the full repository
