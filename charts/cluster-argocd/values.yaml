@@ -18,11 +18,39 @@ context: &context
 # Configuration of the argocd cluster
 argocd:
   # enable deployment of the argocd cluster
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
   hooked: true
   # name of the argocd cluster
   name: "startx-argocd"
+
+# Configuration of the argocd export
+argocd_export:
+  # enable deployment of export
+  enabled: false
+  # List of export to configure
+  list: 
+      # Name of the export configuration
+    - name: "example-export"
+      # Namespace of the export configuration
+      namespace: "startx-argocd"
+      # name of the argocd instance to export
+      argocd: "startx-argocd"
+      # Rythm of the export creation
+      schedule: "0 * * * *"
+      # Storage class used for the PVC creation of the export
+      storageclass: "gp2"
+
+# Configuration of the argocd argocd_project
+argocd_project:
+  # enable deployment of argocd_project
+  enabled: false
+  # List of argocd_project to configure
+  list: 
+      # Name of the argocd_project configuration
+    - name: "default"
+      # Namespace of the argocd_project configuration
+      namespace: "default"
 
 # Configuration of VM to deploy
 application:
@@ -92,7 +120,7 @@ application:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
@@ -114,7 +142,7 @@ project:
 
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
