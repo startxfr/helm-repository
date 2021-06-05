@@ -89,3 +89,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.315 | 2021-06-04 | Stable documentation for all charts
 | 0.3.317 | 2021-06-04 | Improve documentation
 | 0.3.320 | 2021-06-05 | Update basic chart dependencies to 0.3.318
+| 0.3.321 | 2021-06-05 | publish stable update for the full repository
