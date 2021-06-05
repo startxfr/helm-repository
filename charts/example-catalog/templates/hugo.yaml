@@ -1,0 +1,2026 @@
+{{- if .Values.demo }}{{- if .Values.demo.hugo }}{{- if .Values.demo.hugo.enabled -}}
+{{- $root := . -}}
+{{- with .Values.demo.hugo -}}
+{{- $namespace := .namespace | default "demo-hugo" -}}
+{{- $scope := .scope | default "startx" -}}
+{{- $cluster := .cluster | default "default" -}}
+{{- $env := .environment | default "dev" -}}
+{{- $component := .component | default "helm" -}}
+{{- $version := .version | default "0.0.0-beta" -}}
+{{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "{{- $scope -}}-hugo-workspace"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $scope -}}-hugo-workspace-pvc"
+spec:
+  resources:
+    requests:
+      storage: 3Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain 
+  storageClassName: aws-generic-retain
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "containers-cache-hugo"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "containers-cache-hugo-pvc"
+spec:
+  resources:
+    requests:
+      storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain 
+  storageClassName: aws-generic-retain
+---
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: "hugo"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "hugo-imagestream"
+spec:
+  tags:
+    - name: latest
+      annotations:
+        openshift.io/display-name: "{{- $scope -}} - {{- $component -}} application"
+        description: Application {{- $component -}} image for {{- $scope -}} scope
+        iconClass: icon-nodejs
+        tags: startx,nodejs,httpd
+        supports: http
+        version: "{{- $env -}}"
+        sampleRepo: https://github.com/startxfr/sxcm.git
+---
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: "hugo-socle"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "hugo-socle-imagestream"
+spec:
+  tags:
+    - name: latest
+      annotations:
+        openshift.io/display-name: "{{- $scope -}} - {{- $component -}} application"
+        description: Application {{- $component -}} image for {{- $scope -}} scope
+        iconClass: icon-nodejs
+        tags: startx,nodejs,httpd
+        supports: http
+        version: "{{- $env -}}"
+        sampleRepo: https://github.com/startxfr/sxcm.git
+      from:
+        kind: DockerImage
+        name: startx/runner-ansible:latest
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "hugo-config"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    template.openshift.io/expose-id: "{.data['SX_ID']}"
+    template.openshift.io/expose-type: "{.data['SX_TYPE']}"
+    template.openshift.io/expose-service: "{.data['SX_COMPONENT']}"
+    template.openshift.io/expose-name: "{.data['SX_NAME']}"
+    template.openshift.io/expose-summary: "{.data['SX_SUMMARY']}"
+    template.openshift.io/expose-version: "{.data['SX_VERSION']}"
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "hugo-config-configmap"
+data:
+  SX_ID: {{- $scope -}}-{{- $component -}}-{{- $env -}}/app
+  SX_TYPE: app
+  SX_COMPONENT: {{- $component -}}
+  SX_NAME: Startx {{- $component -}} application
+  SX_SUMMARY: Startx {{- $component -}} application based on apache container
+  SX_VERSION: {{- $env -}}
+---
+kind: BuildConfig
+apiVersion: v1
+metadata:
+  name: "hugo"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "hugo-config"
+spec:
+  triggers:
+    - type: ImageChange
+      imageChange: {}
+    - type: ConfigChange
+  runPolicy: SerialLatestOnly
+  source:
+    type: Git
+    git:
+      uri: https://github.com/startxfr/hugo-example.git
+      ref: "master"
+  resources:
+    limits:
+      cpu: 400m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: hugo-socle:latest
+      env:
+        - name: SX_VERBOSE
+          value: "true"
+        - name: SX_DEBUG
+          value: "true"
+  output:
+    to:
+      kind: ImageStreamTag
+      name: hugo:latest
+---
+kind: DeploymentConfig
+apiVersion: v1
+metadata:
+  name: "hugo"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "hugo-deploymentconfig"
+    app.openshift.io/runtime: nodejs
+spec:
+  replicas: 2
+  strategy:
+    type: Rolling
+    rollingParams:
+      timeoutSeconds: 60
+      maxUnavailable: 25%
+      maxSurge: 25%
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - "application"
+        from:
+          kind: ImageStreamTag
+          name: hugo:latest
+    - type: ConfigChange
+  postCommit:
+    script: "/bin/sx-nodejs info"
+  test: false
+  selector:
+    app: "hugo"
+    deploymentconfig: "hugo"
+  template:
+    metadata:
+      annotations:
+        <<: *basic_annotations
+        sidecar.istio.io/inject: "false"
+      labels:
+        <<: *basic_labels
+        app.kubernetes.io/name: "hugo-deploymentconfig"
+        app: "hugo"
+        deploymentconfig: "hugo"
+    spec:
+      containers:
+        - name: "application"
+          image: " "
+          env:
+            - name: SX_VERBOSE
+              value: "true"
+            - name: SX_DEBUG
+              value: "true"
+          envFrom:
+            - configMapRef:
+                name: hugo-config
+          command:
+            - "/bin/sx-nodejs"
+          args:
+            - run
+          ports:
+            - containerPort: 8077
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/sx-nodejs"
+                - isLive
+            initialDelaySeconds: 1
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2
+          readinessProbe:
+            exec:
+              command:
+                - "/bin/sx-nodejs"
+                - isReady
+            initialDelaySeconds: 4
+            timeoutSeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 20m
+              memory: 64Mi
+          terminationMessagePath: "/dev/termination-log"
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: "hugo-log"
+              mountPath: "/var/log/httpd"
+      volumes:
+        - name: "hugo-log"
+          emptyDir:
+            medium: ""
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "hugo"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    template.openshift.io/expose-service_ip: "{.spec.clusterIP}"
+    template.openshift.io/expose-service_port: "{.spec.ports[0].port}"
+    template.openshift.io/expose-service_ip_port: "{.spec.clusterIP}:{.spec.ports[0].port}"
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "hugo-service"
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8077
+  selector:
+    app: "hugo"
+    deploymentconfig: "hugo"
+  type: ClusterIP
+  sessionAffinity: None
+---
+kind: Route
+apiVersion: v1
+metadata:
+  name: "hugo"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    haproxy.router.openshift.io/balance: roundrobin
+    haproxy.router.openshift.io/disable_cookies: true
+    template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "hugo-route"
+spec:
+  tls:
+    insecureEdgeTerminationPolicy: Allow
+    termination: edge
+  wildcardPolicy: None
+  to:
+    kind: Service
+    name: "hugo"
+    weight: 100
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "pipeline-lib"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "pipeline-lib-configmap"
+data:
+  common.sh: |-
+    #!/bin/bash
+    # scope of this pipeline (coded on generation)
+    SCOPE={{- $scope -}}
+    # environment of this pipeline (coded on generation)
+    ENV={{- $env -}}
+    # cluster of this pipeline (coded on generation)
+    CLUSTER={{- $cluster -}}
+
+    # directory path in the workspace for source code
+    DIR_SOURCE="source"
+    # directory path in the workspace for image building
+    DIR_IMAGE="images"
+    # directory path in the workspace for report generation
+    DIR_REPORT="reports"
+    # directory path in the workspace for cached data
+    DIR_CACHE="cache"
+    # Activate debug mode
+    DEBUG="false"
+    # Current date formated for report line prefix
+    DATEF=$(date '+%y%m%d-%H%M%S');
+    # Prefix used for test code report
+    SUFFIX_REPORT_TESTCODE=test-code.report
+    # Prefix used for image security scan report
+    SUFFIX_REPORT_TESTSECIMG=test-secimg.report
+    # Prefix used for application vulnerability report
+    SUFFIX_REPORT_TESTSECAPP=test-secapp.report
+
+
+    # echo with info prefix
+    function echoInfo {
+      echo " INFO == " $1 $2 $3
+    }
+
+    # echo with error prefix
+    function echoError {
+      echo "ERROR == " $1 $2 $3
+    }
+
+    # echo only if debug mode is activated
+    function echoDebug {
+      if [[ "$DEBUG" == "true" ]]
+      then
+        echo "DEBUG == " $1 $2 $3
+      fi
+    }
+
+    # ensure the storage directory structure is present
+    function ensureStorageDirs {
+      echoDebug "create directory /pipeline-workspace/$DIR_SOURCE"
+      mkdir -p /pipeline-workspace/$DIR_SOURCE
+      echoDebug "create directory /pipeline-workspace/$DIR_IMAGE"
+      mkdir -p /pipeline-workspace/$DIR_IMAGE
+      echoDebug "create directory /pipeline-workspace/$DIR_REPORT"
+      mkdir -p /pipeline-workspace/$DIR_REPORT
+      echoDebug "create directory /pipeline-workspace/$DIR_CACHE"
+      mkdir -p /pipeline-workspace/$DIR_CACHE
+    }
+
+    # reset the persistent data
+    function resetStorage {
+      echoInfo "Reset persistent storage"
+      echoDebug "delete directory /pipeline-workspace/$DIR_IMAGE"
+      rm -rf   /pipeline-workspace/$DIR_IMAGE
+      echoDebug "delete directory /pipeline-workspace/$DIR_REPORT"
+      rm -rf   /pipeline-workspace/$DIR_REPORT
+      clearCache
+      clearSource
+      ensureStorageDirs
+    }
+
+    # clear the persistent cache
+    function clearCache {
+      echoInfo "Reset cache storage"
+      echoDebug "delete directory /pipeline-workspace/$DIR_CACHE"
+      rm -rf /pipeline-workspace/$DIR_CACHE
+      echoDebug "delete directory /pipeline-workspace/$DIR_CACHE"
+      mkdir -p /pipeline-workspace/$DIR_CACHE
+    }
+
+    # clear the persistent source code
+    function clearSource {
+      echoInfo "Reset cache storage"
+      echoDebug "delete directory /pipeline-workspace/$DIR_SOURCE"
+      rm -rf /pipeline-workspace/$DIR_SOURCE
+      echoDebug "create directory /pipeline-workspace/$DIR_SOURCE"
+      mkdir -p /pipeline-workspace/$DIR_SOURCE
+    }
+
+    # copy source to persistant storage
+    function persistSource {
+      echoInfo "Copy source code to persistent directory $DIR_SOURCE/"
+      clearSource
+      echoDebug "copy /workspace/source/* to /pipeline-workspace/$DIR_SOURCE/"
+      cp -r /workspace/source/* /pipeline-workspace/$DIR_SOURCE/ &> /dev/null
+      echoDebug "copy /workspace/source/.* to /pipeline-workspace/$DIR_SOURCE/"
+      cp -r /workspace/source/.* /pipeline-workspace/$DIR_SOURCE/ &> /dev/null
+      if [[ ! -d /pipeline-workspace/$DIR_SOURCE/.git ]]
+      then
+        echo "Copy failed because we could not find a .git directory inside /pipeline-workspace/$DIR_SOURCE"
+        exit 1;
+      fi
+    }
+
+    # display commit resource
+    function displayCommitInfo {
+      echoInfo "display commit information"
+      echoDebug "cat /pipeline-workspace/git"
+      echoDebug "$(cat /pipeline-workspace/git)"
+      echo "Last commit : $COMMIT_TAG"
+      echo "Producer    : $COMMIT_AUTHOR"
+      echo "Period      : $COMMIT_DATE"
+      echo "Message     : $COMMIT_MESSAGE"
+      echo "Size        : $COMMIT_SIZE"
+    }
+
+    # generate env file for persistant storage
+    function persistCommitEnv {
+      local DESTFILE=/pipeline-workspace/git
+      echoInfo "persist commit info to $DESTFILE"
+      echoDebug "create $DESTFILE"
+      cd /pipeline-workspace/$DIR_SOURCE &> /dev/null
+      echo "COMMIT_AUTHOR=\"$(git log  | head -n 2 | tail -n 1 | cut -d ':' -f 2 | xargs)\"" > $DESTFILE
+      echo "COMMIT_DATE=\"$(git log --date=format:%Y%m%d-%H%M%S | head -n 3 | tail -n 1 | cut -d ':' -f 2 | cut -d ' ' -f 4 | xargs)\"" >> $DESTFILE
+      echo "COMMIT_TAG=\"$(git log  | head -n 1 | cut -d ' ' -f 2 | xargs)\"" >> $DESTFILE
+      echo "COMMIT_MESSAGE=\"$(git log  | head -n 5 | tail -n 1 | xargs)\"" >> $DESTFILE
+      echo "COMMIT_SIZE=\"$(du -sh . | xargs)\"" >> $DESTFILE
+      cd - &> /dev/null
+      loadCommitDetail
+    }
+
+    # load git detail from persistent storage
+    function loadCommitDetail {
+      local DESTFILE=/pipeline-workspace/git
+      echoDebug "load commit detail if exist"
+      if [[ -f $DESTFILE ]]
+      then
+        echoInfo "load commit detail found at $DESTFILE"
+        echoDebug "source $DESTFILE"
+        source $DESTFILE
+      fi
+    }
+
+    # load git detail from persistent storage
+    function compareGitAndStorageCommits {
+      loadCommitDetail
+      echoDebug "/pipeline-workspace/$DIR_SOURCE reflect commit $COMMIT_TAG"
+      cd /workspace/source &> /dev/null
+      COMMIT_TAG_SOURCE=$(git log  | head -n 1 | cut -d ' ' -f 2 | xargs)
+      echoDebug "/workspace/source reflect commit $COMMIT_TAG_SOURCE"
+      cd - &> /dev/null
+      if [[ "$COMMIT_TAG" == "$COMMIT_TAG_SOURCE" ]]
+      then
+        echoDebug "git commit $COMMIT_TAG and storage commit $COMMIT_TAG_SOURCE are identical"
+        echo "Source and storage contain the same commit tag $COMMIT_TAG_SOURCE"
+        echo "Skipping source copy because storage is already up to date"
+      else
+        echoDebug "git commit $COMMIT_TAG and storage commit $COMMIT_TAG_SOURCE are differents"
+        return 1
+      fi
+      return 0
+    }
+  build.sh: |-
+    #!/bin/bash
+    # Builder image to use for S2I build process
+    BUILDER="quay.io/startx/nodejs:latest"
+    # S2i path inside the builder
+    S2I_PATH="/s2i"
+    # Output file of the S2I build process
+    DOCKERFILE="Dockerfile"
+    # path where we can find source code to build
+    COMPONENT_NAME="mycomponent"
+    # tag name used when building image
+    TAG_NAME="myapp"
+    # repo url used to tag and publish image to registry
+    REPO_URL="localhost/myapp"
+    # TLS verify image registry
+    TLSVERIFY="false"
+
+
+    # prepare an S2i build dockerfile
+    function startBuildS2IPrepare {
+      local COMPONENT=$1 
+      local APP=$2
+      local BUILD_IMAGE=${3:-$BUILDER}
+      local DIR=/pipeline-workspace/$DIR_SOURCE/$COMPONENT/$APP
+      local TAG_NAME=$COMPONENT-$APP
+      local DIRDOCK=/pipeline-workspace/$DIR_IMAGE/$COMPONENT-$APP
+      local DOCKERFILE=$DIRDOCK/Dockerfile.gen 
+      local S2IOPTS=" --loglevel 1"
+      if [[ "$DEBUG" == "true" ]]
+      then
+        S2IOPTS=" --loglevel 3"
+      fi
+      mkdir -p $DIRDOCK &> /dev/null
+      cd $DIRDOCK &> /dev/null
+      echoInfo "start preparing image of $DIR with $BUILD_IMAGE to $TAG_NAME"
+      echoDebug "s2i build $S2IOPTS --image-scripts-url=image://$S2I_PATH $DIR $BUILD_IMAGE --as-dockerfile $DOCKERFILE"
+      s2i build --image-scripts-url=image://$S2I_PATH $DIR $BUILD_IMAGE --as-dockerfile $DOCKERFILE
+      cd - &> /dev/null
+    }
+
+    # start the building of s2i generated dockerfile
+    function startBuildS2I {
+      local COMPONENT=$1 
+      local APP=$2
+      local BUILD_IMAGE=${3:-$BUILDER}
+      local DIRDOCK=/pipeline-workspace/$DIR_IMAGE/$COMPONENT-$APP
+      local DIR=/pipeline-workspace/$DIR_SOURCE/$COMPONENT
+      local TAG_NAME=$COMPONENT-$APP
+      local DOCKERFILE=$DIRDOCK/Dockerfile.gen 
+
+      cd $DIRDOCK &> /dev/null
+      echoInfo "start building image of $DIR with $BUILD_IMAGE to $TAG_NAME"
+      echoDebug "buildah bud --layers -f $DOCKERFILE -t $TAG_NAME"
+      buildah bud --layers -f $DOCKERFILE -t $TAG_NAME
+      cd - &> /dev/null
+    }
+
+    # display commit resource
+    function startBuildDockerfile {
+      local COMPONENT=$1 
+      local APP=$2
+      local DIR=/pipeline-workspace/$DIR_SOURCE/$COMPONENT/$APP
+      local DOCKERFILE=Dockerfile
+      local TAG_NAME=$COMPONENT-$APP
+
+      cd  $DIR &> /dev/null
+      echoInfo "start build image of $DIR/$DOCKERFILE to $TAG_NAME"
+      echoDebug "buildah bud --layers -f $DIR/$DOCKERFILE -t $TAG_NAME $DIR"
+      buildah bud --layers -f $DIR/$DOCKERFILE -t $TAG_NAME $DIR
+      cd - &> /dev/null
+    }
+
+    # display tag resource
+    function startTagImage {
+      local TAG_NAME=$1
+      local REPO_URL=$2
+
+      echoInfo "start tagging image $TAG_NAME to $REPO_URL"
+      echoDebug "buildah tag $TAG_NAME $REPO_URL"
+      buildah tag $TAG_NAME $REPO_URL
+    }
+
+    # display publish resource
+    function publishImage {
+      local REPO_URL=$1
+      local TLSVERIFY=$2
+
+      echoInfo "start publishing image $REPO_URL to registry"
+      echoDebug "buildah push --tls-verify=$TLSVERIFY $REPO_URL docker://$REPO_URL"
+      buildah push --tls-verify=$TLSVERIFY $REPO_URL docker://$REPO_URL
+    }
+  database.sh: |-
+    #!/bin/bash
+
+    # display tag resource
+    function startTestDatabaseConfig {
+      local COMPONENT=$1 
+      local APP=$2
+      local TYPE=$3
+
+      echoInfo "watch rolling out latest version of $COMPONENT $APP $TYPE"
+      echoDebug "/usr/bin/oc rollout latest -w $TYPE/$COMPONENT-$APP"
+      echoDebug "TODO"
+      /usr/bin/oc rollout status -w $TYPE/$COMPONENT-$APP
+    }
+
+    # display tag resource
+    function startLoadSchema {
+      local COMPONENT=$1 
+      local APP=$2
+      local TYPE=$3
+
+      echoInfo "watch rolling out latest version of $COMPONENT $APP $TYPE"
+      echoDebug "TODO"
+    }
+
+    # display tag resource
+    function startLoadData {
+      local COMPONENT=$1 
+      local APP=$2
+      local TYPE=$3
+
+      echoInfo "watch rolling out latest version of $COMPONENT $APP $TYPE"
+      echoDebug "TODO"
+    }
+  deploy.sh: |-
+    #!/bin/bash
+
+    # rollout deployment and watch for deployment end
+    function ocDeployRolloutWatch {
+      local COMPONENT=$1 
+      local APP=$2
+      local TYPE=$3
+
+      echoInfo "watch rolling out latest version of $COMPONENT $APP $TYPE"
+      echoDebug "/usr/bin/oc rollout latest -w $TYPE/$COMPONENT-$APP"
+      /usr/bin/oc rollout status -w --timeout=15s $TYPE/$COMPONENT-$APP
+      exit $?;
+    }
+
+    # rollout deployment
+    function ocDeployRollout {
+      local COMPONENT=$1 
+      local APP=$2
+      local TYPE=$3
+      
+      echoInfo "start rolling out latest version of $COMPONENT $APP $TYPE"
+      if [[ "$TYPE" == "dc" || "$TYPE" == "deploymentconfig" ]]
+      then
+        echoDebug "$TYPE management of $COMPONENT $APP"
+        local STATUS=$(/usr/bin/oc rollout history $TYPE $COMPONENT-$APP | tail -n 1)
+        if [[ "$STATUS" == "No rollout history found." ]]
+        then
+          echoDebug "starting first deployment of $TYPE/$COMPONENT-$APP"
+          /usr/bin/oc rollout latest $TYPE/$COMPONENT-$APP
+          exit $?;
+        elif [[ "$STATUS" == "Complete" || "$STATUS" == "Failed" ]]
+        then
+          echoDebug "starting deployment of $TYPE/$COMPONENT-$APP"
+          /usr/bin/oc rollout latest $TYPE/$COMPONENT-$APP
+          exit $?;
+        else
+          echoDebug "deployment of $TYPE/$COMPONENT-$APP is $STATUS"
+        fi
+      else
+        echoDebug "$TYPE management of $COMPONENT $APP"
+        # /usr/bin/oc patch $TYPE/$COMPONENT-$APP --patch "{\"spec\": {\"template\": {\"metadata\": {\"labels\": {\"redeploy\": \"dep$RANDOM\"}}}}}"
+        oc rollout status $TYPE/$COMPONENT-$APP --timeout=1s &> /tmp/tt && cat /tmp/tt
+        local RTN=$?;
+        local STATUS=$(cat /tmp/tt | cut -d ' ' -f 1)
+        local STATUS2=$(cat /tmp/tt | cut -d ' ' -f 3)
+        if [[ "$STATUS2" == "successfully" ]]
+        then
+          echoDebug "starting re-deployment of $TYPE/$COMPONENT-$APP"
+          /usr/bin/oc rollout latest $TYPE/$COMPONENT-$APP
+          exit $RTN;
+        elif [[ "$STATUS" == "error:" ]]
+        then
+          echoDebug "starting errored deployment of $TYPE/$COMPONENT-$APP"
+          /usr/bin/oc rollout latest $TYPE/$COMPONENT-$APP
+          exit $RTN;
+        else
+          echoDebug "deployment of $TYPE/$COMPONENT-$APP is $STATUS"
+          exit $RTN;
+        fi
+      fi
+    }
+
+    # watch deployment status
+    function ocDeployWatch {
+      local COMPONENT=$1 
+      local APP=$2
+      local TYPE=$3
+      
+      echoInfo "watch status of latest version of $COMPONENT $APP $TYPE"
+      echoDebug "/usr/bin/oc rollout status -w $TYPE/$COMPONENT-$APP"
+      /usr/bin/oc rollout status -w $TYPE/$COMPONENT-$APP
+    }
+  test.sh: |-
+    #!/bin/bash
+    # enable enforcing security check by exiting error on security check failed
+    ENFORCE_SEC=false
+
+    # generate test source code report
+    function testCodeStart {
+      local COMPONENT=$1 
+      local APP=$2
+      local TEST_SCRIPT=$3
+      local CODE_DIR=/pipeline-workspace/$DIR_SOURCE/$COMPONENT/$APP
+      local TEST_DIR=/pipeline-workspace/test
+      local REPORT_FILE=$COMPONENT-$APP-$SUFFIX_REPORT_TESTCODE
+      local REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$REPORT_FILE
+
+      if [[ "$TEST_SCRIPT" == "" ]]
+      then
+        echoInfo "No test script found"
+        echo "$DATEF : Skip test code for $COMPONENT $APP because no script found" >> ${REPORT_FILEPATH}
+        exit
+      fi
+
+      echoInfo "Prepare test environment"
+      mkdir -p $TEST_DIR &> /dev/null
+      rm -rf $TEST_DIR &> /dev/null
+      cp -r $CODE_DIR $TEST_DIR
+      
+      echoInfo "Execute test"
+      cd $TEST_DIR &> /dev/null
+      `$TEST_SCRIPT 1>> ${REPORT_FILEPATH}`
+      local rtn=$?
+      cd - &> /dev/null
+
+      echoInfo "Cleanup test environment"
+      rm -rf $TEST_DIR &> /dev/null
+      echoInfo "Add $COMPONENT $APP test code report to ${REPORT_FILEPATH}"
+      echo "$DATEF : report test code for $COMPONENT $APP" >> ${REPORT_FILEPATH}
+      if [[ "$ENFORCE_SEC" == "true" && $rtn -gt "0" ]]; then
+        echoInfo "Enforced security mode is activated. Exit"
+        exit 1
+      fi
+    }
+
+    # display test source code report
+    function testCodeDisplayResult {
+      local COMPONENT=$1 
+      local APP=$2
+      local REPORT_FILE=$COMPONENT-$APP-$SUFFIX_REPORT_TESTCODE
+      local REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$REPORT_FILE
+
+      if [[ -r $REPORT_FILEPATH ]]
+      then
+        echoInfo "Display test-code report"
+        cat $REPORT_FILEPATH
+      fi
+    }
+
+    # generate test image security scan report
+    function testScanImageStart {
+      local COMPONENT=$1
+      local APP=$2
+      local QUAY_TAG=$3
+      local REPO="$COMPONENT-$APP"
+      local REPORT_FILE=$COMPONENT-$APP-$SUFFIX_REPORT_TESTSECIMG
+      local REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$REPORT_FILE
+      
+      # create organisation if not exist
+      quayUpsertOrganisation
+      quayUpsertOrganisationRobot tekton
+      quayUpsertRepository $COMPONENT $APP
+      quayFindImageForTag $REPO $QUAY_TAG
+      HASIMG=$?
+      if [[ "$HASIMG" == "0" ]]
+      then
+        quayFindVulnForImage $REPO `cat /pipeline-workspace/quay-last-imageid`
+      fi
+
+      echoInfo "Add $COMPONENT $APP image security scan report to $REPORT_FILEPATH"
+      echo "$DATEF : report image security scan for $COMPONENT $APP" >> $REPORT_FILEPATH
+      if [[ "$ENFORCE_SEC" == "true" && $error == "dummy" ]]; then
+        echoInfo "Enforced security mode is activated. Exit"
+        exit 1
+      fi
+    }
+
+    # display test image security scan report
+    function testScanImageDisplayResult {
+      local COMPONENT=$1 
+      local APP=$2
+      local REPORT_FILE=$COMPONENT-$APP-$SUFFIX_REPORT_TESTSECIMG
+      local REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$REPORT_FILE
+
+      if [[ -r $REPORT_FILEPATH ]]
+      then
+        echoInfo "Display image security scan report"
+        cat $REPORT_FILEPATH
+      fi
+    }
+
+    # generate test application security scan report
+    function testScanApplicationStart {
+      local COMPONENT=$1 
+      local APP=$2
+      local TMPVULN=/tmp/vuln.desc
+      local REPORT_FILE=$COMPONENT-$APP-$SUFFIX_REPORT_TESTSECAPP
+      local REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$REPORT_FILE
+      local LIST=`oc get ImageManifestVuln -o name`
+      local RTN=$?
+      if [[ $RTN == "0" ]]
+      then
+        local LISTCOUNT=`oc get ImageManifestVuln -o name | wc -l`
+        if [[ $LISTCOUNT -gt "0" ]]
+        then
+          local IMGSIGID="$SCOPE-$ENV/$COMPONENT-$APP"
+          local HASVULN="false"
+          for vuln in $LIST
+          do
+            local VULNNAME=`oc get -o json $vuln | jq -r ".metadata.name"`
+            oc get -o json $vuln > $TMPVULN
+            local MATCHIMGSIGIDCOUNT=`cat $TMPVULN | jq .status.affectedPods | jq 'to_entries' | jq -r ".[] | select(.key|test(\"$IMGSIGID.\")) | .key" | wc -l`
+            if [[ $MATCHIMGSIGIDCOUNT -gt "0" ]]
+            then
+              HASVULN="true"
+              echoInfo "vulnerbility detected for application $COMPONENT $APP ( $VULNNAME ) "
+              echo "$DATEF : Vulnerability found for $COMPONENT $APP." >> $REPORT_FILEPATH
+              echo "$DATEF : ==       id : $VULNNAME" >> $REPORT_FILEPATH
+              echo "$DATEF : == severity : " `cat $TMPVULN | jq -r .status.highestSeverity` >> $REPORT_FILEPATH
+              echo "$DATEF : ==     high : " `cat $TMPVULN | jq -r .status.highCount` >> $REPORT_FILEPATH
+              echo "$DATEF : ==   medium : " `cat $TMPVULN | jq -r .status.mediumCount` >> $REPORT_FILEPATH
+              echo "$DATEF : ==      low : " `cat $TMPVULN | jq -r .status.lowCount` >> $REPORT_FILEPATH
+            else
+              echoInfo "vulnerbility $VULNNAME not relevant for $COMPONENT $APP"
+            fi
+          done
+          if [[ "$ENFORCE_SEC" == "true" && $HASVULN == "true" ]]; then
+            echoInfo "Enforced security mode is activated. Exit"
+            exit 1
+          fi
+        else
+          echoInfo "$COMPONENT $APP application security scan report no detected vulnerabilities"
+          echo "$DATEF : No vulnerabilities found for $COMPONENT $APP" >> $REPORT_FILEPATH
+        fi
+      else
+        echoInfo "Cluster doesn't have container-security-operator enabled. Running application vulnerability scan is not possible"
+        echo "$DATEF : Skip vulnerability scan for $COMPONENT $APP because cluster doesn't have container-security-operator enabled" >> $REPORT_FILEPATH
+        echoDebug "Please use sxcm to deploy quay service within the cluster"
+      fi
+    }
+
+    # display test application security scan report
+    function testScanApplicationDisplayResult {
+      local COMPONENT=$1 
+      local APP=$2
+      local REPORT_FILE=$COMPONENT-$APP-$SUFFIX_REPORT_TESTSECAPP
+      local REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$REPORT_FILE
+
+      if [[ -r $REPORT_FILEPATH ]]
+      then
+        echoInfo "Display application security scan report"
+        cat $REPORT_FILEPATH
+      fi
+    }
+  report.sh: |-
+    #!/bin/bash
+
+    # test report generate
+    function reportGenerate {
+      local COMPONENT=$1 
+      local APP=$2
+      local REPORT_FILEPATH=""
+
+      echoInfo "test report generate"
+      loadCommitDetail
+      displayCommitInfo
+      echoInfo "GENERATE component application $COMPONENT $APP report"
+
+      REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$COMPONENT-$APP-$SUFFIX_REPORT_TESTCODE
+      if [[ -r $REPORT_FILEPATH ]]
+      then
+        echoInfo "Display $COMPONENT $APP test code report"
+        echoDebug "cat $REPORT_FILEPATH"
+        cat $REPORT_FILEPATH
+      fi
+
+      REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$COMPONENT-$APP-$SUFFIX_REPORT_TESTSECIMG
+      if [[ -r /pipeline-workspace/$DIR_REPORT/$COMPONENT-$APP-$SUFFIX_REPORT_TESTSECIMG ]]
+      then
+        echoInfo "Display $COMPONENT $APP image scan report"
+        echoDebug "cat $REPORT_FILEPATH"
+        cat $REPORT_FILEPATH
+      fi
+
+      REPORT_FILEPATH=/pipeline-workspace/$DIR_REPORT/$COMPONENT-$APP-$SUFFIX_REPORT_TESTSECAPP
+      if [[ -r /pipeline-workspace/$DIR_REPORT/$COMPONENT-$APP-$SUFFIX_REPORT_TESTSECAPP ]]
+      then
+        echoInfo "Display $COMPONENT $APP application vulnerability scan report"
+        echoDebug "cat $REPORT_FILEPATH"
+        cat $REPORT_FILEPATH
+      fi
+    }
+
+    # test report notify
+    function reportNotify {
+      local COMPONENT=$1 
+      local APP=$2
+      local REPORT_FILEPATH=""
+
+      echoInfo "test report notify"
+      loadCommitDetail
+      displayCommitInfo
+      echoInfo "NOTIFY Component application $COMPONENT $APP test result"
+    }
+  generate.sh: |-
+    #!/bin/bash
+
+    # generate html static content form static markdown and cached data
+    function generateHugoStaticContent {
+      local APPSOURCE_DIR="$1/app-source"
+      local APPDEST_DIR="$1/app"
+      local OPTS="-D --minify "
+      if [[ "$2" != "" ]]
+      then
+        OPTS="-b https://$2"
+      fi
+      echoDebug "Jump to directory /pipeline-workspace/$DIR_SOURCE/$APPSOURCE_DIR"
+      cd /pipeline-workspace/$DIR_SOURCE/$APPSOURCE_DIR
+      echoDebug "execute hugo generation of content in $APPSOURCE_DIR"
+      hugo $OPTS
+      local RTN=$?;
+      if [[ "$RTN" == "0" ]]
+      then
+        echoDebug "copy generated content to directory /pipeline-workspace/$DIR_SOURCE/$APPDEST_DIR"
+        cp -r /pipeline-workspace/$DIR_SOURCE/$APPSOURCE_DIR/public/* /pipeline-workspace/$DIR_SOURCE/$APPDEST_DIR/ 
+        exit $RTN;
+      else
+        echoDebug "error in generating static content"
+        exit $RTN;
+      fi
+    }
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: prepare-workspace
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "prepare-workspace-task"
+spec:
+  workspaces:
+    - name: pipeline-workspace
+      description: The pipeline workspace folder
+      mountPath: /pipeline-workspace
+  params:
+    - name: CLEAN_CACHE
+      type: string
+      description: Do we clean the cache directory
+      default: "false"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  resources:
+    inputs:
+      - name: source
+        type: git
+  volumes:
+    - name: sxcm-lib
+      configMap:
+        name: pipeline-lib
+  steps:
+    - name: workspace
+      image: "quay.io/startx/nodejs:latest"
+      workingDir: /pipeline-workspace
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 100m
+          memory: 64Mi
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      volumeMounts:
+      - name: sxcm-lib
+        mountPath: "/sxlib"
+        readOnly: true
+      env:
+        - name: SX_VERBOSE
+          value: "true"
+        - name: SX_DEBUG
+          value: "true"
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          
+          # Load used variable
+          CLEAN_CACHE="$(inputs.params.CLEAN_CACHE)"
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Begining of the main action for this script
+          echo "Ensure basic directories exist in persistant storage"
+          ensureStorageDirs
+          
+          # Check if clean cache is required
+          if [[ "true" == $CLEAN_CACHE || "yes" == $CLEAN_CACHE ]]
+          then
+            echo "Cleanup cache directory $DIR_CACHE/"
+            clearCache
+          fi
+    - name: source-code
+      image: "quay.io/startx/nodejs:latest"
+      workingDir: /pipeline-workspace
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 100m
+          memory: 64Mi
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      volumeMounts:
+      - name: sxcm-lib
+        mountPath: "/sxlib"
+        readOnly: true
+      env:
+        - name: SX_VERBOSE
+          value: "true"
+        - name: SX_DEBUG
+          value: "true"
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          
+          # Load used variable
+          CLEAN_CACHE="$(inputs.params.CLEAN_CACHE)"
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Check if persistent is up to date
+          compareGitAndStorageCommits
+          if [[ $? == "1" ]]
+          then
+            persistSource
+            persistCommitEnv
+            displayCommitInfo
+          fi
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: build-s2i
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "build-s2i-task"
+spec:
+  workspaces:
+    - name: pipeline-workspace
+      description: The pipeline workspace folder
+      mountPath: /pipeline-workspace
+  params:
+    - name: COMPONENT_NAME
+      type: string
+      description: The location of the path to run build from.
+      default: .
+    - name: APP_NAME
+      type: string
+      description: The application name to build
+      default: myapp
+    - name: BUILD_IMAGE
+      type: string
+      description: Image used to build application
+      default: "startx/runner-nodejs:latest"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  volumes:
+    - name: sxcm-lib
+      configMap:
+        name: pipeline-lib
+    - name: container-cache
+      persistentVolumeClaim:
+        claimName: "containers-cache-hugo"
+  steps: 
+    - name: prepare
+      image: quay.io/openshift-pipeline/s2i
+      workingDir: /pipeline-workspace/source
+      securityContext:
+        privileged: true
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 800m
+          memory: 1024Mi
+        requests:
+          cpu: "300m"
+          memory: "512Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+        - name: container-cache
+          mountPath: /var/lib/containers
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/build.sh
+          
+          # Load used variable
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          loadCommitDetail
+          echo "Display commit detail"
+          displayCommitInfo
+          echo "Prepare build of application $(inputs.params.COMPONENT_NAME) $(inputs.params.APP_NAME)"
+          startBuildS2IPrepare $(inputs.params.COMPONENT_NAME) $(inputs.params.APP_NAME) "$(inputs.params.BUILD_IMAGE)"
+    - name: build
+      image: quay.io/buildah/stable
+      workingDir: /pipeline-workspace/source
+      securityContext:
+        privileged: true
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 800m
+          memory: 1024Mi
+        requests:
+          cpu: "300m"
+          memory: "512Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+        - name: container-cache
+          mountPath: /var/lib/containers
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/build.sh
+          
+          # Load used variable
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          loadCommitDetail
+          echo "Display commit detail"
+          displayCommitInfo
+          echo "Start build of application $(inputs.params.COMPONENT_NAME) $(inputs.params.APP_NAME)"
+          startBuildS2I $(inputs.params.COMPONENT_NAME) $(inputs.params.APP_NAME) "$(inputs.params.BUILD_IMAGE)"
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: publish-image-single
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "publish-image-single-task"
+spec:
+  workspaces:
+    - name: pipeline-workspace
+      description: The pipeline workspace folder
+      mountPath: /pipeline-workspace
+  params:
+    - name: TLSVERIFY
+      type: string
+      description: >-
+        Verify the TLS on the registry endpoint (for push/pull to a non-TLS
+        registry)
+      default: 'true'
+    - name: COMPONENT_NAME
+      type: string
+      description: The component to use
+      default: "mycomponent"
+    - name: APP_NAME
+      type: string
+      description: The application to use
+      default: "myapp"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  resources:
+    outputs:
+      - name: repo-internal
+        type: image
+  volumes:
+    - name: sxcm-lib
+      configMap:
+        name: pipeline-lib
+    - name: container-cache
+      persistentVolumeClaim:
+        claimName: "containers-cache-hugo"
+  steps:
+    - name: tag
+      image: quay.io/buildah/stable
+      workingDir: /pipeline-workspace/images
+      securityContext:
+        privileged: true
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 200m
+          memory: 64Mi
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+        - name: container-cache
+          mountPath: /var/lib/containers
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/build.sh
+          
+          # Load used variable
+          TLSVERIFY="$(inputs.params.TLSVERIFY)"
+          REPO_URL="$(outputs.resources.repo-internal.url)"
+          TAG_NAME="$(inputs.params.COMPONENT_NAME)-$(inputs.params.APP_NAME)"
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          loadCommitDetail
+          echo "Display commit detail"
+          displayCommitInfo
+          echo "Start tagging image $TAG_NAME to $REPO_URL"
+          startTagImage $TAG_NAME $REPO_URL
+    - name: push
+      image: quay.io/buildah/stable
+      securityContext:
+        privileged: true
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 300m
+          memory: 512Mi
+        requests:
+          cpu: "100m"
+          memory: "128Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+        - name: container-cache
+          mountPath: /var/lib/containers
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/build.sh
+
+          # Load used variable
+          TLSVERIFY="$(inputs.params.TLSVERIFY)"
+          REPO_URL="$(outputs.resources.repo-internal.url)"
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Load current commit environment
+          loadCommitDetail
+          echo "Display commit detail"
+          displayCommitInfo
+          echo "Publishing $REPO_URL image"
+          publishImage $REPO_URL $TLSVERIFY
+          exit 0;
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: application-deploy
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "application-deploy-task"
+spec:
+  workspaces:
+    - name: pipeline-workspace
+      description: The pipeline workspace folder
+      mountPath: /pipeline-workspace
+  params:
+    - name: APP_NAME
+      type: string
+      description: The application to deploy and test
+      default: "myapp"
+    - name: COMPONENT_NAME
+      type: string
+      description: The component to use
+      default: "mycomponent"
+    - name: DEPLOYMENT_KIND
+      type: string
+      description: The kind of deployment to use
+      default: "deploymentconfig"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  volumes:
+    - name: sxcm-lib
+      configMap:
+        name: pipeline-lib
+  steps:
+    - name: deploy
+      image: quay.io/openshift/origin-cli:latest
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 100m
+          memory: 64Mi
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/deploy.sh
+          
+          # Load used variable
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Load current commit environment
+          ocDeployRollout "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)" "$(inputs.params.DEPLOYMENT_KIND)"
+    - name: wait
+      image: quay.io/openshift/origin-cli:latest
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 100m
+          memory: 64Mi
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/deploy.sh
+          
+          # Load used variable
+          DEBUG="$(inputs.params.DEBUG)"
+
+          # Load current commit environment
+          ocDeployRolloutWatch "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)" "$(inputs.params.DEPLOYMENT_KIND)"
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: test-code
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "test-code-task"
+spec:
+  workspaces:
+    - name: pipeline-workspace
+      description: The pipeline workspace folder
+      mountPath: /pipeline-workspace
+  params:
+    - name: TEST_IMAGE
+      type: string
+      description: The image to use for test
+      default: "startx/runner-nodejs:latest"
+    - name: TEST_SCRIPT
+      type: string
+      description: The command to run for starting the test
+      default: "npm audit"
+    - name: APP_NAME
+      type: string
+      description: The application to report
+      default: "myapp"
+    - name: COMPONENT_NAME
+      type: string
+      description: The component to report
+      default: "mycomponent"
+    - name: ENFORCE_SEC 
+      type: string
+      description: Fail task if security test is false
+      default: "false"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  volumes:
+    - name: sxcm-lib
+      configMap:
+        name: pipeline-lib
+  steps:
+    - name: test
+      image: "$(inputs.params.TEST_IMAGE)"
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 600m
+          memory: 512Mi
+        requests:
+          cpu: "200m"
+          memory: "128Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/test.sh
+          
+          # Load used variable
+          ENFORCE_SEC="$(inputs.params.ENFORCE_SEC)"
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Start testing code
+          testCodeStart "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)" "$(inputs.params.TEST_SCRIPT)"
+    - name: report
+      image: "startx/runner-oc:centos8"
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 200m
+          memory: 128Mi
+        requests:
+          cpu: "100m"
+          memory: "64Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/test.sh
+          
+          # Load used variable
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Display test code report
+          testCodeDisplayResult "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: test-vulnerability-run
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "test-vulnerability-run-task"
+spec:
+  workspaces:
+    - name: pipeline-workspace
+      description: The pipeline workspace folder
+      mountPath: /pipeline-workspace
+  params:
+    - name: APP_NAME
+      type: string
+      description: The application to report
+      default: "myapp"
+    - name: COMPONENT_NAME
+      type: string
+      description: The component to report
+      default: "mycomponent"
+    - name: ENFORCE_SEC 
+      type: string
+      description: Fail task if security test is false
+      default: "false"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  volumes:
+    - name: sxcm-lib
+      configMap:
+        name: pipeline-lib
+  steps:
+    - name: test
+      image: startx/runner-oc:centos8
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 100m
+          memory: 64Mi
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/test.sh
+          
+          # Load used variable
+          ENFORCE_SEC="$(inputs.params.ENFORCE_SEC)"
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Start testing code
+          testScanApplicationStart "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
+    - name: report
+      image: "startx/runner-oc:centos8"
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 200m
+          memory: 64Mi
+        requests:
+          cpu: "100m"
+          memory: "32Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/test.sh
+
+          # Load used variable
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Start testing code
+          testScanApplicationDisplayResult "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: report-notify
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "report-notify-task"
+spec:
+  workspaces:
+    - name: pipeline-workspace
+      description: The pipeline workspace folder
+      mountPath: /pipeline-workspace
+  params:
+    - name: APP_NAME
+      type: string
+      description: The application to report
+      default: "myapp"
+    - name: COMPONENT_NAME
+      type: string
+      description: The component to report
+      default: "mycomponent"
+    - name: ENFORCE_SEC 
+      type: string
+      description: Fail task if security test is false
+      default: "false"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  resources:
+    outputs:
+      - name: notify-url
+        type: cloudEvent
+  volumes:
+    - name: sxcm-lib
+      configMap:
+        name: pipeline-lib
+  steps:
+    - name: generate
+      image: startx/fedora:latest
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 100m
+          memory: 64Mi
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/report.sh
+          
+          # Load used variable
+          ENFORCE_SEC="$(inputs.params.ENFORCE_SEC)"
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Report test result
+          reportGenerate "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
+    - name: notify
+      image: startx/runner-oc:centos8
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 100m
+          memory: 64Mi
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/report.sh
+          
+          # Load used variable
+          ENFORCE_SEC="$(inputs.params.ENFORCE_SEC)"
+          DEBUG="$(inputs.params.DEBUG)"
+          
+          # Report test result
+          reportNotify "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: "hugo-generate-content"
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "hugo-generate-content-task"
+spec:
+  workspaces:
+    - name: pipeline-workspace
+      description: The pipeline workspace folder
+      mountPath: /pipeline-workspace
+  params:
+    - name: UPDATE_CACHE
+      type: string
+      description: enable updating the cache
+      default: "yes"
+    - name: COMPONENT_NAME
+      type: string
+      description: The component to report
+      default: "mycomponent"
+    - name: BASE_URL 
+      type: string
+      description: the base url used for static generation
+      default: "{{- $component -}}-{{- $env -}}.svc.cluster.local"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  volumes:
+    - name: sxcm-lib
+      configMap:
+        name: pipeline-lib
+  steps:
+    - name: generate-static
+      image: "quay.io/startx/runner-ansible:latest"
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 500m
+          memory: 350Mi
+        requests:
+          cpu: "400m"
+          memory: "256Mi"
+      volumeMounts:
+        - name: sxcm-lib
+          mountPath: "/sxlib"
+          readOnly: true
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+          # Load pipeline library
+          source /sxlib/common.sh
+          source /sxlib/generate.sh
+          
+          # Load used variable
+          COMPONENT="$(inputs.params.COMPONENT_NAME)"
+          BASE_URL="$(inputs.params.BASE_URL)"
+          DEBUG="$(inputs.params.DEBUG)"
+
+          # generate static html files using hugo
+          generateHugoStaticContent $COMPONENT $BASE_URL
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: {{- $component -}}
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+spec:
+  params:
+    - name: ENFORCE_SEC 
+      type: string
+      description: If set to true a failed security check (code, image, run) will fail the pipeline
+      default: "false"
+    - name: COMPONENT 
+      type: string
+      description: Name of the component
+      default: "mycomp"
+    - name: UPDATE_CACHE
+      type: string
+      description: enable updating the cache
+      default: "yes"
+    - name: TEST_SCRIPT 
+      type: string
+      description: the test script to launch for code testing
+      default: "/usr/bin/npm run test"
+    - name: TEST_IMAGE 
+      type: string
+      description: Image used to run code testing
+      default: "quay.io/startx/nodejs:latest"
+    - name: BUILD_IMAGE 
+      type: string
+      description: Image used to build application
+      default: "quay.io/startx/apache:latest"
+    - name: DEPLOYMENT_KIND 
+      type: string
+      description: the kind of deployment resource used (should be one of deployment or deploymentconfig)
+      default: "deploymentconfig"
+    - name: BASE_URL 
+      type: string
+      description: the base url used for static generation
+      default: "{{- $component -}}-{{- $env -}}.svc.cluster.local"
+    - name: DEBUG
+      type: string
+      description: enable display debug
+      default: "false"
+  workspaces:
+    - name: running-workspace
+  resources:
+    - name: git-repo
+      type: git
+    - name: image-repo-internal
+      type: image
+    - name: web-notify
+      type: cloudEvent
+  tasks:
+    - name: prepare
+      taskRef:
+        name: prepare-workspace
+      params:
+        - name: DEBUG
+          value: "$(params.DEBUG)"
+        - name: CLEAN_CACHE
+          value: "$(params.UPDATE_CACHE)"
+      resources:
+        inputs:
+        - name: source
+          resource: git-repo
+      workspaces:
+        - name: pipeline-workspace
+          workspace: running-workspace
+    - name: generate
+      runAfter: ["prepare"]
+      taskRef:
+        name: hugo-generate-content
+      params:
+        - name: DEBUG
+          value: "$(params.DEBUG)"
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT)"
+        - name: BASE_URL
+          value: "$(params.BASE_URL)"
+        - name: UPDATE_CACHE
+          value: "$(params.UPDATE_CACHE)"
+      workspaces:
+        - name: pipeline-workspace
+          workspace: running-workspace
+    - name: test-code
+      runAfter: ["generate"]
+      taskRef:
+        name: test-code
+      params:
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT)"
+        - name: APP_NAME
+          value: "hugo-source"
+        - name: TEST_IMAGE
+          value: "$(params.TEST_IMAGE)"
+        - name: TEST_SCRIPT
+          value: "$(params.TEST_SCRIPT)"
+        - name: ENFORCE_SEC
+          value: "$(params.ENFORCE_SEC)"
+        - name: DEBUG
+          value: "$(params.DEBUG)"
+      workspaces:
+        - name: pipeline-workspace
+          workspace: running-workspace
+    - name: build
+      runAfter: ["test-code"]
+      taskRef:
+        name: build-s2i
+      params:
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT)"
+        - name: APP_NAME
+          value: "hugo"
+        - name: BUILD_IMAGE
+          value: "$(params.BUILD_IMAGE)"
+        - name: DEBUG
+          value: "$(params.DEBUG)"
+      workspaces:
+        - name: pipeline-workspace
+          workspace: running-workspace
+    - name: publish
+      runAfter: ["build"]
+      taskRef:
+        name: publish-image-single
+      params:
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT)"
+        - name: APP_NAME
+          value: "hugo"
+        - name: TLSVERIFY
+          value: "false"
+        - name: DEBUG
+          value: "$(params.DEBUG)"
+      resources:
+        outputs:
+        - name: repo-internal
+          resource: image-repo-internal
+      workspaces:
+        - name: pipeline-workspace
+          workspace: running-workspace
+    - name: run
+      runAfter: ["publish"]
+      taskRef:
+        name: application-deploy
+      params:
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT)"
+        - name: APP_NAME
+          value: "hugo"
+        - name: DEPLOYMENT_KIND
+          value: "$(params.DEPLOYMENT_KIND)"
+        - name: DEBUG
+          value: "$(params.DEBUG)"
+      workspaces:
+        - name: pipeline-workspace
+          workspace: running-workspace
+    - name: scan-run
+      runAfter: ["run"]
+      taskRef:
+        name: test-vulnerability-run
+      params:
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT)"
+        - name: APP_NAME
+          value: "hugo"
+        - name: ENFORCE_SEC
+          value: "$(params.ENFORCE_SEC)"
+        - name: DEBUG
+          value: "$(params.DEBUG)"
+      workspaces:
+        - name: pipeline-workspace
+          workspace: running-workspace
+    - name: report
+      runAfter: ["test-code","scan-run"]
+      taskRef:
+        name: report-notify
+      params:
+        - name: COMPONENT_NAME
+          value: "$(params.COMPONENT)"
+        - name: APP_NAME
+          value: "hugo"
+        - name: ENFORCE_SEC
+          value: "$(params.ENFORCE_SEC)"
+        - name: DEBUG
+          value: "$(params.DEBUG)"
+      resources:
+        outputs:
+        - name: notify-url
+          resource: web-notify
+      workspaces:
+        - name: pipeline-workspace
+          workspace: running-workspace
+---
+kind: PipelineResource
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: image-hugo-latest-internal
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "image-hugo-latest-internal-pipelineresource"
+spec:
+  type: image
+  params:
+    - name: url
+      value: image-registry.openshift-image-registry.svc:5000/{{- $namespace -}}/hugo:latest
+---
+kind: PipelineResource
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: git-hugo-demo-master
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    app.openshift.io/vcs-ref: master
+    app.openshift.io/vcs-uri: 'https://github.com/startxfr/okd-demo-hugo.git'
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "git-hugo-demo-master-pipelineresource"
+spec:
+  type: git
+  params:
+    - name: url
+      value: 'https://github.com/startxfr/okd-demo-hugo.git'
+    - name: revision
+      value: master
+---
+kind: PipelineResource
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: github-hugo-demo-addissue
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "github-hugo-demo-addissue-pipelineresource"
+spec:
+  type: cloudEvent
+  params:
+    - name: targetURI
+      value: http://github.com/startxfr/okd-demo-hugo/issues/new
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: {{- $scope -}}-hugo-{{- $randrun -}}
+  namespace: {{ $namespace | quote }}
+  annotations:
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+  labels:
+    {{- include "example-catalog.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $scope -}}-hugo-{{- $randrun -}}-pipelinerun"
+spec:
+  serviceAccountName: {{- $env -}}-pipeline-runner
+  pipelineRef:
+    name: {{- $component -}}
+  params:
+    - name: "ENFORCE_SEC"
+      value: "false"
+    - name: "TEST_SCRIPT"
+      value: "hugo --verboseLog --verbose --renderToMemory --debug --log -d /tmp"
+    - name: "TEST_IMAGE"
+      value: "quay.io/startx/runner-ansible:latest"
+    - name: "DEPLOYMENT_KIND"
+      value: "deploymentconfig"
+    - name: BASE_URL 
+      value: "{{- $component -}}-{{- $env -}}.apps.{{- $cluster -}}.startx.fr"
+    - name: "COMPONENT"
+      value: "{{- $component -}}"
+    - name: BUILD_IMAGE 
+      value: "quay.io/startx/apache:latest"
+    - name: UPDATE_CACHE
+      value: "yes"
+    - name: DEBUG
+      value: "true"
+  resources:
+    - name: git-repo
+      resourceRef:
+        name: git-hugo-demo-master
+    - name: image-repo-internal
+      resourceRef:
+        name: image-hugo-latest-internal
+    - name: web-notify
+      resourceRef:
+        name: github-hugo-demo-addissue
+  workspaces:
+    - name: running-workspace
+      persistentVolumeClaim:
+        claimName: "{{- $scope -}}-hugo-workspace"
+{{- end }}
+{{- end }}{{- end }}{{- end }}
