@@ -11,6 +11,21 @@ argocd:
   enabled: true
   hooked: false
   name: "startx-argocd" 
+argocd_export:
+  enabled: false
+  list: 
+    - name: "startx-export"
+      namespace: "startx-argocd"
+      argocd: "startx-argocd"
+      schedule: "0 * * * *"
+      storageclass: "aws-slow-retain"
+argocd_project:
+  enabled: false
+  list: 
+    - name: "startx-argocd"
+    - name: "cluster-admin"
+    - name: "startx-argocd"
+      namespace: "startx-argocd"
 application:
   enabled: false
   list: 
@@ -89,16 +104,16 @@ project:
     groups: 
     - id: devops-argocd-admin
       name: devops
-      role: appprojects.argoproj.io-v1alpha1-admin
+      role: argocd_projects.argoproj.io-v1alpha1-admin
     - id: devops-argocd-edit
       name: devops
       role: edit
     - id: "cluster-admins-argocd-admin"
       name: "system:cluster-admins"
-      role: appprojects.argoproj.io-v1alpha1-admin
+      role: argocd_projects.argoproj.io-v1alpha1-admin
     - id: dev-argocd-view
       name: dev
-      role: appprojects.argoproj.io-v1alpha1-view
+      role: argocd_projects.argoproj.io-v1alpha1-view
     users: 
     - id: argocd-application-controller-cluster-admin
       name: system:serviceaccount:startx-argocd:argocd-application-controller

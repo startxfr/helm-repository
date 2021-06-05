@@ -17,7 +17,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-application"
   annotations:
     {{- include "cluster-argocd.annotations" $root | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "50"
+    argocd.argoproj.io/sync-wave: "40"
   {{- if .finalizer }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
