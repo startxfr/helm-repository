@@ -23,7 +23,7 @@ metadata:
 spec:
   version: {{ .Values.ocs.version | default "4.5.2" | quote }}
   externalStorage: {}
-  manageNodes: false
+  # manageNodes: false
   storageDeviceSets:
 {{- range .Values.ocs.storage }}
     - name: {{ .name | default "default-deviceset" | quote }}

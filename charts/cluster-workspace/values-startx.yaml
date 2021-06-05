@@ -5,7 +5,7 @@ context: &context
   cluster: default
   environment: infra
   component: workspaces
-  app: openshift-workspaces
+  app: startx-workspaces
 project: 
   enabled: false
   context: 
@@ -14,7 +14,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: openshift-workspaces
+    name: startx-workspaces
     display_name: "Startx WORKSPACES"
     requester: startx
     description: CodeReady Workspace configured by STARTX
@@ -26,7 +26,7 @@ operator:
     enabled: true
     hooked: false
     name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
+    namespace: "startx-workspaces"
     version: "v2.8.0"
     operator: 
       channel: latest
@@ -39,7 +39,7 @@ operator:
     enabled: true
     hooked: false
     name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
+    namespace: "startx-workspaces"
     providedAPIs: "CheCluster.v1.org.eclipse.che"
 cheCluster:
   enabled: true
