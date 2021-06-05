@@ -1,0 +1,31 @@
+{{- if .Values.argocd_export }}{{- if .Values.argocd_export.enabled }}
+{{- $root := . -}}
+{{- $defaultns := .Values.project.project.name -}}
+{{ range .Values.argocd_export.list }}
+{{- $name := .name | default "default-export" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $argocd := .argocd | default $root.Values.argocd.name -}}
+{{- $schedule := .schedule | default "0 * * * *" -}}
+{{- $storageclass := .storageclass | default "gp2" -}}
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCDExport
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-argocd.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-export"
+  annotations:
+    {{- include "cluster-argocd.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "50"
+spec:
+  argocd: {{ $argocd | quote }}
+  schedule: {{ $schedule | quote }}
+  storage:
+    pvc:
+      storageClassName: {{ $storageclass | quote }}
+
+{{- end }}
+{{- end }}{{- end }}

@@ -1,161 +1,72 @@
-{{- if .Values.appproject }}{{- if .Values.appproject.enabled }}
+{{- if .Values.argocd_project }}{{- if .Values.argocd_project.enabled }}
 {{- $root := . -}}
 {{- $defaultns := .Values.project.project.name -}}
-{{ range .Values.appproject.list }}
-
-
+{{ range .Values.argocd_project.list }}
+{{- $name := .name | default "default" -}}
+{{- $namespace := .namespace | default $defaultns -}}
 
 ---
 kind: AppProject
-apiVersion: argoproj.io/v1alpha1
-metadata:
-  name: default
-  namespace: "${ARGOCD_NS}"
-  labels:
-    app.startx.fr/scope: "${SCOPE}"
-    app.startx.fr/cluster: "${CLUSTER}"
-    app.startx.fr/component: "argocd"
-    # app.kubernetes.io/part-of: "${CLUSTER}"
-    app.kubernetes.io/version: "${VERSION}"
-    app.kubernetes.io/component: "argocd"
-    app.kubernetes.io/name: "default-appproject"
-  annotations: 
-    openshift.io/generated-by: sxv4-console
-spec:
-  sourceRepos:
-    - '*'
-  destinations:
-    - namespace: 'default'
-      server: '*'
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  roles:
-  - name: dev
-    description: Read-only privileges to group dev in .default project
-    policies:
-    - g, dev, role:readonly
-    - p, role:startx-dev, *, get, .default/*, allow
-    groups:
-    - dev
-  - name: ops
-    description: Read-only (and sync) privileges to group ops in .default project
-    policies:
-    - p, role:startx-ops, clusters, get, .default/*, allow
-    - p, role:startx-ops, projects, get, .default/*, allow
-    - p, role:startx-ops, applications, get, .default/*, allow
-    - p, role:startx-ops, applications, sync, .default/*, allow
-    - p, role:startx-ops, repositories, get, .default/*, allow
-    - p, role:startx-ops, repositories, sync, .default/*, allow
-    - p, role:startx-ops, certificates, get, .default/*, allow
-    - g, ops, role:startx-ops
-    groups:
-    - ops
-  - name: devops
-    description: Read-only privileges to group devops in .default project
-    policies:
-    - p, role:startx-devops, clusters, get, .default/*, allow
-    - p, role:startx-devops, projects, get, .default/*, allow
-    - p, role:startx-devops, applications, get, .default/*, allow
-    - p, role:startx-devops, repositories, get, .default/*, allow
-    - p, role:startx-devops, certificates, get, .default/*, allow
-    - g, devops, role:startx-devops
-    groups:
-    - devops
-  - name: admin
-    description: All privileges to group admin in .default project
-    policies:
-    - p, role:startx-admin, *, *, default/*, allow
-    - g, system:cluster-admins, role:admin
-    groups:
-    - my-oidc-group
-    - system:cluster-admins
-    - admin
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{{- $name := .name | default "default-application" -}}
-{{- $namespace := .namespace | default $defaultns -}}
-{{- $server := .server | default "https://kubernetes.default.svc" -}}
-{{- $project := .project | default "cluster-admin" -}}
----
-kind: Application
 apiVersion: argoproj.io/v1alpha1
 metadata:
   name: {{ $name | quote }}
   namespace: {{ $namespace | quote }}
   labels:
     {{- include "cluster-argocd.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- $name -}}-application"
+    app.kubernetes.io/name: "{{- $name -}}-argocd_project"
   annotations:
     {{- include "cluster-argocd.annotations" $root | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "50"
-  {{- if .finalizer }}
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-  {{- end }}
+    argocd.argoproj.io/sync-wave: "30"
 spec:
-  destination:
-    namespace:  {{ $namespace | quote }}
-    server: {{ $server | quote }}
-  info:
-    - name: teammail
-      value: dev@startx.fr
-  project: {{ $project | quote }}
-  source:
-    {{- with .source }} 
-    path: {{ .path | default "charts/example-html/" | quote }}
-    repoURL: {{ .repo | default "https://github.com/startxfr/helm-repository.git" | quote }}
-    targetRevision: {{ .rev | default "master" | quote }}
-    {{- end }}
-    {{- if .helm }}
-    helm: 
-      {{- .helm | nindent 6 }}
-    {{- else }}
-    helm: {}
-    {{- end }}
-  {{- if .syncPolicy }}
-  syncPolicy: 
-    {{- .syncPolicy | nindent 4 }}
-  {{- else }}
-  syncPolicy: {}
-  {{- end }}
-  {{- if .ignoreDifferences }}
-  ignoreDifferences: 
-    {{- .ignoreDifferences | nindent 4 }}
-  {{- else }}
-  ignoreDifferences: []
-  {{- end }}
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: {{ $namespace | quote }}
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  roles:
+  - name: dev
+    description: Read-only privileges to group dev in .{{- $name -}} project
+    policies:
+    - g, dev, role:readonly
+    - p, role:startx-dev, *, get, .{{- $name -}}/*, allow
+    groups:
+    - dev
+  - name: ops
+    description: Read-only (and sync) privileges to group ops in .{{- $name -}} project
+    policies:
+    - p, role:startx-ops, clusters, get, .{{- $name -}}/*, allow
+    - p, role:startx-ops, projects, get, .{{- $name -}}/*, allow
+    - p, role:startx-ops, applications, get, .{{- $name -}}/*, allow
+    - p, role:startx-ops, applications, sync, .{{- $name -}}/*, allow
+    - p, role:startx-ops, repositories, get, .{{- $name -}}/*, allow
+    - p, role:startx-ops, repositories, sync, .{{- $name -}}/*, allow
+    - p, role:startx-ops, certificates, get, .{{- $name -}}/*, allow
+    - g, ops, role:startx-ops
+    groups:
+    - ops
+  - name: devops
+    description: Read-only privileges to group devops in .{{- $name -}} project
+    policies:
+    - p, role:startx-devops, clusters, get, .{{- $name -}}/*, allow
+    - p, role:startx-devops, projects, get, .{{- $name -}}/*, allow
+    - p, role:startx-devops, applications, get, .{{- $name -}}/*, allow
+    - p, role:startx-devops, repositories, get, .{{- $name -}}/*, allow
+    - p, role:startx-devops, certificates, get, .{{- $name -}}/*, allow
+    - g, devops, role:startx-devops
+    groups:
+    - devops
+  - name: admin
+    description: All privileges to group admin in .{{- $name -}} project
+    policies:
+    - p, role:startx-admin, *, *, {{- $name -}}/*, allow
+    - g, system:cluster-admins, role:admin
+    groups:
+    - my-oidc-group
+    - system:cluster-admins
+    - admin
+
 {{- end }}
 {{- end }}{{- end }}
