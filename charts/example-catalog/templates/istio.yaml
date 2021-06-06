@@ -14,7 +14,7 @@
 kind: Gateway
 apiVersion: networking.istio.io/v1alpha3
 metadata:
-  name: {{- $scope -}}-istio-gateway
+  name: "{{- $scope -}}-istio-gateway"
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -36,7 +36,7 @@ spec:
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: {{- $scope -}}-istio-public
+  name: "{{- $scope -}}-istio-public"
   namespace: {{ $namespace_istio | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -67,8 +67,6 @@ metadata:
     version: "v1"
     app.kubernetes.io/part-of: details
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-details-service"
-  annotations:
-    <<: *basic_annotations
 spec:
   ports:
     - port: 9080
@@ -441,8 +439,6 @@ metadata:
     version: "v1"
     app.kubernetes.io/part-of: productpage
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-productpage-sa"
-  annotations:
-    <<: *basic_annotations
 ---
 kind: Service
 apiVersion: v1
