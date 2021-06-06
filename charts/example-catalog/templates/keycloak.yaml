@@ -14,7 +14,7 @@
 kind: KeycloakRealm
 apiVersion: keycloak.org/v1alpha1
 metadata:
-  name: {{- $realm -}}
+  name: "{{- $realm -}}"
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -28,8 +28,8 @@ spec:
   realm:
     displayName: Demo Realm
     enabled: true
-    id: {{- $scope -}}
-    realm: {{- $scope -}}
+    id: "{{- $scope -}}"
+    realm: "{{- $scope -}}"
     eventsListeners:
       - "metrics-listener"
     users:
@@ -61,7 +61,7 @@ spec:
 kind: KeycloakClient
 apiVersion: keycloak.org/v1alpha1
 metadata:
-  name: {{- $scope -}}-app1
+  name: "{{- $scope -}}-app1"
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -70,20 +70,20 @@ metadata:
     app.kubernetes.io/name: "{{- $namespace -}}-{{- $scope -}}-app1-keycloakclient"
 spec:
   client:
-    id: {{- $namespace -}}-client-app1
-    clientId: {{- $scope -}}-app1
-    secret: {{- $scope -}}app1secret123
+    id: "{{- $namespace -}}-client-app1"
+    clientId: "{{- $scope -}}-app1"
+    secret: "{{- $scope -}}app1secret123"
     directAccessGrantsEnabled: false
     clientAuthenticatorType: client-app1
     protocol: openid-connect
   realmSelector:
     matchLabels:
-      app: {{- $namespace -}}
+      app: "{{- $namespace -}}"
 ---
 kind: KeycloakUser
 apiVersion: keycloak.org/v1alpha1
 metadata:
-  name: {{- $scope -}}-user
+  name: "{{- $scope -}}-user"
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -93,9 +93,9 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-      app: {{- $namespace -}}
+      app: "{{- $namespace -}}"
   user:
-    username: {{- $scope -}}_user
+    username: "{{- $scope -}}_user"
     email: cl+{{- $scope -}}@startx.fr
     firstName: Demo
     lastName: USER
@@ -108,7 +108,7 @@ spec:
 kind: KeycloakUser
 apiVersion: keycloak.org/v1alpha1
 metadata:
-  name: {{- $scope -}}-admin
+  name: "{{- $scope -}}-admin"
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -118,9 +118,9 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-      app: {{- $namespace -}}
+      app: "{{- $namespace -}}"
   user:
-    username: {{- $scope -}}_admin
+    username: "{{- $scope -}}_admin"
     email: cl+{{- $scope -}}_admin@startx.fr
     firstName: Demo
     lastName: ADMIN
@@ -140,7 +140,7 @@ spec:
 kind: KeycloakBackup
 apiVersion: keycloak.org/v1alpha1
 metadata:
-  name: {{- $scope -}}-keycloakbackup
+  name: "{{- $scope -}}-keycloakbackup"
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}

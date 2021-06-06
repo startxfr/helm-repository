@@ -65,7 +65,7 @@ spec:
     - name: latest
       annotations:
         openshift.io/display-name: "{{- $scope -}} - {{- $component -}} application"
-        description: Application {{- $component -}} image for {{- $scope -}} scope
+        description: "Application {{- $component -}} image for {{- $scope -}} scope"
         iconClass: icon-nodejs
         tags: startx,nodejs,httpd
         supports: http
@@ -87,7 +87,7 @@ spec:
     - name: latest
       annotations:
         openshift.io/display-name: "{{- $scope -}} - {{- $component -}} application"
-        description: Application {{- $component -}} image for {{- $scope -}} scope
+        description: "Application {{- $component -}} image for {{- $scope -}} scope"
         iconClass: icon-nodejs
         tags: startx,nodejs,httpd
         supports: http
@@ -114,12 +114,12 @@ metadata:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "hugo-config-configmap"
 data:
-  SX_ID: {{- $scope -}}-{{- $component -}}-{{- $env -}}/app
+  SX_ID: "{{- $scope -}}-{{- $component -}}-{{- $env -}}/app"
   SX_TYPE: app
-  SX_COMPONENT: {{- $component -}}
+  SX_COMPONENT: "{{- $component -}}"
   SX_NAME: Startx {{- $component -}} application
   SX_SUMMARY: Startx {{- $component -}} application based on apache container
-  SX_VERSION: {{- $env -}}
+  SX_VERSION: "{{- $env -}}"
 ---
 kind: BuildConfig
 apiVersion: v1
@@ -203,10 +203,10 @@ spec:
   template:
     metadata:
       annotations:
-        <<: *basic_annotations
+        {{- include "example-catalog.annotations" $root | nindent 8 }}
         sidecar.istio.io/inject: "false"
       labels:
-        <<: *basic_labels
+        {{- include "example-catalog.labels" $root | nindent 8 }}
         app.kubernetes.io/name: "hugo-deploymentconfig"
         app: "hugo"
         deploymentconfig: "hugo"
@@ -330,11 +330,11 @@ data:
   common.sh: |-
     #!/bin/bash
     # scope of this pipeline (coded on generation)
-    SCOPE={{- $scope -}}
+    SCOPE="{{- $scope -}}"
     # environment of this pipeline (coded on generation)
-    ENV={{- $env -}}
+    ENV="{{- $env -}}"
     # cluster of this pipeline (coded on generation)
-    CLUSTER={{- $cluster -}}
+    CLUSTER="{{- $cluster -}}"
 
     # directory path in the workspace for source code
     DIR_SOURCE="source"
@@ -1729,7 +1729,7 @@ spec:
 kind: Pipeline
 apiVersion: tekton.dev/v1beta1
 metadata:
-  name: {{- $component -}}
+  name: "{{- $component -}}"
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -1978,7 +1978,7 @@ spec:
 kind: PipelineRun
 apiVersion: tekton.dev/v1beta1
 metadata:
-  name: {{- $scope -}}-hugo-{{- $randrun -}}
+  name: "{{- $scope -}}-hugo-{{- $randrun -}}"
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -1986,9 +1986,9 @@ metadata:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{- $scope -}}-hugo-{{- $randrun -}}-pipelinerun"
 spec:
-  serviceAccountName: {{- $env -}}-pipeline-runner
+  serviceAccountName: "{{- $env -}}-pipeline-runner"
   pipelineRef:
-    name: {{- $component -}}
+    name: "{{- $component -}}"
   params:
     - name: "ENFORCE_SEC"
       value: "false"
