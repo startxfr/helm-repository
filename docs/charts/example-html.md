@@ -117,3 +117,4 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.320 | 2021-06-05 | Update basic chart dependencies to 0.3.318
 | 0.3.321 | 2021-06-05 | publish stable update for the full repository
 | 0.3.327 | 2021-06-06 | publish stable update for the full repository
+| 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329

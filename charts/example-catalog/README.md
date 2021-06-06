@@ -106,3 +106,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.323 | 2021-06-05 | Add the keycloak  demo to the example catalog
 | 0.3.324 | 2021-06-05 | Add tekton demo configuration into example catalog
 | 0.3.327 | 2021-06-06 | publish stable update for the full repository
+| 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
