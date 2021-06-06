@@ -95,3 +95,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.323 | 2021-06-05 | Debug values for outofsync argocd deployment
 | 0.3.327 | 2021-06-06 | publish stable update for the full repository
 | 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
+| 0.3.341 | 2021-06-06 | Align release for all charts
