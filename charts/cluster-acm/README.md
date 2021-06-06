@@ -54,3 +54,4 @@ helm install startx/cluster-acm
 | 0.3.331 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
 | 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
 | 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
+| 0.3.341 | 2021-06-06 | Align release for all charts
