@@ -92,3 +92,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.321 | 2021-06-05 | publish stable update for the full repository
 | 0.3.322 | 2021-06-05 | Debug values for outofsync argocd deployment
 | 0.3.327 | 2021-06-06 | publish stable update for the full repository
+| 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329

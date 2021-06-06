@@ -243,3 +243,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.327 | 2021-06-06 | publish stable update for the full repository
 | 0.3.328 | 2021-06-06 | Update limits for 3scale and awx demo values
 | 0.3.329 | 2021-06-06 | remove version into label to avoid conflict when updating project
+| 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
