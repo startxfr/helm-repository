@@ -78,3 +78,4 @@ helm install startx/cluster-couchbase -f https://raw.githubusercontent.com/start
 | 0.3.321 | 2021-06-05 | publish stable update for the full repository
 | 0.3.327 | 2021-06-06 | publish stable update for the full repository
 | 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
+| 0.3.341 | 2021-06-06 | Align release for all charts
