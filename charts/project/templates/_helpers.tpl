@@ -3,8 +3,16 @@
 
 {{/* Common labels */}}
 {{- define "project.labels" -}}
-{{- include "startx.labelsInfra" . }}
-app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
+app.startx.fr/scope: {{ include "startx.appScope" . | quote }}
+app.startx.fr/cluster: {{ include "startx.appCluster" . | quote }}
+app.startx.fr/environment: {{ include "startx.appEnvironment" . | quote }}
+app.startx.fr/app: {{ include "startx.appName" . | quote }}
+helm.sh/chart: {{ include "startx.chartName" . | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service | quote  }}
+app.startx.fr/component: "infra"
+app.kubernetes.io/component: "infra"
+app.kubernetes.io/part-of: {{ include "startx.appCluster" . | quote }}
+app.kubernetes.io/instance: {{ include "startx.appName" . | quote }}
 {{- end -}}
 
 {{/* Common project annotations */}}
