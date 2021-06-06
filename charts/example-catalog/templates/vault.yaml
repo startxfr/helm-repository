@@ -106,12 +106,12 @@ spec:
           <body>
           <h1>Bienvenue sur la demo Vault secret avec Openshift</h1>
           <p>Voici les secrets provenant de vault ({{- $namespace -}}/data/frontend/config) :</p>
-          {{- with secret "{{- $namespace -}}/data/frontend/config" -}}
+          \{\{- with secret "{{- $namespace -}}/data/frontend/config" -\}\}
           <ul>
-          <li><pre>username: {{ .Data.data.username }}</pre></li>
-          <li><pre>password: {{ .Data.data.password }}</pre></li>
+          <li><pre>username: \{\{ .Data.data.username \}\}</pre></li>
+          <li><pre>password: \{\{ .Data.data.password \}\}</pre></li>
           </ul>
-          {{- end }}
+          \{\{- end \}\}
           </body>
           </html>
         # vault.hashicorp.com/namespace: "{{- $namespace -}}"
