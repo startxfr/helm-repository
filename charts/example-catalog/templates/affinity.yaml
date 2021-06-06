@@ -9,12 +9,6 @@
 {{- $version := .version | default "0.0.0-beta" -}}
 {{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
 
-
-
-
-
-
-
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -392,7 +386,7 @@ spec:
   sessionAffinity: None
 ---
 kind: Route
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 metadata:
   name: "node-anti-affinity"
   namespace: {{ $namespace | quote }}
@@ -560,7 +554,7 @@ spec:
   sessionAffinity: None
 ---
 kind: Route
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 metadata:
   name: "node-affinity"
   namespace: {{ $namespace | quote }}
@@ -722,7 +716,7 @@ spec:
   sessionAffinity: None
 ---
 kind: Route
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 metadata:
   name: "pod-anti-affinity"
   namespace: {{ $namespace | quote }}
@@ -884,7 +878,7 @@ spec:
   sessionAffinity: None
 ---
 kind: Route
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 metadata:
   name: "pod-affinity"
   namespace: {{ $namespace | quote }}

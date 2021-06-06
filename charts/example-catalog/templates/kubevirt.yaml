@@ -221,8 +221,10 @@ spec:
   running: true
   template:
     metadata:
+      annotations:
+        {{- include "example-catalog.annotations" $root | nindent 8 }}
       labels:
-        <<: *basic_labels
+        {{- include "example-catalog.labels" $root | nindent 8 }}
         app: vm-demo
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-vm-demo-virtualmachineexec"
         app.kubernetes.io/part-of: vm-demo
