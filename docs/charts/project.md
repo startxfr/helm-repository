@@ -245,3 +245,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.329 | 2021-06-06 | remove version into label to avoid conflict when updating project
 | 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
 | 0.3.335 | 2021-06-06 | Improve helm chart
+| 0.3.337 | 2021-06-06 | Add logging annotation commented
