@@ -1,5 +1,5 @@
 {{- if .Values.couchbase.expose -}}{{- if .Values.couchbase.expose.enabled -}}{{- if eq .Values.couchbase.expose.kind "route" -}}
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: {{ include "startx.appName" . }}
