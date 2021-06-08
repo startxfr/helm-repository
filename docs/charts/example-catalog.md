@@ -113,3 +113,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository
 | 0.3.344 | 2021-06-08 | Debug istio deployment labels
 | 0.3.345 | 2021-06-08 | Change default to context var in example catalog
+| 0.3.346 | 2021-06-08 | Debug deployment of reviews v3
