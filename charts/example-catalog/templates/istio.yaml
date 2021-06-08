@@ -86,6 +86,8 @@ metadata:
     app: details
     version: "v1"
     app.openshift.io/runtime: spring
+    app.kubernetes.io/part-of: details
+    app.kubernetes.io/component: "details"
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-details-v1-deployment"
 spec:
   replicas: 1
@@ -101,6 +103,10 @@ spec:
       labels:
         {{- include "example-catalog.labels" $root | nindent 8 }}
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-details-v1-pod"
+        app: details
+        version: "v1"
+        app.kubernetes.io/part-of: details
+        app.kubernetes.io/component: "details"
     spec:
       containers:
         - name: details
@@ -128,6 +134,8 @@ metadata:
     app: details
     version: "v2"
     app.openshift.io/runtime: spring
+    app.kubernetes.io/part-of: details
+    app.kubernetes.io/component: "details"
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-details-v2-deployment"
 spec:
   replicas: 1
@@ -144,6 +152,10 @@ spec:
         {{- include "example-catalog.labels" $root | nindent 8 }}
         version: "v2"
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-details-v2-pod"
+        app: details
+        version: "v2"
+        app.kubernetes.io/part-of: details
+        app.kubernetes.io/component: "details"
     spec:
       containers:
         - name: details
@@ -191,6 +203,8 @@ metadata:
     app: ratings
     version: "v1"
     app.openshift.io/runtime: spring
+    app.kubernetes.io/part-of: ratings
+    app.kubernetes.io/component: "ratings"
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-ratings-v1-deployment"
 spec:
   replicas: 1
@@ -206,6 +220,10 @@ spec:
       labels:
         {{- include "example-catalog.labels" $root | nindent 8 }}
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-ratings-v1-pod"
+        app: ratings
+        version: "v1"
+        app.kubernetes.io/part-of: ratings
+        app.kubernetes.io/component: "ratings"
     spec:
       containers:
         - name: ratings
@@ -233,6 +251,8 @@ metadata:
     app: ratings
     version: "v2"
     app.openshift.io/runtime: spring
+    app.kubernetes.io/part-of: ratings
+    app.kubernetes.io/component: "ratings"
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-ratings-v2-deployment"
 spec:
   replicas: 1
@@ -249,6 +269,10 @@ spec:
         {{- include "example-catalog.labels" $root | nindent 8 }}
         version: "v2"
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-ratings-v2-pod"
+        app: ratings
+        version: "v2"
+        app.kubernetes.io/part-of: ratings
+        app.kubernetes.io/component: "ratings"
     spec:
       containers:
         - name: ratings
@@ -308,6 +332,8 @@ metadata:
     app: reviews
     version: "v1"
     app.openshift.io/runtime: spring
+    app.kubernetes.io/part-of: reviews
+    app.kubernetes.io/component: "reviews"
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v1-deployment"
 spec:
   replicas: 1
@@ -323,6 +349,10 @@ spec:
       labels:
         {{- include "example-catalog.labels" $root | nindent 8 }}
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v1-pod"
+        app: reviews
+        version: "v1"
+        app.kubernetes.io/part-of: reviews
+        app.kubernetes.io/component: "reviews"
     spec:
       containers:
         - name: reviews
@@ -350,6 +380,8 @@ metadata:
     app: reviews
     version: "v2"
     app.openshift.io/runtime: spring
+    app.kubernetes.io/part-of: reviews
+    app.kubernetes.io/component: "reviews"
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v2-deployment"
 spec:
   replicas: 1
@@ -366,6 +398,10 @@ spec:
         {{- include "example-catalog.labels" $root | nindent 8 }}
         version: "v2"
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v2-pod"
+        app: reviews
+        version: "v2"
+        app.kubernetes.io/part-of: reviews
+        app.kubernetes.io/component: "reviews"
     spec:
       serviceAccountName: bookinfo-reviews
       containers:
@@ -395,6 +431,8 @@ metadata:
     version: "v3"
     app.openshift.io/runtime: spring
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v3-deployment"
+    app.kubernetes.io/part-of: reviews
+    app.kubernetes.io/component: "reviews"
 spec:
   replicas: 1
   selector:
@@ -410,6 +448,10 @@ spec:
         {{- include "example-catalog.labels" $root | nindent 8 }}
         version: "v3"
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v3-pod"
+        app: reviews
+        version: "v2"
+        app.kubernetes.io/part-of: reviews
+        app.kubernetes.io/component: "reviews"
     spec:
       serviceAccountName: bookinfo-reviews
       containers:
@@ -470,6 +512,8 @@ metadata:
     app: productpage
     version: "v1"
     app.openshift.io/runtime: spring
+    app.kubernetes.io/part-of: productpage
+    app.kubernetes.io/component: "productpage"
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-productpage-v1-deployment"
 spec:
   replicas: 1
@@ -487,8 +531,6 @@ spec:
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-productpage-v1-pod"
         app: productpage
         version: "v1"
-        environment: "{{- $env -}}"
-        app.kubernetes.io/version: "v1"
         app.kubernetes.io/part-of: productpage
         app.kubernetes.io/component: "productpage"
     spec:
