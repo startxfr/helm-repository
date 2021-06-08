@@ -2,11 +2,11 @@
 {{- $root := . -}}
 {{- with .Values.demo.storage_context -}}
 {{- $namespace := .namespace | default "demo-storage" -}}
-{{- $scope := .scope | default "startx" -}}
-{{- $cluster := .cluster | default "default" -}}
-{{- $env := .environment | default "dev" -}}
-{{- $component := .component | default "helm" -}}
-{{- $version := .version | default "0.0.0-beta" -}}
+{{- $scope := .scope | default $root.Values.context.scope -}}
+{{- $cluster := .cluster | default $root.Values.context.cluster -}}
+{{- $env := .environment | default $root.Values.context.environment -}}
+{{- $component := .component | default $root.Values.context.component -}}
+{{- $version := .version | default $root.Values.context.version -}}
 
 ---
 kind: SecurityContextConstraints
