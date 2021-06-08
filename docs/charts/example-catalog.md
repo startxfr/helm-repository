@@ -111,3 +111,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.341 | 2021-06-06 | Align release for all charts
 | 0.3.342 | 2021-06-06 | Debug the afinity demo
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository
+| 0.3.344 | 2021-06-08 | Debug istio deployment labels
