@@ -3,11 +3,11 @@
 {{- with .Values.demo.istio -}}
 {{- $namespace := .namespace | default "demo-istio" -}}
 {{- $namespace_istio := .namespaceIstio | default "istio-system" -}}
-{{- $scope := .scope | default "startx" -}}
-{{- $cluster := .cluster | default "default" -}}
-{{- $env := .environment | default "dev" -}}
-{{- $component := .component | default "helm" -}}
-{{- $version := .version | default "0.0.0-beta" -}}
+{{- $scope := .scope | default $root.Values.context.scope -}}
+{{- $cluster := .cluster | default $root.Values.context.cluster -}}
+{{- $env := .environment | default $root.Values.context.environment -}}
+{{- $component := .component | default $root.Values.context.component -}}
+{{- $version := .version | default $root.Values.context.version -}}
 {{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
 
 ---
@@ -564,7 +564,7 @@ spec:
   hosts:
     - "*"
   gateways:
-    - {{- $scope -}}-istio-gateway
+    - "{{- $scope -}}-istio-gateway"
   http:
     - match:
         - uri:
