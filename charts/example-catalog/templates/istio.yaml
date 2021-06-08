@@ -446,10 +446,9 @@ spec:
         sidecar.istio.io/inject: "true"
       labels:
         {{- include "example-catalog.labels" $root | nindent 8 }}
+        app: reviews
         version: "v3"
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v3-pod"
-        app: reviews
-        version: "v2"
         app.kubernetes.io/part-of: reviews
         app.kubernetes.io/component: "reviews"
     spec:
