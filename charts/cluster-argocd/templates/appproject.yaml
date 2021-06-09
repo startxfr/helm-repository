@@ -17,6 +17,8 @@ metadata:
   annotations:
     {{- include "cluster-argocd.annotations" $root | nindent 4 }}
     argocd.argoproj.io/sync-wave: "30"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   sourceRepos:
     - '*'
