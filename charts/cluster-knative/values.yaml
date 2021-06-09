@@ -43,7 +43,7 @@ projectOperator:
   project: 
     enabled: false
     type: namespace
-    name: "serverless-operator"
+    name: "openshift-serverless"
     display_name: Operator SERVERLESS
     description: SERVERLESS operators configured by startx
   rbac: 
@@ -101,10 +101,11 @@ operator:
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
+    hooked: false
     name: "serverless-operator"
-    namespace: "serverless-operator"
-    version: "v1.14.1"
+    namespace: "openshift-serverless"
+    version: "v1.15.0"
     operator: 
       channel: "stable"
       name: serverless-operator
@@ -113,6 +114,9 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
+    hooked: false
     target: "all-ns"
+    name: "serverless-operator"
+    namespace: "openshift-serverless"
     providedAPIs: "KnativeEventing.v1alpha1.operator.knative.dev,KnativeKafka.v1alpha1.operator.serverless.openshift.io,KnativeServing.v1alpha1.operator.knative.dev"
