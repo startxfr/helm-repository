@@ -96,12 +96,15 @@ metadata:
   namespace: {{ $namespace | quote }}
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "yaml"
     app.kubernetes.io/name: "yaml-job"
     app.openshift.io/runtime: nodejs
 spec:
+  ttlSecondsAfterFinished: 3600
   template:
     metadata:
       annotations:
@@ -159,6 +162,5 @@ spec:
       restartPolicy: OnFailure
   backoffLimit: 2
   activeDeadlineSeconds: 35
-  ttlSecondsAfterFinished: 3600
 {{- end }}
 {{- end }}{{- end }}{{- end }}

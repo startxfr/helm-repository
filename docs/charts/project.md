@@ -248,3 +248,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 0.3.337 | 2021-06-06 | Add logging annotation commented
 | 0.3.341 | 2021-06-06 | Align release for all charts
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository
+| 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
