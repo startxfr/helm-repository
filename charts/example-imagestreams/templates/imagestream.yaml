@@ -13,6 +13,7 @@ metadata:
     {{- include "example-imagestreams.annotations" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ $is.name | default "default" }}-imagestreams"
     openshift.io/display-name: {{ $is.displayName | default "openshift" | quote }}
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
   labels:
     {{- include "example-imagestreams.labels" $root | nindent 4 }}
     {{- if $is.labels }}

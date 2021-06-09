@@ -5,7 +5,7 @@ context: &context
   cluster: default
   environment: infra
   component: vpa
-  app: startx-vpa
+  app: demo-vpa
 vpa:
   enabled: false
   hooked: false
@@ -31,7 +31,7 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "demo-vertical-pod-autoscaler"
+    name: "demo-vpa"
     display_name: "Demo VPA"
     requester: startx
     description: Demo of VerticalPodAutoscaler configured by STARTX
@@ -43,7 +43,7 @@ operator:
     enabled: true
     hooked: false
     name: "vertical-pod-autoscaler"
-    namespace: "demo-vertical-pod-autoscaler"
+    namespace: "demo-vpa"
     version: "4.7.0-202105210300.p0"
     operator: 
       channel: "4.7"
@@ -55,6 +55,6 @@ operator:
   operatorGroup:
     enabled: true
     hooked: false
-    name: "startx-vpa"
-    namespace: "demo-vertical-pod-autoscaler"
+    name: "demo-vpa"
+    namespace: "demo-vpa"
     providedAPIs: "VerticalPodAutoscaler.v1.autoscaling.k8s.io,VerticalPodAutoscalerCheckpoint.v1.autoscaling.k8s.io,VerticalPodAutoscalerController.v1.autoscaling.openshift.io"
