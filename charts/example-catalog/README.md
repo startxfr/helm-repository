@@ -37,25 +37,25 @@ helm install startx/example-catalog
 
 ### context values dictionary
 
-| Key                 | Default   | Description
-| ------------------- | --------- | -----------------------------------------------------
-| context.scope       | default   | Name of the global scope for this application (organisational tenant)
-| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)
-| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)
-| context.component   | demo      | Component name of this application (logical tenant)
-| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)                   |
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
 
 ### example-catalog values dictionary
 
-| Key                   | Default    | Description
-| --------------------- | ---------- | -----------------------------------------------------
-| sxapi.service.enabled | false      | Enable service for this application
-| sxapi.version         | 0.3.57     | Sxapi image version to run
-| sxapi.profile         | prod:start | Profile to run inside the container
-| sxapi.debug           | true       | Enable debuging of the container
-| sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance
-| sxapi.data            | string     | Files to load into the application
+| Key                   | Default    | Description                                           |
+| --------------------- | ---------- | ----------------------------------------------------- |
+| sxapi.service.enabled | false      | Enable service for this application                   |
+| sxapi.version         | 0.3.57     | Sxapi image version to run                            |
+| sxapi.profile         | prod:start | Profile to run inside the container                   |
+| sxapi.debug           | true       | Enable debuging of the container                      |
+| sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
+| sxapi.data            | string     | Files to load into the application                    |
 
 ## Values files
 
@@ -87,33 +87,14 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 
 ## History
 
-| Release | Date       | Description
-| ------- | ---------- | -----------------------------------------------------
-| 0.3.225 | 2021-05-29 | Create chart example-catalog from example-sxapi
-| 0.3.227 | 2021-05-29 | Add the storage_context demo resources
-| 0.3.228 | 2021-05-29 | Add storage block and context demo
-| 0.3.229 | 2021-05-29 | Debug block example
-| 0.3.231 | 2021-05-30 | Add storage demo to the example catalog
-| 0.3.232 | 2021-05-30 | Add various demo to catalog
-| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
-| 0.3.311 | 2021-06-03 | Align example chart to 0.3.311
-| 0.3.305 | 2021-06-04 | publish stable update for the full repository
-| 0.3.315 | 2021-06-04 | Stable documentation for all charts
-| 0.3.317 | 2021-06-04 | Improve documentation
-| 0.3.320 | 2021-06-05 | Update basic chart dependencies to 0.3.318
-| 0.3.321 | 2021-06-05 | publish stable update for the full repository
-| 0.3.322 | 2021-06-05 | Add the hugo demo to the example catalog
-| 0.3.323 | 2021-06-05 | Add the keycloak  demo to the example catalog
-| 0.3.324 | 2021-06-05 | Add tekton demo configuration into example catalog
-| 0.3.327 | 2021-06-06 | publish stable update for the full repository
-| 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
-| 0.3.341 | 2021-06-06 | Align release for all charts
-| 0.3.342 | 2021-06-06 | Debug the afinity demo
-| 0.3.343 | 2021-06-06 | publish stable update for the full repository
-| 0.3.344 | 2021-06-08 | Debug istio deployment labels
-| 0.3.345 | 2021-06-08 | Change default to context var in example catalog
-| 0.3.346 | 2021-06-08 | Debug deployment of reviews v3
-| 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
-| 0.3.368 | 2021-06-10 | Debug imagestreams, deployments and route v3 to v4 convertion bugs
-| 0.3.369 | 2021-06-10 | Debug the ocs demo
-| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377
+| Release | Date       | Description                                                                  |
+| ------- | ---------- | ---------------------------------------------------------------------------- |
+| 0.3.225 | 2021-05-29 | Create chart example-catalog from example-sxapi                              |
+| 0.3.227 | 2021-05-29 | Add the storage_context demo resources                                       |
+| 0.3.228 | 2021-05-29 | Add storage block and context demo                                           |
+| 0.3.229 | 2021-05-29 | Debug block example                                                          |
+| 0.3.231 | 2021-05-30 | Add storage demo to the example catalog                                      |
+| 0.3.232 | 2021-05-30 | Add various demo to catalog                                                  |
+| 0.3.305 | 2021-06-04 | publish stable update for the full repository                                |
+| 0.3.343 | 2021-06-06 | publish stable update for the full repository                                |
+| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377 |
