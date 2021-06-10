@@ -37,25 +37,25 @@ helm install startx/example-couchbase
 
 ### context values dictionary
 
-| Key                 | Default   | Description
-| ------------------- | --------- | -----------------------------------------------------
-| context.scope       | default   | Name of the global scope for this application (organisational tenant)
-| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)
-| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)
-| context.component   | demo      | Component name of this application (logical tenant)
-| context.app         | couchbase     | Application name (functionnal tenant, default use Chart name)
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)                   |
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | couchbase | Application name (functionnal tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
 
 ### example-couchbase values dictionary
 
-| Key                   | Default    | Description
-| --------------------- | ---------- | -----------------------------------------------------
-| couchbase.service.enabled | false      | Enable service for this application
-| couchbase.version         | 0.3.57     | Sxapi image version to run
-| couchbase.profile         | prod:start | Profile to run inside the container
-| couchbase.debug           | true       | Enable debuging of the container
-| couchbase.replicas        | 1          | Define the number of replicas for this couchbase instance
-| couchbase.data            | string     | Files to load into the application
+| Key                       | Default    | Description                                               |
+| ------------------------- | ---------- | --------------------------------------------------------- |
+| couchbase.service.enabled | false      | Enable service for this application                       |
+| couchbase.version         | 0.3.57     | Sxapi image version to run                                |
+| couchbase.profile         | prod:start | Profile to run inside the container                       |
+| couchbase.debug           | true       | Enable debuging of the container                          |
+| couchbase.replicas        | 1          | Define the number of replicas for this couchbase instance |
+| couchbase.data            | string     | Files to load into the application                        |
 
 ## Values files
 
@@ -87,23 +87,13 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 
 ## History
 
-| Release | Date       | Description
-| ------- | ---------- | -----------------------------------------------------
-| 0.3.203  | 2021-02-22 | Create chart example-couchbase from example-sxapi
-| 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205
-| 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD
-| 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215
-| 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming
-| 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303
-| 0.3.311 | 2021-06-03 | Align example chart to 0.3.311
-| 0.3.305 | 2021-06-04 | publish stable update for the full repository
-| 0.3.315 | 2021-06-04 | Stable documentation for all charts
-| 0.3.317 | 2021-06-04 | Improve documentation
-| 0.3.320 | 2021-06-05 | Update basic chart dependencies to 0.3.318
-| 0.3.321 | 2021-06-05 | publish stable update for the full repository
-| 0.3.327 | 2021-06-06 | publish stable update for the full repository
-| 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
-| 0.3.341 | 2021-06-06 | Align release for all charts
-| 0.3.343 | 2021-06-06 | publish stable update for the full repository
-| 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
-| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377
+| Release | Date       | Description                                                                  |
+| ------- | ---------- | ---------------------------------------------------------------------------- |
+| 0.3.203 | 2021-02-22 | Create chart example-couchbase from example-sxapi                            |
+| 0.3.207 | 2021-04-19 | Core chart dependencies moved to v0.3.205                                    |
+| 0.3.209 | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD                              |
+| 0.3.215 | 2021-05-06 | Align all chart to release 0.3.215                                           |
+| 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming                                      |
+| 0.3.305 | 2021-06-04 | publish stable update for the full repository                                |
+| 0.3.343 | 2021-06-06 | publish stable update for the full repository                                |
+| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377 |
