@@ -17,7 +17,7 @@ test are OK.
 ## Release rules
 
 - Major releases defined by startx strategy (driven by technology improvments : helm, OCP)
-- Minor releases defined by cross-chart, startx's driven roadmap
+- Minor releases defined by cross-chart, startx's driven roadmap and minor OCP release
 - Patch releases defined by technical issues related to charts
 - pre-release defined as part of major and minor release lifecycle
 - build release used only during dev, test, build CI operations
