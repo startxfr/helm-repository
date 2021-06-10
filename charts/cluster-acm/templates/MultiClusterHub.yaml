@@ -20,7 +20,7 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "0"
 spec:
-  availabilityConfig: {{ .Values.acm.mch.availabilityConfig | default "basic" | quote }}
+  availabilityConfig: {{ .Values.acm.mch.availabilityConfig | default "Basic" | quote }}
 {{- if .Values.acm.mch.hive }}{{- if .Values.acm.mch.hive.enabled }}
   hive:
   {{- if .Values.acm.mch.hive.spec }}
