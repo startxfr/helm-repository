@@ -107,7 +107,6 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.324 | 2021-06-05 | Add tekton demo configuration into example catalog
 | 0.3.327 | 2021-06-06 | publish stable update for the full repository
 | 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
-| 0.3.337 | 2021-06-06 | Debug all example
 | 0.3.341 | 2021-06-06 | Align release for all charts
 | 0.3.342 | 2021-06-06 | Debug the afinity demo
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository
@@ -117,3 +116,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
 | 0.3.368 | 2021-06-10 | Debug imagestreams, deployments and route v3 to v4 convertion bugs
 | 0.3.369 | 2021-06-10 | Debug the ocs demo
+| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377
