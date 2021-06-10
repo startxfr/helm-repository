@@ -102,18 +102,6 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.303 | 2021-06-02 | Update documentation and align all charts to release 0.3.303                                           |
 | 0.3.311 | 2021-06-03 | Align cluster chart to version 0.3.311                                                                 |
 | 0.3.312 | 2021-06-03 | Stable charts                                                                                          |
-| 0.3.305 | 2021-06-04 | publish stable update for the full repository
-| 0.3.315 | 2021-06-04 | Stable documentation for all charts
-| 0.3.317 | 2021-06-04 | Improve documentation
-| 0.3.320 | 2021-06-05 | Update basic chart dependencies to 0.3.318
-| 0.3.321 | 2021-06-05 | publish stable update for the full repository
-| 0.3.327 | 2021-06-06 | publish stable update for the full repository
-| 0.3.331 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
-| 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
-| 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
-| 0.3.341 | 2021-06-06 | Align release for all charts
-| 0.3.343 | 2021-06-06 | publish stable update for the full repository
-| 0.3.344 | 2021-06-09 | Debug the 3scale operator resources limits
-| 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
-| 0.3.368 | 2021-06-10 | Add quote around project limitRange
-| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377
+| 0.3.305 | 2021-06-04 | publish stable update for the full repository                                                          |
+| 0.3.343 | 2021-06-06 | publish stable update for the full repository                                                          |
+| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377                           |
