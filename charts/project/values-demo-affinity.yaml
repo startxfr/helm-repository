@@ -43,21 +43,21 @@ limits:
           cpu: "10m"
           memory: "16Mi"
         max:
-          cpu: 200m
-          memory: 256Mi
+          cpu: "200m"
+          memory: "256Mi"
       - type: "Container"
         default:
-          cpu: 100m
-          memory: 128Mi
+          cpu: "100m"
+          memory: "128Mi"
         defaultRequest:
-          cpu: 20m
-          memory: 64Mi
+          cpu: "20m"
+          memory: "64Mi"
         min:
           cpu: "10m"
           memory: "16Mi"
         max:
-          cpu: 200m
-          memory: 256Mi
+          cpu: "200m"
+          memory: "256Mi"
 quotas: 
   enabled: true
   rules:  |
@@ -98,11 +98,11 @@ quotas:
       pods: "12"
       services.loadbalancers: "0"
       services.nodeports: "0"
-      secrets: "10"
-      configmaps: "6"
+      secrets: "20"
+      configmaps: "20"
       replicationcontrollers: "0"
       openshift.io/imagestreams: "0"
       count/daemonsets.apps: "0"
-      count/replicasets.apps: "8"
-      count/deployments.apps: "4"
-      services: "4"
+      count/replicasets.apps: "16"
+      count/deployments.apps: "8"
+      services: "10"

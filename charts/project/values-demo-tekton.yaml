@@ -36,25 +36,19 @@ limits:
   rules:  |
     limits:
       - type: "Pod"
-        min:
-          cpu: "0"
-          memory: "0"
         max:
           cpu: 2
-          memory: 2Gi
+          memory: "2Gi"
       - type: "Container"
         default:
-          cpu: 200m
-          memory: 256Mi
+          cpu: "200m"
+          memory: "256Mi"
         defaultRequest:
-          cpu: 200m
-          memory: 256Mi
-        min:
-          cpu: "0"
-          memory: "0"
+          cpu: "50m"
+          memory: "32Mi"
         max:
-          cpu: 750m
-          memory: 1024Mi
+          cpu: "750m"
+          memory: "1024Mi"
 quotas: 
   enabled: true
   rules:  |
