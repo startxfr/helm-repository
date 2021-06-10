@@ -75,7 +75,6 @@ xxxx  to do xxxxxxxx
 | 0.3.321 | 2021-06-05 | publish stable update for the full repository
 | 0.3.327 | 2021-06-06 | publish stable update for the full repository
 | 0.3.329 | 2021-06-06 | Update the basic chart dependencies to 0.3.329
-| 0.3.337 | 2021-06-06 | Debug the demo values
 | 0.3.341 | 2021-06-06 | Align release for all charts
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository
 | 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
