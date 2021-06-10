@@ -146,7 +146,6 @@ spec:
   replicas: 2
   progressDeadlineSeconds: 600
   revisionHistoryLimit: 5
-  test: false
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -291,7 +290,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
-    haproxy.router.openshift.io/disable_cookies: true
+    haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
@@ -323,7 +322,6 @@ spec:
   replicas: 2
   progressDeadlineSeconds: 600
   revisionHistoryLimit: 5
-  test: false
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -466,7 +464,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
-    haproxy.router.openshift.io/disable_cookies: true
+    haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
