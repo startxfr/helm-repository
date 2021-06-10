@@ -10,21 +10,23 @@ The objectif of this release is to stabilize helm-repository catalog and special
 
 | Release                                                                 | Date       | Description                                                             |
 | ----------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------- |
-| [0.4.1](https://github.com/startxfr/helm-repository/releases/tag/0.4.1) | 2021-02-27 | Leave basic charts to 0.4.0 release and all other charts moved to 0.4.1 |
-| [0.4.0](https://github.com/startxfr/helm-repository/releases/tag/0.4.0) | 2021-02-27 | Stable repository for the complete repository                           |
+| [0.4.1](https://github.com/startxfr/helm-repository/releases/tag/0.4.1) | 2021-06-11 | Leave basic charts to 0.4.0 release and all other charts moved to 0.4.1 |
+| [0.4.0](https://github.com/startxfr/helm-repository/releases/tag/0.4.0) | 2021-06-11 | Stable repository for the complete repository                           |
 
 ## version 0.3.x (chassagne)
 
 The objectif of this release is to add more content to the helm repository catalog.
 
-| Release                                                                      | Date       | Description                                                                                            |
-| ---------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| [0.3.305](https://github.com/startxfr/helm-repository/releases/tag//0.3.305) | 2021-06-03 | Stable demo and cluster resource configurations                                                        |
-| [0.3.203](https://github.com/startxfr/helm-repository/releases/tag//0.3.203) | 2021-02-21 | Upgrade chart release informations                                                                     |
-| [0.3.151](https://github.com/startxfr/helm-repository/releases/tag//0.3.151) | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                    |
-| [0.3.93](https://github.com/startxfr/helm-repository/releases/tag//0.3.93)   | 2020-11-10 | Stable basic and cluster-xxx charts in the startx repository                                           |
-| [0.3.23](https://github.com/startxfr/helm-repository/releases/tag//0.3.23)   | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information |
-| [0.3.0](https://github.com/startxfr/helm-repository/releases/tag//0.3.0)     | 2020-10-31 | Stable 0.3 release with basic example and repository structure                                         |
+| Release                                                                      | Date       | Description                                                                                        |
+| ---------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| [0.3.381](https://github.com/startxfr/helm-repository/releases/tag//0.3.381) | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377                       |
+| [0.3.343](https://github.com/startxfr/helm-repository/releases/tag//0.3.327) | 2021-06-04 | Stable documentation for all charts and Chart version alignment                                    |
+| [0.3.305](https://github.com/startxfr/helm-repository/releases/tag//0.3.305) | 2021-06-03 | Stable demo and cluster resource configurations                                                    |
+| [0.3.203](https://github.com/startxfr/helm-repository/releases/tag//0.3.203) | 2021-02-21 | Upgrade chart release informations                                                                 |
+| [0.3.151](https://github.com/startxfr/helm-repository/releases/tag//0.3.151) | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                |
+| [0.3.93](https://github.com/startxfr/helm-repository/releases/tag//0.3.93)   | 2020-11-10 | Stable basic and cluster-xxx charts in the startx repository                                       |
+| [0.3.23](https://github.com/startxfr/helm-repository/releases/tag//0.3.23)   | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with relevant information |
+| [0.3.0](https://github.com/startxfr/helm-repository/releases/tag//0.3.0)     | 2020-10-31 | Stable 0.3 release with basic example and repository structure                                     |
 
 ## version 0.2.x (chastang)
 
