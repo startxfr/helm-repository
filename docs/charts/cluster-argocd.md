@@ -81,3 +81,4 @@ xxxx  to do xxxxxxxx
 | 0.3.344 | 2021-06-09 | Add finalizer for the appproject resource
 | 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
 | 0.3.368 | 2021-06-10 | Add quote around project limitRange
+| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377
