@@ -115,3 +115,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository
 | 0.3.344 | 2021-06-09 | Debug the 3scale operator resources limits
 | 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
+| 0.3.368 | 2021-06-10 | Add quote around project limitRange
