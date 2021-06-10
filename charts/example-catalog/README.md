@@ -116,3 +116,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.367 | 2021-06-10 | Multiple debug on example charts used as demo
 | 0.3.368 | 2021-06-10 | Debug imagestreams, deployments and route v3 to v4 convertion bugs
 | 0.3.369 | 2021-06-10 | Debug the ocs demo
+| 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377
