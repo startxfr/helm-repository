@@ -1,0 +1,24 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: demo-workspace
+  app: demo-workspace-cluster
+  # version: "0.0.1"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    name: demo-workspace
+operator:
+  enabled: false
+cheCluster:
+  enabled: true
+  hooked: false
+  name: "codeready-workspaces"
+  storageClass: "aws-generic-retain"
+  storageSize: "1Gi"
