@@ -19,7 +19,7 @@ metadata:
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "high-priority-priorityclass"
-value: 1900000000
+value: 1000000000
 description: >-
   This priority class should be used for very high priority applications.
   Will have more priority than openshift common pod and will be closed to
@@ -35,7 +35,7 @@ metadata:
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "high-priority-priorityclass"
-value: 999000000
+value: 500000000
 description: >-
   This priority class should be used for high priority applications
 preemptionPolicy: PreemptLowerPriority
