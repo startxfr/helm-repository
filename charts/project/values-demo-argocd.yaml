@@ -33,8 +33,18 @@ rbac:
     name: system:serviceaccount:startx-argocd:argocd-application-controller
     role: edit
 networkpolicy: 
-  enabled: false
-  rules: []
+  enabled: true
+  rules: 
+  - id: deny-all-pods
+    spec: |
+      podSelector: {}
+  - id: manpage-allow-external
+    spec: |
+      podSelector:
+        matchLabels:
+          app: manpage
+      ingress:
+        - {}
 limits: 
   enabled: true
   rules:  |
