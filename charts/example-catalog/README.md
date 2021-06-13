@@ -99,3 +99,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository                                |
 | 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377 |
 | 0.3.390 | 2021-06-12 | Prepare 0.4.0 release
+| 0.3.391 | 2021-06-13 | Adding the priority demo to demo catalog

@@ -118,7 +118,7 @@ spec:
         vault.hashicorp.com/role: "demo-vault"
       labels:
         {{- include "example-catalog.labels" $root | nindent 8 }}
-        deploymentconfig: "{{- $appName -}}"
+        app: "{{- $appName -}}"
         app.kubernetes.io/name: "{{- $namespace -}}-{{- $appName -}}-pod"
     spec:
       containers:
@@ -190,8 +190,8 @@ spec:
       port: 8080
       targetPort: 8080
   selector:
-    app: {{- $appName -}}
-    deploymentconfig: {{- $appName -}}
+    app: "{{- $appName -}}"
+    deploymentconfig: "{{- $appName -}}"
   type: ClusterIP
   sessionAffinity: None
 ---
