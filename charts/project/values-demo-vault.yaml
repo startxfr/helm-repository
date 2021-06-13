@@ -38,6 +38,13 @@ networkpolicy:
           app: vaulted-app
       ingress:
         - {}
+  - id: manpage-allow-external
+    spec: |
+      podSelector:
+        matchLabels:
+          app: manpage
+      ingress:
+        - {}
 limits: 
   enabled: true
   rules:  |

@@ -34,6 +34,13 @@ networkpolicy:
   - id: deny-all-pods
     spec: |
       podSelector: {}
+  - id: manpage-allow-external
+    spec: |
+      podSelector:
+        matchLabels:
+          app: manpage
+      ingress:
+        - {}
 limits: 
   enabled: true
   rules:  |

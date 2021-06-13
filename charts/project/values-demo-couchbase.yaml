@@ -36,11 +36,18 @@ rbac:
   #   name: couchbase-backup
   #   role: couchbase-backup
 networkpolicy: 
-  enabled: false
+  enabled: true
   rules: 
   - id: deny-all-pods
     spec: |
       podSelector: {}
+  - id: manpage-allow-external
+    spec: |
+      podSelector:
+        matchLabels:
+          app: manpage
+      ingress:
+        - {}
 limits: 
   enabled: true
   rules:  |
