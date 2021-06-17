@@ -1,0 +1,27 @@
+{{- if .Values.dockercfg.enabled -}}
+{{- $root := . -}}
+{{- $defaultns := .Values.context.app -}}
+{{ range .Values.dockercfg.list }}
+{{- $name := .name | default "default-dockerhub" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $registry := .registry | default "dockerhub.io" -}}
+{{- $user := .user | default "username" -}}
+{{- $pwd := .pwd | default "mypassword" -}}
+{{-- $auth := $user ":" $pwd -}}
+{{-- $auth64 := $auth | b64enc -}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-config.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-dockercfg-{{- include "startx.appVersion" $root -}}"
+  annotations:
+    {{- include "cluster-config.annotations" $root | nindent 4 }}
+stringData:
+  .dockercfg: |-
+    {	"auths": { "{{- $registry -}}": { "auth": "{{- $auth64 -}}" } } }
+
+{{- end -}}
