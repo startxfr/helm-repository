@@ -109,6 +109,24 @@ helm_reposistory:
   #   # UR: of the helm chart repository
   #   url: https://startxfr.github.io/helm-repository/packages
 
+# Configuration of the cluster-version feature
+dockercfg:
+  # Enable the cluster docker credentials
+  enabled: false
+  # List of the credentials to record
+  list: []
+    #   # Name of the credential (secret)
+    # - name: startx-quay
+    #   # Namespace (default is the context.app)
+    #   namepsace: startx
+    #   # Name of the registry
+    #   registry: quay.io
+    #   # Username to use for authentification
+    #   user: startx
+    #   # Password associated to the user (could be a token)
+    #   pwd: xxxx
+
+
 # Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorElastic:
   enabled: false

@@ -100,6 +100,22 @@ objects:
       podSelector: {}
       policyTypes:
       - Ingress
+  - kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: default
+      namespace: ${PROJECT_NAME}
+    imagePullSecrets:
+      - name: docker-startx-creds
+        namespace: startx
+  - kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: builder
+      namespace: ${PROJECT_NAME}
+    imagePullSecrets:
+      - name: docker-startx-creds
+        namespace: startx
 parameters:
 - name: PROJECT_NAME
 - name: PROJECT_DISPLAYNAME
