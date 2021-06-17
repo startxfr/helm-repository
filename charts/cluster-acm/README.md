@@ -46,3 +46,4 @@ helm install startx/cluster-acm
 | 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377 |
 | 0.3.382 | 2021-06-10 | Debug the availabilityConfig value                                           |
 | 0.3.390 | 2021-06-12 | Prepare 0.4.0 release
+| 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
