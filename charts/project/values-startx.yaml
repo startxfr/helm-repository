@@ -6,13 +6,13 @@ context:  &context
   cluster: default
   environment: demo
   component: example
-  app: startx-project
+  app: startx
   # version: "0.0.1"
 enabled: false
 project: 
   enabled: false
   type: project
-  name: startx-project
+  name: startx
   hooked: true
   display_name: Startx default project
   requester: startx
@@ -25,7 +25,7 @@ rbac:
     role: basic-user
   - id: devops
     name: devops
-    role: edit
+    role: basic-user
   - id: ops
     name: ops
     role: admin
@@ -35,62 +35,39 @@ rbac:
     role: basic-user
 networkpolicy: 
   enabled: false
-  rules: 
-  - id: allow-from-openshift-ingress
-    spec: |
-      ingress:
-      - from:
-          - namespaceSelector:
-              matchLabels:
-                network.openshift.io/policy-group: ingress
-      podSelector: {}
-      policyTypes:
-      - Ingress
-  - id: allow-from-same-namespace
-    spec: |
-      podSelector: {}
-      ingress:
-      - from:
-        - podSelector: {}
-  - id: manpage-allow-external
-    spec: |
-      podSelector:
-        matchLabels:
-          app: manpage
-      ingress:
-        - {}
+  rules: []
 limits: 
   enabled: false
   rules:  |
     limits:
       - type: "Pod"
         min:
-          cpu: "20m"
-          memory: "32Mi"
+          cpu: "0"
+          memory: "0"
         max:
-          cpu: "400m"
-          memory: "512Mi"
+          cpu: "0"
+          memory: "0"
       - type: "Container"
         default:
-          cpu: "200m"
-          memory: "256Mi"
+          cpu: "0"
+          memory: "0"
         defaultRequest:
-          cpu: "50m"
-          memory: "32Mi"
+          cpu: "0"
+          memory: "0"
         min:
-          cpu: "20m"
-          memory: "32Mi"
+          cpu: "0"
+          memory: "0"
         max:
-          cpu: "200m"
-          memory: "256Mi"
+          cpu: "0"
+          memory: "0"
 quotas: 
   enabled: false
   rules:  |
     hard:
-      limits.cpu: "1500m"
-      limits.memory: "2000Mi"
-      requests.cpu: "300m"
-      requests.memory: "900Mi"
+      limits.cpu: "0"
+      limits.memory: "0"
+      requests.cpu: "0"
+      requests.memory: "0"
       requests.storage: "0Gi"
       persistentvolumeclaims: "0"
       ephemeral-storage: "0" 
@@ -100,10 +77,10 @@ quotas:
       secrets: "20"
       configmaps: "10"
       count/daemonsets.apps: "0"
-      count/deployments.apps: "2"
-      count/replicasets.apps: "4"
-      replicationcontrollers: "2"
-      pods: "6"
+      count/deployments.apps: "0"
+      count/replicasets.apps: "0"
+      replicationcontrollers: "0"
+      pods: "0"
       services: "3"
       services.loadbalancers: "0"
       services.nodeports: "0"

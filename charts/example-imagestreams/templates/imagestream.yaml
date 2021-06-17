@@ -48,6 +48,8 @@ spec:
         {{- end }}
         {{- end }}
       {{- if $ist.source }}
+      {{- $local := $ist.source | default "false" -}}
+      {{- $insecure := $ist.insecure | default "false" -}}
       {{- if $ist.source.kind }}
       {{- if eq $ist.source.kind "is" }}
       from:
@@ -59,11 +61,27 @@ spec:
       {{- else }}
       from:
         kind: DockerImage
+        {{- if eq $insecure "true"  }}
+        importPolicy:
+          insecure: true 
+        {{- end }}
+        {{- if eq $local "true"  }}
+        referencePolicy:
+          type: Local 
+        {{- end }}
         name: {{ $ist.source.image | default "quay.io/startx/fedora:latest" | quote }}
       {{- end }}
       {{- else }}
       from:
         kind: DockerImage
+        {{- if eq $insecure "true"  }}
+        importPolicy:
+          insecure: true 
+        {{- end }}
+        {{- if eq $local "true"  }}
+        referencePolicy:
+          type: Local 
+        {{- end }}
         name: {{ $ist.source.image | default "quay.io/startx/fedora:latest" | quote }}
       {{- end }}
       {{- end }}
