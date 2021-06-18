@@ -52,15 +52,17 @@ helm_reposistory:
   - name: startx
     url: https://startxfr.github.io/helm-repository/packages
 dockercfg:
-  enabled: false
+  enabled: true
   list: 
-  - name: startx-quay
-    namepsace: startx
-    registry: quay.io
-    user: startx
-    pwd: xxxx
-  - name: startx-docker
-    namepsace: startx
-    registry: dockerhub.io
-    user: startxfr
-    pwd: xxxx 
+    - name: startx-registrycreds-quay
+      namepsace: startx
+      registry: quay.io
+      username: startx
+      password: xxxx
+      email: "dev@startx.fr"
+    - name: startx-registrycreds-docker
+      namepsace: startx
+      registry: dockerhub.io
+      username: startxfr
+      password: xxxx
+      email: "dev@startx.fr"

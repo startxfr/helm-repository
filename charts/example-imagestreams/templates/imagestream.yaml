@@ -48,8 +48,8 @@ spec:
         {{- end }}
         {{- end }}
       {{- if $ist.source }}
-      {{- $local := $ist.source | default "false" -}}
-      {{- $insecure := $ist.insecure | default "false" -}}
+      {{- $local := $ist.source.local | default "false" -}}
+      {{- $insecure := $ist.source.insecure | default "false" -}}
       {{- if $ist.source.kind }}
       {{- if eq $ist.source.kind "is" }}
       from:

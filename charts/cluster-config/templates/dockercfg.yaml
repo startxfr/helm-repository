@@ -1,17 +1,14 @@
 {{- if .Values.dockercfg.enabled -}}
 {{- $root := . -}}
 {{- $defaultns := .Values.context.app -}}
+
 {{ range .Values.dockercfg.list }}
 {{- $name := .name | default "default-dockerhub" -}}
 {{- $namespace := .namespace | default $defaultns -}}
-{{- $registry := .registry | default "dockerhub.io" -}}
-{{- $user := .user | default "username" -}}
-{{- $pwd := .pwd | default "mypassword" -}}
-{{-- $auth := $user ":" $pwd -}}
-{{-- $auth64 := $auth | b64enc -}}
 ---
-apiVersion: v1
 kind: Secret
+apiVersion: v1
+type: "kubernetes.io/dockerconfigjson"
 metadata:
   name: "{{- $name -}}"
   namespace: "{{- $namespace -}}"
@@ -20,8 +17,16 @@ metadata:
     app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-dockercfg-{{- include "startx.appVersion" $root -}}"
   annotations:
     {{- include "cluster-config.annotations" $root | nindent 4 }}
+    template.openshift.io/expose-registry: "{.data['registry']}"
+    template.openshift.io/expose-username: "{.data['username']}"
+    template.openshift.io/expose-email: "{.data['email']}"
+    template.openshift.io/base64-expose-dockerconfig: "{.data['\\.dockerconfigjson']}"
 stringData:
-  .dockercfg: |-
-    {	"auths": { "{{- $registry -}}": { "auth": "{{- $auth64 -}}" } } }
+  .dockerconfigjson: "{{ include "imagePullSecret" . | replace "\"" "\\\"" }}"
+  registry: "{{- .registry | default "dockerhub.io" -}}"
+  username: "{{- .username | default "username" -}}"
+  password: "{{- .password | default "password" -}}"
+  email: "{{- .email | default "mail@example.com" -}}"
 
+{{ end }}
 {{- end -}}
