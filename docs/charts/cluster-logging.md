@@ -70,11 +70,12 @@ xxxx to do xxxxxx
 | 0.3.217 | 2021-05-06 | Move to elastic operator version 5.0.2-18 (OCP 4.7 compat)                                                       |
 | 0.3.219 | 2021-05-06 | Move to elastic operator version 5.0.3-6 (OCP 4.7 compat)                                                        |
 | 0.3.221 | 2021-05-06 | Move to logging operator version 5.0.3-6 (OCP 4.7 compat)                                                        |
-| 0.3.225 | 2021-05-10 | Update all chart to use new RBAC naming                                                                          |
+| 0.3.225 | 2021-05-10 | Update all chart to use new RBAC  naming                                                                         |
 | 0.3.227 | 2021-05-27 | Update elastic operator to 5.0.4-21                                                                              |
 | 0.3.228 | 2021-06-02 | Change csv name to align global naming convention defined by redhat                                              |
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository                                                                    |
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository                                                                    |
 | 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377                                     |
-| 0.3.390 | 2021-06-12 | Prepare 0.4.0 release
-| 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
+| 0.3.390 | 2021-06-12 | Prepare 0.4.0 release                                                                                            |
+| 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts                                                   |
+| 0.3.424 | 2021-06-19 | Update to logging operator version 5.0.5-11
