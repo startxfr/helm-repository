@@ -34,6 +34,8 @@ imageprunner:
     failed: 10
     successful: 5
   suspend: false
+registryroute:
+  enabled: false
 projecttemplate:
   enabled: false
   rbac: 
@@ -52,16 +54,16 @@ helm_reposistory:
   - name: startx
     url: https://startxfr.github.io/helm-repository/packages
 dockercfg:
-  enabled: true
+  enabled: false
   list: 
     - name: startx-registrycreds-quay
-      namepsace: startx
+      namespace: startx
       registry: quay.io
       username: startx
       password: xxxx
       email: "dev@startx.fr"
     - name: startx-registrycreds-docker
-      namepsace: startx
+      namespace: startx
       registry: dockerhub.io
       username: startxfr
       password: xxxx

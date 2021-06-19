@@ -46,12 +46,12 @@ clusterversion:
   # Define the related channel
   channel: candidate
   # Define the maximum
-  version: 4.5
+  version: 4.7
 
 # Configuration of the cluster alert-manager feature
 alertmanager:
   # Enable the cluster alert-manager
-  enabled: true
+  enabled: false
   # Define the related channel
   receiverName: PagerDutyStartx
   # Define the type of alert receiver (pagerDutty or api)
@@ -68,7 +68,7 @@ alertmanager:
 # Configuration of the cluster image-prunner feature
 imageprunner:
   # Enable the cluster image-prunner
-  enabled: true
+  enabled: false
   # Cron formated scheduler
   schedule: "15 * * * *"
   # History limits for logs retention
@@ -80,10 +80,22 @@ imageprunner:
   # Suspend the image prunning
   suspend: true
 
+# Configuration of the cluster image-prunner feature
+registryroute:
+  # Enable the cluster image-prunner
+  enabled: false
+  # Name of the route (default is external)
+  name: "external"
+  # Namespace for the route (default is openshift-image-registry)
+  namespace: "openshift-image-registry"
+
+
+
+
 # Configuration of the cluster project-template feature
 projecttemplate:
   # Enable the cluster image-prunner
-  enabled: true
+  enabled: false
   # Configure RBAC applied to new projects
   rbac: 
     # Enable RBAC default for new projects
@@ -96,7 +108,7 @@ projecttemplate:
 # Configuration of cluster config for redhat tools
 redhat:
   # Enable redhat operator namespace
-  operators: true
+  operators: false
 
 # Configuration of the cluster-version feature
 helm_reposistory:
