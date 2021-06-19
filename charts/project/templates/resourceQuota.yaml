@@ -2,11 +2,11 @@
 kind: ResourceQuota
 apiVersion: v1
 metadata:
-  name: "{{- .Values.project.name | default .Chart.Name -}}-limits"
+  name: "{{- .Values.project.name | default .Chart.Name -}}-quotas"
   namespace: "{{- .Values.project.name | default .Chart.Name -}}"
   labels:
     {{- include "project.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-limits"
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-quotas"
   annotations:
     {{- include "project.annotations" . | nindent 4 }}
 spec: 
