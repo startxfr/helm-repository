@@ -32,7 +32,7 @@ imagestreams:
       source: &ist_apache_source
         local: "false"
         kind: is
-        image: startx-apache:latest
+        image: quay.io/startx/apache:latest
         namespace: "openshift"
     - name: test
       enabled: true
@@ -46,7 +46,7 @@ imagestreams:
         local: "true"
         insecure: "true"
         <<: *ist_apache_source
-        image: startx-apache:alpine3
+        image: quay.io/startx/apache:alpine3
     - name: stable
       enabled: true
       desc:
@@ -59,7 +59,7 @@ imagestreams:
         local: "true"
         insecure: "true"
         <<: *ist_apache_source
-        image: startx-apache:ubi8
+        image: quay.io/startx/apache:ubi8
 - name: sxcm-mariadb
   enabled: true
   namespace: "openshift"
@@ -81,7 +81,7 @@ imagestreams:
       source: &ist_mariadb_source
         local: "false"
         kind: is
-        image: startx-mariadb:latest
+        image: quay.io/startx/mariadb:latest
         namespace: "openshift"
     - name: test
       enabled: true
@@ -95,7 +95,7 @@ imagestreams:
         local: "true"
         insecure: "true"
         <<: *ist_mariadb_source
-        image: startx-mariadb:alpine3
+        image: quay.io/startx/mariadb:alpine3
     - name: stable
       enabled: true
       desc:
@@ -108,7 +108,7 @@ imagestreams:
         local: "true"
         insecure: "true"
         <<: *ist_mariadb_source
-        image: startx-mariadb:ubi8
+        image: quay.io/startx/mariadb:ubi8
 - name: sxcm-nodejs
   enabled: true
   namespace: "openshift"
@@ -130,7 +130,7 @@ imagestreams:
       source: &ist_nodejs_source
         local: "false"
         kind: is
-        image: startx-nodejs:latest
+        image: quay.io/startx/nodejs:latest
         namespace: "openshift"
     - name: test
       enabled: true
@@ -144,7 +144,7 @@ imagestreams:
         local: "true"
         insecure: "true"
         <<: *ist_nodejs_source
-        image: startx-nodejs:alpine3
+        image: quay.io/startx/nodejs:alpine3
     - name: stable
       enabled: true
       desc:
@@ -157,7 +157,7 @@ imagestreams:
         local: "true"
         insecure: "true"
         <<: *ist_nodejs_source
-        image: startx-nodejs:ubi8
+        image: quay.io/startx/nodejs:ubi8
 - name: sxcm-php
   enabled: true
   namespace: "openshift"
@@ -179,7 +179,7 @@ imagestreams:
       source: &ist_php_source
         local: "false"
         kind: is
-        image: startx-php:latest
+        image: quay.io/startx/php:latest
         namespace: "openshift"
     - name: test
       enabled: true
@@ -193,7 +193,7 @@ imagestreams:
         local: "true"
         insecure: "true"
         <<: *ist_php_source
-        image: startx-php:alpine3
+        image: quay.io/startx/php:alpine3
     - name: stable
       enabled: true
       desc:
@@ -206,4 +206,4 @@ imagestreams:
         local: "true"
         insecure: "true"
         <<: *ist_php_source
-        image: startx-php:ubi8
+        image: quay.io/startx/php:ubi8
