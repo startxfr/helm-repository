@@ -122,7 +122,7 @@ data:
   SX_VERSION: "{{- $env -}}"
 ---
 kind: BuildConfig
-apiVersion: v1
+apiVersion: build.openshift.io/v1
 metadata:
   name: "hugo"
   namespace: {{ $namespace | quote }}
@@ -166,7 +166,7 @@ spec:
       name: hugo:latest
 ---
 kind: DeploymentConfig
-apiVersion: v1
+apiVersion: apps.openshift.io/v1
 metadata:
   name: "hugo"
   namespace: {{ $namespace | quote }}
@@ -184,6 +184,8 @@ spec:
       timeoutSeconds: 60
       maxUnavailable: 25%
       maxSurge: 25%
+      post:
+        script: "/bin/sx-nodejs info"
   triggers:
     - type: ImageChange
       imageChangeParams:
@@ -194,8 +196,6 @@ spec:
           kind: ImageStreamTag
           name: hugo:latest
     - type: ConfigChange
-  postCommit:
-    script: "/bin/sx-nodejs info"
   selector:
     app: "hugo"
     deploymentconfig: "hugo"
