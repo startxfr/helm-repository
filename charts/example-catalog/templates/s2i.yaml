@@ -156,7 +156,7 @@ data:
   SX_DEBUG: "true"
 ---
 kind: BuildConfig
-apiVersion: v1
+apiVersion: build.openshift.io/v1
 metadata:
   name: "app-v1"
   namespace: {{ $namespace | quote }}
@@ -205,7 +205,7 @@ spec:
       name: app:v1
 ---
 kind: BuildConfig
-apiVersion: v1
+apiVersion: build.openshift.io/v1
 metadata:
   name: "app-v2"
   namespace: {{ $namespace | quote }}
@@ -254,7 +254,7 @@ spec:
       name: app:v2
 ---
 kind: DeploymentConfig
-apiVersion: v1
+apiVersion: apps.openshift.io/v1
 metadata:
   name: "app-v1"
   namespace: {{ $namespace | quote }}
@@ -361,7 +361,7 @@ spec:
       dnsPolicy: ClusterFirst
 ---
 kind: DeploymentConfig
-apiVersion: v1
+apiVersion: apps.openshift.io/v1
 metadata:
   name: "app-v2"
   namespace: {{ $namespace | quote }}
