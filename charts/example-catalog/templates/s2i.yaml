@@ -276,6 +276,7 @@ spec:
       maxSurge: 25%
       post:
         script: "/bin/sx-nodejs info"
+        failurePolicy: Ignore
   triggers:
     - type: ImageChange
       imageChangeParams:
@@ -383,6 +384,7 @@ spec:
       maxSurge: 25%
       post:
         script: "/bin/sx-nodejs info"
+        failurePolicy: Ignore
   triggers:
     - type: ImageChange
       imageChangeParams:
