@@ -85,7 +85,7 @@ data:
   SX_DEBUG: "true"
 ---
 kind: BuildConfig
-apiVersion: v1
+apiVersion: build.openshift.io/v1
 metadata:
   name: "sxapi-build"
   namespace: {{ $namespace | quote }}
@@ -129,7 +129,7 @@ spec:
       name: sxapi-build:latest
 ---
 kind: DeploymentConfig
-apiVersion: v1
+apiVersion: apps.openshift.io/v1
 metadata:
   name: "sxapi-build"
   namespace: {{ $namespace | quote }}
@@ -146,7 +146,9 @@ spec:
     rollingParams:
       timeoutSeconds: 60
       maxUnavailable: 25%
-      maxSurge: 25%
+      maxSurge: 25
+      post:
+        script: "/bin/sx-nodejs info"
   triggers:
     - type: ImageChange
       imageChangeParams:
@@ -157,8 +159,6 @@ spec:
           kind: ImageStreamTag
           name: sxapi-build:latest
     - type: ConfigChange
-  postCommit:
-    script: "/bin/sx-nodejs info"
   test: false
   selector:
     app: "sxapi-build"

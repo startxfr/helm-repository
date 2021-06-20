@@ -274,6 +274,8 @@ spec:
       timeoutSeconds: 60
       maxUnavailable: 25%
       maxSurge: 25%
+      post:
+        script: "/bin/sx-nodejs info"
   triggers:
     - type: ImageChange
       imageChangeParams:
@@ -284,8 +286,6 @@ spec:
           kind: ImageStreamTag
           name: app:v1
     - type: ConfigChange
-  postCommit:
-    script: "/bin/sx-nodejs info"
   selector:
     app: "s2i"
     version: "1.0.0"
@@ -381,6 +381,8 @@ spec:
       timeoutSeconds: 60
       maxUnavailable: 25%
       maxSurge: 25%
+      post:
+        script: "/bin/sx-nodejs info"
   triggers:
     - type: ImageChange
       imageChangeParams:
@@ -391,8 +393,6 @@ spec:
           kind: ImageStreamTag
           name: app:v2
     - type: ConfigChange
-  postCommit:
-    script: "/bin/sx-nodejs info"
   selector:
     app: "s2i"
     version: "2.0.0"
