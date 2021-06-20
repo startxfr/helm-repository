@@ -148,8 +148,21 @@ spec:
       maxUnavailable: 25%
       maxSurge: 25
       post:
-        script: "/bin/sx-nodejs info"
-        failurePolicy: Ignore
+	      execNewPod:
+          command:
+            - "/bin/sx-nodejs"
+          args:
+            - info
+          failurePolicy: Ignore
+          containerName: application
+          env:
+            - name: SX_VERBOSE
+              value: "true"
+            - name: SX_DEBUG
+              value: "true"
+          envFrom:
+            - configMapRef:
+                name: sxapi-build-config
   triggers:
     - type: ImageChange
       imageChangeParams:
