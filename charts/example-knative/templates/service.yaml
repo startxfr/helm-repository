@@ -25,6 +25,9 @@ spec:
         {{- include "example-knative.annotations" $root | nindent 8 }}
     spec:
       {{- $kservice.spec | nindent 6 }}
+  # traffic:
+  #   - latestRevision: true
+  #     percent: 100
 {{- end }}
 {{- end }}
 {{- end }}{{- end }}
