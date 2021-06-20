@@ -928,7 +928,7 @@ data:
     }
 ---
 kind: Task
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: prepare-workspace
   namespace: {{ $namespace | quote }}
@@ -1042,7 +1042,7 @@ spec:
           fi
 ---
 kind: Task
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: build-s2i
   namespace: {{ $namespace | quote }}
@@ -1153,7 +1153,7 @@ spec:
           startBuildS2I $(inputs.params.COMPONENT_NAME) $(inputs.params.APP_NAME) "$(inputs.params.BUILD_IMAGE)"
 ---
 kind: Task
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: publish-image-single
   namespace: {{ $namespace | quote }}
@@ -1276,7 +1276,7 @@ spec:
           exit 0;
 ---
 kind: Task
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: application-deploy
   namespace: {{ $namespace | quote }}
@@ -1368,7 +1368,7 @@ spec:
           ocDeployRolloutWatch "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)" "$(inputs.params.DEPLOYMENT_KIND)"
 ---
 kind: Task
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: test-code
   namespace: {{ $namespace | quote }}
@@ -1469,7 +1469,7 @@ spec:
           testCodeDisplayResult "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
 ---
 kind: Task
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: test-vulnerability-run
   namespace: {{ $namespace | quote }}
@@ -1562,7 +1562,7 @@ spec:
           testScanApplicationDisplayResult "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
 ---
 kind: Task
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: report-notify
   namespace: {{ $namespace | quote }}
@@ -1660,7 +1660,7 @@ spec:
           reportNotify "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
 ---
 kind: Task
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: "hugo-generate-content"
   namespace: {{ $namespace | quote }}
@@ -1727,7 +1727,7 @@ spec:
           generateHugoStaticContent $COMPONENT $BASE_URL
 ---
 kind: Pipeline
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: "{{- $component -}}"
   namespace: {{ $namespace | quote }}
@@ -1924,7 +1924,7 @@ spec:
           workspace: running-workspace
 ---
 kind: PipelineResource
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: image-hugo-latest-internal
   namespace: {{ $namespace | quote }}
@@ -1940,7 +1940,7 @@ spec:
       value: image-registry.openshift-image-registry.svc:5000/{{- $namespace -}}/hugo:latest
 ---
 kind: PipelineResource
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: git-hugo-demo-master
   namespace: {{ $namespace | quote }}
@@ -1960,7 +1960,7 @@ spec:
       value: master
 ---
 kind: PipelineResource
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: github-hugo-demo-addissue
   namespace: {{ $namespace | quote }}
@@ -1976,7 +1976,7 @@ spec:
       value: http://github.com/startxfr/okd-demo-hugo/issues/new
 ---
 kind: PipelineRun
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: "{{- $scope -}}-hugo-{{- $randrun -}}"
   namespace: {{ $namespace | quote }}
