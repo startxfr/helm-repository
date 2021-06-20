@@ -23,77 +23,67 @@ knativeServing:
       enabled: true
       displayName: POC microservice configured via helm chart and delivered with workings endpoints
       spec: |
-        template:
-          metadata:
-            labels: 
-              app.kubernetes.io/name: "sxapi-kn-service-pod"
-              app.openshift.io/runtime: nodejs
-              app.openshift.io/runtime-version: '12'
-          spec:
-            containerConcurrency: 0
-            containers:
-              - name: user-container
-                image: "startx/sxapi:latest"
-                env:
-                  - name: SX_VERBOSE
-                    value: "true"
-                  - name: SX_DEBUG
-                    value: "true"
-                envFrom:
-                  - configMapRef:
-                      name: demo-knative-config
+        containerConcurrency: 0
+        containers:
+          - name: user-container
+            image: "startx/sxapi:latest"
+            env:
+              - name: SX_VERBOSE
+                value: "true"
+              - name: SX_DEBUG
+                value: "true"
+            envFrom:
+              - configMapRef:
+                  name: demo-knative-config
+            command:
+              - "/bin/sx-nodejs"
+            args:
+              - run
+            ports:
+              - containerPort: 8077
+                protocol: TCP
+            livenessProbe:
+              exec:
                 command:
                   - "/bin/sx-nodejs"
-                args:
-                  - run
-                ports:
-                  - containerPort: 8077
-                    protocol: TCP
-                livenessProbe:
-                  exec:
-                    command:
-                      - "/bin/sx-nodejs"
-                      - isLive
-                  initialDelaySeconds: 1
-                  timeoutSeconds: 5
-                  periodSeconds: 5
-                  successThreshold: 1
-                  failureThreshold: 2
-                readinessProbe:
-                  successThreshold: 1
-                  tcpSocket:
-                    port: 0
-                readinessProbe:
-                  exec:
-                    command:
-                      - "/bin/sx-nodejs"
-                      - isReady
-                  initialDelaySeconds: 4
-                  timeoutSeconds: 5
-                  periodSeconds: 5
-                  successThreshold: 1
-                  failureThreshold: 2
-                resources:
-                  limits:
-                    cpu: 100m
-                    memory: 128Mi
-                  requests:
-                    cpu: 20m
-                    memory: 64Mi
-                volumeMounts:
-                  - name: sxapi-conf
-                    mountPath: "/conf"
-            volumes:
+                  - isLive
+              initialDelaySeconds: 1
+              timeoutSeconds: 5
+              periodSeconds: 5
+              successThreshold: 1
+              failureThreshold: 2
+            readinessProbe:
+              successThreshold: 1
+              tcpSocket:
+                port: 0
+            readinessProbe:
+              exec:
+                command:
+                  - "/bin/sx-nodejs"
+                  - isReady
+              initialDelaySeconds: 4
+              timeoutSeconds: 5
+              periodSeconds: 5
+              successThreshold: 1
+              failureThreshold: 2
+            resources:
+              limits:
+                cpu: 100m
+                memory: 128Mi
+              requests:
+                cpu: 20m
+                memory: 64Mi
+            volumeMounts:
               - name: sxapi-conf
-                configMap:
-                  name: "demo-knative-lib-latest"
-                  items:
-                  - key: sxapi.yml
-                    path: sxapi.yml
-                  - key: mylib.js
-                    path: mylib.js
-            timeoutSeconds: 300
-        traffic:
-          - tag: vx
-            latestRevision: true
-            percent: 100
+                mountPath: "/conf"
+        volumes:
+          - name: sxapi-conf
+            configMap:
+              name: "demo-knative-lib-latest"
+              items:
+              - key: sxapi.yml
+                path: sxapi.yml
+              - key: mylib.js
+                path: mylib.js
+        enableServiceLinks: false
+        timeoutSeconds: 300
