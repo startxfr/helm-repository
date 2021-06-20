@@ -11,7 +11,7 @@
 
 ---
 kind: PipelineResource
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: demo-git
   namespace: {{ $namespace | quote }}
@@ -29,7 +29,7 @@ spec:
       value: master
 ---
 kind: PipelineResource
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: myapp-latest-local
   namespace: {{ $namespace | quote }}
@@ -45,7 +45,7 @@ spec:
       value: image-registry.openshift-image-registry.svc:5000/{{- $scope -}}-tekton/myapp:latest
 ---
 kind: PipelineResource
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: myapp-latest-quay
   namespace: {{ $namespace | quote }}
@@ -61,7 +61,7 @@ spec:
       value: image-registry.openshift-image-registry.svc:5000/{{- $scope -}}-tekton/myapp:latest
 ---
 kind: PipelineResource
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1alpha1
 metadata:
   name: github-addissue
   namespace: {{ $namespace | quote }}
