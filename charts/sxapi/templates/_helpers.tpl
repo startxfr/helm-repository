@@ -27,4 +27,12 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- else }}
       service : disabled
 {{- end }}
+{{- if .sxapi.expose -}}{{- if .sxapi.expose.enabled }}
+        route : enabled
+{{- else }}
+        route : disabled
+{{- end }}
+{{- else }}
+        route : disabled
+{{- end }}
 {{- end -}}

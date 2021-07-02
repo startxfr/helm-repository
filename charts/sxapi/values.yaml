@@ -43,10 +43,10 @@ sxapi:
   # Files to load into the application
   data: |
     sxapi.yml: |-
-      name: {{ include "startx.appName" . }}
-      description: Description of {{ include "startx.appName" . }}
-      version: {{ include "startx.appVersion" . }}
-      debug: "{{- .Values.sxapi.debug }}"
+      name: default
+      description: Description of the default sxapi helm chart instance (defined in values.yaml)
+      version: "0.3.57"
+      debug: false
       resources:
         serviceinfo-sample:
           _class: serviceinfo
@@ -61,8 +61,22 @@ sxapi:
           desc: Display welcome message (HTML)
           body: |-
               <html>
-              <head><title>Example application {{ include "startx.appName" . }}</title></head>
-              <body><h1>API {{ include "startx.appName" . }} is live !</h1></body>
+              <head><title>Example application (default values)</title></head>
+              <body>
+                <h1>SXAPI is live ! (helm chart's managed by default values.yaml)</h1>
+                <p>
+                  This example is deployed using the default values file of the 
+                  <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
+                  available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
+                </p>
+                <p>
+                  You could check the following endpoints :</p>
+                <ul>
+                  <li><a href="./health">Health status (used by readiness probe)</a></li>
+                  <li><a href="./info">Information about the application</a></li>
+                  <li><a href="./ping">Return a simple pong</a></li>
+                </ul>
+              </body>
               </html>
         - path: "/health"
           resource: serviceinfo-sample

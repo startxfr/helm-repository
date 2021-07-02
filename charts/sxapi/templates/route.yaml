@@ -14,12 +14,14 @@ metadata:
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
     argocd.argoproj.io/sync-wave: "10"
 spec:
-  tls:
-    insecureEdgeTerminationPolicy: Allow
-    termination: edge
-  wildcardPolicy: None
   to:
     kind: Service
     name: {{ include "startx.appName" . | quote }}
     weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Allow
+  wildcardPolicy: None
 {{- end -}}{{- end -}}{{- end -}}
