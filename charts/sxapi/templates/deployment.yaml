@@ -45,19 +45,19 @@ spec:
             name: http
             protocol: TCP
           livenessProbe:
-            initialDelaySeconds: 5
+            initialDelaySeconds: 2
             tcpSocket:
               port: 8077
-            timeoutSeconds: 2
+            timeoutSeconds: 1
             periodSeconds: 5
             successThreshold: 1
             failureThreshold: 3
           readinessProbe:
-            initialDelaySeconds: 7
+            initialDelaySeconds: 4
             tcpSocket:
               port: 8077
             timeoutSeconds: 2
-            periodSeconds: 6
+            periodSeconds: 7
             successThreshold: 1
             failureThreshold: 3
           # resources:

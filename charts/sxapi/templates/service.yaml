@@ -12,7 +12,11 @@ metadata:
 spec:
   ports:
     - name: http
+      protocol: TCP
       port: 8080
+      targetPort: 8077
   selector:
     app: {{ include "startx.appName" . }}
+  type: ClusterIP
+  sessionAffinity: None
 {{- end -}}{{- end -}}
