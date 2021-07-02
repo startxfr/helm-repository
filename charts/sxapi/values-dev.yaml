@@ -21,10 +21,10 @@ sxapi:
   replicas: 1
   data: |
     sxapi.yml: |-
-      name: {{ include "startx.appName" . }}
-      description: This is the description of {{ include "startx.appName" . }}
-      version: {{ include "startx.appVersion" . }}
-      debug: "{{- .Values.sxapi.debug }}"
+      name: dev
+      description: Description of the dev sxapi helm chart instance (defined in values-dev.yaml)
+      version: "0.3.57"
+      debug: false
       resources:
         serviceinfo-sample:
           _class: serviceinfo
@@ -39,17 +39,23 @@ sxapi:
           desc: Display welcome message (HTML)
           body: |-
               <html>
-              <head><title>Application {{ include "startx.appName" . }}</title></head>
-              <link rel="stylesheet" href="https://goo.gl/4kFNLH">
-              <body><div class="container">
-              <h1><span class="glyphicon glyphicon-eye-open"></span> Your API {{ include "startx.appName" . }} is
-              live !</h1>
-              <div class="alert alert-success" role="alert"><p>This API is {{ include "startx.appName" . }} (<b>v{{ include "startx.appVersion" . }}</b>)</p></div>
-              <div class="alert alert-info" role="alert"><p>The application signature is <b>{{ include "startx.appNameVersion" . }}</b>.</p></div>
-              <h1>Demo de deploiement</h1>
-              <nav class="navbar navbar-default navbar-fixed-bottom"><div class="container">
-              Microservice engine is <b>{{ include "startx.appName" . }} v{{ include "startx.appVersion" . }}</b></div></nav>
-              </div></body>
+              <head><title>Dev application (dev values)</title></head>
+              <body>
+                <h1>SXAPI is live ! (helm chart's managed by default values-dev.yaml)</h1>
+                <p>
+                  This dev environment is deployed using the dev values file of the 
+                  <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
+                  available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
+                </p>
+                <p>
+                  You could check the following endpoints :</p>
+                <ul>
+                  <li><a href="./health">Health status (used by readiness probe)</a></li>
+                  <li><a href="./info">Information about the application</a></li>
+                  <li><a href="./ping">Return a simple pong</a></li>
+                  <li>Every hour, the bot run the <b>myCronFunction</b> that make a log trace</li>
+                </ul>
+              </body>
               </html>
         - path: "/health"
           resource: serviceinfo-sample
