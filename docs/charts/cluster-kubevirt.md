@@ -71,3 +71,4 @@ xxxx  to do xxxxxxxx
 | 0.3.390 | 2021-06-12 | Prepare 0.4.0 release
 | 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
+| 0.3.441 | 2021-07-27 | Update the kubevirt operator to version 2.6.5
