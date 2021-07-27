@@ -94,3 +94,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
 | 0.3.424 | 2021-06-19 | Update elastic operator to version 5.0.5-11
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
+| 0.3.441 | 2021-07-27 | Update elastic operator to version 5.1.0-96
