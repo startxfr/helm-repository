@@ -6,6 +6,7 @@ context:  &context
   environment: infra
   component: config
   app: startx-config
+
 autoscaling:
   enabled: false
   min: 
@@ -44,10 +45,6 @@ projecttemplate:
     enabled: true
 redhat:
   operators: false
-operatorElastic:
-  enabled: false
-operatorGlobal:
-  enabled: false
 helm_reposistory:
   enabled: false
   list: 
@@ -57,14 +54,87 @@ dockercfg:
   enabled: false
   list: 
     - name: startx-registrycreds-quay
-      namespace: startx
+      namespace: startx-config
       registry: quay.io
       username: startx
       password: xxxx
       email: "dev@startx.fr"
     - name: startx-registrycreds-docker
-      namespace: startx
+      namespace: startx-config
       registry: dockerhub.io
       username: startxfr
       password: xxxx
       email: "dev@startx.fr"
+    - name: startx-registrycreds-redhat
+      namespace: startx-config
+      registry: registry.connect.redhat.com
+      username: startx_rhnuser
+      password: startx_rhnpwd
+      email: "username@startx.fr"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-config"
+    display_name: "Startx Config"
+    requester: startx
+    description: Startx default cluster configuration
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev
+      name: dev
+      role: view
+    - id: devops
+      name: devops
+      role: edit
+    - id: ops
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: true
+    rules: 
+    - id: deny-all-pods
+      spec: |
+        podSelector: {}
+  limits: 
+    enabled: true
+    rules:  |
+      limits:
+        - type: "Pod"
+          min:
+            cpu: "0"
+          max:
+            cpu: "0"
+  quotas: 
+    enabled: true
+    rules:  |
+      hard:
+        limits.cpu: "0"
+        limits.memory: "0"
+        persistentvolumeclaims: "0"
+        ephemeral-storage: "0" 
+        pods: "0"
+        services: "0"
+        secrets: "30"
+        configmaps: "15"
+        replicationcontrollers: "0"
+        openshift.io/imagestreams: "30"
+        count/daemonsets.apps: "0"
+        count/replicasets.apps: "0"
+        count/deployments.apps: "0"
+
+
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
+  enabled: false
+
+# Configuration of the globals operators (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorGlobal:
+  enabled: false
