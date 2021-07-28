@@ -111,10 +111,10 @@ cluster:
         - eu-west-3c
         resources:
           limits:
-            cpu: "3000m"
+            cpu: "3"
             memory: 3Gi
           requests:
-            cpu: "300m"
+            cpu: "500m"
             memory: 2Gi
         volumeMounts:
           default: couchbase
@@ -128,7 +128,6 @@ cluster:
           spec:
             automountServiceAccountToken: false
             serviceAccountName: couchbase-pods
-            containers: []
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: n1ql
@@ -159,7 +158,6 @@ cluster:
           spec:
             automountServiceAccountToken: false
             serviceAccountName: couchbase-pods
-            containers: []
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: ftsevent
@@ -193,7 +191,6 @@ cluster:
           spec:
             automountServiceAccountToken: false
             serviceAccountName: couchbase-pods
-            containers: []
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
       - name: analytics
@@ -225,7 +222,6 @@ cluster:
           spec:
             automountServiceAccountToken: false
             serviceAccountName: couchbase-pods
-            containers: []
             imagePullSecrets:
               - name: "startx-couchbase-rhn"
     buckets: 
