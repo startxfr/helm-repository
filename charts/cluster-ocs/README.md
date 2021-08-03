@@ -93,3 +93,5 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
 | 0.3.441 | 2021-07-27 | Update the ocs operator to version 4.7.2
 | 0.3.480 | 2021-08-03 | publish stable update for the full repository
+| 0.3.481 | 2021-08-03 | Move to 4.7.2 storageCluster resource definition
+| 0.3.482 | 2021-08-03 | Publish new ocs format
