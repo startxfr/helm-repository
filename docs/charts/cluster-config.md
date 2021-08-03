@@ -93,3 +93,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 0.3.424 | 2021-06-19 | Update elastic operator to version 5.0.5-11
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
 | 0.3.441 | 2021-07-27 | Update elastic operator to version 5.1.0-96
+| 0.3.480 | 2021-08-03 | publish stable update for the full repository
