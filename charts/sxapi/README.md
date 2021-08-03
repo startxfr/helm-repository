@@ -133,3 +133,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.425 | 2021-07-03 | Debug route and service definitions
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
 | 0.3.480 | 2021-08-03 | publish stable update for the full repository
+| 0.3.998 | 2021-08-04 | publish stable update for the full repository
