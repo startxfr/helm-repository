@@ -98,3 +98,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 0.3.443 | 2021-07-27 | Update kiali operator to version 1.24.8 and jaeger to 1.20.4
 | 0.3.445 | 2021-07-27 | Upgrade servicemesh operator to 2.0.6.2
 | 0.3.480 | 2021-08-03 | publish stable update for the full repository
+| 0.3.998 | 2021-08-04 | publish stable update for the full repository
