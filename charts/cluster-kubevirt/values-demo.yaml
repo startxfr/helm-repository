@@ -50,8 +50,21 @@ project:
             memory: "9000Mi"
         - type: "Container"
           default:
-            cpu: 1
-            memory: "1024Mi"
+            cpu: "100m"
+            memory: "128Mi"
+          defaultRequest:
+            cpu: "200m"
+            memory: "256Mi"
+          min:
+            cpu: "10m"
+            memory: "10Mi"
+          max:
+            cpu: "500m"
+            memory: "512Mi"
+        - type: "VirtualMachine"
+          default:
+            cpu: "500m"
+            memory: "512Mi"
           defaultRequest:
             cpu: "200m"
             memory: "256Mi"
