@@ -117,3 +117,4 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
 | 0.3.480 | 2021-08-03 | publish stable update for the full repository
 | 0.3.998 | 2021-08-04 | publish stable update for the full repository
+| 0.3.999 | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13
