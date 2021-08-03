@@ -91,3 +91,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
 | 0.3.441 | 2021-07-27 | Update the quay operator to version 3.5.4
+| 0.3.480 | 2021-08-03 | publish stable update for the full repository

@@ -130,7 +130,7 @@ dockercfg:
     #   # Name of the credential (secret)
     # - name: startx-quay
     #   # Namespace (default is the context.app)
-    #   namepsace: startx
+    #   namepsace: startx-config
     #   # Name of the registry
     #   registry: quay.io
     #   # Username to use for authentification
@@ -139,6 +139,22 @@ dockercfg:
     #   password: xxxx
     #   # email associated to the user 
     #   email: xxxx
+
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-config"
+    display_name: "Startx Config"
+    requester: startx
+    description: Startx default cluster configuration
+
 
 # Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorElastic:
