@@ -92,3 +92,4 @@ helm install startx/cluster-knative -f https://raw.githubusercontent.com/startxf
 | 0.3.998 | 2021-08-04 | publish stable update for the full repository
 | 0.3.999 | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13
 | 7.22.1 | 2021-08-04 | Move to release 7.22.1 to align versionning with ocp release cycle
+| 7.22.2 | 2021-08-04 | Move helm dependencies to a 7.x.x release model
