@@ -18,11 +18,35 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
     openshift.io/description: "KubeVirt Demo"
-    openshift.io/display-name: "Demo KUBEVIRT"
+    openshift.io/display-name: "STARTX Demo KUBEVIRT (CentOS 7)"
+    openshift.io/documentation-url: 'https://helm-repository.readthedocs.io/en/latest/charts/cluster-kubevirt'
     openshift.io/requester: sxcm
     openshift.io/generated-by: sxcm
     description: medium Centos 7 with server install
     name.os.template.kubevirt.io/centos7.0: CentOS 7
+    openshift.io/provider-display-name: STARTX
+    template.kubevirt.io/provider: STARTX
+    template.kubevirt.io/provider-support-level: Full
+    template.kubevirt.io/provider-url: 'https://github.com/startxfr'
+    template.kubevirt.io/version: v1alpha1
+    name.os.template.kubevirt.io/centos7.0: STARTX CentOS 7
+    name.os.template.kubevirt.io/centos7.1: STARTX CentOS 7
+    name.os.template.kubevirt.io/centos7.2: STARTX CentOS 7
+    name.os.template.kubevirt.io/centos7.3: STARTX CentOS 7
+    template.kubevirt.io/editable: |
+      /objects[0].spec.template.spec.domain.cpu.sockets
+      /objects[0].spec.template.spec.domain.cpu.cores
+      /objects[0].spec.template.spec.domain.cpu.threads
+      /objects[0].spec.template.spec.domain.resources.requests.memory
+      /objects[0].spec.template.spec.domain.devices.disks
+      /objects[0].spec.template.spec.volumes
+      /objects[0].spec.template.spec.networks
+    tags: 'hidden,kubevirt,virtualmachine,linux,centos,startx'
+    description: >-
+      Template for STARTX CentOS 7 or newer. A PVC with the RHECentOS
+      disk image must be available.
+    openshift.io/support-url: 'https://helm-repository.readthedocs.io/en/latest/charts/cluster-kubevirt'
+    iconClass: icon-rhel
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "{{- $namespace -}}"
@@ -35,8 +59,19 @@ metadata:
     app.kubernetes.io/component: "kubevirt"
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-medium-centos7-server-template"
     flavor.template.kubevirt.io/medium: 'true'
+    flavor.template.kubevirt.io/small: 'true'
     os.template.kubevirt.io/centos7.0: 'true'
-    template.kubevirt.io/type: vm
+    os.template.kubevirt.io/centos7.1: 'true'
+    os.template.kubevirt.io/centos7.2: 'true'
+    os.template.kubevirt.io/centos7.3: 'true'
+    os.template.kubevirt.io/centos7.4: 'true'
+    os.template.kubevirt.io/centos7.5: 'true'
+    os.template.kubevirt.io/centos7.6: 'true'
+    os.template.kubevirt.io/centos7.7: 'true'
+    os.template.kubevirt.io/centos7.8: 'true'
+    template.kubevirt.io/type: base
+    template.kubevirt.io/version: "v{{- $version -}}"
+    template.kubevirt.io/default-os-variant: 'true'
     vm.kubevirt.io/template: centos7-server-medium-v0.7.0
     vm.kubevirt.io/template-namespace: openshift
     workload.template.kubevirt.io/server: 'true'
@@ -163,8 +198,8 @@ parameters:
 kind: VirtualMachine
 apiVersion: kubevirt.io/v1alpha3
 metadata:
-  name: vm-demo
-  namespace: {{ $namespace | quote }}
+  name: centos7-fromtemplate-vm
+  namespace: {{ $namespace | quote }} 
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
     kubevirt.io/latest-observed-api-version: v1alpha3
@@ -172,9 +207,9 @@ metadata:
     name.os.template.kubevirt.io/centos7.0: CentOS 7
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
-    app: vm-demo
-    app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-vm-demo-virtualmachine"
-    app.kubernetes.io/part-of: vm-demo
+    app: centos7-fromtemplate-vm
+    app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-centos7-fromtemplate-vm-virtualmachine"
+    app.kubernetes.io/part-of: centos7-fromtemplate-vm
     flavor.template.kubevirt.io/medium: 'true'
     os.template.kubevirt.io/centos7.0: 'true'
     vm.kubevirt.io/template: medium-centos7-server
@@ -187,7 +222,7 @@ metadata:
 spec:
   dataVolumeTemplates:
     - metadata:
-        name: vm-demo-rootdisk
+        name: centos7-fromtemplate-vm-rootdisk
       spec:
         pvc:
           storageClassName: aws-generic-delete
@@ -204,7 +239,7 @@ spec:
               https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2
       status: {}
     - metadata:
-        name: vm-demo-disk0
+        name: centos7-fromtemplate-vm-disk0
       spec:
         pvc:
           storageClassName: aws-generic-delete
@@ -225,12 +260,12 @@ spec:
         {{- include "example-catalog.annotations" $root | nindent 8 }}
       labels:
         {{- include "example-catalog.labels" $root | nindent 8 }}
-        app: vm-demo
-        app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-vm-demo-virtualmachineexec"
-        app.kubernetes.io/part-of: vm-demo
-        kubevirt.io/domain: vm-demo
+        app: centos7-fromtemplate-vm
+        app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-centos7-fromtemplate-vm-virtualmachineexec"
+        app.kubernetes.io/part-of: centos7-fromtemplate-vm
+        kubevirt.io/domain: centos7-fromtemplate-vm
         kubevirt.io/size: medium
-        vm.kubevirt.io/name: vm-demo
+        vm.kubevirt.io/name: centos7-fromtemplate-vm
     spec:
       domain:
         cpu:
@@ -271,10 +306,10 @@ spec:
       terminationGracePeriodSeconds: 0
       volumes:
         - dataVolume:
-            name: vm-demo-rootdisk
+            name: centos7-fromtemplate-vm-rootdisk
           name: rootdisk
         - dataVolume:
-            name: vm-demo-disk0
+            name: centos7-fromtemplate-vm-disk0
           name: disk0
         - cloudInitNoCloud:
             userData: |

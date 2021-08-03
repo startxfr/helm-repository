@@ -93,28 +93,28 @@ networkpolicy:
 limits: 
   # Enable limitRange default for this project
   enabled: false
-  # Specification of the limitRange ressource
-  rules:  |
-    limits:
-      - type: "Pod"
-        max:
-          cpu: 200m
-          memory: 256Mi
-      - type: "Container"
-        max:
-          cpu: 100m
-          memory: 128Mi
+  # # Specification of the limitRange ressource
+  # rules:  |
+  #   limits:
+  #     - type: "Pod"
+  #       max:
+  #         cpu: 200m
+  #         memory: 256Mi
+  #     - type: "Container"
+  #       max:
+  #         cpu: 100m
+  #         memory: 128Mi
 # Configure quotas for project
 quotas: 
   # Enable quotas default for this project
   enabled: false
-  # Specification of the quotas ressource
-  rules:  |
-    hard:
-      limits.cpu: "400m"
-      limits.memory: "1024Mi"
-      requests.cpu: "400m"
-      requests.memory: "512Mi"
-      persistentvolumeclaims: "0"
-      pods: "4"
-      services: "2"
+  # # Specification of the quotas ressource
+  # rules:  |
+  #   hard:
+  #     limits.cpu: "400m"
+  #     limits.memory: "1024Mi"
+  #     requests.cpu: "400m"
+  #     requests.memory: "512Mi"
+  #     persistentvolumeclaims: "0"
+  #     pods: "4"
+  #     services: "2"
