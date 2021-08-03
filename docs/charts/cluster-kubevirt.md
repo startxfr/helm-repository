@@ -76,3 +76,4 @@ xxxx  to do xxxxxxxx
 | 0.3.481 | 2021-08-03 | Add rhel virtual machine
 | 0.3.482 | 2021-08-03 | Debug new VM
 | 0.3.483 | 2021-08-03 | Debug limitRange for demo
+| 0.3.998 | 2021-08-04 | publish stable update for the full repository
