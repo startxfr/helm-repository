@@ -1,6 +1,6 @@
 {{- if .Values.ocs.enabled -}}
 {{- $root := . -}}
-{{- $namespace := .Values.project.project.name | default "default-ocs" -}}
+{{- $namespace := .Values.project.project.name | default "openshift-storage" -}}
 ---
 kind: StorageCluster
 apiVersion: ocs.openshift.io/v1
@@ -20,19 +20,35 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
     argocd.argoproj.io/sync-wave: "10"
+    uninstall.ocs.openshift.io/cleanup-policy: delete
+    uninstall.ocs.openshift.io/mode: graceful
+  finalizers:
+    - storagecluster.ocs.openshift.io
 spec:
-  version: {{ .Values.ocs.version | default "4.5.2" | quote }}
+  version: {{ .Values.ocs.version | default "4.7.0" | quote }}
+  arbiter: {}
+  encryption:
+    kms: {}
   externalStorage: {}
-  # manageNodes: false
+  managedResources:
+    cephBlockPools: {}
+    cephConfig: {}
+    cephFilesystems: {}
+    cephObjectStoreUsers: {}
+    cephObjectStores: {}
+  nodeTopologies: {}
   storageDeviceSets:
 {{- range .Values.ocs.storage }}
     - name: {{ .name | default "default-deviceset" | quote }}
       replica: {{ int .replicas | default 3 }}
       count: 1
-      placement: {}
-      portable: true
+      config: {}
       resources: {}
+      placement: {}
+      preparePlacement: {}
+      portable: true
       dataPVCTemplate:
+        metadata: {}
         spec:
           accessModes:
             - ReadWriteOnce
