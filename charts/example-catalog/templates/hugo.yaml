@@ -1452,7 +1452,7 @@ spec:
           # Start testing code
           testCodeStart "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)" "$(inputs.params.TEST_SCRIPT)"
     - name: report
-      image: "startx/runner-oc:centos8"
+      image: "quay.io/startx/runner-oc:centos8"
       imagePullPolicy: IfNotPresent
       resources:
         limits:
@@ -1517,7 +1517,7 @@ spec:
         name: pipeline-lib
   steps:
     - name: test
-      image: startx/runner-oc:centos8
+      image: quay.io/startx/runner-oc:centos8
       imagePullPolicy: IfNotPresent
       resources:
         limits:
@@ -1545,7 +1545,7 @@ spec:
           # Start testing code
           testScanApplicationStart "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
     - name: report
-      image: "startx/runner-oc:centos8"
+      image: "quay.io/startx/runner-oc:centos8"
       imagePullPolicy: IfNotPresent
       resources:
         limits:
@@ -1614,7 +1614,7 @@ spec:
         name: pipeline-lib
   steps:
     - name: generate
-      image: startx/fedora:latest
+      image: quay.io/startx/fedora:latest
       imagePullPolicy: IfNotPresent
       resources:
         limits:
@@ -1642,7 +1642,7 @@ spec:
           # Report test result
           reportGenerate "$(inputs.params.COMPONENT_NAME)" "$(inputs.params.APP_NAME)"
     - name: notify
-      image: startx/runner-oc:centos8
+      image: quay.io/startx/runner-oc:centos8
       imagePullPolicy: IfNotPresent
       resources:
         limits:
