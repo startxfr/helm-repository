@@ -92,3 +92,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 0.3.443 | 2021-07-27 | Update the metering operator to version 4.7.0-202107141046
 | 0.3.480 | 2021-08-03 | publish stable update for the full repository
 | 0.3.998 | 2021-08-04 | publish stable update for the full repository
+| 0.3.999 | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13
