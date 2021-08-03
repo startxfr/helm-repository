@@ -73,3 +73,4 @@ xxxx  to do xxxxxxxx
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
 | 0.3.441 | 2021-07-27 | Update the kubevirt operator to version 2.6.5
 | 0.3.480 | 2021-08-03 | publish stable update for the full repository
+| 0.3.481 | 2021-08-03 | Add rhel virtual machine
