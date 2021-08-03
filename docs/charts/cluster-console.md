@@ -88,3 +88,4 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 | 0.3.390 | 2021-06-12 | Prepare 0.4.0 release
 | 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
 | 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
+| 0.3.480 | 2021-08-03 | publish stable update for the full repository
