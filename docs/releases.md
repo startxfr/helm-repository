@@ -16,19 +16,19 @@ test are OK.
 
 ## Release rules
 
-- Major releases defined by startx strategy (driven by technology improvments : helm, OCP)
-- Minor releases defined by cross-chart, startx's driven roadmap and minor OCP release
+- Major releases defined by openshift minor change under the 4.x release
+- Minor releases defined by openshift patch change under the 4.x.x release
 - Patch releases defined by technical issues related to charts
 - pre-release defined as part of major and minor release lifecycle
 - build release used only during dev, test, build CI operations
 
 ## Examples
 
-- major release : `0.1.17` to `1.0.0`
-- minor release : `1.0.0` to `1.1.0`
-- patch release : `1.1.0` to `1.1.1`
-- pre-release : `1.1.1` to `1.1.2-alpha`
-- build release : `1.1.2+20200313144700` or `1.1.2-alpha+20200313144700`
+- major release : `7.22.1` to `8.2.0`
+- minor release : `8.2.0` to `8.3.1`
+- patch release : `8.3.0` to `8.3.3`
+- pre-release : `8.3.4` to `8.3.5-alpha`
+- build release : `8.3.6+20210813144700` or `8.3.6-alpha+20210813144700`
 
 ## Link with Openshift lifecycle
 
