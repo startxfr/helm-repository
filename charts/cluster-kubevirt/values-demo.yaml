@@ -50,8 +50,8 @@ project:
             memory: "9000Mi"
         - type: "Container"
           default:
-            cpu: 1
-            memory: "1024Mi"
+            cpu: "100m"
+            memory: "128Mi"
           defaultRequest:
             cpu: "200m"
             memory: "256Mi"
@@ -59,8 +59,21 @@ project:
             cpu: "10m"
             memory: "10Mi"
           max:
-            cpu: 4
-            memory: "8192Mi"
+            cpu: "500m"
+            memory: "512Mi"
+        # - type: "VirtualMachine"
+        #   default:
+        #     cpu: "500m"
+        #     memory: "512Mi"
+        #   defaultRequest:
+        #     cpu: "200m"
+        #     memory: "256Mi"
+        #   min:
+        #     cpu: "10m"
+        #     memory: "10Mi"
+        #   max:
+        #     cpu: 4
+        #     memory: "8192Mi"
   quotas: 
     enabled: true
     rules: |
@@ -141,6 +154,37 @@ hyperconvergedCluster:
 vms:
   enabled: true
   list: 
+    - name: "startx-demo-rhel8-vm"
+      namespace: "demo-kubevirt"
+      hostname: "startx-demo-rhel8-vm.local"
+      os: 
+        name: "RHEL 8"
+        signature: "rhel8.0"
+        image: "https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?client_id=rh-product-eval&redirect_uri=https%3A%2F%2Fwww.redhat.com%2Fen%2Ftechnologies%2Flinux-platforms%2Fenterprise-linux%2Ftry-it%2Fsuccess-server&state=24f7a53b-3094-4f54-8fb1-7edf1347eb7b&response_mode=fragment&response_type=code&scope=openid&nonce=ccc92ec8-9b40-44a7-b6fe-7ee48eba8fd2"
+      storage:
+        boot_size: 15G
+        boot_storageclass: aws-generic-delete
+        disks: 
+        - name: disk0
+          storageclass: aws-generic-delete
+          size: 10G
+          boot_order: 3
+      cloudInit: |
+        #cloud-config
+        name: rhel8
+        hostname: "rhel8-vm.local"
+        ssh_authorized_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
+        users:
+          - name: admin
+            primary_group: root
+            lock_passwd: false
+            # admin user password is : secretdemerde
+            passwd: $6$rounds=4096$JnxzALRiq8YtBpUS$G5eFZCw1Ega9r7hbSxeE74WRzsUjfwG/mhbmSUhQNhLnzNPnaOZOQ7zlogCqwYzvYRSU223Py3SGwEksWX4zJ/
+            sudo: ALL=(ALL) NOPASSWD:ALL
+            ssh_authorized_keys:
+              - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWDlg68Uc8j5qBA4OYfxvlMc2nSmL6cb8esoy+cPFeIstafJfza1G+Q5wiMf8QBNqWHi03hnoFaElI148thiwwd9fLIz7KQ+lSk7UQAlkZ4AH5L9B+NkUzydhccNT/xNEqO7M/JwMYDS96iyr3NnbYyiDJg+OOCO5l1ebhA2b0XzFOaNeEGbDizb7QLADg6mbcgnaLhb17nI7G90fJE1jJymX1Q/aQFQqcZrv7jA5lvxAoxHW0llTGnF8IpsOoQT9pbVZxoxUJgR9dc7uIKyZcXo6UKw9pkoA3wzsutv6aLTKaG2SwOxNDJxBx98C4XURMUr0dU5vHCTbhPNZYTZIjhPauPxyy2ud0kLUImXFlz7dnNThOfZFp0dSMAx+8s9E0dVzbjqurILsPNLKP4Zjkk13KtWh6qI6VhdiXKOTpokkAFenV5d2hwP0WwL9MOU297u3i1XpS9FdrJZgQH5M1Dp9/fwSYcwbSFbj7f3qZ3NGvaM6VqfW6o6iMPWEkKYo36P0OrkuYsgMRr4w25IUAXI00mzYzN1D7T1nkMIX4JGlemh065536/z8MeKPoFhmRVqlAykJDXEvfNef0m8DjwxnroGQmre/4ewyif0q0I7K+Aj/xjSEqO+MLuNMUXJCWi08uzM0v+YSsJkADKmJH2kWPjrA4sbsAn0c8EDPDJQ== dev@startx.fr
+            ssh_import_id: None
     - name: "startx-demo-centos7-vm"
       namespace: "demo-kubevirt"
       hostname: "startx-demo-centos7-vm.local"
@@ -150,10 +194,10 @@ vms:
         image: "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2"
       storage:
         boot_size: 15G
-        boot_storageclass: ocs-generic-delete
+        boot_storageclass: aws-generic-delete
         disks: 
         - name: disk0
-          storageclass: ocs-generic-delete
+          storageclass: aws-generic-delete
           size: 10G
           boot_order: 3
       cloudInit: |
