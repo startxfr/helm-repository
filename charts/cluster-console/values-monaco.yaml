@@ -1,0 +1,53 @@
+# Default values for configuration of a monaco cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: monaco
+  cluster: monaco
+  environment: default
+  component: console
+  app: startx-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: monaco Console
+    logo: 
+      name: monaco-logo
+      tplFile: webtpl/monaco-logo.svg
+  links:
+  - name: monaco-link-all-namespaces-dashboard
+    spec: |
+      href: 'https://www.monacocloud.mc'
+      location: NamespaceDashboard
+      text: monaco website
+  - name: monaco-consolelink-application-menu
+    spec: |
+      href: 'https://www.monacocloud.mc'
+      location: ApplicationMenu
+      text: monaco website
+      # applicationMenu:
+      #   section: monaco Content
+      #   imageURL: https://www.monacocloud.mc/images/logo.monaco.24x24.png
+  - name: monacogit-consolelink-application-menu
+    spec: |
+      href: 'https://github.com/monacocloud'
+      location: ApplicationMenu
+      text: monacoCloud Github
+      # applicationMenu:
+      #   section: monaco Content
+      #   imageURL: https://www.n9ws.com/images/upload/github-040618081035.png
+  - name: monacogit-consolelink-help-menu
+    spec: |
+      href: 'https://github.com/monacocloud'
+      location: HelpMenu
+      text: monacoCloud Github
+      # HelpMenu:
+      #   section: monaco help
+  notifications:
+  - name: monaco-console-notification-top
+    spec: |
+      backgroundColor: 'green'
+      color: '#fff'
+      location: BannerTop 
+      text: Vous etes sur le cluster de demo de monacoCloud
