@@ -7,7 +7,7 @@ SHARED_NAME=_sample_
 SHARED_SAMPLE=_tools/$SHARED_NAME
 SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
 REPO_PACKAGE_DIR=docs/packages
-WORK_BRANCH=master
+WORK_BRANCH=stable
 MASTER_BRANCH=master
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
@@ -321,7 +321,7 @@ function routerChartPublish {
     local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
     local current_release=$(chartReadVersion $chart_name)
     local branch_current="master"
-    local branch_target="master"
+    local branch_target="stable"
     if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
         branch_current="$BRANCH_NAME"
     fi
