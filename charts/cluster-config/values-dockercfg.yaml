@@ -1,0 +1,50 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context:  &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: config
+  app: startx
+
+autoscaling:
+  enabled: false
+clusterversion:
+  enabled: false
+alertmanager:
+  enabled: false
+imageprunner:
+  enabled: false
+registryroute:
+  enabled: false
+projecttemplate:
+  enabled: false
+redhat:
+  operators: false
+helm_reposistory:
+  enabled: false
+dockercfg:
+  enabled: true
+  list: 
+    - name: startx-registrycreds-quay
+      registry: quay.io
+      username: startx
+      password: xxxx
+      email: "dev@startx.fr"
+    - name: startx-registrycreds-docker
+      registry: dockerhub.io
+      username: startxfr
+      password: xxxx
+      email: "dev@startx.fr"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
+  enabled: false
+
+# Configuration of the globals operators (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorGlobal:
+  enabled: false
