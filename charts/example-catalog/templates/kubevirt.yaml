@@ -127,8 +127,10 @@ objects:
                   disk:
                     bus: virtio
             resources:
+              limits:
+                memory: 1200Mi
               requests:
-                memory: 2Gi
+                memory: 1Gi
           evictionStrategy: LiveMigrate
           terminationGracePeriodSeconds: 0
           networks:
@@ -296,6 +298,8 @@ spec:
         machine:
           type: ''
         resources:
+          limits:
+            memory: 2400Mi
           requests:
             memory: 2Gi
       evictionStrategy: LiveMigrate
