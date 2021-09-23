@@ -65,6 +65,15 @@ alertmanager:
     # API endpoint for receiver
     endpoint: _api_endpoint_
 
+# Configuration of the cluster monitoring feature
+monitoring:
+  # Enable the cluster monitoring personnalisation
+  enabled: false
+  # Define the storage class to use for persistance (default is gp2)
+  storageClass: gp2
+  # Define the storage size to use for persistance (default is 20Gi)
+  storageSize: "20Gi"
+
 # Configuration of the cluster image-prunner feature
 imageprunner:
   # Enable the cluster image-prunner

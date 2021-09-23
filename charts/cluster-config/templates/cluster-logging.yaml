@@ -1,0 +1,37 @@
+{{- if .Values.monitoring.enabled -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-alertmanager-{{- include "startx.appVersion" . -}}"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+data:
+  config.yaml: |
+    prometheus: 
+      retention: 7d
+      resources:
+        requests:
+          cpu: 200m 
+          memory: 2Gi
+    prometheusK8s: 
+      volumeClaimTemplate:
+       spec:
+         storageClassName: {{ default "gp2" .Values.monitoring.storageClass }}
+         volumeMode: Filesystem
+         resources:
+           requests:
+             storage: {{ default "20Gi" .Values.monitoring.storageSize }}
+      externalLabels:
+        {{- include "cluster-config.labels" . | nindent 8 }}
+    alertmanagerMain:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: {{ default "gp2" .Values.monitoring.storageClass }}
+          resources:
+            requests:
+             storage: {{ default "20Gi" .Values.monitoring.storageSize }}
+{{- end -}}
