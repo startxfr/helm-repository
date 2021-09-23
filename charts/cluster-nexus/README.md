@@ -82,3 +82,4 @@ helm install startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/
 | 7.22.5 | 2021-08-05 | publish stable update for the full repository
 | 7.22.6 | 2021-08-05 | Stable version for chart dependencies
 | 7.22.7 | 2021-08-05 | Stable for OCP version 4.7.22
+| 7.22.12 | 2021-09-23 | publish stable update for the full repository
