@@ -26,7 +26,9 @@ data:
            requests:
              storage: {{ default "20Gi" .Values.monitoring.storageSize }}
       externalLabels:
-        {{- include "cluster-config.labels" . | nindent 8 }}
+        scope: {{ include "startx.appScope" . | quote }}
+        cluster: {{ include "startx.appCluster" . | quote }}
+        environment: {{ include "startx.appEnvironment" . | quote }}
     alertmanagerMain:
       volumeClaimTemplate:
         spec:
