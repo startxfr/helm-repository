@@ -28,11 +28,11 @@ project:
       name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
       role: admin
 operator:
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     hooked: false
     name: "vault-helm"
     namespace: "startx-vault"
@@ -45,7 +45,7 @@ operator:
         name: community-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "startx-vault"
     namespace: "startx-vault"
