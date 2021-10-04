@@ -1,21 +1,21 @@
 
 # Default values for configuration of a dev demo
-# see values.awx for explanation on each params
+# see values.elasticsearch for explanation on each params
 context: &context
   scope: startx
   cluster: default
   environment: demo
-  component: demo-awx
-  app: demo-awx-project
+  component: demo-elasticsearch
+  app: demo-elasticsearch-project
   # version: "0.0.1"  
 enabled: true
 project: 
   enabled: true
   hooked: false
   type: project
-  name: "demo-awx"
-  display_name: "Demo AWX"
-  description: "Demo on Ansible Automation Platform"
+  name: "demo-elasticsearch"
+  display_name: "Demo ELASTICSEARCH"
+  description: "Demo on the ElasticSearch operator"
 rbac: 
   enabled: true
   groups: 
@@ -29,44 +29,49 @@ rbac:
     name: ops
     role: admin
 networkpolicy: 
-  enabled: false
+  enabled: true
+  rules: 
+  - id: deny-all-pods
+    spec: |
+      podSelector: {}
+  - id: manpage-allow-external
+    spec: |
+      podSelector:
+        matchLabels:
+          app: manpage
+      ingress:
+        - {}
 limits: 
   enabled: true
   rules:  |
     limits:
       - type: "Pod"
-        min:
-          cpu: "10m"
-          memory: "32Mi"
-        max:
-          cpu: 3
-          memory: "8Gi"
-      - type: "Container"
-        default:
-          cpu: "500m"
-          memory: "512Mi"
-        defaultRequest:
-          cpu: "200m"
-          memory: "256Mi"
-        min:
-          cpu: "10m"
-          memory: "32Mi"
         max:
           cpu: 2
-          memory: "8Gi"
+          memory: "4Gi"
+      - type: "Container"
+        default:
+          cpu: "250m"
+          memory: "256Mi"
+        defaultRequest:
+          cpu: "100m"
+          memory: "128Mi"
+        max:
+          cpu: 2
+          memory: "4Gi"
 quotas: 
   enabled: true
   rules:  |
     hard:
-      limits.cpu: "8"
-      limits.memory: "16Gi"
-      requests.cpu: "4"
-      requests.memory: "8Gi"
-      requests.storage: "20Gi"
-      persistentvolumeclaims: "4"
-      ephemeral-storage: "10" 
-      gp2.storageclass.storage.k8s.io/requests.storage: "0"
-      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      limits.cpu: "4"
+      limits.memory: "36Gi"
+      requests.cpu: "2"
+      requests.memory: "12Gi"
+      requests.storage: "10Gi"
+      persistentvolumeclaims: "10"
+      ephemeral-storage: "10"
+      gp2.storageclass.storage.k8s.io/requests.storage: "100Gi"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "10"
       aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
       aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
@@ -83,24 +88,24 @@ quotas:
       ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "20Gi"
-      ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
+      ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      pods: "10"
-      services: "10"
+      pods: "30"
+      services: "40"
       services.loadbalancers: "0"
-      services.nodeports: "0"
-      secrets: "50"
-      configmaps: "10"
-      replicationcontrollers: "0"
-      openshift.io/imagestreams: "0"
-      count/statefulsets.apps: "2"
-      count/replicasets.apps: "14"
-      count/deployments.apps: "7"
-
-
+      services.nodeports: "10"
+      secrets: "40"
+      configmaps: "40"
+      replicationcontrollers: "10"
+      openshift.io/imagestreams: "10"
+      count/replicasets.apps: "10"
+      count/daemonsets.apps: "0"
+      count/deployments.apps: "10"
