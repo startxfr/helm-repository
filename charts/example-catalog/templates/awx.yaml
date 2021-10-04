@@ -16,10 +16,11 @@ metadata:
   name: tower
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "tower-sa"
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
+
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
@@ -27,26 +28,27 @@ metadata:
   name: tower-scc
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "tower-scc-role"
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
     resourceNames: ["privileged"]
     verbs: ["use"]
- ---
+
+---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: tower-scc
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "tower-scc-rb"
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: tower
@@ -61,10 +63,10 @@ metadata:
   name: "ansible-automation-platform"
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "default-operatorgroup"
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
     olm.providedAPIs: >-
       AnsibleJob.v1alpha1.tower.ansible.com,AutomationController.v1beta1.automationcontroller.ansible.com,AutomationControllerBackup.v1beta1.automationcontroller.ansible.com,AutomationControllerRestore.v1beta1.automationcontroller.ansible.com,AutomationHub.v1beta1.automationhub.ansible.com,AutomationHubBackup.v1beta1.automationhub.ansible.com,AutomationHubRestore.v1beta1.automationhub.ansible.com,JobTemplate.v1alpha1.tower.ansible.com
     helm.sh/hook: pre-install,pre-upgrade
@@ -83,11 +85,11 @@ metadata:
   name: "ansible-automation-platform-operator"
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "ansible-automation-platform-operator-subscription"
     operators.coreos.com/ansible-automation-platform-operator.demo-awx: ''
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-5"
     helm.sh/hook-delete-policy: hook-failed
@@ -108,10 +110,10 @@ metadata:
   name: "tower-admin-password"
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "tower-admin-password-secret"
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
 type: Opaque
 stringData:
   password: secretdemerde
@@ -122,10 +124,10 @@ metadata:
   name: tower
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "tower-automationcontroller"
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
   replicas: 1
   admin_user: admin
@@ -146,10 +148,10 @@ metadata:
   name: hub
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "hub-automationhub"
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
   ingress_type: Route
   route_tls_termination_mechanism: Edge
@@ -179,10 +181,10 @@ metadata:
   name: tower-back
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    {{- include "operator.labels" . | nindent 4 }}
+    {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "tower-back-automationcontrollerbackup"
   annotations:
-    {{- include "operator.annotations" . | nindent 4 }}
+    {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
   deployment_name: tower
 
