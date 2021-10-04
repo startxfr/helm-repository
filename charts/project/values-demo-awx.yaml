@@ -15,7 +15,7 @@ project:
   type: project
   name: "demo-awx"
   display_name: "Demo AWX"
-  description: "Demo on AWX Automation management"
+  description: "Demo on Ansible Automation Platform"
 rbac: 
   enabled: true
   groups: 
@@ -29,18 +29,7 @@ rbac:
     name: ops
     role: admin
 networkpolicy: 
-  enabled: true
-  rules: 
-  - id: deny-all-pods
-    spec: |
-      podSelector: {}
-  - id: manpage-allow-external
-    spec: |
-      podSelector:
-        matchLabels:
-          app: manpage
-      ingress:
-        - {}
+  enabled: false
 limits: 
   enabled: true
   rules:  |
@@ -50,8 +39,8 @@ limits:
           cpu: "10m"
           memory: "32Mi"
         max:
-          cpu: 2
-          memory: "4Gi"
+          cpu: 3
+          memory: "8Gi"
       - type: "Container"
         default:
           cpu: "500m"
@@ -64,7 +53,7 @@ limits:
           memory: "32Mi"
         max:
           cpu: 2
-          memory: "4Gi"
+          memory: "8Gi"
 quotas: 
   enabled: true
   rules:  |
@@ -73,15 +62,15 @@ quotas:
       limits.memory: "16Gi"
       requests.cpu: "4"
       requests.memory: "8Gi"
-      requests.storage: "10Gi"
-      persistentvolumeclaims: "5"
-      ephemeral-storage: "0" 
-      gp2.storageclass.storage.k8s.io/requests.storage: "20Gi"
-      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
+      requests.storage: "20Gi"
+      persistentvolumeclaims: "4"
+      ephemeral-storage: "10" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
       aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "20Gi"
-      aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
+      aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
       aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
@@ -94,22 +83,24 @@ quotas:
       ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
-      ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "20Gi"
+      ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
       ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      pods: "6"
-      services: "6"
+      pods: "10"
+      services: "10"
       services.loadbalancers: "0"
       services.nodeports: "0"
-      secrets: "30"
-      configmaps: "5"
+      secrets: "50"
+      configmaps: "10"
       replicationcontrollers: "0"
       openshift.io/imagestreams: "0"
-      count/daemonsets.apps: "100"
-      count/replicasets.apps: "5"
-      count/deployments.apps: "5"
+      count/statefulsets.apps: "2"
+      count/replicasets.apps: "14"
+      count/deployments.apps: "7"
+
+
