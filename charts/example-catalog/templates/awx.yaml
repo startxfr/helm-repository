@@ -69,11 +69,7 @@ metadata:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
     olm.providedAPIs: >-
       AnsibleJob.v1alpha1.tower.ansible.com,AutomationController.v1beta1.automationcontroller.ansible.com,AutomationControllerBackup.v1beta1.automationcontroller.ansible.com,AutomationControllerRestore.v1beta1.automationcontroller.ansible.com,AutomationHub.v1beta1.automationhub.ansible.com,AutomationHubBackup.v1beta1.automationhub.ansible.com,AutomationHubRestore.v1beta1.automationhub.ansible.com,JobTemplate.v1alpha1.tower.ansible.com
-    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-6"
-    helm.sh/hook-delete-policy: hook-failed
-    # argocd.argoproj.io/hook: PreSync
-    # argocd.argoproj.io/hook-delete-policy: HookFailed
     argocd.argoproj.io/sync-wave: "-6"
 spec: 
   targetNamespaces:
@@ -90,11 +86,7 @@ metadata:
     operators.coreos.com/ansible-automation-platform-operator.demo-awx: ''
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
-    # helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-5"
-    # helm.sh/hook-delete-policy: hook-failed
-    # argocd.argoproj.io/hook: PreSync
-    # argocd.argoproj.io/hook-delete-policy: HookFailed
     argocd.argoproj.io/sync-wave: "-5"
 spec:
   channel: early-access
