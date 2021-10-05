@@ -141,39 +141,7 @@ spec:
   # projects_use_existing_claim: _No_
   # projects_storage_class: gp2
   # projects_storage_size: 10Gi
-# ---
-# apiVersion: automationhub.ansible.com/v1beta1
-# kind: AutomationHub
-# metadata:
-#   name: hub
-#   namespace: {{ $namespace | default "default" | quote }}
-#   labels:
-#     {{- include "example-catalog.labels" $root | nindent 4 }}
-#     app.kubernetes.io/name: "hub-automationhub"
-#   annotations:
-#     {{- include "example-catalog.annotations" $root | nindent 4 }}
-# spec:
-#   ingress_type: Route
-#   route_tls_termination_mechanism: Edge
-#   loadbalancer_port: 80
-#   loadbalancer_protocol: http
-#   admin_password_secret: tower-admin-password
-#   image_pull_policy: IfNotPresent
-#   storage_type: S3
-#   file_storage_size: 100Gi
-#   file_storage_access_mode: ReadWriteMany
-#   web:
-#     replicas: 1
-#   content:
-#     log_level: INFO
-#     replicas: 2
-#   api:
-#     log_level: INFO
-#     replicas: 1
-#   resource_manager:
-#     replicas: 1
-#   worker:
-#     replicas: 2
+
 ---
 apiVersion: automationcontroller.ansible.com/v1beta1
 kind: AutomationControllerBackup
