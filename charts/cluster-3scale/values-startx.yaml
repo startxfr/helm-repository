@@ -37,6 +37,20 @@ project:
     - id: ops-admin
       name: ops
       role: admin
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: default
+        imagePullSecrets: 
+          - name: startx-registrycreds-redhat
+  dockercfg:
+    enabled: false
+    list: 
+      - name: startx-registrycreds-redhat
+        registry: registry.redhat.io
+        username: myuser
+        password: mypass
+        email: "dev@startx.fr"
   networkpolicy: 
     enabled: true
     rules: 
