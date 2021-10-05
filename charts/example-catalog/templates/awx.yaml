@@ -90,9 +90,9 @@ metadata:
     operators.coreos.com/ansible-automation-platform-operator.demo-awx: ''
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
-    helm.sh/hook: pre-install,pre-upgrade
+    # helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-weight: "-5"
-    helm.sh/hook-delete-policy: hook-failed
+    # helm.sh/hook-delete-policy: hook-failed
     # argocd.argoproj.io/hook: PreSync
     # argocd.argoproj.io/hook-delete-policy: HookFailed
     argocd.argoproj.io/sync-wave: "-5"
