@@ -50,6 +50,20 @@ project:
     enabled: false
   quotas: 
     enabled: false
+  serviceAccounts:
+    enabled: false
+    list: 
+      - name: default
+        imagePullSecrets: 
+          - name: registrycreds-rhn
+  dockercfg:
+    enabled: false
+    list: 
+      - name: registrycreds-rhn
+        registry: registry.redhat.io
+        username: myuser
+        password: mypass
+        email: "my@example.com"
 
 # Configuration of the projectOperator (see https://startxfr.github.io/helm-repository/charts/project)
 projectOperator: 
