@@ -28,6 +28,20 @@ rbac:
   - id: ops
     name: ops
     role: admin
+serviceAccounts:
+  enabled: true
+  list: 
+    - name: default
+      imagePullSecrets: 
+        - name: startx-registrycreds-rhn
+dockercfg:
+  enabled: false
+  list: 
+    - name: startx-registrycreds-rhn
+      registry: registry.redhat.io
+      username: myuser
+      password: mypass
+      email: "dev@startx.fr"
 networkpolicy: 
   enabled: false
   rules: []

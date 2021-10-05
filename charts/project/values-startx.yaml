@@ -8,7 +8,7 @@ context:  &context
   component: example
   app: startx
   # version: "0.0.1"
-enabled: false
+enabled: true
 project: 
   enabled: false
   type: project
@@ -33,6 +33,34 @@ rbac:
   - id: dev
     name: dev
     role: basic-user
+serviceAccounts:
+  enabled: false
+  list: 
+    - name: default
+      imagePullSecrets: 
+        - name: startx-registrycreds-quay
+        - name: startx-registrycreds-docker
+    - name: builder
+      imagePullSecrets:
+        - name: startx-registrycreds-quay
+        - name: startx-registrycreds-docker
+    - name: pipeline
+      imagePullSecrets:
+        - name: startx-registrycreds-quay
+        - name: startx-registrycreds-docker
+dockercfg:
+  enabled: false
+  list: 
+    - name: startx-registrycreds-quay
+      registry: quay.io
+      username: startx
+      password: xxxx
+      email: "dev@startx.fr"
+    - name: startx-registrycreds-docker
+      registry: dockerhub.io
+      username: startxfr
+      password: xxxx
+      email: "dev@startx.fr"
 networkpolicy: 
   enabled: false
   rules: []
