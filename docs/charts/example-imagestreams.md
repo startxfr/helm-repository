@@ -197,3 +197,4 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | 7.22.6 | 2021-08-05 | Stable version for chart dependencies
 | 7.22.7 | 2021-08-05 | Stable for OCP version 4.7.22
 | 7.22.12 | 2021-09-23 | publish stable update for the full repository
+| 7.22.21 | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart
