@@ -15,12 +15,7 @@ couchbaseConfig:
   saBackup: 
     enabled: true
     name: couchbase-backup
-  imageCredentials:
-    enabled: true
-    registry: registry.connect.redhat.com
-    username: startx_cl
-    password: 8password
-    email: cl@startx.fr
+  imageCredentialsSecret: startx-registrycreds-rhn
 
 loader:
   enabled: false
@@ -89,6 +84,20 @@ project:
     display_name: "Demo COUCHBASE"
     requester: startx
     description: Demo Couchbase configured by STARTX
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: default
+        imagePullSecrets: 
+          - name: startx-registrycreds-rhn
+  dockercfg:
+    enabled: true
+    list: 
+      - name: startx-registrycreds-rhn
+        registry: registry.connect.redhat.com
+        username: startx_cl
+        password: xxxx
+        email: "cl@startx.fr"
 
 operator:
   enabled: false
