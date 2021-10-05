@@ -42,6 +42,30 @@ project:
     - id: ops-admin
       name: ops
       role: admin
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: default
+        imagePullSecrets: 
+          - name: startx-registrycreds-quay
+          - name: startx-registrycreds-docker
+      - name: deployer
+        imagePullSecrets:
+          - name: startx-registrycreds-quay
+          - name: startx-registrycreds-docker
+  dockercfg:
+    enabled: true
+    list: 
+      - name: startx-registrycreds-quay
+        registry: quay.io
+        username: startx
+        password: xxxx
+        email: "dev@startx.fr"
+      - name: startx-registrycreds-docker
+        registry: dockerhub.io
+        username: startxfr
+        password: xxxx
+        email: "dev@startx.fr"
   networkpolicy: 
     enabled: false
   limits: 
