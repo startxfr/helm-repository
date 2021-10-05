@@ -31,7 +31,7 @@ spec:
         tags: startx,nodejs,httpd
         supports: http
         version: "{{- $env -}}"
-        sampleRepo: https://github.com/startxfr/sxapi-example.git
+        sampleRepo: "https://github.com/startxfr/sxapi-example.git"
     - name: v2
       annotations:
         openshift.io/display-name: "{{- $scope -}} - {{- $component -}} application"
@@ -40,7 +40,7 @@ spec:
         tags: startx,nodejs,httpd
         supports: http
         version: "{{- $env -}}"
-        sampleRepo: https://github.com/startxfr/sxapi-example.git
+        sampleRepo: "https://github.com/startxfr/sxapi-example.git"
     - name: v3
       annotations:
         openshift.io/display-name: "{{- $scope -}} - {{- $component -}} application"
@@ -49,7 +49,7 @@ spec:
         tags: startx,nodejs,httpd
         supports: http
         version: "{{- $env -}}"
-        sampleRepo: https://github.com/startxfr/sxapi-example.git
+        sampleRepo: "https://github.com/startxfr/sxapi-example.git"
 ---
 kind: ImageStream
 apiVersion: image.openshift.io/v1
@@ -275,11 +275,11 @@ spec:
       maxUnavailable: 25%
       maxSurge: 25%
       post:
-	      execNewPod:
+        execNewPod:
           command:
             - "/bin/sx-nodejs"
           args:
-            - info
+            - "info"
           failurePolicy: Ignore
           containerName: application
           env:
@@ -368,8 +368,7 @@ spec:
               mountPath: "/var/log/httpd"
       volumes:
         - name: "app-v1-log"
-          emptyDir:
-            medium: ""
+          emptyDir: {}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
@@ -396,7 +395,7 @@ spec:
       maxUnavailable: 25%
       maxSurge: 25%
       post:
-	      execNewPod:
+        execNewPod:
           command:
             - "/bin/sx-nodejs"
           args:
@@ -710,6 +709,7 @@ spec:
       labels:
         app: "s2i"
         version: "2.0.0"
-        deploymentconfig: "app-v2" 
+        deploymentconfig: "app-v2"
+
 {{- end }}
 {{- end }}{{- end }}{{- end }}
