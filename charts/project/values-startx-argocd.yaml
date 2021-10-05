@@ -6,18 +6,18 @@ context: &context
   cluster: default
   environment: demo
   component: argocd
-  app: demo-argocd
+  app: startx-argocd
   # version: "0.0.1"
 enabled: true
 project: 
-  enabled: true
+  enabled: false
   hooked: false
   type: project
-  name: demo-argocd
-  display_name: Demo ARGOCD
-  description: Various deployment examples deployed via ArgoCD
+  name: startx-argocd
+  display_name: Startx ARGOCD
+  description: STARTX ArgoCD control plane
 rbac: 
-  enabled: true
+  enabled: false
   groups: 
   - id: dev
     name: dev
@@ -28,72 +28,80 @@ rbac:
   - id: ops
     name: ops
     role: admin
-  users: 
-  - id: argocd-controller-sa
-    name: "system:serviceaccount:startx-argocd:argocd-application-controller"
-    role: edit
 serviceAccounts:
   enabled: false
   list: 
     - name: default
       imagePullSecrets: 
+        - name: startx-registrycreds-quay
+        - name: startx-registrycreds-docker
+    - name: argocd-application-controller
+      imagePullSecrets: 
+        - name: startx-registrycreds-quay
         - name: startx-registrycreds-docker
 dockercfg:
   enabled: false
   list: 
+    - name: startx-registrycreds-quay
+      registry: quay.io
+      username: startx
+      password: xxxx
+      email: "dev@startx.fr"
     - name: startx-registrycreds-docker
       registry: docker.io
       username: startxfr
       password: xxxx
       email: "dev@startx.fr"
 networkpolicy: 
-  enabled: true
+  enabled: false
   rules: 
-  - id: deny-all-pods
-    spec: |
-      podSelector: {}
-  - id: manpage-allow-external
+  - id: registry-allow-all-ns
     spec: |
       podSelector:
         matchLabels:
-          app: manpage
+          app: argocd-operator
+          argocd-enterprise-component: app
+          argocd-enterprise-cr: startx
       ingress:
-        - {}
+        - from:
+            - namespaceSelector: {}
 limits: 
-  enabled: true
+  enabled: false
   rules:  |
     limits:
       - type: "Pod"
         min:
-          cpu: "10m"
-          memory: "10Mi"
-        max:
-          cpu: "1400m"
-          memory: "1424Mi"
-      - type: "Container"
-        default:
-          cpu: "500m"
-          memory: "512Mi"
-        defaultRequest:
           cpu: "20m"
           memory: "32Mi"
-        min:
-          cpu: "10m"
-          memory: "10Mi"
         max:
-          cpu: 1
-          memory: "1024Mi"
+          cpu: 6
+          ephemeral-storage: "1Gi"
+          memory: "5Gi"
+      - type: "Container"
+        defaultRequest:
+          cpu: "100m"
+          memory: "128Mi"
+        default:
+          cpu: "200m"
+          memory: "256Mi"
+        min:
+          cpu: "20m"
+          memory: "32Mi"
+        max:
+          cpu: 6
+          ephemeral-storage: "1Gi"
+          memory: "5Gi"
 quotas: 
-  enabled: true
+  enabled: false
   rules:  |
     hard:
-      limits.cpu: "3000m"
-      limits.memory: "3500Mi"
-      requests.cpu: "900m"
-      requests.memory: "1600Mi"
-      requests.storage: "8Gi"
-      persistentvolumeclaims: "8"
-      ephemeral-storage: "0" 
+      limits.cpu: "12000m"
+      limits.memory: "16Gi"
+      requests.cpu: "4000m"
+      requests.memory: "10Gi"
+      requests.storage: "0"
+      persistentvolumeclaims: "0"
+      ephemeral-storage: "10Gi"
       gp2.storageclass.storage.k8s.io/requests.storage: "0Gi"
       gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
@@ -102,12 +110,12 @@ quotas:
       aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
       aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "2Gi"
-      aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+      aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
       aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "6Gi"
-      aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "6"
+      aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
@@ -120,14 +128,14 @@ quotas:
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      pods: "6"
+      pods: "20"
+      services: "20"
       services.loadbalancers: "0"
       services.nodeports: "0"
-      secrets: "20"
-      configmaps: "10"
-      replicationcontrollers: "2"
-      openshift.io/imagestreams: "3"
+      secrets: "75"
+      configmaps: "50"
+      replicationcontrollers: "5"
+      openshift.io/imagestreams: "0"
+      count/replicasets.apps: "40"
       count/daemonsets.apps: "0"
-      count/replicasets.apps: "2"
-      count/deployments.apps: "4"
-      services: "5"
+      count/deployments.apps: "15"
