@@ -118,3 +118,37 @@ quotas:
   #     persistentvolumeclaims: "0"
   #     pods: "4"
   #     services: "2"
+
+# Configure serviceAccounts for project
+serviceAccounts:
+  # Enable serviceAccounts for this project
+  enabled: false
+  # List of the credentials to record
+  list: []
+    #   # Name of the service account (default is default)
+    # - name: default
+    #   # List of the imagePullSecrets to link to this SA
+    #   imagePullSecrets: []
+    #     # Name of the secret with registry credentials
+    #     - name: startx-registrycreds-quay
+    #     # Name of the namespace where the secret reside (default is same project)
+    #     - namespace: default-project
+
+# Configuration of the registry credentials at the project level
+dockercfg:
+  # Enable the project docker credentials
+  enabled: false
+  # List of the credentials to record
+  list: []
+    #   # Name of the credential secret (default is registrycreds)
+    # - name: startx-registrycreds-quay
+    #   # Namespace (default is the context.name)
+    #   namespace: default-project
+    #   # Name of the registry
+    #   registry: quay.io
+    #   # Username to use for authentification
+    #   username: startx
+    #   # Password associated to the user (could be a token)
+    #   password: xxxx
+    #   # email associated to the user 
+    #   email: xxxx
