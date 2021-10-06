@@ -101,3 +101,4 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 | 7.22.21 | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart
 | 7.22.25 | 2021-10-06 | publish stable update for the full repository
 | 7.22.27 | 2021-10-06 | publish stable update for the full repository
+| 8.13.1 | 2021-10-06 | Stable release for OCP 4.8.13 version

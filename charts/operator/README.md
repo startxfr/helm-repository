@@ -190,3 +190,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 7.22.23 | 2021-10-06 | Align basic charts to version 7.22.23
 | 7.22.25 | 2021-10-06 | publish stable update for the full repository
 | 7.22.27 | 2021-10-06 | publish stable update for the full repository
+| 8.13.1 | 2021-10-06 | Stable release for OCP 4.8.13 version
