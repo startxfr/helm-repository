@@ -6,7 +6,7 @@ context: &context
   cluster: default
   environment: demo
   component: demo-3scale
-  app: demo-3scale-project
+  app: demo-3scale
   # version: "0.0.1"  
 enabled: true
 project: 
@@ -28,6 +28,20 @@ rbac:
   - id: ops
     name: ops
     role: admin
+serviceAccounts:
+  enabled: true
+  list: 
+    - name: default
+      imagePullSecrets: 
+        - name: startx-registrycreds-redhat
+dockercfg:
+  enabled: false
+  list: 
+    - name: startx-registrycreds-redhat
+      registry: registry.redhat.io
+      username: myuser
+      password: mypass
+      email: "dev@startx.fr"
 networkpolicy: 
   enabled: false
   rules: []

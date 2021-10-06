@@ -5,7 +5,7 @@ context:  &context
   cluster: default
   environment: infra
   component: config
-  app: startx-config
+  app: startx
 autoscaling:
   enabled: false
 clusterversion:
@@ -22,8 +22,6 @@ redhat:
   operators: false
 helm_reposistory:
   enabled: false
-dockercfg:
-  enabled: false
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -39,7 +37,7 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.1.0-96"
+    version: "5.2.1-5"
     operator: 
       channel: "stable"
       name: elasticsearch-operator

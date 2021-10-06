@@ -5,7 +5,7 @@ context:  &context
   cluster: default
   environment: infra
   component: config
-  app: startx-config
+  app: startx
 
 autoscaling:
   enabled: false
@@ -28,6 +28,10 @@ alertmanager:
   type: pagerDutty
   pagerDutty:
     key: _pager_dutty_startx_key_
+monitoring:
+  enabled: false
+  storageClass: gp2
+  storageSize: "20Gi"
 imageprunner:
   enabled: false
   schedule: "15 * * * *"
@@ -50,38 +54,17 @@ helm_reposistory:
   list: 
   - name: startx
     url: https://startxfr.github.io/helm-repository/packages
-dockercfg:
-  enabled: false
-  list: 
-    - name: startx-registrycreds-quay
-      namespace: startx-config
-      registry: quay.io
-      username: startx
-      password: xxxx
-      email: "dev@startx.fr"
-    - name: startx-registrycreds-docker
-      namespace: startx-config
-      registry: dockerhub.io
-      username: startxfr
-      password: xxxx
-      email: "dev@startx.fr"
-    - name: startx-registrycreds-redhat
-      namespace: startx-config
-      registry: registry.connect.redhat.com
-      username: startx_rhnuser
-      password: startx_rhnpwd
-      email: "username@startx.fr"
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
     enabled: true
     hooked: false
     type: project
-    name: "startx-config"
+    name: "startx"
     display_name: "Startx Config"
     requester: startx
     description: Startx default cluster configuration
@@ -97,6 +80,30 @@ project:
     - id: ops
       name: ops
       role: admin
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: default
+        imagePullSecrets: 
+          - name: startx-registrycreds-quay
+          - name: startx-registrycreds-docker
+      - name: deployer
+        imagePullSecrets:
+          - name: startx-registrycreds-quay
+          - name: startx-registrycreds-docker
+  dockercfg:
+    enabled: true
+    list: 
+      - name: startx-registrycreds-quay
+        registry: quay.io
+        username: startx
+        password: xxxx
+        email: "dev@startx.fr"
+      - name: startx-registrycreds-docker
+        registry: docker.io
+        username: startxfr
+        password: xxxx
+        email: "dev@startx.fr"
   networkpolicy: 
     enabled: true
     rules: 
