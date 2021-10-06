@@ -100,3 +100,4 @@ helm install startx/cluster-knative -f https://raw.githubusercontent.com/startxf
 | 7.22.12 | 2021-09-23 | publish stable update for the full repository
 | 7.22.21 | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart
 | 7.22.25 | 2021-10-06 | publish stable update for the full repository
+| 7.22.27 | 2021-10-06 | publish stable update for the full repository
