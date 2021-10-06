@@ -30,8 +30,22 @@ rbac:
     role: admin
   users: 
   - id: argocd-controller-sa
-    name: system:serviceaccount:startx-argocd:argocd-application-controller
+    name: "system:serviceaccount:startx-argocd:argocd-application-controller"
     role: edit
+serviceAccounts:
+  enabled: false
+  list: 
+    - name: default
+      imagePullSecrets: 
+        - name: startx-registrycreds-docker
+dockercfg:
+  enabled: false
+  list: 
+    - name: startx-registrycreds-docker
+      registry: docker.io
+      username: startxfr
+      password: xxxx
+      email: "dev@startx.fr"
 networkpolicy: 
   enabled: true
   rules: 

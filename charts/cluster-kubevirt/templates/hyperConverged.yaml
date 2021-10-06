@@ -20,11 +20,27 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "10"
 spec:
-  bareMetalPlatform: true
-  infra: {}
-  localStorageClassName: {{ .Values.hyperconvergedCluster.storageClass | default "gp2-csi" | quote }}
-  version: {{ .Values.operator.subscription.version | default "v2.6.5" | quote }}
-  workloads: {}
+  liveMigrationConfig:
+    bandwidthPerMigration: 64Mi
+    completionTimeoutPerGiB: 800
+    parallelMigrationsPerCluster: 5
+    parallelOutboundMigrationsPerNode: 2
+    progressTimeout: 150
+  certConfig:
+    ca:
+      duration: 48h0m0s
+      renewBefore: 24h0m0s
+    server:
+      duration: 24h0m0s
+      renewBefore: 12h0m0s
+  featureGates:
+    sriovLiveMigration: false
+    withHostPassthroughCPU: false
+  # bareMetalPlatform: true
+  # infra: {}
+  # localStorageClassName: {{ .Values.hyperconvergedCluster.storageClass | default "gp2-csi" | quote }}
+  # version: {{ .Values.operator.subscription.version | default "v2.6.5" | quote }}
+  # workloads: {}
 {{- end }}{{- end }}
 
 

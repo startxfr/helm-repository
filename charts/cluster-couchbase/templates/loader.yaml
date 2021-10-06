@@ -22,11 +22,11 @@ spec:
 {{- $sa := $root.Values.couchbaseConfig.saPods.name | default "couchbase-pods" }}
   serviceAccountName: "{{- $sa -}}"
   serviceAccount: "{{- $sa -}}"
-{{- end -}}{{- end }}
-{{- if $root.Values.couchbaseConfig.imageCredentials -}}{{- if $root.Values.couchbaseConfig.imageCredentials.enabled }}
+{{- end -}}{{- end }} 
+{{- if $root.Values.couchbaseConfig.imageCredentialsSecret -}}
   imagePullSecrets:
-    - name: "{{- $ns -}}-rhn"
-{{- end -}}{{- end }}
+    - name: "{{- $root.Values.couchbaseConfig.imageCredentialsSecret -}}"
+{{- end }}
   securityContext:
     runAsUser: 1000
     runAsNonRoot: true

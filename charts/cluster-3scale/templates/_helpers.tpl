@@ -19,7 +19,4 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- if .manager }}{{- if .manager.enabled }}
       manager : enabled
 {{- end }}{{- end }}
-{{- if .rhn }}{{- if .rhn.enabled }}
-          RHN : enabled with user {{- .rhn.user }}
-{{- end }}{{- end }}
 {{- end -}}
