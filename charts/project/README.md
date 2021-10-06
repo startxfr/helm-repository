@@ -248,3 +248,5 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 7.22.12 | 2021-09-23 | publish stable update for the full repository
 | 7.22.15 | 2021-10-05 | Add support for ServicdAccount and ImagePullSecret management
 | 7.22.21 | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart
+| 7.22.23 | 2021-10-06 | Debug the imagePullSecret namespace
+| 7.22.25 | 2021-10-06 | publish stable update for the full repository

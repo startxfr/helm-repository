@@ -17,16 +17,13 @@ metadata:
     app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-dockercfg-{{- include "startx.appVersion" $root -}}"
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
-    template.openshift.io/expose-registry: "{.data['registry']}"
-    template.openshift.io/expose-username: "{.data['username']}"
-    template.openshift.io/expose-email: "{.data['email']}"
+    template.openshift.io/expose-registry: "{{- .registry | default "docker.io" -}}"
+    template.openshift.io/expose-username: "{{- .username | default "username" -}}"
+    template.openshift.io/expose-email: "{{- .email | default "mail@example.com" -}}"
+    template.openshift.io/expose-password: "{{- .password | default "password" -}}"
     template.openshift.io/base64-expose-dockerconfig: "{.data['\\.dockerconfigjson']}"
 stringData:
   .dockerconfigjson: "{{ include "imagePullSecret" . | replace "\"" "\\\"" }}"
-  registry: "{{- .registry | default "dockerhub.io" -}}"
-  username: "{{- .username | default "username" -}}"
-  password: "{{- .password | default "password" -}}"
-  email: "{{- .email | default "mail@example.com" -}}"
 
 {{ end }}
 {{- end -}}{{- end -}}{{- end }}
