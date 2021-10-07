@@ -128,12 +128,48 @@ spec:
   garbage_collect_secrets: false
   ingress_type: Route
   route_tls_termination_mechanism: Edge
+  service_type: ClusterIP
   image_pull_policy: IfNotPresent
+  development_mode: true
   projects_persistence: false
   # projects_use_existing_claim: _No_
   # projects_storage_class: gp2
   # projects_storage_size: 10Gi
-
+  # ee_resource_requirements:
+  #   limits:
+  #     cpu: 500m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 250m
+  #     memory: 256Mi
+  # task_resource_requirements:
+  #   limits:
+  #     cpu: 500m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 250m
+  #     memory: 256Mi
+  # web_resource_requirements:
+  #   limits:
+  #     cpu: 500m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 250m
+  #     memory: 256Mi
+  # postgres_storage_requirements:
+  #   limits:
+  #     cpu: 500m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 250m
+  #     memory: 256Mi
+  # postgres_resource_requirements:
+  #   limits:
+  #     cpu: 500m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 250m
+  #     memory: 256Mi
 ---
 apiVersion: automationcontroller.ansible.com/v1beta1
 kind: AutomationControllerBackup
