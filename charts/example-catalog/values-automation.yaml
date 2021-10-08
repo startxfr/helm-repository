@@ -1,18 +1,18 @@
 
 # Default values for configuration of a dev demo
 # see values.yaml for explanation on each params
-nameOverride: example-catalog-awx
+nameOverride: example-catalog-automation
 versionOverride: "0.0.2"
 context: &context
   scope: startx
   cluster: default
   environment: dev
   component: helm
-  app: example-catalog-awx
+  app: example-catalog-automation
   version: "0.0.2"
 
 demo:
-  awx: 
+  automation: 
     <<: *context
     enabled: true 
-    namespace: demo-awx
+    namespace: demo-automation
