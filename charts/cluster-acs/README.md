@@ -25,3 +25,4 @@ helm install startx/cluster-acs
 | Release | Date       | Description                                                                  |
 | ------- | ---------- | ---------------------------------------------------------------------------- |
 | 8.13.1 | 2021-10-06 | Stable release for OCP 4.8.13 version
+| 8.13.3 | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart
