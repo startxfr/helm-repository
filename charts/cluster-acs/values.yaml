@@ -1,0 +1,83 @@
+# Default values for cluster-acs.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-acs
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# configuration of the acs service
+acs:
+  # Enable the deployment of the acs service
+  enabled: true
+  # configuration of the multi-cluster Hub
+  central:
+    # Enable the deployment of the reporting-operator service
+    enabled: true
+    # Activate the manager as a helm hook
+    hooked: true
+    # name of the central deployment
+    name: "default"
+  # configuration of the scanner service
+  scanner:
+      # Enable the deployment of the scanner service
+      enabled: true
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "open-security-management"
+    display_name: Operator ACS
+    description: ACS operators configured by startx
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "rhacs-operator"
+    namespace: "open-security-management"
+    version: "v3.65.1"
+    operator: 
+      channel: "latest"
+      name: rhacs-operator
+      csv: rhacs-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "rhacs-operator"
+    namespace: "open-security-management"
+    providedAPIs: " Central.v1alpha1.platform.stackrox.io,SecuredCluster.v1alpha1.platform.stackrox.io"

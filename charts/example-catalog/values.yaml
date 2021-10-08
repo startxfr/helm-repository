@@ -74,10 +74,13 @@ demo:
     <<: *context
     enabled: false 
     namespace: demo-elastic 
-  awx: 
+  automation: 
     <<: *context
     enabled: false 
-    namespace: demo-awx 
+    enabledOperator: true 
+    enabledController: true 
+    enabledBackup: false 
+    namespace: demo-automation 
   kubevirt: 
     <<: *context
     enabled: false 

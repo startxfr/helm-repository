@@ -104,3 +104,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 7.22.25 | 2021-10-06 | publish stable update for the full repository
 | 7.22.27 | 2021-10-06 | publish stable update for the full repository
 | 8.13.1 | 2021-10-06 | Stable release for OCP 4.8.13 version
+| 8.13.3 | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart
