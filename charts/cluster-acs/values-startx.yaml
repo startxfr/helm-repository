@@ -5,7 +5,7 @@ context: &context
   cluster: default
   environment: infra
   component: acs
-  app: openshift-acs
+  app: startx-acs
 acs:
   enabled: true
   central:
@@ -50,7 +50,7 @@ operator:
   subscription:
     enabled: true
     name: "rhacs-operator"
-    namespace: "startx-acs"
+    namespace: "openshift-operators"
     version: "v3.65.1"
     operator: 
       channel: "latest"
@@ -61,6 +61,7 @@ operator:
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
+    target: "all-ns"
     name: "rhacs-operator"
-    namespace: "startx-acs"
+    namespace: "openshift-operators"
     providedAPIs: " Central.v1alpha1.platform.stackrox.io,SecuredCluster.v1alpha1.platform.stackrox.io"
