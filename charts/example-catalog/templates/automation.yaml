@@ -9,7 +9,7 @@
 {{- $version := .version | default $root.Values.context.version -}}
 {{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
 
-{{- if .Values.demo.automation.enabledOperator -}}
+{{- if .enabledOperator -}}
 ---
 kind: ServiceAccount
 apiVersion: v1
@@ -97,7 +97,7 @@ spec:
   sourceNamespace: openshift-marketplace
   startingCSV: ansible-automation-platform-operator.v2.0.1-0.1632495515
 {{- end }}
-{{- if .Values.demo.automation.enabledController -}}
+{{- if .enabledController -}}
 ---
 kind: Secret
 apiVersion: v1
@@ -174,7 +174,7 @@ spec:
   #     cpu: 250m
   #     memory: 256Mi
 {{- end }}
-{{- if .Values.demo.automation.enabledBackup -}}
+{{- if .enabledBackup -}}
 ---
 apiVersion: automationcontroller.ansible.com/v1beta1
 kind: AutomationControllerBackup
