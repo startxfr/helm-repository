@@ -1,0 +1,43 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-acs
+# Description of this Helm chart
+description: Helm chart used to configure Advanced Cluster Manager at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 8.13.1
+# Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 2.2.5
+# Version of Openshift 
+engineVersion: 4.7.22
+# Icon of this helm-chart
+icon: https://startxfr.github.io/helm-repository/img/cluster-acs.svg
+# category associated to this package
+category: cluster
+# tags
+tags: infra,cluster,management,multi-cluster
+# Kube minimum version
+kubeVersion: ">=1.18.0"
+# Keyword list for this chart
+keywords: ["startx","cluster","management","multi-cluster"]
+# STARTX helm chart repository homepage
+home: https://startxfr.github.io/helm-repository
+# Sources and documentation for this chart
+sources:
+  - https://startxfr.github.io/helm-repository/charts/cluster-acs
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-acs
+# Main maintainer contact for this helm chart
+maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
+
+dependencies:
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 7.22.23
+    alias: project
+    # condition: project.enabled
+  - name: operator
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: 7.22.23
+    alias: operator
+    # condition: operator.enabled
