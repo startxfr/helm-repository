@@ -77,7 +77,7 @@ helm install startx/example-couchbase
 Complete deployment of a couchbase demo application for stress test (used in HPA test) with the following characteristics :
 
 - 1 **service** named **hpa-app** load balancing to pod deployed
-- 1 **deployment** named **hpa-app** deploying **2 pod** from version **alpine3** couchbase image running with debug disabled
+- 1 **deployment** named **hpa-app** deploying **2 pod** from version **fc35** couchbase image running with debug disabled
 - 2 **configMap** holding couchbase configuration and pod environment variable context
 
 ```bash
@@ -116,3 +116,5 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 | 8.13.1 | 2021-10-06 | Stable release for OCP 4.8.13 version
 | 8.13.3 | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart
 | 8.13.5 | 2021-10-21 | publish stable update for the full repository
+| 8.13.6 | 2021-10-21 | Move default image to fc35 flavour
+| 8.13.7 | 2021-10-21 | publish stable update for the full repository
