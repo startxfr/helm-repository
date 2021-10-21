@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "properties": {
+                "app": {
+                    "type": "string"
+                },
+                "cluster": {
+                    "type": "string"
+                },
+                "component": {
+                    "type": "string"
+                },
+                "environment": {
+                    "type": "string"
+                },
+                "scope": {
+                    "type": "string"
+                }
+            }
+        },
+        "knativeServing": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "displayName": {
+                                "type": "string"
+                            },
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "spec": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
