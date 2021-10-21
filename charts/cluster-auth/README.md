@@ -108,3 +108,4 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 8.13.3 | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart
 | 8.13.5 | 2021-10-21 | publish stable update for the full repository
 | 8.13.7 | 2021-10-21 | publish stable update for the full repository
+| 8.13.8 | 2021-10-21 | Adding first draft of json schema

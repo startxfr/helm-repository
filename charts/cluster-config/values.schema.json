@@ -1,0 +1,355 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "alertmanager": {
+            "type": "object",
+            "properties": {
+                "api": {
+                    "type": "object",
+                    "properties": {
+                        "endpoint": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "pagerDutty": {
+                    "type": "object",
+                    "properties": {
+                        "key": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "receiverName": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "autoscaling": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "max": {
+                    "type": "object",
+                    "properties": {
+                        "cores": {
+                            "type": "integer"
+                        },
+                        "memory": {
+                            "type": "integer"
+                        },
+                        "nodes": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "min": {
+                    "type": "object",
+                    "properties": {
+                        "cores": {
+                            "type": "integer"
+                        },
+                        "memory": {
+                            "type": "integer"
+                        },
+                        "nodes": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "scaleDown": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "clusterversion": {
+            "type": "object",
+            "properties": {
+                "channel": {
+                    "type": "string"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "version": {
+                    "type": "number"
+                }
+            }
+        },
+        "context": {
+            "type": "object",
+            "properties": {
+                "app": {
+                    "type": "string"
+                },
+                "cluster": {
+                    "type": "string"
+                },
+                "component": {
+                    "type": "string"
+                },
+                "environment": {
+                    "type": "string"
+                },
+                "scope": {
+                    "type": "string"
+                }
+            }
+        },
+        "helm_reposistory": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "list": {
+                    "type": "array"
+                }
+            }
+        },
+        "imageprunner": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "history": {
+                    "type": "object",
+                    "properties": {
+                        "failed": {
+                            "type": "integer"
+                        },
+                        "successful": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "schedule": {
+                    "type": "string"
+                },
+                "suspend": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "monitoring": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "storageClass": {
+                    "type": "string"
+                },
+                "storageSize": {
+                    "type": "string"
+                }
+            }
+        },
+        "operatorElastic": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "providedAPIs": {
+                            "type": "string"
+                        },
+                        "target": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "properties": {
+                                "channel": {
+                                    "type": "string"
+                                },
+                                "csv": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "namespace": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "project": {
+                    "type": "object",
+                    "properties": {
+                        "description": {
+                            "type": "string"
+                        },
+                        "display_name": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "requester": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "projecttemplate": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "networkpolicy": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "rbac": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "redhat": {
+            "type": "object",
+            "properties": {
+                "operators": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "registryroute": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
