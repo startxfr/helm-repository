@@ -52,7 +52,7 @@ helm install startx/sxapi
 | Key                   | Default    | Description                                           |
 | --------------------- | ---------- | ----------------------------------------------------- |
 | sxapi.service.enabled | false      | Enable service for this application                   |
-| sxapi.version         | 0.3.57     | Sxapi image version to run                            |
+| sxapi.version         | 0.3.58     | Sxapi image version to run                            |
 | sxapi.profile         | prod:start | Profile to run inside the container                   |
 | sxapi.debug           | true       | Enable debuging of the container                      |
 | sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
@@ -65,7 +65,7 @@ helm install startx/sxapi
 Complete deployment of a project with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.57** sxapi image running the **prod:start** command with debug disabled
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with debug disabled
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
@@ -78,7 +78,7 @@ helm install startx/sxapi
 Complete deployment of a project with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.57** sxapi image running the **dev:start** command with debug enabled
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **dev:start** command with debug enabled
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
@@ -153,3 +153,5 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 8.13.7 | 2021-10-21 | publish stable update for the full repository
 | 8.13.8 | 2021-10-21 | Adding first draft of json schema
 | 8.13.9 | 2021-10-22 | Adding the schema in chart
+| 8.13.9 | 2021-10-22 | Improve artfifacthub annotation
+| 8.13.10 | 2021-10-22 | Improve artfifacthub annotation
