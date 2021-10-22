@@ -119,3 +119,4 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 | 8.13.6 | 2021-10-21 | Move default image to fc35 flavour
 | 8.13.7 | 2021-10-21 | publish stable update for the full repository
 | 8.13.8 | 2021-10-21 | Adding first draft of json schema
+| 8.13.9 | 2021-10-22 | Adding the schema in chart
