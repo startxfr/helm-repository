@@ -232,3 +232,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 8.13.5 | 2021-10-21 | publish stable update for the full repository
 | 8.13.7 | 2021-10-21 | publish stable update for the full repository
 | 8.13.8 | 2021-10-21 | Adding first draft of json schema
+| 8.13.9 | 2021-10-22 | Adding the schema in chart
