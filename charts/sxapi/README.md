@@ -155,3 +155,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 8.13.9 | 2021-10-22 | Adding the schema in chart
 | 8.13.9 | 2021-10-22 | Improve artfifacthub annotation
 | 8.13.10 | 2021-10-22 | Improve artfifacthub annotation
+| 8.13.13 | 2021-10-30 | Improve the values.schema.json
