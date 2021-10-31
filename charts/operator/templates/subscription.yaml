@@ -1,7 +1,7 @@
 {{- if .Values.enabled }}{{- if .Values.subscription }}{{- if .Values.subscription.enabled }}
 {{- $name := .Values.subscription.name -}}
 {{- $namespace := .Values.subscription.namespace -}}
-{{- $version := .Values.subscription.version -}}
+{{- $version := .Values.subscription.version | default (include "startx.appVersion" .) -}}
 ---
 kind: Subscription
 apiVersion: operators.coreos.com/v1alpha1
