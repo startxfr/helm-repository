@@ -38,7 +38,7 @@ spec:
               value: "true"
           envFrom:
             - configMapRef:
-                name: {{ include "startx.appName" . }}-app
+                name: '{{- include "startx.appName" . -}}-app-{{- include "startx.appVersion" . -}}'
           command: [ "npm" , "run", "{{- .Values.sxapi.profile }}" ]
           ports:
           - containerPort: 8077
@@ -80,7 +80,7 @@ spec:
             medium: ""
         - name: sxapi-deploy-conf
           configMap:
-            name: "{{ include "startx.appName" . }}-lib"
+            name: '{{- include "startx.appName" . -}}-lib-{{- include "startx.appVersion" . -}}'
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
