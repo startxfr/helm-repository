@@ -1,30 +1,30 @@
 
-# Default values for configuration of a dev demo
+# Default values for configuration of a pprod demo
 # see values.yaml for explanation on each params
-nameOverride: sxapi-dev
+nameOverride: sxapi-pprod
 versionOverride: "0.0.2"
 context: 
   scope: startx
   cluster: default
   environment: demo
   component: example
-  app: default-sxapi-dev
-  version: "0.0.2-devel"
+  app: default-sxapi-pprod
+  version: "0.0.2"
 sxapi:
   service:
     enabled: true
   expose:
     enabled: false
-  version: "latest"
-  profile: "dev:start"
-  debug: true
+  version: "0.3.58"
+  profile: "pprod:start"
+  debug: false
   replicas: 1
   data: |
     sxapi.yml: |-
-      name: dev
-      description: Description of the dev sxapi helm chart instance (defined in values-dev.yaml)
-      version: "0.0.2-devel"
-      debug: true
+      name: pprod-v1
+      description: Description of the pre-prod v1 sxapi helm chart instance (defined in values-pprod-v2.yaml)
+      version: "0.0.2"
+      debug: false
       resources:
         serviceinfo-sample:
           _class: serviceinfo
@@ -39,11 +39,11 @@ sxapi:
           desc: Display welcome message (HTML)
           body: |-
               <html>
-              <head><title>Dev application (dev values)</title></head>
+              <head><title>Pre-Prod application (v2 values)</title></head>
               <body>
-                <h1>SXAPI is live ! (helm chart's managed by default values-dev.yaml)</h1>
+                <h1>SXAPI is live ! (helm chart's managed by default values-pprod-v2.yaml)</h1>
                 <p>
-                  This dev environment is deployed using the dev values file of the 
+                  This pre-production environment is deployed using the v2 values file of the 
                   <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
                   available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
                 </p>

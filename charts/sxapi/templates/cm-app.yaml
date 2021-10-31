@@ -2,16 +2,16 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: {{ include "startx.appName" . }}-app
+  name: '{{- include "startx.appName" . -}}-app-{{- include "startx.appVersion" . -}}'
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-app-cm"
     {{- include "sxapi.labels" . | nindent 4 }}
   annotations:
     {{- include "sxapi.annotations" . | nindent 4 }}
 data:
-  SX_ID: {{ include "startx.appName" . }}-app
+  SX_ID: {{ include "startx.appNameVersion" . }}
   SX_TYPE: app
   SX_COMPONENT: {{ include "startx.appComponent" . }}
-  SX_NAME: Startx {{ include "startx.appComponent" . }} application
-  SX_SUMMARY: Startx {{ include "startx.appComponent" . }} application based on apache container
-  SX_VERSION: {{ include "startx.appEnvironment" . }}
+  SX_NAME: '{{ include "startx.appScope" . }} - {{ include "startx.appEnvironment" . }} - {{ include "startx.appComponent" . }} - {{ include "startx.appName" . }}'
+  SX_SUMMARY: 'Application {{ include "startx.appName" . }} part of the {{ include "startx.appComponent" . }} component in the {{ include "startx.appEnvironment" . }} environment, under the {{ include "startx.appScope" . }} scope and running under the {{ include "startx.appCluster" . }} cluster'
+  SX_VERSION: {{ include "startx.appVersion" . }}

@@ -43,7 +43,7 @@ helm install startx/sxapi
 ### 1. Connect to your kubernetes cluster
 
 ```bash
-oc login -t <token> <cluster-url>
+kubectl login -t <token> <cluster-url>
 ```
 
 ### 2. Install the STARTX helm repository
@@ -95,8 +95,15 @@ helm install startx/sxapi
 The [values.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values.yaml) define a deployment with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with debug disabled
-- 2 **configMap** holding sxapi configuration and pod environment variable context
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with :
+  - debug disabled
+  - **/** : homepage with html content
+  - **/health** : health page
+  - **/info** : description of the micro-service
+  - **/ping** : return a pong message
+- 2 **configMap** for application instance configuration
+  - **lib** : Versionned content of the sxapi configuration file and related content
+  - **app** : Environment variable describing the application deployed in version *0.0.1*
 
 ```bash
 # base configuration running default configuration
@@ -108,12 +115,97 @@ helm install startx/sxapi
 The [values-dev.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml) define a deployment with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **dev:start** command with debug enabled
-- 2 **configMap** holding sxapi configuration and pod environment variable context
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **latest** sxapi image running the **dev:start** command with :
+  - debug enabled
+  - **/** : homepage with html content
+  - **/health** : health page
+  - **/info** : description of the micro-service
+  - **/ping** : return a pong message
+- 2 **configMap** for application instance configuration
+  - **lib** : Versionned content of the sxapi configuration file and related content
+  - **app** : Environment variable describing the application deployed in version *0.0.2-devel*
 
 ```bash
 # base configuration running dev configuration
 helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml
+```
+
+### Test values file (values-test.yaml)
+
+The [values-test.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml) define a deployment with the following characteristics :
+
+- 1 **service** named **sxapi** load balancing to pod deployed
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **testing** sxapi image running the **prod:start** command with :
+  - debug enabled
+  - **/** : homepage with html content
+  - **/health** : health page
+  - **/info** : description of the micro-service
+  - **/ping** : return a pong message
+- 2 **configMap** for application instance configuration
+  - **lib** : Versionned content of the sxapi configuration file and related content
+  - **app** : Environment variable describing the application deployed in version *0.0.1-testing*
+
+```bash
+# base configuration running dev configuration
+helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml
+```
+
+### Pre-prod-v1 values file (values-pprod-v1.yaml)
+
+The [values-pprod-v1.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml) define a deployment with the following characteristics :
+
+- 1 **service** named **sxapi** load balancing to pod deployed
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.57** sxapi image running the **prod:start** command with :
+  - debug disabled
+  - **/** : homepage with html content
+  - **/health** : health page
+  - **/info** : description of the micro-service
+- 2 **configMap** for application instance configuration
+  - **lib** : Versionned content of the sxapi configuration file and related content
+  - **app** : Environment variable describing the application deployed in version *0.0.1*
+
+```bash
+# base configuration running dev configuration
+helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml
+```
+
+### Prod-v1 values file (values-prod-v1.yaml)
+
+The [values-prod-v1.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml) define a deployment with the following characteristics :
+
+- 1 **service** named **sxapi** load balancing to pod deployed
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.57** sxapi image running the **prod:start** command with :
+  - debug disabled
+  - **/** : homepage with html content
+  - **/health** : health page
+  - **/info** : description of the micro-service
+- 2 **configMap** for application instance configuration
+  - **lib** : Versionned content of the sxapi configuration file and related content
+  - **app** : Environment variable describing the application deployed in version *0.0.1*
+
+```bash
+# base configuration running dev configuration
+helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml
+```
+
+### Pre-prod-v2 values file (values-pprod-v2.yaml)
+
+The [values-pprod-v2.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml) define a deployment with the following characteristics :
+
+- 1 **service** named **sxapi** load balancing to pod deployed
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with :
+  - debug disabled
+  - **/** : homepage with html content
+  - **/health** : health page
+  - **/info** : description of the micro-service
+  - **/ping** : return a pong message
+- 2 **configMap** for application instance configuration
+  - **lib** : Versionned content of the sxapi configuration file and related content
+  - **app** : Environment variable describing the application deployed in version *0.0.2*
+
+```bash
+# base configuration running dev configuration
+helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml
 ```
 
 ## History
@@ -187,3 +279,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 8.13.10 | 2021-10-22 | Improve artfifacthub annotation
 | 8.13.13 | 2021-10-30 | Improve the values.schema.json
 | 8.13.14 | 2021-10-31 | Adding support for LoadBalancer, NodePort and ingress external access
+| 8.13.15 | 2021-10-31 | Improve ci/cd workflow capactities
