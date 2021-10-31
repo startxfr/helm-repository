@@ -259,3 +259,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 8.13.9 | 2021-10-22 | Adding the schema in chart
 | 8.13.15 | 2021-10-31 | Improve schema[1;5Djson
 | 8.13.16 | 2021-10-31 | Improve schema with all features
+| 8.13.17 | 2021-10-31 | Improve schema with support for all options
