@@ -1,0 +1,19 @@
+{{- if .Values.sxapi -}}{{- if .Values.sxapi.expose -}}{{- if .Values.sxapi.expose.enabled -}}{{- if eq .Values.sxapi.expose.kind "ingress" -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "startx.appName" . }}
+  labels:
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-route"
+    {{- include "sxapi.labels" . | nindent 4 }}
+    app: {{ include "startx.appName" . }}
+  annotations:
+    {{- include "sxapi.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  defaultBackend:
+    service:
+      name: {{ include "startx.appName" . | quote }}
+      port:
+        number: 8077
+{{- end -}}{{- end -}}{{- end -}}{{- end -}}

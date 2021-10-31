@@ -9,4 +9,60 @@ metadata:
   annotations:
     {{- include "sxapi.annotations" . | nindent 4 }}
 data:
+{{- if .Values.sxapi -}}{{- if .Values.sxapi.data -}}
   {{- .Values.sxapi.data | nindent 2 }}
+{{ else }}
+  sxapi.yml: |-
+    name: default
+    description: Description of the default sxapi helm chart instance
+    version: "0.3.58"
+    debug: false
+    server:
+      port: '8077'
+      endpoints:
+      - path: "/"
+        desc: Display default page
+        body: |-
+            <html>
+            <head><title>Helm-Chart sxapi default page</title></head>
+            <body>
+              <h1>Helm-Chart sxapi default page</h1>
+              <p>
+                You can change this page using the {{ include "startx.appName" . }}-lib configMap in your application namespace.
+              </p>
+              <p>
+                You can read the <a href="https://sxapi-core.readthedocs.io/en/latest/guides/2.Configure" target="_blank">sxapi configuration guide</a> 
+                to learn more about sxapi capacity and how to define and enable them into your configMap. 
+              </p>
+            </body>
+            </html>
+{{- end -}}
+{{ else }}
+  sxapi.yml: |-
+    name: default
+    description: Description of the default sxapi helm chart instance
+    version: "0.3.58"
+    debug: false
+    server:
+      port: '8077'
+      endpoints:
+      - path: "/"
+        desc: Display default page
+        body: |-
+            <html>
+            <head><title>Helm-Chart sxapi default page</title></head>
+            <body>
+              <h1>Helm-Chart sxapi default page</h1>
+              <p>
+                You can change this page using the {{ include "startx.appName" . }}-lib configMap in your application namespace.
+              </p>
+              <p>
+                You can read the <a href="https://sxapi-core.readthedocs.io/en/latest/guides/2.Configure" target="_blank">sxapi configuration guide</a> 
+                to learn more about sxapi capacity and how to define and enable them into your configMap. 
+              </p>
+            </body>
+            </html>
+{{- end -}}
+
+
+
