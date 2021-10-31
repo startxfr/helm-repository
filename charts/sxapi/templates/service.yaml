@@ -1,4 +1,4 @@
-{{- if .Values.sxapi.service -}}{{- if .Values.sxapi.service.enabled -}}
+{{- if .Values.sxapi -}}{{- if .Values.sxapi.service -}}{{- if .Values.sxapi.service.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,4 +19,4 @@ spec:
     app: {{ include "startx.appName" . }}
   type: ClusterIP
   sessionAffinity: None
-{{- end -}}{{- end -}}
+{{- end -}}{{- end -}}{{- end -}}

@@ -1,4 +1,4 @@
-{{- if .Values.sxapi.expose -}}{{- if .Values.sxapi.expose.enabled -}}{{- if eq .Values.sxapi.expose.kind "route" -}}
+{{- if .Values.sxapi -}}{{- if .Values.sxapi.expose -}}{{- if .Values.sxapi.expose.enabled -}}{{- if eq .Values.sxapi.expose.kind "route" -}}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -24,4 +24,4 @@ spec:
     termination: edge
     insecureEdgeTerminationPolicy: Allow
   wildcardPolicy: None
-{{- end -}}{{- end -}}{{- end -}}
+{{- end -}}{{- end -}}{{- end -}}{{- end -}}

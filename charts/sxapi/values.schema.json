@@ -2,7 +2,6 @@
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "required": [
-        "context",
         "sxapi"
     ],
     "properties": {
@@ -115,15 +114,24 @@
                         },
                         "kind": {
                             "type": "string",
-                            "enum": ["route", "ingress"],
+                            "enum": ["route", "ingress", "LoadBalancer", "NodePort"],
                             "title": "Provider",
                             "description": "Name of the resource used to expose the application to the outside world.",
-                            "default": "route",
+                            "default": "ingress",
                             "examples": [
                                 "route",
-                                "ingress"
+                                "ingress",
+                                "LoadBalancer",
+                                "NodePort"
                             ]
                         }
+                    },
+                    "required": [
+                        "kind"
+                    ],
+                    "dependentRequired": {
+                        "enabled": ["kind"],
+                        "kind": ["enabled"]
                     }
                 },
                 "profile": {
