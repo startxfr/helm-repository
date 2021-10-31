@@ -18,7 +18,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-project
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.1"
+  version: "0.0.1"
 
 # enable the basic chart globally
 enabled: true
@@ -36,6 +36,7 @@ project:
   # display_name: Example project
   # # Description of the project (only for project)
   # description: This is an default project created via Helm
+
 # Configure RBAC for project
 rbac: 
   # Enable RBAC default for this project
@@ -63,11 +64,12 @@ rbac:
   #   name: myuser_example
   #   # Example user role in this project
   #   role: basic-user
+
 # Configure NetworkPolicy for project
 networkpolicy: 
   # Enable NetworkPolicy default for this project
   enabled: false
-  # # List group to create
+  # List group to create
   # rules: 
   # # allow from external
   # - id: allow-from-openshift-ingress
@@ -89,6 +91,7 @@ networkpolicy:
   #     ingress:
   #     - from:
   #       - podSelector: {}
+
 # Configure limitRange for project
 limits: 
   # Enable limitRange default for this project
@@ -104,12 +107,13 @@ limits:
   #       max:
   #         cpu: 100m
   #         memory: 128Mi
+
 # Configure quotas for project
 quotas: 
   # Enable quotas default for this project
   enabled: false
   # # Specification of the quotas ressource
-  # rules:  |
+  # rules: |
   #   hard:
   #     limits.cpu: "400m"
   #     limits.memory: "1024Mi"
@@ -132,7 +136,7 @@ serviceAccounts:
     #     # Name of the secret with registry credentials
     #     - name: startx-registrycreds-quay
     #     # Name of the namespace where the secret reside (default is same project)
-    #     - namespace: default-project
+    #       namespace: default-project
 
 # Configuration of the registry credentials at the project level
 dockercfg:
