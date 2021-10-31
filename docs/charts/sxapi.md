@@ -1,12 +1,16 @@
-# Basic sxapi
+# SXAPI Helm-chart
 
-This helm chart is used to create a deployment of a small an simple micro-service based on
-sxapi engine running under nodejs engine.
+This helm chart is used to deploy a lightweight micro-service based on
+the [sxapi engine](https://sxapi-core.readthedocs.io). The deployment is exposed into the cluster
+and could be exposed outside by using various exposition method (ingress, route or nodePort).
+
+You can configure the behavior of you micro-service directly into your values.yaml file and versionning
+it will allow you to keep track of your application states.
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) for
-more information on how to use theses resources.
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use STARTX helm chart.
 
 ## Deploy this helm chart on openshift
 
@@ -29,6 +33,32 @@ helm show chart startx/sxapi
 ```
 
 ### 4. Install this chart
+
+```bash
+helm install startx/sxapi
+```
+
+## Deploy this helm chart on kubernetes
+
+### 1. Connect to your kubernetes cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the STARTX helm repository
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
+```
+
+### 3. Information about this chart
+
+```bash
+helm show chart startx/sxapi
+```
+
+### 4. Install sxapi chart
 
 ```bash
 helm install startx/sxapi
@@ -60,9 +90,9 @@ helm install startx/sxapi
 
 ## Values files
 
-### Default values file (values.yaml)
+### Default values file
 
-Complete deployment of a project with the following characteristics :
+The [values.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values.yaml) define a deployment with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
 - 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with debug disabled
@@ -75,7 +105,7 @@ helm install startx/sxapi
 
 ### Dev values file (values-dev.yaml)
 
-Complete deployment of a project with the following characteristics :
+The [values-dev.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml) define a deployment with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
 - 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **dev:start** command with debug enabled
@@ -156,3 +186,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 8.13.9 | 2021-10-22 | Improve artfifacthub annotation
 | 8.13.10 | 2021-10-22 | Improve artfifacthub annotation
 | 8.13.13 | 2021-10-30 | Improve the values.schema.json
+| 8.13.14 | 2021-10-31 | Adding support for LoadBalancer, NodePort and ingress external access
