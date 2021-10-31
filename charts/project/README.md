@@ -261,3 +261,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 8.13.16 | 2021-10-31 | Improve schema with all features
 | 8.13.17 | 2021-10-31 | Improve schema with support for all options
 | 8.13.18 | 2021-10-31 | Remove conditional subchart in schema (imcompatible with Openshift console)
+| 8.13.19 | 2021-10-31 | value.schema.json fully support all options
