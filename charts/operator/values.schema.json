@@ -15,8 +15,8 @@
         },
         "context": {
             "type": "object",
-            "title": "Project / namespace context",
-            "description": "Properties of the project context.",
+            "title": "Operator context",
+            "description": "Properties of the operator context.",
             "required": [
                 "scope",
                 "cluster",
@@ -92,9 +92,9 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 20,
-                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "pattern": "^([a-zA-Z1-9]*)(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
                     "title": "Version name",
-                    "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                    "description": "Name of the subscription version. Should be incremented each time the operator version is changed to keep track of changes and allow ease rolling of the operator (and rollout in case of problem). Default use Chart appVersion.",
                     "default": "0.0.1",
                     "examples": [
                         "0.0.1",
@@ -112,8 +112,7 @@
             "required": [
                 "enabled",
                 "name",
-                "namespace",
-                "version"
+                "namespace"
             ],
             "properties": {
                 "enabled": {
@@ -126,7 +125,7 @@
                     "type": "boolean",
                     "title": "Helm hook",
                     "description": "Subscription creation is done as an helm hook. Should be set to true when included as chart dependencies to create subscription prior to other resources (helm doesn't recognize subscription resources as it does for CRD)",
-                    "default": false
+                    "default": true
                 },
                 "name": {
                     "type": "string",
@@ -156,7 +155,7 @@
                     "minLength": 1,
                     "maxLength": 20,
                     "title": "Operator version",
-                    "description": "Version of the operator to deploy. Must be available in the operator catalog.",
+                    "description": "Version of the operator to deploy. Must be available in the operator catalog. If not set use the context version.",
                     "default": "v0.8.0",
                     "examples": [
                         "0.0.1",
@@ -260,7 +259,7 @@
                     "type": "boolean",
                     "title": "Helm hook",
                     "description": "operatorGroup creation is done as an helm hook. Should be set to true when included as chart dependencies to create operatorGroup prior to other resources (helm doesn't recognize operatorGroup resources as it does for CRD)",
-                    "default": false
+                    "default": true
                 },
                 "name": {
                     "type": "string",
