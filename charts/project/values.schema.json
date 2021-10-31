@@ -14,8 +14,8 @@
         },
         "context": {
             "type": "object",
-            "title": "Deployment context",
-            "description": "Properties of the deployment context.",
+            "title": "Project / namespace context",
+            "description": "Properties of the project context.",
             "required": [
                 "scope",
                 "cluster",
@@ -121,7 +121,7 @@
                 "hooked": {
                     "type": "boolean",
                     "title": "Helm hook",
-                    "description": "Project or namespace creation is done as an helm hook.",
+                    "description": "Project or namespace creation is done as an helm hook. Should be set to true if type is project (helm doesn't recognize project resource as it does for namespace)",
                     "default": false
                 },
                 "name": {
@@ -141,7 +141,7 @@
                         "project",
                         "namespace"
                     ],
-                    "title": "Provider",
+                    "title": "Kind of resource",
                     "description": "Kind of resource to use for namespace isolation. Project kind should be used against Openshift clusters.",
                     "default": "namespace",
                     "examples": [
@@ -226,10 +226,10 @@
                                 "type": "string",
                                 "title": "User name",
                                 "description": "Name of the user used to connect to the registry.",
-                                "default": "docker.io",
+                                "default": "myusername",
                                 "examples": [
-                                    "docker.io",
-                                    "quay.io"
+                                    "myusername",
+                                    "username"
                                 ]
                             },
                             "password": {
@@ -337,7 +337,8 @@
             "title": "Quota management",
             "description": "Creation of ResourceQuota in the namespace to restrict resource consumption. see https://kubernetes.io/docs/concepts/policy/resource-quotas",
             "required": [
-                "enabled"
+                "enabled",
+                "rules"
             ],
             "properties": {
                 "enabled": {
@@ -345,29 +346,15 @@
                     "title": "Enable quotas into the namespace",
                     "description": "Enable the creation of ResourceQuotas in this project / namespace.",
                     "default": false
-                }
-            },
-            "if": {
-                "properties": {
-                    "enabled": {
-                        "const": true
-                    }
-                }
-            },
-            "then": {
-                "required": [
-                    "rules"
-                ],
-                "properties": {
-                    "rules": {
-                        "type": "string",
-                        "title": "Rules",
-                        "description": "List quotas rules to apply to this project / namespace. You can set whatever is supported in the spec of the ResourceQuota kubernetes resource. See https://kubernetes.io/docs/concepts/policy/resource-quotas for more information.",
-                        "default": "hard:\n  limits.cpu: '400m'",
-                        "examples": [
-                            "hard:\n  limits.cpu: '400m'"
-                        ]
-                    }
+                },
+                "rules": {
+                    "type": "string",
+                    "title": "Rules",
+                    "description": "List quotas rules to apply to this project / namespace. You can set whatever is supported in the spec of the ResourceQuota kubernetes resource. See https://kubernetes.io/docs/concepts/policy/resource-quotas for more information.",
+                    "default": "hard:\n  limits.cpu: '400m'",
+                    "examples": [
+                        "hard:\n  limits.cpu: '400m'"
+                    ]
                 }
             }
         },
@@ -376,7 +363,8 @@
             "title": "LimitRanges management",
             "description": "Creation of LimitRanges in the namespace to restrict resource consumption. see https://kubernetes.io/docs/concepts/policy/limit-range",
             "required": [
-                "enabled"
+                "enabled",
+                "rules"
             ],
             "properties": {
                 "enabled": {
@@ -384,29 +372,15 @@
                     "title": "Enable limit ranges into the namespace",
                     "description": "Enable the creation of LimitRanges in this project / namespace.",
                     "default": false
-                }
-            },
-            "if": {
-                "properties": {
-                    "enabled": {
-                        "const": true
-                    }
-                }
-            },
-            "then": {
-                "required": [
-                    "rules"
-                ],
-                "properties": {
-                    "rules": {
-                        "type": "string",
-                        "title": "Rules",
-                        "description": "List limit ranges rules to apply to this project / namespace. You can set whatever is supported in the spec of the LimitRanges kubernetes resource. See https://kubernetes.io/docs/concepts/policy/limit-range for more information.",
-                        "default": "limits:\n  - type: Pod\n    max:\n      cpu: 200m",
-                        "examples": [
-                            "limits:\n  - type: Pod\n    max:\n      cpu: 200m"
-                        ]
-                    }
+                },
+                "rules": {
+                    "type": "string",
+                    "title": "Rules",
+                    "description": "List limit ranges rules to apply to this project / namespace. You can set whatever is supported in the spec of the LimitRanges kubernetes resource. See https://kubernetes.io/docs/concepts/policy/limit-range for more information.",
+                    "default": "limits:\n  - type: Pod\n    max:\n      cpu: 200m",
+                    "examples": [
+                        "limits:\n  - type: Pod\n    max:\n      cpu: 200m"
+                    ]
                 }
             }
         },
@@ -415,7 +389,8 @@
             "title": "NetworkPolicy management",
             "description": "Creation of various NetworkPolicy in the namespace to restrict network exposition. see https://kubernetes.io/docs/concepts/services-networking/network-policies",
             "required": [
-                "enabled"
+                "enabled",
+                "rules"
             ],
             "properties": {
                 "enabled": {
@@ -423,52 +398,38 @@
                     "title": "Enable NetworkPolicy into the namespace",
                     "description": "Enable the creation of NetworkPolicies in this project / namespace.",
                     "default": false
-                }
-            },
-            "if": {
-                "properties": {
-                    "enabled": {
-                        "const": true
-                    }
-                }
-            },
-            "then": {
-                "required": [
-                    "rules"
-                ],
-                "properties": {
-                    "rules": {
-                        "title": "NetworkPolicy rules list",
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string",
-                                    "title": "NetworkPolicy name",
-                                    "description": "Name of the NetworkPolicy to create.",
-                                    "default": "allow-from-openshift-ingress",
-                                    "examples": [
-                                        "allow-from-openshift-ingress",
-                                        "allow-app1-to-app2",
-                                        "deny-front-to-back"
-                                    ]
-                                },
-                                "spec": {
-                                    "type": "string",
-                                    "title": "Rules",
-                                    "description": "Specification of the network policy to apply. You can set whatever is supported in the spec of the NetworkPolicy kubernetes resource. See https://kubernetes.io/docs/concepts/services-networking/network-policies for more information.",
-                                    "default": "hard:\n  limits.cpu: '400m'",
-                                    "examples": [
-                                        "hard:\n  limits.cpu: '400m'"
-                                    ]
-                                }
+                },
+                "rules": {
+                    "title": "NetworkPolicy rules list",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "title": "NetworkPolicy name",
+                                "description": "Name of the NetworkPolicy to create.",
+                                "default": "allow-from-openshift-ingress",
+                                "examples": [
+                                    "allow-from-openshift-ingress",
+                                    "allow-app1-to-app2",
+                                    "deny-front-to-back"
+                                ]
                             },
-                            "required": [
-                                "id",
-                                "spec"
-                            ]
-                        }
+                            "spec": {
+                                "type": "string",
+                                "title": "Rules",
+                                "description": "Specification of the network policy to apply. You can set whatever is supported in the spec of the NetworkPolicy kubernetes resource. See https://kubernetes.io/docs/concepts/services-networking/network-policies for more information.",
+                                "default": "hard:\n  limits.cpu: '400m'",
+                                "examples": [
+                                    "hard:\n  limits.cpu: '400m'"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "spec"
+                        ]
                     }
                 }
             }
@@ -478,7 +439,9 @@
             "title": "RBAC management",
             "description": "Creation of various RBAC resources to restrict access to the namespace resources. see https://kubernetes.io/docs/reference/access-authn-authz/rbac",
             "required": [
-                "enabled"
+                "enabled",
+                "groups",
+                "users"
             ],
             "properties": {
                 "enabled": {
@@ -486,144 +449,129 @@
                     "title": "Enable RBAC into the namespace",
                     "description": "Enable the creation of RBAC resources in this project / namespace.",
                     "default": false
-                }
-            },
-            "if": {
-                "properties": {
-                    "enabled": {
-                        "const": true
+                },
+                "groups": {
+                    "title": "RoleBinding rules for groups",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "title": "RoleBinding ID",
+                                "description": "ID of the RoleBinding to create.",
+                                "default": "mygroup",
+                                "examples": [
+                                    "mygroup",
+                                    "mygroup-basic-user",
+                                    "mygroupcluster"
+                                ]
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "Group name",
+                                "description": "Name of the group to onboard in the project.",
+                                "default": "mygroup",
+                                "examples": [
+                                    "mygroup",
+                                    "mygroup-example",
+                                    "group1",
+                                    "dev-team"
+                                ]
+                            },
+                            "role": {
+                                "type": "string",
+                                "title": "Role name",
+                                "description": "Name of the role to give to this group.",
+                                "default": "basic-user",
+                                "examples": [
+                                    "basic-user",
+                                    "edit",
+                                    "admin"
+                                ]
+                            },
+                            "type": {
+                                "type": "string",
+                                "title": "Role type",
+                                "description": "The kind of role to use. Could be cluster or local. Default is local.",
+                                "enum": [
+                                    "local",
+                                    "cluster"
+                                ],
+                                "default": "local",
+                                "examples": [
+                                    "local",
+                                    "cluster"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "role"
+                        ]
                     }
-                }
-            },
-            "then": {
-                "required": [
-                    "groups",
-                    "users"
-                ],
-                "properties": {
-                    "groups": {
-                        "title": "RoleBinding rules for groups",
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string",
-                                    "title": "RoleBinding ID",
-                                    "description": "ID of the RoleBinding to create.",
-                                    "default": "mygroup",
-                                    "examples": [
-                                        "mygroup",
-                                        "mygroup-basic-user",
-                                        "mygroupcluster"
-                                    ]
-                                },
-                                "name": {
-                                    "type": "string",
-                                    "title": "Group name",
-                                    "description": "Name of the group to onboard in the project.",
-                                    "default": "mygroup",
-                                    "examples": [
-                                        "mygroup",
-                                        "mygroup-example",
-                                        "group1",
-                                        "dev-team"
-                                    ]
-                                },
-                                "role": {
-                                    "type": "string",
-                                    "title": "Role name",
-                                    "description": "Name of the role to give to this group.",
-                                    "default": "basic-user",
-                                    "examples": [
-                                        "basic-user",
-                                        "edit",
-                                        "admin"
-                                    ]
-                                },
-                                "type": {
-                                    "type": "string",
-                                    "title": "Role type",
-                                    "description": "The kind of role to use. Could be cluster or local. Default is local.",
-                                    "enum": [
-                                        "local",
-                                        "cluster"
-                                    ],
-                                    "default": "local",
-                                    "examples": [
-                                        "local",
-                                        "cluster"
-                                    ]
-                                }
+                },
+                "users": {
+                    "title": "RoleBinding rules for users",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "title": "RoleBinding ID",
+                                "description": "ID of the RoleBinding to create.",
+                                "default": "myuser",
+                                "examples": [
+                                    "myuser",
+                                    "myuser-basic-user",
+                                    "myusercluster"
+                                ]
                             },
-                            "required": [
-                                "id",
-                                "name",
-                                "role"
-                            ]
-                        }
-                    },
-                    "users": {
-                        "title": "RoleBinding rules for users",
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string",
-                                    "title": "RoleBinding ID",
-                                    "description": "ID of the RoleBinding to create.",
-                                    "default": "myuser",
-                                    "examples": [
-                                        "myuser",
-                                        "myuser-basic-user",
-                                        "myusercluster"
-                                    ]
-                                },
-                                "name": {
-                                    "type": "string",
-                                    "title": "User name",
-                                    "description": "Name of the user to onboard in the project.",
-                                    "default": "myuser",
-                                    "examples": [
-                                        "myuser",
-                                        "myuser-example",
-                                        "user1",
-                                        "dev1"
-                                    ]
-                                },
-                                "role": {
-                                    "type": "string",
-                                    "title": "Role name",
-                                    "description": "Name of the role to give to this user.",
-                                    "default": "basic-user",
-                                    "examples": [
-                                        "basic-user",
-                                        "edit",
-                                        "admin"
-                                    ]
-                                },
-                                "type": {
-                                    "type": "string",
-                                    "title": "Role type",
-                                    "description": "The kind of role to use. Could be cluster or local. Default is local.",
-                                    "enum": [
-                                        "local",
-                                        "cluster"
-                                    ],
-                                    "default": "local",
-                                    "examples": [
-                                        "local",
-                                        "cluster"
-                                    ]
-                                }
+                            "name": {
+                                "type": "string",
+                                "title": "User name",
+                                "description": "Name of the user to onboard in the project.",
+                                "default": "myuser",
+                                "examples": [
+                                    "myuser",
+                                    "myuser-example",
+                                    "user1",
+                                    "dev1"
+                                ]
                             },
-                            "required": [
-                                "id",
-                                "name",
-                                "role"
-                            ]
-                        }
+                            "role": {
+                                "type": "string",
+                                "title": "Role name",
+                                "description": "Name of the role to give to this user.",
+                                "default": "basic-user",
+                                "examples": [
+                                    "basic-user",
+                                    "edit",
+                                    "admin"
+                                ]
+                            },
+                            "type": {
+                                "type": "string",
+                                "title": "Role type",
+                                "description": "The kind of role to use. Could be cluster or local. Default is local.",
+                                "enum": [
+                                    "local",
+                                    "cluster"
+                                ],
+                                "default": "local",
+                                "examples": [
+                                    "local",
+                                    "cluster"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "role"
+                        ]
                     }
                 }
             }
