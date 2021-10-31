@@ -280,3 +280,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 8.13.13 | 2021-10-30 | Improve the values.schema.json
 | 8.13.14 | 2021-10-31 | Adding support for LoadBalancer, NodePort and ingress external access
 | 8.13.15 | 2021-10-31 | Improve ci/cd workflow capactities
+| 8.13.16 | 2021-10-31 | Improve sxapi options
