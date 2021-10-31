@@ -137,7 +137,10 @@
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["project", "namespace"],
+                    "enum": [
+                        "project",
+                        "namespace"
+                    ],
                     "title": "Provider",
                     "description": "Kind of resource to use for namespace isolation. Project kind should be used against Openshift clusters.",
                     "default": "namespace",
@@ -186,73 +189,73 @@
                     "title": "Dockercfg list",
                     "type": "array",
                     "items": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "title": "Credential name",
-                          "description": "Name of the credential to create.",
-                          "default": "corp-registrycreds-repositoryname",
-                          "examples": [
-                              "corp-registrycreds-repositoryname",
-                              "my-repository-name",
-                              "corp-repository-name"
-                          ]
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Credential name",
+                                "description": "Name of the credential to create.",
+                                "default": "corp-registrycreds-repositoryname",
+                                "examples": [
+                                    "corp-registrycreds-repositoryname",
+                                    "my-repository-name",
+                                    "corp-repository-name"
+                                ]
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "title": "Credential namespace",
+                                "description": "Namespace where the credential must reside.",
+                                "default": "default-project",
+                                "examples": [
+                                    "default-project",
+                                    "default"
+                                ]
+                            },
+                            "registry": {
+                                "type": "string",
+                                "title": "Registry",
+                                "description": "Domain name of the registry to use.",
+                                "default": "docker.io",
+                                "examples": [
+                                    "docker.io",
+                                    "quay.io"
+                                ]
+                            },
+                            "username": {
+                                "type": "string",
+                                "title": "User name",
+                                "description": "Name of the user used to connect to the registry.",
+                                "default": "docker.io",
+                                "examples": [
+                                    "docker.io",
+                                    "quay.io"
+                                ]
+                            },
+                            "password": {
+                                "type": "string",
+                                "title": "Password",
+                                "description": "Password coresponding to the user declared for the registry access.",
+                                "default": "xxxxxx"
+                            },
+                            "email": {
+                                "type": "string",
+                                "title": "E-mail",
+                                "description": "Email associated to the registry user.",
+                                "default": "my@example.com",
+                                "examples": [
+                                    "my@example.com",
+                                    "my@corp.com"
+                                ]
+                            }
                         },
-                        "namespace": {
-                            "type": "string",
-                            "title": "Credential namespace",
-                            "description": "Namespace where the credential must reside.",
-                            "default": "default-project",
-                            "examples": [
-                                "default-project",
-                                "default"
-                            ]
-                        },
-                        "registry": {
-                            "type": "string",
-                            "title": "Registry",
-                            "description": "Domain name of the registry to use.",
-                            "default": "docker.io",
-                            "examples": [
-                                "docker.io",
-                                "quay.io"
-                            ]
-                        },
-                        "username": {
-                            "type": "string",
-                            "title": "User name",
-                            "description": "Name of the user used to connect to the registry.",
-                            "default": "docker.io",
-                            "examples": [
-                                "docker.io",
-                                "quay.io"
-                            ]
-                        },
-                        "password": {
-                            "type": "string",
-                            "title": "Password",
-                            "description": "Password coresponding to the user declared for the registry access.",
-                            "default": "xxxxxx"
-                        },
-                        "email": {
-                            "type": "string",
-                            "title": "E-mail",
-                            "description": "Email associated to the registry user.",
-                            "default": "my@example.com",
-                            "examples": [
-                                "my@example.com",
-                                "my@corp.com"
-                            ]
-                        }
-                      },
-                      "required": [
-                        "name",
-                        "registry",
-                        "username",
-                        "password",
-                        "email"
-                      ]
+                        "required": [
+                            "name",
+                            "registry",
+                            "username",
+                            "password",
+                            "email"
+                        ]
                     }
                 }
             }
@@ -275,56 +278,56 @@
                     "title": "ServiceAccounts list",
                     "type": "array",
                     "items": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "title": "serviceAccount name",
-                          "description": "Name of the serviceAccount to create.",
-                          "default": "default-project",
-                          "examples": [
-                              "default",
-                              "builder"
-                          ]
-                        },
-                        "imagePullSecrets": {
-                            "type": "array",
-                            "title": "imagePullSecrets list",
-                            "description": "List of secrets used for imagePull requests.",
-                            "items": {
-                                "type": "object",
-                                "required": [
-                                "name"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "title": "Secret name",
-                                        "description": "Name of the secret to link to this serviceAccount for imagePull.",
-                                        "default": "corp-registrycreds-repositoryname",
-                                        "examples": [
-                                            "corp-registrycreds-repositoryname",
-                                            "my-repository-name",
-                                            "corp-repository-name"
-                                        ]
-                                    },
-                                    "namespace": {
-                                        "type": "string",
-                                        "title": "Secret namespace",
-                                        "description": "Namespace of the secret to link to this serviceAccount for imagePull.",
-                                        "default": "default-project",
-                                        "examples": [
-                                            "default-project",
-                                            "default"
-                                        ]
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "serviceAccount name",
+                                "description": "Name of the serviceAccount to create.",
+                                "default": "default-project",
+                                "examples": [
+                                    "default",
+                                    "builder"
+                                ]
+                            },
+                            "imagePullSecrets": {
+                                "type": "array",
+                                "title": "imagePullSecrets list",
+                                "description": "List of secrets used for imagePull requests.",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "name"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "title": "Secret name",
+                                            "description": "Name of the secret to link to this serviceAccount for imagePull.",
+                                            "default": "corp-registrycreds-repositoryname",
+                                            "examples": [
+                                                "corp-registrycreds-repositoryname",
+                                                "my-repository-name",
+                                                "corp-repository-name"
+                                            ]
+                                        },
+                                        "namespace": {
+                                            "type": "string",
+                                            "title": "Secret namespace",
+                                            "description": "Namespace of the secret to link to this serviceAccount for imagePull.",
+                                            "default": "default-project",
+                                            "examples": [
+                                                "default-project",
+                                                "default"
+                                            ]
+                                        }
                                     }
                                 }
                             }
-                        }
-                      },
-                      "required": [
-                        "name"
-                      ]
+                        },
+                        "required": [
+                            "name"
+                        ]
                     }
                 }
             }
@@ -345,13 +348,17 @@
                 }
             },
             "if": {
-                "properties": { "enabled": { "const": true } }
+                "properties": {
+                    "enabled": {
+                        "const": true
+                    }
+                }
             },
             "then": {
                 "required": [
                     "rules"
                 ],
-                "properties": { 
+                "properties": {
                     "rules": {
                         "type": "string",
                         "title": "Rules",
@@ -360,7 +367,7 @@
                         "examples": [
                             "hard:\n  limits.cpu: '400m'"
                         ]
-                    } 
+                    }
                 }
             }
         },
@@ -380,13 +387,17 @@
                 }
             },
             "if": {
-                "properties": { "enabled": { "const": true } }
+                "properties": {
+                    "enabled": {
+                        "const": true
+                    }
+                }
             },
             "then": {
                 "required": [
                     "rules"
                 ],
-                "properties": { 
+                "properties": {
                     "rules": {
                         "type": "string",
                         "title": "Rules",
@@ -395,7 +406,7 @@
                         "examples": [
                             "limits:\n  - type: Pod\n    max:\n      cpu: 200m"
                         ]
-                    } 
+                    }
                 }
             }
         },
@@ -415,46 +426,50 @@
                 }
             },
             "if": {
-                "properties": { "enabled": { "const": true } }
+                "properties": {
+                    "enabled": {
+                        "const": true
+                    }
+                }
             },
             "then": {
                 "required": [
                     "rules"
                 ],
-                "properties": { 
+                "properties": {
                     "rules": {
                         "title": "NetworkPolicy rules list",
                         "type": "array",
                         "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "title": "NetworkPolicy name",
-                              "description": "Name of the NetworkPolicy to create.",
-                              "default": "allow-from-openshift-ingress",
-                              "examples": [
-                                  "allow-from-openshift-ingress",
-                                  "allow-app1-to-app2",
-                                  "deny-front-to-back"
-                              ]
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "title": "NetworkPolicy name",
+                                    "description": "Name of the NetworkPolicy to create.",
+                                    "default": "allow-from-openshift-ingress",
+                                    "examples": [
+                                        "allow-from-openshift-ingress",
+                                        "allow-app1-to-app2",
+                                        "deny-front-to-back"
+                                    ]
+                                },
+                                "spec": {
+                                    "type": "string",
+                                    "title": "Rules",
+                                    "description": "Specification of the network policy to apply. You can set whatever is supported in the spec of the NetworkPolicy kubernetes resource. See https://kubernetes.io/docs/concepts/services-networking/network-policies for more information.",
+                                    "default": "hard:\n  limits.cpu: '400m'",
+                                    "examples": [
+                                        "hard:\n  limits.cpu: '400m'"
+                                    ]
+                                }
                             },
-                            "spec": {
-                                "type": "string",
-                                "title": "Rules",
-                                "description": "Specification of the network policy to apply. You can set whatever is supported in the spec of the NetworkPolicy kubernetes resource. See https://kubernetes.io/docs/concepts/services-networking/network-policies for more information.",
-                                "default": "hard:\n  limits.cpu: '400m'",
-                                "examples": [
-                                    "hard:\n  limits.cpu: '400m'"
-                                ]
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "spec"
-                          ]
+                            "required": [
+                                "id",
+                                "spec"
+                            ]
                         }
-                    } 
+                    }
                 }
             }
         },
@@ -474,130 +489,140 @@
                 }
             },
             "if": {
-                "properties": { "enabled": { "const": true } }
+                "properties": {
+                    "enabled": {
+                        "const": true
+                    }
+                }
             },
             "then": {
                 "required": [
                     "groups",
                     "users"
                 ],
-                "properties": { 
+                "properties": {
                     "groups": {
                         "title": "RoleBinding rules for groups",
                         "type": "array",
                         "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "title": "RoleBinding ID",
-                              "description": "ID of the RoleBinding to create.",
-                              "default": "mygroup",
-                              "examples": [
-                                  "mygroup",
-                                  "mygroup-basic-user",
-                                  "mygroupcluster"
-                              ]
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "title": "RoleBinding ID",
+                                    "description": "ID of the RoleBinding to create.",
+                                    "default": "mygroup",
+                                    "examples": [
+                                        "mygroup",
+                                        "mygroup-basic-user",
+                                        "mygroupcluster"
+                                    ]
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "title": "Group name",
+                                    "description": "Name of the group to onboard in the project.",
+                                    "default": "mygroup",
+                                    "examples": [
+                                        "mygroup",
+                                        "mygroup-example",
+                                        "group1",
+                                        "dev-team"
+                                    ]
+                                },
+                                "role": {
+                                    "type": "string",
+                                    "title": "Role name",
+                                    "description": "Name of the role to give to this group.",
+                                    "default": "basic-user",
+                                    "examples": [
+                                        "basic-user",
+                                        "edit",
+                                        "admin"
+                                    ]
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "title": "Role type",
+                                    "description": "The kind of role to use. Could be cluster or local. Default is local.",
+                                    "enum": [
+                                        "local",
+                                        "cluster"
+                                    ],
+                                    "default": "local",
+                                    "examples": [
+                                        "local",
+                                        "cluster"
+                                    ]
+                                }
                             },
-                            "name": {
-                              "type": "string",
-                              "title": "Group name",
-                              "description": "Name of the group to onboard in the project.",
-                              "default": "mygroup",
-                              "examples": [
-                                  "mygroup",
-                                  "mygroup-example",
-                                  "group1",
-                                  "dev-team"
-                              ]
-                            },
-                            "role": {
-                              "type": "string",
-                              "title": "Role name",
-                              "description": "Name of the role to give to this group.",
-                              "default": "basic-user",
-                              "examples": [
-                                  "basic-user",
-                                  "edit",
-                                  "admin"
-                              ]
-                            },
-                            "type": {
-                              "type": "string",
-                              "title": "Role type",
-                              "description": "The kind of role to use. Could be cluster or local. Default is local.",
-                              "enum": ["local", "cluster"],
-                              "default": "local",
-                              "examples": [
-                                  "local",
-                                  "cluster"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "name",
-                            "role"
-                          ]
+                            "required": [
+                                "id",
+                                "name",
+                                "role"
+                            ]
                         }
                     },
                     "users": {
                         "title": "RoleBinding rules for users",
                         "type": "array",
                         "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "title": "RoleBinding ID",
-                              "description": "ID of the RoleBinding to create.",
-                              "default": "myuser",
-                              "examples": [
-                                  "myuser",
-                                  "myuser-basic-user",
-                                  "myusercluster"
-                              ]
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "title": "RoleBinding ID",
+                                    "description": "ID of the RoleBinding to create.",
+                                    "default": "myuser",
+                                    "examples": [
+                                        "myuser",
+                                        "myuser-basic-user",
+                                        "myusercluster"
+                                    ]
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "title": "User name",
+                                    "description": "Name of the user to onboard in the project.",
+                                    "default": "myuser",
+                                    "examples": [
+                                        "myuser",
+                                        "myuser-example",
+                                        "user1",
+                                        "dev1"
+                                    ]
+                                },
+                                "role": {
+                                    "type": "string",
+                                    "title": "Role name",
+                                    "description": "Name of the role to give to this user.",
+                                    "default": "basic-user",
+                                    "examples": [
+                                        "basic-user",
+                                        "edit",
+                                        "admin"
+                                    ]
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "title": "Role type",
+                                    "description": "The kind of role to use. Could be cluster or local. Default is local.",
+                                    "enum": [
+                                        "local",
+                                        "cluster"
+                                    ],
+                                    "default": "local",
+                                    "examples": [
+                                        "local",
+                                        "cluster"
+                                    ]
+                                }
                             },
-                            "name": {
-                              "type": "string",
-                              "title": "User name",
-                              "description": "Name of the user to onboard in the project.",
-                              "default": "myuser",
-                              "examples": [
-                                  "myuser",
-                                  "myuser-example",
-                                  "user1",
-                                  "dev1"
-                              ]
-                            },
-                            "role": {
-                              "type": "string",
-                              "title": "Role name",
-                              "description": "Name of the role to give to this user.",
-                              "default": "basic-user",
-                              "examples": [
-                                  "basic-user",
-                                  "edit",
-                                  "admin"
-                              ]
-                            },
-                            "type": {
-                              "type": "string",
-                              "title": "Role type",
-                              "description": "The kind of role to use. Could be cluster or local. Default is local.",
-                              "enum": ["local", "cluster"],
-                              "default": "local",
-                              "examples": [
-                                  "local",
-                                  "cluster"
-                              ]
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "name",
-                            "role"
-                          ]
+                            "required": [
+                                "id",
+                                "name",
+                                "role"
+                            ]
                         }
                     }
                 }
