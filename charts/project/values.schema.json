@@ -1,27 +1,369 @@
 {
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
+    "required": [
+        "project",
+        "enabled"
+    ],
     "properties": {
+        "enabled": {
+            "type": "boolean",
+            "title": "Enable the namespace/project creation",
+            "description": "Enable creation of the namespace or project. Is required to be enabled if you want to create the resource.",
+            "default": true
+        },
         "context": {
             "type": "object",
+            "title": "Deployment context",
+            "description": "Properties of the deployment context.",
+            "required": [
+                "scope",
+                "cluster",
+                "environment",
+                "component",
+                "app",
+                "version"
+            ],
             "properties": {
-                "app": {
-                    "type": "string"
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "default": "myscope",
+                    "examples": [
+                        "myscope",
+                        "mycustomer"
+                    ]
                 },
                 "cluster": {
-                    "type": "string"
-                },
-                "component": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "localhost",
+                    "examples": [
+                        "mycluster",
+                        "localhost"
+                    ]
                 },
                 "environment": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10,
+                    "title": "Environement name",
+                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
                 },
-                "scope": {
-                    "type": "string"
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "mycomp",
+                    "examples": [
+                        "mycomp",
+                        "myservice"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "title": "Application name",
+                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "default": "default-project",
+                    "examples": [
+                        "myapp",
+                        "mymicroservice"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "title": "Version name",
+                    "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                    "default": "0.0.1",
+                    "examples": [
+                        "0.0.1",
+                        "0.1",
+                        "0.0.1-snapshot",
+                        "0.0.1-202110300900"
+                    ]
                 }
             }
         },
+        "project": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable namespace / project creation",
+                    "description": "Enable the creation of the project or namespace.",
+                    "default": true
+                },
+                "hooked": {
+                    "type": "boolean",
+                    "title": "Helm hook",
+                    "description": "Project or namespace creation is done as an helm hook.",
+                    "default": false
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Name of the project or namespace.",
+                    "default": "my-project",
+                    "examples": [
+                        "default-project",
+                        "my-project",
+                        "my-app"
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["project", "namespace"],
+                    "title": "Provider",
+                    "description": "Kind of resource to use for namespace isolation. Project kind should be used against Openshift clusters.",
+                    "default": "namespace",
+                    "examples": [
+                        "project",
+                        "namespace"
+                    ]
+                }
+            }
+        },
+        "dockercfg": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable namespace scoped Dockercfg secret",
+                    "description": "Enable the creation of various dockercfg at the namespace / project level. This file hold credentials for container images repository access. Could be linked with service accounts (see serviceAccounts section).",
+                    "default": false
+                },
+                "list": {
+                    "title": "Dockercfg list",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "title": "Credential name",
+                          "description": "Name of the credential to create.",
+                          "default": "corp-registrycreds-repositoryname",
+                          "examples": [
+                              "corp-registrycreds-repositoryname",
+                              "my-repository-name",
+                              "corp-repository-name"
+                          ]
+                        },
+                        "namespace": {
+                            "type": "string",
+                            "title": "Credential namespace",
+                            "description": "Namespace where the credential must reside.",
+                            "default": "default-project",
+                            "examples": [
+                                "default-project",
+                                "default"
+                            ]
+                        },
+                        "registry": {
+                            "type": "string",
+                            "title": "Registry",
+                            "description": "Domain name of the registry to use.",
+                            "default": "docker.io",
+                            "examples": [
+                                "docker.io",
+                                "quay.io"
+                            ]
+                        },
+                        "username": {
+                            "type": "string",
+                            "title": "User name",
+                            "description": "Name of the user used to connect to the registry.",
+                            "default": "docker.io",
+                            "examples": [
+                                "docker.io",
+                                "quay.io"
+                            ]
+                        },
+                        "password": {
+                            "type": "string",
+                            "title": "Password",
+                            "description": "Password coresponding to the user declared for the registry access.",
+                            "default": "xxxxxx"
+                        },
+                        "email": {
+                            "type": "string",
+                            "title": "E-mail",
+                            "description": "Email associated to the registry user.",
+                            "default": "my@example.com",
+                            "examples": [
+                                "my@example.com",
+                                "my@corp.com"
+                            ]
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "registry",
+                        "username",
+                        "password",
+                        "email"
+                      ]
+                    }
+                }
+            }
+        },
+        "serviceAccounts": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable namespace scoped serviceAccounts",
+                    "description": "Enable the creation of various serviceAccounts at the namespace / project level. This list hold all serviceAccounts managed by this chart.",
+                    "default": false
+                },
+                "list": {
+                    "title": "ServiceAccounts list",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "title": "serviceAccount name",
+                          "description": "Name of the serviceAccount to create.",
+                          "default": "default-project",
+                          "examples": [
+                              "default",
+                              "builder"
+                          ]
+                        },
+                        "imagePullSecrets": {
+                            "type": "array",
+                            "title": "imagePullSecrets list",
+                            "description": "List of secrets used for imagePull requests.",
+                            "items": {
+                                "name": {
+                                    "type": "string",
+                                    "title": "Secret name",
+                                    "description": "Name of the secret to link to this serviceAccount for imagePull.",
+                                    "default": "corp-registrycreds-repositoryname",
+                                    "examples": [
+                                        "corp-registrycreds-repositoryname",
+                                        "my-repository-name",
+                                        "corp-repository-name"
+                                    ]
+                                },
+                                "namespace": {
+                                    "type": "string",
+                                    "title": "Secret namespace",
+                                    "description": "Namespace of the secret to link to this serviceAccount for imagePull.",
+                                    "default": "default-project",
+                                    "examples": [
+                                        "default-project",
+                                        "default"
+                                    ]
+                                }
+                            }
+                        },
+                        "registry": {
+                            "type": "string",
+                            "title": "Registry",
+                            "description": "Domain name of the registry to use.",
+                            "default": "docker.io",
+                            "examples": [
+                                "docker.io",
+                                "quay.io"
+                            ]
+                        },
+                        "username": {
+                            "type": "string",
+                            "title": "User name",
+                            "description": "Name of the user used to connect to the registry.",
+                            "default": "docker.io",
+                            "examples": [
+                                "docker.io",
+                                "quay.io"
+                            ]
+                        },
+                        "password": {
+                            "type": "string",
+                            "title": "Password",
+                            "description": "Password coresponding to the user declared for the registry access.",
+                            "default": "xxxxxx"
+                        },
+                        "email": {
+                            "type": "string",
+                            "title": "E-mail",
+                            "description": "Email associated to the registry user.",
+                            "default": "my@example.com",
+                            "examples": [
+                                "my@example.com",
+                                "my@corp.com"
+                            ]
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "registry",
+                        "username",
+                        "password",
+                        "email"
+                      ]
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
         "dockercfg": {
             "type": "object",
             "properties": {
@@ -32,9 +374,6 @@
                     "type": "array"
                 }
             }
-        },
-        "enabled": {
-            "type": "boolean"
         },
         "limits": {
             "type": "object",
