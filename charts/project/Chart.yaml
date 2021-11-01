@@ -6,7 +6,7 @@ description: Helm chart used to create a project, or namespace, with various opt
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.13.19
+version: 8.13.21
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.7.22
 # Version of Openshift 
@@ -20,7 +20,17 @@ tags: infra,basic,project
 # Kube minimum version
 kubeVersion: ">=1.18.0"
 # Keyword list for this chart
-keywords: ["startx","basic-chart","project"]
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - basic-chart
+  - Project
+  - Namespace
+  - NetworkPolicy
+  - RoleBinding
+  - ResourceQuotas
+  - LimitRange
 # STARTX helm chart repository homepage
 home: https://startxfr.github.io/helm-repository
 # Sources and documentation for this chart
@@ -28,4 +38,15 @@ sources:
   - https://startxfr.github.io/helm-repository/charts/project
   - https://github.com/startxfr/helm-repository/tree/master/charts/project
 # Main maintainer contact for this helm chart
-maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: added
+      description: Added the chart schema
+    - kind: changed
+      description: Improve the Chart.yaml with artifacthub annotations
+  artifacthub.io/containsSecurityUpdates: "false"
