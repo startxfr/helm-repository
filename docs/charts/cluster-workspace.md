@@ -1,11 +1,11 @@
 # Cluster workspace
 
 This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deployment pod but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io)  for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
@@ -71,7 +71,7 @@ cheCluster:
 
 ### project values dictionary
 
-The **project property** scope the [project helm chart](https://startxfr.github.io/helm-repository/charts/project) dependency. You can find
+The **project property** scope the [project helm chart](https://helm-repository.readthedocs.io/en/latest/charts/project) dependency. You can find
 more information on the availables options you can set under this **project** property on the [project helm chart documentation](https://helm-repository.readthedocs.io/en/latest/charts/project) or by reading the [source code](https://github.com/startxfr/helm-repository/tree/master/charts/project).
 
 #### project values example
@@ -96,7 +96,7 @@ project:
 
 ### operator values dictionary
 
-The **operator property** scope the [operator helm chart](https://startxfr.github.io/helm-repository/charts/operator) dependency. You can find
+The **operator property** scope the [operator helm chart](https://helm-repository.readthedocs.io/en/latest/charts/operator) dependency. You can find
 more information on the availables options you can set under this **operator** property on the [operator helm chart documentation](https://helm-repository.readthedocs.io/en/latest/charts/operator) or by reading the [source code](https://github.com/startxfr/helm-repository/tree/master/charts/operator).
 
 #### operator values example
@@ -234,3 +234,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 8.13.8 | 2021-10-21 | Adding first draft of json schema
 | 8.13.9 | 2021-10-22 | Adding the schema in chart
 | 8.13.25 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23
+| 8.13.27 | 2021-11-10 | publish stable update for the full repository
