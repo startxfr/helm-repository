@@ -7,8 +7,6 @@ and could be exposed outside by using various exposition method (ingress, route 
 You can configure the behavior of you micro-service directly into your values.yaml file and versionning
 it will allow you to keep track of your application states.
 
-This chart is part of the [basic-xxx startx helm chart series](https://helm-repository.readthedocs.io#basic-helm-charts) used by [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts) and [example-xxx charts](https://helm-repository.readthedocs.io#examples-helm-charts).
-
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
@@ -252,37 +250,37 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository                                                          |
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository                                                          |
 | 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377                           |
-| 0.3.390 | 2021-06-12 | Prepare 0.4.0 release
-| 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
-| 0.3.425 | 2021-07-03 | Debug route and service definitions
-| 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
-| 0.3.480 | 2021-08-03 | publish stable update for the full repository
-| 0.3.998 | 2021-08-04 | publish stable update for the full repository
-| 0.3.999 | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13
-| 7.22.1 | 2021-08-04 | Move to release 7.22.1 to align versionning with ocp release cycle
-| 7.22.2 | 2021-08-04 | Move helm dependencies to a 7.x.x release model
-| 7.22.3 | 2021-08-05 | publish stable update for the full repository
-| 7.22.5 | 2021-08-05 | publish stable update for the full repository
-| 7.22.6 | 2021-08-05 | Stable version for chart dependencies
-| 7.22.7 | 2021-08-05 | Stable for OCP version 4.7.22
-| 7.22.12 | 2021-09-23 | publish stable update for the full repository
-| 7.22.15 | 2021-10-05 | Align core charts to release 7.22.15
-| 7.22.21 | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart
-| 7.22.23 | 2021-10-06 | Align basic charts to version 7.22.23
-| 7.22.25 | 2021-10-06 | publish stable update for the full repository
-| 7.22.27 | 2021-10-06 | publish stable update for the full repository
-| 8.13.1 | 2021-10-06 | Stable release for OCP 4.8.13 version
-| 8.13.3 | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart
-| 8.13.5 | 2021-10-21 | publish stable update for the full repository
-| 8.13.7 | 2021-10-21 | publish stable update for the full repository
-| 8.13.8 | 2021-10-21 | Adding first draft of json schema
-| 8.13.9 | 2021-10-22 | Adding the schema in chart
-| 8.13.9 | 2021-10-22 | Improve artfifacthub annotation
-| 8.13.10 | 2021-10-22 | Improve artfifacthub annotation
-| 8.13.13 | 2021-10-30 | Improve the values.schema.json
-| 8.13.14 | 2021-10-31 | Adding support for LoadBalancer, NodePort and ingress external access
-| 8.13.15 | 2021-10-31 | Improve ci/cd workflow capactities
-| 8.13.16 | 2021-10-31 | Improve sxapi options
-| 8.13.21 | 2021-11-01 | Align basic charts to version 8.13.21
-| 8.13.23 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters
-| 8.13.25 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23
+| 0.3.390 | 2021-06-12 | Prepare 0.4.0 release                                                                                  |
+| 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts                                         |
+| 0.3.425 | 2021-07-03 | Debug route and service definitions                                                                    |
+| 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0                                                                            |
+| 0.3.480 | 2021-08-03 | publish stable update for the full repository                                                          |
+| 0.3.998 | 2021-08-04 | publish stable update for the full repository                                                          |
+| 0.3.999 | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13                                                   |
+| 7.22.1  | 2021-08-04 | Move to release 7.22.1 to align versionning with ocp release cycle                                     |
+| 7.22.2  | 2021-08-04 | Move helm dependencies to a 7.x.x release model                                                        |
+| 7.22.3  | 2021-08-05 | publish stable update for the full repository                                                          |
+| 7.22.5  | 2021-08-05 | publish stable update for the full repository                                                          |
+| 7.22.6  | 2021-08-05 | Stable version for chart dependencies                                                                  |
+| 7.22.7  | 2021-08-05 | Stable for OCP version 4.7.22                                                                          |
+| 7.22.12 | 2021-09-23 | publish stable update for the full repository                                                          |
+| 7.22.15 | 2021-10-05 | Align core charts to release 7.22.15                                                                   |
+| 7.22.21 | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart                                           |
+| 7.22.23 | 2021-10-06 | Align basic charts to version 7.22.23                                                                  |
+| 7.22.25 | 2021-10-06 | publish stable update for the full repository                                                          |
+| 7.22.27 | 2021-10-06 | publish stable update for the full repository                                                          |
+| 8.13.1  | 2021-10-06 | Stable release for OCP 4.8.13 version                                                                  |
+| 8.13.3  | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart                                        |
+| 8.13.5  | 2021-10-21 | publish stable update for the full repository                                                          |
+| 8.13.7  | 2021-10-21 | publish stable update for the full repository                                                          |
+| 8.13.8  | 2021-10-21 | Adding first draft of json schema                                                                      |
+| 8.13.9  | 2021-10-22 | Adding the schema in chart                                                                             |
+| 8.13.9  | 2021-10-22 | Improve artfifacthub annotation                                                                        |
+| 8.13.10 | 2021-10-22 | Improve artfifacthub annotation                                                                        |
+| 8.13.13 | 2021-10-30 | Improve the values.schema.json                                                                         |
+| 8.13.14 | 2021-10-31 | Adding support for LoadBalancer, NodePort and ingress external access                                  |
+| 8.13.15 | 2021-10-31 | Improve ci/cd workflow capactities                                                                     |
+| 8.13.16 | 2021-10-31 | Improve sxapi options                                                                                  |
+| 8.13.21 | 2021-11-01 | Align basic charts to version 8.13.21                                                                  |
+| 8.13.23 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters                                                  |
+| 8.13.25 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23         |
