@@ -7,6 +7,8 @@ and could be exposed outside by using various exposition method (ingress, route 
 You can configure the behavior of you micro-service directly into your values.yaml file and versionning
 it will allow you to keep track of your application states.
 
+This chart is part of the [basic-xxx startx helm chart series](https://helm-repository.readthedocs.io#basic-helm-charts) used by [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts) and [example-xxx charts](https://helm-repository.readthedocs.io#examples-helm-charts).
+
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
