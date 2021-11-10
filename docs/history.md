@@ -4,22 +4,29 @@
 
 _The objectif of this release is to stabilize the full repository content and offer a dev (regular ehancements) to stable (regular secfix) content for a global coverage of environements requirements._
 
-## version 9.0.x (claux)
+## version 9.x.x (claux)
 
 _The objectif of this release is to stabilize the full repository content and offer a dev (regular ehancements) to stable (regular secfix) content for a global coverage of environements requirements._
 
-## version 8.1.x (charbonnel)
+## version 8.x.x (charbonnel)
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.8 release](https://docs.openshift.com/container-platform/4.8)**.
 
 The objectif of this version is :
 
 - Stable support for cluster service running under an Openshift 4.8.x cluster
+- Revamp versionning of chart to stick the openshift minor-patch lifecycle
+- Add support for [artifacthub](https://artifacthub.io/packages/search?repo=startx) exposure
 - Stable helm-repository catalog
 
-| Release                                                                  | Date       | Description                                                |
-| ------------------------------------------------------------------------ | ---------- | ---------------------------------------------------------- |
-| [8.1.1](https://github.com/startxfr/helm-repository/releases/tag//8.1.1) | 2021-08-04 | Move to release 8.1.1 aligned with openshift 4.8.1 release |
+| Release                                                                      | Date       | Description                                                                       |
+| ---------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------- |
+| [8.13.25](https://github.com/startxfr/helm-repository/releases/tag//8.13.25) | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters                             |
+| [8.13.13](https://github.com/startxfr/helm-repository/releases/tag//8.13.13) | 2021-10-30 | Improve artifacthub and OCP catalog with helm schema                              |
+| [8.13.10](https://github.com/startxfr/helm-repository/releases/tag//8.13.10) | 2021-10-22 | Add support for [artifacthub](https://artifacthub.io/packages/search?repo=startx) |
+| [8.13.7](https://github.com/startxfr/helm-repository/releases/tag//8.13.7)   | 2021-10-21 | Improve code execution, syntax and introduce the ACS helm-chart                   |
+| [8.13.1](https://github.com/startxfr/helm-repository/releases/tag//8.13.1)   | 2021-10-06 | Move to release 8.1.13 aligned with openshift 4.8.13 release                      |
+| [8.1.1](https://github.com/startxfr/helm-repository/releases/tag//8.1.1)     | 2021-08-04 | Move to release 8.1.1 aligned with openshift 4.8.1 release                        |
 
 ## version 7.22.x (chaumeil)
 
