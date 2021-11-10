@@ -2,9 +2,11 @@
 
 This helm chart is used to create a simple pod with various application images according to the values file.
 
+This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
+
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io)  for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
@@ -135,3 +137,4 @@ helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/he
 | 8.13.8 | 2021-10-21 | Adding first draft of json schema
 | 8.13.9 | 2021-10-22 | Adding the schema in chart
 | 8.13.25 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23
+| 8.13.27 | 2021-11-10 | publish stable update for the full repository
