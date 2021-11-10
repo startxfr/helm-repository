@@ -263,3 +263,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 8.13.18 | 2021-10-31 | Remove conditional subchart in schema (imcompatible with Openshift console)
 | 8.13.19 | 2021-10-31 | value.schema.json fully support all options
 | 8.13.21 | 2021-11-01 | Align basic charts to version 8.13.21
+| 8.13.23 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and push up limits in values.schema.json
