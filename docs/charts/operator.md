@@ -200,3 +200,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 8.13.17 | 2021-10-31 | value.schema.json fully support all options
 | 8.13.21 | 2021-11-01 | Align basic charts to version 8.13.21
 | 8.13.23 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters
+| 8.13.25 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23
