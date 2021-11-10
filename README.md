@@ -1,7 +1,6 @@
 # helm-repository ![sxapi](https://img.shields.io/badge/latest-v8.13.25-blue.svg) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
-For more informations and access to the helm index, you can visit the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) or the [startx helm-repository documentation](https://helm-repository.readthedocs.io).
 
 ## Install chart from repository
 
