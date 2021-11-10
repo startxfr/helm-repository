@@ -101,3 +101,4 @@ xxxx to do xxxxxx
 | 8.13.8 | 2021-10-21 | Adding first draft of json schema
 | 8.13.9 | 2021-10-22 | Adding the schema in chart
 | 8.13.9 | 2021-10-22 | Adding the schema in chart
+| 8.13.25 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23
