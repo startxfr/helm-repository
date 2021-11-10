@@ -1,15 +1,14 @@
 # Release convention
 
-- MAJOR version for major helm structural changes that lead to break the compatibility with previous version (ex: X.0.0)
-- MINOR version for major functionality ehancement added in a backwards compatible manner (ex: 0.X.0)
-- PATCH version for bug, security and functionnals updates, backwards compatible for continous delivery (ex: 0.0.X)
-- PRE-RELEASE version for an unstable release that might not satisfy the intended compatibility requirements (ex: 0.0.0-beta)
-- BUILD version to identify to differents build during release preparation (ex: 0.0.0-tag)
+- **MAJOR** version is aligned to the **minor** version of Openshift 4.x version. (ex:  chart version 8.x.x is stable for OCP 4.8.x releases)
+- **MINOR** version is aligned to the **patch** version of Openshift 4.x.x version. (ex:  chart version 8.13.x is stable for OCP 4.8.13 release)
+- PATCH version for major functionality ehancement added in a backwards compatible manner (ex: 8.13.x)
+- PRE-RELEASE version for bug, security and functionnals updates, backwards compatible for continous delivery (ex: 8.13.23-beta)
 
 Only MAJOR, MINOR and PATCH are mandatory for naming a chart release.
 
-Minor or patch release with an **odd number** are used for **stable** and releasable version.
-A **even** minor or patch number indicate a release **not stable** and releasable.
+Patch release with an **odd number** are used for **stable** and releasable version.
+A **even** minor on the patch number indicate a release **not stable** and releasable.
 
 The CI chain will run integration test suite and promote to a stable release number the code if
 test are OK.
@@ -20,7 +19,6 @@ test are OK.
 - Minor releases defined by openshift patch change under the 4.x.x release
 - Patch releases defined by technical issues related to charts
 - pre-release defined as part of major and minor release lifecycle
-- build release used only during dev, test, build CI operations
 
 ## Examples
 
