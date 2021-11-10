@@ -2,9 +2,11 @@
 
 This helm chart is used to create a project, or namespace, with various options constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
 
+This chart is part of the [basic-xxx startx helm chart series](https://helm-repository.readthedocs.io#basic-helm-charts) used by [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts) and [example-xxx charts](https://helm-repository.readthedocs.io#examples-helm-charts).
+
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io)  for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
