@@ -1,10 +1,12 @@
 # Example html
 
-This helm chart is used to create a deployment of a small webserver based on [startx apache image](https://quay.io/startx/apache)
+This helm chart is used to create a deployment of a small webserver based on [startx apache image](https://quay.io/startx/apache).
+
+This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io)  for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
