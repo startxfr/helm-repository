@@ -67,8 +67,8 @@ operator:
   subscription:
     enabled: true
     name: "rhacs-operator"
-    namespace: "open-security-management"
-    version: "v3.65.1"
+    namespace: "openshift-operators"
+    version: "v3.66.1"
     operator: 
       channel: "latest"
       name: rhacs-operator
@@ -78,6 +78,7 @@ operator:
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
+    target: "all-ns"
     name: "rhacs-operator"
-    namespace: "open-security-management"
+    namespace: "openshift-operators"
     providedAPIs: " Central.v1alpha1.platform.stackrox.io,SecuredCluster.v1alpha1.platform.stackrox.io"
