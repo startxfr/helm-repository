@@ -8,7 +8,7 @@ metadata:
   name: "{{ .name }}"
   labels:
     {{- include "cluster-config.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "openshift-operators-redhat-project"
+    app.kubernetes.io/name: "{{ .name }}-project"
     openshift.io/cluster-monitoring: "true"
   annotations:
     {{- include "cluster-config.annotations" $root | nindent 4 }}
