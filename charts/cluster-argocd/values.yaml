@@ -22,7 +22,7 @@ argocd:
   # Activate the manager as a helm hook
   hooked: true
   # name of the argocd cluster
-  name: "startx-argocd"
+  name: "openshift-gitops"
 
 # Configuration of the argocd export
 argocd_export:
@@ -33,9 +33,9 @@ argocd_export:
       # Name of the export configuration
     - name: "example-export"
       # Namespace of the export configuration
-      namespace: "startx-argocd"
+      namespace: "openshift-gitops"
       # name of the argocd instance to export
-      argocd: "startx-argocd"
+      argocd: "openshift-gitops"
       # Rythm of the export creation
       schedule: "0 * * * *"
       # Storage class used for the PVC creation of the export
@@ -61,7 +61,7 @@ application:
       # Name of the application to configure
     - name: "example-application"
       # Namespace where to deploy this application (default is project)
-      namespace: "startx-argocd"
+      namespace: "openshift-gitops"
       # enable argocd finalizer for this application
       finalizer: true
       # name of the destination server (default is https://kubernetes.default.svc) 
@@ -126,8 +126,8 @@ project:
   project: 
     enabled: true
     type: namespace
-    name: startx-argocd
-    display_name: "Startx ARGOCD"
+    name: openshift-gitops
+    display_name: "Openshift GITOPS"
     requester: startx
     description: ArgoCD and gitops features configured by STARTX
   rbac: 
@@ -148,19 +148,20 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "argocd-operator"
-    namespace: "startx-argocd"
-    version: "v0.0.15"
+    name: "openshift-gitops-operator"
+    namespace: "openshift-operators"
+    version: "v1.3.1"
     operator: 
-      channel: "alpha"
-      name: argocd-operator
-      csv: argocd-operator
+      channel: "stable"
+      name: openshift-gitops-operator
+      csv: openshift-gitops-operator
       source: 
-        name: community-operators
+        name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: false
-    name: "argocd"
-    namespace: "startx-argocd"
-    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,ArgoCDExport.v1alpha1.argoproj.io"
+    name: "gitops"
+    target: "all-ns"
+    namespace: "openshift-operators"
+    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,GitopsService.v1alpha1.pipelines.openshift.io"
