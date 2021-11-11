@@ -1,0 +1,69 @@
+# Default values for cluster-sso.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-sso
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Deploy an API manager
+sso:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: true
+  # Name of the deployed instance of Redhat-SSOConfig
+  name: default
+  # The applyed Redhat-SSO config specifications
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: project
+    name: "startx-sso"
+    display_name: Default SSO
+    description: Redhat-SSO configured by STARTX
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "rhsso-operator"
+    namespace: "startx-sso"
+    version: "7.5.0"
+    operator: 
+      channel: alpha
+      name: rhsso-operator
+      csv: rhsso-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-sso"
+    namespace: "startx-sso"
+    providedAPIs: "Keycloak.v1alpha1.keycloak.org,KeycloakBackup.v1alpha1.keycloak.org,KeycloakClient.v1alpha1.keycloak.org,KeycloakRealm.v1alpha1.keycloak.org,KeycloakUser.v1alpha1.keycloak.org"
+
