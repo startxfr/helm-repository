@@ -6,11 +6,11 @@ description: Helm chart used to configure Knative at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.1
+version: 8.20.5
 # Version name of the knative operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 1.16.0
+appVersion: 1.18.0
 # Version of Openshift 
-engineVersion: 4.7.22
+engineVersion: 4.8.20
 # Icon of this helm-chart
 icon: https://startxfr.github.io/helm-repository/img/cluster-knative.svg
 # category associated to this package
@@ -18,7 +18,7 @@ category: cluster
 # tags
 tags: infra,cluster,knative
 # Kube minimum version
-kubeVersion: ">=1.18.0-0"
+kubeVersion: ">=1.21.1-0"
 # Keyword list for this chart
 keywords: ["startx","cluster","knative"]
 # STARTX helm chart repository homepage
@@ -33,21 +33,21 @@ maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.s
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.13.23
+    version: 8.20.2
     alias: projectOperator
     # condition: projectOperator.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.13.23
+    version: 8.20.2
     alias: projectKServing
     # condition: projectKServing.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.13.23
+    version: 8.20.2
     alias: projectKEventing
     # condition: projectKEventing.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.13.23
+    version: 8.20.2
     alias: operator
     # condition: operator.enabled

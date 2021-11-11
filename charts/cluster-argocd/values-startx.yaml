@@ -216,19 +216,20 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "argocd-operator"
-    namespace: "startx-argocd"
-    version: "v0.0.15"
+    name: "openshift-gitops-operator"
+    namespace: "openshift-operators"
+    version: "v1.3.1"
     operator: 
-      channel: "alpha"
-      name: argocd-operator
-      csv: argocd-operator
+      channel: "stable"
+      name: openshift-gitops-operator
+      csv: openshift-gitops-operator
       source: 
-        name: community-operators
+        name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: false
-    name: "argocd"
-    namespace: "startx-argocd"
-    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,ArgoCDExport.v1alpha1.argoproj.io"
+    name: "gitops"
+    target: "all-ns"
+    namespace: "openshift-operators"
+    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,GitopsService.v1alpha1.pipelines.openshift.io"
