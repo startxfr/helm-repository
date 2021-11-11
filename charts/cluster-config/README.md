@@ -117,3 +117,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 8.13.25 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23
 | 8.13.27 | 2021-11-10 | publish stable update for the full repository
 | 8.20.3 | 2021-11-11 | Align all charts to Openshift version 4.8.20
+| 8.20.3 | 2021-11-11 | stable release for all chart for openshift version 4.8.20
