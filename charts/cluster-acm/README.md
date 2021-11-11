@@ -75,3 +75,4 @@ helm install startx/cluster-acm
 | 8.20.3 | 2021-11-11 | Align all charts to Openshift version 4.8.20
 | 8.20.3 | 2021-11-11 | stable release for all chart for openshift version 4.8.20
 | 8.20.5 | 2021-11-12 | Upgrade all appVersion and align chart release
+| 8.20.7 | 2021-11-12 | Upgrade all schema for context subtree
