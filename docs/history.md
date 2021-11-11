@@ -21,7 +21,7 @@ The objectif of this version is :
 
 | Release                                                                      | Date       | Description                                                                       |
 | ---------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------- |
-| [8.20.1](https://github.com/startxfr/helm-repository/releases/tag//8.20.1) | 2021-11-11 | Upgrde charts to be aligned with Openshift version 4.8.20                             |
+| [8.20.3](https://github.com/startxfr/helm-repository/releases/tag//8.20.3) | 2021-11-11 | Upgrde charts to be aligned with Openshift version 4.8.20                             |
  [8.13.25](https://github.com/startxfr/helm-repository/releases/tag//8.13.25) | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters                             |
 | [8.13.13](https://github.com/startxfr/helm-repository/releases/tag//8.13.13) | 2021-10-30 | Improve artifacthub and OCP catalog with helm schema                              |
 | [8.13.10](https://github.com/startxfr/helm-repository/releases/tag//8.13.10) | 2021-10-22 | Add support for [artifacthub](https://artifacthub.io/packages/search?repo=startx) |
