@@ -288,3 +288,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 8.20.3 | 2021-11-11 | Align all charts to Openshift version 4.8.20
 | 8.20.2 | 2021-11-11 | stable release for basic chart for Openshift version 4.8.20
 | 8.20.5 | 2021-11-12 | Upgrade all appVersion and align chart release
+| 8.20.9 | 2021-11-12 | Align all startx chart to version 8.20.9
