@@ -6,7 +6,7 @@ description: Helm chart used to configure Code Ready Workspace at the cluster le
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.5
+version: 8.20.9
 # Version name of the CRW operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.8.2
 # Version of Openshift 
@@ -20,7 +20,17 @@ tags: infra,cluster,kubevirt
 # Kube minimum version
 kubeVersion: ">=1.21.1-0"
 # Keyword list for this chart
-keywords: ["startx","cluster","kubevirt"]
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - kubevirt
+  - virtualisation
+  - KVM
+  - virtual machine
 # STARTX helm chart repository homepage
 home: https://startxfr.github.io/helm-repository
 # Sources and documentation for this chart
@@ -28,7 +38,10 @@ sources:
   - https://startxfr.github.io/helm-repository/charts/cluster-kubevirt
   - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubevirt
 # Main maintainer contact for this helm chart
-maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
 
 dependencies:
   - name: project
@@ -41,3 +54,9 @@ dependencies:
     version: 8.20.2
     alias: operator
     # condition: operator.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: Align all startx chart to version 8.20.9
+  artifacthub.io/containsSecurityUpdates: "false"
