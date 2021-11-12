@@ -6,7 +6,7 @@ description: Helm chart used to configure Redhat-SSO at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.1
+version: 8.20.9
 # Version name of the redhat-sso operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 7.5.0
 # Version of Openshift 
@@ -20,7 +20,17 @@ tags: infra,cluster,sso,authentification,signle-sign-on
 # Kube minimum version
 kubeVersion: ">=1.21.1-0"
 # Keyword list for this chart
-keywords: ["startx","cluster","sso","authentification","signle-sign-on"]
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - security
+  - single sign on
+  - SSO
+  - keycloak
 # STARTX helm chart repository homepage
 home: https://startxfr.github.io/helm-repository
 # Sources and documentation for this chart
@@ -28,7 +38,10 @@ sources:
   - https://startxfr.github.io/helm-repository/charts/cluster-sso
   - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-sso
 # Main maintainer contact for this helm chart
-maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
 
 dependencies:
   - name: project
@@ -41,3 +54,9 @@ dependencies:
     version: 8.20.2
     alias: operator
     # condition: operator.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: Align all startx chart to version 8.20.9
+  artifacthub.io/containsSecurityUpdates: "false"
