@@ -6,7 +6,7 @@ description: Helm chart used to configure Nexus at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.9
+version: 0.20.11
 # Version name of the nexus operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 3.32.0
 # Version of Openshift 
@@ -45,18 +45,18 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.2
+    version: 8.20.5
     alias: project
     # condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.2
+    version: 8.20.5
     alias: operator
     # condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Align all startx chart to version 8.20.9
+      description: Align all startx chart to version 0.20.11
   artifacthub.io/containsSecurityUpdates: "false"
 
