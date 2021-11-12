@@ -128,3 +128,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 8.20.3 | 2021-11-11 | Align all charts to Openshift version 4.8.20
 | 8.20.5 | 2021-11-12 | Upgrade all appVersion and align chart release
 | 8.20.9 | 2021-11-12 | Align all startx chart to version 8.20.9
+| 0.20.11 | 2021-11-12 | Move chart dependencies to version 8.20.5
