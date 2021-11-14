@@ -78,3 +78,4 @@ helm install startx/cluster-acm
 | 8.20.7 | 2021-11-12 | Upgrade all schema for context subtree
 | 8.20.9 | 2021-11-12 | Align all startx chart to version 8.20.9
 | 0.20.11 | 2021-11-12 | Move chart dependencies to version 8.20.5
+| 0.20.33 | 2021-11-14 | publish stable update for the full repository
