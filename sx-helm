@@ -11,8 +11,8 @@ if [[ "$1" != "" ]]; then
     case $1 in
         list)                   routerList;;
         publish)                routerPublish;;
-        release)                routerRelease;;
-        archive)                routerArchive;;
+        release)                routerRelease $@ ;;
+        archive)                routerArchive $@ ;;
         version)                routerVersion;;
         *)
             case $2 in
