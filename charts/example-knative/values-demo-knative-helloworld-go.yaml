@@ -11,14 +11,14 @@ context: &context
   # Component name of this application (logical tenant)
   component: helm
   # Application name (functionnal tenant, default use Chart name)
-  app: example-helloworld-go
+  app: example-hello-go
   # Version name of this application (default use Chart appVersion)
   # version: "0.0.1"
 
 knativeServing:
   enabled: true
   services: 
-    - name: helloworld-go 
+    - name: hello-go 
       namespace: demo-knative
       enabled: true
       displayName: helloworld GO example based on google knative sample helloworld-go

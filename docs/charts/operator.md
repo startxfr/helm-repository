@@ -216,3 +216,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 8.20.46 | 2021-11-19 | Transitionnal chart
 | 8.20.55 | 2021-11-19 | Stable release for basic charts
 | 8.20.60 | 2021-11-19 | publish stable update for the full repository
+| 8.20.63 | 2021-11-20 | Updating values schema

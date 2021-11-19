@@ -18,14 +18,18 @@ metadata:
     {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
 spec:
   restartPolicy: Never
-{{- if $root.Values.couchbaseConfig.saPods -}}{{- if $root.Values.couchbaseConfig.saPods.enabled }}
+{{- if $root.Values.couchbaseConfig }}
+{{- if $root.Values.couchbaseConfig.saPods }}
+{{- if $root.Values.couchbaseConfig.saPods.enabled }}
 {{- $sa := $root.Values.couchbaseConfig.saPods.name | default "couchbase-pods" }}
   serviceAccountName: "{{- $sa -}}"
   serviceAccount: "{{- $sa -}}"
-{{- end -}}{{- end }} 
-{{- if $root.Values.couchbaseConfig.imageCredentialsSecret -}}
+{{- end }}
+{{- end }}
+{{- if $root.Values.couchbaseConfig.imageCredentialsSecret }}
   imagePullSecrets:
     - name: "{{- $root.Values.couchbaseConfig.imageCredentialsSecret -}}"
+{{- end }}
 {{- end }}
   securityContext:
     runAsUser: 1000
