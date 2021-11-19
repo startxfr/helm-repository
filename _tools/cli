@@ -134,9 +134,8 @@ function routerArchive {
 
 # router for archive command
 function doHelmrepositoryRefresh {
-    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:GITHUB_REPOURL}"
-    helm repo index --url ${3:GITHUB_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
-
+    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:-$GITHUB_REPOURL}"
+    helm repo index --url ${3:-$GITHUB_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
     git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
     git commit -m "[docs] update repository ${1:-default} index" $PROJECT_PATH/docs/${2:-packages} &>/dev/null
     git push origin $WORK_BRANCH
