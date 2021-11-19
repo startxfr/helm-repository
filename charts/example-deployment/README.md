@@ -171,3 +171,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 0.20.11 | 2021-11-12 | Move chart dependencies to version 8.20.5
 | 0.20.33 | 2021-11-14 | publish stable update for the full repository
 | 0.20.41 | 2021-11-14 | Aling all dependencies to version 0.20.34
+| 8.20.46 | 2021-11-19 | Transitionnal chart
