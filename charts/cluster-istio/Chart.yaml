@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.60
+version: 8.20.66
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 5.2.1
 # Version of Openshift 
@@ -47,32 +47,32 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: project
     # condition: project.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: projectOperator
     # condition: projectOperator.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: operatorElastic
     # condition: operatorElastic.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: operatorKiali
     # condition: operatorKiali.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: operatorJaeger
     # condition: operatorJaeger.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: operatorIstio
     # condition: operatorIstio.enabled
 
@@ -80,4 +80,6 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: "Update schema limits to 15 characters for context.xxx values"
+    - kind: changed
+      description: "Update dependencies chart to version 8.20.63"
   artifacthub.io/containsSecurityUpdates: "false"

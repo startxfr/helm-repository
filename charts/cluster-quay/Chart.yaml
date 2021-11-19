@@ -6,7 +6,7 @@ description: Helm chart used to configure Quay.io private registry at the cluste
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.60
+version: 8.20.66
 # Version name of the quay operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 3.6.0
 # Version of Openshift 
@@ -47,17 +47,17 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: project
     # condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: operator
     # condition: operator.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.55
+    version: 8.20.63
     alias: operatorsec
     # condition: operatorsec.enabled
 
@@ -65,4 +65,6 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: "Update schema limits to 15 characters for context.xxx values"
+    - kind: changed
+      description: "Update dependencies chart to version 8.20.63"
   artifacthub.io/containsSecurityUpdates: "false"

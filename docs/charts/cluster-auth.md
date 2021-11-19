@@ -123,3 +123,4 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 0.20.41 | 2021-11-14 | Aling all dependencies to version 0.20.34
 | 8.20.46 | 2021-11-19 | Transitionnal chart
 | 8.20.60 | 2021-11-19 | publish stable update for the full repository
+| 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema
