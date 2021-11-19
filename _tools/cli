@@ -80,18 +80,7 @@ function routerList {
 
 # router for publish command
 function routerPublish {
-    echo -e "\e[36mPublish\e[0m Generate index for $GITHUB_REPOURL"
-    helm repo index --url $GITHUB_REPOURL/packages/ $PROJECT_PATH/docs/packages/
-    echo -e "\e[36mPublish\e[0m versionning of index for $GITHUB_REPOURL"
-    git add $PROJECT_PATH/docs/packages &>/dev/null
-    git commit -m "[docs] update repository index" $PROJECT_PATH/docs/packages &>/dev/null
-    git push origin $WORK_BRANCH
-    echo -e "\e[36mPublish\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
-    git checkout $MASTER_BRANCH &>/dev/null
-    git merge --commit --no-edit $WORK_BRANCH
-    echo -e "\e[36mPublish\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
-    git push origin $MASTER_BRANCH $WORK_BRANCH
-    git checkout $WORK_BRANCH
+    doHelmrepositoryRefresh default packages $GITHUB_REPOURL Publish 36
 }
 
 # router for release command
@@ -140,32 +129,21 @@ function routerRelease {
 
 # router for archive command
 function routerArchive {
-    echo -e "\e[36mPublish\e[0m Generate archive index for $GITHUB_REPOURL"
-    helm repo index --url $GITHUB_REPOURL/packages-archives/ $PROJECT_PATH/docs/packages-archives/
-    echo -e "\e[36mPublish\e[0m versionning of archive index for $GITHUB_REPOURL"
-    git add $PROJECT_PATH/docs/packages-archives &>/dev/null
-    git commit -m "[docs] update repository archive index" $PROJECT_PATH/docs/packages-archives &>/dev/null
-    git push origin $WORK_BRANCH
-    echo -e "\e[36mPublish\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
-    git checkout $MASTER_BRANCH &>/dev/null
-    git merge --commit --no-edit $WORK_BRANCH
-    echo -e "\e[36mPublish\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
-    git push origin $MASTER_BRANCH $WORK_BRANCH
-    git checkout $WORK_BRANCH
+    doHelmrepositoryRefresh archive packages-archives $GITHUB_REPOURL Archive 37
 }
 
 # router for archive command
-function doArchive {
-    echo -e "\e[36mPublish\e[0m Generate archive index for $GITHUB_REPOURL"
-    helm repo index --url $GITHUB_REPOURL/packages-archives/ $PROJECT_PATH/docs/packages-archives/
-    echo -e "\e[36mPublish\e[0m versionning of archive index for $GITHUB_REPOURL"
-    git add $PROJECT_PATH/docs/packages-archives &>/dev/null
-    git commit -m "[docs] update repository archive index" $PROJECT_PATH/docs/packages-archives &>/dev/null
+function doHelmrepositoryRefresh {
+    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:GITHUB_REPOURL}"
+    helm repo index --url ${3:GITHUB_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
+
+    git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
+    git commit -m "[docs] update repository ${1:-default} index" $PROJECT_PATH/docs/${2:-packages} &>/dev/null
     git push origin $WORK_BRANCH
-    echo -e "\e[36mPublish\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
+    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
     git checkout $MASTER_BRANCH &>/dev/null
     git merge --commit --no-edit $WORK_BRANCH
-    echo -e "\e[36mPublish\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
+    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
     git push origin $MASTER_BRANCH $WORK_BRANCH
     git checkout $WORK_BRANCH
 }
