@@ -1,0 +1,90 @@
+{{- if .Values.quay.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "default-quay" -}}
+apiVersion: quay.redhat.com/v1
+kind: QuayRegistry
+metadata:
+  name: "{{- include "startx.appName" . -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-quay.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-quayecosystem"
+  annotations:
+    {{- include "cluster-quay.annotations" . | nindent 4 }}
+    {{- if .Values.quay.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  components:
+    - kind: clair
+      managed: true
+    - kind: postgres
+      managed: true
+    - kind: objectstorage
+      managed: true
+    - kind: redis
+      managed: true
+    - kind: horizontalpodautoscaler
+      managed: true
+    - kind: route
+      managed: true
+    - kind: mirror
+      managed: true
+    - kind: monitoring
+      managed: true
+    - kind: tls
+      managed: true
+  quay:
+    skipSetup: false
+    keepConfigDeployment: true
+    deploymentStrategy: RollingUpdate
+{{- with .Values.quay.image }}
+    image: "{{- . -}}"
+{{- end }}
+{{- if .Values.quay.pullSecretEnabled }}
+    imagePullSecretName: "{{- include "startx.appName" . -}}-pull-auth"
+{{- end }}
+{{- if .Values.quay.admin }}
+    superuserCredentialsSecretName: "{{- include "startx.appName" . -}}-adminuser"
+{{- end }}
+    migrationPhase: new-installation
+    repoMirrorResources: {}
+    resources:
+      limits:
+        cpu: "1"
+        memory: 4096Mi
+      requests:
+        cpu: 400m
+        memory: 2048Mi
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health/instance
+        port: 8443
+        scheme: HTTPS
+      initialDelaySeconds: 5
+    # externalAccessType: Route
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /health/instance
+        port: 8443
+        scheme: HTTPS
+      initialDelaySeconds: 90
+      timeoutSeconds: 5
+    registryBackends:
+      - name: default
+        local:
+          storagePath: /datastorage/registry
+    registryStorage:
+      persistentVolumeAccessModes:
+        - {{ .Values.quay.storageAccess | default "ReadWriteOnce" | quote }}
+      persistentVolumeSize: {{ .Values.quay.size | default "10Gi" | quote }}
+      persistentVolumeStorageClassName: {{ .Values.quay.storageClass | default "gp2" | quote  }}
+
+{{- end -}}
