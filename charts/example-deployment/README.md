@@ -181,3 +181,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 9.8.7 | 2021-11-20 | Debug dependencies problem
 | 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
 | 9.8.15 | 2021-11-20 | Update startx chart dependencies version to 9.8.11
+| 9.8.19 | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema
