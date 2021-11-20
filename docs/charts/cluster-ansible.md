@@ -1,0 +1,61 @@
+# Cluster Ansible
+
+This helm chart is used to create an operator based deployment of Ansible Automation.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deployment pod but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io)  for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/cluster-ansible
+```
+
+### 4. Install this chart
+
+```bash
+helm install startx/cluster-ansible
+```
+
+## Default values
+
+Complete deployment of a project with the following characteristics :
+
+xxxxxx TO DO xxxxxx
+
+```bash
+# base configuration running default configuration
+helm install startx/cluster-ansible
+```
+
+## Others values availables
+
+- **startx** : Ansible operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml))
+
+```bash
+helm install startx/cluster-ansible -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml
+```
+
+## History
+
+| Release | Date       | Description                                                                                            |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
+| 9.8.19  | 2021-11-20 | Create chart cluster-ansible from cluster-quay
+| 9.8.21 | 2021-11-20 | Initial version of the cluster chart for ansible
