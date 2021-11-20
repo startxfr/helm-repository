@@ -122,3 +122,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 8.20.60 | 2021-11-19 | publish stable update for the full repository
 | 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema
 | 8.20.67 | 2021-11-20 | Update metering operator to release 4.8.0-202111041632
+| 8.20.70 | 2021-11-20 | publish stable update for the full repository
