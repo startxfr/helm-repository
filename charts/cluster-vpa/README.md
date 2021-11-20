@@ -109,3 +109,4 @@ helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/he
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
 | 9.8.1 | 2021-11-20 | Upgrade to Openshift version 4.9.8
+| 9.8.4 | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version
