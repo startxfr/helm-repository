@@ -219,3 +219,4 @@ helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
 | 9.8.1 | 2021-11-20 | Upgrade to Openshift version 4.9.8
 | 9.8.2 | 2021-11-20 | Debug toleration in startx values
+| 9.8.3 | 2021-11-20 | Update the startx values with coments on defaulted values
