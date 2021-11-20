@@ -6,7 +6,7 @@ description: Helm chart used to configure Gitlab at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.19
+version: 9.8.28
 # Version name of the gitlab operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.0.0
 # Version of Openshift 
@@ -47,20 +47,20 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 9.8.15
+    version: 9.8.23
     alias: project
     # condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 9.8.15
+    version: 9.8.23
     alias: operator
     # condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade control of version in the values schema"
+      description: "Version check in value schema support v as a prefix to the version identifier"
     - kind: changed
-      description: "Update startx chart dependencies version to 9.8.15"
+      description: "Update the startx chart dependencies to version 9.8.23"
   artifacthub.io/containsSecurityUpdates: "false"
 
