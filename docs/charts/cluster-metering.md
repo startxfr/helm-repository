@@ -128,3 +128,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 9.8.2 | 2021-11-20 | Disable this chart for Openshift version 4.9.x release because of deprecation removal
 | 9.8.4 | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version
 | 9.8.7 | 2021-11-20 | Debug dependencies problem
+| 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
