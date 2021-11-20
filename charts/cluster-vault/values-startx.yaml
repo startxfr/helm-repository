@@ -29,8 +29,8 @@ project:
       role: admin
 vault:
   global:
-    enabled: true
-    imagePullSecrets: []
+    enabled: false
+    # imagePullSecrets: []
     tlsDisable: true
     openshift: true
   injector:
@@ -46,7 +46,7 @@ vault:
     logLevel: "info"
     logFormat: "standard"
     revokeOnShutdown: false
-    namespaceSelector: {}
+    # namespaceSelector: {}
     certs:
       secretName: null
       caBundle: ""
@@ -59,7 +59,7 @@ vault:
       limits:
         memory: 256Mi
         cpu: 250m
-    extraEnvironmentVars: {}
+    # extraEnvironmentVars: {}
     # affinity: null
     # tolerations: null
     # nodeSelector: null
@@ -78,12 +78,12 @@ vault:
         cpu: 250m
     ingress:
       enabled: false
-      labels: {}
-      annotations: {}
+      # labels: {}
+      # annotations: {}
       hosts:
-        - host: chart-example.local
-          paths: []
-      tls: []
+        - host: startx-vault.local
+      #     paths: []
+      # tls: []
     authDelegator:
       enabled: true
     extraContainers: null
@@ -96,9 +96,6 @@ vault:
       path: "/v1/sys/health?standbyok=true"
       initialDelaySeconds: 60
     preStopSleepSeconds: 5
-    extraEnvironmentVars: {}
-    extraSecretEnvironmentVars: []
-    extraVolumes: []
     affinity: |
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
@@ -108,6 +105,9 @@ vault:
                 app.kubernetes.io/instance: "{{ .Release.Name }}"
                 component: server
             topologyKey: kubernetes.io/hostname
+    # extraEnvironmentVars: {}
+    # extraSecretEnvironmentVars: []
+    # extraVolumes: []
     # tolerations: {}
     # nodeSelector: {}
     # extraLabels: {}
@@ -161,13 +161,11 @@ vault:
         enabled: false
         config: |
           ui = true
-
           listener "tcp" {
             tls_disable = 1
             address = "[::]:8200"
             cluster_address = "[::]:8201"
           }
-
           storage "raft" {
             path = "/vault/data"
           }
@@ -175,7 +173,6 @@ vault:
           service_registration "kubernetes" {}
       config: |
         ui = true
-
         listener "tcp" {
           tls_disable = 1
           address = "[::]:8200"
@@ -185,9 +182,7 @@ vault:
           path = "vault"
           address = "HOST_IP:8500"
         }
-
         service_registration "kubernetes" {}
-
         # Example configuration for using auto-unseal, using Google Cloud KMS. The
         # GKMS keys must already exist, and the cluster must have a service account
         # that is authorized to access GCP KMS.
@@ -199,12 +194,12 @@ vault:
         #}
       disruptionBudget:
         enabled: true
-        maxUnavailable: null
-    serviceAccount:
-      annotations: {}
+    #     maxUnavailable: null
+    # serviceAccount:
+    #   annotations: {}
   ui:
     enabled: true
     serviceType: "ClusterIP"
-    serviceNodePort: null
+    # serviceNodePort: null
     externalPort: 8200
-    annotations: {}
+    # annotations: {}
