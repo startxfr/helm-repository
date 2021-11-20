@@ -113,38 +113,38 @@ more information on the availables options you can set under this **vault** prop
 
 Configuration of default properties all disabled by default. This mean no resource will be created unless overwriting default parameters. Default configuration have the following characteristics :
 
-- 1 **project** named **default-workspaces**
-- 1 **operatorGroup** named **codeready-workspaces** to enable codeready operator in the project
-- 1 **subscription** named **codeready-workspaces** to deploy codeready operator in the project with the following characteristics
-  - operator name is **codeready-workspaces**
+- 1 **project** named **default-vault**
+- 1 **operatorGroup** named **vault** to enable codeready operator in the project
+- 1 **subscription** named **vault** to deploy codeready operator in the project with the following characteristics
+  - operator name is **vault**
   - operator version is **2.3.0**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **codeready-workspaces** to deploy cheCluster in the project with the following characteristics
+- 1 **cheCluster** named **vault** to deploy cheCluster in the project with the following characteristics
   - storage class **gp2**
   - storage size defined to **1Gi**
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-workspace
+helm install startx/cluster-vault
 ```
 
 ### Default values file (values-startx.yaml)
 
 Configuration of startx properties with the following characteristics :
 
-- 1 **project** named **openshift-workspaces** (disabled by default)
-- 1 **operatorGroup** named **codeready-workspaces** (disabled by default)
-- 1 **subscription** named **codeready-workspaces** (disabled by default)
-  - operator name is **codeready-workspaces**
+- 1 **project** named **openshift-vault** (disabled by default)
+- 1 **operatorGroup** named **vault** (disabled by default)
+- 1 **subscription** named **vault** (disabled by default)
+  - operator name is **vault**
   - operator version is **2.3.0**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **codeready-workspaces** to deploy cheCluster in the project with the following characteristics
+- 1 **cheCluster** named **vault** to deploy cheCluster in the project with the following characteristics
   - storage class **aws-generic-retain**
   - storage size defined to **2Gi**
 
 ```bash
 # base configuration running startx configuration
-helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
+helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml
 ```
 
 ## History
