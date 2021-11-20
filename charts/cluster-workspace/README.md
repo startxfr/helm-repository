@@ -249,3 +249,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
 | 9.8.1 | 2021-11-20 | Upgrade to Openshift version 4.9.8
 | 9.8.2 | 2021-11-20 | Upgrade crwoperatorallnamespaces operator to version 2.12.101
+| 9.8.4 | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version
