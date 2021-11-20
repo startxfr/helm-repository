@@ -27,29 +27,6 @@ project:
     - id: vault-agent-injector-sa-admin
       name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
       role: admin
-operator:
-  enabled: true
-  context: 
-    <<: *context
-  subscription:
-    enabled: true
-    hooked: false
-    name: "vault-helm"
-    namespace: "startx-vault"
-    version: "v0.0.2"
-    operator: 
-      channel: alpha
-      name: vault-helm
-      csv: vault-helm
-      source: 
-        name: community-operators
-        namespace: openshift-marketplace
-  operatorGroup:
-    enabled: true
-    hooked: false
-    name: "startx-vault"
-    namespace: "startx-vault"
-    providedAPIs: "Vault.v1alpha1.vault.sdbrett.com"
 vault:
   global:
     enabled: true
@@ -59,12 +36,12 @@ vault:
   injector:
     enabled: true
     image:
-      repository: "hashicorp/vault-k8s"
-      tag: "0.3.0"
+      repository: "registry.connect.redhat.com/hashicorp/vault-k8s"
+      tag: "0.14.1-ubi"
       pullPolicy: IfNotPresent
     agentImage:
-      repository: "vault"
-      tag: "1.4.0"
+      repository: "registry.connect.redhat.com/hashicorp/vault"
+      tag: "1.9.0-ubi"
     authPath: "auth/kubernetes"
     logLevel: "info"
     logFormat: "standard"
@@ -88,8 +65,8 @@ vault:
     nodeSelector: null
   server:
     image:
-      repository: "vault"
-      tag: "1.4.0"
+      repository: "registry.connect.redhat.com/hashicorp/vault"
+      tag: "1.9.0-ubi"
       pullPolicy: IfNotPresent
     updateStrategyType: "OnDelete"
     resources:
