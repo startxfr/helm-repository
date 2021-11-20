@@ -223,3 +223,4 @@ helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/
 | 9.8.4 | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version
 | 9.8.7 | 2021-11-20 | Debug dependencies problem
 | 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
+| 9.8.15 | 2021-11-20 | Update startx chart dependencies version to 9.8.11
