@@ -11,6 +11,7 @@ metadata:
     app: {{ $appName }}
   annotations:
     {{- include "example-html.annotations" . | nindent 4 }}
+    idling.alpha.openshift.io/unidle-targets: '[{"kind":"Deployment","name":"{{- $appName -}}","group":"apps","replicas": {{ .Values.html.replicas | default 1 }} }]'
 spec:
   ports:
     - name: http
