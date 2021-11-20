@@ -133,3 +133,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 8.20.68 | 2021-11-20 | Update all operators and upgrade to maistra.io v2
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
+| 9.8.1 | 2021-11-20 | Upgrade to Openshift version 4.9.8
