@@ -306,3 +306,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 9.8.7 | 2021-11-20 | Debug dependencies problem
 | 9.8.8 | 2021-11-20 | Update schema limit to 30 characters for version name
 | 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
+| 9.9.11 | 2021-11-20 | Update the context.xxx limit to 25 characters in values schema
