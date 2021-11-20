@@ -60,9 +60,9 @@ vault:
         memory: 256Mi
         cpu: 250m
     extraEnvironmentVars: {}
-    affinity: null
-    tolerations: null
-    nodeSelector: null
+    # affinity: null
+    # tolerations: null
+    # nodeSelector: null
   server:
     image:
       repository: "registry.connect.redhat.com/hashicorp/vault"
@@ -108,10 +108,10 @@ vault:
                 app.kubernetes.io/instance: "{{ .Release.Name }}"
                 component: server
             topologyKey: kubernetes.io/hostname
-    tolerations: {}
-    nodeSelector: {}
-    extraLabels: {}
-    annotations: {}
+    # tolerations: {}
+    # nodeSelector: {}
+    # extraLabels: {}
+    # annotations: {}
     service:
       enabled: true
       clusterIP: None
