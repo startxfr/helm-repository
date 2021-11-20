@@ -113,3 +113,5 @@ xxxx to do xxxxxx
 | 8.20.60 | 2021-11-19 | publish stable update for the full repository
 | 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema
 | 8.20.67 | 2021-11-20 | Debug resources type in values schema
+| 8.20.68 | 2021-11-20 | Update to openshift-logging operator release 5.3.0-55
+| 8.20.69 | 2021-11-20 | Update elasticsearch operator to release 5.3.0-67
