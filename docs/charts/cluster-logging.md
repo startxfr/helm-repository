@@ -116,3 +116,4 @@ xxxx to do xxxxxx
 | 8.20.68 | 2021-11-20 | Update to openshift-logging operator release 5.3.0-55
 | 8.20.69 | 2021-11-20 | Update elasticsearch operator to release 5.3.0-67
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository
+| 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
