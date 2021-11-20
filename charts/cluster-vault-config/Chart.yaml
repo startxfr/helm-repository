@@ -1,22 +1,22 @@
 apiVersion: v2
 # Name of this Helm chart
-name: cluster-workspace
+name: cluster-vault-config
 # Description of this Helm chart
-description: Helm chart used to configure Code Ready Workspace at the cluster level
+description: Helm chart used to configure vault-config at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.67
-# Version name of the CRW operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 2.11.0
+version: 8.20.66
+# Version name of the vault-config service (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 0.0.2
 # Version of Openshift 
 engineVersion: 4.8.20
 # Icon of this helm-chart
-icon: https://startxfr.github.io/helm-repository/img/cluster-workspace.svg
+icon: https://startxfr.github.io/helm-repository/img/cluster-vault.svg
 # category associated to this package
 category: cluster
 # tags
-tags: infra,cluster,codeready-workspace
+tags: infra,cluster,vault
 # Kube minimum version
 kubeVersion: ">=1.21.0-0"
 # Keyword list for this chart
@@ -27,14 +27,16 @@ keywords:
   - cluster-chart
   - cluster
   - infrastructure
-  - IDE
-  - code ready workspace
+  - security
+  - vault
+  - vault-config
+  - secret management
 # STARTX helm chart repository homepage
 home: https://startxfr.github.io/helm-repository
 # Sources and documentation for this chart
 sources:
-  - https://startxfr.github.io/helm-repository/charts/cluster-workspace
-  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace
+  - https://startxfr.github.io/helm-repository/charts/cluster-vault-config
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault-config
 # Main maintainer contact for this helm chart
 maintainers: 
   - name: "STARTX"
@@ -55,6 +57,9 @@ dependencies:
 
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: "Update crwoperatorallnamespaces operator to release 2.12.101"
+    - kind: created
+      description: "First version of the vault-config chart (only for directory structure)"
+    - kind: created
+      description: "Add vault-config operator release 0.1.1"
   artifacthub.io/containsSecurityUpdates: "false"
+

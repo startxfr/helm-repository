@@ -1,0 +1,77 @@
+# Default values for cluster-vault-config.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-vault-config
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: default-vault-config
+    display_name: Operator VAULT
+    description: Vault storage & control plane configured by startx
+  rbac: 
+    enabled: true
+    user: 
+    - id: vault-config-sa-edit
+      name: system:serviceaccount:default-vault-config:{{ .Release.name }}
+      role: edit
+    - id: vault-config-agent-injector-sa-admin
+      name: system:serviceaccount:default-vault-config:{{ .Release.name }}-agent-injector
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+    hooked: false
+    name: "vault-config-operator"
+    namespace: "default-vault-config"
+    version: "v0.1.1"
+    operator: 
+      channel: alpha
+      name: vault-config-operator
+      csv: vault-config-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "default-vault-config"
+    namespace: "default-vault-config"
+    providedAPIs: "AuthEngineMount.v1alpha1.redhatcop.redhat.io,DatabaseSecretEngineConfig.v1alpha1.redhatcop.redhat.io,DatabaseSecretEngineRole.v1alpha1.redhatcop.redhat.io,KubernetesAuthEngineConfig.v1alpha1.redhatcop.redhat.io,KubernetesAuthEngineRole.v1alpha1.redhatcop.redhat.io,PasswordPolicy.v1alpha1.redhatcop.redhat.io,Policy.v1alpha1.redhatcop.redhat.io,RandomSecret.v1alpha1.redhatcop.redhat.io,SecretEngineMount.v1alpha1.redhatcop.redhat.io"
+
+# Configuration of various vault resources (see https://helm.releases.hashicorp.com/)
+vault:
+  # Available parameters and their default values for the Vault chart.
+  RandomSecret:
+    # enabled is the master enabled switch. Setting this to true or false
+    # will enable or disable the RandomSecret creation.
+    enabled: false
