@@ -23,7 +23,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
  - Cluster autoscaling disabled
 {{ end }}
 {{ if .clusterversion.enabled }}
- - Cluster version enabled (channel {{ default "candidate" .clusterversion.channel }}-{{ default "4.5" .clusterversion.version }})
+ - Cluster version enabled (channel {{ default "candidate" .clusterversion.channel }}-{{ default "4.9" .clusterversion.version }})
   # oc describe ClusterVersion version 
 {{ else }}
  - Cluster version disabled
