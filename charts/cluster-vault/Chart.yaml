@@ -6,11 +6,11 @@ description: Helm chart used to configure vault at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.70
+version: 8.20.71
 # Version name of the vault service (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.9.0
 # Version of Openshift 
-engineVersion: 4.8.20
+engineVersion: 4.8.21
 # Icon of this helm-chart
 icon: https://startxfr.github.io/helm-repository/img/cluster-vault.svg
 # category associated to this package
@@ -54,12 +54,9 @@ dependencies:
     alias: vault
     # condition: vault.enabled
 
-
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update documentation"
-    - kind: changed
-      description: "Move to the official helm chart in version 0.18.0 (supporting vault 1.9.0)"
+      description: "Align to Openshift version 4.8.21"
   artifacthub.io/containsSecurityUpdates: "false"
 

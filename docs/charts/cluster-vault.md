@@ -216,3 +216,4 @@ helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/
 | 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema
 | 8.20.67 | 2021-11-20 | Move to the official helm chart in version 0.18.0 (supporting vault 1.9.0)
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository
+| 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
