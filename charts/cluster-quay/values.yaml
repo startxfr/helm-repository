@@ -53,38 +53,6 @@ quay:
     password: "mysecret123"
     # email of the admin user
     email: "mail@example.com"
-  # Configuration of the clair scanner
-  clair: 
-    # Enable the clair service
-    enabled: true
-    # Image to use for the database deployment
-    image: 'quay.io/redhat/clair-jwt:v3.2.0'
-    # The size of the persistant volume to use
-    size: '2Gi'
-  # Configuration of the database
-  db: 
-    # name of the database to use
-    name: "quay"
-    # Image to use for the database deployment
-    image: 'registry.access.redhat.com/rhscl/postgresql-96-rhel7:1'
-    # The size of the persistant volume to use
-    size: '2Gi'
-    # Credentials to use to get access to the database
-    creds:
-      # username used to get access to the database
-      username: "admin"
-      # password associated to the user
-      password: "secretdemerde"
-      # database root password (admin)
-      root-password: "S3cr3tDeQuay"
-  # Configuration of the redis cache
-  redis: 
-    # Image to use for the redis deployment
-    image: 'registry.access.redhat.com/rhscl/redis-32-rhel7:latest'
-    # Credentials to use to get access to the database
-    creds:
-      # password to use to access redis cache
-      password: "secretdemerde"
 
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
@@ -135,7 +103,7 @@ operatorsec:
     hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
-    version: "v3.6.0"
+    version: "v3.6.1"
     operator: 
       channel: stable-3.6
       name: container-security-operator
