@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 8.20.67
+version: 8.20.68
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 5.2.1
 # Version of Openshift 
@@ -79,5 +79,11 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update elasticsearch operator to release 5.3.0-67"
+      description: "Update kiali operator to release 1.36.6"
+    - kind: changed
+      description: "Update jaeger operator to release 1.24.1"
+    - kind: changed
+      description: "Update servicemesh operator to release 2.1.0"
+    - kind: changed
+      description: "Update templates to maistra.io/v2"      
   artifacthub.io/containsSecurityUpdates: "true"
