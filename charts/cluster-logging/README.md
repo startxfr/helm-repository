@@ -112,3 +112,4 @@ xxxx to do xxxxxx
 | 8.20.46 | 2021-11-19 | Transitionnal chart
 | 8.20.60 | 2021-11-19 | publish stable update for the full repository
 | 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema
+| 8.20.67 | 2021-11-20 | Debug resources type in values schema
