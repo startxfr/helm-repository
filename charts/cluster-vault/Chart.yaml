@@ -6,7 +6,7 @@ description: Helm chart used to configure vault at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.3
+version: 9.8.4
 # Version name of the vault service (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.9.0
 # Version of Openshift 
@@ -45,7 +45,7 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 8.20.63
+    version: 9.8.1
     alias: project
     # condition: project.enabled
   - name: vault
@@ -57,6 +57,8 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update the startx values with coments on defaulted values"
+      description: "Update startx chart dependencies to version 9.8.1"
+    - kind: changed
+      description: "Release stable version 9.8.4 for all startx chart"
   artifacthub.io/containsSecurityUpdates: "false"
 
