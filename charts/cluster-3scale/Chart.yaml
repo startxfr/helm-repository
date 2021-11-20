@@ -44,22 +44,24 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 9.8.1
+    version: 9.8.8
     alias: project
     # condition: project.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 9.8.1
+    version: 9.8.8
     alias: projectOperator
     # condition: projectOperator.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 9.8.1
+    version: 9.8.8
     alias: operator
     # condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Debug wrong dependencies version"
+      description: "Update schema limit to 30 characters for version name"
+    - kind: changed
+      description: "Update startx chart dependencies version to 9.8.8"
   artifacthub.io/containsSecurityUpdates: "false"
