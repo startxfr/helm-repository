@@ -15,9 +15,9 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-ansible.notes" -}}
--- Quay registry -------------------
-{{- if .quay }}{{- if .quay.enabled }}
-         quay : enabled
+-- Ansible automation -------------------
+{{- if .ansible }}{{- if .ansible.enabled }}
+         ansible : enabled
 {{- end }}{{- end }}
 {{- if .rhn }}{{- if .rhn.enabled }}
           RHN : enabled with user {{ .rhn.user }}

@@ -80,7 +80,7 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 30,
-                    "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                    "pattern": "^(?:[vV]*)(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
                     "title": "Version name",
                     "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
                     "default": "0.0.1",
@@ -183,100 +183,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 30,
-                            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
-                            "title": "Version name",
-                            "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
-                            "default": "0.0.1",
-                            "examples": [
-                                "0.0.1",
-                                "0.1",
-                                "0.0.1-snapshot",
-                                "0.0.1-202110300900"
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "operatorsec": {
-            "type": "object",
-            "properties": {
-                "context": {
-                    "type": "object",
-                    "properties": {
-                        "app": {
-                            "type": "string"
-                        },
-                        "cluster": {
-                            "type": "string"
-                        },
-                        "component": {
-                            "type": "string"
-                        },
-                        "environment": {
-                            "type": "string"
-                        },
-                        "scope": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "operatorGroup": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "subscription": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "hooked": {
-                            "type": "boolean"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "namespace": {
-                            "type": "string"
-                        },
-                        "operator": {
-                            "type": "object",
-                            "properties": {
-                                "channel": {
-                                    "type": "string"
-                                },
-                                "csv": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "source": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "namespace": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "version": {
-                            "type": "string",
-                            "minLength": 1,
-                            "maxLength": 30,
-                            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                            "pattern": "^(?:[vV]*)(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
                             "title": "Version name",
                             "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
                             "default": "0.0.1",
@@ -342,68 +249,14 @@
                 }
             }
         },
-        "quay": {
+        "ansibleHub": {
             "type": "object",
             "properties": {
-                "admin": {
-                    "type": "object",
-                    "properties": {
-                        "email": {
-                            "type": "string"
-                        },
-                        "password": {
-                            "type": "string"
-                        },
-                        "username": {
-                            "type": "string"
-                        }
-                    }
-                },
                 "enabled": {
                     "type": "boolean"
                 },
                 "hooked": {
                     "type": "boolean"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "pullSecretEnabled": {
-                    "type": "boolean"
-                },
-                "size": {
-                    "type": "string"
-                },
-                "storageAccess": {
-                    "type": "string"
-                },
-                "storageClass": {
-                    "type": "string"
-                }
-            }
-        },
-        "rhn": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "pwd": {
-                    "type": "string"
-                },
-                "user": {
-                    "type": "string"
-                }
-            }
-        },
-        "route": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
                 }
             }
         }
