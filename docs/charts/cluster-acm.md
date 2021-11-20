@@ -94,3 +94,4 @@ helm install startx/cluster-acm
 | 9.8.16 | 2021-11-20 | Debug the subscription version name
 | 9.8.19 | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema
 | 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
+| 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
