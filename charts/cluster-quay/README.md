@@ -131,3 +131,4 @@ helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.15 | 2021-11-20 | Update startx chart dependencies version to 9.8.11
 | 9.8.16 | 2021-11-20 | Upgrade quay to QuayRegistry resource
 | 9.8.19 | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema
+| 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
