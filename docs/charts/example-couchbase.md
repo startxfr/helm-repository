@@ -134,3 +134,4 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 | 8.20.60 | 2021-11-19 | publish stable update for the full repository
 | 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository
+| 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
