@@ -8,6 +8,7 @@ metadata:
     app: {{ include "startx.appName" . }}
   annotations:
     {{- include "example-deployment.annotations" . | nindent 4 }}
+    idling.alpha.openshift.io/unidle-targets: '[{"kind":"Deployment","name":"{{- include "startx.appName" . -}}","group":"apps","replicas": {{ .Values.replicas | default 1 }} }]'
 spec:
   ports:
     - name: http
