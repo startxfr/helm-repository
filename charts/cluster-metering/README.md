@@ -124,3 +124,4 @@ helm install startx/cluster-metering -f https://raw.githubusercontent.com/startx
 | 8.20.67 | 2021-11-20 | Update metering operator to release 4.8.0-202111041632
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
+| 9.8.1 | 2021-11-20 | Upgrade to Openshift version 4.9.8
