@@ -88,3 +88,4 @@ helm install startx/cluster-acm
 | 9.8.1   | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                             |
 | 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                            |
 | 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                            |
+| 9.8.7 | 2021-11-20 | Debug dependencies problem
