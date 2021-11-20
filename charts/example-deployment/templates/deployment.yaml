@@ -9,7 +9,7 @@ metadata:
     {{- include "example-deployment.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "30"
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.replicas | default 0 }}
   selector:
     matchLabels:
       app: {{ include "startx.appName" . }}
@@ -65,7 +65,7 @@ spec:
             failureThreshold: 3
           resources:
             limits:
-              cpu: 200m
+              cpu: 100m
               memory: 64Mi
             requests:
               cpu: 20m
