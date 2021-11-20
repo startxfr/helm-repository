@@ -131,3 +131,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 9.8.1   | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                                     |
 | 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                                    |
 | 9.8.5 | 2021-11-20 | Update to openshift 4.9 channel for cluster management
+| 9.8.5 | 2021-11-20 | Update to openshift 4.9 channel for cluster management
