@@ -251,3 +251,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 9.8.2 | 2021-11-20 | Upgrade crwoperatorallnamespaces operator to version 2.12.101
 | 9.8.4 | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version
 | 9.8.7 | 2021-11-20 | Debug dependencies problem
+| 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
