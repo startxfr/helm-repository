@@ -149,3 +149,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 9.8.1 | 2021-11-20 | Upgrade to Openshift version 4.9.8
 | 9.8.2 | 2021-11-20 | Upgrade 3scale operator to version 0.8.0-0.1634606167
 | 9.8.4 | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version
+| 9.8.4 | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version
