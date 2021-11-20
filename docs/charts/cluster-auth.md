@@ -126,3 +126,4 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21
+| 9.8.1 | 2021-11-20 | Upgrade to Openshift version 4.9.8
