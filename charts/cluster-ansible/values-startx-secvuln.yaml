@@ -1,0 +1,54 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: quaysecvuln
+  app: startx-quaysecvuln
+rhn:
+  enabled: false
+route:
+  enabled: false
+quay:
+  enabled: false
+  hooked: false
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    hooked: false
+    enabled: false
+    type: project
+    name: "startx-quaysecvuln"
+    display_name: "Startx QUAYSEC"
+    requester: startx
+    description: Quay security scan configured by STARTX
+operator:
+  enabled: false
+  operatorGroup:
+    enabled: false
+operatorsec:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "container-security-operator"
+    namespace: "openshift-operators"
+    version: "v3.6.1"
+    operator: 
+      channel: stable-3.6
+      name: container-security-operator
+      csv: container-security-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "ImageManifestVuln.v1alpha1.secscan.quay.redhat.com"

@@ -1,0 +1,70 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: quay
+  app: startx-quay
+rhn:
+  enabled: true
+  user: startx_rhnuser
+  pwd: startx_rhnpwd
+route:
+  enabled: true
+  name: registry
+quay:
+  enabled: false
+  hooked: false
+  image: 'quay.io/redhat/quay:v3.2.0'
+  size: '10Gi'
+  storageClass: 'aws-generic-retain'
+  storageAccess: 'ReadWriteOnce'
+  pullSecretEnabled: true
+  admin: 
+    username: "admin"
+    password: "secretdemerde"
+    email: "cl@startx.fr"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-quay"
+    display_name: "Startx QUAY"
+    requester: startx
+    description: Quay enterprise registry configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "quay-operator"
+    namespace: "startx-quay"
+    version: "v3.6.0"
+    operator: 
+      channel: stable-3.6
+      name: quay-operator
+      csv: quay-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-quay"
+    namespace: "startx-quay"
+    providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io,QuayRegistry.v1.quay.redhat.com"
+operatorsec:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false

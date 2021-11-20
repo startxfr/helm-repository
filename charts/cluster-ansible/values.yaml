@@ -1,0 +1,115 @@
+# Default values for cluster-ansible.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-quay
+  # Version name of this application (default use Chart appVersion)
+  # version: 0.0.3
+
+# RHN informations for the container catalog
+rhn:
+  # Enable the configuration of the rhn account for image pull
+  enabled: true
+  # Redhat Network access user to the RH container catalog
+  user: rhnuser
+  # Redhat Network access password to the Rh container catalog
+  pwd: rhnpwd
+# Deploy aroute to the quay registry
+route:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Enable the configuration of the API manager
+  name: registry
+# Deploy an API manager
+quay:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: true
+  # Image to use for the database deployment
+  image: 'quay.io/redhat/quay:v3.2.0'
+  # The size of the persistant volume to use form image layer storage
+  size: '10Gi'
+  # The storage class used for images persistance
+  storageClass: 'aws-generic-retain'
+  # The storage access mode used for registry recording
+  storageAccess: 'ReadWriteOnce'
+  # Enable pull secret using rhn credentials
+  pullSecretEnabled: true
+  # Configuration of the admin user
+  admin: 
+    # username of the admin user
+    username: "admin"
+    # password for the admin user
+    password: "mysecret123"
+    # email of the admin user
+    email: "mail@example.com"
+
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: project
+    name: "quay-operator"
+    display_name: Operator QUAY
+    description: Quay enterprise registry configured by STARTX
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+    hooked: false
+    name: "quay-operator"
+    namespace: "startx-quay"
+    version: "v3.6.0"
+    operator: 
+      channel: stable-3.6
+      name: quay-operator
+      csv: quay-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "quay-operator"
+    namespace: "quay-operator"
+    providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io,QuayRegistry.v1.quay.redhat.com"
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorsec:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+    hooked: false
+    name: "container-security-operator"
+    namespace: "openshift-operators"
+    version: "v3.6.1"
+    operator: 
+      channel: stable-3.6
+      name: container-security-operator
+      csv: container-security-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
