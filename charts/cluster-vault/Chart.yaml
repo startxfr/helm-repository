@@ -6,7 +6,7 @@ description: Helm chart used to configure vault at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: "9.8.45"
+version: "9.8.47"
 # Version name of the vault service (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.9.0
 # Version of Openshift 
@@ -50,13 +50,13 @@ dependencies:
     # condition: project.enabled
   - name: vault
     repository: https://helm.releases.hashicorp.com
-    version: 0.18.0
+    version: "0.18.0"
     alias: vault
     # condition: vault.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update the values schema limits for context properties"
+      description: "Improve version management for chart"
   artifacthub.io/containsSecurityUpdates: "false"
 
