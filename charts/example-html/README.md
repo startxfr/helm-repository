@@ -159,3 +159,4 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.32 | 2021-11-21 | Idleing resources
 | 9.8.39 | 2021-11-21 | Debug version check with more permissive mode
 | 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
+| 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
