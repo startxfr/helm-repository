@@ -94,7 +94,7 @@ spec:
   selector:
     matchLabels:
       app: details
-      version: v1
+      version: "v1"
   template:
     metadata:
       annotations:
@@ -142,7 +142,7 @@ spec:
   selector:
     matchLabels:
       app: details
-      version: v2
+      version: "v2"
   template:
     metadata:
       annotations:
@@ -211,7 +211,7 @@ spec:
   selector:
     matchLabels:
       app: ratings
-      version: v1
+      version: "v1"
   template:
     metadata:
       annotations:
@@ -259,7 +259,7 @@ spec:
   selector:
     matchLabels:
       app: ratings
-      version: v2
+      version: "v2"
   template:
     metadata:
       annotations:
@@ -340,7 +340,7 @@ spec:
   selector:
     matchLabels:
       app: reviews
-      version: v1
+      version: "v1"
   template:
     metadata:
       annotations:
@@ -388,7 +388,7 @@ spec:
   selector:
     matchLabels:
       app: reviews
-      version: v2
+      version: "v2"
   template:
     metadata:
       annotations:
@@ -438,7 +438,7 @@ spec:
   selector:
     matchLabels:
       app: reviews
-      version: v3
+      version: "v3"
   template:
     metadata:
       annotations:
@@ -519,7 +519,7 @@ spec:
   selector:
     matchLabels:
       app: productpage
-      version: v1
+      version: "v1"
   template:
     metadata:
       annotations:
@@ -601,7 +601,7 @@ spec:
   subsets:
     - name: v1
       labels:
-        version: v1
+        version: "v1"
 ---
 kind: DestinationRule
 apiVersion: networking.istio.io/v1alpha3
@@ -622,13 +622,13 @@ spec:
   subsets:
     - name: v1
       labels:
-        version: v1
+        version: "v1"
     - name: v2
       labels:
-        version: v2
+        version: "v2"
     - name: v3
       labels:
-        version: v3
+        version: "v3"
 ---
 kind: DestinationRule
 apiVersion: networking.istio.io/v1alpha3
@@ -649,10 +649,10 @@ spec:
   subsets:
     - name: v1
       labels:
-        version: v1
+        version: "v1"
     - name: v2
       labels:
-        version: v2
+        version: "v2"
 ---
 kind: DestinationRule
 apiVersion: networking.istio.io/v1alpha3
@@ -673,9 +673,9 @@ spec:
   subsets:
     - name: v1
       labels:
-        version: v1
+        version: "v1"
     - name: v2
       labels:
-        version: v2
+        version: "v2"
 {{- end }}
 {{- end }}{{- end }}{{- end }}
