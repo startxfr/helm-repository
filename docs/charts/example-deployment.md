@@ -185,3 +185,4 @@ helm install startx/example-deployment -f https://raw.githubusercontent.com/star
 | 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
 | 9.8.32 | 2021-11-21 | Idleing resources
 | 9.8.39 | 2021-11-21 | Debug version check with more permissive mode
+| 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
