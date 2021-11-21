@@ -28,7 +28,7 @@ metadata:
     template.kubevirt.io/provider: STARTX
     template.kubevirt.io/provider-support-level: Full
     template.kubevirt.io/provider-url: 'https://github.com/startxfr'
-    template.kubevirt.io/version: v1alpha1
+    template.kubevirt.io/version: "v1alpha1"
     name.os.template.kubevirt.io/centos7.0: STARTX CentOS 7
     name.os.template.kubevirt.io/centos7.1: STARTX CentOS 7
     name.os.template.kubevirt.io/centos7.2: STARTX CentOS 7
@@ -87,7 +87,7 @@ objects:
         app.kubernetes.io/part-of: vm-${NAME}
         vm.kubevirt.io/template: centos7-server-medium
         vm.kubevirt.io/template.revision: '1'
-        vm.kubevirt.io/template.version: v0.8.2
+        vm.kubevirt.io/template.version: "v0.8.2"
     spec:
       running: false
       template:
@@ -204,8 +204,8 @@ metadata:
   namespace: {{ $namespace | quote }} 
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
-    kubevirt.io/latest-observed-api-version: v1
-    kubevirt.io/storage-observed-api-version: v1alpha3
+    kubevirt.io/latest-observed-api-version: "v1"
+    kubevirt.io/storage-observed-api-version: "v1alpha3"
     name.os.template.kubevirt.io/centos7.0: CentOS 7
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
@@ -217,7 +217,7 @@ metadata:
     vm.kubevirt.io/template: medium-centos7-server
     vm.kubevirt.io/template-namespace: "{{- $namespace -}}"
     vm.kubevirt.io/template.revision: '1'
-    vm.kubevirt.io/template.version: v0.8.2
+    vm.kubevirt.io/template.version: "v0.8.2"
     workload.template.kubevirt.io/server: 'true'
   finalizers:
     - k8s.v1.cni.cncf.io/kubeMacPool
