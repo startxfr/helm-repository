@@ -60,3 +60,4 @@ helm install startx/cluster-ansible -f https://raw.githubusercontent.com/startxf
 | 9.8.19  | 2021-11-20 | Create chart cluster-ansible from cluster-quay
 | 9.8.21 | 2021-11-20 | Initial version of the cluster chart for ansible
 | 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
+| 9.8.39 | 2021-11-21 | Debug version check with more permissive mode
