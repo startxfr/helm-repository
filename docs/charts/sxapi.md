@@ -82,7 +82,7 @@ helm install startx/sxapi
 | Key                   | Default    | Description                                           |
 | --------------------- | ---------- | ----------------------------------------------------- |
 | sxapi.service.enabled | false      | Enable service for this application                   |
-| sxapi.version         | 0.3.58     | Sxapi image version to run                            |
+| sxapi.version         | 0.3.63     | Sxapi image version to run                            |
 | sxapi.profile         | prod:start | Profile to run inside the container                   |
 | sxapi.debug           | true       | Enable debuging of the container                      |
 | sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
@@ -95,7 +95,7 @@ helm install startx/sxapi
 The [values.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values.yaml) define a deployment with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with :
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.63** sxapi image running the **prod:start** command with :
   - debug disabled
   - **/** : homepage with html content
   - **/health** : health page
@@ -155,7 +155,7 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 The [values-pprod-v1.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml) define a deployment with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.57** sxapi image running the **prod:start** command with :
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with :
   - debug disabled
   - **/** : homepage with html content
   - **/health** : health page
@@ -174,7 +174,7 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 The [values-prod-v1.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml) define a deployment with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.57** sxapi image running the **prod:start** command with :
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with :
   - debug disabled
   - **/** : homepage with html content
   - **/health** : health page
@@ -193,7 +193,7 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 The [values-pprod-v2.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml) define a deployment with the following characteristics :
 
 - 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with :
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.63** sxapi image running the **prod:start** command with :
   - debug disabled
   - **/** : homepage with html content
   - **/health** : health page
@@ -317,3 +317,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
 | 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
 | 9.8.47 | 2021-11-21 | Improve version management for chart
+| 9.8.48 | 2021-11-22 | Update sxapi to version 0.3.63 with many security updates
