@@ -53,7 +53,7 @@ helm install startx/example-couchbase
 | Key                       | Default    | Description                                               |
 | ------------------------- | ---------- | --------------------------------------------------------- |
 | couchbase.service.enabled | false      | Enable service for this application                       |
-| couchbase.version         | 0.3.57     | Sxapi image version to run                                |
+| couchbase.version         | 0.3.63     | Sxapi image version to run                                |
 | couchbase.profile         | prod:start | Profile to run inside the container                       |
 | couchbase.debug           | true       | Enable debuging of the container                          |
 | couchbase.replicas        | 1          | Define the number of replicas for this couchbase instance |
@@ -66,7 +66,7 @@ helm install startx/example-couchbase
 Complete deployment of an couchbase application with the following characteristics :
 
 - 1 **service** named **example-couchbase** load balancing to pod deployed
-- 1 **deployment** named **example-couchbase** deploying **1 pod** from version **0.3.57** couchbase image running the **prod:start** command with debug disabled
+- 1 **deployment** named **example-couchbase** deploying **1 pod** from version **0.3.63** couchbase image running the **prod:start** command with debug disabled
 - 2 **configMap** holding couchbase configuration and pod environment variable context
 
 ```bash
@@ -146,3 +146,5 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 | 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
 | 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
 | 9.8.47 | 2021-11-21 | Improve version management for chart
+| 9.8.48 | 2021-11-22 | Update sxapi to version 0.3.63 with many security updates
+| 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
