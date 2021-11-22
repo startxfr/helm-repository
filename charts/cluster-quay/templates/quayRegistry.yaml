@@ -39,52 +39,52 @@ spec:
       managed: true
     - kind: tls
       managed: true
-  quay:
-    skipSetup: false
-    keepConfigDeployment: true
-    deploymentStrategy: RollingUpdate
-{{- with .Values.quay.image }}
-    image: "{{- . -}}"
-{{- end }}
-{{- if .Values.quay.pullSecretEnabled }}
-    imagePullSecretName: "{{- include "startx.appName" . -}}-pull-auth"
-{{- end }}
-{{- if .Values.quay.admin }}
-    superuserCredentialsSecretName: "{{- include "startx.appName" . -}}-adminuser"
-{{- end }}
-    migrationPhase: new-installation
-    repoMirrorResources: {}
-    resources:
-      limits:
-        cpu: "1"
-        memory: 4096Mi
-      requests:
-        cpu: 400m
-        memory: 2048Mi
-    readinessProbe:
-      failureThreshold: 3
-      httpGet:
-        path: /health/instance
-        port: 8443
-        scheme: HTTPS
-      initialDelaySeconds: 5
-    # externalAccessType: Route
-    livenessProbe:
-      failureThreshold: 3
-      httpGet:
-        path: /health/instance
-        port: 8443
-        scheme: HTTPS
-      initialDelaySeconds: 90
-      timeoutSeconds: 5
-    registryBackends:
-      - name: default
-        local:
-          storagePath: /datastorage/registry
-    registryStorage:
-      persistentVolumeAccessModes:
-        - {{ .Values.quay.storageAccess | default "ReadWriteOnce" | quote }}
-      persistentVolumeSize: {{ .Values.quay.size | default "10Gi" | quote }}
-      persistentVolumeStorageClassName: {{ .Values.quay.storageClass | default "gp2" | quote  }}
+#   quay:
+#     skipSetup: false
+#     keepConfigDeployment: true
+#     deploymentStrategy: RollingUpdate
+# {{- with .Values.quay.image }}
+#     image: "{{- . -}}"
+# {{- end }}
+# {{- if .Values.quay.pullSecretEnabled }}
+#     imagePullSecretName: "{{- include "startx.appName" . -}}-pull-auth"
+# {{- end }}
+# {{- if .Values.quay.admin }}
+#     superuserCredentialsSecretName: "{{- include "startx.appName" . -}}-adminuser"
+# {{- end }}
+#     migrationPhase: new-installation
+#     repoMirrorResources: {}
+#     resources:
+#       limits:
+#         cpu: "1"
+#         memory: 4096Mi
+#       requests:
+#         cpu: 400m
+#         memory: 2048Mi
+#     readinessProbe:
+#       failureThreshold: 3
+#       httpGet:
+#         path: /health/instance
+#         port: 8443
+#         scheme: HTTPS
+#       initialDelaySeconds: 5
+#     # externalAccessType: Route
+#     livenessProbe:
+#       failureThreshold: 3
+#       httpGet:
+#         path: /health/instance
+#         port: 8443
+#         scheme: HTTPS
+#       initialDelaySeconds: 90
+#       timeoutSeconds: 5
+#     registryBackends:
+#       - name: default
+#         local:
+#           storagePath: /datastorage/registry
+#     registryStorage:
+#       persistentVolumeAccessModes:
+#         - {{ .Values.quay.storageAccess | default "ReadWriteOnce" | quote }}
+#       persistentVolumeSize: {{ .Values.quay.size | default "10Gi" | quote }}
+#       persistentVolumeStorageClassName: {{ .Values.quay.storageClass | default "gp2" | quote  }}
 
 {{- end -}}
