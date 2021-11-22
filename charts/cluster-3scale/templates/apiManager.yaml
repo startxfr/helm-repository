@@ -28,8 +28,8 @@ spec:
       replicas: 1
     sidekiqSpec:
       replicas: 1
-    sphinxSpec: 
-      replicas: 1
+    # sphinxSpec: 
+    #   replicas: 1
     fileStorage:
       persistentVolumeClaim:
         storageClassName: ocs-fs-retain
@@ -38,9 +38,9 @@ spec:
       replicas: 1
     queSpec:
       replicas: 1
-    fileStorage:
-      persistentVolumeClaim:
-        storageClassName: gp2
+    # fileStorage:
+    #   persistentVolumeClaim:
+    #     storageClassName: gp2
   backend:
     cronSpec:
       replicas: 1
@@ -48,9 +48,9 @@ spec:
       replicas: 1
     workerSpec:
       replicas: 1
-    fileStorage:
-      persistentVolumeClaim:
-        storageClassName: gp2
+    # fileStorage:
+    #   persistentVolumeClaim:
+    #     storageClassName: gp2
   apicast:
     managementAPI: status
     openSSLVerify: false
@@ -60,7 +60,7 @@ spec:
       replicas: 1
     productionSpec:
       replicas: 1
-    fileStorage:
-      persistentVolumeClaim:
-        storageClassName: gp2
+    # fileStorage:
+    #   persistentVolumeClaim:
+    #     storageClassName: gp2
 {{- end -}}
