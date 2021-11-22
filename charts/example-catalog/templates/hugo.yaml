@@ -180,10 +180,10 @@ spec:
     type: Rolling
     rollingParams:
       timeoutSeconds: 60
-      maxUnavailable: 25%
-      maxSurge: 25%
+      maxUnavailable: "25%"
+      maxSurge: "25%"
       post:
-	      execNewPod:
+        execNewPod:
           command:
             - "/bin/sx-nodejs"
           args:
@@ -937,6 +937,7 @@ data:
         exit $RTN;
       fi
     }
+
 ---
 kind: Task
 apiVersion: tekton.dev/v1alpha1
