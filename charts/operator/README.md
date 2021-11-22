@@ -237,3 +237,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
 | 9.8.47 | 2021-11-21 | Improve version management for chart
 | 9.8.48 | 2021-11-22 | Align with all other basic chart version to number 9.8.48
+| 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
