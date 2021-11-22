@@ -53,7 +53,7 @@ helm install startx/example-html
 | Key                  | Default    | Description                                          |
 | -------------------- | ---------- | ---------------------------------------------------- |
 | html.service.enabled | false      | Enable service for this application                  |
-| html.version         | 0.3.57     | Sxapi image version to run                           |
+| html.version         | 0.3.63     | Sxapi image version to run                           |
 | html.profile         | prod:start | Profile to run inside the container                  |
 | html.debug           | true       | Enable debuging of the container                     |
 | html.replicas        | 1          | Define the number of replicas for this html instance |
@@ -66,7 +66,7 @@ helm install startx/example-html
 Complete deployment of an html application with the following characteristics :
 
 - 1 **service** named **example-html** load balancing to pod deployed
-- 1 **deployment** named **example-html** deploying **1 pod** from version **0.3.57** html image running the **prod:start** command with debug disabled
+- 1 **deployment** named **example-html** deploying **1 pod** from version **0.3.63** html image running the **prod:start** command with debug disabled
 - 2 **configMap** holding html configuration and pod environment variable context
 
 ```bash
@@ -161,3 +161,4 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
 | 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
 | 9.8.47 | 2021-11-21 | Improve version management for chart
+| 9.8.48 | 2021-11-22 | Update sxapi to version 0.3.63 with many security updates
