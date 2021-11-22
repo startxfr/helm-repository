@@ -53,7 +53,7 @@ helm install startx/example-catalog
 | Key                   | Default    | Description                                           |
 | --------------------- | ---------- | ----------------------------------------------------- |
 | sxapi.service.enabled | false      | Enable service for this application                   |
-| sxapi.version         | 0.3.57     | Sxapi image version to run                            |
+| sxapi.version         | 0.3.63     | Sxapi image version to run                            |
 | sxapi.profile         | prod:start | Profile to run inside the container                   |
 | sxapi.debug           | true       | Enable debuging of the container                      |
 | sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
@@ -66,7 +66,7 @@ helm install startx/example-catalog
 Complete deployment of an sxapi application with the following characteristics :
 
 - 1 **service** named **example-catalog** load balancing to pod deployed
-- 1 **deployment** named **example-catalog** deploying **1 pod** from version **0.3.57** sxapi image running the **prod:start** command with debug disabled
+- 1 **deployment** named **example-catalog** deploying **1 pod** from version **0.3.63** sxapi image running the **prod:start** command with debug disabled
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
@@ -79,7 +79,7 @@ helm install startx/example-catalog
 Complete deployment of a sxapi development application with the following characteristics :
 
 - 1 **service** named **example-catalog-dev** load balancing to pod deployed
-- 1 **deployment** named **example-catalog-dev** deploying **1 pod** from version **0.3.57** sxapi image running the **dev:start** command with debug disabled
+- 1 **deployment** named **example-catalog-dev** deploying **1 pod** from version **0.3.63** sxapi image running the **dev:start** command with debug disabled
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
@@ -147,3 +147,5 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
 | 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
 | 9.8.47 | 2021-11-21 | Improve version management for chart
+| 9.8.48 | 2021-11-22 | Update sxapi to version 0.3.63 with many security updates
+| 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48

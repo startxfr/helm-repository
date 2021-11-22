@@ -88,7 +88,7 @@ spec:
       from:
         kind: DockerImage
         name: startx/sxapi:testing
-    - name: "v0.3.58"
+    - name: "v0.3.63"
       annotations:
         openshift.io/display-name: "{{- $scope -}} - {{- $component -}} application"
         description: Application {{- $component -}} image for {{- $scope -}} scope
@@ -99,7 +99,7 @@ spec:
         sampleRepo: https://github.com/startxfr/sxapi-core.git
       from:
         kind: DockerImage
-        name: startx/sxapi:0.3.58
+        name: startx/sxapi:0.3.63
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -193,7 +193,7 @@ spec:
     sourceStrategy:
       from:
         kind: ImageStreamTag
-        name: builder:v0.3.58
+        name: builder:v0.3.63
       env:
         - name: SX_VERBOSE
           value: "true"
