@@ -149,3 +149,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 9.8.47 | 2021-11-21 | Improve version management for chart
 | 9.8.48 | 2021-11-22 | Update sxapi to version 0.3.63 with many security updates
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
+| 9.8.52 | 2021-11-22 | Debug the hugo demo template with tab istead of space hidden into the tempate
