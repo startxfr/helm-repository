@@ -53,7 +53,7 @@ helm install startx/example-knative
 | Key                     | Default    | Description                                             |
 | ----------------------- | ---------- | ------------------------------------------------------- |
 | knative.service.enabled | false      | Enable service for this application                     |
-| knative.version         | 0.3.57     | Sxapi image version to run                              |
+| knative.version         | 0.3.63     | Sxapi image version to run                              |
 | knative.profile         | prod:start | Profile to run inside the container                     |
 | knative.debug           | true       | Enable debuging of the container                        |
 | knative.replicas        | 1          | Define the number of replicas for this knative instance |
@@ -164,3 +164,4 @@ helm install startx/example-knative -f https://raw.githubusercontent.com/startxf
 | 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
 | 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
 | 9.8.47 | 2021-11-21 | Improve version management for chart
+| 9.8.48 | 2021-11-22 | Update sxapi to version 0.3.63 with many security updates
