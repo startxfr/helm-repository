@@ -275,21 +275,19 @@ spec:
       maxUnavailable: 25%
       maxSurge: 25%
       post:
+        failurePolicy: Ignore
         execNewPod:
+          containerName: application-post
           command:
-            - "/bin/sx-nodejs"
-          args:
-            - "info"
-          failurePolicy: Ignore
-          containerName: application
+            - "/bin/sx-nodejs info"
           env:
             - name: SX_VERBOSE
               value: "true"
             - name: SX_DEBUG
               value: "true"
-          envFrom:
-            - configMapRef:
-                name: app-v1-config
+          # envFrom:
+          #   - configMapRef:
+          #       name: app-v1-config
   triggers:
     - type: ImageChange
       imageChangeParams:
@@ -395,21 +393,19 @@ spec:
       maxUnavailable: 25%
       maxSurge: 25%
       post:
+        failurePolicy: Ignore
         execNewPod:
+          containerName: application-post
           command:
-            - "/bin/sx-nodejs"
-          args:
-            - info
-          failurePolicy: Ignore
-          containerName: application
+            - "/bin/sx-nodejs info"
           env:
             - name: SX_VERBOSE
               value: "true"
             - name: SX_DEBUG
               value: "true"
-          envFrom:
-            - configMapRef:
-                name: app-v2-config
+          # envFrom:
+          #   - configMapRef:
+          #       name: app-v2-config
   triggers:
     - type: ImageChange
       imageChangeParams:
