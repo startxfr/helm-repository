@@ -30,9 +30,9 @@ imagestreams:
         version: latest
         sampleRepo: https://github.com/startxfr/sxcm.git
       source: &ist_apache_source
-        local: "false"
-        kind: is
-        image: latest
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:fc35
     - name: test
       enabled: true
       desc:
@@ -42,10 +42,8 @@ imagestreams:
         tags:  builder,sxcm,test,apache,httpd
         version: alpine3
       source:
-        local: "true"
-        insecure: "false"
         <<: *ist_apache_source
-        image: quay.io/startx/apache:alpine3
+        image: quay.io/startx/apache:centos8
     - name: stable
       enabled: true
       desc:
@@ -55,8 +53,6 @@ imagestreams:
         tags:  builder,sxcm,stable,apache,httpd
         version: ubi8
       source:
-        local: "true"
-        insecure: "false"
         <<: *ist_apache_source
         image: quay.io/startx/apache:ubi8
 - name: sxcm-mariadb
@@ -78,9 +74,9 @@ imagestreams:
         version: latest
         sampleRepo: https://github.com/startxfr/sxcm.git
       source: &ist_mariadb_source
-        local: "false"
-        kind: is
-        image: latest
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:fc35
     - name: test
       enabled: true
       desc:
@@ -90,10 +86,8 @@ imagestreams:
         tags:  builder,sxcm,test,mariadb,sql
         version: alpine3
       source:
-        local: "true"
-        insecure: "false"
         <<: *ist_mariadb_source
-        image: quay.io/startx/mariadb:alpine3
+        image: quay.io/startx/mariadb:centos8
     - name: stable
       enabled: true
       desc:
@@ -103,8 +97,6 @@ imagestreams:
         tags:  builder,sxcm,stable,mariadb,sql
         version: ubi8
       source:
-        local: "true"
-        insecure: "false"
         <<: *ist_mariadb_source
         image: quay.io/startx/mariadb:ubi8
 - name: sxcm-nodejs
@@ -126,9 +118,9 @@ imagestreams:
         version: latest
         sampleRepo: https://github.com/startxfr/sxcm.git
       source: &ist_nodejs_source
-        local: "false"
-        kind: is
-        image: latest
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:fc35
     - name: test
       enabled: true
       desc:
@@ -141,7 +133,7 @@ imagestreams:
         local: "true"
         insecure: "false"
         <<: *ist_nodejs_source
-        image: quay.io/startx/nodejs:alpine3
+        image: quay.io/startx/nodejs:centos8
     - name: stable
       enabled: true
       desc:
@@ -174,9 +166,9 @@ imagestreams:
         version: latest
         sampleRepo: https://github.com/startxfr/sxcm.git
       source: &ist_php_source
-        local: "false"
-        kind: is
-        image: latest
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:fc35
     - name: test
       enabled: true
       desc:
@@ -189,7 +181,7 @@ imagestreams:
         local: "true"
         insecure: "false"
         <<: *ist_php_source
-        image: quay.io/startx/php:alpine3
+        image: quay.io/startx/php:centos8
     - name: stable
       enabled: true
       desc:
