@@ -302,3 +302,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.47 | 2021-11-21 | Improve version management for chart
 | 9.8.48 | 2021-11-22 | Align with all other basic chart version to number 9.8.48
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
+| 9.8.52 | 2021-11-23 | Move the awx-runner values to automation-runner
