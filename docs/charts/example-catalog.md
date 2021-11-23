@@ -153,3 +153,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 9.8.53 | 2021-11-23 | Debug the hugo demo template with comment on DeploymentConfig Post hook instructions
 | 9.8.54 | 2021-11-23 | Debug the hugo demo template with failurePolicy on post hook
 | 9.8.55 | 2021-11-23 | Debug hugo and s2i values
+| 9.8.56 | 2021-11-23 | Debug humo and vault examples
