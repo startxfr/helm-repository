@@ -151,3 +151,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
 | 9.8.52 | 2021-11-22 | Debug the hugo demo template with tab istead of space hidden into the tempate
 | 9.8.53 | 2021-11-23 | Debug the hugo demo template with comment on DeploymentConfig Post hook instructions
+| 9.8.54 | 2021-11-23 | Debug the hugo demo template with failurePolicy on post hook
