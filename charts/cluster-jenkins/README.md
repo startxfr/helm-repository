@@ -120,3 +120,4 @@ helm install startx/cluster-jenkins -f https://raw.githubusercontent.com/startxf
 | 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
 | 9.8.47 | 2021-11-21 | Improve version management for chart
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
+| 9.8.52 | 2021-11-23 | Debug version csv version v0.7.3 in operator configuration
