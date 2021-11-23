@@ -184,20 +184,17 @@ spec:
       maxSurge: "25%"
       post:
         execNewPod:
+          containerName: application-post
           command:
-            - "/bin/sx-nodejs"
-          args:
-            - info
-          failurePolicy: Ignore
-          containerName: application
+            - "/bin/sx-nodejs info"
           env:
             - name: SX_VERBOSE
               value: "true"
             - name: SX_DEBUG
               value: "true"
-          envFrom:
-            - configMapRef:
-                name: hugo-config
+          # envFrom:
+          #   - configMapRef:
+          #       name: hugo-config
   triggers:
     - type: ImageChange
       imageChangeParams:
