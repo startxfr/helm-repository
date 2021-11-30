@@ -35,4 +35,8 @@ spec:
 {{- end }}{{- end }}
   overrides: {}
   separateCertificateManagement: false
+{{- if .Values.acm.mch.infra }}
+  nodeSelector:
+    node-role.kubernetes.io/infra: ''
+{{- end }}
 {{- end }}{{- end }}{{- end }}
