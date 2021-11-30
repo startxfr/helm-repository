@@ -1,13 +1,6 @@
 {{- if .Values.acs.enabled }}{{- if .Values.acs.central }}{{- if .Values.acs.central.enabled }}
 {{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "open-security-management" -}}
-
-
-
-
-
-
-
 apiVersion: platform.stackrox.io/v1alpha1
 kind: Central
 metadata:
@@ -39,6 +32,14 @@ spec:
     persistence:
       persistentVolumeClaim:
         claimName: stackrox-db
+    {{- if .Values.acs.infra }}
+    nodeSelector:
+      node-role.kubernetes.io/infra: ''
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/infra
+        operator: Exists
+    {{- end }}
   egress:
     connectivityPolicy: Online
   scanner:
