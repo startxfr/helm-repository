@@ -30,6 +30,21 @@ spec:
   source: {{ .name | default "redhat-operators" | quote }}
   sourceNamespace: {{ .namespace | default "openshift-marketplace" | quote }}
   {{- end }}
-  startingCSV: "{{ .csv | default $name }}.{{ $version | default "v0.1.0" }}"
-  {{- end }}
+  startingCSV: '{{ .csv | default $name }}.{{ $version | default "v0.1.0" }}'
+  {{- if .config }}
+  config:
+  {{- if .config.infra }}
+    nodeSelector:
+      node-role.kubernetes.io/infra: ''
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/infra
+        operator: Exists
+  {{- end }}{{- /* end condition line 36 */ -}}
+  {{- if .config.env }}
+    env:
+      {{- .config.env | toYaml | nindent 6 }}
+  {{- end }}{{- /* end condition line 44 */ -}}
+  {{- end }}{{- /* end condition line 34 */ -}}
+  {{- end }}{{- /* end condition line 26 */ -}}
 {{- end }}{{- end }}{{- end }}
