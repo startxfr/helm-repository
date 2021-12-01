@@ -83,7 +83,7 @@ spec:
       schedule: {{ .schedule | default "30 3 * * *" | quote }}
       {{- if .resources }}
       resources:
-        {{- .resources | nindent 8 -}}
+        {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
   {{- end }}{{- end }}{{- end }}
   {{- if .Values.logging.fluentd }}{{- if .Values.logging.fluentd.enabled }}
