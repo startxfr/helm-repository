@@ -9,6 +9,7 @@ context: &context
 acm:
   enabled: true
   mch:
+    infra: false ## set to true if infra is available
     enabled: true
     hooked: false
     name: "startx-mch"
@@ -71,6 +72,7 @@ operator:
       channel: "release-2.4"
       name: advanced-cluster-management
       csv: advanced-cluster-management
+      infra: false ## Set to true if infra nodes are available
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
