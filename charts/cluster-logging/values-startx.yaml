@@ -7,12 +7,13 @@ context: &context
   component: logging
   app: openshift-logging
 logging:
+  infra: false ## set to true if infra node available
   enabled: true
   managementState: "Managed"
   elasticsearch:
     enabled: true
     replicas: 3
-    resources: |
+    resources:
       limits:
         memory: 16Gi
       requests:
@@ -24,7 +25,7 @@ logging:
   kibana:
     enabled: true
     replicas: 1
-    resources: |
+    resources:
       limits:
         memory: 736Mi
       requests:
@@ -33,7 +34,7 @@ logging:
   curation:
     enabled: true
     schedule: "30 3 * * *"
-    resources: |
+    resources:
       limits:
         memory: 256Mi
       requests:
@@ -41,7 +42,7 @@ logging:
         memory: 256Mi
   fluentd:
     enabled: true
-    resources: |
+    resources:
       limits:
         memory: 736Mi
       requests:
@@ -50,7 +51,7 @@ logging:
 eventrouter:
   enabled: false
   replicas: 1
-  resources: |
+  resources:
     limits:
       cpu: 400m
       memory: 512Mi
