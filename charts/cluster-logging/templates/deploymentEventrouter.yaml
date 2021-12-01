@@ -104,7 +104,7 @@ spec:
           imagePullPolicy: IfNotPresent
           {{- if .Values.eventrouter.resources }}
           resources:
-            {{- .Values.eventrouter.resources | nindent 12 -}}
+            {{- .Values.eventrouter.resources | toYaml | nindent 12 -}}
           {{- end }}
           volumeMounts:
           - name: config-volume
