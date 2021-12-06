@@ -4,7 +4,7 @@
 {{- $region := .Values.cluster.region | default "eu-west-3" -}}
 {{ range .Values.machineSet.list }}
 ---
-kind: StorageClass
+kind: MachineSet
 apiVersion: machine.k8s.io/v1
 metadata:
   name: "{{ .id }}"
