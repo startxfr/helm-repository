@@ -261,3 +261,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 9.8.47 | 2021-11-21 | Improve version management for chart
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
 | 9.8.52 | 2021-11-22 | Move to a cluster wide operator group scope
+| 9.8.53 | 2021-12-06 | Update to workspace operator version 2.13.100
