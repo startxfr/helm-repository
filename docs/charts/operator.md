@@ -239,3 +239,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 9.8.48 | 2021-11-22 | Align with all other basic chart version to number 9.8.48
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
 | 9.8.52 | 2021-11-22 | Move to a cluster wide operator group scope for codeready-workspace values
+| 9.8.53 | 2021-12-06 | Add values-crw-2.13.100 for codeready-workspace
