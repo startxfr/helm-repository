@@ -8,12 +8,13 @@ context: &context
   app: startx-acs
 acs:
   enabled: true
+  infra: false ## set this to true if infra node available
   central:
     enabled: true
     hooked: false
     name: "startx"
   scanner:
-      enabled: true
+    enabled: true
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -49,6 +50,7 @@ operator:
     <<: *context
   subscription:
     enabled: true
+    infra: false ## set this to true if infra node available
     name: "rhacs-operator"
     namespace: "openshift-operators"
     version: "v3.67.0"
