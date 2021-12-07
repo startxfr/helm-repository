@@ -194,3 +194,4 @@ helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/
 | 9.8.47 | 2021-11-21 | Improve version management for chart
 | 9.8.48 | 2021-11-22 | Update sxapi to version 0.3.63 with many security updates
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
+| 9.8.52 | 2021-12-07 | Debug values
