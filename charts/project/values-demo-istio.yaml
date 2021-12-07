@@ -56,15 +56,16 @@ limits:
           memory: "512Mi"
 quotas: 
   enabled: true
-  rules:  |
+  rules: |
     hard:
       limits.cpu: "9"
       limits.memory: "10Gi"
+      limits.storage: "2Gi"
       requests.cpu: "5"
       requests.memory: "6Gi"
-      requests.storage: "0"
+      requests.storage: "2Gi"
       persistentvolumeclaims: "0"
-      ephemeral-storage: "0" 
+      ephemeral-storage: "2Gi" 
       gp2.storageclass.storage.k8s.io/requests.storage: "0"
       gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
