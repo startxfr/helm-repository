@@ -307,3 +307,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.54 | 2021-12-07 | Improve project options
 | 9.8.55 | 2021-12-07 | Improve quotas management in startx-istio project values
 | 9.8.56 | 2021-12-07 | Debug quotas
+| Debug values | 2021-12-07 | Improve project options
