@@ -305,3 +305,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.52 | 2021-11-23 | Move the awx-runner values to automation-runner
 | 9.8.53 | 2021-11-23 | Update the quay-secvuln project quotas
 | 9.8.54 | 2021-12-07 | Improve project options
+| 9.8.55 | 2021-12-07 | Improve quotas management in startx-istio project values
