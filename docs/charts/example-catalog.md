@@ -155,3 +155,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 9.8.55 | 2021-11-23 | Debug hugo and s2i values
 | 9.8.56 | 2021-11-23 | Debug humo and vault examples
 | 9.8.57 | 2021-12-09 | Update to ansible-automation-platform operator version v2.1.0-0.1638388448
+| 9.8.58 | 2021-12-09 | Update to ansible-automation-platform operator version 2.1.0-0.1638393503 from stable-2.1 channel
