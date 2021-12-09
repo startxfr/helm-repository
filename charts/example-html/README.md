@@ -165,3 +165,4 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
 | 9.8.52 | 2021-11-23 | Move the demo-awx-runner manpage values to demo-automation-runner
 | 9.8.53 | 2021-12-09 | Move all manpage chart to 1 replicas
+| 9.8.54 | 2021-12-09 | Move all manpage chart to 1 replicas
