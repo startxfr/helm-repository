@@ -66,3 +66,4 @@ helm install startx/cluster-ansible -f https://raw.githubusercontent.com/startxf
 | 9.8.47 | 2021-11-21 | Improve version management for chart
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
 | 9.8.52 | 2021-11-22 | Update to ansible-automation-platform operator version and move to a cluster scope operator
+| 9.8.53 | 2021-12-09 | Update to ansible-automation-platform operator version v2.1.0-0.1638388448
