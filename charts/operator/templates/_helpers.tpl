@@ -4,8 +4,8 @@
 
 {{/* Common labels */}}
 {{- define "operator.labels" -}}
-{{ include "startx.labelsInfra" . }}
-app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
+{{ include "startx.labelsCommon" . }}
+app.kubernetes.io/instance: {{ include "startx.appName" . | quote }}
 {{- end -}}
 
 {{/* Common operator annotations */}}
