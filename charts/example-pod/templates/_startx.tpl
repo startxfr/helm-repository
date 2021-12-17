@@ -109,8 +109,8 @@ app.kubernetes.io/part-of: {{ include "startx.appEnironment" . | quote }}
 {{/* Common infrastructure labels */}}
 {{- define "startx.labelsInfra" -}}
 {{ include "startx.labelsDefault" . }}
-app.startx.fr/component: "infra"
-app.kubernetes.io/component: "infra"
+app.startx.fr/component: {{ default "infra" .Values.context.component | quote }}
+app.kubernetes.io/component: {{ default "infra" .Values.context.component | quote }}
 app.kubernetes.io/part-of: {{ include "startx.appCluster" . | quote }}
 {{- end -}}
 
