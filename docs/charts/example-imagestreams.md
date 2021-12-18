@@ -237,3 +237,4 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | 9.8.53 | 2021-11-23 | Update values examples
 | 9.8.54 | 2021-11-23 | Update the sxcm imagestream
 | 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
+| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59

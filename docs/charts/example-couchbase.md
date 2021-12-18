@@ -149,3 +149,4 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 | 9.8.48 | 2021-11-22 | Update sxapi to version 0.3.63 with many security updates
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
 | 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
+| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
