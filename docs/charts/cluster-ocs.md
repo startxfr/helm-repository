@@ -142,3 +142,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
 | 9.8.52 | 2021-12-09 | Move to OCS deployed in version 4.8.0
 | 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
+| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
