@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: "9.8.53"
+version: 9.8.67
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 5.2.1
 # Version of Openshift 
@@ -47,37 +47,39 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.48"
+    version: "9.8.59"
     alias: project
     # condition: project.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.48"
+    version: "9.8.59"
     alias: projectOperator
     # condition: projectOperator.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.48"
+    version: "9.8.59"
     alias: operatorElastic
     # condition: operatorElastic.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.48"
+    version: "9.8.59"
     alias: operatorKiali
     # condition: operatorKiali.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.48"
+    version: "9.8.59"
     alias: operatorJaeger
     # condition: operatorJaeger.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.48"
+    version: "9.8.59"
     alias: operatorIstio
     # condition: operatorIstio.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Improve quotas management in startx-istio project values"
+      description: "Update startx chart dependencies to version 9.8.59"
+    - kind: changed
+      description: "Align with all other startx chart version to number 9.8.67"
   artifacthub.io/containsSecurityUpdates: "false"

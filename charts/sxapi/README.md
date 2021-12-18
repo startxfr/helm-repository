@@ -321,3 +321,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 9.8.49 | 2021-11-22 | Align with all other basic chart version to number 9.8.48 (blank release)
 | 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
 | 9.8.59 | 2021-12-18 | Improve global label management
+| 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
