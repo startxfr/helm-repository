@@ -62,3 +62,4 @@ helm install startx/cluster-acs
 | 9.8.52 | 2021-12-06 | Update to version 3.67.0
 | 9.8.53 | 2021-12-06 | Update to version 3.67.0
 | 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
+| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
