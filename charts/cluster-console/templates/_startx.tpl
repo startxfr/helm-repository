@@ -85,14 +85,20 @@ STARTX common helpers
 openshift.io/generated-by: startx-helm-{{- .Chart.Name -}}
 {{- end -}}
 
-{{/* Common labels */}}
-{{- define "startx.labelsDefault" -}}
+{{/* Common startx labels */}}
+{{- define "startx.labelsDefaultStartx" -}}
 app.startx.fr/scope: {{ include "startx.appScope" . | quote }}
 app.startx.fr/cluster: {{ include "startx.appCluster" . | quote }}
 app.startx.fr/environment: {{ include "startx.appEnvironment" . | quote }}
+app.startx.fr/component: {{ include "startx.appComponent" . | default "component" | quote }}
 app.startx.fr/app: {{ include "startx.appName" . | quote }}
-app.kubernetes.io/name: {{ include "startx.appName" . | quote }}
 app.startx.fr/version: {{ include "startx.appVersion" . | quote }}
+{{- end -}}
+
+{{/* Common labels */}}
+{{- define "startx.labelsDefault" -}}
+{{ include "startx.labelsDefaultStartx" . }}
+app.kubernetes.io/name: {{ include "startx.appName" . | quote }}
 app.kubernetes.io/version: {{ include "startx.appVersion" . | quote }}
 helm.sh/chart: {{ include "startx.chartNameVersion" . | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote  }}
@@ -101,17 +107,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service | quote  }}
 {{/* Common labels */}}
 {{- define "startx.labelsCommon" -}}
 {{ include "startx.labelsDefault" . }}
-app.startx.fr/component: {{ include "startx.appComponent" . | quote }}
-app.kubernetes.io/component: {{ include "startx.appComponent" . | quote }}
-app.kubernetes.io/part-of: {{ include "startx.appEnironment" . | quote }}
+app.kubernetes.io/component: {{ include "startx.appComponent" . | default "component" | quote }}
+app.kubernetes.io/part-of: {{ include "startx.appEnvironment" . | default "component" | quote }}
 {{- end -}}
 
 {{/* Common infrastructure labels */}}
 {{- define "startx.labelsInfra" -}}
 {{ include "startx.labelsDefault" . }}
-app.startx.fr/component: {{ default "infra" .Values.context.component | quote }}
-app.kubernetes.io/component: {{ default "infra" .Values.context.component | quote }}
-app.kubernetes.io/part-of: {{ include "startx.appCluster" . | quote }}
+app.kubernetes.io/component: {{ include "startx.appComponent" . | default "infra" | quote }}
+app.kubernetes.io/part-of: {{ include "startx.appCluster" . | default "cluster" | quote }}
 {{- end -}}
 
 {{- define "imagePullSecret" }}
