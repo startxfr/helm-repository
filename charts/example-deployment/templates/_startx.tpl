@@ -67,7 +67,7 @@ STARTX common helpers
 {{- if .Values.context }}
 {{- default .Chart.Name .Values.context.app | trunc 63 | trimSuffix "-" -}}
 {{- else }}
-{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- default "myapp" .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 {{- end -}}
 
@@ -76,46 +76,73 @@ STARTX common helpers
 {{- if .Values.context }}
 {{- default .Chart.Version .Values.context.version | trunc 63 | trimSuffix "-" -}}
 {{- else }}
-{{- .Chart.Version | trunc 63 | trimSuffix "-" -}}
+{{- default "0.0.1" .Chart.Version | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 {{- end -}}
 
 {{/* Common annotation for infra charts */}}
 {{- define "startx.annotationsInfra" -}}
-openshift.io/generated-by: startx-helm-{{- .Chart.Name -}}
+{{ include "startx.annotationsCommon" . }}
+{{- end -}}
+
+{{/* Common annotation for all charts */}}
+{{- define "startx.annotationsCommon" -}}
+openshift.io/generated-by: startx-helm-{{- .Chart.Name | default "mychart" -}}
 {{- end -}}
 
 {{/* Common startx labels */}}
-{{- define "startx.labelsDefaultStartx" -}}
-app.startx.fr/scope: {{ include "startx.appScope" . | quote }}
-app.startx.fr/cluster: {{ include "startx.appCluster" . | quote }}
-app.startx.fr/environment: {{ include "startx.appEnvironment" . | quote }}
-app.startx.fr/component: {{ include "startx.appComponent" . | default "component" | quote }}
-app.startx.fr/app: {{ include "startx.appName" . | quote }}
-app.startx.fr/version: {{ include "startx.appVersion" . | quote }}
+{{- define "startx.labelsCommonStartxMin" -}}
+app.startx.fr/scope: {{ include "startx.appScope" . | default "scope" | quote }}
+app.startx.fr/cluster: {{ include "startx.appCluster" . | default "cluster" | quote }}
+app.startx.fr/environment: {{ include "startx.appEnvironment" . | default "myenv" | quote }}
 {{- end -}}
 
-{{/* Common labels */}}
-{{- define "startx.labelsDefault" -}}
-{{ include "startx.labelsDefaultStartx" . }}
-app.kubernetes.io/name: {{ include "startx.appName" . | quote }}
-app.kubernetes.io/version: {{ include "startx.appVersion" . | quote }}
-helm.sh/chart: {{ include "startx.chartNameVersion" . | quote }}
+{{/* Common startx labels */}}
+{{- define "startx.labelsCommonStartx" -}}
+{{ include "startx.labelsCommonStartxMin" . }}
+app.startx.fr/component: {{ include "startx.appComponent" . | default "mycomponent" | quote }}
+app.startx.fr/app: {{ include "startx.appName" . | default "myapp" | quote }}
+app.startx.fr/version: {{ include "startx.appVersion" . | default "0.0.1" | quote }}
+{{- end -}}
+
+{{/* Common minimum kubernetes labels */}}
+{{- define "startx.labelsCommonK8SMin" -}}
+app.kubernetes.io/component: {{ include "startx.appComponent" . | default "mycomponent" | quote }}
+app.kubernetes.io/part-of: {{ include "startx.appEnvironment" . | default "myenv" | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote  }}
+{{- end -}}
+
+{{/* Common kubernetes labels */}}
+{{- define "startx.labelsCommonK8S" -}}
+{{ include "startx.labelsCommonK8SMin" . }}
+app.kubernetes.io/name: {{ include "startx.appName" . | default "myapp" | quote }}
+app.kubernetes.io/version: {{ include "startx.appVersion" . | default "0.0.1" | quote }}
+{{- end -}}
+
+{{/* Common helm labels */}}
+{{- define "startx.labelsCommonHelm" -}}
+helm.sh/chart: {{ include "startx.chartNameVersion" . | default "mychart-0.0.1" | quote }}
 {{- end -}}
 
 {{/* Common labels */}}
 {{- define "startx.labelsCommon" -}}
-{{ include "startx.labelsDefault" . }}
-app.kubernetes.io/component: {{ include "startx.appComponent" . | default "component" | quote }}
-app.kubernetes.io/part-of: {{ include "startx.appEnvironment" . | default "component" | quote }}
+{{ include "startx.labelsCommonStartx" . }}
+{{ include "startx.labelsCommonHelm" . }}
+{{ include "startx.labelsCommonK8S" . }}
 {{- end -}}
 
 {{/* Common infrastructure labels */}}
 {{- define "startx.labelsInfra" -}}
-{{ include "startx.labelsDefault" . }}
+{{ include "startx.labelsCommonStartxMin" . }}
+{{ include "startx.labelsCommonHelm" . }}
 app.kubernetes.io/component: {{ include "startx.appComponent" . | default "infra" | quote }}
 app.kubernetes.io/part-of: {{ include "startx.appCluster" . | default "cluster" | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service | default "helm" | quote  }}
+app.kubernetes.io/name: {{ include "startx.appName" . | default "myapp" | quote }}
+app.kubernetes.io/version: {{ include "startx.appVersion" . | default "0.0.1" | quote }}
+app.startx.fr/component: {{ include "startx.appComponent" . | default "infra" | quote }}
+app.startx.fr/app: {{ include "startx.appName" . | default "myapp" | quote }}
+app.startx.fr/version: {{ include "startx.appVersion" . | default "0.0.1" | quote }}
 {{- end -}}
 
 {{- define "imagePullSecret" }}
