@@ -150,3 +150,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 9.8.53  | 2021-12-07 | Debug quotas                                                                                                                 |
 | 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                                                           |
 | 9.8.68 | 2021-12-18 | Update elasticsearch operator to version 5.3.1-12
+| 9.8.68 | 2021-12-18 | Improve cluster-istio options
