@@ -113,7 +113,7 @@ xxxx to do xxxxxx
 | 8.20.60 | 2021-11-19 | publish stable update for the full repository                                                                    |
 | 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema                                                                |
 | 8.20.67 | 2021-11-20 | Debug resources type in values schema                                                                            |
-| 8.20.68 | 2021-11-20 | Update to openshift-logging operator release 5.3.0-55                                                            |
+| 8.20.68 | 2021-11-20 | Update to openshift-logging operator release 5.3.0-55                                                            | 
 | 8.20.69 | 2021-11-20 | Update elasticsearch operator to release 5.3.0-67                                                                |
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository                                                                    |
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21                                                                     |
@@ -131,3 +131,4 @@ xxxx to do xxxxxx
 | 9.8.51  | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                               |
 | 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                                               |
 | 9.8.68 | 2021-12-18 | Update elasticsearch operator to version 5.3.1-12
+| 9.8.68 | 2021-12-18 | Update logging operator to version 5.3.1-12
