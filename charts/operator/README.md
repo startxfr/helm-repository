@@ -242,3 +242,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 9.8.53 | 2021-12-06 | Add values-crw-2.13.100 for codeready-workspace
 | 9.8.54 | 2021-12-06 | Disable hooked subscription mode for codeready-workspaces values
 | 9.8.59 | 2021-12-18 | Improve global label management
+| 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
