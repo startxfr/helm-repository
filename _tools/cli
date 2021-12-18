@@ -20,7 +20,7 @@ GITHUB_REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
 # read chart version
 function chartReadVersion {
     if [[ "" != "$1" ]]; then
-        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq .version -)
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq .version - | tr -d \")
     else
         echo ""
     fi
@@ -47,7 +47,7 @@ function chartReadName {
 # read chart appVersion
 function chartReadAppVersion {
     if [[ "" != "$1" ]]; then
-        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq .appVersion -)
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq .appVersion - | tr -d \")
     else
         echo ""
     fi
