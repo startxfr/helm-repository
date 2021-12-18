@@ -24,8 +24,8 @@ yum install helm -y
 oc login -t <my-token> <my-openshift-api>
 ```
 
-If you don't have access to an openshift cluster, consider using codeready-container to
-run locally a simulated cluster.
+If you don't have access to an openshift cluster, consider using codeready-container
+to run locally a simulated cluster.
 
 ### 2. Install repository
 
