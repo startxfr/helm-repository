@@ -323,3 +323,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 9.8.59 | 2021-12-18 | Improve global label management
 | 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
 | 9.8.69 | 2021-12-18 | Refactor label and annotation go template library
+| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
