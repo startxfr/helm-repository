@@ -3,7 +3,7 @@
 
 {{/* Common labels */}}
 {{- define "example-catalog.labels" -}}
-{{ include "startx.labelsInfra" . }}
+{{ include "startx.labelsCommon" . }}
 app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- end -}}
 
