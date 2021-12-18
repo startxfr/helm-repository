@@ -1,11 +1,11 @@
 # Cluster auth
 
 This helm chart is used to configure Auth at the cluster level.
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deployment pod but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deployment pod but rather represent a cluster configuration state orchestrated by gitops tools like auth.
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io)  for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
@@ -36,9 +36,14 @@ helm install startx/cluster-auth
 
 ## Default values
 
-Complete deployment of a project with the following characteristics :
+Complete configuration of the OCP authentification with the following characteristics :
 
-xxxx to do xxxxxx
+- 3 auth templates in **openshift-config**
+  - 1 template login set to **default-login**
+  - 1 template errors set to **default-errors**
+  - 1 template providers set to **default-providers**
+- 1 auth backend set to **htpasswd** named **default-htpasswd** with
+  - 1 user **dev**
 
 ```bash
 # base configuration running default configuration
@@ -47,10 +52,55 @@ helm install startx/cluster-auth
 
 ## Others values availables
 
-- **startx** : Startx cluster auth user (dev, devops and ops) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml))
+- **startx** : Startx auth cluster wide service configuration using startx group (dev, devops and ops) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml))
+  - 3 auth templates in **openshift-config**
+    - 1 template login set to **startx-login**
+    - 1 template errors set to **startx-errors**
+    - 1 template providers set to **startx-providers**
+  - 1 auth backend set to **htpasswd** named **default-htpasswd** with
+    - 1 user **dev**
+    - 1 user **devops**
+    - 1 user **ops**
+    - 1 user **admin**
 
 ```bash
 helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml
+```
+
+- **startx-afd** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-afd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml))
+
+```bash
+helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml
+```
+
+- **startx-cisval** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-cisval.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml))
+
+```bash
+helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml
+```
+
+- **startx-lumiplan** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-lumiplan.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml))
+
+```bash
+helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml
+```
+
+- **startx-manutan** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-manutan.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml))
+
+```bash
+helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml
+```
+
+- **startx-monaco** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-monaco.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml))
+
+```bash
+helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml
+```
+
+- **startx-photoweb** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-photoweb.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml))
+
+```bash
+helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml
 ```
 
 ## History
@@ -71,7 +121,7 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 0.3.151 | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                                                                     |
 | 0.3.153 | 2021-01-23 | publish stable update for the full repository                                                                                                           |
 | 0.3.165 | 2021-01-23 | Upgrade all chart dependencies                                                                                                                          |
-| 0.3.167 | 2021-01-24 | Remove conditional dependencies for argocd compatibility in HA environments                                                                             |
+| 0.3.167 | 2021-01-24 | Remove conditional dependencies for auth compatibility in HA environments                                                                               |
 | 0.3.169 | 2021-01-24 | Move to 0.3.155 dependencies                                                                                                                            |
 | 0.3.187 | 2021-02-13 | Align cluster chart release to 0.3.187                                                                                                                  |
 | 0.3.191 | 2021-02-13 | Update cluster chart dependencies to 0.3.189                                                                                                            |
@@ -126,15 +176,15 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21                                                                                                            |
 | 9.8.1   | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                                                                                      |
 | 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                                                                                     |
-| 9.8.7 | 2021-11-20 | Debug dependencies problem
-| 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
-| 9.8.15 | 2021-11-20 | Update startx chart dependencies version to 9.8.11
-| 9.8.19 | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema
-| 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
-| 9.8.39 | 2021-11-21 | Debug version check with more permissive mode
-| 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
-| 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
-| 9.8.47 | 2021-11-21 | Improve version management for chart
-| 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
-| 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
-| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
+| 9.8.7   | 2021-11-20 | Debug dependencies problem                                                                                                                              |
+| 9.8.9   | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update                                                                                     |
+| 9.8.15  | 2021-11-20 | Update startx chart dependencies version to 9.8.11                                                                                                      |
+| 9.8.19  | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema                                                                            |
+| 9.8.28  | 2021-11-20 | Update the startx chart dependencies to version 9.8.23                                                                                                  |
+| 9.8.39  | 2021-11-21 | Debug version check with more permissive mode                                                                                                           |
+| 9.8.43  | 2021-11-21 | Update the startx chart dependencies to version 9.8.39                                                                                                  |
+| 9.8.45  | 2021-11-21 | Update the values schema limits for context properties                                                                                                  |
+| 9.8.47  | 2021-11-21 | Improve version management for chart                                                                                                                    |
+| 9.8.51  | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                                                                      |
+| 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                                                                                      |
+| 9.8.71  | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                                                                        |
