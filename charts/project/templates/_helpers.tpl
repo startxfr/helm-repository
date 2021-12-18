@@ -3,13 +3,16 @@
 
 {{/* Common labels */}}
 {{- define "project.labels" -}}
-{{ include "startx.labelsCommon" . }}
-app.kubernetes.io/instance: {{ include "startx.appName" . | quote }}
+{{ include "startx.labelsCommonStartxMin" . }}
+{{ include "startx.labelsCommonHelm" . }}
+{{ include "startx.labelsCommonK8SMin" . }}
+app.startx.fr/component: {{ include "startx.appComponent" . | default "mycomponent" | quote }}
+app.startx.fr/app: {{ include "startx.appName" . | default "myapp" | quote }}
 {{- end -}}
 
 {{/* Common project annotations */}}
 {{- define "project.annotations" -}}
-{{- include "startx.annotationsInfra" . -}}
+{{- include "startx.annotationsCommon" . -}}
 {{- end -}}
 
 {{/* Common project note */}}
