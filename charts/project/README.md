@@ -309,3 +309,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.56 | 2021-12-07 | Debug quotas
 | 9.8.57 | 2021-12-07 | Improve project options
 | 9.8.58 | 2021-12-07 | Debug values
+| 9.8.59 | 2021-12-18 | Improve global label management
