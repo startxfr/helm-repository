@@ -20,6 +20,36 @@ helm show chart startx/cluster-acm
 helm install startx/cluster-acm
 ```
 
+## Default values
+
+Complete deployment of a project with the following characteristics :
+
+- 1 **project:** named **open-cluster-management** with the following properties
+  - 1 **LimitRange:** defined for this projet
+  - 1 **Quotas:** defined for this projet
+  - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
+- 1 **operator:** named **advanced-cluster-management** configured with
+  - The **release-2.4** channel
+  - The **2.4.0** version
+  - Deployed under the **open-cluster-management** project
+  - The **manager** deployed
+- 1 **mch:** named **default-mch** configured with
+  - **hive** enabled
+  - **ingress** enabled
+
+```bash
+# base configuration running default configuration
+helm install startx/cluster-acm
+```
+
+## Others values availables
+
+- **startx** : Startx ACM cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx.yaml))
+
+```bash
+helm install startx/cluster-acm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx.yaml
+```
+
 ## History
 
 | Release | Date       | Description                                                                                    |
@@ -88,17 +118,17 @@ helm install startx/cluster-acm
 | 9.8.1   | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                             |
 | 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                            |
 | 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                            |
-| 9.8.7 | 2021-11-20 | Debug dependencies problem
-| 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
-| 9.8.15 | 2021-11-20 | Update startx chart dependencies version to 9.8.11
-| 9.8.16 | 2021-11-20 | Debug the subscription version name
-| 9.8.19 | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema
-| 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
-| 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
-| 9.8.39 | 2021-11-21 | Debug version check with more permissive mode
-| 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
-| 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
-| 9.8.47 | 2021-11-21 | Improve version management for chart
-| 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
-| 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
-| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
+| 9.8.7   | 2021-11-20 | Debug dependencies problem                                                                     |
+| 9.8.9   | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update                            |
+| 9.8.15  | 2021-11-20 | Update startx chart dependencies version to 9.8.11                                             |
+| 9.8.16  | 2021-11-20 | Debug the subscription version name                                                            |
+| 9.8.19  | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema                   |
+| 9.8.28  | 2021-11-20 | Update the startx chart dependencies to version 9.8.23                                         |
+| 9.8.28  | 2021-11-20 | Update the startx chart dependencies to version 9.8.23                                         |
+| 9.8.39  | 2021-11-21 | Debug version check with more permissive mode                                                  |
+| 9.8.43  | 2021-11-21 | Update the startx chart dependencies to version 9.8.39                                         |
+| 9.8.45  | 2021-11-21 | Update the values schema limits for context properties                                         |
+| 9.8.47  | 2021-11-21 | Improve version management for chart                                                           |
+| 9.8.51  | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                             |
+| 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                             |
+| 9.8.71  | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                               |
