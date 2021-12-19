@@ -128,3 +128,4 @@ helm install startx/cluster-couchbase -f https://raw.githubusercontent.com/start
 | 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
 | 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
 | 9.8.76 | 2021-12-19 | Change helm.sh/chart name
+| 9.8.77 | 2021-12-19 | Upgrade couchbase operator to version 2.2.1
