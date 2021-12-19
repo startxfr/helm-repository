@@ -158,3 +158,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 9.8.58 | 2021-12-09 | Update to ansible-automation-platform operator version 2.1.0-0.1638393503 from stable-2.1 channel
 | 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
 | 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
+| 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75

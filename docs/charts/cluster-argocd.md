@@ -5,7 +5,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io)  for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
@@ -36,7 +36,39 @@ helm install startx/cluster-argocd
 
 ## Default values
 
-xxxx  to do xxxxxxxx
+Complete deployment of a project with the following characteristics :
+
+- 1 **project:** named **openshift-gitops** with the following properties
+  - 1 **LimitRange:** defined for this projet
+  - 1 **Quotas:** defined for this projet
+  - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
+- 1 **operator:** named **openshift-gitops-operator** configured with
+  - The **stable** channel
+  - The **1.3.1** version
+  - Deployed under the **openshift-operators** project
+- 1 **argocd:** named **openshift-gitops**
+- 1 **argocd_export:** every days
+- 1 **argocd_project:** with **default** namespace declared
+- 1 **argocd_application:** named **example-application** used to deploy an html example in **default** namespace
+
+```bash
+# base configuration running default configuration
+helm install startx/cluster-argocd
+```
+
+## Others values availables
+
+- **startx** : Startx argocd cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx.yaml))
+
+```bash
+helm install startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx.yaml
+```
+
+- **startx-gitops** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-gitops.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx-gitops.yaml))
+
+```bash
+helm install startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx-gitops.yaml
+```
 
 ## History
 
@@ -85,7 +117,7 @@ xxxx  to do xxxxxxxx
 | 7.22.25 | 2021-10-06 | publish stable update for the full repository                                                              |
 | 7.22.27 | 2021-10-06 | publish stable update for the full repository                                                              |
 | 8.13.1  | 2021-10-06 | Stable release for OCP 4.8.13 version                                                                      |
-| 8.13.3  | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart                                            |
+| 8.13.3  | 2021-10-08 | Improve code execution, syntax and introduce the argocd helm-chart                                         |
 | 8.13.5  | 2021-10-21 | publish stable update for the full repository                                                              |
 | 8.13.7  | 2021-10-21 | publish stable update for the full repository                                                              |
 | 8.13.8  | 2021-10-21 | Adding first draft of json schema                                                                          |
@@ -108,15 +140,16 @@ xxxx  to do xxxxxxxx
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21                                                               |
 | 9.8.1   | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                                         |
 | 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                                        |
-| 9.8.7 | 2021-11-20 | Debug dependencies problem
-| 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
-| 9.8.15 | 2021-11-20 | Update startx chart dependencies version to 9.8.11
-| 9.8.19 | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema
-| 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
-| 9.8.39 | 2021-11-21 | Debug version check with more permissive mode
-| 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
-| 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
-| 9.8.47 | 2021-11-21 | Improve version management for chart
-| 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
-| 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
-| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
+| 9.8.7   | 2021-11-20 | Debug dependencies problem                                                                                 |
+| 9.8.9   | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update                                        |
+| 9.8.15  | 2021-11-20 | Update startx chart dependencies version to 9.8.11                                                         |
+| 9.8.19  | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema                               |
+| 9.8.28  | 2021-11-20 | Update the startx chart dependencies to version 9.8.23                                                     |
+| 9.8.39  | 2021-11-21 | Debug version check with more permissive mode                                                              |
+| 9.8.43  | 2021-11-21 | Update the startx chart dependencies to version 9.8.39                                                     |
+| 9.8.45  | 2021-11-21 | Update the values schema limits for context properties                                                     |
+| 9.8.47  | 2021-11-21 | Improve version management for chart                                                                       |
+| 9.8.51  | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                         |
+| 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                                         |
+| 9.8.71  | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                           |
+| 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
