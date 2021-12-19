@@ -115,7 +115,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service | quote  }}
 {{/* Common kubernetes labels */}}
 {{- define "startx.labelsCommonK8S" -}}
 {{ include "startx.labelsCommonK8SMin" . }}
-app.kubernetes.io/name: {{ include "startx.appName" . | default "myapp" | quote }}
 app.kubernetes.io/version: {{ include "startx.appVersion" . | default "0.0.1" | quote }}
 {{- end -}}
 
@@ -138,7 +137,6 @@ helm.sh/chart: {{ include "startx.chartNameVersion" . | default "mychart-0.0.1" 
 app.kubernetes.io/component: {{ include "startx.appComponent" . | default "infra" | quote }}
 app.kubernetes.io/part-of: {{ include "startx.appCluster" . | default "cluster" | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | default "helm" | quote  }}
-app.kubernetes.io/name: {{ include "startx.appName" . | default "myapp" | quote }}
 app.kubernetes.io/version: {{ include "startx.appVersion" . | default "0.0.1" | quote }}
 app.startx.fr/component: {{ include "startx.appComponent" . | default "infra" | quote }}
 app.startx.fr/app: {{ include "startx.appName" . | default "myapp" | quote }}
