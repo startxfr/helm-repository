@@ -6,7 +6,7 @@ description: Helm chart used to configure tekton at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.71
+version: 9.8.75
 # Version name of the pipeline operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.5.2
 # Version of Openshift 
@@ -46,12 +46,12 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.59"
+    version: "9.8.72"
     alias: projectOperator
     # condition: projectOperator.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.59"
+    version: "9.8.72"
     alias: operator
     # condition: operator.enabled
 
@@ -59,4 +59,6 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: "Remove app.kubernetes.io/name from default label"
+    - kind: changed
+      description: "Upgrade startx chart dependencies to version 9.8.72"
   artifacthub.io/containsSecurityUpdates: "false"
