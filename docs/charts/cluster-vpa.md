@@ -124,3 +124,4 @@ helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/he
 | 9.8.53 | 2021-11-23 | Update vpa operator to version 4.9.0-202111151318
 | 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
 | 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
+| 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
