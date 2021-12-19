@@ -120,7 +120,7 @@ app.kubernetes.io/version: {{ include "startx.appVersion" . | default "0.0.1" | 
 
 {{/* Common helm labels */}}
 {{- define "startx.labelsCommonHelm" -}}
-helm.sh/chart: {{ include "startx.chartNameVersion" . | default "mychart-0.0.1" | quote }}
+helm.sh/chart: {{ include "startx.chartName" . | default "mychart" | quote }}
 {{- end -}}
 
 {{/* Common labels */}}
