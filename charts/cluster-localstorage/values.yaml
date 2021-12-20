@@ -1,0 +1,126 @@
+# Default values for cluster-localstorage.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-localstorage
+  # Version name of this application (default use Chart appVersion)
+  # version: "0.0.3"
+
+# configuration of the LocalVolume service
+localstorage:
+  # Enable the deployment of a OCS cluster
+  enabled: false
+  # Name of the default storage
+  name: default-localstorage
+  # Configure storage backend for this cluster
+  list:
+    # Name of the storage pool
+  - name: local-fs
+    # storage mode (fs or block)
+    mode: fs
+    # filesystem type (only for type mode)
+    fsType: ext4
+    # Local mount directory
+    path: /data
+
+# configuration of the LocalVolumeSet service
+localstorageset:
+  # Enable the deployment of a OCS cluster
+  enabled: false
+  # Configure storage backend for this cluster
+  list:
+    # Name of the storage pool
+  - name: local-fs
+    # storage mode (fs or block)
+    mode: fs
+    # filesystem type (only for type mode)
+    fsType: ext4
+    # Maximum PV to use for this storage class
+    max: 10
+    # Minimum size for the provisionned PV
+    minSize: 256Mi
+    # Maximum size for the provisionned PV
+    max: 2Gi
+    # Node label used tu identify node with storage
+    nodeKey: "kubernetes.io/os"
+    # Node value coresponding to the nodeKey value
+    nodeKey: "linux"
+
+# configuration of the LocalVolumeDiscovery service
+localstoragediscovery:
+  # Enable the deployment of a OCS cluster
+  enabled: false
+  # Configure storage backend for this cluster
+  list:
+    # Name of the storage pool
+  - name: os-linux
+    # Node label used tu identify node with storage
+    nodeKey: "kubernetes.io/os"
+    # Node value coresponding to the nodeKey value
+    nodeKey: "linux"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "openshift-local-storage"
+    display_name: "Startx Local Storage"
+    requester: startx
+    description: Local Storage configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev-view
+      name: dev
+      role: view
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "local-storage-operator"
+    namespace: "openshift-local-storage"
+    version: "4.9.0-202111151318"
+    operator: 
+      channel: "4.9"
+      name: local-storage-operator
+      csv: local-storage-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-local-storage"
+    namespace: "openshift-local-storage"
+    providedAPIs: "LocalVolume.v1.local.storage.openshift.io,LocalVolumeDiscovery.v1alpha1.local.storage.openshift.io,LocalVolumeDiscoveryResult.v1alpha1.local.storage.openshift.io,LocalVolumeSet.v1alpha1.local.storage.openshift.io"

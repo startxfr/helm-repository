@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![startx helm repository](https://img.shields.io/badge/latest-v9.8.76-blue.svg)](https://github.com/startxfr/helm-repository)
+[![startx helm repository](https://img.shields.io/badge/latest-v9.8.81-blue.svg)](https://github.com/startxfr/helm-repository)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 For more informations and access to the helm index, you can visit the [startx helm-repository homepage](https://startxfr.github.io/helm-repository).
@@ -21,6 +21,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-auth](charts/cluster-auth.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth)         | configure Auth at the cluster level                               |
 | **[cluster-console](charts/cluster-console.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-console)      | configure the openshift console at the cluster level              |
 | **[cluster-storage](charts/cluster-storage.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-storage)      | enable StoragesClass at the cluster level                         |
+| **[cluster-localstorage](charts/cluster-localstorage.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-localstorage) | enable local storage at the cluster level                         |
 | **[cluster-logging](charts/cluster-logging.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-logging)      | deploy a EFK (puit de log) at the cluster level                   |
 | **[cluster-pipeline](charts/cluster-pipeline.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline)     | enable tekton pipeline at the cluster level                       |
 | **[cluster-metering](charts/cluster-metering.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering)     | enable Metering at the cluster level                              |

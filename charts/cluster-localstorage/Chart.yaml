@@ -1,0 +1,66 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-localstorage
+# Description of this Helm chart
+description: Helm chart used to configure local storage at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 9.8.81
+# Version name of the localstorage operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 4.9.0
+# Version of Openshift 
+engineVersion: 4.9.8
+# Icon of this helm-chart
+icon: https://startxfr.github.io/helm-repository/img/cluster-localstorage.svg
+# category associated to this package
+category: cluster
+# tags
+tags: infra,cluster,localstorage
+# Kube minimum version
+kubeVersion: ">=1.21.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - storage
+  - local-storage
+  - file storage
+  - block storage
+# STARTX helm chart repository homepage
+home: https://startxfr.github.io/helm-repository
+# Sources and documentation for this chart
+sources:
+  - https://startxfr.github.io/helm-repository/charts/cluster-localstorage
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-localstorage
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project 
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "9.8.72"
+    alias: project
+    # condition: project.enabled
+  - name: operator
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "9.8.72"
+    alias: operator
+    # condition: operator.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Create the local-storage chart"
+    - kind: added
+      description: "Support for the local-storage operator"
+    - kind: added
+      description: "creation of a LocalVolume"
+  artifacthub.io/containsSecurityUpdates: "false"
