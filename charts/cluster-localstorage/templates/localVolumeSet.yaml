@@ -9,31 +9,31 @@ metadata:
   name: {{ .name | default "default" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-localstorage.labels" . | nindent 4 }}
+    {{- include "cluster-localstorage.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .name | default "default" }}-localvolumeset"
   annotations:
-    {{- include "cluster-localstorage.annotations" . | nindent 4 }}
+    {{- include "cluster-localstorage.annotations" $root | nindent 4 }}
     argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - storage.openshift.com/local-volume-protection
 spec:
   storageClassName: {{ .name | default "default-local" | quote }}
-  {{- if .mode == "block" -}}
+  {{- if eq .mode "block" }}
   volumeMode: Block
   deviceInclusionSpec:
     deviceMechanicalProperties:
       - Rotational
-  {{- else -}}
+  {{- else }}
   volumeMode: Filesystem
   deviceInclusionSpec:
     deviceMechanicalProperties:
       - NonRotational
-  {{- if .fsType != "" -}}
+  {{- if ne .fsType "" -}}
   fsType: {{- .fsType -}}
   {{- else -}}
   fsType: ext4
   {{- end -}}
-  {{- end -}}
+  {{- end }}
     deviceTypes:
       - disk
       - part
@@ -47,4 +47,5 @@ spec:
             operator: In
             values:
               - {{ .nodeValue | default "linux" | quote }}
+{{- end }}
 {{- end }}

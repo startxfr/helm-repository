@@ -21,16 +21,12 @@ spec:
   storageClassDevices:
 {{- range .Values.localstorage.list }}
     - storageClassName: {{ .name | default "default-local" | quote }}
-      {{- if .mode == "block" -}}
+      {{- if eq .mode "block" }}
       volumeMode: Block
-      {{- else -}}
+      {{- else }}
       volumeMode: Filesystem
-      {{- if .fsType != "" -}}
-      fsType: {{- .fsType -}}
-      {{- else -}}
-      fsType: ext4
-      {{- end -}}
-      {{- end -}}
+      fsType: {{ default .fsType "ext4" }}   
+      {{- end }}   
       devicePaths:
         - {{ .path | default "/data" | quote }}
 {{- end }}
