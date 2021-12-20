@@ -55,8 +55,8 @@ helm install startx/cluster-machine
 <!-- - **startx** : Startx machine classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml)) creating the following machine classes
   - **startx-aws-generic-retain** (AWS EBS gp2 level with encryption and expansion enabled with retain policy)
   - **startx-aws-generic-delete** (AWS EBS gp2 level with encryption and expansion enabled with delete policy)
-  - **startx-aws-fastws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
-  - **startx-aws-fastws-fast-delete** (AWS EBS io1 level without encryption and expansion enabled with delete policy)
+  - **startx-aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
+  - **startx-aws-fast-delete** (AWS EBS io1 level without encryption and expansion enabled with delete policy)
   - **startx-aws-slow-retain** (AWS EBS sc1 level with encryption and expansion enabled with retain policy)
   - **startx-aws-slow-delete** (AWS EBS sc1 level with encryption and expansion enabled with delete policy)
 
@@ -143,3 +143,4 @@ helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxf
 | 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
 | 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
 | 9.8.76 | 2021-12-19 | Change helm.sh/chart name
+| 9.8.81 | 2021-12-20 | Update the storage context
