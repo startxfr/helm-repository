@@ -58,3 +58,4 @@ helm install startx/cluster-localstorage -f https://raw.githubusercontent.com/st
 | Release | Date       | Description                                        |
 | ------- | ---------- | -------------------------------------------------- |
 | 9.8.76  | 2021-12-19 | Create chart cluster-localstorage from cluster-ocs |
+| 9.8.81 | 2021-12-20 | Update the storage context
