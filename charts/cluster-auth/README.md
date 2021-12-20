@@ -190,3 +190,4 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.71  | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                                                                        |
 | 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
 | 9.8.76 | 2021-12-19 | Change helm.sh/chart name
+| 9.8.81 | 2021-12-20 | Update the storage context
