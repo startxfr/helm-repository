@@ -133,7 +133,7 @@ Configuration of startx properties with the following characteristics :
   - operator version is **2.3.0**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
 - 1 **cheCluster** named **vault-config** to deploy cheCluster in the project with the following characteristics
-  - storage class **aws-generic-retain**
+  - storage class **startx-aws-generic-retain**
   - storage size defined to **2Gi**
 
 ```bash
@@ -164,3 +164,4 @@ helm install startx/cluster-vault-config -f https://raw.githubusercontent.com/st
 | 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
 | 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
 | 9.8.76 | 2021-12-19 | Change helm.sh/chart name
+| 9.8.81 | 2021-12-20 | Update the storage context

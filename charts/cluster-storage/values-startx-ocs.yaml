@@ -7,8 +7,8 @@ context:
   component: infra
   app: startx-infra
 storageClasses:
-- id: ocs-generic-delete
-  name: ocs-generic-delete
+- id: startx-ocs-generic-delete
+  name: startx-ocs-generic-delete
   provisioner: "openshift-storage.rbd.csi.ceph.com"
   parameters: |
     csi.storage.k8s.io/fstype: ext4
@@ -25,8 +25,8 @@ storageClasses:
   reclaimPolicy: Delete
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: ocs-generic-retain
-  name: ocs-generic-retain
+- id: startx-ocs-generic-retain
+  name: startx-ocs-generic-retain
   provisioner: "openshift-storage.rbd.csi.ceph.com"
   parameters: |
     csi.storage.k8s.io/fstype: ext4
@@ -43,8 +43,8 @@ storageClasses:
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: ocs-fs-delete
-  name: ocs-fs-delete
+- id: startx-ocs-fs-delete
+  name: startx-ocs-fs-delete
   provisioner: "openshift-storage.cephfs.csi.ceph.com"
   parameters: |
     clusterID: openshift-storage
@@ -57,8 +57,8 @@ storageClasses:
     fsName: startx-ocs-cephfilesystem
   reclaimPolicy: Delete
   volumeBindingMode: WaitForFirstConsumer
-- id: ocs-fs-retain
-  name: ocs-fs-retain
+- id: startx-ocs-fs-retain
+  name: startx-ocs-fs-retain
   provisioner: "openshift-storage.cephfs.csi.ceph.com"
   parameters: |
     clusterID: openshift-storage

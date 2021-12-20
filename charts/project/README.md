@@ -316,3 +316,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.72 | 2021-12-19 | Remove app.kubernetes.io/name from default label
 | 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
 | 9.8.76 | 2021-12-19 | Change helm.sh/chart name
+| 9.8.81 | 2021-12-20 | Update the storage context

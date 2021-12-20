@@ -164,7 +164,7 @@ Configuration of startx properties with the following characteristics :
   - operator version is **2.3.0**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
 - 1 **cheCluster** named **codeready-workspaces** to deploy cheCluster in the project with the following characteristics
-  - storage class **aws-generic-retain**
+  - storage class **startx-aws-generic-retain**
   - storage size defined to **2Gi**
 
 ```bash
@@ -268,3 +268,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
 | 9.8.76 | 2021-12-19 | Change helm.sh/chart name
 | 9.8.77 | 2021-12-19 | Upgrade workspace operator to version 2.13.101-0.1639666401.p
+| 9.8.81 | 2021-12-20 | Update the storage context

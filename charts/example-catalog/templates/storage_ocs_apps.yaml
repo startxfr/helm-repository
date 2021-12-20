@@ -240,7 +240,7 @@ data:
             <h1>OCS Filesystem storage demo</h1>
             <h2>CephFS - shared access to Ceph FS</h2>
             <div class="alert alert-success" role="alert"><p>This demo use 2 pod using the same PVC to read and write files. 
-            This PVC have a storage backend delivered using the ocs-fs-delete storage class provisionned using the CephFS CSI provisoner. 
+            This PVC have a storage backend delivered using the startx-ocs-fs-delete storage class provisionned using the CephFS CSI provisoner. 
             The provided PersistantVolume is dedicated to this sample application and shared accross pods.</p></div>
             <div class="alert alert-info" role="alert"><p>If you want to read or record a document to the file storage, you can 
             send it to /storage/__filename__ with a GET, POST or PUT request and the content as body</p>
@@ -321,7 +321,7 @@ data:
             <h1>OCS Filesystem storage demo</h1>
             <h2>CephFS - exclusive access to Ceph FS</h2>
             <div class="alert alert-success" role="alert"><p>This demo use one pod using a single PVC to read and write files. 
-            This PVC have a storage backend delivered using the ocs-fs-delete storage class provisionned using the CephFS CSI provisoner. 
+            This PVC have a storage backend delivered using the startx-ocs-fs-delete storage class provisionned using the CephFS CSI provisoner. 
             The provided PersistantVolume is dedicated to this sample application.</p></div>
             <div class="alert alert-info" role="alert"><p>If you want to read or record a document to the file storage, you can 
             send it to /storage/__filename__ with a GET, POST or PUT request and the content as body.</p>
@@ -1221,7 +1221,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: ocs-fs-delete
+  storageClassName: startx-ocs-fs-delete
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -1408,7 +1408,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: ocs-fs-delete
+  storageClassName: startx-ocs-fs-delete
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -2322,7 +2322,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: ocs-generic-retain
+  storageClassName: startx-ocs-generic-retain
   volumeMode: Filesystem
   accessModes:
     - ReadOnlyMany
