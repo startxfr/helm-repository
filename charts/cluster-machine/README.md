@@ -53,22 +53,22 @@ helm install startx/cluster-machine
 ## Others values availables
 
 <!-- - **startx** : Startx machine classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml)) creating the following machine classes
-  - **aws-generic-retain** (AWS EBS gp2 level with encryption and expansion enabled with retain policy)
-  - **aws-generic-delete** (AWS EBS gp2 level with encryption and expansion enabled with delete policy)
-  - **aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
-  - **aws-fast-delete** (AWS EBS io1 level without encryption and expansion enabled with delete policy)
-  - **aws-slow-retain** (AWS EBS sc1 level with encryption and expansion enabled with retain policy)
-  - **aws-slow-delete** (AWS EBS sc1 level with encryption and expansion enabled with delete policy)
+  - **startx-aws-generic-retain** (AWS EBS gp2 level with encryption and expansion enabled with retain policy)
+  - **startx-aws-generic-delete** (AWS EBS gp2 level with encryption and expansion enabled with delete policy)
+  - **startx-aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
+  - **startx-aws-fast-delete** (AWS EBS io1 level without encryption and expansion enabled with delete policy)
+  - **startx-aws-slow-retain** (AWS EBS sc1 level with encryption and expansion enabled with retain policy)
+  - **startx-aws-slow-delete** (AWS EBS sc1 level with encryption and expansion enabled with delete policy)
 
 ```bash
 helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml
 ```
 
 - **startx-ocs** : Startx machine classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml)) creating the following machine classes
-  - **ocs-generic-retain** (OCS provisionned via openshift-machine.rbd.csi.ceph.com in cluster openshift-machine with retain policy and expansion enabled)
-  - **ocs-generic-delete** (OCS provisionned via openshift-machine.rbd.csi.ceph.com in cluster openshift-machine with delete policy and expansion enabled)
-  - **ocs-fs-retain** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with retain policy)
-  - **ocs-fs-delete** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with delete policy)
+  - **startx-ocs-generic-retain** (OCS provisionned via openshift-machine.rbd.csi.ceph.com in cluster openshift-machine with retain policy and expansion enabled)
+  - **startx-ocs-generic-delete** (OCS provisionned via openshift-machine.rbd.csi.ceph.com in cluster openshift-machine with delete policy and expansion enabled)
+  - **startx-ocs-fs-retain** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with retain policy)
+  - **startx-ocs-fs-delete** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with delete policy)
 
 ```bash
 helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml
