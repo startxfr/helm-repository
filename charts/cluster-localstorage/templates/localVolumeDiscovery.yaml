@@ -1,0 +1,25 @@
+{{- if .Values.localstoragediscovery.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-local-storage" -}}
+{{- range .Values.localstoragediscovery.list }}
+---
+apiVersion: local.storage.openshift.io/v1alpha1
+kind: LocalVolumeDiscovery
+metadata:
+  name: {{ .name | default "default" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-localstorage.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "default" }}-localvolumediscovery"
+  annotations:
+    {{- include "cluster-localstorage.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  nodeSelector:
+    nodeSelectorTerms:
+      - matchExpressions:
+          - key: {{ .nodeKey | default "kubernetes.io/os" | quote }}
+            operator: In
+            values:
+              - {{ .nodeValue | default "linux" | quote }}
+{{- end }}

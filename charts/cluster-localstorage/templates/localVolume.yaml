@@ -1,0 +1,37 @@
+{{- if .Values.localstorage.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-local-storage" -}}
+---
+apiVersion: local.storage.openshift.io/v1
+kind: LocalVolume
+metadata:
+  name: {{ .Values.localstorage.name | default "default" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-localstorage.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.localstorage.name | default "default" }}-localvolume"
+  annotations:
+    {{- include "cluster-localstorage.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - storage.openshift.com/local-volume-protection
+spec:
+  logLevel: Normal
+  managementState: Managed
+  storageClassDevices:
+{{- range .Values.localstorage.list }}
+    - storageClassName: {{ .name | default "default-local" | quote }}
+      {{- if .mode == "block" -}}
+      volumeMode: Block
+      {{- else -}}
+      volumeMode: Filesystem
+      {{- if .fsType != "" -}}
+      fsType: {{- .fsType -}}
+      {{- else -}}
+      fsType: ext4
+      {{- end -}}
+      {{- end -}}
+      devicePaths:
+        - {{ .path | default "/data" | quote }}
+{{- end }}
+{{- end -}}
