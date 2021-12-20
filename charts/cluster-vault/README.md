@@ -139,7 +139,7 @@ Configuration of startx properties with the following characteristics :
   - operator version is **2.3.0**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
 - 1 **cheCluster** named **vault** to deploy cheCluster in the project with the following characteristics
-  - storage class **aws-generic-retain**
+  - storage class **startx-aws-generic-retain**
   - storage size defined to **2Gi**
 
 ```bash

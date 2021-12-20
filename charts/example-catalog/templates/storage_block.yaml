@@ -114,7 +114,7 @@ data:
             <h1>Block storage demo</h1>
             <h2>AWS EBS - exclusive read-write access</h2>
             <div class="alert alert-success" role="alert"><p>This demo use one pod using a single PVC to read and write files. 
-            This PVC have a storage backend delivered using the aws-generic-delete storage class provisionned using the AWS-EBS CSI provisoner. 
+            This PVC have a storage backend delivered using the startx-aws-generic-delete storage class provisionned using the AWS-EBS CSI provisoner. 
             The provided PersistantVolume is dedicated to this sample application.</p></div>
             <div class="alert alert-info" role="alert"><p>If you want to read or record a document to this volume, you can 
             send it to /storage/__filename__ with a GET, POST or PUT request and the content as body</p>
@@ -399,7 +399,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: aws-generic-delete
+  storageClassName: startx-aws-generic-delete
   volumeMode: Block
   accessModes:
     - ReadWriteOnce
@@ -628,7 +628,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: aws-generic-delete
+  storageClassName: startx-aws-generic-delete
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
