@@ -11,22 +11,34 @@ context:  &context
   # Component name of this application (logical tenant)
   component: mycomponent
   # Application name (functionnal tenant, default use Chart name)
-  app: default-gitlab-runner
+  app: default-gitlab
   # Version name of this application (default use Chart appVersion)
   # version: "0.0.3"
 
-# Deploy an API manager
+# Deploy an Gitlab server
 gitlab:
-  # Enable the configuration of the API manager
-  enabled: true
-  # Activate the manager as a helm hook
-  hooked: true
-  # Name of the deployed instance of GitlabConfig
-  name: default
-  # The applyed Gitlab config specifications
-  spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
+  enabled: false
+  global:
+    common:
+      labels: {}
+    pod:
+      labels: {}
+    edition: ee
+    certmanager-issuer:
+      email: me@example.com
+    hosts:
+      domain: startx.fr
+      hostSuffix:
+      https: true
+      externalIP:
+      ssh: ~
+      gitlab: {}
+      minio: {}
+      registry: {}
+      tls: {}
+      smartcard: {}
+      kas: {}
+      pages: {}
 
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
@@ -38,31 +50,6 @@ project:
     enabled: false
     hooked: false
     type: project
-    name: "gitlab-runner-operator"
-    display_name: Operator GITLAB
+    name: "default-gitlab"
+    display_name: Startx GITLAB
     description: Gitlab configured by STARTX
-
-# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
-operator:
-  enabled: false
-  context: 
-    <<: *context
-  subscription:
-    enabled: false
-    hooked: false
-    name: "gitlab-runner-operator"
-    namespace: "gitlab-runner-operator"
-    version: "v1.0.0"
-    operator: 
-      channel: stable
-      name: gitlab-runner-operator
-      csv: gitlab-runner-operator
-      source: 
-        name: certified-operators
-        namespace: openshift-marketplace
-  operatorGroup:
-    enabled: false
-    hooked: false
-    name: "gitlab-runner-operator"
-    namespace: "openshift-gitlab"
-    providedAPIs: "Runner.v1beta2.apps.gitlab.com"
