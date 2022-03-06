@@ -144,3 +144,4 @@ helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxf
 | 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
 | 9.8.76 | 2021-12-19 | Change helm.sh/chart name
 | 9.8.81 | 2021-12-20 | Update the storage context
+| 9.8.91 | 2022-03-06 | publish stable update for the full repository
