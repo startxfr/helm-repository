@@ -6,7 +6,7 @@ description: Helm chart used to configure Quay.io private registry at the cluste
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.91
+version: 9.8.93
 # Version name of the quay operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 3.6.0
 # Version of Openshift 
@@ -49,22 +49,20 @@ dependencies:
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.72"
     alias: project
-    # condition: project.enabled
+    condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.72"
     alias: operator
-    # condition: operator.enabled
+    condition: operator.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.72"
     alias: operatorsec
-    # condition: operatorsec.enabled
+    condition: operatorsec.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Remove app.kubernetes.io/name from default label"
-    - kind: changed
-      description: "Upgrade startx chart dependencies to version 9.8.72"
+      description: "Enable conditionnal loading of charts dependencies"
   artifacthub.io/containsSecurityUpdates: "false"
