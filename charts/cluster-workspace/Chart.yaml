@@ -6,7 +6,7 @@ description: Helm chart used to configure Code Ready Workspace at the cluster le
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.91
+version: 9.8.93
 # Version name of the CRW operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.13.100
 # Version of Openshift 
@@ -46,15 +46,15 @@ dependencies:
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.72"
     alias: project
-    # condition: project.enabled
+    condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.72"
     alias: operator
-    # condition: operator.enabled
+    condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade workspace operator to version 2.13.101-0.1639666401.p"
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: "Enable conditionnal loading of charts dependencies"
+  artifacthub.io/containsSecurityUpdates: "false"
