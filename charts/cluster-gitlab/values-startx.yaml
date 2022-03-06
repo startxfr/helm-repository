@@ -5,24 +5,31 @@ context: &context
   cluster: default
   environment: infra
   component: gitlab
-  app: startx-gitlab-runner
+  app: startx-gitlab
 gitlab:
   enabled: false
-  hooked: false
-  name: default
-  spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
-    # profile:
-    # - name: "profile1"
-    #   interface: "enp134s0f0"
-    #   gitlab4lOpts: "-s -2"
-    #   phc2sysOpts: "-a -r"
-    # recommend:
-    # - profile: "profile1"
-    #   priority: 4
-    #   match:
-    #   - nodeLabel: "node-role.kubernetes.io/worker"
+  global:
+    common:
+      labels: {}
+    pod:
+      labels: {}
+    edition: ee
+    certmanager-issuer:
+      email: me@example.com
+    hosts:
+      domain: startx.fr
+      hostSuffix:
+      https: true
+      externalIP:
+      ssh: ~
+      gitlab: {}
+      minio: {}
+      registry: {}
+      tls: {}
+      smartcard: {}
+      kas: {}
+      pages: {}
+
 project: 
   enabled: false
   context: 
@@ -31,30 +38,7 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "startx-gitlab-runner"
+    name: "startx-gitlab"
     display_name: "Startx GITLAB"
     requester: startx
     description: Gitlab configured by STARTX
-operator:
-  enabled: false
-  context: 
-    <<: *context
-  subscription:
-    enabled: true
-    hooked: false
-    name: "gitlab-runner-operator"
-    namespace: "startx-gitlab-runner"
-    version: "v1.0.0"
-    operator: 
-      channel: stable
-      name: gitlab-runner-operator
-      csv: gitlab-runner-operator
-      source: 
-        name: certified-operators
-        namespace: openshift-marketplace
-  operatorGroup:
-    enabled: true
-    hooked: false
-    name: "startx-gitlab-runner"
-    namespace: "startx-gitlab-runner"
-    providedAPIs: "Runner.v1beta2.apps.gitlab.com"
