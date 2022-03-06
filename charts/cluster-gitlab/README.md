@@ -61,3 +61,4 @@ helm install startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr
 | 9.8.82 | 2022-02-23 | move to gitlab deployment from helm chart version 5.8.1
 | 9.8.91 | 2022-03-06 | publish stable update for the full repository
 | 9.8.92 | 2022-03-07 | Improve cluster-gitlab options
+| 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
