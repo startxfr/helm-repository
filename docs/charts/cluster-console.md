@@ -137,3 +137,4 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 | 9.8.76 | 2021-12-19 | Change helm.sh/chart name
 | 9.8.81 | 2021-12-20 | Update the storage context
 | 9.8.82 | 2022-02-23 | Add minju demo
+| 9.8.83 | 2022-03-06 | Add the ubisoft template
