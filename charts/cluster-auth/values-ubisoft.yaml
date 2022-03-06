@@ -1,0 +1,69 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: ubisoft
+  cluster: default
+  environment: infra
+  component: auth
+  app: ubisoft-auth
+auth:
+  enabled: true
+  namespace: openshift-config
+  templates:
+    login: 
+      name: ubisoft-login
+      tplFile: webtpl/ubisoft-login.html
+    errors: 
+      name: ubisoft-errors
+      tplFile: webtpl/ubisoft-errors.html
+    providers: 
+      name: ubisoft-providers
+      tplFile: webtpl/ubisoft-providers.html
+  authBackend:
+    type: htpasswd
+    name: ubisoft-htpasswd
+    comment: |
+      htpasswd -c -b _console/ocp.passwd admin secretdemerde
+      htpasswd -b _console/ocp.passwd dev dev
+      htpasswd -b _console/ocp.passwd devops devops
+      htpasswd -b _console/ocp.passwd ops ops
+      htpasswd -b _console/ocp.passwd user1 user1STARTX
+      htpasswd -b _console/ocp.passwd user2 user2STARTX
+      htpasswd -b _console/ocp.passwd user3 user3STARTX
+      htpasswd -b _console/ocp.passwd user4 user4STARTX
+      htpasswd -b _console/ocp.passwd user5 user5STARTX
+      htpasswd -b _console/ocp.passwd user6 user6STARTX
+      htpasswd -b _console/ocp.passwd user7 user7STARTX
+      htpasswd -b _console/ocp.passwd user8 user8STARTX
+      htpasswd -b _console/ocp.passwd user9 user9STARTX
+      htpasswd -b _console/ocp.passwd user10 user10STARTX
+      htpasswd -b _console/ocp.passwd user11 user11STARTX
+      htpasswd -b _console/ocp.passwd user12 user12STARTX
+      htpasswd -b _console/ocp.passwd user13 user13STARTX
+      htpasswd -b _console/ocp.passwd user14 user14STARTX
+      htpasswd -b _console/ocp.passwd user15 user15STARTX
+      htpasswd -b _console/ocp.passwd user16 user16STARTX
+      oc create secret generic htpass-secret --from-file=htpasswd=_console/ocp.passwd -n openshift-config
+      oc export secret ${SCOPE}-htpass-secret -n openshift-config
+    htpasswdContent: |
+      admin:$apr1$NF6RwJ2m$LZptFKgY.K.h7WKPG1X4w.
+      dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
+      devops:$apr1$V.QRjS8L$qsecQFnwOyaZ/coTqDZ9h/
+      ops:$apr1$LHdhpqJk$3qNVW4uqTR7sSnlZBP.9d/
+      user1:$apr1$z3jWdMU3$m/vOq9E50GGc8B7q7Z52E.
+      user2:$apr1$RayQ8IH5$Vr8IBbc63BrMHDY64zytO.
+      user3:$apr1$oKrsH92P$RldH6f2hFT5KraoGxw.0c/
+      user4:$apr1$BkMbad3b$jn8XoagBpw9ImpfWn6HwV0
+      user5:$apr1$nHs9Qiy9$pe.TIal.86kQxMrWPuKpI/
+      user6:$apr1$etZEiJpi$iBtS8syVYeyWK.jQClbLl0
+      user7:$apr1$bd.qPWyW$zBOI8zRdD8OdUHthlMnWD0
+      user8:$apr1$plDYfzJr$Vluk1l1ZHhmM8gu1f1Kav0
+      user9:$apr1$LgNPMX6o$uVCh32YuHrcxZAWgTVGMv0
+      user10:$apr1$VATM7vZ9$Dr0Os8PrSeha56pbjE.Bs0
+      user11:$apr1$3vjF.f/I$vfNpWsRRIJBzAuAfutomQ/
+      user12:$apr1$Ysc4.KPj$HBJVc12H5qq5DlMtZl5XZ0
+      user13:$apr1$IZjZHnSX$OuQpdfCP.ZMn3zGPFuIrc.
+      user14:$apr1$g1NslQHk$H9BFISS283xja38dp9q3M/
+      user15:$apr1$aGqYJ0/1$l/KAqMdqTI0/yeJ8vWPCs.
+      user16:$apr1$XELMYT0e$oMfh6soKxANbH/mua79Pq.
+
