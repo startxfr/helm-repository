@@ -27,22 +27,54 @@ auth:
       htpasswd -b _console/ocp.passwd dev dev
       htpasswd -b _console/ocp.passwd devops devops
       htpasswd -b _console/ocp.passwd ops ops
-      htpasswd -b _console/ocp.passwd user1 user1STARTX
-      htpasswd -b _console/ocp.passwd user2 user2STARTX
-      htpasswd -b _console/ocp.passwd user3 user3STARTX
-      htpasswd -b _console/ocp.passwd user4 user4STARTX
-      htpasswd -b _console/ocp.passwd user5 user5STARTX
-      htpasswd -b _console/ocp.passwd user6 user6STARTX
-      htpasswd -b _console/ocp.passwd user7 user7STARTX
-      htpasswd -b _console/ocp.passwd user8 user8STARTX
-      htpasswd -b _console/ocp.passwd user9 user9STARTX
-      htpasswd -b _console/ocp.passwd user10 user10STARTX
-      htpasswd -b _console/ocp.passwd user11 user11STARTX
-      htpasswd -b _console/ocp.passwd user12 user12STARTX
-      htpasswd -b _console/ocp.passwd user13 user13STARTX
-      htpasswd -b _console/ocp.passwd user14 user14STARTX
-      htpasswd -b _console/ocp.passwd user15 user15STARTX
-      htpasswd -b _console/ocp.passwd user16 user16STARTX
+      htpasswd -b _console/ocp.passwd user1dev user1dev
+      htpasswd -b _console/ocp.passwd user2dev user2dev
+      htpasswd -b _console/ocp.passwd user3dev user3dev
+      htpasswd -b _console/ocp.passwd user4dev user4dev
+      htpasswd -b _console/ocp.passwd user5dev user5dev
+      htpasswd -b _console/ocp.passwd user6dev user6dev
+      htpasswd -b _console/ocp.passwd user7dev user7dev
+      htpasswd -b _console/ocp.passwd user8dev user8dev
+      htpasswd -b _console/ocp.passwd user9dev user9dev
+      htpasswd -b _console/ocp.passwd user10dev user10dev
+      htpasswd -b _console/ocp.passwd user11dev user11dev
+      htpasswd -b _console/ocp.passwd user12dev user12dev
+      htpasswd -b _console/ocp.passwd user13dev user13dev
+      htpasswd -b _console/ocp.passwd user14dev user14dev
+      htpasswd -b _console/ocp.passwd user15dev user15dev
+      htpasswd -b _console/ocp.passwd user16dev user16dev
+      htpasswd -b _console/ocp.passwd user1ops user1ops
+      htpasswd -b _console/ocp.passwd user2ops user2ops
+      htpasswd -b _console/ocp.passwd user3ops user3ops
+      htpasswd -b _console/ocp.passwd user4ops user4ops
+      htpasswd -b _console/ocp.passwd user5ops user5ops
+      htpasswd -b _console/ocp.passwd user6ops user6ops
+      htpasswd -b _console/ocp.passwd user7ops user7ops
+      htpasswd -b _console/ocp.passwd user8ops user8ops
+      htpasswd -b _console/ocp.passwd user9ops user9ops
+      htpasswd -b _console/ocp.passwd user10ops user10ops
+      htpasswd -b _console/ocp.passwd user11ops user11ops
+      htpasswd -b _console/ocp.passwd user12ops user12ops
+      htpasswd -b _console/ocp.passwd user13ops user13ops
+      htpasswd -b _console/ocp.passwd user14ops user14ops
+      htpasswd -b _console/ocp.passwd user15ops user15ops
+      htpasswd -b _console/ocp.passwd user16ops user16ops
+      htpasswd -b _console/ocp.passwd user1devops user1devops
+      htpasswd -b _console/ocp.passwd user2devops user2devops
+      htpasswd -b _console/ocp.passwd user3devops user3devops
+      htpasswd -b _console/ocp.passwd user4devops user4devops
+      htpasswd -b _console/ocp.passwd user5devops user5devops
+      htpasswd -b _console/ocp.passwd user6devops user6devops
+      htpasswd -b _console/ocp.passwd user7devops user7devops
+      htpasswd -b _console/ocp.passwd user8devops user8devops
+      htpasswd -b _console/ocp.passwd user9devops user9devops
+      htpasswd -b _console/ocp.passwd user10devops user10devops
+      htpasswd -b _console/ocp.passwd user11devops user11devops
+      htpasswd -b _console/ocp.passwd user12devops user12devops
+      htpasswd -b _console/ocp.passwd user13devops user13devops
+      htpasswd -b _console/ocp.passwd user14devops user14devops
+      htpasswd -b _console/ocp.passwd user15devops user15devops
+      htpasswd -b _console/ocp.passwd user16devops user16devops
       oc create secret generic htpass-secret --from-file=htpasswd=_console/ocp.passwd -n openshift-config
       oc export secret ${SCOPE}-htpass-secret -n openshift-config
     htpasswdContent: |
@@ -50,20 +82,52 @@ auth:
       dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
       devops:$apr1$V.QRjS8L$qsecQFnwOyaZ/coTqDZ9h/
       ops:$apr1$LHdhpqJk$3qNVW4uqTR7sSnlZBP.9d/
-      user1:$apr1$z3jWdMU3$m/vOq9E50GGc8B7q7Z52E.
-      user2:$apr1$RayQ8IH5$Vr8IBbc63BrMHDY64zytO.
-      user3:$apr1$oKrsH92P$RldH6f2hFT5KraoGxw.0c/
-      user4:$apr1$BkMbad3b$jn8XoagBpw9ImpfWn6HwV0
-      user5:$apr1$nHs9Qiy9$pe.TIal.86kQxMrWPuKpI/
-      user6:$apr1$etZEiJpi$iBtS8syVYeyWK.jQClbLl0
-      user7:$apr1$bd.qPWyW$zBOI8zRdD8OdUHthlMnWD0
-      user8:$apr1$plDYfzJr$Vluk1l1ZHhmM8gu1f1Kav0
-      user9:$apr1$LgNPMX6o$uVCh32YuHrcxZAWgTVGMv0
-      user10:$apr1$VATM7vZ9$Dr0Os8PrSeha56pbjE.Bs0
-      user11:$apr1$3vjF.f/I$vfNpWsRRIJBzAuAfutomQ/
-      user12:$apr1$Ysc4.KPj$HBJVc12H5qq5DlMtZl5XZ0
-      user13:$apr1$IZjZHnSX$OuQpdfCP.ZMn3zGPFuIrc.
-      user14:$apr1$g1NslQHk$H9BFISS283xja38dp9q3M/
-      user15:$apr1$aGqYJ0/1$l/KAqMdqTI0/yeJ8vWPCs.
-      user16:$apr1$XELMYT0e$oMfh6soKxANbH/mua79Pq.
+      user1dev:$apr1$/QrtJVMG$6X4hptmNYZ5E3bckXL4JE1
+      user2dev:$apr1$r45D3S9P$xQwwfIOvfVNTDtKoK85YD0
+      user3dev:$apr1$C0WKZtEq$0sJhMIsEdfiZQTgTS0gOk.
+      user4dev:$apr1$1aFhULcK$68jkp6gZAe2SX0nDuOGhB/
+      user5dev:$apr1$mn8vuRvX$B3Ttt.Ml/xEyOjBotk93F/
+      user6dev:$apr1$3aIT5BVl$eR14LmAd6xsSJCEM.o9ti0
+      user7dev:$apr1$IIJ3Ce9M$5K1RtxugysEQ1puueQxPl/
+      user8dev:$apr1$pK2zvHOl$o25dz2kQUZhiFmJ.DU.GI1
+      user9dev:$apr1$1.WeUyUk$3J3BuglGK56CDfE1R.DTc0
+      user10dev:$apr1$fp35O8mA$wjrrQ/l6wgLrxGzccEnRV0
+      user11dev:$apr1$VRMo.EIC$W99wWVSpBLQ9.ox8mdJCY1
+      user12dev:$apr1$2ahTQyCn$t.W8QIPT5Qau1WncqUIZz0
+      user13dev:$apr1$lXzRgZ/3$22Uar.dya1KvTIDWd7DXo1
+      user14dev:$apr1$TFjh2v4K$lT8eI5tl6RzVqFey79veY.
+      user15dev:$apr1$TzB11rcD$pO9U.MlxSciYm0zw9hJn/1
+      user16dev:$apr1$oZhyYrRA$0qpRQNEAD6Mx8n8Nh1nZs0
+      user1ops:$apr1$M85lRQDh$.ndIYAUo5t.R9uTOp9mbK0
+      user2ops:$apr1$M33oyK2U$E2a88a5bUHIYEqhJ9hFgR.
+      user3ops:$apr1$DxUIVIVA$AtmPuGfSDcQULQw9/R87n0
+      user4ops:$apr1$Du9MdCdC$kmdG.2uKCLCrWiK5/8xYA1
+      user5ops:$apr1$0I69Zdfk$xevpyXK67BY9WyT2I2B9j1
+      user6ops:$apr1$GQZatEM6$mGH3Yln1xCINk2Xlgktv7/
+      user7ops:$apr1$NNPfk8GA$.UJXZnmVAcuMitYcxEvmd0
+      user8ops:$apr1$UUC.UOnw$Af8aMz1K6Ff.gpU8WDF900
+      user9ops:$apr1$zYP9y2iQ$M6PhYWi6akJV2vipRNwKt/
+      user10ops:$apr1$QNeB7/b5$p9sc5/NGhLdk7GwJs7Sby1
+      user11ops:$apr1$PfyDFRZv$mjfA7u74nh1xoFWb/ikJy/
+      user12ops:$apr1$9fALcDsl$S8y8E.r48WxEVUIIMW.ZF/
+      user13ops:$apr1$CzeCKniP$3j75FLUuctyviOm.bg4OT1
+      user14ops:$apr1$7KwuZB2N$LnYH048EKX3J01GnQJh.K1
+      user15ops:$apr1$cMOdmL4/$cqEtn39MOZOL82HykSYhA1
+      user16ops:$apr1$YZPwv09p$Vc3bIjDTgX2vs9RPA4/nI0
+      user1devops:$apr1$cy5HeFDj$Mo/y0OCxd7x9P9bSkUDqQ/
+      user2devops:$apr1$bkZTXY/V$NbsFr1Mrv7KP7DGsGsJu40
+      user3devops:$apr1$f9Zo2l0T$FWabxurLiitW1TRdbYZvq/
+      user4devops:$apr1$RJ216CsL$PFdnBG5et3aPYFRlLS07j1
+      user5devops:$apr1$/gUzLDyt$5GSJDidBSF1mZhs/OBdNE1
+      user6devops:$apr1$DqNs.PkS$czzVR9SlJkr30rB4t6gLh.
+      user7devops:$apr1$wV9GPpo6$OaDE7UPu1XssWqm4n0ANt/
+      user8devops:$apr1$YI6E1JKK$8/aZ0pFXcKMPiL6YsiVr0/
+      user9devops:$apr1$8WZ/hQMI$YQH1ENg86W1.ZCap0Vszs.
+      user10devops:$apr1$Y00.KvnG$cIlODWRn5./Ax1rHS8Ovm/
+      user11devops:$apr1$LmGhQ3Us$5uDAFloVdV4HNMSSD5MU3.
+      user12devops:$apr1$tcJkdFPD$zLxIuk/UmRLfauqE/D459/
+      user13devops:$apr1$HCtO7.v3$7HXmik1pccm6FGCXwsOYj.
+      user14devops:$apr1$wlrjemfE$jNQFQ18Jslp2t/Xe.Sf.z.
+      user15devops:$apr1$nmhj/ypa$B9Yen/gKySI0qwV8GBxWi/
+      user16devops:$apr1$urx63ZGg$kq6zYfI0lv7RflQ9R5xlu.
 
