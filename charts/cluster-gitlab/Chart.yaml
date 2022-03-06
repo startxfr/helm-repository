@@ -6,7 +6,7 @@ description: Helm chart used to configure Gitlab at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.91
+version: 9.8.92
 # Version name of the gitlab operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.0.0
 # Version of Openshift 
@@ -49,18 +49,18 @@ dependencies:
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.72"
     alias: project
-    # condition: project.enabled
+    condition: project.enabled
   - name: gitlab
     repository: https://charts.gitlab.io/
-    version: "5.8.1"
+    version: "5.8.2"
     alias: gitlab
-    # condition: gitlab.enabled
+    condition: gitlab.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Remove app.kubernetes.io/name from default label"
+      description: "Upgrade startx values example"
     - kind: changed
-      description: "Upgrade startx chart dependencies to version 9.8.72"
+      description: "Upgrade gitlab chart dependencies to version 5.8.2"
   artifacthub.io/containsSecurityUpdates: "false"
 
