@@ -147,3 +147,4 @@ helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.94 | 2022-03-07 | Add the ubisoft value
 | 9.8.94 | 2022-03-07 | Add ubisoft personalisation
 | 9.8.95 | 2022-03-07 | Update ubisoft groups
+| 9.8.96 | 2022-03-07 | Improve group management
