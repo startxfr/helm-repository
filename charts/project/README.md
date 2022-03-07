@@ -322,3 +322,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
 | 9.8.94 | 2022-03-07 | Improve project options
 | 9.8.95 | 2022-03-07 | Improve group management
+| 9.8.96 | 2022-03-07 | Improve group management
