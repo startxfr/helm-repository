@@ -9,8 +9,36 @@ context:
 groups:
   enabled: true
   list: 
-  - id: student
-    name: student
+  - id: demo
+    name: demo
+    role: basic-user
+    users: 
+    - dev
+    - devops
+    - ops
+    - admin
+  - id: admin
+    name: admin
+    role: cluster-admin
+    users: 
+    - admin
+  - id: dev
+    name: dev
+    role: basic-user
+    users: 
+    - dev
+  - id: devops
+    name: devops
+    role: self-provisionner
+    users: 
+    - devops
+  - id: ops
+    name: ops
+    role: edit
+    users: 
+    - ops
+  - id: students
+    name: students
     role: basic-user
     users: 
     - user1dev
@@ -61,19 +89,10 @@ groups:
     - user14ops
     - user15ops
     - user16ops
-  - id: demo
-    name: demo
+  - id: students-dev
+    name: students-dev
     role: basic-user
     users: 
-    - dev
-    - devops
-    - ops
-    - admin
-  - id: dev
-    name: dev
-    role: basic-user
-    users: 
-    - dev
     - user1dev
     - user2dev
     - user3dev
@@ -90,17 +109,10 @@ groups:
     - user14dev
     - user15dev
     - user16dev
-  - id: admin
-    name: admin
-    role: cluster-admin
+  - id: students-devops
+    name: students-devops
+    role: self-provisionner
     users: 
-    - admin
-  - id: devops
-    name: devops
-    # Devops cluster role
-    role: edit
-    users: 
-    - devops
     - user1devops
     - user2devops
     - user3devops
@@ -117,11 +129,10 @@ groups:
     - user14devops
     - user15devops
     - user16devops
-  - id: ops
-    name: ops
-    role: self-provisionner
+  - id: students-ops
+    name: students-ops
+    role: edit
     users: 
-    - ops
     - user1ops
     - user2ops
     - user3ops
@@ -137,4 +148,116 @@ groups:
     - user13ops
     - user14ops
     - user15ops
+    - user16ops
+  - id: student1
+    name: student1
+    role: basic-user
+    users: 
+    - user1dev
+    - user1devops
+    - user1ops
+  - id: student2
+    name: student2
+    role: basic-user
+    users: 
+    - user2dev
+    - user2devops
+    - user2ops
+  - id: student3
+    name: student3
+    role: basic-user
+    users: 
+    - user3dev
+    - user3devops
+    - user3ops
+  - id: student4
+    name: student4
+    role: basic-user
+    users: 
+    - user4dev
+    - user4devops
+    - user4ops
+  - id: student5
+    name: student5
+    role: basic-user
+    users: 
+    - user5dev
+    - user5devops
+    - user5ops
+  - id: student6
+    name: student6
+    role: basic-user
+    users: 
+    - user6dev
+    - user6devops
+    - user6ops
+  - id: student7
+    name: student7
+    role: basic-user
+    users: 
+    - user7dev
+    - user7devops
+    - user7ops
+  - id: student8
+    name: student8
+    role: basic-user
+    users: 
+    - user8dev
+    - user8devops
+    - user8ops
+  - id: student9
+    name: student9
+    role: basic-user
+    users: 
+    - user9dev
+    - user9devops
+    - user9ops
+  - id: student10
+    name: student10
+    role: basic-user
+    users: 
+    - user10dev
+    - user10devops
+    - user10ops
+  - id: student11
+    name: student11
+    role: basic-user
+    users: 
+    - user11dev
+    - user11devops
+    - user11ops
+  - id: student12
+    name: student12
+    role: basic-user
+    users: 
+    - user12dev
+    - user12devops
+    - user12ops
+  - id: student13
+    name: student13
+    role: basic-user
+    users: 
+    - user13dev
+    - user13devops
+    - user13ops
+  - id: student14
+    name: student14
+    role: basic-user
+    users: 
+    - user14dev
+    - user14devops
+    - user14ops
+  - id: student15
+    name: student15
+    role: basic-user
+    users: 
+    - user15dev
+    - user15devops
+    - user15ops
+  - id: student16
+    name: student16
+    role: basic-user
+    users: 
+    - user16dev
+    - user16devops
     - user16ops
