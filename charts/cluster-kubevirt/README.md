@@ -128,3 +128,4 @@ xxxx  to do xxxxxxxx
 | 9.8.81 | 2021-12-20 | Update the storage context
 | 9.8.91 | 2022-03-06 | publish stable update for the full repository
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
+| 9.8.94 | 2022-03-07 | Update kubevirt operator to version 4.9.3
