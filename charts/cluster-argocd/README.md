@@ -44,7 +44,7 @@ Complete deployment of a project with the following characteristics :
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **openshift-gitops-operator** configured with
   - The **stable** channel
-  - The **1.3.1** version
+  - The **1.5.0** version
   - Deployed under the **openshift-operators** project
 - 1 **argocd:** named **openshift-gitops**
 - 1 **argocd_export:** every days
@@ -157,3 +157,4 @@ helm install startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr
 | 9.8.81 | 2021-12-20 | Update the storage context
 | 9.8.91 | 2022-03-06 | publish stable update for the full repository
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
+| 9.8.94 | 2022-04-21 | Update to gitops-operator version 1.5.0
