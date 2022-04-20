@@ -159,3 +159,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
 | 9.8.94 | 2022-03-07 | Improve group management
 | 9.8.95 | 2022-03-07 | Upgrade 3scale operator to version 0.8.3-0.1645735250.p
+| 9.8.96 | 2022-04-21 | Upgrade 3scale operator to version 0.8.3-0.1649688682.p
