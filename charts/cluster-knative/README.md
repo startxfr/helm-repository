@@ -141,3 +141,4 @@ helm install startx/cluster-knative -f https://raw.githubusercontent.com/startxf
 | 9.8.91 | 2022-03-06 | publish stable update for the full repository
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
 | 9.8.94 | 2022-03-07 | Update to operator version 1.20.1
+| 9.8.95 | 2022-04-21 | Update to operator version 1.21.1
