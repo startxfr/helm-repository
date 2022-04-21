@@ -273,3 +273,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
 | 9.8.94 | 2022-03-07 | Improve workspace group roles
 | 9.8.95 | 2022-04-21 | Upgrade crw operator to version 2.15.3
+| 9.8.96 | 2022-04-21 | Upgrade crwoperatorallnamespaces operator to version 2.13.100
