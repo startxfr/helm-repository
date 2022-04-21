@@ -26,7 +26,7 @@ cluster:
     spec: |
       image: registry.connect.redhat.com/couchbase/server:6.5.1
       paused: false
-      antiAffinity: true
+      antiAffinity: false
       softwareUpdateNotifications: true
       serverGroups:
         - eu-west-3a
@@ -47,6 +47,7 @@ cluster:
         exposeAdminConsole: true
         adminConsoleServices:
         - data
+        - query
       buckets:
         managed: true
         selector:

@@ -6,7 +6,7 @@ description: Helm chart used to configure Couchbase cluster using Couchbase Auto
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.93
+version: 9.8.94
 # Version name of the couchbase operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.2.1
 # Version of Openshift 
@@ -59,6 +59,10 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Enable conditionnal loading of charts dependencies"
+      description: "Update default version to 7.0.3-1"
+    - kind: changed
+      description: "Enable admin console for sql service and disable anti-affinity in the venus demo cluster"
+    - kind: changed
+      description: "Enable admin console for all service and disable anti-affinity in the jupiter demo cluster"
   artifacthub.io/containsSecurityUpdates: "false"
 
