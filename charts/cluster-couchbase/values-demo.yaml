@@ -23,7 +23,7 @@ loader:
   - name: venus
     command: | 
       #!/bin/bash
-      WORKLOAD_CONF=" --threads=5 -r .6 -i 300000 -s 1000"
+      WORKLOAD_CONF=" --threads=5 -r .6 -i 120000 -s 75000 --json"
       CREDS=" -u administrator -p administrator123"
       CLUSTER=venus-cluster
       BUCKET=yellow-back-bucket
@@ -37,7 +37,7 @@ loader:
   - name: jupiter
     command: | 
       #!/bin/bash
-      WORKLOAD_CONF=" --threads=5 -r .6 -i 300000 -s 1000"
+      WORKLOAD_CONF=" --threads=5 -r .6 -i 4000000 -s 15000 --json"
       CREDS=" -u administrator -p administrator123"
       CLUSTER=jupiter-cluster
       BUCKET=orange-back-bucket
@@ -54,7 +54,7 @@ loader:
   - name: mercury
     command: | 
       #!/bin/bash
-      WORKLOAD_CONF=" --threads=1 -r .6 -i 300000 -s 1000"
+      WORKLOAD_CONF=" --threads=1 -r .6 -i 600000 -s 1000 --json"
       CREDS=" -u administrator -p administrator123"
       CLUSTER=mercury-cluster
       BUCKET=purple-bucket
