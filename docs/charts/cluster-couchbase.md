@@ -133,3 +133,4 @@ helm install startx/cluster-couchbase -f https://raw.githubusercontent.com/start
 | 9.8.91 | 2022-03-06 | publish stable update for the full repository
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
 | 9.8.94 | 2022-04-21 | Update default version to 7.0.3-1 and update demo venus and jupiter
+| 9.8.95 | 2022-04-21 | Update couchbase-operator to version 2.3.0-1
