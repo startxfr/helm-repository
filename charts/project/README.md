@@ -324,3 +324,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.95 | 2022-03-07 | Improve group management
 | 9.8.96 | 2022-03-07 | Improve group management
 | 9.8.97 | 2022-03-07 | Improve workspace group roles
+| 9.8.98 | 2022-04-21 | add ubisoft sample
