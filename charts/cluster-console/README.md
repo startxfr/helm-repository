@@ -142,3 +142,4 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
 | 9.8.94 | 2022-04-26 | Add Monaco PDD template
 | 9.8.95 | 2022-04-26 | Change Monaco PDD message topbar
+| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107

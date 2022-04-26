@@ -6,7 +6,7 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.95
+version: 9.8.109
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.9.8
 # Version of Openshift 
@@ -44,23 +44,23 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.107"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.107"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.107"
     alias: operatorGlobal
     condition: operatorGlobal.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update the elastic operator to version 5.4.0-152"
+      description: "Update startx chart dependencies to version 9.8.107"
   artifacthub.io/containsSecurityUpdates: "true"
 
