@@ -128,3 +128,4 @@ helm install startx/cluster-sso -f https://raw.githubusercontent.com/startxfr/he
 | 9.8.94  | 2022-03-07 | Update the sso operator to version 7.5.1-opr-009                                               |
 | 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                            |
 | 9.8.110 | 2022-04-27 | Stable release for all charts                                                                  |
+| 9.8.114 | 2022-04-27 | publish stable update for the full repository
