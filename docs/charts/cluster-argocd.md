@@ -161,3 +161,4 @@ helm install startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr
 | 9.8.95 | 2022-04-21 | Update limits
 | 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
 | 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
+| 9.8.99 | 2022-04-27 | Update llcalstorage, logging and elastic for OCP 4.8 and bellow 4.9.11
