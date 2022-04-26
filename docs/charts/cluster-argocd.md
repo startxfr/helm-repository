@@ -160,3 +160,4 @@ helm install startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr
 | 9.8.94 | 2022-04-21 | Update to gitops-operator version 1.5.0
 | 9.8.95 | 2022-04-21 | Update limits
 | 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
+| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
