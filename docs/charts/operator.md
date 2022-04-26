@@ -251,3 +251,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 9.8.81 | 2021-12-20 | Update the storage context
 | 9.8.91 | 2022-03-06 | publish stable update for the full repository
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
+| 9.8.107 | 2022-04-26 | Upgrade startx chart dependencies to version 9.8.107
