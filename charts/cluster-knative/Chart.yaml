@@ -6,7 +6,7 @@ description: Helm chart used to configure Knative at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.95
+version: 9.8.109
 # Version name of the knative operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.20.1
 # Version of Openshift 
@@ -46,27 +46,27 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.107"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.107"
     alias: projectKServing
     condition: projectKServing.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.107"
     alias: projectKEventing
     condition: projectKEventing.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.107"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update to operator version 1.21.1"
+      description: "Update startx chart dependencies to version 9.8.107"
   artifacthub.io/containsSecurityUpdates: "true"
