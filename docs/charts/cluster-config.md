@@ -143,15 +143,16 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 9.8.47  | 2021-11-21 | Improve version management for chart                                                                   |
 | 9.8.51  | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                     |
 | 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                                     |
-| 9.8.68 | 2021-12-18 | Update elasticsearch operator to version 5.3.1-12
-| 9.8.68 | 2021-12-18 | Improve cluster-config options
-| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
-| 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
-| 9.8.76 | 2021-12-19 | Change helm.sh/chart name
-| 9.8.81 | 2021-12-20 | Update the storage context
-| 9.8.82 | 2022-02-23 | Upgrate elastic and logging operator to version 5.3.4-13
-| 9.8.91 | 2022-03-06 | publish stable update for the full repository
-| 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
-| 9.8.94 | 2022-03-07 | Update the elastic operator to version 5.3.5-20
-| 9.8.95 | 2022-04-21 | Update the elastic operator to version 5.4.0-152
-| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
+| 9.8.68  | 2021-12-18 | Update elasticsearch operator to version 5.3.1-12                                                      |
+| 9.8.68  | 2021-12-18 | Improve cluster-config options                                                                         |
+| 9.8.71  | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                       |
+| 9.8.75  | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                             |
+| 9.8.76  | 2021-12-19 | Change helm.sh/chart name                                                                              |
+| 9.8.81  | 2021-12-20 | Update the storage context                                                                             |
+| 9.8.82  | 2022-02-23 | Upgrate elastic and logging operator to version 5.3.4-13                                               |
+| 9.8.91  | 2022-03-06 | publish stable update for the full repository                                                          |
+| 9.8.93  | 2022-03-07 | Enable conditionnal loading of charts dependencies                                                     |
+| 9.8.94  | 2022-03-07 | Update the elastic operator to version 5.3.5-20                                                        |
+| 9.8.95  | 2022-04-21 | Update the elastic operator to version 5.4.0-152                                                       |
+| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                    |
+| 9.8.99 | 2022-04-27 | Update llcalstorage, logging and elastic for OCP 4.8 and bellow 4.9.11
