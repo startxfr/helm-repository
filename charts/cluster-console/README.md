@@ -5,7 +5,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io)  for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
@@ -121,26 +121,26 @@ helm install startx/cluster-console -f https://raw.githubusercontent.com/startxf
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21                                                                     |
 | 9.8.1   | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                                               |
 | 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                                              |
-| 9.8.7 | 2021-11-20 | Debug dependencies problem
-| 9.8.9 | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update
-| 9.8.15 | 2021-11-20 | Update startx chart dependencies version to 9.8.11
-| 9.8.19 | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema
-| 9.8.28 | 2021-11-20 | Update the startx chart dependencies to version 9.8.23
-| 9.8.39 | 2021-11-21 | Debug version check with more permissive mode
-| 9.8.43 | 2021-11-21 | Update the startx chart dependencies to version 9.8.39
-| 9.8.45 | 2021-11-21 | Update the values schema limits for context properties
-| 9.8.47 | 2021-11-21 | Improve version management for chart
-| 9.8.51 | 2021-11-22 | Update startx chart dependencies to version 9.8.48
-| 9.8.67 | 2021-12-18 | Align all charts to release 9.8.67
-| 9.8.71 | 2021-12-18 | Update helm-chart dependencies to version 9.8.59
-| 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
-| 9.8.76 | 2021-12-19 | Change helm.sh/chart name
-| 9.8.81 | 2021-12-20 | Update the storage context
-| 9.8.82 | 2022-02-23 | Add minju demo
-| 9.8.83 | 2022-03-06 | Add the ubisoft template
-| 9.8.91 | 2022-03-06 | publish stable update for the full repository
-| 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
-| 9.8.94 | 2022-04-26 | Add Monaco PDD template
-| 9.8.95 | 2022-04-26 | Change Monaco PDD message topbar
-| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
-| 9.8.110 | 2022-04-27 | Stable release for all charts
+| 9.8.7   | 2021-11-20 | Debug dependencies problem                                                                                       |
+| 9.8.9   | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update                                              |
+| 9.8.15  | 2021-11-20 | Update startx chart dependencies version to 9.8.11                                                               |
+| 9.8.19  | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema                                     |
+| 9.8.28  | 2021-11-20 | Update the startx chart dependencies to version 9.8.23                                                           |
+| 9.8.39  | 2021-11-21 | Debug version check with more permissive mode                                                                    |
+| 9.8.43  | 2021-11-21 | Update the startx chart dependencies to version 9.8.39                                                           |
+| 9.8.45  | 2021-11-21 | Update the values schema limits for context properties                                                           |
+| 9.8.47  | 2021-11-21 | Improve version management for chart                                                                             |
+| 9.8.51  | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                               |
+| 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                                               |
+| 9.8.71  | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                                 |
+| 9.8.75  | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                                       |
+| 9.8.76  | 2021-12-19 | Change helm.sh/chart name                                                                                        |
+| 9.8.81  | 2021-12-20 | Update the storage context                                                                                       |
+| 9.8.82  | 2022-02-23 | Add minju demo                                                                                                   |
+| 9.8.83  | 2022-03-06 | Add the ubisoft template                                                                                         |
+| 9.8.91  | 2022-03-06 | publish stable update for the full repository                                                                    |
+| 9.8.93  | 2022-03-07 | Enable conditionnal loading of charts dependencies                                                               |
+| 9.8.94  | 2022-04-26 | Add Monaco PDD template                                                                                          |
+| 9.8.95  | 2022-04-26 | Change Monaco PDD message topbar                                                                                 |
+| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                              |
+| 9.8.110 | 2022-04-27 | Stable release for all charts                                                                                    |
