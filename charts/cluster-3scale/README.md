@@ -152,14 +152,14 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 9.8.52  | 2021-11-22 | Debug storage configuration issue due to update in APIManager resource. Comment errored properties     |
 | 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                                     |
 | 9.8.71  | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                       |
-| 9.8.75 | 2021-12-19 | Align with all other startx chart version to number 9.8.75
-| 9.8.76 | 2021-12-19 | Change helm.sh/chart name
-| 9.8.81 | 2021-12-20 | Update the storage context
-| 9.8.91 | 2022-03-06 | publish stable update for the full repository
-| 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
-| 9.8.94 | 2022-03-07 | Improve group management
-| 9.8.95 | 2022-03-07 | Upgrade 3scale operator to version 0.8.3-0.1645735250.p
-| 9.8.96 | 2022-04-21 | Upgrade 3scale operator to version 0.8.3-0.1649688682.p
-| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
-| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
-| 9.8.110 | 2022-04-27 | Stable release for all charts
+| 9.8.75  | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                             |
+| 9.8.76  | 2021-12-19 | Change helm.sh/chart name                                                                              |
+| 9.8.81  | 2021-12-20 | Update the storage context                                                                             |
+| 9.8.91  | 2022-03-06 | publish stable update for the full repository                                                          |
+| 9.8.93  | 2022-03-07 | Enable conditionnal loading of charts dependencies                                                     |
+| 9.8.94  | 2022-03-07 | Improve group management                                                                               |
+| 9.8.95  | 2022-03-07 | Upgrade 3scale operator to version 0.8.3-0.1645735250.p                                                |
+| 9.8.96  | 2022-04-21 | Upgrade 3scale operator to version 0.8.3-0.1649688682.p                                                |
+| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                    |
+| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                    |
+| 9.8.110 | 2022-04-27 | Stable release for all charts                                                                          |
