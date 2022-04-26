@@ -7,7 +7,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-04-26T23:59:11.802839422+02:00"
+    created: "2022-04-27T00:47:32.366153066+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -54,11 +54,61 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 0.7.0
+    created: "2022-04-27T00:47:32.38088247+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: projectOperator
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure 3scale at the cluster level
+    digest: e80dd3baa8885addc90996650d19f63cd3a525adcf63d85accf21cacfece7147
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-3scale.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - 3scale
+    - api management
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-3scale
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-3scale
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale
+    tags: infra,cluster,3scale
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-3scale-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-04-26T23:59:11.799453659+02:00"
+    created: "2022-04-27T00:47:32.3605952+02:00"
     dependencies:
     - alias: project
       name: project
@@ -108,7 +158,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-04-26T23:59:11.795419092+02:00"
+    created: "2022-04-27T00:47:32.344184884+02:00"
     dependencies:
     - alias: project
       name: project
@@ -151,7 +201,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-04-26T23:59:11.791176716+02:00"
+    created: "2022-04-27T00:47:32.33750546+02:00"
     dependencies:
     - alias: project
       name: project
@@ -189,7 +239,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-04-26T23:59:11.780283302+02:00"
+    created: "2022-04-27T00:47:32.332165573+02:00"
     dependencies:
     - alias: project
       name: project
@@ -233,7 +283,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-04-26T23:59:11.820331623+02:00"
+    created: "2022-04-27T00:47:32.408498564+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -277,11 +327,59 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 2.2.8
+    created: "2022-04-27T00:47:32.418431541+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Advanced Cluster Manager at the cluster
+      level
+    digest: 82ed8801372a09f1227e7ca7be7158531e83dd8082481c1f3f4cc0549e5d3caa
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-acm.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - acm
+    - advanced cluster management
+    - RHACM
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-acm
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-acm
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-acm
+    tags: infra,cluster,management,multi-cluster
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-acm-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-04-26T23:59:11.81708937+02:00"
+    created: "2022-04-27T00:47:32.403848386+02:00"
     dependencies:
     - alias: project
       name: project
@@ -327,7 +425,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-04-26T23:59:11.81328649+02:00"
+    created: "2022-04-27T00:47:32.398898651+02:00"
     dependencies:
     - alias: project
       name: project
@@ -368,7 +466,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-04-26T23:59:11.810158455+02:00"
+    created: "2022-04-27T00:47:32.39086809+02:00"
     dependencies:
     - alias: project
       name: project
@@ -404,7 +502,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 2.2.5
-    created: "2022-04-26T23:59:11.80729382+02:00"
+    created: "2022-04-27T00:47:32.386363926+02:00"
     dependencies:
     - alias: project
       name: project
@@ -446,7 +544,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-04-26T23:59:11.834531296+02:00"
+    created: "2022-04-27T00:47:32.443821691+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -490,11 +588,59 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 3.67.0
+    created: "2022-04-27T00:47:32.454185086+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Advanced Cluster Manager at the cluster
+      level
+    digest: 1ae9032bc0e6d6153e06163f7197578472dcae64b714dab9175c6b162a941ed7
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-acs.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - acs
+    - advanced cluster security
+    - stackrocks
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-acs
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-acs
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-acs
+    tags: infra,cluster,security,compliancy,scanning
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-acs-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.66.1
-    created: "2022-04-26T23:59:11.829818852+02:00"
+    created: "2022-04-27T00:47:32.438730105+02:00"
     dependencies:
     - alias: project
       name: project
@@ -542,7 +688,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.66.1
-    created: "2022-04-26T23:59:11.827313318+02:00"
+    created: "2022-04-27T00:47:32.434414176+02:00"
     dependencies:
     - alias: project
       name: project
@@ -583,7 +729,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 3.66.1
-    created: "2022-04-26T23:59:11.824580041+02:00"
+    created: "2022-04-27T00:47:32.425165936+02:00"
     dependencies:
     - alias: project
       name: project
@@ -626,7 +772,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-04-26T23:59:11.837059967+02:00"
+    created: "2022-04-27T00:47:32.460900093+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -668,6 +814,55 @@ entries:
     urls:
     - https://startxfr.github.io/helm-repository/packages/cluster-ansible-9.8.109.tgz
     version: 9.8.109
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 3.6.0
+    created: "2022-04-27T00:47:32.466796287+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Ansible Automation private registry
+      at the cluster level
+    digest: cdbea634ab762dbe41025f09a1d372f410b6120e12db325e6b806134705f4023
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-ansible.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - security
+    - automation
+    - tower
+    - ansible
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-ansible
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-ansible
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ansible
+    tags: infra,cluster,ansible
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-ansible-9.8.71.tgz
+    version: 9.8.71
   cluster-argocd:
   - annotations:
       artifacthub.io/changes: |
@@ -676,7 +871,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-04-26T23:59:11.853676128+02:00"
+    created: "2022-04-27T00:47:32.498669597+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -719,11 +914,58 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 2.5.4
+    created: "2022-04-27T00:47:32.505158071+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure ArgoCD at the cluster level
+    digest: ee3706d1dadedd30ddefaafb8d4f795d8454ae895bc3f68940e659a3ac0916cc
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-argocd.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - argocd
+    - gitops
+    - continous delivery
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-argocd
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-argocd
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-argocd
+    tags: infra,cluster,argocd
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-argocd-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-04-26T23:59:11.84858902+02:00"
+    created: "2022-04-27T00:47:32.492629197+02:00"
     dependencies:
     - alias: project
       name: project
@@ -770,7 +1012,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-04-26T23:59:11.844171135+02:00"
+    created: "2022-04-27T00:47:32.483760705+02:00"
     dependencies:
     - alias: project
       name: project
@@ -810,7 +1052,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-04-26T23:59:11.840895737+02:00"
+    created: "2022-04-27T00:47:32.476342455+02:00"
     dependencies:
     - alias: project
       name: project
@@ -850,7 +1092,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.182131141+02:00"
+    created: "2022-04-27T00:47:32.966219813+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 6cd501612e46db5f6bf751d222af46787ae6d1d767062585d7e6c5fc322ca400
     home: https://startxfr.github.io/helm-repository
@@ -881,11 +1123,48 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.9.8
+    created: "2022-04-27T00:47:33.090660411+02:00"
+    description: Helm chart used to configure Auth at the cluster level
+    digest: cb9bba464fa0d5beffd4ca3c71f343b8a5dafca99bf147cb95b907d4be2151e1
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-auth.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - authentification
+    - oauth
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-auth
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-auth
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth
+    tags: infra,cluster,auth
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-auth-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.112623774+02:00"
+    created: "2022-04-27T00:47:32.861183656+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 16d08f6c7ea81370e102c30db80bf8991b9a56184fd62f1ff265be6baf92dba6
     home: https://startxfr.github.io/helm-repository
@@ -922,7 +1201,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.048776826+02:00"
+    created: "2022-04-27T00:47:32.767953193+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 93b4cab6c492a3497f63c671b603fc83598f3da21b0c2a22409b19a4663e17d5
     home: https://startxfr.github.io/helm-repository
@@ -952,7 +1231,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:11.979553901+02:00"
+    created: "2022-04-27T00:47:32.671936059+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: d92c547def3bd8593f4b60f50766018863d91f7ff54066d54f2275db3d07c1c3
     home: https://startxfr.github.io/helm-repository
@@ -977,7 +1256,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:11.913838423+02:00"
+    created: "2022-04-27T00:47:32.58484566+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: e4bba6419f9582d694813b5702c1de283f5b0b1c3ef91083318effd7266d7cb3
     home: https://startxfr.github.io/helm-repository
@@ -1008,7 +1287,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-04-26T23:59:12.196495262+02:00"
+    created: "2022-04-27T00:47:33.117834807+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1050,11 +1329,57 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 0.1.44
+    created: "2022-04-27T00:47:33.124698185+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Compliance at the cluster level
+    digest: 81a8f17f689e05dfeadc62fb2851cfadd4f94eb3130c05c05abd13d3a67a6f81
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-compliance.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - compliance
+    - openscap
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-compliance
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-compliance
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-compliance
+    tags: infra,cluster,compliance,security,cloud-management
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-compliance-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.44
-    created: "2022-04-26T23:59:12.193938815+02:00"
+    created: "2022-04-27T00:47:33.111749023+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1100,7 +1425,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.44
-    created: "2022-04-26T23:59:12.191430437+02:00"
+    created: "2022-04-27T00:47:33.106998147+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1139,7 +1464,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 0.1.44
-    created: "2022-04-26T23:59:12.188074405+02:00"
+    created: "2022-04-27T00:47:33.102943396+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1175,7 +1500,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 0.1.35
-    created: "2022-04-26T23:59:12.184696929+02:00"
+    created: "2022-04-27T00:47:33.098739144+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1217,7 +1542,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.2121292+02:00"
+    created: "2022-04-27T00:47:33.166712326+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1265,11 +1590,62 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.9.8
+    created: "2022-04-27T00:47:33.175824813+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operatorElastic
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operatorGlobal
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure cluster generic behaviours like image
+      prunning and cluster auto-scaling capacity
+    digest: 7a9d1f26b823585f1ae383c45fd483693b210f0ca6a370e0ed926f26660dda3d
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-config.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - openshift
+    - config
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-config
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-config
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config
+    tags: infra,cluster,config
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-config-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.208798881+02:00"
+    created: "2022-04-27T00:47:33.158799535+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1318,7 +1694,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.205891256+02:00"
+    created: "2022-04-27T00:47:33.151106213+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1362,7 +1738,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.202301682+02:00"
+    created: "2022-04-27T00:47:33.139398078+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1401,7 +1777,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.199456246+02:00"
+    created: "2022-04-27T00:47:33.134872294+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1446,7 +1822,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.248043061+02:00"
+    created: "2022-04-27T00:47:33.268007817+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: b065d703e2e3cd2095db84aa0e74264358429487fa1abda8501d911e38fdbe83
     home: https://startxfr.github.io/helm-repository
@@ -1477,11 +1853,48 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.9.8
+    created: "2022-04-27T00:47:33.276768443+02:00"
+    description: Helm chart used to configure openshift console at the cluster level
+    digest: 6f6534f5ad24eb0ca5e5612e0d211bccab6f54d13a9aa68e9603ab8d9274cc0e
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-console.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - openshift
+    - console
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-console
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-console
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-console
+    tags: infra,cluster,console
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-console-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.24019585+02:00"
+    created: "2022-04-27T00:47:33.246571851+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 15531a14eb5f5f2a3a88b3a2c4c1e2dbd447905eefbaabb4d215427938d5c114
     home: https://startxfr.github.io/helm-repository
@@ -1518,7 +1931,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.233401017+02:00"
+    created: "2022-04-27T00:47:33.230073428+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 35c11cdf7b898ac9e9fb992083a8f76402fa3d3a6691bda9c84f6e572d684f6f
     home: https://startxfr.github.io/helm-repository
@@ -1548,7 +1961,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.22718892+02:00"
+    created: "2022-04-27T00:47:33.213235068+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 70c526f10e1287129ca538838fb7587fe9ecc6ded3e6f934034d8d3d0d7d9c16
     home: https://startxfr.github.io/helm-repository
@@ -1573,7 +1986,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.218246118+02:00"
+    created: "2022-04-27T00:47:33.195097168+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 6801437ff73ed832f168d47f4198afe3705dd0501e288551c319eb5cead706b6
     home: https://startxfr.github.io/helm-repository
@@ -1604,7 +2017,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-04-26T23:59:12.26111975+02:00"
+    created: "2022-04-27T00:47:33.311963485+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1650,11 +2063,61 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 2.2.0
+    created: "2022-04-27T00:47:33.329826119+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Couchbase cluster using Couchbase Autonomous
+      operator
+    digest: f79495d4736df55d538c7ff0b0beaf17a4180d9ab88e6939b866cd7d6d61548c
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-couchbase.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - couchbase
+    - big data
+    - nosql
+    - memcached
+    - couchdb
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-couchbase
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-couchbase
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-couchbase
+    tags: infra,cluster,couchbase,repository,artifacts
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-couchbase-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-04-26T23:59:12.258009627+02:00"
+    created: "2022-04-27T00:47:33.304798367+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1706,7 +2169,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-04-26T23:59:12.254167606+02:00"
+    created: "2022-04-27T00:47:33.296974532+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1749,7 +2212,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-04-26T23:59:12.251030653+02:00"
+    created: "2022-04-27T00:47:33.285084794+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1792,7 +2255,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-04-26T23:59:12.332726069+02:00"
+    created: "2022-04-27T00:47:33.44688369+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1837,11 +2300,60 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-04-27T00:47:33.452397508+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Gitlab at the cluster level
+    digest: 0fb1416204812dd94395975fc1344b12650d75df7a0c5a5230ffdb865271d4ee
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-gitlab.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - gitlab
+    - git
+    - code repository
+    - SCM
+    - git repository
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-gitlab
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-gitlab
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-gitlab
+    tags: infra,cluster,gitlab,build,repository
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-gitlab-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-04-26T23:59:12.268886006+02:00"
+    created: "2022-04-27T00:47:33.361047282+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1890,7 +2402,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-04-26T23:59:12.266242205+02:00"
+    created: "2022-04-27T00:47:33.348697175+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1932,7 +2444,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-04-26T23:59:12.263199115+02:00"
+    created: "2022-04-27T00:47:33.343691258+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1974,7 +2486,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-04-26T23:59:12.348225844+02:00"
+    created: "2022-04-27T00:47:33.501833636+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2037,12 +2549,77 @@ entries:
     - https://startxfr.github.io/helm-repository/packages/cluster-istio-9.8.109.tgz
     version: 9.8.109
   - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 5.2.1
+    created: "2022-04-27T00:47:33.517522704+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: projectOperator
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operatorElastic
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operatorKiali
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operatorJaeger
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operatorIstio
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Istio at the cluster level
+    digest: 5961e94b638459037d28b72519dc2bab35af76e33e3aa3daef821663aab165a1
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-istio.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - istio
+    - kiali
+    - jaeger
+    - service mesh
+    - openshift service mesh
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-istio
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-istio
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio
+    tags: infra,cluster,istio
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-istio-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
       artifacthub.io/changes: "- kind: changed\n  description: \"Align to Openshift
         version 4.8.21\"  \n"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-04-26T23:59:12.344289898+02:00"
+    created: "2022-04-27T00:47:33.485330704+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2107,7 +2684,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-04-26T23:59:12.339399001+02:00"
+    created: "2022-04-27T00:47:33.477766343+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2165,7 +2742,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.0.6.2
-    created: "2022-04-26T23:59:12.33579645+02:00"
+    created: "2022-04-27T00:47:33.459039307+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2221,7 +2798,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-04-26T23:59:12.360297918+02:00"
+    created: "2022-04-27T00:47:33.549817748+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2266,11 +2843,60 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 0.7.3
+    created: "2022-04-27T00:47:33.552818902+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Jenkins at the cluster level
+    digest: d8e19d51bff4751e95f3c441d44cec75be31ba590eba09e46dae50f0d2a99d6e
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-jenkins.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - jenkins
+    - build
+    - test
+    - continous integration
+    - CI
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-jenkins
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-jenkins
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-jenkins
+    tags: infra,cluster,jenkins,build,runner
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-jenkins-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-04-26T23:59:12.356405873+02:00"
+    created: "2022-04-27T00:47:33.534140027+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2319,7 +2945,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-04-26T23:59:12.354230893+02:00"
+    created: "2022-04-27T00:47:33.527912885+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2361,7 +2987,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 0.7.1
-    created: "2022-04-26T23:59:12.350909067+02:00"
+    created: "2022-04-27T00:47:33.522129328+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2403,7 +3029,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-04-26T23:59:12.374355082+02:00"
+    created: "2022-04-27T00:47:33.585199999+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -2457,11 +3083,67 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 1.18.0
+    created: "2022-04-27T00:47:33.589171886+02:00"
+    dependencies:
+    - alias: projectOperator
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: projectKServing
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: projectKEventing
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Knative at the cluster level
+    digest: c6a53da3a806afadd326703459e8bd048c2220fe3d3ad7fd619739ae2f60eff7
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-knative.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - knative
+    - serverless
+    - saas
+    - idle
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-knative
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-knative
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-knative
+    tags: infra,cluster,knative
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-knative-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.18.0
-    created: "2022-04-26T23:59:12.370771767+02:00"
+    created: "2022-04-27T00:47:33.580556649+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -2517,7 +3199,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.18.0
-    created: "2022-04-26T23:59:12.36569466+02:00"
+    created: "2022-04-27T00:47:33.571535172+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -2566,7 +3248,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-04-26T23:59:12.362768359+02:00"
+    created: "2022-04-27T00:47:33.559976453+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -2614,7 +3296,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-04-26T23:59:12.386758002+02:00"
+    created: "2022-04-27T00:47:33.618651754+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2659,11 +3341,60 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.8.2
+    created: "2022-04-27T00:47:33.626525438+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Code Ready Workspace at the cluster
+      level
+    digest: e003b7ec34f025466a9b018ace13c78bddd20980333321a6a6d517ec10b15c89
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-kubevirt.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - kubevirt
+    - virtualisation
+    - KVM
+    - virtual machine
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-kubevirt
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-kubevirt
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubevirt
+    tags: infra,cluster,kubevirt
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-kubevirt-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.2
-    created: "2022-04-26T23:59:12.383739791+02:00"
+    created: "2022-04-27T00:47:33.613504924+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2712,7 +3443,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.2
-    created: "2022-04-26T23:59:12.380159354+02:00"
+    created: "2022-04-27T00:47:33.606623334+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2754,7 +3485,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.377412497+02:00"
+    created: "2022-04-27T00:47:33.601796502+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2795,7 +3526,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-04-26T23:59:12.389669742+02:00"
+    created: "2022-04-27T00:47:33.632526576+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2843,7 +3574,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-04-26T23:59:12.403949369+02:00"
+    created: "2022-04-27T00:47:33.655412649+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2893,11 +3624,64 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 5.3.1
+    created: "2022-04-27T00:47:33.661600054+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operatorElastic
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Metering at the cluster level
+    digest: a26e8180a5fff6581af7ef819bbe1e5e4530b3e7e05b6a56916cb5f59276f86b
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-logging.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - logging
+    - EFK
+    - elastic
+    - fluend
+    - kibana
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-logging
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-logging
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-logging
+    tags: infra,cluster,logging
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-logging-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.2
-    created: "2022-04-26T23:59:12.400647616+02:00"
+    created: "2022-04-27T00:47:33.650465828+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2948,7 +3732,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.2
-    created: "2022-04-26T23:59:12.396749059+02:00"
+    created: "2022-04-27T00:47:33.64577627+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2994,7 +3778,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 5.1.0
-    created: "2022-04-26T23:59:12.393867086+02:00"
+    created: "2022-04-27T00:47:33.636597301+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3038,7 +3822,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.407236834+02:00"
+    created: "2022-04-27T00:47:33.668382484+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 030ce0bdbd845269c48298697903a7616ba60c2f7de37c193f350729a5edbb14
     home: https://startxfr.github.io/helm-repository
@@ -3070,11 +3854,49 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.9.8
+    created: "2022-04-27T00:47:33.669411036+02:00"
+    description: Helm chart used to configure various state of the machine api
+    digest: 663bae69c1c0e3a29d48ffe1f4ddef013f950bfd69505790a82cbbf3261986fa
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-machine.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - scaling
+    - machine set
+    - node scaling
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-machine
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-machine
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-machine
+    tags: infra,cluster,machine-api,machine,cluster-management
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-machine-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.406465056+02:00"
+    created: "2022-04-27T00:47:33.666691888+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: d2855a981846df32b081c275ace2e145b1cd9c17291ae3f43f222b48adc55ba9
     home: https://startxfr.github.io/helm-repository
@@ -3114,7 +3936,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.405651401+02:00"
+    created: "2022-04-27T00:47:33.665106959+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: c65ae93d05a4a7938910f252d5486d10bd6bb0e7ee0ed2003bbe4af4b83e0569
     home: https://startxfr.github.io/helm-repository
@@ -3145,7 +3967,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.404872084+02:00"
+    created: "2022-04-27T00:47:33.663407524+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: c61789270d70e1e120dbe30478dc3421190fddda8c640732e8a2efcf06c03247
     home: https://startxfr.github.io/helm-repository
@@ -3178,7 +4000,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.420040147+02:00"
+    created: "2022-04-27T00:47:33.697517971+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3221,11 +4043,58 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.8.0
+    created: "2022-04-27T00:47:33.701104732+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Metering at the cluster level
+    digest: 1640ca10608f64c0a36102c20d7d85f5b21e7be2d1c17dab9cc64570de7cc3d0
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-metering.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - metering
+    - billing
+    - reporting
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-metering
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-metering
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering
+    tags: infra,cluster,metering
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-metering-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.417183563+02:00"
+    created: "2022-04-27T00:47:33.693126031+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3270,7 +4139,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.413051254+02:00"
+    created: "2022-04-27T00:47:33.680139656+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3310,7 +4179,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-04-26T23:59:12.410276543+02:00"
+    created: "2022-04-27T00:47:33.675473716+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3350,7 +4219,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-04-26T23:59:12.431469908+02:00"
+    created: "2022-04-27T00:47:33.721131615+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3393,11 +4262,58 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 3.32.0
+    created: "2022-04-27T00:47:33.726306037+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Nexus at the cluster level
+    digest: 1d903983cae8c71fe1ad71e4803c32ba87f2b2975e4ebfdb5dcacdc90fb373c0
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-nexus.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - nexus
+    - repository
+    - artifact storage
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-nexus
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-nexus
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nexus
+    tags: infra,cluster,nexus,repository,artifacts
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-nexus-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-04-26T23:59:12.427861894+02:00"
+    created: "2022-04-27T00:47:33.716537257+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3444,7 +4360,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-04-26T23:59:12.425465288+02:00"
+    created: "2022-04-27T00:47:33.712329262+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3484,7 +4400,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 3.27.0
-    created: "2022-04-26T23:59:12.422235034+02:00"
+    created: "2022-04-27T00:47:33.705943302+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3526,7 +4442,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.443973643+02:00"
+    created: "2022-04-27T00:47:33.752875052+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3575,11 +4491,64 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.8.0
+    created: "2022-04-27T00:47:33.757234805+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Openshift Container Storage at the cluster
+      level
+    digest: 57e85c8b35cc477d0907584c941a1ec22393bc9ae4fb85fdfb3d382742591454
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-ocs.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - storage
+    - ceph
+    - noobaa
+    - openshift container storage
+    - OCS
+    - object storage
+    - file storage
+    - block storage
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-ocs
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-ocs
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs
+    tags: infra,cluster,ocs
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-ocs-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.3
-    created: "2022-04-26T23:59:12.440338343+02:00"
+    created: "2022-04-27T00:47:33.741220663+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3632,7 +4601,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.3
-    created: "2022-04-26T23:59:12.436552263+02:00"
+    created: "2022-04-27T00:47:33.736898645+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3678,7 +4647,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.2
-    created: "2022-04-26T23:59:12.433815368+02:00"
+    created: "2022-04-27T00:47:33.730843366+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3719,7 +4688,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-04-26T23:59:12.456142279+02:00"
+    created: "2022-04-27T00:47:33.773551684+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -3763,11 +4732,59 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 1.5.2
+    created: "2022-04-27T00:47:33.776522558+02:00"
+    dependencies:
+    - alias: projectOperator
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure tekton at the cluster level
+    digest: bc5a947bc8087198d569b79104547e86b857ed7cf66206a23c8747b2a7abbfcb
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-pipeline.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - pipeline
+    - tekton
+    - continous integration
+    - CI
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-pipeline
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-pipeline
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline
+    tags: infra,cluster,pipeline
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-pipeline-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-04-26T23:59:12.453501619+02:00"
+    created: "2022-04-27T00:47:33.769668375+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -3815,7 +4832,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-04-26T23:59:12.450966867+02:00"
+    created: "2022-04-27T00:47:33.76435929+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -3856,7 +4873,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 1.4.1
-    created: "2022-04-26T23:59:12.447098263+02:00"
+    created: "2022-04-27T00:47:33.760771224+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -3896,7 +4913,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.468800607+02:00"
+    created: "2022-04-27T00:47:33.792914198+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3940,11 +4957,59 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.8.0
+    created: "2022-04-27T00:47:33.795712586+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Precision Time Protocol at the cluster
+      level
+    digest: 0bb308995ba8450cf2fe8e5d3f72d56b622749671ba6bb17fa7efc44893d4f7e
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-ptp.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - NTP
+    - PTP
+    - time
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-ptp
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-ptp
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ptp
+    tags: infra,cluster,ptp,ntp,time
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-ptp-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.464401164+02:00"
+    created: "2022-04-27T00:47:33.788603059+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3992,7 +5057,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.461810702+02:00"
+    created: "2022-04-27T00:47:33.78508683+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4033,7 +5098,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-04-26T23:59:12.459232468+02:00"
+    created: "2022-04-27T00:47:33.781248022+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4076,7 +5141,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-04-26T23:59:12.481223495+02:00"
+    created: "2022-04-27T00:47:33.81133934+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4127,11 +5192,65 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 3.6.0
+    created: "2022-04-27T00:47:33.815934197+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operatorsec
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Quay.io private registry at the cluster
+      level
+    digest: 17477ccb6908317aff165e5b9f748bf45ff6c299029cf830dddd5ef1f22122c1
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-quay.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - security
+    - registry
+    - container registry
+    - docker registry
+    - quay
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-quay
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-quay
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay
+    tags: infra,cluster,quay
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-quay-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-04-26T23:59:12.47828367+02:00"
+    created: "2022-04-27T00:47:33.807565646+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4185,7 +5304,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-04-26T23:59:12.474544621+02:00"
+    created: "2022-04-27T00:47:33.803882327+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4232,7 +5351,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 3.5.4
-    created: "2022-04-26T23:59:12.471594535+02:00"
+    created: "2022-04-27T00:47:33.799294889+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4277,7 +5396,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.484356308+02:00"
+    created: "2022-04-27T00:47:33.819578156+02:00"
     description: Helm chart used to configure RBAC
     digest: bb6b026229e0f7c3d1fb661d3dabf7a8074a4543341f6e4ed5845737d95dc77a
     home: https://startxfr.github.io/helm-repository
@@ -4309,11 +5428,49 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.9.8
+    created: "2022-04-27T00:47:33.820183925+02:00"
+    description: Helm chart used to configure RBAC
+    digest: 8f70d80c331e2a9e4fe23dd20b7a15ed3dd42f1cd6a67b4165d5e276ece26d94
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-rbac.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - security
+    - RBAC
+    - access
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-rbac
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-rbac
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac
+    tags: infra,cluster,rbac
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-rbac-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.483652569+02:00"
+    created: "2022-04-27T00:47:33.818999428+02:00"
     description: Helm chart used to configure RBAC
     digest: 0ec57d750f8dba9666cd90c132f56aafa68befe3fccd275cd027eeaacb02549d
     home: https://startxfr.github.io/helm-repository
@@ -4351,7 +5508,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.482375644+02:00"
+    created: "2022-04-27T00:47:33.818450367+02:00"
     description: Helm chart used to configure RBAC
     digest: 4c440c629c20e5e0daacf4111a4f783c697d2836853c61a2ebe1157b64a47400
     home: https://startxfr.github.io/helm-repository
@@ -4382,7 +5539,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.481785054+02:00"
+    created: "2022-04-27T00:47:33.817360795+02:00"
     description: Helm chart used to configure RBAC
     digest: e0a1159d0363531731e278574536a9a37f1d7f6980b695e63336c77c012e4a5a
     home: https://startxfr.github.io/helm-repository
@@ -4413,7 +5570,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-04-26T23:59:12.494808489+02:00"
+    created: "2022-04-27T00:47:33.833130635+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4457,11 +5614,59 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 7.5.0
+    created: "2022-04-27T00:47:33.836881854+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Redhat-SSO at the cluster level
+    digest: 98adf8b65b2c458b5c8c3aa1ee76511910a69535a09a7f1816b5fcde1fe54820
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-sso.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - security
+    - single sign on
+    - SSO
+    - keycloak
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-sso
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-sso
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-sso
+    tags: infra,cluster,sso,authentification,signle-sign-on
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-sso-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 7.5.0
-    created: "2022-04-26T23:59:12.492146216+02:00"
+    created: "2022-04-27T00:47:33.829414556+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4509,7 +5714,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 7.5.0
-    created: "2022-04-26T23:59:12.488853243+02:00"
+    created: "2022-04-27T00:47:33.826205672+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4550,7 +5755,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 7.4.7
-    created: "2022-04-26T23:59:12.486331502+02:00"
+    created: "2022-04-27T00:47:33.823204063+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4592,7 +5797,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.497119944+02:00"
+    created: "2022-04-27T00:47:33.839887543+02:00"
     description: Helm chart used to configure various storageClass
     digest: 744d490e85cec91dadd7cf889dd611a942a8e9455a264933e3aa69fb93864f7b
     home: https://startxfr.github.io/helm-repository
@@ -4623,11 +5828,48 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.9.8
+    created: "2022-04-27T00:47:33.840675058+02:00"
+    description: Helm chart used to configure various storageClass
+    digest: 9998e51a8d64661cd157413d0ec983286b9f5ab65e62e72d8fcdc92ee867f71d
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-storage.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - storage
+    - aws ebs
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-storage
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-storage
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-storage
+    tags: infra,cluster,storage
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-storage-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.496485941+02:00"
+    created: "2022-04-27T00:47:33.839147028+02:00"
     description: Helm chart used to configure various storageClass
     digest: 3e4546b358366c4ca6fb6a58fda748108a5ab734c7c0b7b61e0d2cd17f77dc88
     home: https://startxfr.github.io/helm-repository
@@ -4664,7 +5906,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.495897527+02:00"
+    created: "2022-04-27T00:47:33.838330118+02:00"
     description: Helm chart used to configure various storageClass
     digest: 4de3eb75b5ebdaaae0c03ed765b2d7e2cd58ec865a08c6910e116504fd878450
     home: https://startxfr.github.io/helm-repository
@@ -4694,7 +5936,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.49539848+02:00"
+    created: "2022-04-27T00:47:33.837573029+02:00"
     description: Helm chart used to configure various storageClass
     digest: f3fa9a5c38eed05168e83dd157b14d3d6c21bb5f725bb91bd596cc795261904a
     home: https://startxfr.github.io/helm-repository
@@ -4725,7 +5967,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-04-26T23:59:12.517645984+02:00"
+    created: "2022-04-27T00:47:33.862865202+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4768,11 +6010,58 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 1.9.0
+    created: "2022-04-27T00:47:33.868517841+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: vault
+      name: vault
+      repository: https://helm.releases.hashicorp.com
+      version: 0.18.0
+    description: Helm chart used to configure vault at the cluster level
+    digest: 6953a786abb0557fc9187c1e2220d6f68c948a225c304e3e599dc51c811ecbb7
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-vault.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - security
+    - vault
+    - secret management
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-vault
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-vault
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault
+    tags: infra,cluster,vault
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-vault-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-04-26T23:59:12.513237922+02:00"
+    created: "2022-04-27T00:47:33.857973955+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4819,7 +6108,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-04-26T23:59:12.507655454+02:00"
+    created: "2022-04-27T00:47:33.852188374+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4859,7 +6148,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 0.9.0
-    created: "2022-04-26T23:59:12.50266689+02:00"
+    created: "2022-04-27T00:47:33.847195918+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4899,7 +6188,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-04-26T23:59:12.529154815+02:00"
+    created: "2022-04-27T00:47:33.879268181+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4947,7 +6236,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-04-26T23:59:12.523000206+02:00"
+    created: "2022-04-27T00:47:33.873329672+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4994,7 +6283,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.54066949+02:00"
+    created: "2022-04-27T00:47:33.891228647+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5037,11 +6326,58 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.8.0
+    created: "2022-04-27T00:47:33.895634113+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure VerticalPodAutoscaler at the cluster
+      level
+    digest: 554d86847098a22e0a62e7edf1ec8b452d668565f9bf3dc83d899cbcb307b187
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-vpa.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - scaling
+    - vertical pod autoscaler
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-vpa
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-vpa
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vpa
+    tags: infra,cluster,vpa,authentification
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-vpa-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.5380202+02:00"
+    created: "2022-04-27T00:47:33.888275004+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5088,7 +6424,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-04-26T23:59:12.534191603+02:00"
+    created: "2022-04-27T00:47:33.885047377+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5128,7 +6464,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-04-26T23:59:12.531542431+02:00"
+    created: "2022-04-27T00:47:33.881614538+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5170,7 +6506,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-04-26T23:59:12.552788795+02:00"
+    created: "2022-04-27T00:47:33.907980803+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5213,11 +6549,58 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Refactor label and annotation go template library"
+        - kind: changed
+          description: "Update helm-chart dependencies to version 9.8.59"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 2.13.100
+    created: "2022-04-27T00:47:33.911204621+02:00"
+    dependencies:
+    - alias: project
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    - alias: operator
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.59
+    description: Helm chart used to configure Code Ready Workspace at the cluster
+      level
+    digest: 090fb9550b42cb35a3c1bb1cb7309ce8b38e772db4ffbf33b432f86ea8aea1a3
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-workspace.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - IDE
+    - code ready workspace
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-workspace
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-workspace
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace
+    tags: infra,cluster,codeready-workspace
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-workspace-9.8.71.tgz
+    version: 9.8.71
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align to Openshift version 4.8.21"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.11.0
-    created: "2022-04-26T23:59:12.5497486+02:00"
+    created: "2022-04-27T00:47:33.90495841+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5262,7 +6645,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.11.0
-    created: "2022-04-26T23:59:12.546928157+02:00"
+    created: "2022-04-27T00:47:33.900813084+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5302,7 +6685,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.11.0
-    created: "2022-04-26T23:59:12.542897093+02:00"
+    created: "2022-04-27T00:47:33.897974775+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5345,7 +6728,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.652295616+02:00"
+    created: "2022-04-27T00:47:34.025425207+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 63a3fdedcc69c8dd6bf607a395e6552d03640e07cebf437a661744d44afbfeac
@@ -5381,7 +6764,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.619830939+02:00"
+    created: "2022-04-27T00:47:33.988233907+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 0df92d630ed1b3e3595ee2e366641eaa05b655936d1cfda0427a09fd39925f8c
@@ -5417,7 +6800,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.587510115+02:00"
+    created: "2022-04-27T00:47:33.95064807+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 8d8741ea19ba20d8b9d08f9abe3be4b1c8ac7174a09d4061680729f293018d98
@@ -5454,7 +6837,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.656916457+02:00"
+    created: "2022-04-27T00:47:34.031898301+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -5498,7 +6881,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.655459129+02:00"
+    created: "2022-04-27T00:47:34.030000929+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -5544,7 +6927,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.654022721+02:00"
+    created: "2022-04-27T00:47:34.028077105+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -5591,7 +6974,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.659102178+02:00"
+    created: "2022-04-27T00:47:34.035054977+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 2aca21eb1f31bcc716ec0376bda58640a3bf9587b458595ce8885de636e6882a
@@ -5629,7 +7012,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.658519649+02:00"
+    created: "2022-04-27T00:47:34.034273605+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 962bfeb5f53514fe32de7fd3ad9435dbd76f5cd433c3a2472d1427c8711e3506
@@ -5667,7 +7050,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.65793221+02:00"
+    created: "2022-04-27T00:47:34.033512508+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 260c93b1699cedac36fbe51f3a308d1f5856b5040c6c51204a347950f4244f6b
@@ -5700,7 +7083,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.657388697+02:00"
+    created: "2022-04-27T00:47:34.032660123+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: c38eff92da21132f1e54240fb6f146339bb212dd3e036b5a953db4c801e83870
@@ -5734,7 +7117,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.662426401+02:00"
+    created: "2022-04-27T00:47:34.039669803+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: a4818a60eb039e67eb175637cd635d2667bb95e2403d6d7696df50014fb314d6
     home: https://startxfr.github.io/helm-repository
@@ -5770,7 +7153,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.661584209+02:00"
+    created: "2022-04-27T00:47:34.038418723+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 81b2a7b2e4f1eba090bdebd66c498cf076495b6ee4f4821aed545d97d2592620
     home: https://startxfr.github.io/helm-repository
@@ -5806,7 +7189,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.66070366+02:00"
+    created: "2022-04-27T00:47:34.037218626+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: bf595174cf1a7ad59974d667c76b06ea6b25afe8523088c987cb5020effc742f
     home: https://startxfr.github.io/helm-repository
@@ -5837,7 +7220,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.659841543+02:00"
+    created: "2022-04-27T00:47:34.036103256+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: a005b410954f437ba108d3cf974513f27a8772a3da692cfdfc0fa2cff9b9c80b
     home: https://startxfr.github.io/helm-repository
@@ -5871,7 +7254,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.666260763+02:00"
+    created: "2022-04-27T00:47:34.046269722+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 81aaa3c8e52c58e6a36cae462f44d85dfda28cccaa2df3a5c9fbcffee204b552
     home: https://startxfr.github.io/helm-repository
@@ -5905,7 +7288,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.665274672+02:00"
+    created: "2022-04-27T00:47:34.043389163+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 4950fdea957c7db43c6f3c0a3546ba0db6d8b3e8a30516a0e29d52a0e007a01c
     home: https://startxfr.github.io/helm-repository
@@ -5939,7 +7322,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.664294542+02:00"
+    created: "2022-04-27T00:47:34.042162764+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: acfa02d26dc6e4fa28b905cf85e409caf11f95dad6e03b0f4332e65a13532221
     home: https://startxfr.github.io/helm-repository
@@ -5968,7 +7351,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.66331907+02:00"
+    created: "2022-04-27T00:47:34.040796532+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 3190deb7662761167d79db587cbdb2358700cd7b5758999928e9d0444db10782
     home: https://startxfr.github.io/helm-repository
@@ -6001,7 +7384,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.669718264+02:00"
+    created: "2022-04-27T00:47:34.049954332+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 468f4b28680689ce21ce4d48f445214e1db44ad43c6712ed3a2580820c151bec
@@ -6037,7 +7420,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.667998575+02:00"
+    created: "2022-04-27T00:47:34.048529777+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: e67296685b5788fd2a94bdeaf9b60453cf53c7d097b53552c42293d434711905
@@ -6073,7 +7456,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.66743735+02:00"
+    created: "2022-04-27T00:47:34.047672429+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: f9f0a17f042a785953178994bcabde9fecdddb66d0ab0587077db9e15cf5fa82
@@ -6104,7 +7487,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.666824106+02:00"
+    created: "2022-04-27T00:47:34.046986656+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: a03e026fe44c19b480d181d4ace2be6a4af8e36ccd51ad95b5ce3a1ac9576bd7
@@ -6138,7 +7521,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.67232895+02:00"
+    created: "2022-04-27T00:47:34.05273351+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: e7b1d2e11fb08010c575842e6377fc4003e34461e910faf797b6c06a6c78ddec
@@ -6176,7 +7559,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.671705132+02:00"
+    created: "2022-04-27T00:47:34.052102947+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 9a23b0fe785fdf6bcd84e9c92e24135da1d197046389c883f1fb6b2dd29a3f10
@@ -6214,7 +7597,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.670996061+02:00"
+    created: "2022-04-27T00:47:34.051491777+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: a5a059ccccb942154e1e72df6b31d9023a79905ee766440771ebad6b139cfbfc
@@ -6247,7 +7630,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.670340092+02:00"
+    created: "2022-04-27T00:47:34.050851088+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 18a2525fd39b692bcbbb2957eb65f9b855d2eed33a2f77fcddb5ba415c950789
@@ -6281,7 +7664,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.67437005+02:00"
+    created: "2022-04-27T00:47:34.054701251+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 07680704c353802fd04d35339fdc277c2bd5997d7dff1ddac58173f221204a5e
     home: https://startxfr.github.io/helm-repository
@@ -6315,7 +7698,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.673835043+02:00"
+    created: "2022-04-27T00:47:34.054182796+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: b7cac0a7550553c0bd7e399841de667f3e555a9d35845ec1f2b27827a8438ef4
     home: https://startxfr.github.io/helm-repository
@@ -6349,7 +7732,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.673279216+02:00"
+    created: "2022-04-27T00:47:34.053657909+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 38e7aa3370b6ab26b8ae65e1dce81be812b89ed3f96cb15719de315db2462f75
     home: https://startxfr.github.io/helm-repository
@@ -6378,7 +7761,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.672764408+02:00"
+    created: "2022-04-27T00:47:34.05316034+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 7820d094c22b5f0606965fe672883b33924aa74598d6efc7f5742a95403d49ba
     home: https://startxfr.github.io/helm-repository
@@ -6409,7 +7792,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.680853705+02:00"
+    created: "2022-04-27T00:47:34.06106073+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -6454,7 +7837,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.679312225+02:00"
+    created: "2022-04-27T00:47:34.059136716+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -6501,7 +7884,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.677360237+02:00"
+    created: "2022-04-27T00:47:34.057236334+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -6541,7 +7924,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.675604952+02:00"
+    created: "2022-04-27T00:47:34.055835072+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -6578,7 +7961,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.684728355+02:00"
+    created: "2022-04-27T00:47:34.065558043+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: a8db9176200bfd3ddbf821f1b52100622c5f9d7e66fbddc78702f2eb11d8b0f2
@@ -6615,7 +7998,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.683873671+02:00"
+    created: "2022-04-27T00:47:34.064504043+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: e13aa2acd0ee37b239bbc847d29774fd1f0ec5ef2cd2dad31e432bf70f1d1473
@@ -6652,7 +8035,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.68301539+02:00"
+    created: "2022-04-27T00:47:34.063627927+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 99b02a6df83294e2c669b34ef215630e04422440bf2d2c0c30e29d5757b3fbf1
@@ -6689,7 +8072,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.682277859+02:00"
+    created: "2022-04-27T00:47:34.062821878+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: a86d57c4d3031aa77581142bfaee82896342fb73ad45ecd88401b8977f1ff4d7
@@ -6721,7 +8104,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.681551842+02:00"
+    created: "2022-04-27T00:47:34.061953035+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 6cbf461a1fe293e447e9f80da303f5c6ae3c52ed56d7815c7ae5fb71dab8a713
@@ -6753,7 +8136,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.692103011+02:00"
+    created: "2022-04-27T00:47:34.073982302+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 9b8833c5685187d2ac7cccdef385096aef4f1f0cab09bcd9f65c8ac44dcfef38
@@ -6790,7 +8173,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-04-26T23:59:12.690745263+02:00"
+    created: "2022-04-27T00:47:34.072357615+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: c839e38ab65e369d1aba23a3e1630c2b9ea4548b07702d27ded65a0d6641668a
@@ -6827,7 +8210,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-04-26T23:59:12.689302385+02:00"
+    created: "2022-04-27T00:47:34.070802821+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 1af2e54e624a387740aa8861f0c66d2a599138e656d6e5d65a232a1bc82691db
@@ -6865,7 +8248,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-04-26T23:59:12.687854928+02:00"
+    created: "2022-04-27T00:47:34.069276588+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 3a6c0aa3f84e6af03cd5605f650516354ee872eb9f44f6cabdf6c2b1a3f196b0
@@ -6898,7 +8281,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.685950425+02:00"
+    created: "2022-04-27T00:47:34.066838988+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 41f1888f86a5d91915593b6ea3f9b46600d1ce2b9c4fb1079f2bedbfa6aec166
@@ -6940,7 +8323,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-04-26T23:59:12.697246287+02:00"
+    created: "2022-04-27T00:47:34.080589991+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: aa1ef0aa4aceb9b2e439c3cb2ac140a9138a1f747d4b2c74ed8a5ef4c7821a60
@@ -6985,7 +8368,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-04-26T23:59:12.696272251+02:00"
+    created: "2022-04-27T00:47:34.079434287+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 1ff3ee873f673bc4bd0dee6b60be2a3b04a2b445f17752b28170a6f05199bebd
@@ -7030,7 +8413,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.58
-    created: "2022-04-26T23:59:12.695191256+02:00"
+    created: "2022-04-27T00:47:34.077820369+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: ca96a039232bcef1458d75689bbd5c3d3a686fc54e07c99535bfc39810c2d849
@@ -7075,7 +8458,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.58
-    created: "2022-04-26T23:59:12.693830425+02:00"
+    created: "2022-04-27T00:47:34.075943579+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: c1ff34ab0170786acc12280c5bf2ea8f36a41c593178968507bb5a59bf84207b
@@ -7105,7 +8488,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-04-26T23:59:12.692830564+02:00"
+    created: "2022-04-27T00:47:34.074825525+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: e2056b6f82e4b88860429221e8831651f62c69036573b8bac029eb2721b41096
@@ -7129,4 +8512,4 @@ entries:
     urls:
     - https://startxfr.github.io/helm-repository/packages/sxapi-7.22.27.tgz
     version: 7.22.27
-generated: "2022-04-26T23:59:11.774564977+02:00"
+generated: "2022-04-27T00:47:32.324167939+02:00"
