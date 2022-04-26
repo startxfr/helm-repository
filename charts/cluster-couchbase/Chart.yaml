@@ -6,7 +6,7 @@ description: Helm chart used to configure Couchbase cluster using Couchbase Auto
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.97
+version: 9.8.109
 # Version name of the couchbase operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.2.1
 # Version of Openshift 
@@ -47,18 +47,18 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.107"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.72"
+    version: "9.8.1077"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "demo loader load json documents"
+      description: "Update startx chart dependencies to version 9.8.107"
   artifacthub.io/containsSecurityUpdates: "false"
 
