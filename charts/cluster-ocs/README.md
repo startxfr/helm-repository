@@ -150,3 +150,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 9.8.93 | 2022-03-07 | Enable conditionnal loading of charts dependencies
 | 9.8.94 | 2022-04-21 | Update to ODF operator version 4.9.5
 | 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107
+| 9.8.99 | 2022-04-27 | Update llcalstorage, logging and elastic for OCP 4.8 and bellow 4.9.11
