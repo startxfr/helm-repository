@@ -1,0 +1,38 @@
+{{- if .Values.thanos.enabled }}{{- if .Values.thanos.mch }}{{- if .Values.thanos.mch.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "open-cluster-management-observability" -}}
+kind: MultiClusterHub
+apiVersion: operator.open-cluster-management-observability.io/v1
+metadata:
+  name: {{ .Values.thanos.mch.name | default "multiclusterhub" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-thanos.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.thanos.mch.name | default "default" }}-multiclusterhub"
+  annotations:
+    {{- include "cluster-thanos.annotations" . | nindent 4 }}
+    {{- if .Values.thanos.mch.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  availabilityConfig: {{ .Values.thanos.mch.availabilityConfig | default "Basic" | quote }}
+{{- if .Values.thanos.mch.hive }}{{- if .Values.thanos.mch.hive.enabled }}
+  hive:
+  {{- if .Values.thanos.mch.hive.spec }}
+    {{- .Values.thanos.mch.hive.spec | nindent 4 -}}
+  {{- end }}
+{{- end }}{{- end }}
+{{- if .Values.thanos.mch.ingress }}{{- if .Values.thanos.mch.ingress.enabled }}
+  ingress:
+  {{- if .Values.thanos.mch.ingress.spec }}
+    {{- .Values.thanos.mch.ingress.spec | nindent 4 -}}
+  {{- end }}
+{{- end }}{{- end }}
+  overrides: {}
+  separateCertificateManagement: false
+{{- end }}{{- end }}{{- end }}

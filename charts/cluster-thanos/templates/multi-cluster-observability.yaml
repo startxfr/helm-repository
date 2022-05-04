@@ -1,0 +1,20 @@
+apiVersion: observability.open-cluster-management.io/v1beta1
+kind: MultiClusterObservability
+metadata:
+  name: observability
+spec:
+  availabilityConfig: {{ .Values.thanos.multiClusterObservability.availabilityConfig }}
+  imagePullPolicy: {{ .Values.thanos.multiClusterObservability.imagePullPolicy }}
+  imagePullSecret: {{ .Values.thanos.multiClusterObservability.imagePullSecret }}
+  observabilityAddonSpec:
+    enableMetrics: {{ .Values.thanos.multiClusterObservability.enableMetrics }}
+    interval: {{ .Values.thanos.multiClusterObservability.interval }}
+  retentionResolution1h: {{ .Values.thanos.multiClusterObservability.retentionResolution1h }}
+  retentionResolution5m: {{ .Values.thanos.multiClusterObservability.retentionResolution5m }}
+  retentionResolutionRaw: {{ .Values.thanos.multiClusterObservability.retentionResolutionRaw }}
+  storageConfigObject:
+    metricObjectStorage:
+      name: thanos-object-storage
+      key: thanos.yaml
+    statefulSetSize: {{ .Values.thanos.multiClusterObservability.statefulSetSize }}
+    statefulSetStorageClass: {{ .Values.thanos.multiClusterObservability.statefulSetStorageClass }}
