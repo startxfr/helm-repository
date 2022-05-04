@@ -1,0 +1,61 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-thanos
+# Description of this Helm chart
+description: Helm chart used to configure Advanced Cluster Manager at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 9.8.110
+# Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 2.2.8
+# Version of Openshift 
+engineVersion: 4.9.8
+# Icon of this helm-chart
+icon: https://startxfr.github.io/helm-repository/img/cluster-thanos.svg
+# category associated to this package
+category: cluster
+# tags
+tags: infra,cluster,management,multi-cluster
+# Kube minimum version
+kubeVersion: ">=1.21.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - thanos
+  - open-cluster-management-observability
+  - observability
+# STARTX helm chart repository homepage
+home: https://startxfr.github.io/helm-repository
+# Sources and documentation for this chart
+sources:
+  - https://startxfr.github.io/helm-repository/charts/cluster-thanos
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-thanos
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "9.8.107"
+    alias: project
+    condition: project.enabled
+  - name: operator
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "9.8.107"
+    alias: operator
+    condition: operator.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Creation of the first chart example"
+  artifacthub.io/containsSecurityUpdates: "false"
