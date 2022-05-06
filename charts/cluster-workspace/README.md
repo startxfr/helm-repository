@@ -276,3 +276,4 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 9.8.96  | 2022-04-21 | Upgrade crwoperatorallnamespaces operator to version 2.13.100                                          |
 | 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                    |
 | 9.8.110 | 2022-04-27 | Stable release for all charts                                                                          |
+| 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
