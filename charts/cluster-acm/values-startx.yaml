@@ -29,6 +29,31 @@ acm:
             - ECDHE-RSA-CHACHA20-POLY1305
             - ECDHE-ECDSA-AES128-GCM-SHA256
             - ECDHE-RSA-AES128-GCM-SHA256
+observability:
+  enabled: false
+  hooked: false
+  bucket:
+    s3bucket: "s3bucket-value"
+    s3host: "s3host-value"
+    s3accesskey: "s3accesskey-value"
+    s3secretkey: "s3secretkey-value"
+  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  mco:
+    availabilityConfig: "High"
+    imagePullPolicy: "Always"
+    imagePullSecret: "multiclusterhub-operator-pull-secret"
+    observabilityAddonSpec:
+      enableMetrics: true
+      interval: 60
+      retentionResolution1h: "30d" 
+      retentionResolution5m: "14d"
+      retentionResolutionRaw: "5d"
+      storageConfigObject:
+        metricObjectStorage:
+          name: thanos-object-storage
+          key: thanos.yaml
+        statefulSetSize: "10Gi"
+        statefulSetStorageClass: "gp2"
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
