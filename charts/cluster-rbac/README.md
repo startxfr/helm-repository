@@ -151,4 +151,8 @@ helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.97  | 2022-03-07 | Improve workspace group roles                                                                          |
 | 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                    |
 | 9.8.110 | 2022-04-27 | Stable release for all charts                                                                          |
+<<<<<<< HEAD
 | 9.8.114 | 2022-04-27 | publish stable update for the full repository
+=======
+| 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
+>>>>>>> devel

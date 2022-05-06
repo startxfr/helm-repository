@@ -1,6 +1,7 @@
 # Cluster Thanos
 
-This helm chart must have a description
+This helm chart configure the thanos observability. You must first install 
+ACM, for example with [startx cluster-acm](https://helm-repository.readthedocs.io/en/latest/charts/cluster-acm/).
 
 ## Install the repository
 
@@ -28,11 +29,6 @@ Complete deployment of a project with the following characteristics :
   - 1 **LimitRange:** defined for this projet
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
-- 1 **operator:** named **advanced-cluster-management** configured with
-  - The **release-2.4** channel
-  - The **2.4.0** version
-  - Deployed under the **open-cluster-management-observability** project
-  - The **manager** deployed
 - 1 **mch:** named **default-mch** configured with
   - **hive** enabled
   - **ingress** enabled
@@ -55,3 +51,4 @@ helm install startx/cluster-thanos -f https://raw.githubusercontent.com/startxfr
 | Release | Date       | Description                                                                                    |
 | ------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 9.8.110 | 2022-04-27 | Create chart cluster-thanos from cluster-thanos                                                |
+| 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
