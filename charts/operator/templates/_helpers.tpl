@@ -33,6 +33,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | default "myap
        source : {{ .name | default "redhat-operators" }}
     source NS : {{ .namespace | default "openshift-marketplace" }}
 {{- end }}
+
+  installPlan : {{ .installPlanApproval | default "Automatic" }}
           CSV : {{ .csv }}.v{{ $version }}
 {{- end }}
 {{- else }}
