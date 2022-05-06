@@ -143,4 +143,8 @@ helm install startx/cluster-couchbase -f https://raw.githubusercontent.com/start
 | 9.8.114 | 2022-04-27 | publish stable update for the full repository
 =======
 | 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
+<<<<<<< HEAD
+>>>>>>> devel
+=======
+| 9.8.230 | 2022-05-06 | Stable full repository
 >>>>>>> devel

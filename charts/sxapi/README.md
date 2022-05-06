@@ -336,3 +336,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 9.8.111 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.111
 | 9.8.211 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
 | 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
+| 9.8.230 | 2022-05-06 | Stable full repository
