@@ -332,3 +332,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.211 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
 | 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
 | 9.8.230 | 2022-05-06 | Stable full repository
+| 9.8.231 | 2022-05-06 | Debug basic chart dependencies
