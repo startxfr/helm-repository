@@ -64,3 +64,4 @@ helm install startx/cluster-localstorage -f https://raw.githubusercontent.com/st
 | 9.8.93  | 2022-03-07 | Enable conditionnal loading of charts dependencies  |
 | 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107 |
 | 9.8.110 | 2022-04-27 | Stable release for all charts                       |
+| 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
