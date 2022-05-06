@@ -15,8 +15,4 @@ Description of cluster-thanos deployment result.
 {{ include "project.notes" .Values.project }}
 {{- end }}{{- end }}
 
-{{- if .Values.operator }}{{- if .Values.operator.enabled }}
-{{ include "operator.notes" .Values.operator }}
-{{- end }}{{- end }}
-
 {{ include "cluster-thanos.notes" .Values }}
