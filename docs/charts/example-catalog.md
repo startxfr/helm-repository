@@ -169,3 +169,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 9.8.110 | 2022-04-27 | Stable release for all charts                                                                     |
 | 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
 | 9.8.230 | 2022-05-06 | Stable full repository
+| 9.8.231 | 2022-05-06 | Debug basic chart dependencies
