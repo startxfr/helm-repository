@@ -18,7 +18,14 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- if .acm.enabled }}{{- if .acm.mch }}{{- if .acm.mch.enabled }}
 {{- $root := . -}}
 {{- $namespace := .project.project.name | default "open-cluster-management" -}}
-     logging : enabled in {{ $namespace }}
+          ACM : enabled in {{ $namespace }}
          name : {{ .acm.mch.name | default "multiclusterhub" }}
 {{- end }}{{- end }}{{- end }}
+
+-- Observability -------------------
+{{- if .observability.enabled }}{{- if .observability.enabled }}
+{{- $root := . -}}
+{{- $namespace := .project.project.name | default "open-cluster-management" -}}
+observability : enabled in {{ $namespace }}
+{{- end }}{{- end }}
 {{- end -}}
