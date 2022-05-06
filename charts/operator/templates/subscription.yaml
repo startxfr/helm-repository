@@ -22,8 +22,8 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "-5"
 spec:
-  installPlanApproval: Automatic
   {{- with .Values.subscription.operator }}
+  installPlanApproval: {{ .installPlanApproval | default "Automatic" | quote }}
   channel: {{ .channel | default "latest" | quote }}
   name: {{ .name | default $name | quote }}
   {{- with .source }}

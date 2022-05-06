@@ -1,0 +1,32 @@
+{{- if .Values.thanos.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "open-cluster-management-observability" -}}
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: "thanos-object-storage"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-thanos.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "thanos-object-storage"
+  annotations:
+    {{- include "cluster-thanos.annotations" . | nindent 4 }}
+    {{- if .Values.thanos.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "5"
+stringData:
+  thanos.yaml: |
+    type: s3
+    config:
+      bucket: {{ .Values.thanos.bucket.s3bucket }}
+      endpoint: {{ .Values.thanos.bucket.s3host }}
+      insecure: true
+      access_key: {{ .Values.thanos.bucket.s3accesskey }}
+      secret_key: {{ .Values.thanos.bucket.s3secretkey }}
+{{- end -}}

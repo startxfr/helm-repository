@@ -1,0 +1,31 @@
+{{- if .Values.thanos.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "open-cluster-management-observability" -}}
+apiVersion: observability.open-cluster-management.io/v1beta1
+kind: MultiClusterObservability
+metadata:
+  name: "observability"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-thanos.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "observability"
+  annotations:
+    {{- include "cluster-thanos.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  availabilityConfig: {{ .Values.thanos.mco.availabilityConfig }}
+  imagePullPolicy: {{ .Values.thanos.mco.imagePullPolicy }}
+  imagePullSecret: {{ .Values.thanos.mco.imagePullSecret }}
+  observabilityAddonSpec:
+    enableMetrics: {{ .Values.thanos.mco.enableMetrics }}
+    interval: {{ .Values.thanos.mco.interval }}
+  retentionResolution1h: {{ .Values.thanos.mco.retentionResolution1h }}
+  retentionResolution5m: {{ .Values.thanos.mco.retentionResolution5m }}
+  retentionResolutionRaw: {{ .Values.thanos.mco.retentionResolutionRaw }}
+  storageConfigObject:
+    metricObjectStorage:
+      name: thanos-object-storage
+      key: thanos.yaml
+    statefulSetSize: {{ .Values.thanos.mco.statefulSetSize }}
+    statefulSetStorageClass: {{ .Values.thanos.mco.statefulSetStorageClass }}
+{{- end -}}

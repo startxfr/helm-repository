@@ -1,0 +1,105 @@
+# Default values for cluster-thanos.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-thanos
+  # Version name of this application (default use Chart appVersion)
+  # version: "0.0.3"
+
+# configuration of the thanos service
+thanos:
+  # Enable the deployment of the thanos service
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: false
+  # Bucket configuration for the storage backend
+  bucket:
+    s3bucket: ""
+    s3host: ""
+    s3accesskey: ""
+    s3secretkey: ""
+  # Cluster pull secret user by thanos
+  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  # configuration of the multiClusterObservability
+  mco:
+    availabilityConfig: "High"
+    imagePullPolicy: "Always"
+    imagePullSecret: "multiclusterhub-operator-pull-secret"
+    observabilityAddonSpec:
+      enableMetrics: true
+      interval: 60
+      # How long to retain samples of 1 hour in bucket
+      retentionResolution1h: "30d" 
+      # How long to retain samples of 5 minutes in bucket
+      retentionResolution5m: "14d"
+      # How long to retain samples of raw in bucket
+      retentionResolutionRaw: "5d"
+      # Specifies the storage to be used by Observability
+      storageConfigObject: 
+        metricObjectStorage:
+          name: thanos-object-storage
+          key: thanos.yaml
+        # The amount of storage applied to the Observability stateful sets, i.e. Amazon S3 store, Rule, compact and receiver.
+        statefulSetSize: "10Gi"
+        statefulSetStorageClass: "gp2"
+
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "open-cluster-management-observability"
+    display_name: Operator Thanos
+    description: Thanos operators configured by startx
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "advanced-cluster-management"
+    namespace: "open-cluster-management-observability"
+    version: "v2.4.0"
+    operator: 
+      channel: "release-2.4"
+      name: advanced-cluster-management
+      installPlanApproval: Automatic
+      csv: advanced-cluster-management
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    name: "advanced-cluster-management-operator"
+    namespace: "open-cluster-management-observability"
+    providedAPIs: "Application.v1beta1.app.k8s.io,Channel.v1.apps.open-cluster-management-observability.io,Checkpoint.v1.hive.openshift.io,ClusterClaim.v1.hive.openshift.io,ClusterDeployment.v1.hive.openshift.io,ClusterDeprovision.v1.hive.openshift.io,ClusterImageSet.v1.hive.openshift.io,ClusterManager.v1.operator.open-cluster-management-observability.io,ClusterPool.v1.hive.openshift.io,ClusterProvision.v1.hive.openshift.io,ClusterRelocate.v1.hive.openshift.io,ClusterState.v1.hive.openshift.io,ClusterSync.v1alpha1.hiveinternal.openshift.io,ClusterSyncLease.v1alpha1.hiveinternal.openshift.io,DNSZone.v1.hive.openshift.io,Deployable.v1.apps.open-cluster-management-observability.io,FakeClusterInstall.v1alpha1.hiveinternal.openshift.io,GitOpsCluster.v1alpha1.apps.open-cluster-management-observability.io,GitOpsCluster.v1beta1.apps.open-cluster-management-observability.io,HelmRelease.v1.apps.open-cluster-management-observability.io,HiveConfig.v1.hive.openshift.io,MachinePool.v1.hive.openshift.io,MachinePoolNameLease.v1.hive.openshift.io,MultiClusterHub.v1.operator.open-cluster-management-observability.io,MultiClusterObservability.v1beta1.observability.open-cluster-management-observability.io,MultiClusterObservability.v1beta2.observability.open-cluster-management-observability.io,ObservabilityAddon.v1beta1.observability.open-cluster-management-observability.io,Observatorium.v1alpha1.core.observatorium.io,PlacementRule.v1.apps.open-cluster-management-observability.io,SelectorSyncIdentityProvider.v1.hive.openshift.io,SelectorSyncSet.v1.hive.openshift.io,SubmarinerConfig.v1alpha1.submarineraddon.open-cluster-management-observability.io,Subscription.v1.apps.open-cluster-management-observability.io,SyncIdentityProvider.v1.hive.openshift.io,SyncSet.v1.hive.openshift.io"
