@@ -201,20 +201,6 @@
                                 "my-operator"
                             ]
                         },
-                        "installPlanApproval": {
-                            "type": "string",
-                            "title": "installPlanApproval ",
-                            "description": "The installPlanApproval mode to use.",
-                            "default": "Automatic",
-                            "enum": [
-                                "Automatic",
-                                "Manual"
-                            ],
-                            "examples": [
-                                "Automatic",
-                                "Manual"
-                            ]
-                        },
                         "source": {
                             "type": "object",
                             "title": "Operator source",
@@ -250,18 +236,18 @@
                             }
                         },
                         "config": {
-                            "type": "object"
-                            "title": "Operator configuration"
-                            "description": "Optional configuration for Operator"
-                            "default": {}
+                            "type": "object",
+                            "title": "Operator configuration",
+                            "description": "Optional configuration for Operator",
+                            "default": {},
                             "examples": [
                                 {"infra": true},
                                 {"env": [{
-                                    "name": "FOO"
-                                    "vaue": "bar"
+                                    "name": "FOO",
+                                    "value": "bar"
                                 }]}
                             ]
-                        },
+                        }
                     }
                 }
             }

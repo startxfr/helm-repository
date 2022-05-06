@@ -1,9 +1,13 @@
 # STARTX helm repository
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [![startx helm repository](https://img.shields.io/badge/latest-v9.8.114-blue.svg)](https://github.com/startxfr/helm-repository)
 =======
 [![startx helm repository](https://img.shields.io/badge/latest-v9.8.215-blue.svg)](https://github.com/startxfr/helm-repository)
+>>>>>>> devel
+=======
+[![startx helm repository](https://img.shields.io/badge/latest-v9.8.230-blue.svg)](https://github.com/startxfr/helm-repository)
 >>>>>>> devel
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
