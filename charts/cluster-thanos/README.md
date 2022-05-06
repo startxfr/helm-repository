@@ -55,3 +55,4 @@ helm install startx/cluster-thanos -f https://raw.githubusercontent.com/startxfr
 | Release | Date       | Description                                                                                    |
 | ------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 9.8.110 | 2022-04-27 | Create chart cluster-thanos from cluster-thanos                                                |
+| 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
