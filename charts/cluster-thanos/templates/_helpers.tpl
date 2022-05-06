@@ -18,7 +18,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- if .thanos.enabled }}{{- if .thanos.mch }}{{- if .thanos.mch.enabled }}
 {{- $root := . -}}
 {{- $namespace := .project.project.name | default "open-cluster-management-observability" -}}
-     logging : enabled in {{ $namespace }}
+     thanos : enabled in {{ $namespace }}
          name : {{ .thanos.mch.name | default "multiclusterhub" }}
 {{- end }}{{- end }}{{- end }}
 {{- end -}}

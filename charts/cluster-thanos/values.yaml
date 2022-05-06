@@ -19,38 +19,39 @@ context:  &context
 thanos:
   # Enable the deployment of the thanos service
   enabled: true
-  # configuration of the multi-cluster Hub
-  mch:
-    # Enable the deployment of the reporting-operator service
-    enabled: true
-    # Activate the manager as a helm hook
-    hooked: true
-    # name of the multiclusterhub
-    name: "default-mch"
-    # availability config
-    availabilityConfig: Basic
-    # configuration of the hive service
-    hive:
-        # Enable the deployment of the hive service
-        enabled: true
-        # spec of the hive service
-        spec: |
-          backup:
-              velero: {}
-          failedProvisionConfig: {}
-    # configuration of the ingress service
-    ingress:
-        # Enable the deployment of the ingress service
-        enabled: true
-        # spec of the ingress
-        spec: |
-          sslCiphers:
-            - ECDHE-ECDSA-AES256-GCM-SHA384
-            - ECDHE-RSA-AES256-GCM-SHA384
-            - ECDHE-ECDSA-CHACHA20-POLY1305
-            - ECDHE-RSA-CHACHA20-POLY1305
-            - ECDHE-ECDSA-AES128-GCM-SHA256
-            - ECDHE-RSA-AES128-GCM-SHA256
+  # Activate the manager as a helm hook
+  hooked: false
+  # Bucket configuration for the storage backend
+  bucket:
+    s3bucket: ""
+    s3host: ""
+    s3accesskey: ""
+    s3secretkey: ""
+  # Cluster pull secret user by thanos
+  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  # configuration of the multiClusterObservability
+  mco:
+    availabilityConfig: "High"
+    imagePullPolicy: "Always"
+    imagePullSecret: "multiclusterhub-operator-pull-secret"
+    observabilityAddonSpec:
+      enableMetrics: true
+      interval: 60
+      # How long to retain samples of 1 hour in bucket
+      retentionResolution1h: "30d" 
+      # How long to retain samples of 5 minutes in bucket
+      retentionResolution5m: "14d"
+      # How long to retain samples of raw in bucket
+      retentionResolutionRaw: "5d"
+      # Specifies the storage to be used by Observability
+      storageConfigObject: 
+        metricObjectStorage:
+          name: thanos-object-storage
+          key: thanos.yaml
+        # The amount of storage applied to the Observability stateful sets, i.e. Amazon S3 store, Rule, compact and receiver.
+        statefulSetSize: "10Gi"
+        statefulSetStorageClass: "gp2"
+
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
