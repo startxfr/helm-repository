@@ -1,6 +1,7 @@
 {{- if .Values.acm.enabled }}{{- if .Values.acm.mch }}{{- if .Values.acm.mch.enabled }}
 {{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "open-cluster-management" -}}
+---
 kind: MultiClusterHub
 apiVersion: operator.open-cluster-management.io/v1
 metadata:

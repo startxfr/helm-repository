@@ -148,3 +148,4 @@ helm install startx/cluster-acm -f https://raw.githubusercontent.com/startxfr/he
 | 9.8.233 | 2022-05-06 | publish stable update for the full repository
 | 9.8.234 | 2022-05-06 | Add observability (old cluster-thanos)
 | 9.8.235 | 2022-05-06 | Improve cluster-acm options
+| 9.8.236 | 2022-05-07 | Add import and create cluster support

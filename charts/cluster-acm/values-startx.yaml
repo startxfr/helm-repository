@@ -30,6 +30,100 @@ acm:
             - ECDHE-RSA-CHACHA20-POLY1305
             - ECDHE-ECDSA-AES128-GCM-SHA256
             - ECDHE-RSA-AES128-GCM-SHA256
+import:
+  enabled: false
+  hooked: false
+  name: importedcluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  token: "mytoken"
+  server: "myserver"
+import_project: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "importedcluster"
+    display_name: ACM Cluster importedcluster
+    description: ACM managed cluster named importedcluster
+  rbac: 
+    enabled: true
+    groups: 
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+create:
+  enabled: false
+  hooked: false
+  name: createdcluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  config: 
+    baseDomain: startx.fr
+    region: eu-west-3
+    master:
+      platform: |-
+        aws:
+          type: t3a.xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 200
+            size: 200
+            type: io1
+    worker:
+      replicas: 3
+      platform: |-
+        aws:
+          type: m5a.2xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 500
+            size: 250
+            type: io1
+create_project: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "createdcluster"
+    display_name: ACM Cluster createdcluster
+    description: ACM managed cluster named createdcluster
+  rbac: 
+    enabled: true
+    groups: 
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
 observability:
   enabled: false
   hooked: false
@@ -38,7 +132,8 @@ observability:
     s3host: "s3host-value"
     s3accesskey: "s3accesskey-value"
     s3secretkey: "s3secretkey-value"
-  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  # clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  clusterPullSecret: 'xxxx'
   mco:
     availabilityConfig: "High"
     imagePullPolicy: "Always"

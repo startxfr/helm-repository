@@ -14,6 +14,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common cluster-acm annotations */}}
 {{- define "cluster-acm.notes" -}}
+
 -- Advanced Cluster Management -----
 {{- if .acm.enabled }}{{- if .acm.mch }}{{- if .acm.mch.enabled }}
 {{- $root := . -}}
@@ -23,9 +24,24 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- end }}{{- end }}{{- end }}
 
 -- Observability -------------------
-{{- if .observability.enabled }}{{- if .observability.enabled }}
-{{- $root := . -}}
+{{- if .observability.enabled }}
 {{- $namespace := .project.project.name | default "open-cluster-management" -}}
-observability : enabled in {{ $namespace }}
-{{- end }}{{- end }}
+observability : enabled
+    namespace : {{ $namespace }}
+{{- end }}
+
+-- Create cluster ------------------
+{{- if .create.enabled }}
+     creation : enabled
+ cluster name : {{ .create.name }}
+   cluster ns : {{ .create_project.project.name }}
+{{- end }}
+
+-- Import cluster ------------------
+{{- if .import.enabled }}
+    importing : enabled
+ cluster name : {{ .create.name }}
+   cluster ns : {{ .create_project.project.name }}
+{{- end }}
+
 {{- end -}}

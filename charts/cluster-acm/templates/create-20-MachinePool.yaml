@@ -1,0 +1,20 @@
+{{- if .Values.create }}{{- if .Values.create.sshPrivateKey }}
+{{- $root := . -}}
+{{- $namespace := .Values.create_project.project.name | default "createdcluster" -}}
+{{- $name := .Values.create.name | default "createdcluster" -}}
+---
+apiVersion: hive.openshift.io/v1
+kind: MachinePool
+metadata:
+  name: '{{- $name -}}-worker'
+  namespace: "{{- $namespace -}}"
+spec:
+  #commented to fix error validating data: ValidationError(MachinePool.spec): unknown field "skipMachinePools
+  #skipMachinePools: true
+  clusterDeploymentRef:
+    name: "{{- $name -}}"
+  name: worker
+  platform:
+    {{ .Values.create.config.worker.platform }}
+  replicas: {{ .Values.create.config.worker.replicas }}
+{{- end }}{{- end }}
