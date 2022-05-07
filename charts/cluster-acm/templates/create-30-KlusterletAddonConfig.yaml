@@ -1,0 +1,40 @@
+{{- if .Values.create }}{{- if .Values.create.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.create_project.project.name | default "createdcluster" -}}
+{{- $name := .Values.create.name | default "createdcluster" -}}
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acm.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-klusterletaddonconfig"
+    cloud: '{{ .Values.create.labels.cloud }}'
+    vendor: '{{ .Values.create.labels.vendor }}'
+    iaas: '{{ .Values.create.labels.iaas }}'
+    paas: '{{ .Values.create.labels.paas }}'
+    caas: '{{ .Values.create.labels.caas }}'
+  annotations:
+    {{- include "cluster-acm.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  clusterName: "{{- $name -}}"
+  clusterNamespace: "{{- $namespace -}}"
+  clusterLabels:
+    cloud: '{{ .Values.create.labels.cloud }}'
+    vendor: '{{ .Values.create.labels.vendor }}'
+    iaas: '{{ .Values.create.labels.iaas }}'
+    paas: '{{ .Values.create.labels.paas }}'
+    caas: '{{ .Values.create.labels.caas }}'
+  applicationManager:
+    enabled: true
+  certPolicyController:
+    enabled: true
+  iamPolicyController:
+    enabled: true
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+{{- end }}{{- end }}

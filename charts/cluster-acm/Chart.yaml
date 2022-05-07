@@ -6,7 +6,7 @@ description: Helm chart used to configure Advanced Cluster Manager at the cluste
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.235
+version: 9.8.236
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.2.8
 # Version of Openshift 
@@ -18,7 +18,7 @@ category: cluster
 # tags
 tags: infra,cluster,management,multi-cluster
 # Kube minimum version
-kubeVersion: ">=1.21.0-0"
+kubeVersion: ">=1.19.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -48,6 +48,16 @@ dependencies:
     version: "9.8.211"
     alias: project
     condition: project.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "9.8.211"
+    alias: import_project
+    condition: import.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "9.8.211"
+    alias: create_project
+    condition: create.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.211"
@@ -57,5 +67,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Adding the thanos observability configuration"
+      description: "Add the import option to import a cluster into ACM"
+    - kind: changed
+      description: "Reorg template name and sequence"
   artifacthub.io/containsSecurityUpdates: "false"

@@ -1,0 +1,65 @@
+{{- if .Values.create }}{{- if .Values.create.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.create_project.project.name | default "createdcluster" -}}
+{{- $name := .Values.create.name | default "createdcluster" -}}
+{{- if .Values.create.config  }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: "{{- $name -}}-install-config"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acm.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-install-config-secret"
+    cloud: '{{ .Values.create.labels.cloud }}'
+    vendor: '{{ .Values.create.labels.vendor }}'
+    iaas: '{{ .Values.create.labels.iaas }}'
+    paas: '{{ .Values.create.labels.paas }}'
+    caas: '{{ .Values.create.labels.caas }}'
+  annotations:
+    {{- include "cluster-acm.annotations" . | nindent 4 }}
+    {{- if .Values.create.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "5"
+stringData:
+  install-config.yaml: |-
+    apiVersion: v1
+    metadata:
+      name: {{ $name }}
+    baseDomain: {{ $name }}.{{ .Values.create.config.baseDomain }}
+    controlPlane:
+      hyperthreading: Enabled
+      name: master
+      replicas: 3
+      platform:
+        {{ .Values.create.config.master.platform }}
+    compute:
+    - hyperthreading: Enabled
+      name: 'worker'
+      replicas: {{ .Values.create.config.worker.replicas }}
+      platform:
+        {{ .Values.create.config.worker.platform }}
+    networking:
+      networkType: OpenShiftSDN
+      clusterNetwork:
+      - cidr: 10.128.0.0/14
+        hostPrefix: 23
+      machineNetwork:
+      - cidr: 10.0.0.0/16
+      serviceNetwork:
+      - 172.30.0.0/16
+    platform:
+      aws:
+        region: {{ .Values.create.config.region }}
+    pullSecret: "" # skip, hive will inject based on it's secret
+    # Insert below ssh public key.
+    sshKey: |-
+        ssh-rsa < ssh public key > 
+{{- end }}{{- end }}{{- end }}

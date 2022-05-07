@@ -52,6 +52,135 @@ acm:
             - ECDHE-ECDSA-AES128-GCM-SHA256
             - ECDHE-RSA-AES128-GCM-SHA256
 
+# configuration to import a cluster into ACM
+import:
+  # Enable the import cluster
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # The name of the cluster to import
+  name: importedcluster
+  # Additionnal labels added to the managed cluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  # Token to use fot the auto-import secret
+  token: "mytoken"
+  # server to use fot the auto-import secret
+  server: "myserver"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+import_project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "importedcluster"
+    display_name: ACM Cluster importedcluster
+    description: ACM managed cluster named importedcluster
+  rbac: 
+    enabled: true
+    groups: 
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# configuration to create a cluster from ACM
+create:
+  # Enable the import cluster
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # The name of the cluster to create
+  name: createdcluster
+  # Configuration of the cluster basics
+  config: 
+    # Base domain to use for this cluster
+    baseDomain: example.com
+    # the datacenter region name
+    region: eu-west-3
+    # Configuration for the master
+    master:
+      platform: |-
+        aws:
+          type: t3a.xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 200
+            size: 200
+            type: io1
+    # Configuration for the worker
+    worker:
+      # replicas for workers
+      replicas: 3
+      platform: |-
+        aws:
+          type: m5a.2xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 500
+            size: 250
+            type: io1
+  # Cluster pull secret user by acm provisionner
+  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  # Additionnal labels added to the managed cluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  # Additionnal labels added to the managed cluster
+  aws_creds:
+    # AWS key ID used to provision resource required by the provisionned cluster
+    access_key_id: myAwsKeyID
+    # AWS secret coresponding to the previous key
+    secret_access_key: myAwsSecretKey
+  # Token to use fot the auto-import secret
+  token: "mytoken"
+  # server to use fot the auto-import secret
+  server: "myserver"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+create_project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "createdcluster"
+    display_name: ACM Cluster createdcluster
+    description: ACM managed cluster named createdcluster
+  rbac: 
+    enabled: true
+    groups: 
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
 
 # configuration of the thanos service
 observability:
@@ -65,7 +194,7 @@ observability:
     s3host: "s3host-value"
     s3accesskey: "s3accesskey-value"
     s3secretkey: "s3secretkey-value"
-  # Cluster pull secret user by thanos
+  # Cluster pull secret user by thanos (used with mco.imagePullSecret in a secret)
   clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
   # configuration of the multiClusterObservability
   mco:
