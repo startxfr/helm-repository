@@ -7,7 +7,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-05-06T11:07:20.937283461+02:00"
+    created: "2022-05-07T17:59:35.489064124+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -57,7 +57,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-05-06T11:07:20.928941596+02:00"
+    created: "2022-05-07T17:59:35.483168388+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -107,7 +107,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-05-06T11:07:20.922306756+02:00"
+    created: "2022-05-07T17:59:35.475636502+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -157,7 +157,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-05-06T11:07:20.914522624+02:00"
+    created: "2022-05-07T17:59:35.468401998+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -207,7 +207,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-05-06T11:07:20.907657273+02:00"
+    created: "2022-05-07T17:59:35.458658696+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -257,7 +257,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-05-06T11:07:20.89755631+02:00"
+    created: "2022-05-07T17:59:35.451804034+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -310,7 +310,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-05-06T11:07:20.947883833+02:00"
+    created: "2022-05-07T17:59:35.49554317+02:00"
     dependencies:
     - alias: project
       name: project
@@ -358,7 +358,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-05-06T11:07:20.888784016+02:00"
+    created: "2022-05-07T17:59:35.444744149+02:00"
     dependencies:
     - alias: project
       name: project
@@ -408,7 +408,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-05-06T11:07:20.881170486+02:00"
+    created: "2022-05-07T17:59:35.437337041+02:00"
     dependencies:
     - alias: project
       name: project
@@ -451,7 +451,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-05-06T11:07:20.869229019+02:00"
+    created: "2022-05-07T17:59:35.429986665+02:00"
     dependencies:
     - alias: project
       name: project
@@ -489,7 +489,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-05-06T11:07:20.858813817+02:00"
+    created: "2022-05-07T17:59:35.419731901+02:00"
     dependencies:
     - alias: project
       name: project
@@ -529,11 +529,71 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Add the import option to import a cluster into ACM"
+        - kind: changed
+          description: "Reorg template name and sequence"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 2.2.8
+    created: "2022-05-07T17:59:35.580346295+02:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.211
+    - alias: import_project
+      condition: import.enabled
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.211
+    - alias: create_project
+      condition: create.enabled
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.211
+    - alias: operator
+      condition: operator.enabled
+      name: operator
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 9.8.211
+    description: Helm chart used to configure Advanced Cluster Manager at the cluster
+      level
+    digest: bb9c3e051671e3444cdbc570e5812d2f8ce821f1cd87deb2905591384c7b23b8
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/cluster-acm.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - cluster-chart
+    - cluster
+    - infrastructure
+    - acm
+    - advanced cluster management
+    - RHACM
+    kubeVersion: '>=1.19.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: cluster-acm
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/cluster-acm
+    - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-acm
+    tags: infra,cluster,management,multi-cluster
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/cluster-acm-9.8.236.tgz
+    version: 9.8.236
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Adding the thanos observability configuration"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:21.042872839+02:00"
+    created: "2022-05-07T17:59:35.572589956+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -581,7 +641,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:21.027507362+02:00"
+    created: "2022-05-07T17:59:35.56629716+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -629,7 +689,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:21.020364845+02:00"
+    created: "2022-05-07T17:59:35.557496511+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -677,7 +737,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:21.014688601+02:00"
+    created: "2022-05-07T17:59:35.549655583+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -725,7 +785,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:21.007611067+02:00"
+    created: "2022-05-07T17:59:35.542469653+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -773,7 +833,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:21.000751371+02:00"
+    created: "2022-05-07T17:59:35.535420091+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -821,7 +881,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:20.992154876+02:00"
+    created: "2022-05-07T17:59:35.529739067+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -869,7 +929,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:20.984358402+02:00"
+    created: "2022-05-07T17:59:35.52393361+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -919,7 +979,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:21.050100484+02:00"
+    created: "2022-05-07T17:59:35.585647278+02:00"
     dependencies:
     - alias: project
       name: project
@@ -965,7 +1025,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:20.975211329+02:00"
+    created: "2022-05-07T17:59:35.518568319+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1011,7 +1071,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:20.968207754+02:00"
+    created: "2022-05-07T17:59:35.512951595+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1052,7 +1112,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:20.961514735+02:00"
+    created: "2022-05-07T17:59:35.506610093+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1088,7 +1148,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 2.2.5
-    created: "2022-05-06T11:07:20.953889355+02:00"
+    created: "2022-05-07T17:59:35.501417505+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1130,7 +1190,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-05-06T11:07:21.12306282+02:00"
+    created: "2022-05-07T17:59:35.637833215+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1178,7 +1238,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-05-06T11:07:21.114378147+02:00"
+    created: "2022-05-07T17:59:35.631999375+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1226,7 +1286,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-05-06T11:07:21.107907817+02:00"
+    created: "2022-05-07T17:59:35.627563847+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1274,7 +1334,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-05-06T11:07:21.100081556+02:00"
+    created: "2022-05-07T17:59:35.621166181+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1322,7 +1382,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-05-06T11:07:21.093325462+02:00"
+    created: "2022-05-07T17:59:35.614273308+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1370,7 +1430,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-05-06T11:07:21.083871819+02:00"
+    created: "2022-05-07T17:59:35.608730785+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1420,7 +1480,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-05-06T11:07:21.128480506+02:00"
+    created: "2022-05-07T17:59:35.643346852+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1466,7 +1526,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.66.1
-    created: "2022-05-06T11:07:21.074059483+02:00"
+    created: "2022-05-07T17:59:35.602342896+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1514,7 +1574,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.66.1
-    created: "2022-05-06T11:07:21.067304244+02:00"
+    created: "2022-05-07T17:59:35.5970603+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1555,7 +1615,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 3.66.1
-    created: "2022-05-06T11:07:21.059094323+02:00"
+    created: "2022-05-07T17:59:35.591573322+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1598,7 +1658,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:21.168565621+02:00"
+    created: "2022-05-07T17:59:35.681806386+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1647,7 +1707,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:21.160264753+02:00"
+    created: "2022-05-07T17:59:35.676671158+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1696,7 +1756,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:21.154397721+02:00"
+    created: "2022-05-07T17:59:35.671640761+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1745,7 +1805,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:21.147319358+02:00"
+    created: "2022-05-07T17:59:35.663171062+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1794,7 +1854,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:21.141620072+02:00"
+    created: "2022-05-07T17:59:35.657312925+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1843,7 +1903,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:21.135671787+02:00"
+    created: "2022-05-07T17:59:35.650562449+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1894,7 +1954,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:21.176461893+02:00"
+    created: "2022-05-07T17:59:35.690474213+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1942,7 +2002,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.241697601+02:00"
+    created: "2022-05-07T17:59:35.775212865+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1989,7 +2049,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.23509042+02:00"
+    created: "2022-05-07T17:59:35.748136427+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2036,7 +2096,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.227815358+02:00"
+    created: "2022-05-07T17:59:35.740887794+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2083,7 +2143,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.221403158+02:00"
+    created: "2022-05-07T17:59:35.733038691+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2130,7 +2190,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.21389081+02:00"
+    created: "2022-05-07T17:59:35.724964989+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2177,7 +2237,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.20733215+02:00"
+    created: "2022-05-07T17:59:35.718180586+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2226,7 +2286,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.248747275+02:00"
+    created: "2022-05-07T17:59:35.78700832+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2271,7 +2331,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.199446257+02:00"
+    created: "2022-05-07T17:59:35.710219689+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2318,7 +2378,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.192898031+02:00"
+    created: "2022-05-07T17:59:35.704333934+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2358,7 +2418,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-05-06T11:07:21.185029007+02:00"
+    created: "2022-05-07T17:59:35.696490647+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2398,7 +2458,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.146133901+02:00"
+    created: "2022-05-07T17:59:37.059400725+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 378f93655922944343dd25c975f5369afcc68a1f5f8ebe5b73943198e3bf4947
     home: https://startxfr.github.io/helm-repository
@@ -2433,7 +2493,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.046525989+02:00"
+    created: "2022-05-07T17:59:36.958166862+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 32ee697ae56c3ccb6f4fdfbfc8a2bc84506ee672238beb113709746a548f0b70
     home: https://startxfr.github.io/helm-repository
@@ -2468,7 +2528,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:21.952517836+02:00"
+    created: "2022-05-07T17:59:36.868989298+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 98cfa41d4b6fac2ac7eb4fbc315aa4af297ca8c99242601e78047577df876f03
     home: https://startxfr.github.io/helm-repository
@@ -2503,7 +2563,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:21.8540054+02:00"
+    created: "2022-05-07T17:59:36.72526159+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 324ca51215cdca33345ebb9e42f1e32d64ccd6379fa131facd7acf32202382d5
     home: https://startxfr.github.io/helm-repository
@@ -2538,7 +2598,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:21.748048831+02:00"
+    created: "2022-05-07T17:59:36.609278934+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 752e5dc0504b07460e03441681689b69c8f1ffbfadd6e807b545dc8b5be85e60
     home: https://startxfr.github.io/helm-repository
@@ -2573,7 +2633,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:21.631618114+02:00"
+    created: "2022-05-07T17:59:36.424131195+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 6cd501612e46db5f6bf751d222af46787ae6d1d767062585d7e6c5fc322ca400
     home: https://startxfr.github.io/helm-repository
@@ -2610,7 +2670,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.217304745+02:00"
+    created: "2022-05-07T17:59:37.188776004+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: cb9bba464fa0d5beffd4ca3c71f343b8a5dafca99bf147cb95b907d4be2151e1
     home: https://startxfr.github.io/helm-repository
@@ -2645,7 +2705,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:21.540501882+02:00"
+    created: "2022-05-07T17:59:36.271465994+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 16d08f6c7ea81370e102c30db80bf8991b9a56184fd62f1ff265be6baf92dba6
     home: https://startxfr.github.io/helm-repository
@@ -2682,7 +2742,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:21.471697114+02:00"
+    created: "2022-05-07T17:59:36.163275003+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 93b4cab6c492a3497f63c671b603fc83598f3da21b0c2a22409b19a4663e17d5
     home: https://startxfr.github.io/helm-repository
@@ -2712,7 +2772,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:21.400781851+02:00"
+    created: "2022-05-07T17:59:36.045347215+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: d92c547def3bd8593f4b60f50766018863d91f7ff54066d54f2275db3d07c1c3
     home: https://startxfr.github.io/helm-repository
@@ -2737,7 +2797,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:21.328790817+02:00"
+    created: "2022-05-07T17:59:35.923958185+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: e4bba6419f9582d694813b5702c1de283f5b0b1c3ef91083318effd7266d7cb3
     home: https://startxfr.github.io/helm-repository
@@ -2768,7 +2828,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-05-06T11:07:22.298369577+02:00"
+    created: "2022-05-07T17:59:37.250851945+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2814,7 +2874,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-05-06T11:07:22.291335021+02:00"
+    created: "2022-05-07T17:59:37.24410366+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2860,7 +2920,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-05-06T11:07:22.281926878+02:00"
+    created: "2022-05-07T17:59:37.238665985+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2906,7 +2966,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-05-06T11:07:22.273562627+02:00"
+    created: "2022-05-07T17:59:37.232764314+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2952,7 +3012,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-05-06T11:07:22.264025061+02:00"
+    created: "2022-05-07T17:59:37.225271796+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2998,7 +3058,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-05-06T11:07:22.256764455+02:00"
+    created: "2022-05-07T17:59:37.220082831+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3046,7 +3106,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.44
-    created: "2022-05-06T11:07:22.304211938+02:00"
+    created: "2022-05-07T17:59:37.25636403+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3090,7 +3150,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.44
-    created: "2022-05-06T11:07:22.246655601+02:00"
+    created: "2022-05-07T17:59:37.214257389+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3136,7 +3196,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.44
-    created: "2022-05-06T11:07:22.238207145+02:00"
+    created: "2022-05-07T17:59:37.208908906+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3175,7 +3235,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 0.1.44
-    created: "2022-05-06T11:07:22.230487087+02:00"
+    created: "2022-05-07T17:59:37.201128432+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3211,7 +3271,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 0.1.35
-    created: "2022-05-06T11:07:22.223867492+02:00"
+    created: "2022-05-07T17:59:37.194160998+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3253,7 +3313,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.374825262+02:00"
+    created: "2022-05-07T17:59:37.32377908+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3305,7 +3365,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.365579234+02:00"
+    created: "2022-05-07T17:59:37.317114234+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3357,7 +3417,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.359879974+02:00"
+    created: "2022-05-07T17:59:37.309242309+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3409,7 +3469,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.353634084+02:00"
+    created: "2022-05-07T17:59:37.302029606+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3461,7 +3521,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.347111784+02:00"
+    created: "2022-05-07T17:59:37.295453719+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3513,7 +3573,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.34103588+02:00"
+    created: "2022-05-07T17:59:37.288906645+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3567,7 +3627,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.384131996+02:00"
+    created: "2022-05-07T17:59:37.330514434+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3616,7 +3676,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:22.333425431+02:00"
+    created: "2022-05-07T17:59:37.28241204+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3665,7 +3725,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:22.326968084+02:00"
+    created: "2022-05-07T17:59:37.275203588+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3709,7 +3769,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:22.320419273+02:00"
+    created: "2022-05-07T17:59:37.267446058+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3748,7 +3808,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:22.310824336+02:00"
+    created: "2022-05-07T17:59:37.261978626+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3793,7 +3853,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.509248485+02:00"
+    created: "2022-05-07T17:59:37.487203648+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: accf7430aabc990c8c8feba1ee97ffa5fcaa37c976a26044adb34d0cea6bd1fa
     home: https://startxfr.github.io/helm-repository
@@ -3828,7 +3888,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.49739644+02:00"
+    created: "2022-05-07T17:59:37.474797236+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 0e434bf959e9d1b01a93fd092704e56ca0576f42e973a9d1174ee1814d30362c
     home: https://startxfr.github.io/helm-repository
@@ -3863,7 +3923,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.484747309+02:00"
+    created: "2022-05-07T17:59:37.461780473+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: f4c697f5f1261fa33c564d892ddd3a32b454ba8af49d7b8b7c0bf1902122d1d8
     home: https://startxfr.github.io/helm-repository
@@ -3898,7 +3958,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.47150641+02:00"
+    created: "2022-05-07T17:59:37.443274579+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: c2b794ad6bb6941533e53a758bb30f0aba3a12776e257a37357b7e9d92cd6862
     home: https://startxfr.github.io/helm-repository
@@ -3933,7 +3993,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.45962312+02:00"
+    created: "2022-05-07T17:59:37.426508083+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: d398d92625abd96b9d9dd54daea8ceba9cd0112d9c2ba77d383b1ae0eda0c89d
     home: https://startxfr.github.io/helm-repository
@@ -3968,7 +4028,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.446697522+02:00"
+    created: "2022-05-07T17:59:37.410180563+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: b065d703e2e3cd2095db84aa0e74264358429487fa1abda8501d911e38fdbe83
     home: https://startxfr.github.io/helm-repository
@@ -4005,7 +4065,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:22.519410188+02:00"
+    created: "2022-05-07T17:59:37.501858005+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 6f6534f5ad24eb0ca5e5612e0d211bccab6f54d13a9aa68e9603ab8d9274cc0e
     home: https://startxfr.github.io/helm-repository
@@ -4040,7 +4100,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:22.432588303+02:00"
+    created: "2022-05-07T17:59:37.392426221+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 15531a14eb5f5f2a3a88b3a2c4c1e2dbd447905eefbaabb4d215427938d5c114
     home: https://startxfr.github.io/helm-repository
@@ -4077,7 +4137,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:22.42206868+02:00"
+    created: "2022-05-07T17:59:37.376294998+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 35c11cdf7b898ac9e9fb992083a8f76402fa3d3a6691bda9c84f6e572d684f6f
     home: https://startxfr.github.io/helm-repository
@@ -4107,7 +4167,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:22.407280367+02:00"
+    created: "2022-05-07T17:59:37.359982677+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 70c526f10e1287129ca538838fb7587fe9ecc6ded3e6f934034d8d3d0d7d9c16
     home: https://startxfr.github.io/helm-repository
@@ -4132,7 +4192,7 @@ entries:
     version: 8.20.7
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:22.397482148+02:00"
+    created: "2022-05-07T17:59:37.346076999+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 6801437ff73ed832f168d47f4198afe3705dd0501e288551c319eb5cead706b6
     home: https://startxfr.github.io/helm-repository
@@ -4163,7 +4223,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-05-06T11:07:22.578349458+02:00"
+    created: "2022-05-07T17:59:37.562153562+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4213,7 +4273,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-05-06T11:07:22.571549629+02:00"
+    created: "2022-05-07T17:59:37.554667838+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4263,7 +4323,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-05-06T11:07:22.564688123+02:00"
+    created: "2022-05-07T17:59:37.548789222+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4313,7 +4373,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-05-06T11:07:22.558779752+02:00"
+    created: "2022-05-07T17:59:37.54173108+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4363,7 +4423,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-05-06T11:07:22.551441326+02:00"
+    created: "2022-05-07T17:59:37.534413696+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4413,7 +4473,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-05-06T11:07:22.545638288+02:00"
+    created: "2022-05-07T17:59:37.526686019+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4465,7 +4525,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-05-06T11:07:22.584357433+02:00"
+    created: "2022-05-07T17:59:37.567995055+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4513,7 +4573,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-05-06T11:07:22.537926765+02:00"
+    created: "2022-05-07T17:59:37.520318399+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4565,7 +4625,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-05-06T11:07:22.531980697+02:00"
+    created: "2022-05-07T17:59:37.513758974+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4608,7 +4668,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-05-06T11:07:22.525216616+02:00"
+    created: "2022-05-07T17:59:37.507494332+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4651,7 +4711,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.999628802+02:00"
+    created: "2022-05-07T17:59:37.984251966+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4700,7 +4760,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.938062791+02:00"
+    created: "2022-05-07T17:59:37.932327939+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4749,7 +4809,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.864701325+02:00"
+    created: "2022-05-07T17:59:37.876959515+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4798,7 +4858,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.79895096+02:00"
+    created: "2022-05-07T17:59:37.807665949+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4847,7 +4907,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.731502108+02:00"
+    created: "2022-05-07T17:59:37.727789453+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4896,7 +4956,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.662808414+02:00"
+    created: "2022-05-07T17:59:37.644878394+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4947,7 +5007,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:23.00659712+02:00"
+    created: "2022-05-07T17:59:37.99002305+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4994,7 +5054,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.602492262+02:00"
+    created: "2022-05-07T17:59:37.586295489+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5043,7 +5103,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.5966731+02:00"
+    created: "2022-05-07T17:59:37.580931787+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5085,7 +5145,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-05-06T11:07:22.591090157+02:00"
+    created: "2022-05-07T17:59:37.574659427+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5127,7 +5187,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.066933695+02:00"
+    created: "2022-05-07T17:59:38.053023162+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5196,7 +5256,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.059165596+02:00"
+    created: "2022-05-07T17:59:38.046407898+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5265,7 +5325,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.053363333+02:00"
+    created: "2022-05-07T17:59:38.040221339+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5334,7 +5394,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.046421447+02:00"
+    created: "2022-05-07T17:59:38.033688041+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5403,7 +5463,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.038616224+02:00"
+    created: "2022-05-07T17:59:38.027142618+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5472,7 +5532,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.031954599+02:00"
+    created: "2022-05-07T17:59:38.0186867+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5543,7 +5603,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.074474325+02:00"
+    created: "2022-05-07T17:59:38.059606073+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5605,7 +5665,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.024927014+02:00"
+    created: "2022-05-07T17:59:38.012138051+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5670,7 +5730,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-05-06T11:07:23.018641281+02:00"
+    created: "2022-05-07T17:59:38.004423594+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5728,7 +5788,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.0.6.2
-    created: "2022-05-06T11:07:23.012475615+02:00"
+    created: "2022-05-07T17:59:37.996874643+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5784,7 +5844,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.135918189+02:00"
+    created: "2022-05-07T17:59:38.117990141+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5833,7 +5893,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.126887847+02:00"
+    created: "2022-05-07T17:59:38.111295296+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5882,7 +5942,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.120881963+02:00"
+    created: "2022-05-07T17:59:38.105867809+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5931,7 +5991,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.114338523+02:00"
+    created: "2022-05-07T17:59:38.097009865+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5980,7 +6040,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.107204323+02:00"
+    created: "2022-05-07T17:59:38.090653554+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6029,7 +6089,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.098907983+02:00"
+    created: "2022-05-07T17:59:38.08304586+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6080,7 +6140,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.142357511+02:00"
+    created: "2022-05-07T17:59:38.123826053+02:00"
     dependencies:
     - alias: project
       name: project
@@ -6127,7 +6187,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.091549199+02:00"
+    created: "2022-05-07T17:59:38.076647634+02:00"
     dependencies:
     - alias: project
       name: project
@@ -6176,7 +6236,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-05-06T11:07:23.085033364+02:00"
+    created: "2022-05-07T17:59:38.071335444+02:00"
     dependencies:
     - alias: project
       name: project
@@ -6218,7 +6278,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 0.7.1
-    created: "2022-05-06T11:07:23.079364389+02:00"
+    created: "2022-05-07T17:59:38.063939716+02:00"
     dependencies:
     - alias: project
       name: project
@@ -6260,7 +6320,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-05-06T11:07:23.206672672+02:00"
+    created: "2022-05-07T17:59:38.189961757+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6318,7 +6378,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-05-06T11:07:23.198756748+02:00"
+    created: "2022-05-07T17:59:38.182078878+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6376,7 +6436,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-05-06T11:07:23.191373511+02:00"
+    created: "2022-05-07T17:59:38.174332261+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6434,7 +6494,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-05-06T11:07:23.185065956+02:00"
+    created: "2022-05-07T17:59:38.167085695+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6492,7 +6552,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-05-06T11:07:23.177241374+02:00"
+    created: "2022-05-07T17:59:38.158952939+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6550,7 +6610,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-05-06T11:07:23.17087206+02:00"
+    created: "2022-05-07T17:59:38.151262275+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6610,7 +6670,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.18.0
-    created: "2022-05-06T11:07:23.214212102+02:00"
+    created: "2022-05-07T17:59:38.197258266+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -6664,7 +6724,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.18.0
-    created: "2022-05-06T11:07:23.164024782+02:00"
+    created: "2022-05-07T17:59:38.142828825+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -6720,7 +6780,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.18.0
-    created: "2022-05-06T11:07:23.156151127+02:00"
+    created: "2022-05-07T17:59:38.136091918+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -6769,7 +6829,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-05-06T11:07:23.149853409+02:00"
+    created: "2022-05-07T17:59:38.129142416+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -6817,7 +6877,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-05-06T11:07:23.272205461+02:00"
+    created: "2022-05-07T17:59:38.264133565+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6866,7 +6926,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-05-06T11:07:23.265594744+02:00"
+    created: "2022-05-07T17:59:38.257535317+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6915,7 +6975,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-05-06T11:07:23.259692343+02:00"
+    created: "2022-05-07T17:59:38.248422864+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6964,7 +7024,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-05-06T11:07:23.25220256+02:00"
+    created: "2022-05-07T17:59:38.240842997+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7013,7 +7073,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-05-06T11:07:23.245549607+02:00"
+    created: "2022-05-07T17:59:38.231210641+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7062,7 +7122,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-05-06T11:07:23.238489643+02:00"
+    created: "2022-05-07T17:59:38.224484067+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7113,7 +7173,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.2
-    created: "2022-05-06T11:07:23.27828297+02:00"
+    created: "2022-05-07T17:59:38.272534233+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7160,7 +7220,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.2
-    created: "2022-05-06T11:07:23.232362174+02:00"
+    created: "2022-05-07T17:59:38.218676844+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7209,7 +7269,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.2
-    created: "2022-05-06T11:07:23.226614534+02:00"
+    created: "2022-05-07T17:59:38.20940282+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7251,7 +7311,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.220269512+02:00"
+    created: "2022-05-07T17:59:38.20235286+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7292,7 +7352,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-05-06T11:07:23.325257149+02:00"
+    created: "2022-05-07T17:59:38.326740619+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7339,7 +7399,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-05-06T11:07:23.3173667+02:00"
+    created: "2022-05-07T17:59:38.318960728+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7386,7 +7446,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-05-06T11:07:23.309275534+02:00"
+    created: "2022-05-07T17:59:38.309620419+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7433,7 +7493,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-05-06T11:07:23.301322699+02:00"
+    created: "2022-05-07T17:59:38.302018579+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7480,7 +7540,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-05-06T11:07:23.294341619+02:00"
+    created: "2022-05-07T17:59:38.291683792+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7527,7 +7587,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-05-06T11:07:23.285092397+02:00"
+    created: "2022-05-07T17:59:38.281019616+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7575,7 +7635,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-05-06T11:07:23.396463842+02:00"
+    created: "2022-05-07T17:59:38.391969821+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7629,7 +7689,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-05-06T11:07:23.3890001+02:00"
+    created: "2022-05-07T17:59:38.384332184+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7683,7 +7743,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-05-06T11:07:23.380165941+02:00"
+    created: "2022-05-07T17:59:38.375537526+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7737,7 +7797,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-05-06T11:07:23.371955361+02:00"
+    created: "2022-05-07T17:59:38.369338559+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7791,7 +7851,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-05-06T11:07:23.363396223+02:00"
+    created: "2022-05-07T17:59:38.361214327+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7845,7 +7905,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-05-06T11:07:23.355613584+02:00"
+    created: "2022-05-07T17:59:38.354539541+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7901,7 +7961,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.3.1
-    created: "2022-05-06T11:07:23.405326647+02:00"
+    created: "2022-05-07T17:59:38.399306938+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7952,7 +8012,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.2
-    created: "2022-05-06T11:07:23.34792973+02:00"
+    created: "2022-05-07T17:59:38.347362004+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8003,7 +8063,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.2
-    created: "2022-05-06T11:07:23.340933246+02:00"
+    created: "2022-05-07T17:59:38.339590099+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8049,7 +8109,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 5.1.0
-    created: "2022-05-06T11:07:23.333910019+02:00"
+    created: "2022-05-07T17:59:38.332991786+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8093,7 +8153,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.438292473+02:00"
+    created: "2022-05-07T17:59:38.432981239+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 1723019b71d36103333923eda1d54598923ec12adc5ed4f5a14bc2de383de5ae
     home: https://startxfr.github.io/helm-repository
@@ -8129,7 +8189,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.432860067+02:00"
+    created: "2022-05-07T17:59:38.429838616+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: e463ebf65794ec23e6841a555601cabf8fc113273b9f81bf38d575a31d225c28
     home: https://startxfr.github.io/helm-repository
@@ -8165,7 +8225,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.429286226+02:00"
+    created: "2022-05-07T17:59:38.426544115+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: cdac95cfa2b5361cc89f04f6664f9aa8055cb647c9f022420e73630685aa0b61
     home: https://startxfr.github.io/helm-repository
@@ -8201,7 +8261,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.426145901+02:00"
+    created: "2022-05-07T17:59:38.422565061+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 74ba4a863c4e1890e52fb34890b9b256173e8747e0c1c1bb96cde54a774f3d97
     home: https://startxfr.github.io/helm-repository
@@ -8237,7 +8297,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.422579544+02:00"
+    created: "2022-05-07T17:59:38.418819518+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: b2242d55bab31aac9bc748cf9679d9a13af0fd70f37d7bdeb96824a5168135da
     home: https://startxfr.github.io/helm-repository
@@ -8273,7 +8333,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.419196075+02:00"
+    created: "2022-05-07T17:59:38.414298188+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 030ce0bdbd845269c48298697903a7616ba60c2f7de37c193f350729a5edbb14
     home: https://startxfr.github.io/helm-repository
@@ -8311,7 +8371,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.442753082+02:00"
+    created: "2022-05-07T17:59:38.436644102+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 663bae69c1c0e3a29d48ffe1f4ddef013f950bfd69505790a82cbbf3261986fa
     home: https://startxfr.github.io/helm-repository
@@ -8347,7 +8407,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:23.415900075+02:00"
+    created: "2022-05-07T17:59:38.410645296+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: d2855a981846df32b081c275ace2e145b1cd9c17291ae3f43f222b48adc55ba9
     home: https://startxfr.github.io/helm-repository
@@ -8387,7 +8447,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:23.41262749+02:00"
+    created: "2022-05-07T17:59:38.406748461+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: c65ae93d05a4a7938910f252d5486d10bd6bb0e7ee0ed2003bbe4af4b83e0569
     home: https://startxfr.github.io/helm-repository
@@ -8418,7 +8478,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:23.409180264+02:00"
+    created: "2022-05-07T17:59:38.402990804+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: c61789270d70e1e120dbe30478dc3421190fddda8c640732e8a2efcf06c03247
     home: https://startxfr.github.io/helm-repository
@@ -8451,7 +8511,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.519557216+02:00"
+    created: "2022-05-07T17:59:38.499295134+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8498,7 +8558,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.512243303+02:00"
+    created: "2022-05-07T17:59:38.493441987+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8545,7 +8605,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.503746937+02:00"
+    created: "2022-05-07T17:59:38.487411092+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8592,7 +8652,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.497537998+02:00"
+    created: "2022-05-07T17:59:38.477495022+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8639,7 +8699,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.486479448+02:00"
+    created: "2022-05-07T17:59:38.469651343+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8686,7 +8746,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.478647164+02:00"
+    created: "2022-05-07T17:59:38.462735777+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8735,7 +8795,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.526927936+02:00"
+    created: "2022-05-07T17:59:38.506925531+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8780,7 +8840,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.469584495+02:00"
+    created: "2022-05-07T17:59:38.455586447+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8825,7 +8885,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.459372892+02:00"
+    created: "2022-05-07T17:59:38.449544144+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8865,7 +8925,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-05-06T11:07:23.450646349+02:00"
+    created: "2022-05-07T17:59:38.441681323+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8905,7 +8965,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.587259761+02:00"
+    created: "2022-05-07T17:59:38.560674767+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8952,7 +9012,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.580039861+02:00"
+    created: "2022-05-07T17:59:38.55526411+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8999,7 +9059,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.574283625+02:00"
+    created: "2022-05-07T17:59:38.54886368+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9046,7 +9106,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.568137955+02:00"
+    created: "2022-05-07T17:59:38.543006307+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9093,7 +9153,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.561079998+02:00"
+    created: "2022-05-07T17:59:38.536940844+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9140,7 +9200,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.555740471+02:00"
+    created: "2022-05-07T17:59:38.530076649+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9189,7 +9249,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.594079562+02:00"
+    created: "2022-05-07T17:59:38.566481621+02:00"
     dependencies:
     - alias: project
       name: project
@@ -9234,7 +9294,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.549624773+02:00"
+    created: "2022-05-07T17:59:38.523926085+02:00"
     dependencies:
     - alias: project
       name: project
@@ -9281,7 +9341,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-05-06T11:07:23.54232078+02:00"
+    created: "2022-05-07T17:59:38.518048044+02:00"
     dependencies:
     - alias: project
       name: project
@@ -9321,7 +9381,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 3.27.0
-    created: "2022-05-06T11:07:23.536479124+02:00"
+    created: "2022-05-07T17:59:38.512010062+02:00"
     dependencies:
     - alias: project
       name: project
@@ -9363,7 +9423,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.652764419+02:00"
+    created: "2022-05-07T17:59:38.624523437+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9416,7 +9476,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.646877271+02:00"
+    created: "2022-05-07T17:59:38.618385627+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9469,7 +9529,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.637116659+02:00"
+    created: "2022-05-07T17:59:38.612618539+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9522,7 +9582,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.631305286+02:00"
+    created: "2022-05-07T17:59:38.605933615+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9575,7 +9635,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.625501828+02:00"
+    created: "2022-05-07T17:59:38.599703489+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9628,7 +9688,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.61781503+02:00"
+    created: "2022-05-07T17:59:38.593102806+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -9683,7 +9743,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.658387349+02:00"
+    created: "2022-05-07T17:59:38.63207169+02:00"
     dependencies:
     - alias: project
       name: project
@@ -9734,7 +9794,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.3
-    created: "2022-05-06T11:07:23.61193625+02:00"
+    created: "2022-05-07T17:59:38.58554366+02:00"
     dependencies:
     - alias: project
       name: project
@@ -9787,7 +9847,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.3
-    created: "2022-05-06T11:07:23.606172312+02:00"
+    created: "2022-05-07T17:59:38.5792203+02:00"
     dependencies:
     - alias: project
       name: project
@@ -9833,7 +9893,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.2
-    created: "2022-05-06T11:07:23.599389789+02:00"
+    created: "2022-05-07T17:59:38.572985499+02:00"
     dependencies:
     - alias: project
       name: project
@@ -9874,7 +9934,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.726539148+02:00"
+    created: "2022-05-07T17:59:38.696162317+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -9922,7 +9982,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.719686939+02:00"
+    created: "2022-05-07T17:59:38.688707106+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -9970,7 +10030,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.713164481+02:00"
+    created: "2022-05-07T17:59:38.682522346+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -10018,7 +10078,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.702818295+02:00"
+    created: "2022-05-07T17:59:38.676244871+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -10066,7 +10126,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.696888861+02:00"
+    created: "2022-05-07T17:59:38.667155062+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -10114,7 +10174,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.690489029+02:00"
+    created: "2022-05-07T17:59:38.65978945+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -10164,7 +10224,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.733538359+02:00"
+    created: "2022-05-07T17:59:38.702581116+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -10210,7 +10270,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.677600776+02:00"
+    created: "2022-05-07T17:59:38.653713637+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -10258,7 +10318,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-05-06T11:07:23.670941666+02:00"
+    created: "2022-05-07T17:59:38.645344484+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -10299,7 +10359,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 1.4.1
-    created: "2022-05-06T11:07:23.665717723+02:00"
+    created: "2022-05-07T17:59:38.637327166+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -10339,7 +10399,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.794905422+02:00"
+    created: "2022-05-07T17:59:38.762149611+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10387,7 +10447,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.785941871+02:00"
+    created: "2022-05-07T17:59:38.756407538+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10435,7 +10495,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.77785052+02:00"
+    created: "2022-05-07T17:59:38.748742063+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10483,7 +10543,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.772705616+02:00"
+    created: "2022-05-07T17:59:38.741315365+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10531,7 +10591,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.766642865+02:00"
+    created: "2022-05-07T17:59:38.734247488+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10579,7 +10639,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.75941716+02:00"
+    created: "2022-05-07T17:59:38.726983474+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10629,7 +10689,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.801054877+02:00"
+    created: "2022-05-07T17:59:38.768994551+02:00"
     dependencies:
     - alias: project
       name: project
@@ -10675,7 +10735,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.752781288+02:00"
+    created: "2022-05-07T17:59:38.720735259+02:00"
     dependencies:
     - alias: project
       name: project
@@ -10723,7 +10783,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:23.747002268+02:00"
+    created: "2022-05-07T17:59:38.714633648+02:00"
     dependencies:
     - alias: project
       name: project
@@ -10764,7 +10824,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-05-06T11:07:23.739686655+02:00"
+    created: "2022-05-07T17:59:38.707870185+02:00"
     dependencies:
     - alias: project
       name: project
@@ -10807,7 +10867,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.86238136+02:00"
+    created: "2022-05-07T17:59:38.829024768+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10862,7 +10922,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.855218108+02:00"
+    created: "2022-05-07T17:59:38.822345617+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10917,7 +10977,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.849586551+02:00"
+    created: "2022-05-07T17:59:38.815837694+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -10972,7 +11032,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.843990988+02:00"
+    created: "2022-05-07T17:59:38.809020662+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11027,7 +11087,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.83652809+02:00"
+    created: "2022-05-07T17:59:38.80161363+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11082,7 +11142,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.830258093+02:00"
+    created: "2022-05-07T17:59:38.795115104+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11139,7 +11199,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.867855495+02:00"
+    created: "2022-05-07T17:59:38.835741144+02:00"
     dependencies:
     - alias: project
       name: project
@@ -11191,7 +11251,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.823024399+02:00"
+    created: "2022-05-07T17:59:38.789101516+02:00"
     dependencies:
     - alias: project
       name: project
@@ -11245,7 +11305,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-05-06T11:07:23.8166085+02:00"
+    created: "2022-05-07T17:59:38.781727363+02:00"
     dependencies:
     - alias: project
       name: project
@@ -11292,7 +11352,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 3.5.4
-    created: "2022-05-06T11:07:23.810240713+02:00"
+    created: "2022-05-07T17:59:38.774945768+02:00"
     dependencies:
     - alias: project
       name: project
@@ -11337,7 +11397,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.895023742+02:00"
+    created: "2022-05-07T17:59:38.863969825+02:00"
     description: Helm chart used to configure RBAC
     digest: ffa7f406e8dc49e9facfecf2137c2d52cc71c1a4676863ec3cec014c6c72766f
     home: https://startxfr.github.io/helm-repository
@@ -11373,7 +11433,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.891973714+02:00"
+    created: "2022-05-07T17:59:38.860474819+02:00"
     description: Helm chart used to configure RBAC
     digest: 069ccba07fd361814ad1fb99f67f302d5f2aabbd485aa1723cbb178af97ff2c8
     home: https://startxfr.github.io/helm-repository
@@ -11409,7 +11469,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.888710909+02:00"
+    created: "2022-05-07T17:59:38.857219251+02:00"
     description: Helm chart used to configure RBAC
     digest: d704aeddd0c6f3ebfc41f44772004c9a068fbc4aff02d0376b2f114e46c2e88c
     home: https://startxfr.github.io/helm-repository
@@ -11445,7 +11505,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.885754862+02:00"
+    created: "2022-05-07T17:59:38.853889016+02:00"
     description: Helm chart used to configure RBAC
     digest: dcdac8c8f7f3167df84ebbda32c797ba0031381f8aa2ffbdc4865473638a5656
     home: https://startxfr.github.io/helm-repository
@@ -11481,7 +11541,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.882197703+02:00"
+    created: "2022-05-07T17:59:38.850548037+02:00"
     description: Helm chart used to configure RBAC
     digest: 339e3ed62901f38987e915a29e0ce0e4f4004704167d6e433886b44a38e68a41
     home: https://startxfr.github.io/helm-repository
@@ -11517,7 +11577,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.879228305+02:00"
+    created: "2022-05-07T17:59:38.847935021+02:00"
     description: Helm chart used to configure RBAC
     digest: bb6b026229e0f7c3d1fb661d3dabf7a8074a4543341f6e4ed5845737d95dc77a
     home: https://startxfr.github.io/helm-repository
@@ -11555,7 +11615,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.899354125+02:00"
+    created: "2022-05-07T17:59:38.869859288+02:00"
     description: Helm chart used to configure RBAC
     digest: 8f70d80c331e2a9e4fe23dd20b7a15ed3dd42f1cd6a67b4165d5e276ece26d94
     home: https://startxfr.github.io/helm-repository
@@ -11591,7 +11651,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:23.876544057+02:00"
+    created: "2022-05-07T17:59:38.845195292+02:00"
     description: Helm chart used to configure RBAC
     digest: 0ec57d750f8dba9666cd90c132f56aafa68befe3fccd275cd027eeaacb02549d
     home: https://startxfr.github.io/helm-repository
@@ -11629,7 +11689,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:23.873590238+02:00"
+    created: "2022-05-07T17:59:38.842376376+02:00"
     description: Helm chart used to configure RBAC
     digest: 4c440c629c20e5e0daacf4111a4f783c697d2836853c61a2ebe1157b64a47400
     home: https://startxfr.github.io/helm-repository
@@ -11660,7 +11720,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:23.870818702+02:00"
+    created: "2022-05-07T17:59:38.839089285+02:00"
     description: Helm chart used to configure RBAC
     digest: e0a1159d0363531731e278574536a9a37f1d7f6980b695e63336c77c012e4a5a
     home: https://startxfr.github.io/helm-repository
@@ -11691,7 +11751,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-05-06T11:07:23.959096704+02:00"
+    created: "2022-05-07T17:59:38.937643791+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11739,7 +11799,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-05-06T11:07:23.951370176+02:00"
+    created: "2022-05-07T17:59:38.929488757+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11787,7 +11847,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-05-06T11:07:23.945654134+02:00"
+    created: "2022-05-07T17:59:38.922242311+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11835,7 +11895,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-05-06T11:07:23.939690352+02:00"
+    created: "2022-05-07T17:59:38.915065178+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11883,7 +11943,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-05-06T11:07:23.931597358+02:00"
+    created: "2022-05-07T17:59:38.906624538+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11931,7 +11991,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-05-06T11:07:23.925670866+02:00"
+    created: "2022-05-07T17:59:38.899525355+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -11981,7 +12041,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 7.5.0
-    created: "2022-05-06T11:07:23.964967454+02:00"
+    created: "2022-05-07T17:59:38.944713275+02:00"
     dependencies:
     - alias: project
       name: project
@@ -12027,7 +12087,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 7.5.0
-    created: "2022-05-06T11:07:23.917739934+02:00"
+    created: "2022-05-07T17:59:38.892692668+02:00"
     dependencies:
     - alias: project
       name: project
@@ -12075,7 +12135,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 7.5.0
-    created: "2022-05-06T11:07:23.910665311+02:00"
+    created: "2022-05-07T17:59:38.881742559+02:00"
     dependencies:
     - alias: project
       name: project
@@ -12116,7 +12176,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 7.4.7
-    created: "2022-05-06T11:07:23.904899758+02:00"
+    created: "2022-05-07T17:59:38.875575122+02:00"
     dependencies:
     - alias: project
       name: project
@@ -12158,7 +12218,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.994743942+02:00"
+    created: "2022-05-07T17:59:38.972846181+02:00"
     description: Helm chart used to configure various storageClass
     digest: 79dfbbfe6da1060b28290feb9d768983088cf58d20d5e357a3ab7b86c4233281
     home: https://startxfr.github.io/helm-repository
@@ -12193,7 +12253,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.991582547+02:00"
+    created: "2022-05-07T17:59:38.970067759+02:00"
     description: Helm chart used to configure various storageClass
     digest: 844f8544352c9d9a46acc3727d8eaee8c7032042ab3cbdcc967c7f7c29dd9704
     home: https://startxfr.github.io/helm-repository
@@ -12228,7 +12288,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.988079499+02:00"
+    created: "2022-05-07T17:59:38.967243334+02:00"
     description: Helm chart used to configure various storageClass
     digest: 1d682b488b2d8e2c759c5c68da6d4fef5fa56577ad8015c806bcd5a0a7111901
     home: https://startxfr.github.io/helm-repository
@@ -12263,7 +12323,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.984890224+02:00"
+    created: "2022-05-07T17:59:38.963633381+02:00"
     description: Helm chart used to configure various storageClass
     digest: 1c49bc7ca66e4fffada6ca14b1cecd052f7e5afe324bab7aa9daf8a88b676c6c
     home: https://startxfr.github.io/helm-repository
@@ -12298,7 +12358,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.981745771+02:00"
+    created: "2022-05-07T17:59:38.960404359+02:00"
     description: Helm chart used to configure various storageClass
     digest: 5481652ae34620df4a8da23b9a192cb821b7040b083ee359f26c8f0c97353645
     home: https://startxfr.github.io/helm-repository
@@ -12333,7 +12393,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.977684293+02:00"
+    created: "2022-05-07T17:59:38.956325901+02:00"
     description: Helm chart used to configure various storageClass
     digest: 744d490e85cec91dadd7cf889dd611a942a8e9455a264933e3aa69fb93864f7b
     home: https://startxfr.github.io/helm-repository
@@ -12370,7 +12430,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:23.997791567+02:00"
+    created: "2022-05-07T17:59:38.975638539+02:00"
     description: Helm chart used to configure various storageClass
     digest: 9998e51a8d64661cd157413d0ec983286b9f5ab65e62e72d8fcdc92ee867f71d
     home: https://startxfr.github.io/helm-repository
@@ -12405,7 +12465,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:23.974071682+02:00"
+    created: "2022-05-07T17:59:38.953529771+02:00"
     description: Helm chart used to configure various storageClass
     digest: 3e4546b358366c4ca6fb6a58fda748108a5ab734c7c0b7b61e0d2cd17f77dc88
     home: https://startxfr.github.io/helm-repository
@@ -12442,7 +12502,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:23.970780456+02:00"
+    created: "2022-05-07T17:59:38.950516249+02:00"
     description: Helm chart used to configure various storageClass
     digest: 4de3eb75b5ebdaaae0c03ed765b2d7e2cd58ec865a08c6910e116504fd878450
     home: https://startxfr.github.io/helm-repository
@@ -12472,7 +12532,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:23.968002039+02:00"
+    created: "2022-05-07T17:59:38.947463324+02:00"
     description: Helm chart used to configure various storageClass
     digest: f3fa9a5c38eed05168e83dd157b14d3d6c21bb5f725bb91bd596cc795261904a
     home: https://startxfr.github.io/helm-repository
@@ -12503,7 +12563,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:24.026908419+02:00"
+    created: "2022-05-07T17:59:39.002938881+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12546,7 +12606,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:24.018854814+02:00"
+    created: "2022-05-07T17:59:38.996562622+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12589,7 +12649,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:24.01252293+02:00"
+    created: "2022-05-07T17:59:38.991345701+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12632,7 +12692,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-05-06T11:07:24.004320732+02:00"
+    created: "2022-05-07T17:59:38.983113241+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12681,7 +12741,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.120388457+02:00"
+    created: "2022-05-07T17:59:39.083291083+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12728,7 +12788,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.112165697+02:00"
+    created: "2022-05-07T17:59:39.075245794+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12775,7 +12835,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.103047711+02:00"
+    created: "2022-05-07T17:59:39.067509014+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12822,7 +12882,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.09370379+02:00"
+    created: "2022-05-07T17:59:39.059385138+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12869,7 +12929,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.080961297+02:00"
+    created: "2022-05-07T17:59:39.049602242+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12916,7 +12976,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.070507732+02:00"
+    created: "2022-05-07T17:59:39.04138571+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -12965,7 +13025,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.128993458+02:00"
+    created: "2022-05-07T17:59:39.093215385+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13010,7 +13070,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.056744225+02:00"
+    created: "2022-05-07T17:59:39.031229799+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13057,7 +13117,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-05-06T11:07:24.04719629+02:00"
+    created: "2022-05-07T17:59:39.023069123+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13097,7 +13157,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 0.9.0
-    created: "2022-05-06T11:07:24.03522108+02:00"
+    created: "2022-05-07T17:59:39.012983979+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13137,7 +13197,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-05-06T11:07:24.197336935+02:00"
+    created: "2022-05-07T17:59:39.155103334+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13185,7 +13245,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-05-06T11:07:24.188590382+02:00"
+    created: "2022-05-07T17:59:39.147321608+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13233,7 +13293,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-05-06T11:07:24.178193789+02:00"
+    created: "2022-05-07T17:59:39.138383055+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13281,7 +13341,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-05-06T11:07:24.169224614+02:00"
+    created: "2022-05-07T17:59:39.128030326+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13329,7 +13389,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-05-06T11:07:24.158369424+02:00"
+    created: "2022-05-07T17:59:39.117841035+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13377,7 +13437,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-05-06T11:07:24.147579501+02:00"
+    created: "2022-05-07T17:59:39.110019078+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13425,7 +13485,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-05-06T11:07:24.136571994+02:00"
+    created: "2022-05-07T17:59:39.100401288+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13472,7 +13532,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.259065876+02:00"
+    created: "2022-05-07T17:59:39.208314616+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13519,7 +13579,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.252333852+02:00"
+    created: "2022-05-07T17:59:39.203469713+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13566,7 +13626,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.246164298+02:00"
+    created: "2022-05-07T17:59:39.19685248+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13613,7 +13673,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.238130642+02:00"
+    created: "2022-05-07T17:59:39.191095923+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13660,7 +13720,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.231954061+02:00"
+    created: "2022-05-07T17:59:39.183859002+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13707,7 +13767,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.225649631+02:00"
+    created: "2022-05-07T17:59:39.176537511+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13756,7 +13816,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.266238938+02:00"
+    created: "2022-05-07T17:59:39.214300126+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13801,7 +13861,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.216380212+02:00"
+    created: "2022-05-07T17:59:39.171486468+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13848,7 +13908,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-05-06T11:07:24.210099478+02:00"
+    created: "2022-05-07T17:59:39.166415382+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13888,7 +13948,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-05-06T11:07:24.202241189+02:00"
+    created: "2022-05-07T17:59:39.160275181+02:00"
     dependencies:
     - alias: project
       name: project
@@ -13930,7 +13990,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-05-06T11:07:24.337601817+02:00"
+    created: "2022-05-07T17:59:39.272495756+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -13977,7 +14037,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-05-06T11:07:24.326353681+02:00"
+    created: "2022-05-07T17:59:39.265401689+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -14024,7 +14084,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-05-06T11:07:24.31918827+02:00"
+    created: "2022-05-07T17:59:39.259951982+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -14071,7 +14131,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-05-06T11:07:24.312587484+02:00"
+    created: "2022-05-07T17:59:39.252339064+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -14118,7 +14178,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-05-06T11:07:24.30445075+02:00"
+    created: "2022-05-07T17:59:39.245651813+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -14165,7 +14225,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-05-06T11:07:24.297771484+02:00"
+    created: "2022-05-07T17:59:39.239641136+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -14214,7 +14274,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-05-06T11:07:24.34366994+02:00"
+    created: "2022-05-07T17:59:39.278943068+02:00"
     dependencies:
     - alias: project
       name: project
@@ -14259,7 +14319,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.11.0
-    created: "2022-05-06T11:07:24.289718615+02:00"
+    created: "2022-05-07T17:59:39.232213853+02:00"
     dependencies:
     - alias: project
       name: project
@@ -14304,7 +14364,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.11.0
-    created: "2022-05-06T11:07:24.277072608+02:00"
+    created: "2022-05-07T17:59:39.226685493+02:00"
     dependencies:
     - alias: project
       name: project
@@ -14344,7 +14404,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 2.11.0
-    created: "2022-05-06T11:07:24.271302556+02:00"
+    created: "2022-05-07T17:59:39.220165684+02:00"
     dependencies:
     - alias: project
       name: project
@@ -14387,7 +14447,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.700296097+02:00"
+    created: "2022-05-07T17:59:39.782481697+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 45ff51acaf3c21f851223774ee3ccc4fa22878d53fc78f1d172261b0ca6e1054
@@ -14425,7 +14485,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.656619293+02:00"
+    created: "2022-05-07T17:59:39.731736064+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 1221c21555761764c1f2fabcf4dd2c5dee64b342aa66e5af1001c674d8d9c2e1
@@ -14463,7 +14523,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.612081845+02:00"
+    created: "2022-05-07T17:59:39.685041916+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 2ec240e480c02bb49c221c5264856d4f85be963ae613496d13b7bcf020f3a88a
@@ -14501,7 +14561,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.56376123+02:00"
+    created: "2022-05-07T17:59:39.615094423+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: ffd267380eaf815c084568506153d894485b1e25b771318e13e882949a35c5a7
@@ -14539,7 +14599,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.518365117+02:00"
+    created: "2022-05-07T17:59:39.562197537+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 8abeaec80e995b587baf8ae3f8b201bf86df41800609c4ceeacdbd86c536aae4
@@ -14577,7 +14637,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.477341996+02:00"
+    created: "2022-05-07T17:59:39.488381265+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 63a3fdedcc69c8dd6bf607a395e6552d03640e07cebf437a661744d44afbfeac
@@ -14613,7 +14673,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.432098383+02:00"
+    created: "2022-05-07T17:59:39.424227897+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 0df92d630ed1b3e3595ee2e366641eaa05b655936d1cfda0427a09fd39925f8c
@@ -14649,7 +14709,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.387728088+02:00"
+    created: "2022-05-07T17:59:39.345660264+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 8d8741ea19ba20d8b9d08f9abe3be4b1c8ac7174a09d4061680729f293018d98
@@ -14686,7 +14746,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.737858662+02:00"
+    created: "2022-05-07T17:59:39.815651571+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -14730,7 +14790,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.733550642+02:00"
+    created: "2022-05-07T17:59:39.811789211+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -14774,7 +14834,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.729215378+02:00"
+    created: "2022-05-07T17:59:39.807941271+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -14818,7 +14878,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.725066938+02:00"
+    created: "2022-05-07T17:59:39.803898802+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -14862,7 +14922,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.71960082+02:00"
+    created: "2022-05-07T17:59:39.799652103+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -14906,7 +14966,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.715728616+02:00"
+    created: "2022-05-07T17:59:39.79558413+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -14950,7 +15010,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.711413202+02:00"
+    created: "2022-05-07T17:59:39.791942496+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -14996,7 +15056,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.706867342+02:00"
+    created: "2022-05-07T17:59:39.787413915+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -15043,7 +15103,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.768653652+02:00"
+    created: "2022-05-07T17:59:39.843249833+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 0fa5a13893189d022cefe959c739a49950208eceb590d12e7406312750cc30f6
@@ -15083,7 +15143,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.76519937+02:00"
+    created: "2022-05-07T17:59:39.840191996+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: f9e64454a6bd100096341c8fb7bf4abd3d00822e51b5c3109f6bd5bc2ab21dd8
@@ -15123,7 +15183,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.761633732+02:00"
+    created: "2022-05-07T17:59:39.83693722+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 5a38a2fdbc1602d10d4efda54c8e57b12556f36702d2f50bdf236d7422d0d106
@@ -15163,7 +15223,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.758675875+02:00"
+    created: "2022-05-07T17:59:39.83366259+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 75e8518a68edc8d510fa39876ea299d0577eee39f15ebab07b9e208b5a71feb1
@@ -15203,7 +15263,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.75499478+02:00"
+    created: "2022-05-07T17:59:39.830280251+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: fb9c1238e842895969e6634f30e7af0af2a93b4666765e7168a73b0b6e7d1b06
@@ -15243,7 +15303,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.751396405+02:00"
+    created: "2022-05-07T17:59:39.827081937+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 2aca21eb1f31bcc716ec0376bda58640a3bf9587b458595ce8885de636e6882a
@@ -15281,7 +15341,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.747864435+02:00"
+    created: "2022-05-07T17:59:39.824085374+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 962bfeb5f53514fe32de7fd3ad9435dbd76f5cd433c3a2472d1427c8711e3506
@@ -15319,7 +15379,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.744250516+02:00"
+    created: "2022-05-07T17:59:39.821373896+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 260c93b1699cedac36fbe51f3a308d1f5856b5040c6c51204a347950f4244f6b
@@ -15352,7 +15412,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:24.740984845+02:00"
+    created: "2022-05-07T17:59:39.818699934+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: c38eff92da21132f1e54240fb6f146339bb212dd3e036b5a953db4c801e83870
@@ -15386,7 +15446,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.800788704+02:00"
+    created: "2022-05-07T17:59:39.876567833+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 5e6de15109d72c894c874e29b1000e63d5b833af079cc72fa995ae3393c6a5f5
     home: https://startxfr.github.io/helm-repository
@@ -15424,7 +15484,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.797511099+02:00"
+    created: "2022-05-07T17:59:39.872146993+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 6152ace655ee36100c21bccc0d11c8a38d3fd4ff7555a0ae0077be2c7fa72f33
     home: https://startxfr.github.io/helm-repository
@@ -15462,7 +15522,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.793994223+02:00"
+    created: "2022-05-07T17:59:39.868475046+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 66f54818af241f7d59f5bc34f85cf7a691f2a5329e4299dc5555174423afc2f4
     home: https://startxfr.github.io/helm-repository
@@ -15500,7 +15560,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.790422703+02:00"
+    created: "2022-05-07T17:59:39.864633938+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: c0f39a40446cbe665e753cf4162240302d9e1b3018fe5236b379763e4d73691f
     home: https://startxfr.github.io/helm-repository
@@ -15538,7 +15598,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.785998195+02:00"
+    created: "2022-05-07T17:59:39.860610092+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: c7fe747ab7a9e1a4b7e4fd81b02a23c66a2e11880a8d5e6c0ec05a5c766f6ce1
     home: https://startxfr.github.io/helm-repository
@@ -15576,7 +15636,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.782683345+02:00"
+    created: "2022-05-07T17:59:39.857018442+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: a4818a60eb039e67eb175637cd635d2667bb95e2403d6d7696df50014fb314d6
     home: https://startxfr.github.io/helm-repository
@@ -15612,7 +15672,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.779595639+02:00"
+    created: "2022-05-07T17:59:39.853308748+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 81b2a7b2e4f1eba090bdebd66c498cf076495b6ee4f4821aed545d97d2592620
     home: https://startxfr.github.io/helm-repository
@@ -15648,7 +15708,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.776344575+02:00"
+    created: "2022-05-07T17:59:39.849970954+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: bf595174cf1a7ad59974d667c76b06ea6b25afe8523088c987cb5020effc742f
     home: https://startxfr.github.io/helm-repository
@@ -15679,7 +15739,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:24.772163079+02:00"
+    created: "2022-05-07T17:59:39.846071234+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: a005b410954f437ba108d3cf974513f27a8772a3da692cfdfc0fa2cff9b9c80b
     home: https://startxfr.github.io/helm-repository
@@ -15713,7 +15773,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.83390151+02:00"
+    created: "2022-05-07T17:59:39.91013136+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: b575b631455f97ffc35019a0ecfead057f88e639a3eaf00b06a01a95b8dac93a
     home: https://startxfr.github.io/helm-repository
@@ -15749,7 +15809,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.83060416+02:00"
+    created: "2022-05-07T17:59:39.905782473+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 4893bedbc05e972eb1aa3ed04898240e376d89aba0717cac06235c067d34d32b
     home: https://startxfr.github.io/helm-repository
@@ -15785,7 +15845,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.827680084+02:00"
+    created: "2022-05-07T17:59:39.902857821+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 8d660ce3ed8c370dc2baf7108e3df47742046d0a021d42614185f8edea049eaf
     home: https://startxfr.github.io/helm-repository
@@ -15821,7 +15881,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.824078918+02:00"
+    created: "2022-05-07T17:59:39.899498933+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 8f34572cba0a3136fad03ba9e24b59ba64ba1482acf20431f5aa35d579f904bf
     home: https://startxfr.github.io/helm-repository
@@ -15857,7 +15917,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.820536826+02:00"
+    created: "2022-05-07T17:59:39.896071711+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 551b91250c4d04cb0336961315234c135f529d57b7a11ef7a932b637b08bb03c
     home: https://startxfr.github.io/helm-repository
@@ -15893,7 +15953,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.817192235+02:00"
+    created: "2022-05-07T17:59:39.89215293+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 81aaa3c8e52c58e6a36cae462f44d85dfda28cccaa2df3a5c9fbcffee204b552
     home: https://startxfr.github.io/helm-repository
@@ -15927,7 +15987,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.81408943+02:00"
+    created: "2022-05-07T17:59:39.888546805+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 4950fdea957c7db43c6f3c0a3546ba0db6d8b3e8a30516a0e29d52a0e007a01c
     home: https://startxfr.github.io/helm-repository
@@ -15961,7 +16021,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.810404894+02:00"
+    created: "2022-05-07T17:59:39.884782643+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: acfa02d26dc6e4fa28b905cf85e409caf11f95dad6e03b0f4332e65a13532221
     home: https://startxfr.github.io/helm-repository
@@ -15990,7 +16050,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:24.803757151+02:00"
+    created: "2022-05-07T17:59:39.880018804+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 3190deb7662761167d79db587cbdb2358700cd7b5758999928e9d0444db10782
     home: https://startxfr.github.io/helm-repository
@@ -16023,7 +16083,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.86781436+02:00"
+    created: "2022-05-07T17:59:39.935926759+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 6284589db8d04bcd9e82cfeade3ff6aac82662f5b4755e2c2124e10f4e579b7e
@@ -16061,7 +16121,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.864383516+02:00"
+    created: "2022-05-07T17:59:39.933150263+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: b014c977ad7ab12d2afb0d84416ac81c691aa71a052318979922291f1c33af74
@@ -16099,7 +16159,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.860487027+02:00"
+    created: "2022-05-07T17:59:39.930503591+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 0fbab50e3ae2bfe1a6cefa3692c8d682a24f0efc41b048f87753a60a321e3d11
@@ -16137,7 +16197,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.856600263+02:00"
+    created: "2022-05-07T17:59:39.927190931+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: cbdeb213d8a98ecf1a6ddf05eead79241c36a2b6e97ae8543f16061410b9078c
@@ -16175,7 +16235,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.851421122+02:00"
+    created: "2022-05-07T17:59:39.923616845+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 07ba21b7c7a597f3641be7527ae5f6f10cee46cc87b56cae32612f49335acadf
@@ -16213,7 +16273,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.846902813+02:00"
+    created: "2022-05-07T17:59:39.921031858+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 468f4b28680689ce21ce4d48f445214e1db44ad43c6712ed3a2580820c151bec
@@ -16249,7 +16309,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.843291132+02:00"
+    created: "2022-05-07T17:59:39.918596186+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: e67296685b5788fd2a94bdeaf9b60453cf53c7d097b53552c42293d434711905
@@ -16285,7 +16345,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.839924626+02:00"
+    created: "2022-05-07T17:59:39.91621805+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: f9f0a17f042a785953178994bcabde9fecdddb66d0ab0587077db9e15cf5fa82
@@ -16316,7 +16376,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:24.836665642+02:00"
+    created: "2022-05-07T17:59:39.913166397+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: a03e026fe44c19b480d181d4ace2be6a4af8e36ccd51ad95b5ce3a1ac9576bd7
@@ -16350,7 +16410,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.900792993+02:00"
+    created: "2022-05-07T17:59:39.964189866+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 6f5ee5acc5132bdade0e309460a4dc05f46b89e87d7fad9bca8f67d981327c15
@@ -16390,7 +16450,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.897021325+02:00"
+    created: "2022-05-07T17:59:39.961108445+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: d3d246193c6a6bb14439965f4214b8249b2b07b007ed3fe7e04142d4495df16a
@@ -16430,7 +16490,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.8920443+02:00"
+    created: "2022-05-07T17:59:39.958601052+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 8f9954c637cbf95b6b1b7392e896fa9a7944602fceaa5bc8ea499c8933d11e6f
@@ -16470,7 +16530,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.888372588+02:00"
+    created: "2022-05-07T17:59:39.95434005+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 396e98ceff58771f9759c3cae4bf0c0154f354f4428fa9d11d35b9c56d2edf6b
@@ -16510,7 +16570,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.884029515+02:00"
+    created: "2022-05-07T17:59:39.951118528+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 9b0795bbd7d3dcd15d5155a505f76df38d6762ce08ae1c82b711178b332b7e61
@@ -16550,7 +16610,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.880912784+02:00"
+    created: "2022-05-07T17:59:39.947940433+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: e7b1d2e11fb08010c575842e6377fc4003e34461e910faf797b6c06a6c78ddec
@@ -16588,7 +16648,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.877669644+02:00"
+    created: "2022-05-07T17:59:39.945094734+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 9a23b0fe785fdf6bcd84e9c92e24135da1d197046389c883f1fb6b2dd29a3f10
@@ -16626,7 +16686,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.874545808+02:00"
+    created: "2022-05-07T17:59:39.942266321+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: a5a059ccccb942154e1e72df6b31d9023a79905ee766440771ebad6b139cfbfc
@@ -16659,7 +16719,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:24.871418066+02:00"
+    created: "2022-05-07T17:59:39.938930672+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 18a2525fd39b692bcbbb2957eb65f9b855d2eed33a2f77fcddb5ba415c950789
@@ -16693,7 +16753,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.930713793+02:00"
+    created: "2022-05-07T17:59:39.990308705+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 588070050098b310fb5b37b385a3ecb4b6904ac3f58b9e02c4af09f858290490
     home: https://startxfr.github.io/helm-repository
@@ -16729,7 +16789,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.927649983+02:00"
+    created: "2022-05-07T17:59:39.986902905+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 78a01ab963e6206d5e4c61f5c983760b4ed3392bbe869a7797c4e4c603c7b366
     home: https://startxfr.github.io/helm-repository
@@ -16765,7 +16825,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.924743519+02:00"
+    created: "2022-05-07T17:59:39.983847371+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: e86411f8911a375ba6004970eac90d9c6cbf7ff3c6fe50c4131f2c37a0ea1daf
     home: https://startxfr.github.io/helm-repository
@@ -16801,7 +16861,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.921359923+02:00"
+    created: "2022-05-07T17:59:39.980601726+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 3fcac917d3325df62197a9b46e03227d4652d98efee30ea6824fb941c3617b28
     home: https://startxfr.github.io/helm-repository
@@ -16837,7 +16897,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.918179851+02:00"
+    created: "2022-05-07T17:59:39.977793279+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 94bc089081679dd038483eb22b24358d0b3b5083056ac9c3393cd2fd1fb60426
     home: https://startxfr.github.io/helm-repository
@@ -16873,7 +16933,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.914456192+02:00"
+    created: "2022-05-07T17:59:39.974828168+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 07680704c353802fd04d35339fdc277c2bd5997d7dff1ddac58173f221204a5e
     home: https://startxfr.github.io/helm-repository
@@ -16907,7 +16967,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.911081916+02:00"
+    created: "2022-05-07T17:59:39.972093411+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: b7cac0a7550553c0bd7e399841de667f3e555a9d35845ec1f2b27827a8438ef4
     home: https://startxfr.github.io/helm-repository
@@ -16941,7 +17001,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.907769664+02:00"
+    created: "2022-05-07T17:59:39.969474418+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 38e7aa3370b6ab26b8ae65e1dce81be812b89ed3f96cb15719de315db2462f75
     home: https://startxfr.github.io/helm-repository
@@ -16970,7 +17030,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:24.904523773+02:00"
+    created: "2022-05-07T17:59:39.967029563+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 7820d094c22b5f0606965fe672883b33924aa74598d6efc7f5742a95403d49ba
     home: https://startxfr.github.io/helm-repository
@@ -17001,7 +17061,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.976532232+02:00"
+    created: "2022-05-07T17:59:40.036212387+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17046,7 +17106,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.970277533+02:00"
+    created: "2022-05-07T17:59:40.031773066+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17091,7 +17151,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.965908078+02:00"
+    created: "2022-05-07T17:59:40.026350816+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17136,7 +17196,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.961395577+02:00"
+    created: "2022-05-07T17:59:40.021283686+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17181,7 +17241,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.957002436+02:00"
+    created: "2022-05-07T17:59:40.016271767+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17226,7 +17286,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.952178033+02:00"
+    created: "2022-05-07T17:59:40.011315855+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17271,7 +17331,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.947353776+02:00"
+    created: "2022-05-07T17:59:40.006324651+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17318,7 +17378,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.942680258+02:00"
+    created: "2022-05-07T17:59:40.001305458+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17358,7 +17418,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:24.93489589+02:00"
+    created: "2022-05-07T17:59:39.995068718+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -17395,7 +17455,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.020138489+02:00"
+    created: "2022-05-07T17:59:40.083480055+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: cf6e09f88a237fa75714a7a394ebe8b99a0f274dbfbc92bde1c988723aaf6e48
@@ -17432,7 +17492,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.017105768+02:00"
+    created: "2022-05-07T17:59:40.079558406+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 60760673750854763003ff00b896c8ea76f367bce2785172669fd0895ced97e4
@@ -17469,7 +17529,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.013247417+02:00"
+    created: "2022-05-07T17:59:40.076189896+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: eb52cfc71be08362e4427fbc0343f56e819179c76f55eadfda8c1810f69ac5c9
@@ -17506,7 +17566,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.008615927+02:00"
+    created: "2022-05-07T17:59:40.070282023+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 17377d213c67487d6c438f8bad7c39208b996e737c93c6ce21c96ce708982682
@@ -17543,7 +17603,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.003952109+02:00"
+    created: "2022-05-07T17:59:40.066390212+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: e4bd95caf6de14c0f548f0f01021be6870e8d823e1ec93dd10580d230ec4da25
@@ -17580,7 +17640,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.000728915+02:00"
+    created: "2022-05-07T17:59:40.063062108+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: a86f4d077f83133044b231152d7747cd0ec2b323982caa2cdc2a22db65cfd526
@@ -17617,7 +17677,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.996786754+02:00"
+    created: "2022-05-07T17:59:40.059404031+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 9fce9a949a36027a90742a78e90399fc96016a9820153593fb18e65cc698f378
@@ -17654,7 +17714,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.993017715+02:00"
+    created: "2022-05-07T17:59:40.055561619+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: a8db9176200bfd3ddbf821f1b52100622c5f9d7e66fbddc78702f2eb11d8b0f2
@@ -17691,7 +17751,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:24.989638921+02:00"
+    created: "2022-05-07T17:59:40.05181122+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: e13aa2acd0ee37b239bbc847d29774fd1f0ec5ef2cd2dad31e432bf70f1d1473
@@ -17728,7 +17788,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:24.986346925+02:00"
+    created: "2022-05-07T17:59:40.047752356+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 99b02a6df83294e2c669b34ef215630e04422440bf2d2c0c30e29d5757b3fbf1
@@ -17765,7 +17825,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:24.982837893+02:00"
+    created: "2022-05-07T17:59:40.043401831+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: a86d57c4d3031aa77581142bfaee82896342fb73ad45ecd88401b8977f1ff4d7
@@ -17797,7 +17857,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:24.979627081+02:00"
+    created: "2022-05-07T17:59:40.039734425+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 6cbf461a1fe293e447e9f80da303f5c6ae3c52ed56d7815c7ae5fb71dab8a713
@@ -17829,7 +17889,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.082686994+02:00"
+    created: "2022-05-07T17:59:40.144709934+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 3be1976b11dfda623be107ff1d27aa6e1a17ead80bbceac83fa568279a6f001e
@@ -17866,7 +17926,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.076884345+02:00"
+    created: "2022-05-07T17:59:40.139667405+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: b96d81d148137b45be78d12e23391f5d56d75a734e729088db1e991c82c42a8c
@@ -17903,7 +17963,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.072680981+02:00"
+    created: "2022-05-07T17:59:40.13575667+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 1960770e03cb4d5f5e911cdddd98529f04a144d7a62a40f90b07938c24a2efd3
@@ -17940,7 +18000,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.067485629+02:00"
+    created: "2022-05-07T17:59:40.131207373+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 9802ac423f5c22758460d92880e5fbe79cfa792694b2de09e0cd1f645c8fd780
@@ -17977,7 +18037,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.062864754+02:00"
+    created: "2022-05-07T17:59:40.12501713+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 3113888e37f47d2b211af1101483a2d16b24d672054382621e97bc03f0eb4de5
@@ -18014,7 +18074,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.056417476+02:00"
+    created: "2022-05-07T17:59:40.120341074+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 2fb9f6d43e115ed187cfee2c5b4566552d00c0a3f5de206825d4c128b343e774
@@ -18051,7 +18111,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.051103782+02:00"
+    created: "2022-05-07T17:59:40.115807654+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: cf7995fc4c6a8574c6ea3bbfaebe37ed2bcf7b45407452f205802d7dfbe3f756
@@ -18088,7 +18148,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.04664651+02:00"
+    created: "2022-05-07T17:59:40.111031469+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 9b8833c5685187d2ac7cccdef385096aef4f1f0cab09bcd9f65c8ac44dcfef38
@@ -18125,7 +18185,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-05-06T11:07:25.042450863+02:00"
+    created: "2022-05-07T17:59:40.106950454+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: c839e38ab65e369d1aba23a3e1630c2b9ea4548b07702d27ded65a0d6641668a
@@ -18162,7 +18222,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-05-06T11:07:25.036875236+02:00"
+    created: "2022-05-07T17:59:40.100368507+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 1af2e54e624a387740aa8861f0c66d2a599138e656d6e5d65a232a1bc82691db
@@ -18200,7 +18260,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.20
-    created: "2022-05-06T11:07:25.030182567+02:00"
+    created: "2022-05-07T17:59:40.094884032+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 3a6c0aa3f84e6af03cd5605f650516354ee872eb9f44f6cabdf6c2b1a3f196b0
@@ -18233,7 +18293,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:25.024502623+02:00"
+    created: "2022-05-07T17:59:40.089640635+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 41f1888f86a5d91915593b6ea3f9b46600d1ce2b9c4fb1079f2bedbfa6aec166
@@ -18275,7 +18335,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.133593936+02:00"
+    created: "2022-05-07T17:59:40.188012049+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 615612ff34887cc73a8ab4a51c3b7d18483638c8485cca3e4551e79e0396eef1
@@ -18320,7 +18380,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.130348802+02:00"
+    created: "2022-05-07T17:59:40.184094091+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 64a35f34a0eb978f37d0c7d679aea885522400ad13e696aee54247249317994d
@@ -18365,7 +18425,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.124571928+02:00"
+    created: "2022-05-07T17:59:40.180559542+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 43b28e94fb7e10ef91ae891fb5051c0695b2413ac0509a777845f9a6b16a46dc
@@ -18410,7 +18470,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.120864746+02:00"
+    created: "2022-05-07T17:59:40.176652268+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 4d26d95f9d7a5bb74fa99d8aaba439681a6b277d1c3ea52ffca1a94e822b2945
@@ -18455,7 +18515,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.117070302+02:00"
+    created: "2022-05-07T17:59:40.173012798+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 515b9b6a92675441282af83a5bbbfa03d88fd5145fd8096040d615d26c3c52db
@@ -18500,7 +18560,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.113300333+02:00"
+    created: "2022-05-07T17:59:40.169483109+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: b2466391947940e07853a2af249f019b93d6bdd84189716a86ef16f8740b1bc2
@@ -18545,7 +18605,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.109505452+02:00"
+    created: "2022-05-07T17:59:40.166250303+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 6220a680cf8bf32ef200b56f10ac15540a74f2e091dc5e256d710fd93d98332d
@@ -18590,7 +18650,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.105787902+02:00"
+    created: "2022-05-07T17:59:40.162959171+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: aa1ef0aa4aceb9b2e439c3cb2ac140a9138a1f747d4b2c74ed8a5ef4c7821a60
@@ -18635,7 +18695,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-05-06T11:07:25.101868906+02:00"
+    created: "2022-05-07T17:59:40.159401482+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 1ff3ee873f673bc4bd0dee6b60be2a3b04a2b445f17752b28170a6f05199bebd
@@ -18680,7 +18740,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.58
-    created: "2022-05-06T11:07:25.09748563+02:00"
+    created: "2022-05-07T17:59:40.154948806+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: ca96a039232bcef1458d75689bbd5c3d3a686fc54e07c99535bfc39810c2d849
@@ -18725,7 +18785,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.58
-    created: "2022-05-06T11:07:25.094000552+02:00"
+    created: "2022-05-07T17:59:40.151575636+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: c1ff34ab0170786acc12280c5bf2ea8f36a41c593178968507bb5a59bf84207b
@@ -18755,7 +18815,7 @@ entries:
     version: 8.20.70
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-05-06T11:07:25.089266452+02:00"
+    created: "2022-05-07T17:59:40.14833684+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: e2056b6f82e4b88860429221e8831651f62c69036573b8bac029eb2721b41096
@@ -18779,4 +18839,4 @@ entries:
     urls:
     - https://startxfr.github.io/helm-repository/packages/sxapi-7.22.27.tgz
     version: 7.22.27
-generated: "2022-05-06T11:07:20.848012055+02:00"
+generated: "2022-05-07T17:59:35.405447033+02:00"
