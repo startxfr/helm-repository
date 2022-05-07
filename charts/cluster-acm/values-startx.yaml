@@ -29,6 +29,39 @@ acm:
             - ECDHE-RSA-CHACHA20-POLY1305
             - ECDHE-ECDSA-AES128-GCM-SHA256
             - ECDHE-RSA-AES128-GCM-SHA256
+import:
+  enabled: false
+  hooked: false
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  token: "mytoken"
+  server: "myserver"
+  project: 
+    enabled: false
+    context: 
+      <<: *context
+    project: 
+      enabled: true
+      type: namespace
+      name: "imported_cluster"
+      display_name: ACM Cluster imported_cluster
+      description: ACM managed cluster named imported_cluster
+    rbac: 
+      enabled: true
+      groups: 
+      - id: ops-admin
+        name: ops
+        role: admin
+    networkpolicy: 
+      enabled: false
+    limits: 
+      enabled: false
+    quotas: 
+      enabled: false
 observability:
   enabled: false
   hooked: false
@@ -37,7 +70,8 @@ observability:
     s3host: "s3host-value"
     s3accesskey: "s3accesskey-value"
     s3secretkey: "s3secretkey-value"
-  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  # clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  clusterPullSecret: 'xxxx'
   mco:
     availabilityConfig: "High"
     imagePullPolicy: "Always"

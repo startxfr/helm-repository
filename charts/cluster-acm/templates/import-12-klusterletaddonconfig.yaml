@@ -1,0 +1,28 @@
+{{- if .Values.import }}{{- if .Values.import.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.import.project.name | default "imported_cluster" -}}
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: "{{- $namespace -}}"
+  namespace: "{{- $namespace -}}"
+spec:
+  clusterName: "{{- $namespace -}}"
+  clusterNamespace: "{{- $namespace -}}"
+  applicationManager:
+    enabled: true
+  certPolicyController:
+    enabled: true
+  clusterLabels:
+    cloud: '{{ .Values.import.labels.cloud }}'
+    vendor: '{{ .Values.import.labels.vendor }}'
+    iaas: '{{ .Values.import.labels.iaas }}'
+    paas: '{{ .Values.import.labels.paas }}'
+    caas: '{{ .Values.import.labels.caas }}'
+  iamPolicyController:
+    enabled: true
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+{{- end }}{{- end }}
