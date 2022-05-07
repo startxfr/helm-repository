@@ -1,6 +1,6 @@
 {{- if .Values.create }}{{- if .Values.create.enabled }}
 {{- $root := . -}}
-{{- $namespace := .Values.create.project.name | default "created_cluster" -}}
+{{- $namespace := .Values.create_project.name | default "created_cluster" -}}
 {{- $name := .Values.create.name | default "created_cluster" -}}
 apiVersion: agent.open-cluster-management.io/v1
 kind: KlusterletAddonConfig
