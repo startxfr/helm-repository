@@ -140,7 +140,145 @@
             }
         },
         "import": {
+            "title": "Import a managed cluster",
+            "description": "Configuration parameter defining a imported cluster deployed without ACM",
             "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "hooked": {
+                    "type": "boolean"
+                },
+                "labels": {
+                    "type": "object",
+                    "properties": {
+                        "cloud": {
+                            "type": "string"
+                        },
+                        "vendor": {
+                            "type": "string"
+                        },
+                        "iaas": {
+                            "type": "string"
+                        },
+                        "paas": {
+                            "type": "string"
+                        },
+                        "caas": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "token": {
+                    "type": "string"
+                },
+                "server": {
+                    "type": "string"
+                },
+                "project": {
+                    "type": "object",
+                    "properties": {
+                        "context": {
+                            "type": "object",
+                            "properties": {
+                                "app": {
+                                    "type": "string"
+                                },
+                                "cluster": {
+                                    "type": "string"
+                                },
+                                "component": {
+                                    "type": "string"
+                                },
+                                "environment": {
+                                    "type": "string"
+                                },
+                                "scope": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "limits": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                }
+                            }
+                        },
+                        "networkpolicy": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                }
+                            }
+                        },
+                        "project": {
+                            "type": "object",
+                            "properties": {
+                                "description": {
+                                    "type": "string"
+                                },
+                                "display_name": {
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "quotas": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                }
+                            }
+                        },
+                        "rbac": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "groups": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "role": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "create": {
+            "type": "object",
+            "title": "Creating a managed cluster",
+            "description": "Configuration parameter defining a new cluster deployed via ACM",
             "properties": {
                 "enabled": {
                     "type": "boolean"

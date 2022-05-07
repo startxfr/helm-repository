@@ -32,6 +32,7 @@ acm:
 import:
   enabled: false
   hooked: false
+  name: imported_cluster
   labels:
     vendor: OpenShift
     cloud: Amazon
@@ -41,7 +42,7 @@ import:
   token: "mytoken"
   server: "myserver"
   project: 
-    enabled: false
+    enabled: true
     context: 
       <<: *context
     project: 
@@ -50,6 +51,66 @@ import:
       name: "imported_cluster"
       display_name: ACM Cluster imported_cluster
       description: ACM managed cluster named imported_cluster
+    rbac: 
+      enabled: true
+      groups: 
+      - id: ops-admin
+        name: ops
+        role: admin
+    networkpolicy: 
+      enabled: false
+    limits: 
+      enabled: false
+    quotas: 
+      enabled: false
+create:
+  enabled: false
+  hooked: false
+  name: created_cluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  config: 
+    baseDomain: startx.fr
+    region: eu-west-3
+    master:
+      platform: |-
+        aws:
+          type: t3a.xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 200
+            size: 200
+            type: io1
+    worker:
+      replicas: 3
+      platform: |-
+        aws:
+          type: m5a.2xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 500
+            size: 250
+            type: io1
+  project: 
+    enabled: true
+    context: 
+      <<: *context
+    project: 
+      enabled: true
+      type: namespace
+      name: "created_cluster"
+      display_name: ACM Cluster created_cluster
+      description: ACM managed cluster named created_cluster
     rbac: 
       enabled: true
       groups: 
