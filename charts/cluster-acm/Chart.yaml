@@ -18,7 +18,7 @@ category: cluster
 # tags
 tags: infra,cluster,management,multi-cluster
 # Kube minimum version
-kubeVersion: ">=1.21.0-0"
+kubeVersion: ">=1.19.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -51,12 +51,12 @@ dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.211"
-    alias: import.project
+    alias: import_project
     condition: import.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.211"
-    alias: create.project
+    alias: create_project
     condition: create.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
