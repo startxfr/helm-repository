@@ -1,14 +1,16 @@
 {{- if .Values.import }}{{- if .Values.import.enabled }}
 {{- $root := . -}}
 {{- $namespace := .Values.import.project.name | default "imported_cluster" -}}
+{{- $name := .Values.import.name | default "imported_cluster" -}}
+---
 apiVersion: agent.open-cluster-management.io/v1
 kind: KlusterletAddonConfig
 metadata:
-  name: "{{- $namespace -}}"
+  name: "{{- $name -}}"
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-acm.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{ $namespace }}-klusterletaddonconfig"
+    app.kubernetes.io/name: "{{ $name }}-klusterletaddonconfig"
     cloud: '{{ .Values.import.labels.cloud }}'
     vendor: '{{ .Values.import.labels.vendor }}'
     iaas: '{{ .Values.import.labels.iaas }}'
@@ -18,18 +20,18 @@ metadata:
     {{- include "cluster-acm.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "15"
 spec:
-  clusterName: "{{- $namespace -}}"
+  clusterName: "{{- $name -}}"
   clusterNamespace: "{{- $namespace -}}"
-  applicationManager:
-    enabled: true
-  certPolicyController:
-    enabled: true
   clusterLabels:
     cloud: '{{ .Values.import.labels.cloud }}'
     vendor: '{{ .Values.import.labels.vendor }}'
     iaas: '{{ .Values.import.labels.iaas }}'
     paas: '{{ .Values.import.labels.paas }}'
     caas: '{{ .Values.import.labels.caas }}'
+  applicationManager:
+    enabled: true
+  certPolicyController:
+    enabled: true
   iamPolicyController:
     enabled: true
   policyController:
