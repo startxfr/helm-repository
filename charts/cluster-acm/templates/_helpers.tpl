@@ -34,14 +34,14 @@ observability : enabled
 {{- if .create.enabled }}
      creation : enabled
  cluster name : {{ .create.name }}
-   cluster ns : {{ .create_project.name }}
+   cluster ns : {{ .create_project.project.name }}
 {{- end }}
 
 -- Import cluster ------------------
 {{- if .import.enabled }}
     importing : enabled
  cluster name : {{ .create.name }}
-   cluster ns : {{ .create_project.name }}
+   cluster ns : {{ .create_project.project.name }}
 {{- end }}
 
 {{- end -}}

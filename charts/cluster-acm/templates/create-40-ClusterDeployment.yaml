@@ -1,15 +1,24 @@
 {{- if .Values.create }}{{- if .Values.create.enabled }}
 {{- $root := . -}}
-{{- $namespace := .Values.create_project.name | default "created_cluster" -}}
-{{- $name := .Values.create.name | default "created_cluster" -}}
+{{- $namespace := .Values.create_project.project.name | default "createdcluster" -}}
+{{- $name := .Values.create.name | default "createdcluster" -}}
 ---
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
 metadata:
   name: "{{- $name -}}"
   namespace: "{{- $namespace -}}"
   labels:
-    cloud: '{{ .Values.cloud.service }}'
-    region: '{{ .Values.cloud.region }}'
-    vendor: OpenShift
+    {{- include "cluster-acm.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-clusterdeployment"
+    cloud: '{{ .Values.create.labels.cloud }}'
+    vendor: '{{ .Values.create.labels.vendor }}'
+    iaas: '{{ .Values.create.labels.iaas }}'
+    paas: '{{ .Values.create.labels.paas }}'
+    caas: '{{ .Values.create.labels.caas }}'
+  annotations:
+    {{- include "cluster-acm.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
 spec:
   baseDomain: '{{ .Values.create.config.baseDomain }}'
   clusterName: "{{- $name -}}"
