@@ -48,16 +48,6 @@ dependencies:
     version: "9.8.211"
     alias: project
     condition: project.enabled
-  - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.211"
-    alias: import_project
-    condition: import.enabled
-  - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.211"
-    alias: create_project
-    condition: create.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.211"
@@ -70,4 +60,6 @@ annotations:
       description: "Add the import option to import a cluster into ACM"
     - kind: changed
       description: "Reorg template name and sequence"
+    - kind: changed
+      description: "Separate the values example for observability, mch, import and create subparts"
   artifacthub.io/containsSecurityUpdates: "false"
