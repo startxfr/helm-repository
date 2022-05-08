@@ -1,0 +1,64 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: acm
+  app: startx-acm
+acm:
+  enabled: false
+  mch:
+    enabled: false
+    hooked: false
+import:
+  enabled: true
+  hooked: false
+  name: importedcluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  token: "mytoken"
+  server: "myserver"
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+create:
+  enabled: false
+  hooked: false
+observability:
+  enabled: false
+  hooked: false
+project: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "importedcluster"
+    display_name: ACM Cluster importedcluster
+    description: ACM managed cluster named importedcluster
+  rbac: 
+    enabled: true
+    groups: 
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  enabled: false
+  subscription:
+    enabled: false

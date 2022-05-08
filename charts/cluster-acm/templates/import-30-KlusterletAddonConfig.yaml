@@ -1,6 +1,6 @@
 {{- if .Values.import }}{{- if .Values.import.enabled }}
 {{- $root := . -}}
-{{- $namespace := .Values.import_project.project.name | default "importedcluster" -}}
+{{- $namespace := .Values.project.project.name | default "importedcluster" -}}
 {{- $name := .Values.import.name | default "importedcluster" -}}
 ---
 apiVersion: agent.open-cluster-management.io/v1
