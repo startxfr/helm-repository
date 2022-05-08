@@ -60,6 +60,8 @@ import:
   hooked: false
   # The name of the cluster to import
   name: importedcluster
+  # The name of the namespace to import
+  namespace: importedcluster
   # Additionnal labels added to the managed cluster
   labels:
     vendor: OpenShift
@@ -72,30 +74,6 @@ import:
   # server to use fot the auto-import secret
   server: "myserver"
 
-# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
-import_project: 
-  enabled: false
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    type: namespace
-    name: "importedcluster"
-    display_name: ACM Cluster importedcluster
-    description: ACM managed cluster named importedcluster
-  rbac: 
-    enabled: true
-    groups: 
-    - id: ops-admin
-      name: ops
-      role: admin
-  networkpolicy: 
-    enabled: false
-  limits: 
-    enabled: false
-  quotas: 
-    enabled: false
-
 # configuration to create a cluster from ACM
 create:
   # Enable the import cluster
@@ -104,6 +82,8 @@ create:
   hooked: false
   # The name of the cluster to create
   name: createdcluster
+  # The name of the namespace to create
+  namespace: createdcluster
   # Configuration of the cluster basics
   config: 
     # Base domain to use for this cluster
@@ -157,30 +137,6 @@ create:
   token: "mytoken"
   # server to use fot the auto-import secret
   server: "myserver"
-
-# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
-create_project: 
-  enabled: false
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    type: namespace
-    name: "createdcluster"
-    display_name: ACM Cluster createdcluster
-    description: ACM managed cluster named createdcluster
-  rbac: 
-    enabled: true
-    groups: 
-    - id: ops-admin
-      name: ops
-      role: admin
-  networkpolicy: 
-    enabled: false
-  limits: 
-    enabled: false
-  quotas: 
-    enabled: false
 
 # configuration of the thanos service
 observability:
