@@ -202,3 +202,4 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.230 | 2022-05-06 | Stable full repository
 | 9.8.231 | 2022-05-06 | Debug basic chart dependencies
 | 9.8.233 | 2022-05-06 | publish stable update for the full repository
+| 9.8.234 | 2022-05-13 | Add the lahsc profile
