@@ -13,7 +13,7 @@ metadata:
     {{- include "cluster-acm.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "15"
 spec:
-  availabilityConfig: {{ .Values.observability.mco.availabilityConfig }}
+  # availabilityConfig: {{ .Values.observability.mco.availabilityConfig }}
   imagePullPolicy: {{ .Values.observability.mco.imagePullPolicy }}
   imagePullSecret: {{ .Values.observability.mco.imagePullSecret }}
   observabilityAddonSpec:
