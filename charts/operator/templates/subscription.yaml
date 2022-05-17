@@ -30,6 +30,8 @@ spec:
   source: {{ .name | default "redhat-operators" | quote }}
   sourceNamespace: {{ .namespace | default "openshift-marketplace" | quote }}
   {{- end }}
-  startingCSV: "{{ .csv | default $name }}.{{ $version | default "v0.1.0" }}"
+  {{- with .csv }}
+  startingCSV: "{{ . }}.{{ $version | default "v0.1.0" }}"
+  {{- end }}
   {{- end }}
 {{- end }}{{- end }}{{- end }}
