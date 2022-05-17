@@ -260,3 +260,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 9.8.230 | 2022-05-06 | Stable full repository
 | 9.8.231 | 2022-05-06 | Debug basic chart dependencies
 | 9.8.233 | 2022-05-06 | publish stable update for the full repository
+| 9.8.234 | 2022-05-17 | Make csv properties optionnal. When used, will push a startingCSV property
