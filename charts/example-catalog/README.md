@@ -173,3 +173,4 @@ helm install startx/example-catalog -f https://raw.githubusercontent.com/startxf
 | 9.8.231 | 2022-05-06 | Debug basic chart dependencies
 | 9.8.233 | 2022-05-06 | publish stable update for the full repository
 | 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
+| 9.8.240 | 2022-05-20 | Debug the tekton template
