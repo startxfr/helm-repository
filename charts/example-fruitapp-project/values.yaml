@@ -12,9 +12,9 @@ context: &context
 # Name of the cluster running this application (plateform tenant)
  cluster: localhost
 # Name of the environement for this application (ex: dev, factory, preprod or prod)
- environment: myenv
+ environment: global
 # Component name of this application (logical tenant)
- component: helm
+ component: fruitapp
 # Application name (functionnal tenant, default use Chart name)
  app: fruitapp
 # Version name of this application (default use Chart appVersion)
@@ -33,12 +33,24 @@ project_devel:
     description: FruitApp Christophe's developper environment
   rbac: 
     enabled: false
+    groups: []
+    users: []
   networkpolicy: 
     enabled: false
+    rules: []
   limits: 
     enabled: false
+    rules: ""
   quotas: 
     enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project_integration: 
@@ -53,12 +65,23 @@ project_integration:
     description: FruitApp integration environment
   rbac: 
     enabled: false
+    groups: []
+    users: []
   networkpolicy: 
     enabled: false
+    rules: []
   limits: 
     enabled: false
+    rules: ""
   quotas: 
     enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project_preprod: 
@@ -77,12 +100,22 @@ project_preprod:
     - id: ci-pipeline-pusher-role
       name: "system:serviceaccounts:fruitapp-ci:pipeline"
       role: "system:image-pusher"
+    groups: []
   networkpolicy: 
     enabled: false
+    rules: []
   limits: 
     enabled: false
+    rules: ""
   quotas: 
     enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project_prod: 
@@ -101,12 +134,22 @@ project_prod:
     - id: ci-pipeline-pusher-role
       name: "system:serviceaccounts:fruitapp-ci:pipeline"
       role: "system:image-pusher"
+    groups: []
   networkpolicy: 
     enabled: false
+    rules: []
   limits: 
     enabled: false
+    rules: ""
   quotas: 
     enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
 
 imagestreams:
   enabled: true
@@ -119,22 +162,15 @@ imagestreams:
     displayName: "FruitApp PreProd"
     labels: |
       app: frontend
-      app.kubernetes.io/component: frontend
-      app.kubernetes.io/instance: frontend
       app.kubernetes.io/name: frontend
-      app.kubernetes.io/part-of: fruitsapp
       app.openshift.io/runtime: nodejs
     tags: []
-  imagestreams:
   - name: frontend
     enabled: true
     namespace: "fruitapp-prod"
     displayName: "FruitApp Prod"
     labels: |
       app: frontend
-      app.kubernetes.io/component: frontend
-      app.kubernetes.io/instance: frontend
       app.kubernetes.io/name: frontend
-      app.kubernetes.io/part-of: fruitsapp
       app.openshift.io/runtime: nodejs
     tags: []
