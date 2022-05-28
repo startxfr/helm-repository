@@ -1,0 +1,140 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-fruitapp-frontend
+# # Use it to Overrride the helm-chart version
+#versionOverride: 0.0.1
+
+# Application fruitapp-frontend context
+context: &context
+# Name of the global scope for this application (organisational tenant)
+ scope: myscope
+# Name of the cluster running this application (plateform tenant)
+ cluster: localhost
+# Name of the environement for this application (ex: dev, factory, preprod or prod)
+ environment: myenv
+# Component name of this application (logical tenant)
+ component: helm
+# Application name (functionnal tenant, default use Chart name)
+ app: fruitapp
+# Version name of this application (default use Chart appVersion)
+ version: "0.0.1"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project_devel: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-devel-christophe
+    display_name: "FruitApp Dev Christophe"
+    description: FruitApp Christophe's developper environment
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project_integration: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-ci
+    display_name: "FruitApp Integration"
+    description: FruitApp integration environment
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project_preprod: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-preprod
+    display_name: "FruitApp Preprod"
+    description: FruitApp pre-production environment
+  rbac: 
+    enabled: true
+    user: 
+    - id: ci-pipeline-pusher-role
+      name: "system:serviceaccounts:fruitapp-ci:pipeline"
+      role: "system:image-pusher"
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project_prod: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-prod
+    display_name: "FruitApp Prod"
+    description: FruitApp production environment
+  rbac: 
+    enabled: true
+    user: 
+    - id: ci-pipeline-pusher-role
+      name: "system:serviceaccounts:fruitapp-ci:pipeline"
+      role: "system:image-pusher"
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+imagestreams:
+  enabled: true
+  context: 
+    <<: *context
+  imagestreams:
+  - name: frontend
+    enabled: true
+    namespace: "fruitapp-preprod"
+    displayName: "FruitApp PreProd"
+    labels: |
+      app: frontend
+      app.kubernetes.io/component: frontend
+      app.kubernetes.io/instance: frontend
+      app.kubernetes.io/name: frontend
+      app.kubernetes.io/part-of: fruitsapp
+      app.openshift.io/runtime: nodejs
+    tags: []
+  imagestreams:
+  - name: frontend
+    enabled: true
+    namespace: "fruitapp-prod"
+    displayName: "FruitApp Prod"
+    labels: |
+      app: frontend
+      app.kubernetes.io/component: frontend
+      app.kubernetes.io/instance: frontend
+      app.kubernetes.io/name: frontend
+      app.kubernetes.io/part-of: fruitsapp
+      app.openshift.io/runtime: nodejs
+    tags: []
