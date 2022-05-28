@@ -99,16 +99,19 @@ helm install startx/sxapi
 
 Helm chart prefixed with `example-` are Example chart. Example are used in demo and various workshop to show how to use helm as part of a gitops toolchain.
 
-| Chart                                                      | Source                                                                                        | Description                                                                           |
-| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| **[example-imagestreams](charts/example-imagestreams.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-imagestreams) | An example on how to deploy multiple image streams using helm                         |
-| **[example-knative](charts/example-knative.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-knative)      | An example on how to deploy application using serverless                              |
-| **[example-deployment](charts/example-deployment.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment)   | An example on how to deploy simple applications using helm and a deployment           |
-| **[example-html](charts/example-html.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-html)         | An example on how to deploy webserver using helm and a deployment                     |
-| **[example-php](charts/example-php.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-php)          | An example on how to deploy PHP application                                           |
-| **[example-pod](charts/example-pod.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)          | An example on how to deploy simple applications using helm and a pod                  |
-| **[example-sxapi](charts/example-sxapi.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)        | An example on how to deploy simple micro-applications using helm and an sxapi toolkit |
-| **[example-catalog](charts/example-catalog.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-catalog)      | Various demo examples                                                                 |
+| Chart                                                              | Source                                                                                            | Description                                                                           |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **[example-imagestreams](charts/example-imagestreams.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-imagestreams)     | An example on how to deploy multiple image streams using helm                         |
+| **[example-knative](charts/example-knative.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-knative)          | An example on how to deploy application using serverless                              |
+| **[example-deployment](charts/example-deployment.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-deployment)       | An example on how to deploy simple applications using helm and a deployment           |
+| **[example-html](charts/example-html.md)**                         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-html)             | An example on how to deploy webserver using helm and a deployment                     |
+| **[example-php](charts/example-php.md)**                           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-php)              | An example on how to deploy PHP application                                           |
+| **[example-pod](charts/example-pod.md)**                           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)              | An example on how to deploy simple applications using helm and a pod                  |
+| **[example-sxapi](charts/example-sxapi.md)**                       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)            | An example on how to deploy simple micro-applications using helm and an sxapi toolkit |
+| **[example-catalog](charts/example-catalog.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-catalog)          | Various demo examples                                                                 |
+| **[example-fruitapp-project](charts/example-fruitapp-project.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-project) | Deploy fruitapp CI/CD demo with common and project structure (like namespaces)        |
+| **[example-fruitapp-shared](charts/example-fruitapp-shared.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-shared)  | Deploy shared component like database and secrets                                     |
+| **[example-fruitapp-app](charts/example-fruitapp-app.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-app)     | Deploy application stack into an environment                                          |
 
 #### Use Examples charts
 
@@ -121,6 +124,9 @@ helm install startx/example-knative
 helm install startx/example-php
 helm install startx/example-pod
 helm install startx/example-sxapi
+helm install startx/example-fruitapp-project
+helm install startx/example-fruitapp-shared
+helm install startx/example-fruitapp-app
 ```
 
 ## Install a local copy of this repository
@@ -196,6 +202,9 @@ helm install startx/example-knative
 helm install startx/example-php
 helm install charts/example-pod
 helm install charts/example-sxapi
+helm install startx/example-fruitapp-project
+helm install startx/example-fruitapp-shared
+helm install startx/example-fruitapp-app
 ```
 
 ## Install building environment
