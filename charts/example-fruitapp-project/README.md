@@ -26,13 +26,13 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ### 3. Get information about this chart
 
 ```bash
-helm show chart startx/example-fruitapp-frontend
+helm show chart startx/example-fruitapp-project
 ```
 
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-fruitapp-frontend
+helm install startx/example-fruitapp-project
 ```
 
 ## Values dictionary
@@ -48,7 +48,7 @@ helm install startx/example-fruitapp-frontend
 | context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
 
-### example-fruitapp-frontend values dictionary
+### example-fruitapp-project values dictionary
 
 | Key      | Default       | Description                                                      |
 | -------- | ------------- | ---------------------------------------------------------------- |
@@ -64,12 +64,12 @@ helm install startx/example-fruitapp-frontend
 
 Simple deployment of a container image with the following characteristics :
 
-- 1 **deployment** named **example-fruitapp-frontend** of **1 pod** running **quay.io/startx/fedora:latest** image
-- 1 **service** named **example-fruitapp-frontend**
+- 1 **deployment** named **example-fruitapp-project** of **1 pod** running **quay.io/startx/fedora:latest** image
+- 1 **service** named **example-fruitapp-project**
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-fruitapp-frontend
+helm install startx/example-fruitapp-project
 ```
 
 ### Demo values file (values-demo.yaml)
@@ -81,31 +81,31 @@ Deployment of an demo container image with the following characteristics :
 
 ```bash
 # Configuration running demo example configuration
-helm install startx/example-fruitapp-frontend -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
+helm install startx/example-fruitapp-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
 ### Apache values file (values-apache.yaml)
 
 Deployment of an apache container image with the following characteristics :
 
-- 1 **pod** named **example-fruitapp-frontend-apache** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **example-fruitapp-frontend-apache**
+- 1 **pod** named **example-fruitapp-project-apache** of **2 pods** running **quay.io/startx/apache:latest** image
+- 1 **service** named **example-fruitapp-project-apache**
 
 ```bash
 # Configuration running apache example configuration
-helm install startx/example-fruitapp-frontend -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
+helm install startx/example-fruitapp-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
 ```
 
 ### MariaDB values file (values-mariadb.yaml)
 
 Deployment of an mariadb container image with the following characteristics :
 
-- 1 **pod** named **example-fruitapp-frontend-mariadb** of **2 pods** running **quay.io/startx/mariadb:latest** image
-- 1 **service** named **example-fruitapp-frontend-mariadb**
+- 1 **pod** named **example-fruitapp-project-mariadb** of **2 pods** running **quay.io/startx/mariadb:latest** image
+- 1 **service** named **example-fruitapp-project-mariadb**
 
 ```bash
 # Configuration running mariadb example configuration
-helm install startx/example-fruitapp-frontend -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
+helm install startx/example-fruitapp-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
 ## History
