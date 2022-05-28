@@ -113,3 +113,4 @@ helm install startx/example-fruitapp-frontend -f https://raw.githubusercontent.c
 | Release | Date       | Description                                                                                            |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 9.8.239 | 2022-05-28 | Initial commit for this helm chart with default value example 
+| 9.8.240 | 2022-05-29 | Improve the schema
