@@ -342,3 +342,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 9.8.234 | 2022-05-17 | Align chart release to version 9.8.234
 | 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
 | 9.8.251 | 2022-05-29 | Align basic charts to release 9.8.251
+| 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
