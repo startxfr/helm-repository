@@ -1,0 +1,91 @@
+# Example Fruitapp -shared
+
+This helm chart is used to deploy all shared components required for a particular environment.
+
+This chart is part of the [example-fruitapp-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/example-fruitapp-shared
+```
+
+### 4. Install this chart
+
+```bash
+helm install startx/example-fruitapp-shared
+```
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)                   |
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-fruitapp-shared values dictionary
+
+| Key                         | Default                   | Description                                                                                        |
+| --------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------- |
+| namespace                   | fruitapp-preprod          | Project used fot theses resources                                                                  |
+| database                    | {}                        | Configuration of the database components                                                           |
+| database.enabled            | true                      | Enable database for this project                                                                   |
+| database.name               | fruitapp                  | Database name used                                                                                 |
+| database.user               | fruitapp-preprod          | Database username                                                                                  |
+| database.password           | fruitapp-preprod-password | Database password associated to the user                                                           |
+| database.storage_capacitity | 1Gi                       | Database storage quantity                                                                          |
+| database.storage_class      | gp2                       | Database storage quality                                                                           |
+| database.memory_limit       | 256Mi                     | Database memory limit                                                                              |
+| database.version            | latest                    | The postgressql version (should be one of latest, 10-el7, 10-el8, 9.6-el8, 13-el8, 12-el8, 12-el7) |
+
+## Values files
+
+### Default values file (values.yaml)
+
+Deploy all shared services for a given namespace with the following characteristics :
+
+- 1 **pvc** named **postgresql-preprod** with
+  - **gp2** storage class
+  - **1Gi** allocation
+- 1 **secret** named **db** with all databse credentials
+- 1 **service** named **db** routing internal calls to pods
+- 1 **deployment** named **db** with
+  - port **5432** exposed
+  - path **/var/lib/pgsql/data** mounted with volume **postgresql-preprod**
+
+```bash
+# base configuration running default configuration
+helm install startx/example-fruitapp-shared
+```
+
+## History
+
+| Release | Date       | Description                                                   |
+| ------- | ---------- | ------------------------------------------------------------- |
+| 9.8.239 | 2022-05-28 | Initial commit for this helm chart with default value example |
+| 9.8.240 | 2022-05-29 | Improve the schema                                            |
