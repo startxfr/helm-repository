@@ -20,6 +20,15 @@ context: &context
 # Version name of this application (default use Chart appVersion)
  version: "0.0.1"
 
+# Configuration of the development stack
+devel_chain:
+  # Enable creation of the application stack for developpment
+  enabled: true
+  # The postgresql version (should be one of latest, 10-el7, 10-el8, 9.6-el8, 13-el8, 12-el8, 12-el7)
+  pg_version: latest
+  # The version of the NodeJS builder. (should be one of latest, 12-ubi7, 12-ubi8, 14-ubi7, 14-ubi8, 14-ubi8-minimal)
+  nodejs_version: latest
+
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project_devel: 
   enabled: true
