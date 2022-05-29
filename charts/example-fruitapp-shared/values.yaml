@@ -1,0 +1,43 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-fruitapp-shared
+# # Use it to Overrride the helm-chart version
+#versionOverride: 0.0.1
+
+# Application fruitapp-shared context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: startx
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: preprod
+  # Component name of this application (logical tenant)
+  component: fruitapp
+  # Application name (functionnal tenant, default use Chart name)
+  app: fruitapp
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+# Project used fot theses resources
+namespace: fruitapp-preprod
+
+# Configure database for project
+database:
+  # Enable database for this project
+  enabled: true
+  # Database name used
+  name: fruitapp
+  # Database username
+  user: fruitapp-preprod
+  # Database password associated to the user
+  password: fruitapp-preprod-password
+  # Database storage quantity
+  storage_capacitity: 1Gi
+  # Database storage quality
+  storage_class: gp2
+  # Database memory limit
+  memory_limit: 256Mi
+  # The postgressql version (should be one of latest, 10-el7, 10-el8, 9.6-el8, 13-el8, 12-el8, 12-el7)
+  version: latest

@@ -1,17 +1,17 @@
 
-Example of a basic application deployed using fruitapp-frontend resource packaged into helm chart. 
-The fruitapp-frontend have the following characteristics :
+Demo environment for the fruitapp application. 
+The fruitapp project have the following characteristics :
 
 -- Context -------------------------
-        scope : {{ include "startx.appScope" . }}
-      cluster : {{ include "startx.appCluster" . }}
-  environment : {{ include "startx.appEnvironment" . }}
-    component : {{ include "startx.appComponent" . }}
-          app : {{ include "startx.appName" . }}
-      version : {{ include "startx.appVersion" . }}
+                scope : {{ include "startx.appScope" . }}
+              cluster : {{ include "startx.appCluster" . }}
+          environment : {{ include "startx.appEnvironment" . }}
+            component : {{ include "startx.appComponent" . }}
+                  app : {{ include "startx.appName" . }}
+              version : {{ include "startx.appVersion" . }}
 
--- Example -------------------------
-
-Your fruitapp-frontend managing pod example named {{ include "startx.appName" . }} is done
-
-you can execute `kubectl get fruitapp-frontend {{ include "startx.appName" . }}` to get detail about this fruitapp-frontend
+-- Content -------------------------
+      devel namespace : {{ .Values.project_devel.project.name }}
+integration namespace : {{ .Values.project_devel.project.name }}
+    preprod namespace : {{ .Values.project_devel.project.name }}
+       prod namespace : {{ .Values.project_devel.project.name }}

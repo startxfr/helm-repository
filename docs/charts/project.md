@@ -336,3 +336,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.233 | 2022-05-06 | publish stable update for the full repository
 | 9.8.234 | 2022-05-17 | Align chart release to version 9.8.234
 | 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
+| 9.8.251 | 2022-05-29 | Align basic charts to release 9.8.251
