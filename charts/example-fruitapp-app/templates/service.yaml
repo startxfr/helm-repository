@@ -1,0 +1,31 @@
+{{- if .Values.frontend }}{{- if .Values.frontend.enabled }}
+{{- $root := . -}}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app.kubernetes.io/name: '{{- include "startx.appName" $root -}}-{{- include "startx.appVersion" $root -}}-deployment'
+    {{- include "example-fruitapp-app.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: '{{- .Values.frontend.name }}-{{- .Values.frontend.version | replace "." "-" }}'
+    app: {{ include "startx.appName" $root }}
+  annotations:
+    {{- include "example-fruitapp-app.annotations" $root | nindent 4 }}
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
+    app.openshift.io/vcs-ref: "{{- .Values.frontend.version }}"
+    app.openshift.io/vcs-uri: https://github.com/startxfr/nodejs-rest-http-crud.git
+    openshift.io/generated-by: startx
+  namespace: "{{- .Values.namespace }}"
+  name: '{{ include "startx.appName" $root }}-{{- .Values.frontend.version | replace "." "-" }}'
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: frontend
+    version: "{{- .Values.frontend.version }}"
+  sessionAffinity: None
+  type: ClusterIP
+{{- end }}{{- end }}

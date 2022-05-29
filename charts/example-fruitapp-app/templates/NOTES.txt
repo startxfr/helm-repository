@@ -1,0 +1,19 @@
+
+Example of a basic application deployed using fruitapp-app resource packaged into helm chart. 
+The fruitapp-app have the following characteristics :
+
+-- Context -------------------------
+                scope : {{ include "startx.appScope" . }}
+              cluster : {{ include "startx.appCluster" . }}
+          environment : {{ include "startx.appEnvironment" . }}
+            component : {{ include "startx.appComponent" . }}
+                  app : {{ include "startx.appName" . }}
+              version : {{ include "startx.appVersion" . }}
+
+-- Application components ----------
+            namespace : {{ .Values.namespace }}
+    microservice name : {{ .Values.frontend.name }}
+microservice replicas : {{ .Values.frontend.replicas }}
+  microservice memory : {{ .Values.frontend.memory_limit }}
+  application version : {{ .Values.frontend.version }}
+    application image : {{- .Values.namespace }}/frontend:{{- .Values.frontend.version }}
