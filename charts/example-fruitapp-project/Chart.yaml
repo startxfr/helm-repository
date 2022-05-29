@@ -1,8 +1,8 @@
 apiVersion: v2
 # Name of this Helm chart
-name: example-fruitapp-frontend
+name: example-fruitapp-project
 # Description of this Helm chart
-description: Helm chart used to deploy and manage a scaled pod running a given container image.
+description: Helm chart used to deploy all project required to deploy a full CI/CD chain for the fruitapp demo application.
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
@@ -12,11 +12,11 @@ appVersion: 4.9.8
 # Version of Openshift 
 engineVersion: 4.9.8
 # Icon of this helm-chart
-icon: https://startxfr.github.io/helm-repository/img/example-fruitapp-frontend.svg
+icon: https://startxfr.github.io/helm-repository/img/example-fruitapp-project.svg
 # category associated to this package
 category: example
 # tags
-tags: infra,example,fruitapp,frontend
+tags: infra,example,fruitapp,project
 # Kube minimum version
 kubeVersion: ">=1.21.0-0"
 # Keyword list for this chart
@@ -43,8 +43,7 @@ maintainers:
     email: "dev@startx.fr"
     url: "https://www.startx.fr"
 
-
-dependencies:
+dependencies: 
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "9.8.234"
@@ -71,11 +70,12 @@ dependencies:
     alias: imagestreams
     condition: imagestreams.enabled
 
-
-
-
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Create the example fruitapp frontend chart"
+      description: "Improve the schema"
+    - kind: changed
+      description: "Debug the project templates"
+    - kind: changed
+      description: "Improve documentation"
   artifacthub.io/containsSecurityUpdates: "false"

@@ -1,0 +1,99 @@
+{{- if .Values.database }}{{- if .Values.database.enabled }}
+{{- $root := . -}}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}"
+    {{- include "example-fruitapp-shared.labels" $root | nindent 4 }}
+    app: {{ include "startx.appName" $root }}
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"postgresql:{{- .Values.database.version }}","namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
+    {{- include "example-fruitapp-shared.annotations" $root | nindent 4 }}
+  namespace: "{{- .Values.namespace }}"
+  name: db
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: db
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db
+        startx.fr/app: "{{- .Values.context.app }}"
+    spec:
+      containers:
+        - env:
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: db
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: db
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database-name
+                name: db
+          image: openshift/postgresql:{{- .Values.database.version }}
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: postgresql-data
+              mountPath: /var/lib/pgsql/data
+          livenessProbe:
+            exec:
+              command:
+              - /usr/libexec/check-container
+              - --live
+            failureThreshold: 3
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          name: postgresql
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /usr/libexec/check-container
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 100m
+              memory: "{{- .Values.database.memory_limit }}"
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: postgresql-data
+          persistentVolumeClaim:
+            claimName: "postgresql-{{- .Values.context.environment }}"
+{{- end }}{{- end }}

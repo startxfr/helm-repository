@@ -1,0 +1,110 @@
+{{- if .Values.frontend }}{{- if .Values.frontend.enabled }}
+{{- $root := . -}}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: '{{ include "startx.appName" $root }}-{{- .Values.frontend.version | replace "." "-"  }}'
+  namespace: "{{- .Values.namespace }}"
+  labels:
+    app.kubernetes.io/name: '{{- include "startx.appName" $root -}}-{{- include "startx.appVersion" $root -}}-deployment'
+    {{- include "example-fruitapp-app.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: '{{- .Values.frontend.name }}-{{- .Values.frontend.version | replace "." "-" }}'
+    app: {{ include "startx.appName" $root }}
+  annotations:
+    {{- include "example-fruitapp-app.annotations" $root | nindent 4 }}
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:{{- .Values.frontend.version }}","namespace":"{{- .Values.namespace }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image","pause":"false"}]'
+    argocd.argoproj.io/sync-wave: "30"
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
+    app.openshift.io/vcs-ref: "{{- .Values.frontend.version }}"
+    app.openshift.io/vcs-uri: https://github.com/startxfr/nodejs-rest-http-crud.git
+    openshift.io/generated-by: startx
+spec:
+  progressDeadlineSeconds: 600
+  replicas: "{{- .Values.frontend.replicas }}"
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: frontend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: "{{- .Values.frontend.version }}"
+    spec:
+      containers:
+      - env:
+        - name: MY_DATABASE_SERVICE_HOST
+          value: db
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: database-user
+              name: db
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: database-password
+              name: db
+        - name: POSTGRESQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              key: database-name
+              name: db
+        image: '{{- .Values.namespace }}/frontend:{{- .Values.frontend.version }}'
+        imagePullPolicy: Always
+        name: frontend
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 7
+          timeoutSeconds: 2
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 3
+          timeoutSeconds: 2
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /live
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 2
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            cpu: 100m
+            memory: "{{- .Values.frontend.memory_limit }}"
+          requests:
+            cpu: 50m
+            memory: 64Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+{{- end }}{{- end }}

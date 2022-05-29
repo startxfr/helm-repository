@@ -95,6 +95,16 @@ eventrouter:
 logforwarder:
   # Enable the deployment of the logforwarder service
   enabled: false
+  # spec of the og forwarder
+  spec: |
+    pipelines: 
+    - name: all-to-default
+      inputRefs:
+      - infrastructure
+      - application
+      - audit
+      outputRefs:
+      - default
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 

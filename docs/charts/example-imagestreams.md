@@ -253,3 +253,4 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
 | 9.8.240 | 2022-05-28 | Add support for local imagestream
 | 9.8.241 | 2022-05-28 | Change schema
+| 9.8.251 | 2022-05-29 | Align basic charts to release 9.8.251
