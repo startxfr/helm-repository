@@ -1,6 +1,6 @@
-# Example deployment
+# Example Fruitapp -project
 
-This helm chart is used to deploya postgresql database ready to use for the fruitapp demo.
+This helm chart is used to deploy all project required to deploy a full CI/CD chain for the fruitapp demo application.
 
 This chart is part of the [example-fruitapp-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
 
@@ -26,13 +26,13 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ### 3. Get information about this chart
 
 ```bash
-helm show chart startx/example-fruitapp-frontend
+helm show chart startx/example-fruitapp-project
 ```
 
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-fruitapp-frontend
+helm install startx/example-fruitapp-project
 ```
 
 ## Values dictionary
@@ -48,69 +48,40 @@ helm install startx/example-fruitapp-frontend
 | context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
 
-### example-fruitapp-frontend values dictionary
+### example-fruitapp-project values dictionary
 
-| Key      | Default       | Description                                                      |
-| -------- | ------------- | ---------------------------------------------------------------- |
-| image    | fedora:latest | Image to run into the pod                                        |
-| command  | /bin/sx       | Command to run inside the container                              |
-| args     | run           | argunments to pass to the command exectuted inside the container |
-| debug    | true          | Enable debuging of the container                                 |
-| replicas | 1             | Define the number of replicas for this sxapi instance            |
+| Key                 | Default | Description                                                                                                    |
+| ------------------- | ------- | -------------------------------------------------------------------------------------------------------------- |
+| project_devel       | {}      | See [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project)                           |
+| project_integration | {}      | See [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project)                           |
+| project_preprod     | {}      | See [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project)                           |
+| project_prod        | {}      | See [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project)                           |
+| imagestreams        | {}      | See [example-imagestreams chart](https://helm-repository.readthedocs.io/en/latest/charts/example-imagestreams) |
 
-## Values files 
+## Values files
 
 ### Default values file (values.yaml)
 
-Simple deployment of a container image with the following characteristics :
+Deploy the full fruitapp CI/CD context with the following characteristics :
 
-- 1 **deployment** named **example-fruitapp-frontend** of **1 pod** running **quay.io/startx/fedora:latest** image
-- 1 **service** named **example-fruitapp-frontend**
+- 1 **project** named **fruitapp-devel-christophe**
+- 1 **project** named **fruitapp-ci**
+- 1 **project** named **fruitapp-preprod**
+  - 1 **roleBinding** allowing **fruitapp-ci pipeline** to push image
+  - 1 **imageStream** named **frontend** holding deployed images
+- 1 **project** named **fruitapp-prod**
+  - 1 **roleBinding** allowing **fruitapp-ci pipeline** to push image
+  - 1 **imageStream** named **frontend** holding deployed images
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-fruitapp-frontend
-```
-
-### Demo values file (values-demo.yaml)
-
-Deployment of an demo container image with the following characteristics :
-
-- 1 **pod** named **demo-helm-deployment** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **demo-helm-deployment**
-
-```bash
-# Configuration running demo example configuration
-helm install startx/example-fruitapp-frontend -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
-```
-
-### Apache values file (values-apache.yaml)
-
-Deployment of an apache container image with the following characteristics :
-
-- 1 **pod** named **example-fruitapp-frontend-apache** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **example-fruitapp-frontend-apache**
-
-```bash
-# Configuration running apache example configuration
-helm install startx/example-fruitapp-frontend -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
-```
-
-### MariaDB values file (values-mariadb.yaml)
-
-Deployment of an mariadb container image with the following characteristics :
-
-- 1 **pod** named **example-fruitapp-frontend-mariadb** of **2 pods** running **quay.io/startx/mariadb:latest** image
-- 1 **service** named **example-fruitapp-frontend-mariadb**
-
-```bash
-# Configuration running mariadb example configuration
-helm install startx/example-fruitapp-frontend -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
+helm install startx/example-fruitapp-project
 ```
 
 ## History
 
-| Release | Date       | Description                                                                                            |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 9.8.239 | 2022-05-28 | Initial commit for this helm chart with default value example 
-| 9.8.240 | 2022-05-29 | Improve the schema
+| Release | Date       | Description                                                   |
+| ------- | ---------- | ------------------------------------------------------------- |
+| 9.8.239 | 2022-05-28 | Initial commit for this helm chart with default value example |
+| 9.8.240 | 2022-05-29 | Improve the schema                                            |
+| 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
