@@ -18,7 +18,7 @@ metadata:
   annotations:
     {{- include "cluster-machine.annotations" $root | nindent 4 }}
 spec:
-  replicas: "{{ .replicas }}"
+  replicas: {{ .replicas }}
   selector:
     matchLabels:
       machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
