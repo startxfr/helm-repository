@@ -157,3 +157,4 @@ helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxf
 | 9.8.254 | 2022-05-30 | Add support for machineset infra and worker
 | 9.8.255 | 2022-05-30 | Debug apiversion for MachineSet
 | 9.8.256 | 2022-05-30 | Debug machineset structure
+| 9.8.257 | 2022-05-30 | Debug machineset replicas type
