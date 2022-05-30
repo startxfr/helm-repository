@@ -43,12 +43,11 @@ spec:
       taints: 
         {{- if eq .type "infra" }}
         - key: "node-role.kubernetes.io/infra"
+          effect: NoSchedule
         {{- else if eq .type "storage" }}
         - key: "node-role.kubernetes.io/storage"
-        {{- else }}
-        - key: "node-role.kubernetes.io/app"
-        {{ end }}
           effect: NoSchedule
+        {{ end }}
       providerSpec:
         value:
           ami:
