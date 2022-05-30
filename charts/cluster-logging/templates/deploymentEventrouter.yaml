@@ -98,6 +98,10 @@ spec:
       name: {{ $name | quote }}
     spec:
       serviceAccount: {{ $name | quote }}
+      {{- if $root.Values.logging.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      {{- end }}
       containers:
         - name: kube-eventrouter
           image: "registry.redhat.io/openshift4/ose-logging-eventrouter:latest"
