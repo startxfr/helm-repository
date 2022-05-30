@@ -4,8 +4,8 @@
 {{- $region := .Values.cluster.region | default "eu-west-3" -}}
 {{ range .Values.machineSet.list }}
 ---
+apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
-apiVersion: machine.k8s.io/v1
 metadata:
   name: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
   labels:
