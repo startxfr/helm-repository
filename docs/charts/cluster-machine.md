@@ -156,3 +156,4 @@ helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxf
 | 9.8.233 | 2022-05-06 | publish stable update for the full repository
 | 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
+| 9.8.254 | 2022-05-30 | Add support for machineset infra and worker
