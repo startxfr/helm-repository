@@ -164,3 +164,5 @@ helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxf
 | 9.8.259 | 2022-05-30 | Improve cluster-machine options
 | 9.8.260 | 2022-05-30 | Improve cluster-machine options
 | 9.8.261 | 2022-05-30 | Improve cluster-machine options
+| 9.8.262 | 2022-05-30 | Improve cluster-machine options
+| 9.8.263 | 2022-05-30 | Improve cluster-machine options
