@@ -15,7 +15,8 @@ metadata:
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "2"
-spec: {{ .Values.logforwarder.spec }}
+spec: 
+{{- .Values.logforwarder.spec | nindent 2 }}
 {{- end }}
 
 
