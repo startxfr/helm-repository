@@ -91,7 +91,7 @@ imageprunner:
   # Suspend the image prunning
   suspend: true
 
-# Configuration of the external registryroute
+# Configuration of the external registry route
 registryroute:
   # Enable the cluster image-prunner
   enabled: false
@@ -100,8 +100,19 @@ registryroute:
   # Namespace for the route (default is openshift-image-registry)
   namespace: "openshift-image-registry"
 
+# Configuration of the internal registry
+registryconfig:
+  # Enable the configuration of the ingresscontroller
+  enabled: false
+  # Enable the configuration of the ingresscontroller service into infra nodes
+  infra_enabled: true
 
-
+# Configuration of the ingresscontroller
+ingresscontroller:
+  # Enable the configuration of the ingresscontroller
+  enabled: false
+  # Enable the configuration of the ingresscontroller service into infra nodes
+  infra_enabled: true
 
 # Configuration of the cluster project-template feature
 projecttemplate:
