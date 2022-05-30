@@ -69,6 +69,8 @@ alertmanager:
 monitoring:
   # Enable the cluster monitoring personnalisation
   enabled: false
+  # Enable the deployment of the logging service into infra nodes
+  infra_enabled: false
   # Define the storage class to use for persistance (default is gp2)
   storageClass: gp2
   # Define the storage size to use for persistance (default is 20Gi)
@@ -89,7 +91,7 @@ imageprunner:
   # Suspend the image prunning
   suspend: true
 
-# Configuration of the cluster image-prunner feature
+# Configuration of the external registryroute
 registryroute:
   # Enable the cluster image-prunner
   enabled: false
