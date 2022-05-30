@@ -1,7 +1,6 @@
 {{- if .Values.registryroute.enabled -}}
 {{- $name := .Values.registryroute.name | default "external" -}}
 {{- $namespace := .Values.registryroute.namespace | default "openshift-image-registry" -}}
-
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
@@ -21,5 +20,4 @@ spec:
   tls:
     termination: reencrypt
   wildcardPolicy: None
-
 {{- end -}}
