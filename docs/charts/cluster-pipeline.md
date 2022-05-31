@@ -159,3 +159,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 9.8.233 | 2022-05-06 | publish stable update for the full repository
 | 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
+| 9.8.277 | 2022-05-31 | publish stable update for the full repository
