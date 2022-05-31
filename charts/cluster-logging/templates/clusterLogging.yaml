@@ -45,7 +45,7 @@ spec:
       {{- end }}
       {{- if .resources }}
       resources:
-        {{- .resources | toYaml | nindent 8 }}
+        {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
       redundancyPolicy: "SingleRedundancy"
       storage:
@@ -79,7 +79,7 @@ spec:
       {{- end }}
       {{- if .resources }}
       resources:
-        {{- .resources | toYaml | nindent 8 }}
+        {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
     {{- end }}
     {{- if .Values.logging.infra }}
@@ -107,8 +107,12 @@ spec:
     logs:
       type: "fluentd"
       {{- with .Values.logging.fluentd}}
-      fluentd:
-        resources: {{ if .resources }}{{ .resources | toJson }}{{ else }}{}{{- end }}
+      {{- if .resources }}
+      fluentd: 
+        resources:
+          {{- .resources | toYaml | nindent 10 -}}
+      {{- else }}
+      fluentd: {}
       {{- end }}
         {{- if .Values.logging.infra }}
         tolerations:
