@@ -87,3 +87,4 @@ helm install startx/example-fruitapp-project
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
 | 9.8.254 | 2022-05-29 | Add support for the devel deployment
 | 9.8.255 | 2022-05-29 | Debug the db deployment
+| 9.8.277 | 2022-05-31 | publish stable update for the full repository

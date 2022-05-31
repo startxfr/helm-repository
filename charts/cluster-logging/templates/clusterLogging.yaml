@@ -36,6 +36,10 @@ spec:
     elasticsearch:
       nodeCount: {{ .replicas | default 3 }}
       {{- if $root.Values.logging.infra_enabled }}
+      tolerations:
+        - effect: NoSchedule 
+          key: node-role.kubernetes.io/infra 
+          operator: Exists
       nodeSelector: 
         node-role.kubernetes.io/infra: ''
       {{- end }}
@@ -66,6 +70,10 @@ spec:
     kibana:
       replicas: {{ .replicas | default 1 }}
       {{- if $root.Values.logging.infra_enabled }}
+      tolerations:
+        - effect: NoSchedule 
+          key: node-role.kubernetes.io/infra 
+          operator: Exists
       nodeSelector: 
         node-role.kubernetes.io/infra: ''
       {{- end }}
