@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/part-of: '{{ include "startx.appName" $root }}'
     app.openshift.io/runtime: nodejs
     app.openshift.io/runtime-version: "{{- .Values.frontend.version }}"
-    app: {{- .Values.frontend.name }}
+    app: {{ .Values.frontend.name }}
   annotations:
     {{- include "example-fruitapp-app.annotations" $root | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:{{- .Values.frontend.version }}","namespace":"{{- .Values.namespace }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image","pause":"false"}]'
