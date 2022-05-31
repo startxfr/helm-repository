@@ -28,4 +28,8 @@ spec:
       key: thanos.yaml
     statefulSetSize: {{ .Values.observability.mco.statefulSetSize }}
     statefulSetStorageClass: {{ .Values.observability.mco.statefulSetStorageClass }}
+{{- if .Values.observability.infra }}
+  nodeSelector:
+    node-role.kubernetes.io/infra: ''
+{{- end }}
 {{- end -}}
