@@ -1,11 +1,11 @@
 # Default values for configuration of a STARTX cluster
 # see values.yaml for explanation on each params
 context: 
-  scope: startx
-  cluster: startx-default
-  environment: infra
-  component: config
-  app: startx-machine
+  scope: mccm
+  cluster: mccm-mgmt
+  environment: mgmt
+  component: machine
+  app: mccm-machine
 
 cluster:
   id: startx-xyzab
@@ -68,21 +68,21 @@ machineSet:
   - name: a-infra
     az: a
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07b7248cf3c2b3190
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 0
+    replicas: 1
   - name: b-infra
     az: b
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07b7248cf3c2b3190
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 0
+    replicas: 1
   - name: c-infra
     az: c
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07b7248cf3c2b3190
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 0
+    replicas: 1
