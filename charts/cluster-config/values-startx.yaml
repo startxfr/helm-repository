@@ -28,8 +28,12 @@ alertmanager:
   type: pagerDutty
   pagerDutty:
     key: _pager_dutty_startx_key_
+ingresscontroller:
+  enabled: false
+  infra_enabled: true
 monitoring:
   enabled: false
+  infra_enabled: true
   storageClass: gp2
   storageSize: "20Gi"
 imageprunner:
@@ -41,6 +45,9 @@ imageprunner:
   suspend: false
 registryroute:
   enabled: false
+registryconfig:
+  enabled: false
+  infra_enabled: true
 projecttemplate:
   enabled: false
   rbac: 

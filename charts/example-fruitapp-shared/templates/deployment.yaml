@@ -7,7 +7,10 @@ metadata:
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" $root -}}"
     {{- include "example-fruitapp-shared.labels" $root | nindent 4 }}
-    app: {{ include "startx.appName" $root }}
+    app.kubernetes.io/part-of: '{{ include "startx.appName" $root }}'
+    app.openshift.io/runtime: postgresql
+    app.openshift.io/runtime-version: "{{- .Values.database.version }}"
+    app: db
   annotations:
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"postgresql:{{- .Values.database.version }}","namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
     {{- include "example-fruitapp-shared.annotations" $root | nindent 4 }}
@@ -20,9 +23,6 @@ spec:
     matchLabels:
       app: db
   strategy:
-    activeDeadlineSeconds: 21600
-    recreateParams:
-      timeoutSeconds: 600
     type: Recreate
   template:
     metadata:
