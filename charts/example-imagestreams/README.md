@@ -254,3 +254,4 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | 9.8.241 | 2022-05-28 | Change schema
 | 9.8.251 | 2022-05-29 | Align basic charts to release 9.8.251
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
+| 9.8.277 | 2022-05-31 | publish stable update for the full repository
