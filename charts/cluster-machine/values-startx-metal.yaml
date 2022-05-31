@@ -63,26 +63,29 @@ machineAutoscaler:
     maxReplicas: 2
 
 machineSet: 
-  enabled: false
+  enabled: true
   list:
   - name: a-infra
     az: a
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07b7248cf3c2b3190
+    subnet_name: "mgmt-subnet-private1-eu-west-3a"
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 0
+    replicas: 1
   - name: b-infra
     az: b
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07b7248cf3c2b3190
+    subnet_name: "mgmt-subnet-private2-eu-west-3b"
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 0
+    replicas: 1
   - name: c-infra
     az: c
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07b7248cf3c2b3190
+    subnet_name: "mgmt-subnet-private3-eu-west-3c"
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 0
+    replicas: 1
