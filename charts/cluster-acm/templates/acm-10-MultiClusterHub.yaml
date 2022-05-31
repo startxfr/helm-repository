@@ -36,4 +36,12 @@ spec:
 {{- end }}{{- end }}
   overrides: {}
   separateCertificateManagement: false
+{{- if .Values.acm.mch.infra }}
+  nodeSelector:
+    node-role.kubernetes.io/infra: ''
+  tolerations:
+    - effect: NoSchedule 
+      key: node-role.kubernetes.io/infra 
+      operator: Exists
+{{- end }}
 {{- end }}{{- end }}{{- end }}
