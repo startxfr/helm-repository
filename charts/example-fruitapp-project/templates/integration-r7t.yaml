@@ -1,0 +1,294 @@
+{{- if .Values.integration_chain }}{{- if .Values.integration_chain.enabled }}{{- if .Values.integration_chain.enabled_r7t}}
+{{- $root := . -}}
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: db-r7t
+  namespace: "{{- .Values.project_integration.project.name }}"
+  labels:
+    app.kubernetes.io/name: 'db-r7t'
+    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: 'devel'
+    app: db-r7t
+  annotations:
+    template.openshift.io/expose-database_name: '{.data[''database-name'']}'
+    template.openshift.io/expose-password: '{.data[''database-password'']}'
+    template.openshift.io/expose-username: '{.data[''database-user'']}'
+stringData:
+  database-name: fruitapp
+  database-password: mydevel-password
+  database-user: mydevel-user
+type: Opaque
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: 'db-r7t'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  labels:
+    app.kubernetes.io/name: 'db-r7t-deployment'
+    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: 'devel'
+    app: db-r7t
+  annotations:
+    {{- include "example-fruitapp-project.annotations" $root | nindent 4 }}
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"postgresql:{{- .Values.integration_chain.pg_version }}","namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
+    argocd.argoproj.io/sync-wave: "10"
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    openshift.io/generated-by: startx
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: db-r7t
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db-r7t
+        startx.fr/app: db-r7t
+    spec:
+      containers:
+        - name: postgresql
+          image: "openshift/postgresql:{{- .Values.integration_chain.pg_version }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 5432
+            protocol: TCP
+          env:
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: database-user
+                name: db-r7t
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-password
+                name: db-r7t
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: database-name
+                name: db-r7t
+          livenessProbe:
+            exec:
+              command:
+              - /usr/libexec/check-container
+              - --live
+            failureThreshold: 3
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+              - /usr/libexec/check-container
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: db-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: db-data
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: 'frontend-r7t'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  labels:
+    app.kubernetes.io/name: 'frontend-r7t-deployment'
+    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: 'devel'
+    app: frontend-r7t
+  annotations:
+    {{- include "example-fruitapp-project.annotations" $root | nindent 4 }}
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:r7t","namespace":"{{- .Values.project_integration.project.name }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
+    argocd.argoproj.io/sync-wave: "15"
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
+    app.openshift.io/vcs-ref: "devel"
+    app.openshift.io/vcs-uri: https://github.com/startxfr/nodejs-rest-http-crud.git
+    openshift.io/generated-by: startx
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: frontend-r7t
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: frontend-r7t
+        startx.fr/app: frontend-r7t
+    spec:
+      containers:
+      - name: frontend
+        image: "{{- .Values.project_integration.project.name }}/frontend:r7t"
+        imagePullPolicy: Always
+        env:
+        - name: MY_DATABASE_SERVICE_HOST
+          value: db-r7t
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: database-user
+              name: db-r7t
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: database-password
+              name: db-r7t
+        - name: POSTGRESQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              key: database-name
+              name: db-r7t
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 7
+          timeoutSeconds: 2
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 3
+          timeoutSeconds: 2
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /live
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 2
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: 'db-r7t'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  labels:
+    app.kubernetes.io/name: 'db-r7t-service'
+    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: 'devel'
+    app: db-r7t
+  annotations:
+    template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
+    openshift.io/generated-by: startx
+spec:
+  internalTrafficPolicy: Cluster
+  ports:
+  - name: postgresql
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: db-r7t
+  sessionAffinity: None
+  type: ClusterIP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: 'frontend-r7t'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  labels:
+    app.kubernetes.io/name: 'frontend-r7t-service'
+    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: 'devel'
+    app: frontend-r7t
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
+    app.openshift.io/vcs-ref: "devel"
+    app.openshift.io/vcs-uri: https://github.com/startxfr/nodejs-rest-http-crud.git
+    openshift.io/generated-by: startx
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: frontend-r7t
+  sessionAffinity: None
+  type: ClusterIP
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: 'frontend-r7t'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  labels:
+    app.kubernetes.io/name: 'frontend-r7t'
+    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+spec:
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: frontend-r7t
+    weight: 100
+  wildcardPolicy: None
+{{- end }}{{- end }}{{- end }}
