@@ -1,11 +1,11 @@
 # Cluster Vault
 
 This helm chart is used to create a deployment of a vault, helm based, deployment of Hashicorp Vault solution.
-This chart is part of the cluster-xxx startx helm chart that doesn't create application deployment but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deployment pod but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
@@ -63,12 +63,12 @@ route:
 
 ### project values dictionary
 
-The **project property** scope the [project helm chart](https://startxfr.github.io/helm-repository/charts/project) dependency. You can find
+The **project property** scope the [project helm chart](https://helm-repository.readthedocs.io/en/latest/charts/project) dependency. You can find
 more information on the availables options you can set under this **project** property on the [project helm chart documentation](https://helm-repository.readthedocs.io/en/latest/charts/project) or by reading the [source code](https://github.com/startxfr/helm-repository/tree/master/charts/project).
 
 #### project values example
 
-```yaml
+````yaml
 # example of a project creation with this helm chart
 project:
   enabled: true
@@ -84,9 +84,9 @@ project:
     name: default-vault
     display_name: Operator VAULT
     description: Vault storage & control plane configured by startx
-  rbac: 
+  rbac:
     enabled: true
-    user: 
+    user:
     - id: vault-sa-edit
       name: "system:serviceaccount:default-vault:{{ .Release.name }}"
       role: edit
@@ -97,7 +97,7 @@ project:
 
 ### vault values dictionary
 
-The **vault property** scope the [vault helm chart](https://startxfr.github.io/helm-repository/charts/vault) dependency. You can find
+The **vault property** scope the [vault helm chart](https://helm-repository.readthedocs.io/en/latest/charts/cluster-vault) dependency. You can find
 more information on the availables options you can set under this **vault** property on the [vault helm chart documentation](https://helm-repository.readthedocs.io/en/latest/charts/vault) or by reading the [source code](https://github.com/startxfr/helm-repository/tree/master/charts/vault).
 
 #### vault values example
@@ -105,7 +105,7 @@ more information on the availables options you can set under this **vault** prop
 ```yaml
 # example of a vault creation with this helm chart
 
-```
+````
 
 ## Values files
 
@@ -113,38 +113,38 @@ more information on the availables options you can set under this **vault** prop
 
 Configuration of default properties all disabled by default. This mean no resource will be created unless overwriting default parameters. Default configuration have the following characteristics :
 
-- 1 **project** named **default-workspaces**
-- 1 **operatorGroup** named **codeready-workspaces** to enable codeready operator in the project
-- 1 **subscription** named **codeready-workspaces** to deploy codeready operator in the project with the following characteristics
-  - operator name is **codeready-workspaces**
+- 1 **project** named **default-vault**
+- 1 **operatorGroup** named **vault** to enable codeready operator in the project
+- 1 **subscription** named **vault** to deploy codeready operator in the project with the following characteristics
+  - operator name is **vault**
   - operator version is **2.3.0**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **codeready-workspaces** to deploy cheCluster in the project with the following characteristics
+- 1 **cheCluster** named **vault** to deploy cheCluster in the project with the following characteristics
   - storage class **gp2**
   - storage size defined to **1Gi**
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-workspace
+helm install startx/cluster-vault
 ```
 
 ### Default values file (values-startx.yaml)
 
 Configuration of startx properties with the following characteristics :
 
-- 1 **project** named **openshift-workspaces** (disabled by default)
-- 1 **operatorGroup** named **codeready-workspaces** (disabled by default)
-- 1 **subscription** named **codeready-workspaces** (disabled by default)
-  - operator name is **codeready-workspaces**
+- 1 **project** named **openshift-vault** (disabled by default)
+- 1 **operatorGroup** named **vault** (disabled by default)
+- 1 **subscription** named **vault** (disabled by default)
+  - operator name is **vault**
   - operator version is **2.3.0**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **codeready-workspaces** to deploy cheCluster in the project with the following characteristics
-  - storage class **aws-generic-retain**
+- 1 **cheCluster** named **vault** to deploy cheCluster in the project with the following characteristics
+  - storage class **startx-aws-generic-retain**
   - storage size defined to **2Gi**
 
 ```bash
 # base configuration running startx configuration
-helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
+helm install startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml
 ```
 
 ## History
@@ -180,19 +180,72 @@ helm install startx/cluster-workspace -f https://raw.githubusercontent.com/start
 | 0.3.305 | 2021-06-04 | publish stable update for the full repository                                                          |
 | 0.3.343 | 2021-06-06 | publish stable update for the full repository                                                          |
 | 0.3.381 | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377                           |
-| 0.3.390 | 2021-06-12 | Prepare 0.4.0 release
-| 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts
-| 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0
-| 0.3.480 | 2021-08-03 | publish stable update for the full repository
-| 0.3.998 | 2021-08-04 | publish stable update for the full repository
-| 0.3.999 | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13
-| 7.22.1 | 2021-08-04 | Move to release 7.22.1 to align versionning with ocp release cycle
-| 7.22.2 | 2021-08-04 | Move helm dependencies to a 7.x.x release model
-| 7.22.3 | 2021-08-05 | publish stable update for the full repository
-| 7.22.5 | 2021-08-05 | publish stable update for the full repository
-| 7.22.6 | 2021-08-05 | Stable version for chart dependencies
-| 7.22.7 | 2021-08-05 | Stable for OCP version 4.7.22
-| 7.22.12 | 2021-09-23 | publish stable update for the full repository
-| 7.22.21 | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart
-| 7.22.25 | 2021-10-06 | publish stable update for the full repository
-| 7.22.27 | 2021-10-06 | publish stable update for the full repository
+| 0.3.390 | 2021-06-12 | Prepare 0.4.0 release                                                                                  |
+| 0.3.423 | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts                                         |
+| 0.3.431 | 2021-07-05 | Move to dependencies 1.18.0                                                                            |
+| 0.3.480 | 2021-08-03 | publish stable update for the full repository                                                          |
+| 0.3.998 | 2021-08-04 | publish stable update for the full repository                                                          |
+| 0.3.999 | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13                                                   |
+| 7.22.1  | 2021-08-04 | Move to release 7.22.1 to align versionning with ocp release cycle                                     |
+| 7.22.2  | 2021-08-04 | Move helm dependencies to a 7.x.x release model                                                        |
+| 7.22.3  | 2021-08-05 | publish stable update for the full repository                                                          |
+| 7.22.5  | 2021-08-05 | publish stable update for the full repository                                                          |
+| 7.22.6  | 2021-08-05 | Stable version for chart dependencies                                                                  |
+| 7.22.7  | 2021-08-05 | Stable for OCP version 4.7.22                                                                          |
+| 7.22.12 | 2021-09-23 | publish stable update for the full repository                                                          |
+| 7.22.21 | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart                                           |
+| 7.22.25 | 2021-10-06 | publish stable update for the full repository                                                          |
+| 7.22.27 | 2021-10-06 | publish stable update for the full repository                                                          |
+| 8.13.1  | 2021-10-06 | Stable release for OCP 4.8.13 version                                                                  |
+| 8.13.3  | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart                                        |
+| 8.13.5  | 2021-10-21 | publish stable update for the full repository                                                          |
+| 8.13.7  | 2021-10-21 | publish stable update for the full repository                                                          |
+| 8.13.8  | 2021-10-21 | Adding first draft of json schema                                                                      |
+| 8.13.9  | 2021-10-22 | Adding the schema in chart                                                                             |
+| 8.13.9  | 2021-10-22 | Adding the schema in chart                                                                             |
+| 8.13.25 | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23         |
+| 8.13.27 | 2021-11-10 | publish stable update for the full repository                                                          |
+| 8.20.3  | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                           |
+| 8.20.5  | 2021-11-12 | Upgrade all appVersion and align chart release                                                         |
+| 8.20.9  | 2021-11-12 | Align all startx chart to version 8.20.9                                                               |
+| 0.20.11 | 2021-11-12 | Move chart dependencies to version 8.20.5                                                              |
+| 0.20.33 | 2021-11-14 | publish stable update for the full repository                                                          |
+| 0.20.41 | 2021-11-14 | Aling all dependencies to version 0.20.34                                                              |
+| 8.20.46 | 2021-11-19 | Transitionnal chart                                                                                    |
+| 8.20.60 | 2021-11-19 | publish stable update for the full repository                                                          |
+| 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema                                                      |
+| 8.20.67 | 2021-11-20 | Move to the official helm chart in version 0.18.0 (supporting vault 1.9.0)                             |
+| 8.20.70 | 2021-11-20 | publish stable update for the full repository                                                          |
+| 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21                                                           |
+| 9.8.1   | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                                     |
+| 9.8.2   | 2021-11-20 | Debug toleration in startx values                                                                      |
+| 9.8.3   | 2021-11-20 | Update the startx values with coments on defaulted values                                              |
+| 9.8.4   | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                                    |
+| 9.8.7   | 2021-11-20 | Debug dependencies problem                                                                             |
+| 9.8.9   | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update                                    |
+| 9.8.15  | 2021-11-20 | Update startx chart dependencies version to 9.8.11                                                     |
+| 9.8.19  | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema                           |
+| 9.8.28  | 2021-11-20 | Update the startx chart dependencies to version 9.8.23                                                 |
+| 9.8.39  | 2021-11-21 | Debug version check with more permissive mode                                                          |
+| 9.8.43  | 2021-11-21 | Update the startx chart dependencies to version 9.8.39                                                 |
+| 9.8.45  | 2021-11-21 | Update the values schema limits for context properties                                                 |
+| 9.8.47  | 2021-11-21 | Improve version management for chart                                                                   |
+| 9.8.51  | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                     |
+| 9.8.52  | 2021-12-08 | Debug naming of resources and route service name                                                       |
+| 9.8.67  | 2021-12-18 | Align all charts to release 9.8.67                                                                     |
+| 9.8.71  | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                       |
+| 9.8.75  | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                             |
+| 9.8.76  | 2021-12-19 | Change helm.sh/chart name                                                                              |
+| 9.8.81  | 2021-12-20 | Update the storage context                                                                             |
+| 9.8.91  | 2022-03-06 | publish stable update for the full repository                                                          |
+| 9.8.93  | 2022-03-07 | Enable conditionnal loading of charts dependencies                                                     |
+| 9.8.109 | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                    |
+| 9.8.110 | 2022-04-27 | Stable release for all charts                                                                          |
+| 9.8.114 | 2022-04-27 | publish stable update for the full repository
+| 9.8.215 | 2022-05-06 | Upgrade startx chart dependencies to version 9.8.211
+| 9.8.230 | 2022-05-06 | Stable full repository
+| 9.8.231 | 2022-05-06 | Debug basic chart dependencies
+| 9.8.233 | 2022-05-06 | publish stable update for the full repository
+| 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
+| 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
+| 9.8.277 | 2022-05-31 | publish stable update for the full repository

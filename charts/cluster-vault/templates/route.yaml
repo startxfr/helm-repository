@@ -12,7 +12,7 @@ metadata:
 spec:
   to:
     kind: Service
-    name: vault-ui
+    name: "{{ .Values.vault.fullnameOverride | default "vault" }}-ui"    
     weight: 100
   port:
     targetPort: http

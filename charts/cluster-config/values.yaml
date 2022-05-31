@@ -13,7 +13,7 @@ context: &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-config
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # Configuration of the cluster auto-scaling feature
 autoscaling:
@@ -46,7 +46,7 @@ clusterversion:
   # Define the related channel
   channel: candidate
   # Define the maximum
-  version: 4.7
+  version: "4.9"
 
 # Configuration of the cluster alert-manager feature
 alertmanager:
@@ -69,6 +69,8 @@ alertmanager:
 monitoring:
   # Enable the cluster monitoring personnalisation
   enabled: false
+  # Enable the deployment of the logging service into infra nodes
+  infra_enabled: false
   # Define the storage class to use for persistance (default is gp2)
   storageClass: gp2
   # Define the storage size to use for persistance (default is 20Gi)
@@ -89,7 +91,7 @@ imageprunner:
   # Suspend the image prunning
   suspend: true
 
-# Configuration of the cluster image-prunner feature
+# Configuration of the external registry route
 registryroute:
   # Enable the cluster image-prunner
   enabled: false
@@ -98,8 +100,19 @@ registryroute:
   # Namespace for the route (default is openshift-image-registry)
   namespace: "openshift-image-registry"
 
+# Configuration of the internal registry
+registryconfig:
+  # Enable the configuration of the ingresscontroller
+  enabled: false
+  # Enable the configuration of the ingresscontroller service into infra nodes
+  infra_enabled: true
 
-
+# Configuration of the ingresscontroller
+ingresscontroller:
+  # Enable the configuration of the ingresscontroller
+  enabled: false
+  # Enable the configuration of the ingresscontroller service into infra nodes
+  infra_enabled: true
 
 # Configuration of the cluster project-template feature
 projecttemplate:
@@ -156,11 +169,12 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.2.1-5"
+    version: "5.4.0-152"
     operator: 
-      channel: "stable"
+      channel: "stable-5.4"
       name: elasticsearch-operator
-      csv: elasticsearch-operator
+      installPlanApproval: Automatic
+      # csv: elasticsearch-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace

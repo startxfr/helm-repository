@@ -100,31 +100,31 @@ project:
         limits.memory: "18Gi"
         requests.cpu: "6"
         requests.memory: "7Gi"
-        requests.storage: "0"
+        requests.storage: "2Gi"
         persistentvolumeclaims: "0"
-        ephemeral-storage: "0" 
+        ephemeral-storage: "2Gi" 
         gp2.storageclass.storage.k8s.io/requests.storage: "0"
         gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
         ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
@@ -148,11 +148,12 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.2.1-5"
+    version: "5.4.0-152"
     operator: 
-      channel: "stable"
+      channel: "stable-5.4"
       name: elasticsearch-operator
-      csv: elasticsearch-operator
+      # csv: elasticsearch-operator
+      installPlanApproval: Automatic
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -174,11 +175,12 @@ operatorKiali:
     hooked: false
     name: "kiali-ossm"
     namespace: "openshift-operators"
-    version: "v1.24.10"
+    version: "v1.36.6"
     operator: 
       channel: "stable"
       name: kiali-ossm
-      csv: kiali-operator
+      installPlanApproval: Automatic
+      # csv: kiali-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -203,9 +205,10 @@ operatorJaeger:
     namespace: "openshift-operators"
     version: "v1.24.1"
     operator: 
-      channel: "stable"
+      channel: "1.24-stable"
       name: jaeger-product
-      csv: jaeger-operator
+      installPlanApproval: Automatic
+      # csv: jaeger-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -228,11 +231,12 @@ operatorIstio:
     hooked: false
     name: "servicemeshoperator"
     namespace: "openshift-operators"
-    version: "v2.0.8"
+    version: "v2.1.0"
     operator: 
       channel: "stable"
       name: servicemeshoperator
-      csv: servicemeshoperator
+      installPlanApproval: Automatic
+      # csv: servicemeshoperator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -242,4 +246,4 @@ operatorIstio:
     target: "all-ns"
     name: "global-operators"
     namespace: "openshift-operators"
-    providedAPIs: "ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
+    providedAPIs: "ServiceMeshControlPlane.v2.maistra.io,ServiceMeshMember.v2.maistra.io,ServiceMeshMemberRoll.v2.maistra.io"

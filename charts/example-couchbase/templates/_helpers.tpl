@@ -3,13 +3,16 @@
 
 {{/* Common labels */}}
 {{- define "example-couchbase.labels" -}}
-{{ include "startx.labelsInfra" . }}
-app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
+{{ include "startx.labelsCommon" . }}
+app.startx.fr/component: {{ include "startx.appComponent" . | default "component" | quote }}
+app.kubernetes.io/component: {{ include "startx.appComponent" . | default "component" | quote }}
+app.kubernetes.io/part-of: {{ include "startx.appCluster" . | default "cluster" | quote }}
+app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | default "myapp-0.0.1" | quote }}
 {{- end -}}
 
 {{/* Common example-couchbase annotations */}}
 {{- define "example-couchbase.annotations" -}}
-{{- include "startx.annotationsInfra" . -}}
+{{- include "startx.annotationsCommon" . -}}
 {{- end -}}
 
 {{/* Common example-couchbase note */}}

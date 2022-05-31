@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-jenkins
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # Deploy an API manager
 jenkins:
@@ -52,11 +52,12 @@ operator:
     hooked: false
     name: "openshift-jenkins-operator"
     namespace: "startx-jenkins"
-    version: "0.7.1"
+    version: "v0.7.3"
     operator: 
       channel: alpha
       name: openshift-jenkins-operator
-      csv: jenkins-operator
+      installPlanApproval: Automatic
+      # csv: jenkins-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace

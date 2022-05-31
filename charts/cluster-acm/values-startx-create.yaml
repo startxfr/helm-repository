@@ -1,0 +1,84 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: acm
+  app: startx-acm
+acm:
+  enabled: false
+  mch:
+    enabled: false
+    hooked: false
+import:
+  enabled: false
+  hooked: false
+create:
+  enabled: true
+  hooked: false
+  name: createdcluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  config: 
+    baseDomain: startx.fr
+    region: eu-west-3
+    master:
+      platform: |-
+        aws:
+          type: t3a.xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 200
+            size: 200
+            type: io1
+    worker:
+      replicas: 3
+      platform: |-
+        aws:
+          type: m5a.2xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 500
+            size: 250
+            type: io1
+observability:
+  enabled: false
+  hooked: false
+project: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "createdcluster"
+    display_name: ACM Cluster createdcluster
+    description: ACM managed cluster named createdcluster
+  rbac: 
+    enabled: true
+    groups: 
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  enabled: false
+  subscription:
+    enabled: false

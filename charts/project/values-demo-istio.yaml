@@ -19,6 +19,9 @@ project:
 rbac: 
   enabled: true
   groups: 
+  - id: students
+    name: students
+    role: view
   - id: dev
     name: dev
     role: view
@@ -36,7 +39,7 @@ limits:
     limits:
       - type: "Pod"
         min:
-          cpu: "20m"
+          cpu: "10m"
           memory: "32Mi"
         max:
           cpu: "1100m"
@@ -49,44 +52,46 @@ limits:
           cpu: "50m"
           memory: "64Mi"
         min:
-          cpu: "20m"
+          cpu: "10m"
           memory: "32Mi"
         max:
           cpu: "500m"
           memory: "512Mi"
 quotas: 
   enabled: true
-  rules:  |
+  rules: |
     hard:
       limits.cpu: "9"
       limits.memory: "10Gi"
       requests.cpu: "5"
       requests.memory: "6Gi"
-      requests.storage: "0"
+      requests.storage: "2Gi"
       persistentvolumeclaims: "0"
-      ephemeral-storage: "0" 
+      ephemeral-storage: "2Gi" 
       gp2.storageclass.storage.k8s.io/requests.storage: "0"
       gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
-      aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
-      aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
-      aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
-      aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
-      aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
-      aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
-      ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
-      ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
-      ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
-      ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      gp2-csi.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"

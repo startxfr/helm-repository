@@ -1,0 +1,210 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-fruitapp-project
+# # Use it to Overrride the helm-chart version
+#versionOverride: 0.0.1
+
+# Application fruitapp-project context
+context: &context
+# Name of the global scope for this application (organisational tenant)
+ scope: startx
+# Name of the cluster running this application (plateform tenant)
+ cluster: localhost
+# Name of the environement for this application (ex: dev, factory, preprod or prod)
+ environment: global
+# Component name of this application (logical tenant)
+ component: fruitapp
+# Application name (functionnal tenant, default use Chart name)
+ app: fruitapp
+# Version name of this application (default use Chart appVersion)
+ version: "3.2.11"
+
+# Configuration of the development stack
+devel_chain:
+  # Enable creation of the application stack for developpment
+  enabled: true
+  # The postgresql version (should be one of latest, 10-el7, 10-el8, 9.6-el8, 13-el8, 12-el8, 12-el7)
+  pg_version: latest
+  # The version of the NodeJS builder. (should be one of latest, 12-ubi7, 12-ubi8, 14-ubi7, 14-ubi8, 14-ubi8-minimal)
+  nodejs_version: latest
+
+# Configuration of the integration stack
+integration_chain:
+  # Enable creation of the integration stack
+  enabled: true
+  # Enable creation of the test environment
+  enabled_test: true
+  # Enable creation of the r7t environment
+  enabled_r7t: true
+  # # The postgresql version (should be one of latest, 10-el7, 10-el8, 9.6-el8, 13-el8, 12-el8, 12-el7)
+  # pg_version: latest
+  # # The version of the NodeJS builder. (should be one of latest, 12-ubi7, 12-ubi8, 14-ubi7, 14-ubi8, 14-ubi8-minimal)
+  # nodejs_version: latest
+  # github credentials
+  github: 
+    # Enable creation of the github credentials
+    enabled: true
+    # Token used for github writes
+    token: "mygithubtoken"
+    # Username associated to the token
+    user: "startxfr"
+    # Name of the commit user 
+    username: "Dev STARTX"
+    # Email used for the commit user 
+    email: "dev@startx.fr"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project_devel: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-devel-christophe
+    display_name: "FruitApp Dev Christophe"
+    description: FruitApp Christophe's developper environment
+  rbac: 
+    enabled: false
+    groups: []
+    users: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+    rules: ""
+  quotas: 
+    enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project_integration: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-ci
+    display_name: "FruitApp Integration"
+    description: FruitApp integration environment
+  rbac: 
+    enabled: false
+    groups: []
+    users: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+    rules: ""
+  quotas: 
+    enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project_preprod: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-preprod
+    display_name: "FruitApp Preprod"
+    description: FruitApp pre-production environment
+  rbac: 
+    enabled: true
+    users: 
+    - id: ci-pipeline-pusher-role
+      name: "system:serviceaccounts:fruitapp-ci:pipeline"
+      role: "system:image-pusher"
+    groups: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+    rules: ""
+  quotas: 
+    enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project_prod: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-prod
+    display_name: "FruitApp Prod"
+    description: FruitApp production environment
+  rbac: 
+    enabled: true
+    users: 
+    - id: ci-pipeline-pusher-role
+      name: "system:serviceaccounts:fruitapp-ci:pipeline"
+      role: "system:image-pusher"
+    groups: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+    rules: ""
+  quotas: 
+    enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+
+# Configuration of the example-imagestreams (see https://startxfr.github.io/helm-repository/charts/example-imagestreams)
+imagestreams:
+  enabled: true
+  context: 
+    <<: *context
+  imagestreams:
+  - name: frontend
+    enabled: true
+    namespace: "fruitapp-preprod"
+    displayName: "FruitApp PreProd"
+    labels: |
+      app: frontend
+      app.kubernetes.io/name: frontend
+      app.openshift.io/runtime: nodejs
+    tags: []
+  - name: frontend
+    enabled: true
+    namespace: "fruitapp-prod"
+    displayName: "FruitApp Prod"
+    labels: |
+      app: frontend
+      app.kubernetes.io/name: frontend
+      app.openshift.io/runtime: nodejs
+    tags: []

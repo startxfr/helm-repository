@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-compliance
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # Deploy an API manager
 compliance:
@@ -52,11 +52,12 @@ operator:
     hooked: false
     name: "compliance-operator"
     namespace: "openshift-compliance"
-    version: "v0.1.35"
+    version: "v0.1.48"
     operator: 
       channel: "release-0.1"
       name: compliance-operator
-      csv: compliance-operator
+      installPlanApproval: Automatic
+      # csv: compliance-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace

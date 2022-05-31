@@ -4,30 +4,84 @@
 {{- $region := .Values.cluster.region | default "eu-west-3" -}}
 {{ range .Values.machineSet.list }}
 ---
-kind: StorageClass
-apiVersion: machine.k8s.io/v1
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
 metadata:
-  name: "{{ .id }}"
+  name: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
   labels:
     {{- include "cluster-machine.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .name }}-machineclass"
+    app.kubernetes.io/name: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}-machineset"
+    machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
+    machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
+    machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
+  namespace: openshift-machine-api
   annotations:
     {{- include "cluster-machine.annotations" $root | nindent 4 }}
-provisioner: {{ .provisioner | default "kubernetes.io/aws-ebs" | quote }}
-{{- if .parameters }}
-parameters:
-  {{- .parameters | nindent 2 }}
-{{- else }}
-parameters: {}
-{{- end -}}
-{{- if .reclaimPolicy }}
-reclaimPolicy: {{ .reclaimPolicy | quote }}
-{{- end -}}
-{{- if .allowVolumeExpansion }}
-allowVolumeExpansion: {{ .allowVolumeExpansion }}
-{{- end -}}
-{{- if .volumeBindingMode }}
-volumeBindingMode: {{ .volumeBindingMode | quote }}
-{{- end -}}
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
+      machine.openshift.io/cluster-api-machineset: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
+        machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
+        machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
+        machine.openshift.io/cluster-api-machineset: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
+    spec:
+      metadata:
+        labels:
+          {{- if eq .type "infra" }}
+          node-role.kubernetes.io/infra: ""
+          {{- else if eq .type "storage" }}
+          node-role.kubernetes.io/storage: ""
+          {{- else }}
+          node-role.kubernetes.io/app: ""
+          {{ end }}
+      taints: 
+        {{- if eq .type "infra" }}
+        - key: "node-role.kubernetes.io/infra"
+          effect: NoSchedule
+        {{- else if eq .type "storage" }}
+        - key: "node-role.kubernetes.io/storage"
+          effect: NoSchedule
+        {{ end }}
+      providerSpec:
+        value:
+          ami:
+            id: {{ .ami }}
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+            - ebs:
+                iops: 0
+                volumeSize: {{ .volumeSize }}
+                volumeType: gp2
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: "{{ $root.Values.cluster.id }}-worker-profile"
+          instanceType: "{{ .instanceType }}"
+          kind: AWSMachineProviderConfig
+          placement:
+            availabilityZone: "{{ $root.Values.cluster.region }}{{ .az }}"
+            region: "{{ $root.Values.cluster.region }}"
+          securityGroups:
+            - filters:
+                - name: tag:Name
+                  values:
+                    - "{{ $root.Values.cluster.id }}-worker-sg"
+          subnet:
+            filters:
+              - name: tag:Name
+                values:
+                  - "{{ $root.Values.cluster.id }}-private-{{ $root.Values.cluster.region }}{{ .az }}"
+          tags:
+            - name: kubernetes.io/cluster/{{ $root.Values.cluster.id }}
+              value: owned
+          userDataSecret:
+            name: worker-user-data
 {{ end }}
 {{ end }}

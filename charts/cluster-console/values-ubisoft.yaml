@@ -1,0 +1,51 @@
+# Default values for configuration of a Ubisoft cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: ubisoft
+  cluster: default
+  environment: infra
+  component: console
+  app: startx-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: Ubisoft Console
+    logo: 
+      name: ubisoft-logo
+      tplFile: webtpl/ubisoft-logo.svg
+  links:
+  - name: ubisoft-link-all-namespaces-dashboard
+    spec: |
+      href: 'https://www.ubisoft.com'
+      location: NamespaceDashboard
+      text: Ubisoft website
+  - name: ubisoft-consolelink-application-menu
+    spec: |
+      href: 'https://www.ubisoft.com'
+      location: ApplicationMenu
+      text: Ubisoft website
+  - name: ubisoftgit-consolelink-application-menu
+    spec: |
+      href: 'https://github.com/ubisoft'
+      location: ApplicationMenu
+      text: Ubisoft Github
+  - name: ubisoftgit-consolelink-help-menu
+    spec: |
+      href: 'https://github.com/ubisoft'
+      location: HelpMenu
+      text: Ubisoft Github
+  logLinks:
+  - name: ubisoft-externallog
+    spec: |
+      hrefTemplate: >-
+        https://ubisoft.com/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: Show in Ubisoft central logs
+  notifications:
+  - name: ubisoft-console-notification-top
+    spec: |
+      backgroundColor: 'green'
+      color: '#fff'
+      location: BannerTop 
+      text: Vous etes sur le cluster de travail Ubisoft

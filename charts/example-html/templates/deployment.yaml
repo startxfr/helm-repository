@@ -13,7 +13,7 @@ metadata:
     checksum/config: {{ include (print $.Template.BasePath "/cm-lib.yaml") . | sha256sum }}
     argocd.argoproj.io/sync-wave: "30"
 spec:
-  replicas: {{ .Values.html.replicas  }}
+  replicas: {{ .Values.html.replicas | default 0 }}
   selector:
     matchLabels:
       app: {{ $appName }}

@@ -1,0 +1,65 @@
+
+# Default values for configuration of a pprod demo
+# see values.yaml for explanation on each params
+nameOverride: sxapi-pprod
+versionOverride: "0.0.1"
+context: 
+  scope: startx
+  cluster: default
+  environment: demo
+  component: sxapi
+  app: default-sxapi-pprod
+  version: "0.0.1"
+sxapi:
+  service:
+    enabled: true
+  expose:
+    enabled: false
+  version: "0.3.58"
+  profile: "prod:start"
+  debug: false
+  replicas: 1
+  data: |
+    sxapi.yml: |-
+      name: pprod-v1
+      description: Description of the pre-prod v1 sxapi helm chart instance (defined in values-pprod-v1.yaml)
+      version: "0.0.1"
+      debug: false
+      resources:
+        serviceinfo-sample:
+          _class: serviceinfo
+      log:
+        filters:
+          level: '0,1,2,3,4'
+          type: debug,info,error,warn
+      server:
+        port: '8077'
+        endpoints:
+        - path: "/"
+          desc: Display welcome message (HTML)
+          body: |-
+              <html>
+              <head><title>Pre-Prod application (v1 values)</title></head>
+              <body>
+                <h1>SXAPI is live ! (helm chart's managed by default values-pprod-v1.yaml)</h1>
+                <p>
+                  This pre-production environment is deployed using the v1 values file of the 
+                  <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
+                  available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
+                </p>
+                <p>
+                  You could check the following endpoints :</p>
+                <ul>
+                  <li><a href="./health">Health status (used by readiness probe)</a></li>
+                  <li><a href="./info">Information about the application</a></li>
+                  <li><a href="./ping">Return a simple pong</a></li>
+                  <li>Every hour, the bot run the <b>myCronFunction</b> that make a log trace</li>
+                </ul>
+              </body>
+              </html>
+        - path: "/health"
+          resource: serviceinfo-sample
+          endpoint: health
+        - path: "/info"
+          resource: serviceinfo-sample
+          endpoint: info

@@ -1,0 +1,17 @@
+
+Demo environment for the fruitapp application. 
+The fruitapp project have the following characteristics :
+
+-- Context -------------------------
+                scope : {{ include "startx.appScope" . }}
+              cluster : {{ include "startx.appCluster" . }}
+          environment : {{ include "startx.appEnvironment" . }}
+            component : {{ include "startx.appComponent" . }}
+                  app : {{ include "startx.appName" . }}
+              version : {{ include "startx.appVersion" . }}
+
+-- Content -------------------------
+      devel namespace : {{ .Values.project_devel.project.name }}
+integration namespace : {{ .Values.project_devel.project.name }}
+    preprod namespace : {{ .Values.project_devel.project.name }}
+       prod namespace : {{ .Values.project_devel.project.name }}

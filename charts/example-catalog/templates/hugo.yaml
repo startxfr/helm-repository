@@ -27,7 +27,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  storageClassName: aws-generic-retain
+  storageClassName: startx-aws-generic-retain
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -46,7 +46,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  storageClassName: aws-generic-retain
+  storageClassName: startx-aws-generic-retain
 ---
 kind: ImageStream
 apiVersion: image.openshift.io/v1
@@ -180,24 +180,22 @@ spec:
     type: Rolling
     rollingParams:
       timeoutSeconds: 60
-      maxUnavailable: 25%
-      maxSurge: 25%
+      maxUnavailable: "25%"
+      maxSurge: "25%"
       post:
-	      execNewPod:
+        failurePolicy: Ignore
+        execNewPod:
+          containerName: application-post
           command:
-            - "/bin/sx-nodejs"
-          args:
-            - info
-          failurePolicy: Ignore
-          containerName: application
+            - "/bin/sx-nodejs info"
           env:
             - name: SX_VERBOSE
               value: "true"
             - name: SX_DEBUG
               value: "true"
-          envFrom:
-            - configMapRef:
-                name: hugo-config
+          # envFrom:
+          #   - configMapRef:
+          #       name: hugo-config
   triggers:
     - type: ImageChange
       imageChangeParams:
@@ -274,8 +272,7 @@ spec:
               mountPath: "/var/log/httpd"
       volumes:
         - name: "hugo-log"
-          emptyDir:
-            medium: ""
+          emptyDir: {}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
@@ -937,6 +934,7 @@ data:
         exit $RTN;
       fi
     }
+
 ---
 kind: Task
 apiVersion: tekton.dev/v1alpha1
@@ -1101,7 +1099,7 @@ spec:
       resources:
         limits:
           cpu: 800m
-          memory: 1024Mi
+          memory: 1Gi
         requests:
           cpu: "300m"
           memory: "512Mi"
@@ -1136,7 +1134,7 @@ spec:
       resources:
         limits:
           cpu: 800m
-          memory: 1024Mi
+          memory: 1Gi
         requests:
           cpu: "300m"
           memory: "512Mi"

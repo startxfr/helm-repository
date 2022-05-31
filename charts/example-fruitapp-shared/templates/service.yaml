@@ -1,0 +1,27 @@
+{{- if .Values.database }}{{- if .Values.database.enabled }}
+{{- $root := . -}}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}"
+    {{- include "example-fruitapp-shared.labels" $root | nindent 4 }}
+    app: {{ include "startx.appName" $root }}
+  annotations:
+    template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
+    {{- include "example-fruitapp-shared.annotations" $root | nindent 4 }}
+  namespace: "{{- .Values.namespace }}"
+  name: db
+spec:
+  internalTrafficPolicy: Cluster
+  ports:
+  - name: postgresql
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: db
+  sessionAffinity: None
+  type: ClusterIP
+{{- end }}{{- end }}

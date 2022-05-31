@@ -1,0 +1,27 @@
+{{- if .Values.sxapi -}}{{- if .Values.sxapi.expose -}}{{- if .Values.sxapi.expose.enabled -}}{{- if eq .Values.sxapi.expose.kind "route" -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "startx.appName" . }}
+  labels:
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-route"
+    {{- include "sxapi.labels" . | nindent 4 }}
+    app: {{ include "startx.appName" . }}
+  annotations:
+    {{- include "sxapi.annotations" . | nindent 4 }}
+    haproxy.router.openshift.io/balance: roundrobin
+    haproxy.router.openshift.io/disable_cookies: "true"
+    template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  to:
+    kind: Service
+    name: {{ include "startx.appName" . | quote }}
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Allow
+  wildcardPolicy: None
+{{- end -}}{{- end -}}{{- end -}}{{- end -}}

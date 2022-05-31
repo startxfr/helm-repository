@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-vpa
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # Deploy an API manager
 vpa:
@@ -52,11 +52,12 @@ operator:
     hooked: false
     name: "vertical-pod-autoscaler"
     namespace: "openshift-vertical-pod-autoscaler"
-    version: "4.7.0-202107070458"
+    version: "4.9.0-202111151318"
     operator: 
-      channel: "4.7"
+      channel: "stable"
       name: vertical-pod-autoscaler
-      csv: verticalpodautoscaler
+      installPlanApproval: Automatic
+      # csv: verticalpodautoscaler
       source: 
         name: redhat-operators
         namespace: openshift-marketplace

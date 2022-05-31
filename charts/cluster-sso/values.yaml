@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-sso
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # Deploy an API manager
 sso:
@@ -52,11 +52,12 @@ operator:
     hooked: false
     name: "rhsso-operator"
     namespace: "startx-sso"
-    version: "7.4.9"
+    version: "7.5.1-opr-009"
     operator: 
-      channel: alpha
+      channel: stable
       name: rhsso-operator
-      csv: rhsso-operator
+      installPlanApproval: Automatic
+      # csv: rhsso-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace

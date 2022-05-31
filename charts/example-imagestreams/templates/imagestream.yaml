@@ -20,6 +20,7 @@ metadata:
     {{- $is.labels | nindent 4 -}}
     {{- end }}
 spec:
+  {{- if gt (len $is.tags) 0 }}
   tags:
     {{- range $is.tags }} 
     {{- $ist := . -}}
@@ -87,6 +88,10 @@ spec:
       {{- end }}
     {{- end }}
     {{- end }}
+  {{- else }}
+  lookupPolicy:
+    local: false
+  {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}{{- end }}

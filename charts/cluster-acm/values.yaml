@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-acm
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # configuration of the acm service
 acm:
@@ -52,6 +52,129 @@ acm:
             - ECDHE-ECDSA-AES128-GCM-SHA256
             - ECDHE-RSA-AES128-GCM-SHA256
 
+# configuration to import a cluster into ACM
+import:
+  # Enable the import cluster
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # The name of the cluster to import
+  name: importedcluster
+  # The name of the namespace to import
+  namespace: importedcluster
+  # Additionnal labels added to the managed cluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  # Token to use fot the auto-import secret
+  token: "mytoken"
+  # server to use fot the auto-import secret
+  server: "myserver"
+
+# configuration to create a cluster from ACM
+create:
+  # Enable the import cluster
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # The name of the cluster to create
+  name: createdcluster
+  # The name of the namespace to create
+  namespace: createdcluster
+  # Configuration of the cluster basics
+  config: 
+    # Base domain to use for this cluster
+    baseDomain: example.com
+    # the datacenter region name
+    region: eu-west-3
+    # Configuration for the master
+    master:
+      platform: |-
+        aws:
+          type: t3a.xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 200
+            size: 200
+            type: io1
+    # Configuration for the worker
+    worker:
+      # replicas for workers
+      replicas: 3
+      platform: |-
+        aws:
+          type: m5a.2xlarge
+          zones:
+            - eu-west-3a
+            - eu-west-3b
+            - eu-west-3c
+          rootVolume:
+            iops: 500
+            size: 250
+            type: io1
+  # Cluster pull secret user by acm provisionner
+  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  # Additionnal labels added to the managed cluster
+  labels:
+    vendor: OpenShift
+    cloud: Amazon
+    iaas: aws
+    paas: ocp
+    caas: ocp
+  # Additionnal labels added to the managed cluster
+  aws_creds:
+    # AWS key ID used to provision resource required by the provisionned cluster
+    access_key_id: myAwsKeyID
+    # AWS secret coresponding to the previous key
+    secret_access_key: myAwsSecretKey
+  # Token to use fot the auto-import secret
+  token: "mytoken"
+  # server to use fot the auto-import secret
+  server: "myserver"
+
+# configuration of the thanos service
+observability:
+  # Enable the deployment of the thanos service
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # Bucket configuration for the storage backend
+  bucket:
+    s3bucket: "s3bucket-value"
+    s3host: "s3host-value"
+    s3accesskey: "s3accesskey-value"
+    s3secretkey: "s3secretkey-value"
+  # Cluster pull secret user by thanos (used with mco.imagePullSecret in a secret)
+  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  # configuration of the multiClusterObservability
+  mco:
+    availabilityConfig: "High"
+    imagePullPolicy: "Always"
+    imagePullSecret: "multiclusterhub-operator-pull-secret"
+    observabilityAddonSpec:
+      enableMetrics: true
+      interval: 60
+      # How long to retain samples of 1 hour in bucket
+      retentionResolution1h: "30d" 
+      # How long to retain samples of 5 minutes in bucket
+      retentionResolution5m: "14d"
+      # How long to retain samples of raw in bucket
+      retentionResolutionRaw: "5d"
+      # Specifies the storage to be used by Observability
+      storageConfigObject: 
+        metricObjectStorage:
+          name: thanos-object-storage
+          key: thanos.yaml
+        # The amount of storage applied to the Observability stateful sets, i.e. Amazon S3 store, Rule, compact and receiver.
+        statefulSetSize: "10Gi"
+        statefulSetStorageClass: "gp2"
+
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   enabled: false
@@ -88,11 +211,12 @@ operator:
     enabled: true
     name: "advanced-cluster-management"
     namespace: "open-cluster-management"
-    version: "2.2.8"
+    version: "v2.4.0"
     operator: 
-      channel: "release-2.2"
+      channel: "release-2.4"
       name: advanced-cluster-management
-      csv: advanced-cluster-management
+      installPlanApproval: Automatic
+      # csv: advanced-cluster-management
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -100,4 +224,4 @@ operator:
     enabled: true
     name: "advanced-cluster-management-operator"
     namespace: "open-cluster-management"
-    providedAPIs: "Application.v1beta1.app.k8s.io,Channel.v1.apps.open-cluster-management.io,Checkpoint.v1.hive.openshift.io,ClusterClaim.v1.hive.openshift.io,ClusterDeployment.v1.hive.openshift.io,ClusterDeprovision.v1.hive.openshift.io,ClusterImageSet.v1.hive.openshift.io,ClusterManager.v1.operator.open-cluster-management.io,ClusterPool.v1.hive.openshift.io,ClusterProvision.v1.hive.openshift.io,ClusterRelocate.v1.hive.openshift.io,ClusterState.v1.hive.openshift.io,ClusterSync.v1alpha1.hiveinternal.openshift.io,ClusterSyncLease.v1alpha1.hiveinternal.openshift.io,DNSZone.v1.hive.openshift.io,Deployable.v1.apps.open-cluster-management.io,HelmRelease.v1.apps.open-cluster-management.io,HiveConfig.v1.hive.openshift.io,MachinePool.v1.hive.openshift.io,MachinePoolNameLease.v1.hive.openshift.io,MultiClusterHub.v1.operator.open-cluster-management.io,MultiClusterObservability.v1beta1.observability.open-cluster-management.io,ObservabilityAddon.v1beta1.observability.open-cluster-management.io,Observatorium.v1alpha1.core.observatorium.io,PlacementRule.v1.apps.open-cluster-management.io,SelectorSyncIdentityProvider.v1.hive.openshift.io,SelectorSyncSet.v1.hive.openshift.io,Subscription.v1.apps.open-cluster-management.io,SyncIdentityProvider.v1.hive.openshift.io,SyncSet.v1.hive.openshift.io"
+    providedAPIs: "Application.v1beta1.app.k8s.io,Channel.v1.apps.open-cluster-management.io,Checkpoint.v1.hive.openshift.io,ClusterClaim.v1.hive.openshift.io,ClusterDeployment.v1.hive.openshift.io,ClusterDeprovision.v1.hive.openshift.io,ClusterImageSet.v1.hive.openshift.io,ClusterManager.v1.operator.open-cluster-management.io,ClusterPool.v1.hive.openshift.io,ClusterProvision.v1.hive.openshift.io,ClusterRelocate.v1.hive.openshift.io,ClusterState.v1.hive.openshift.io,ClusterSync.v1alpha1.hiveinternal.openshift.io,ClusterSyncLease.v1alpha1.hiveinternal.openshift.io,DNSZone.v1.hive.openshift.io,Deployable.v1.apps.open-cluster-management.io,FakeClusterInstall.v1alpha1.hiveinternal.openshift.io,GitOpsCluster.v1alpha1.apps.open-cluster-management.io,GitOpsCluster.v1beta1.apps.open-cluster-management.io,HelmRelease.v1.apps.open-cluster-management.io,HiveConfig.v1.hive.openshift.io,MachinePool.v1.hive.openshift.io,MachinePoolNameLease.v1.hive.openshift.io,MultiClusterHub.v1.operator.open-cluster-management.io,MultiClusterObservability.v1beta1.observability.open-cluster-management.io,MultiClusterObservability.v1beta2.observability.open-cluster-management.io,ObservabilityAddon.v1beta1.observability.open-cluster-management.io,Observatorium.v1alpha1.core.observatorium.io,PlacementRule.v1.apps.open-cluster-management.io,SelectorSyncIdentityProvider.v1.hive.openshift.io,SelectorSyncSet.v1.hive.openshift.io,SubmarinerConfig.v1alpha1.submarineraddon.open-cluster-management.io,Subscription.v1.apps.open-cluster-management.io,SyncIdentityProvider.v1.hive.openshift.io,SyncSet.v1.hive.openshift.io"

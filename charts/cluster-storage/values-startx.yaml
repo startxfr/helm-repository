@@ -7,8 +7,8 @@ context:
   component: config
   app: startx-storage
 storageClasses:
-- id: aws-generic-retain
-  name: aws-generic-retain
+- id: startx-aws-generic-retain
+  name: startx-aws-generic-retain
   provisioner: "kubernetes.io/aws-ebs"
   parameters: |
     encrypted: "true"
@@ -16,8 +16,8 @@ storageClasses:
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: aws-generic-delete
-  name: aws-generic-delete
+- id: startx-aws-generic-delete
+  name: startx-aws-generic-delete
   provisioner: "kubernetes.io/aws-ebs"
   parameters: |
     encrypted: "true"
@@ -25,8 +25,8 @@ storageClasses:
   reclaimPolicy: Delete
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: aws-fast-retain
-  name: aws-fast-retain
+- id: startx-aws-fast-retain
+  name: startx-aws-fast-retain
   provisioner: "kubernetes.io/aws-ebs"
   parameters: |
     encrypted: "false"
@@ -34,8 +34,8 @@ storageClasses:
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: aws-fast-delete
-  name: aws-fast-delete
+- id: startx-aws-fast-delete
+  name: startx-aws-fast-delete
   provisioner: "kubernetes.io/aws-ebs"
   parameters: |
     encrypted: "false"
@@ -43,8 +43,8 @@ storageClasses:
   reclaimPolicy: Delete
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: aws-slow-retain
-  name: aws-slow-retain
+- id: startx-aws-slow-retain
+  name: startx-aws-slow-retain
   provisioner: "kubernetes.io/aws-ebs"
   parameters: |
     encrypted: "true"
@@ -52,8 +52,8 @@ storageClasses:
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: aws-slow-delete
-  name: aws-slow-delete
+- id: startx-aws-slow-delete
+  name: startx-aws-slow-delete
   provisioner: "kubernetes.io/aws-ebs"
   parameters: |
     encrypted: "true"
