@@ -24,15 +24,15 @@ project:
   rbac: 
     enabled: true
     groups: 
-    - id: dev-basic-user
+    - id: dev-3scale-operator
       name: dev
-      role: basic-user
-    - id: devops-admin
+      role: 3scale-operator-view
+    - id: devops-3scale-operator
       name: devops
-      role: admin
-    - id: ops-admin
+      role: 3scale-operator-edit
+    - id: ops-3scale-operator
       name: ops
-      role: admin
+      role: 3scale-operator-admin
   serviceAccounts:
     enabled: true
     list: 
@@ -95,26 +95,26 @@ project:
         ephemeral-storage: "0" 
         gp2.storageclass.storage.k8s.io/requests.storage: "20Gi"
         gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "10"
-        aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
-        ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-        ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "2Gi"
-        ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-ocs-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-ocs-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-ocs-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-ocs-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-ocs-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-ocs-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-ocs-fs-retain.storageclass.storage.k8s.io/requests.storage: "2Gi"
+        startx-ocs-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
         ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
         ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
         openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
@@ -139,11 +139,12 @@ operator:
     hooked: false
     name: "3scale-operator"
     namespace: "startx-3scale"
-    version: "v0.7.0"
+    version: "v0.8.3-0.1649688682.p"
     operator: 
-      channel: threescale-2.10
+      channel: threescale-2.11
       name: 3scale-operator
-      csv: 3scale-operator
+      installPlanApproval: Automatic
+      # csv: 3scale-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace

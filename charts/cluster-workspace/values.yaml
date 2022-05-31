@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: openshift-workspaces
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # Configuration of the codeready workspace
 cheCluster:
@@ -34,7 +34,7 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: project
     name: openshift-workspaces
     display_name: Operator WORKSPACES
@@ -48,19 +48,21 @@ operator:
   subscription:
     enabled: true
     hooked: true
-    name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
-    version: "v2.11.0"
+    name: "codeready-workspaces2"
+    namespace: "openshift-operators"
+    version: "v2.13.100"
     operator: 
-      channel: latest
-      name: codeready-workspaces
-      csv: crwoperator
+      channel: tech-preview-latest-all-namespaces
+      name: codeready-workspaces2
+      installPlanApproval: Automatic
+      # csv: crwoperatorallnamespaces
       source: 
         name: redhat-operators
-        namespace: default-marketplace
+        namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: true
+    target: "all-ns"
     name: "codeready-workspaces"
-    namespace: "openshift-workspaces"
-    providedAPIs: "CheCluster.v1.org.eclipse.che"
+    namespace: "openshift-operators"
+    providedAPIs: "CheBackupServerConfiguration.v1.org.eclipse.che,CheCluster.v1.org.eclipse.che,CheClusterBackup.v1.org.eclipse.che,CheClusterRestore.v1.org.eclipse.che,DevWorkspace.v1alpha1.workspace.devfile.io,DevWorkspace.v1alpha2.workspace.devfile.io,DevWorkspaceOperatorConfig.v1alpha1.controller.devfile.io,DevWorkspaceRouting.v1alpha1.controller.devfile.io,DevWorkspaceTemplate.v1alpha1.workspace.devfile.io,DevWorkspaceTemplate.v1alpha2.workspace.devfile.io"

@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-istio
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # configuration of the istio service
 istio:
@@ -89,11 +89,12 @@ operatorElastic:
     enabled: true
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.2.1-5"
+    version: "5.4.0-152"
     operator: 
-      channel: "stable"
+      channel: "stable-5.4"
       name: elasticsearch-operator
-      csv: elasticsearch-operator
+      installPlanApproval: Automatic
+      # csv: elasticsearch-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -109,11 +110,12 @@ operatorKiali:
     enabled: true
     name: "kiali-ossm"
     namespace: "openshift-operators"
-    version: "v1.24.10"
+    version: "v1.36.6"
     operator: 
       channel: "stable"
       name: kiali-ossm
-      csv: kiali-operator
+      installPlanApproval: Automatic
+      # csv: kiali-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -131,9 +133,10 @@ operatorJaeger:
     namespace: "openshift-operators"
     version: "v1.24.1"
     operator: 
-      channel: "stable"
+      channel: "1.24-stable"
       name: jaeger-product
-      csv: jaeger-operator
+      installPlanApproval: Automatic
+      # csv: jaeger-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -149,11 +152,12 @@ operatorIstio:
     enabled: true
     name: "servicemeshoperator"
     namespace: "istio-operators"
-    version: "v2.0.8"
+    version: "v2.1.0"
     operator: 
       channel: "stable"
       name: servicemeshoperator
-      csv: servicemeshoperator
+      installPlanApproval: Automatic
+      # csv: servicemeshoperator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -161,4 +165,4 @@ operatorIstio:
     enabled: true
     name: "istio-operators"
     namespace: "istio-operators"
-    providedAPIs: "ServiceMeshControlPlane.v1.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"
+    providedAPIs: "ServiceMeshControlPlane.v2.maistra.io,ServiceMeshMember.v2.maistra.io,ServiceMeshMemberRoll.v2.maistra.io"

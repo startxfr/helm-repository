@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-metering
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # configuration of the metering service
 metering:
@@ -140,11 +140,12 @@ operator:
     hooked: false
     name: "metering-ocp"
     namespace: "openshift-metering"
-    version: "4.8.0-202109210857"
+    version: "4.8.0-202111041632"
     operator: 
       channel: "4.8"
       name: metering-ocp
-      csv: metering-operator
+      installPlanApproval: Automatic
+      # csv: metering-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace

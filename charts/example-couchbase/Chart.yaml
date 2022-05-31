@@ -6,11 +6,11 @@ description: Helm chart used to deploy an example of a simple micro-service usin
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 7.22.27
+version: 9.8.277
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 4.7.22
+appVersion: 4.9.8
 # Version of Openshift 
-engineVersion: 4.7.22
+engineVersion: 4.9.8
 # Icon of this helm-chart
 icon: https://startxfr.github.io/helm-repository/img/example-couchbase.svg
 # category associated to this package
@@ -18,9 +18,20 @@ category: example
 # tags
 tags: infra,example,couchbase
 # Kube minimum version
-kubeVersion: ">=1.18.0"
+kubeVersion: ">=1.21.0-0"
 # Keyword list for this chart
-keywords: ["startx","example","couchbase"]
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - example-chart
+  - example
+  - caas
+  - couchbase
+  - nodejs
+  - framework
+  - api
+  - sxapi
 # STARTX helm chart repository homepage
 home: https://startxfr.github.io/helm-repository
 # Sources and documentation for this chart
@@ -28,10 +39,19 @@ sources:
   - https://startxfr.github.io/helm-repository/charts/example-couchbase
   - https://github.com/startxfr/helm-repository/tree/master/charts/example-couchbase
 # Main maintainer contact for this helm chart
-maintainers: [{"name": "STARTX", "email": "dev@startx.fr", "url": "https://www.startx.fr"}]
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
 
 dependencies:
   - name: sxapi
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 7.22.23
+    version: "9.8.251"
     alias: application
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Upgrade startx chart dependencies to version 9.8.251"
+  artifacthub.io/containsSecurityUpdates: "false"

@@ -1,0 +1,54 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: acm
+  app: startx-acm
+acm:
+  enabled: false
+  mch:
+    enabled: false
+    hooked: false
+import:
+  enabled: false
+  hooked: false
+create:
+  enabled: false
+  hooked: false
+observability:
+  enabled: true
+  hooked: false
+  bucket:
+    s3bucket: "s3bucket-value"
+    s3host: "s3host-value"
+    s3accesskey: "s3accesskey-value"
+    s3secretkey: "s3secretkey-value"
+  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  mco:
+    availabilityConfig: "High"
+    imagePullPolicy: "Always"
+    imagePullSecret: "multiclusterhub-operator-pull-secret"
+    observabilityAddonSpec:
+      enableMetrics: true
+      interval: 60
+      retentionResolution1h: "30d" 
+      retentionResolution5m: "14d"
+      retentionResolutionRaw: "5d"
+      storageConfigObject:
+        metricObjectStorage:
+          name: thanos-object-storage
+          key: thanos.yaml
+        statefulSetSize: "10Gi"
+        statefulSetStorageClass: "gp2"
+project: 
+  enabled: false
+  project: 
+    enabled: false
+    hooked: false
+    name: "open-cluster-management"
+operator:
+  enabled: false
+  subscription:
+    enabled: false

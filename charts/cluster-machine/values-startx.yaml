@@ -38,7 +38,7 @@ cluster:
 
 machineHealthCheck:
   enabled: false
-  list: 
+  list:
   - name: master
     type: master
     maxUnhealthy: 40%
@@ -68,3 +68,30 @@ machineAutoscaler:
   - name: c
     minReplicas: 1
     maxReplicas: 2
+
+
+machineSet: 
+  enabled: false
+  list:
+  - name: a-infra
+    az: a
+    type: infra
+    ami: ami-046fe691f52a953f9
+    instanceType: "m6i.xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: b-infra
+    az: b
+    type: infra
+    ami: ami-046fe691f52a953f9
+    instanceType: "m6i.xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: c-infra
+    az: c
+    type: infra
+    ami: ami-046fe691f52a953f9
+    instanceType: "m6i.xlarge"
+    volumeSize: 120
+    replicas: 1
+

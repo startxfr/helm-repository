@@ -1,0 +1,43 @@
+{{- if .Values.create }}{{- if .Values.create.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "createdcluster" -}}
+{{- $name := .Values.create.name | default "createdcluster" -}}
+---
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acm.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-clusterdeployment"
+    cloud: '{{ .Values.create.labels.cloud }}'
+    vendor: '{{ .Values.create.labels.vendor }}'
+    iaas: '{{ .Values.create.labels.iaas }}'
+    paas: '{{ .Values.create.labels.paas }}'
+    caas: '{{ .Values.create.labels.caas }}'
+  annotations:
+    {{- include "cluster-acm.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  baseDomain: '{{ .Values.create.config.baseDomain }}'
+  clusterName: "{{- $name -}}"
+  controlPlaneConfig:
+    servingCertificates: {}
+  installAttemptsLimit: 1
+  installed: false
+  platform:
+    aws:
+      credentialsSecretRef:
+        name: "{{- $name -}}-aws-creds"
+      region: '{{ .Values.create.config.region }}'
+  provisioning:
+    installConfigSecretRef:
+      name: "{{- $name -}}-install-config"
+    sshPrivateKeySecretRef:
+      name: "{{- $name -}}-ssh-private-key"
+    # imageSetRef:
+    #   name: quay.io/openshift-release-dev/ocp-release:4.9.21-x86_64
+  pullSecretRef:
+    name: "{{- $name -}}-pull-secret"
+{{- end }}{{- end }}

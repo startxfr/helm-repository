@@ -1,0 +1,21 @@
+{{- if .Values.sxapi -}}{{- if .Values.sxapi.expose -}}{{- if .Values.sxapi.expose.enabled -}}{{- if eq .Values.sxapi.expose.kind "NodePort" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{- include "startx.appName" . -}}-external"
+  labels:
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-route"
+    {{- include "sxapi.labels" . | nindent 4 }}
+    app: {{ include "startx.appName" . }}
+  annotations:
+    {{- include "sxapi.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  type: NodePort
+  selector:
+    app: {{ include "startx.appName" . }}
+  ports:
+    - port: 8077
+      targetPort: 8077
+      # nodePort: 30077
+{{- end -}}{{- end -}}{{- end -}}{{- end -}}

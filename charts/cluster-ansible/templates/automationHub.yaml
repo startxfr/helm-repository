@@ -1,0 +1,45 @@
+{{- if .Values.ansibleHub.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "ansible-automation-platform" -}}
+apiVersion: automationhub.ansible.com/v1beta1
+kind: AutomationHub
+metadata:
+  name: "{{- include "startx.appName" . -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-ansible.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-automationhub"
+  annotations:
+    {{- include "cluster-ansible.annotations" . | nindent 4 }}
+    {{- if .Values.ansibleHub.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  route_tls_termination_mechanism: Edge
+  ingress_type: Route
+  loadbalancer_port: 80
+  file_storage_size: 20Gi
+  image_pull_policy: IfNotPresent
+  file_storage_storage_class: gp2
+  web:
+    replicas: 1
+  file_storage_access_mode: ReadWriteMany
+  content:
+    log_level: INFO
+    replicas: 2
+  api:
+    log_level: INFO
+    replicas: 1
+  loadbalancer_protocol: http
+  resource_manager:
+    replicas: 1
+  storage_type: File
+  worker:
+    replicas: 2
+
+{{- end -}}

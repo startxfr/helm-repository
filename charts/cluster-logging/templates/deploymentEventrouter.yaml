@@ -98,13 +98,21 @@ spec:
       name: {{ $name | quote }}
     spec:
       serviceAccount: {{ $name | quote }}
+      {{- if $root.Values.logging.infra_enabled }}
+      tolerations:
+        - effect: NoSchedule 
+          key: node-role.kubernetes.io/infra 
+          operator: Exists
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      {{- end }}
       containers:
         - name: kube-eventrouter
           image: "registry.redhat.io/openshift4/ose-logging-eventrouter:latest"
           imagePullPolicy: IfNotPresent
           {{- if .Values.eventrouter.resources }}
           resources:
-            {{- .Values.eventrouter.resources | nindent 12 -}}
+            {{- .Values.eventrouter.resources | toYaml | nindent 12 -}}
           {{- end }}
           volumeMounts:
           - name: config-volume

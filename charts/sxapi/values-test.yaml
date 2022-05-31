@@ -1,0 +1,86 @@
+
+# Default values for configuration of a test demo
+# see values.yaml for explanation on each params
+nameOverride: sxapi-test
+versionOverride: "0.0.1"
+context: 
+  scope: startx
+  cluster: default
+  environment: demo
+  component: sxapi
+  app: default-sxapi-test
+  version: "0.0.1-testing"
+sxapi:
+  service:
+    enabled: true
+  expose:
+    enabled: false
+  version: "testing"
+  profile: "prod:start"
+  debug: true
+  replicas: 1
+  data: |
+    sxapi.yml: |-
+      name: test
+      description: Description of the test sxapi helm chart instance (defined in values-test.yaml)
+      version: "0.0.1-testing"
+      debug: true
+      resources:
+        serviceinfo-sample:
+          _class: serviceinfo
+      log:
+        filters:
+          level: '0,1,2,3,4'
+          type: debug,info,error,warn
+      server:
+        port: '8077'
+        endpoints:
+        - path: "/"
+          desc: Display welcome message (HTML)
+          body: |-
+              <html>
+              <head><title>Test application (test values)</title></head>
+              <body>
+                <h1>SXAPI is live ! (helm chart's managed by default values-test.yaml)</h1>
+                <p>
+                  This test environment is deployed using the test values file of the 
+                  <a href="https://helm-repository.readthedocs.io/en/latest/charts/sxapi.html" target="_blank">sxapi chart</a>
+                  available in the <a href="https://helm-repository.readthedocs.io" target="_blank">startx helm repository</a>. 
+                </p>
+                <p>
+                  You could check the following endpoints :</p>
+                <ul>
+                  <li><a href="./health">Health status (used by readiness probe)</a></li>
+                  <li><a href="./info">Information about the application</a></li>
+                  <li><a href="./ping">Return a simple pong</a></li>
+                  <li>Every hour, the bot run the <b>myCronFunction</b> that make a log trace</li>
+                </ul>
+              </body>
+              </html>
+        - path: "/health"
+          resource: serviceinfo-sample
+          endpoint: health
+        - path: "/info"
+          resource: serviceinfo-sample
+          endpoint: info
+        - path: "/ping"
+          desc: Ping the application. Return a sample message in json
+          code: '200'
+          body: pong
+      bot:
+        lib: "/conf/mylib"
+        cron:
+        - id: test-cront-task
+          name: Execute test cron task
+          schedule: "*/1 * * * *"
+          task: myCronFunction
+    mylib.js: |-
+      /* global $log, module */
+      //'use strict';
+      var mylib = {
+        myCronFunction: function (config) {
+          var moment = require('moment');
+          $log.info("cron task " + config.id + " executed at " + moment().format('YYYY-MM-DD HH:mm:ss'));
+        }
+      };
+      module.exports = mylib;

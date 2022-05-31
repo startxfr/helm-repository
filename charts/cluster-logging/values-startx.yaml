@@ -7,12 +7,14 @@ context: &context
   component: logging
   app: openshift-logging
 logging:
-  enabled: true
+  enabled: false
+  infra_enabled: false
+  hooked: false
   managementState: "Managed"
   elasticsearch:
     enabled: true
     replicas: 3
-    resources: |
+    resources: |-
       limits:
         memory: 16Gi
       requests:
@@ -24,7 +26,7 @@ logging:
   kibana:
     enabled: true
     replicas: 1
-    resources: |
+    resources: |-
       limits:
         memory: 736Mi
       requests:
@@ -33,7 +35,7 @@ logging:
   curation:
     enabled: true
     schedule: "30 3 * * *"
-    resources: |
+    resources: |-
       limits:
         memory: 256Mi
       requests:
@@ -41,7 +43,7 @@ logging:
         memory: 256Mi
   fluentd:
     enabled: true
-    resources: |
+    resources:
       limits:
         memory: 736Mi
       requests:
@@ -50,7 +52,7 @@ logging:
 eventrouter:
   enabled: false
   replicas: 1
-  resources: |
+  resources:
     limits:
       cpu: 400m
       memory: 512Mi
@@ -59,6 +61,15 @@ eventrouter:
       memory: 128Mi
 logforwarder:
   enabled: false
+  spec: |
+    pipelines: 
+    - name: all-to-default
+      inputRefs:
+      - infrastructure
+      - application
+      - audit
+      outputRefs:
+      - default
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -106,11 +117,12 @@ operator:
     enabled: true
     name: "cluster-logging"
     namespace: "openshift-logging"
-    version: "5.2.1-5"
+    version: "5.4.0-138"
     operator: 
-      channel: "stable"
+      channel: "stable-5.4"
       name: cluster-logging
-      csv: cluster-logging
+      installPlanApproval: Automatic
+      # csv: cluster-logging
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -132,11 +144,12 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.2.1-5"
+    version: "5.4.0-152"
     operator: 
-      channel: "stable"
+      channel: "stable-5.4"
       name: elasticsearch-operator
-      csv: elasticsearch-operator
+      installPlanApproval: Automatic
+      # csv: elasticsearch-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace

@@ -5,7 +5,7 @@ context: &context
   cluster: default
   environment: infra
   component: workspaces
-  app: startx-workspaces
+  app: openshift-workspaces
 project: 
   enabled: false
   context: 
@@ -14,7 +14,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: startx-workspaces
+    name: openshift-workspaces
     display_name: "Startx WORKSPACES"
     requester: startx
     description: CodeReady Workspace configured by STARTX
@@ -25,25 +25,27 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "codeready-workspaces"
-    namespace: "startx-workspaces"
-    version: "v2.11.0"
+    name: "codeready-workspaces2"
+    namespace: "openshift-operators"
+    version: "v2.13.100"
     operator: 
-      channel: latest
-      name: codeready-workspaces
-      csv: crwoperator
+      channel: tech-preview-latest-all-namespaces
+      name: codeready-workspaces2
+      installPlanApproval: Automatic
+      # csv: crwoperatorallnamespaces
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: false
+    target: "all-ns"
     name: "codeready-workspaces"
-    namespace: "startx-workspaces"
-    providedAPIs: "CheCluster.v1.org.eclipse.che"
+    namespace: "openshift-operators"
+    providedAPIs: "CheBackupServerConfiguration.v1.org.eclipse.che,CheCluster.v1.org.eclipse.che,CheClusterBackup.v1.org.eclipse.che,CheClusterRestore.v1.org.eclipse.che,DevWorkspace.v1alpha1.workspace.devfile.io,DevWorkspace.v1alpha2.workspace.devfile.io,DevWorkspaceOperatorConfig.v1alpha1.controller.devfile.io,DevWorkspaceRouting.v1alpha1.controller.devfile.io,DevWorkspaceTemplate.v1alpha1.workspace.devfile.io,DevWorkspaceTemplate.v1alpha2.workspace.devfile.io"
 cheCluster:
   enabled: true
   hooked: false
   name: "codeready-workspaces"
-  storageClass: "aws-generic-retain"
+  storageClass: "startx-aws-generic-retain"
   storageSize: "2Gi"

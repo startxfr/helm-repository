@@ -1,0 +1,20 @@
+
+Example of a basic application deployed using fruitapp-shared resource packaged into helm chart. 
+The fruitapp-shared have the following characteristics :
+
+-- Context -------------------------
+                scope : {{ include "startx.appScope" . }}
+              cluster : {{ include "startx.appCluster" . }}
+          environment : {{ include "startx.appEnvironment" . }}
+            component : {{ include "startx.appComponent" . }}
+                  app : {{ include "startx.appName" . }}
+              version : {{ include "startx.appVersion" . }}
+
+-- Shared components ---------------
+            namespace : {{ .Values.namespace }}
+        database name : {{ .Values.database.name }}
+        database user : {{ .Values.database.user }}
+  database capacitity : {{ .Values.database.storage_capacitity }}
+     database quality : {{ .Values.database.storage_class }}
+      database memory : {{ .Values.database.memory_limit }}
+     database version : {{ .Values.database.version }}

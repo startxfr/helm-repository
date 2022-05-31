@@ -37,11 +37,12 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.2.1-5"
+    version: "5.4.0-152"
     operator: 
-      channel: "stable"
+      channel: "stable-5.4"
       name: elasticsearch-operator
-      csv: elasticsearch-operator
+      installPlanApproval: Automatic
+      # csv: elasticsearch-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -56,3 +57,9 @@ operatorElastic:
 # Configuration of the globals operators (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorGlobal:
   enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false

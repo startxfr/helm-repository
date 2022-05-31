@@ -13,7 +13,7 @@ context:
   # Application name (functionnal tenant, default use Chart name)
   app: startx-infra
   # Version name of this application (default use Chart appVersion)
-  # version: 0.0.3
+  # version: "0.0.3"
 
 # Configuration of the cluster
 cluster:
@@ -71,5 +71,18 @@ machineSet:
   # Enable the management of machineSet
   enabled: false
   # List of machineSet to control
-  list: []
-
+  list: 
+    # name suffix of the machineset 
+  - name: a-infra
+    # name of the az to use (complete cluster.region)
+    az: a
+    # type of node. should be infra, worker or storage
+    type: infra
+    # name of the ami used for boot (should be available into the cluster region)
+    ami: ami-046fe691f52a953f9
+    # type of backend instance
+    instanceType: "m6i.large"
+    # volume size in Giga
+    volumeSize: 120
+    # number of replicas node
+    replicas: 1

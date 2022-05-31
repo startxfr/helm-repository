@@ -2,9 +2,9 @@
 # see values.yaml for explanation on each params
 context: &context
   scope: startx
-  cluster: default
-  environment: infra
-  component: kubevirt
+  cluster: hyperconverged-cluster
+  environment: hyperconverged-cluster
+  component: network
   app: startx-kubevirt
 project: 
   enabled: false
@@ -43,11 +43,12 @@ operator:
     hooked: false
     name: "kubevirt-hyperconverged"
     namespace: "openshift-cnv"
-    version: "v4.8.0"
+    version: "v4.9.3"
     operator: 
       channel: "stable"
       name: kubevirt-hyperconverged
-      csv: kubevirt-hyperconverged-operator
+      installPlanApproval: Automatic
+      # csv: kubevirt-hyperconverged-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
@@ -74,10 +75,10 @@ vms:
         image: "https://fr2.rpmfind.net/linux/fedora/linux/releases/33/Cloud/x86_64/images/Fedora-Cloud-Base-33-1.2.x86_64.qcow2"
       storage:
         boot_size: 15G
-        boot_storageclass: ocs-generic-delete
+        boot_storageclass: startx-ocs-generic-delete
         disks: 
         - name: disk0
-          storageclass: ocs-generic-delete
+          storageclass: startx-ocs-generic-delete
           size: 10G
           boot_order: 3
       cloudInit: |

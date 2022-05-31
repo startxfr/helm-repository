@@ -1,0 +1,751 @@
+{{- if .Values.integration_chain }}{{- if .Values.integration_chain.enabled }}
+{{- $root := . -}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-credentials
+  namespace: "{{- .Values.project_integration.project.name }}"
+  labels:
+    app.kubernetes.io/name: 'github-credentials'
+    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: 'ci'
+    app: ci
+stringData:
+  GITHUB_TOKEN: "{{- .Values.integration_chain.github.token }}"
+  protocol: https
+  host: github.com
+  username: "{{- .Values.integration_chain.github.user }}"
+  password: "{{- .Values.integration_chain.github.token }}"
+  .gitconfig: |
+    protocol=https
+    [user]
+      name = "{{- .Values.integration_chain.github.username }}"
+      email = "{{- .Values.integration_chain.github.email }}"
+    [pull]
+            rebase = false
+    [http]
+            postBuffer = 524288000
+    [https]
+            postBuffer = 524288000
+    [ssh]
+            postBuffer = 524288000
+  .git-credentials: |
+    protocol=https
+    host=github.com
+    username="{{- .Values.integration_chain.github.user }}"
+    password="{{- .Values.integration_chain.github.token }}"
+type: Opaque
+---
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: "devel"
+    app.openshift.io/vcs-uri: https://github.com/startxfr/nodejs-rest-http-crud.git
+    openshift.io/generated-by: startx
+  labels:
+    app.kubernetes.io/name: 'frontend'
+    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    app.kubernetes.io/part-of: 'frontend'
+    app: frontend
+  namespace: "{{- .Values.project_integration.project.name }}"
+  name: frontend
+spec:
+  lookupPolicy:
+    local: false
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    openshift.io/installed-from: tektonhub
+    tekton.dev/categories: Git
+    tekton.dev/displayName: create github release
+    tekton.dev/pipelines.minVersion: 0.12.1
+    tekton.dev/platforms: linux/amd64
+    tekton.dev/tags: github
+  labels:
+    app: ci
+    app.kubernetes.io/component: ci
+    app.kubernetes.io/instance: ci
+    app.kubernetes.io/name: create-github-release
+    app.kubernetes.io/part-of: "{{- .Values.project_integration.project.name }}"
+    app.kubernetes.io/version: '0.1'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  name: create-github-release
+spec:
+  description: >-
+    This `task` can be used to make a github release.
+
+    It is typical to create a Github tag at the moment of release to introduce a
+    checkpoint in your source code history,but in most cases users will need
+    compiled objects or other assets output, not just the raw source code.Github
+    Releases are a way to track deliverables in your project. Consider them a
+    snapshot in time of the source, build output, artifacts, and other metadata
+    associated with a released version of your code.
+  params:
+    - description: A git tag that will be created with this release (e.g. v1.0.0)
+      name: TAG
+      type: string
+    - default: master
+      description: 'Git revision to create a release from (branch, tag, sha, ref…).'
+      name: REVISION
+      type: string
+    - default: release.md
+      description: Name of the file that has to be uploaded as release notes.
+      name: RELEASE_FILE_NAME
+      type: string
+    - default: github-credentials
+      description: Name of the secret holding the github-credentials.
+      name: GITHUB_TOKEN_SECRET
+      type: string
+    - default: GITHUB_TOKEN
+      description: Name of the secret key holding the github-credentials.
+      name: GITHUB_TOKEN_SECRET_KEY
+      type: string
+  steps:
+    - env:
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: $(params.GITHUB_TOKEN_SECRET_KEY)
+              name: $(params.GITHUB_TOKEN_SECRET)
+      image: "quay.io/diagrawa/github-hub:latest"
+      name: create-release
+      resources: {}
+      script: |
+        #!/usr/bin/env bash
+        set -ex
+
+        # Appending command to upload multiple release assets.
+
+        UPLOAD_ASSET=$(workspaces.input.path)/*
+        cmd=""
+        # for file in $UPLOAD_ASSET
+        # do
+        #   cmd="$cmd\
+        #     --attach $file"
+        # done
+
+        # Create a release
+        echo "Creating release $(params.TAG)"
+
+        hub release create \
+          --commitish $(params.REVISION) \
+          --file $(workspaces.release-notes.path)/$(params.RELEASE_FILE_NAME) \
+          $cmd \
+          $(params.TAG)
+      workingDir: $(workspaces.source.path)
+  workspaces:
+    - name: input
+    - name: source
+    - name: release-notes
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    openshift.io/installed-from: tektonhub
+    tekton.dev/categories: Git
+    tekton.dev/displayName: create github release
+    tekton.dev/pipelines.minVersion: 0.12.1
+    tekton.dev/platforms: linux/amd64
+    tekton.dev/tags: github
+  labels:
+    app: ci
+    app.kubernetes.io/component: ci
+    app.kubernetes.io/instance: ci
+    app.kubernetes.io/name: git-startx-merge
+    app.kubernetes.io/part-of: "{{- .Values.project_integration.project.name }}"
+    app.kubernetes.io/version: '0.1'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  name: git-startx-merge
+spec:
+  description: >-
+    This task takes a set of refspecs, fetches them and performs git operations
+    (cherry-pick or merge) to apply them in order on the given base revision (default master).
+    The resulting commit SHA will not match across taskruns, but the git tree SHA should
+    match. This can be useful for batch testing changes, for example, when you want to
+    batch up your PRs into a single merge by taking the HEAD of the branch you want to merge
+    to, and adding all the PRs to it. This concept is used in tools such as Tide to
+    batch test PR’s, and Zuul CI Gating, to perform speculative execution of
+    PR’s/change requests individually
+  workspaces:
+    - name: output
+      description: The git repo will be cloned onto the volume backing this workspace
+  params:
+    - name: url
+      description: git url to clone
+      type: string
+    - name: revision
+      description: base git revision to checkout (branch, tag, sha, ref…)
+      type: string
+      default: master
+    - name: refspec
+      description: base git refspec to fetch before checking out revision
+      type: string
+      default: "refs/heads/master:refs/heads/master"
+    - name: batchedRefs
+      description: git refs to fetch and batch on top of revision using the given mode (must be a valid refname, no commit SHA's)
+      type: string
+    - name: gitUserName
+      description: git user name to use for creating the batched commit (First Last)
+      type: string
+      default: GitBatch Task
+    - name: gitUserEmail
+      description: git user email to use for creating the batched commit (First.Last@domain.com)
+      type: string
+      default: GitBatch.Task@tekton.dev
+    - name: mode
+      description: git operation to perform while batching (choose from merge, cherry-pick)
+      type: string
+      default: merge
+    - name: submodules
+      description: defines if the resource should initialize and fetch the submodules
+      type: string
+      default: "true"
+    - name: depth
+      description: performs a shallow clone where only the most recent commit(s) will be fetched
+      type: string
+      default: "1"
+    - name: sslVerify
+      description: defines if http.sslVerify should be set to true or false in the global git config
+      type: string
+      default: "true"
+    - name: subdirectory
+      description: subdirectory inside the "output" workspace to clone the git repo into
+      type: string
+      default: "src"
+    - name: deleteExisting
+      description: clean out the contents of the repo's destination directory (if it already exists) before trying to clone the repo there
+      type: string
+      default: "false"
+  results:
+    - name: commit
+      description: The final commit SHA that was obtained after batching all provided refs onto revision
+    - name: tree
+      description: The git tree SHA that was obtained after batching all provided refs onto revision.
+  steps:
+    - name: clone
+      image: gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.14.2
+      script: |
+        CHECKOUT_DIR="$(workspaces.output.path)/$(params.subdirectory)"
+        cleandir() {
+          # Delete any existing contents of the repo directory if it exists.
+          #
+          # We don't just "rm -rf $CHECKOUT_DIR" because $CHECKOUT_DIR might be "/"
+          # or the root of a mounted volume.
+          if [[ -d "$CHECKOUT_DIR" ]] ; then
+            # Delete non-hidden files and directories
+            rm -rf "$CHECKOUT_DIR"/*
+            # Delete files and directories starting with . but excluding ..
+            rm -rf "$CHECKOUT_DIR"/.[!.]*
+            # Delete files and directories starting with .. plus any other character
+            rm -rf "$CHECKOUT_DIR"/..?*
+          fi
+        }
+        if [[ "$(params.deleteExisting)" == "true" ]] ; then
+          cleandir
+        fi
+        mode="$(params.mode)"
+
+        # startx hack for simple merge
+        if [[ $mode == "startx" ]]; then
+            cd $CHECKOUT_DIR
+            git clone $(params.url) tmp
+            mv tmp/* tmp/.*i* . &>/dev/null
+            rm -rf tmp
+            git checkout "$(params.refspec)"
+            git merge origin/$(params.batchedRefs) 
+            exit 0
+        fi
+
+        p="$(params.batchedRefs)"
+        refs="$(params.refspec)"
+        for ref in $p; do
+          refs="$refs $ref:refs/batch/$ref"
+        done
+        /ko-app/git-init \
+          -url "$(params.url)" \
+          -revision "$(params.revision)" \
+          -refspec "$refs" \
+          -path "$CHECKOUT_DIR" \
+          -sslVerify="$(params.sslVerify)" \
+          -submodules="$(params.submodules)" \
+          -depth "$(params.depth)"
+        git -C $CHECKOUT_DIR config user.name "$(params.gitUserName)"
+        git -C $CHECKOUT_DIR config user.email "$(params.gitUserEmail)"
+        if [[ $mode == "merge" ]]; then
+          for ref in $p; do
+            git -C $CHECKOUT_DIR merge --quiet --allow-unrelated-histories refs/batch/$ref
+          done
+        elif [[ $mode == "cherry-pick" ]]; then
+          for ref in $p; do
+            git -C $CHECKOUT_DIR cherry-pick --allow-empty --keep-redundant-commits refs/batch/$ref
+          done
+        else
+            echo "unsupported mode $mode"
+            exit 1
+        fi
+        RESULT_SHA="$(git -C $CHECKOUT_DIR rev-parse HEAD)"
+        TREE_SHA="$(git -C $CHECKOUT_DIR rev-parse HEAD^{tree})"
+        # Make sure we don't add a trailing newline to the result!
+        echo -n "$(echo $RESULT_SHA | tr -d '\n')" > $(results.commit.path)
+        echo -n "$(echo $TREE_SHA | tr -d '\n')" > $(results.tree.path)
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    openshift.io/installed-from: tektonhub
+    tekton.dev/categories: Git
+    tekton.dev/displayName: Fruitppp CI pipeline
+    tekton.dev/pipelines.minVersion: 0.12.1
+    tekton.dev/platforms: linux/amd64
+    tekton.dev/tags: github
+  labels:
+    app: ci
+    app.kubernetes.io/component: ci
+    app.kubernetes.io/instance: ci
+    app.kubernetes.io/name: git-startx-merge
+    app.kubernetes.io/part-of: "{{- .Values.project_integration.project.name }}"
+    app.kubernetes.io/version: '0.1'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  name: "{{ include "startx.appName" $root }}"
+spec:
+  params:
+    - name: APP_NAME
+      default: frontend
+      type: string
+    - name: GIT_REPO
+      default: https://github.com/startxfr/nodejs-rest-http-crud.git
+      type: string
+    - name: GIT_RELEASE
+      default: main
+      type: string
+    - name: IMAGE_NAME
+      default: image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-ci/frontend
+      type: string
+    - name: PATH_CONTEXT
+      default: .
+      type: string
+    - name: VERSION
+      default: latest
+      type: string
+  tasks:
+  - name: merge-devel-to-main
+    params:
+      - name: url
+        value: $(params.GIT_REPO)
+      - name: revision
+        value: "origin/main"
+      - name: mode
+        value: "startx"
+      - name: refspec
+        value: "main"
+      - name: subdirectory
+        value: ""
+      - name: batchedRefs
+        value: "devel"
+      - name: gitUserName
+        value: "{{- .Values.integration_chain.github.user }}"
+      - name: gitUserEmail
+        value: "{{- .Values.integration_chain.github.email }}"
+    taskRef:
+      kind: Task
+      name: git-startx-merge
+    workspaces:
+      - name: output
+        workspace: workspace-devel
+  - name: push-main
+    params:
+      - name: BASE_IMAGE
+        value: "docker.io/alpine/git:v2.26.2"
+      - name: GIT_USER_NAME
+        value: "{{- .Values.integration_chain.github.user }}"
+      - name: GIT_USER_EMAIL
+        value: "{{- .Values.integration_chain.github.email }}"
+      - name: GIT_SCRIPT
+        value: >-
+          git push origin main
+      - name: USER_HOME
+        value: /root
+      - name: VERBOSE
+        value: 'true'
+    runAfter:
+      - merge-devel-to-main
+    taskRef:
+      kind: ClusterTask
+      name: git-cli
+    workspaces:
+      - name: source
+        workspace: workspace-devel
+      - name: input
+        workspace: workspace-devel
+      - name: basic-auth
+        workspace: github-credentials
+  - name: fetch-main
+    params:
+    - name: url
+      value: $(params.GIT_REPO)
+    - name: revision
+      value: main
+    - name: subdirectory
+      value: ""
+    - name: deleteExisting
+      value: "true"
+    runAfter:
+      - push-main
+    taskRef:
+      kind: ClusterTask
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: workspace-mainsrc
+  - name: build-test
+    params:
+    - name: IMAGE
+      value: $(params.IMAGE_NAME):test
+    - name: TLSVERIFY
+      value: "false"
+    - name: PATH_CONTEXT
+      value: $(params.PATH_CONTEXT)
+    - name: VERSION
+      value: $(params.VERSION)
+    runAfter:
+    - fetch-main
+    taskRef:
+      kind: ClusterTask
+      name: s2i-nodejs
+    workspaces:
+    - name: source
+      workspace: workspace-mainsrc
+  - name: deploy-test-frontend
+    params:
+    - name: SCRIPT
+      value: oc rollout status deploy/$(params.APP_NAME)-test
+    runAfter:
+    - build-test
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+  - name: test-db
+    params:
+    - name: SCRIPT
+      value: until [[ $(kubectl get endpoints/db-test -o=jsonpath='{.metadata.name}') ]]; do sleep 5; done
+    runAfter:
+    - deploy-test-frontend
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+  - name: test-frontend
+    params:
+    - name: SCRIPT
+      value: until [[ $(kubectl get endpoints/frontend-test -o=jsonpath='{.subsets[*].addresses[*].ip}') ]]; do sleep 5; done
+    runAfter:
+    - deploy-test-frontend
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+  - name: merge-main-to-stable
+    params:
+      - name: url
+        value: $(params.GIT_REPO)
+      - name: revision
+        value: "origin/stable"
+      - name: mode
+        value: "startx"
+      - name: refspec
+        value: "stable"
+      - name: subdirectory
+        value: ""
+      - name: batchedRefs
+        value: "main"
+      - name: gitUserName
+        value: "{{- .Values.integration_chain.github.user }}"
+      - name: gitUserEmail
+        value: "{{- .Values.integration_chain.github.email }}"
+    runAfter:
+      - test-frontend
+      - test-db
+    taskRef:
+      kind: Task
+      name: git-startx-merge
+    workspaces:
+      - name: output
+        workspace: workspace-main
+  - name: push-stable
+    params:
+      - name: BASE_IMAGE
+        value: "docker.io/alpine/git:v2.26.2"
+      - name: GIT_USER_NAME
+        value: "{{- .Values.integration_chain.github.user }}"
+      - name: GIT_USER_EMAIL
+        value: "{{- .Values.integration_chain.github.email }}"
+      - name: GIT_SCRIPT
+        value: >-
+          git push origin stable
+      - name: USER_HOME
+        value: /root
+      - name: VERBOSE
+        value: 'true'
+    runAfter:
+      - merge-main-to-stable
+    taskRef:
+      kind: ClusterTask
+      name: git-cli
+    workspaces:
+      - name: source
+        workspace: workspace-main
+      - name: input
+        workspace: workspace-main
+      - name: basic-auth
+        workspace: github-credentials
+  - name: fetch-stable
+    params:
+    - name: url
+      value: $(params.GIT_REPO)
+    - name: revision
+      value: stable
+    - name: subdirectory
+      value: ""
+    - name: deleteExisting
+      value: "true"
+    runAfter:
+    - push-stable
+    taskRef:
+      kind: ClusterTask
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: workspace-stable
+  - name: build-r7t
+    params:
+    - name: IMAGE
+      value: $(params.IMAGE_NAME):stable
+    - name: TLSVERIFY
+      value: "false"
+    - name: PATH_CONTEXT
+      value: $(params.PATH_CONTEXT)
+    - name: VERSION
+      value: $(params.VERSION)
+    runAfter:
+    - fetch-stable
+    taskRef:
+      kind: ClusterTask
+      name: s2i-nodejs
+    workspaces:
+    - name: source
+      workspace: workspace-stable
+  - name: deploy-r7t-frontend
+    params:
+    - name: SCRIPT
+      value: oc rollout status deploy/$(params.APP_NAME)-r7t
+    runAfter:
+    - build-r7t
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+  - name: r7t-db
+    params:
+    - name: SCRIPT
+      value: until [[ $(kubectl get endpoints/db-r7t -o=jsonpath='{.metadata.name}') ]]; do sleep 5; done
+    runAfter:
+      - deploy-r7t-frontend
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+  - name: r7t-frontend
+    params:
+    - name: SCRIPT
+      value: until [[ $(kubectl get endpoints/frontend-r7t -o=jsonpath='{.subsets[*].addresses[*].ip}') ]]; do sleep 5; done
+    runAfter:
+      - deploy-r7t-frontend
+    taskRef:
+      kind: ClusterTask
+      name: openshift-client
+  - name: push-preprod
+    params:
+      - name: srcImageURL
+        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-ci/frontend:stable"
+      - name: destImageURL
+        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-preprod/frontend:$(params.GIT_RELEASE)"
+      - name: srcTLSverify
+        value: 'false'
+      - name: destTLSverify
+        value: 'false'
+    runAfter:
+      - r7t-db
+      - r7t-frontend
+    taskRef:
+      kind: ClusterTask
+      name: skopeo-copy-1-6-0
+    workspaces:
+      - name: images-url
+        workspace: img-url
+  - name: push-prod
+    params:
+      - name: srcImageURL
+        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-ci/frontend:stable"
+      - name: destImageURL
+        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-prod/frontend:$(params.GIT_RELEASE)"
+      - name: srcTLSverify
+        value: 'false'
+      - name: destTLSverify
+        value: 'false'
+    runAfter:
+      - r7t-db
+      - r7t-frontend
+    taskRef:
+      kind: ClusterTask
+      name: skopeo-copy-1-6-0
+    workspaces:
+      - name: images-url
+        workspace: img-url
+  - name: release-in-github
+    params:
+      - name: TAG
+        value: $(params.GIT_RELEASE)
+      - name: REVISION
+        value: stable
+      - name: RELEASE_FILE_NAME
+        value: Release.md
+      - name: GITHUB_TOKEN_SECRET
+        value: github-credentials
+      - name: GITHUB_TOKEN_SECRET_KEY
+        value: GITHUB_TOKEN
+    runAfter:
+      - push-preprod
+      - push-prod
+    taskRef:
+      kind: Task
+      name: create-github-release
+    workspaces:
+      - name: input
+        workspace: ephemeral
+      - name: source
+        workspace: workspace-stable
+      - name: release-notes
+        workspace: workspace-stable
+  workspaces:
+  - name: workspace-devel
+  - name: workspace-mainsrc
+  - name: workspace-main
+  - name: workspace-stable
+  - name: img-url
+  - name: ephemeral
+  - name: github-credentials
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    openshift.io/installed-from: tektonhub
+    tekton.dev/categories: Git
+    tekton.dev/displayName: Fruitppp CI pipelinerun
+    tekton.dev/pipelines.minVersion: 0.12.1
+    tekton.dev/platforms: linux/amd64
+    tekton.dev/tags: github
+  labels:
+    app: ci
+    app.kubernetes.io/component: ci
+    app.kubernetes.io/instance: ci
+    app.kubernetes.io/name: git-startx-merge
+    app.kubernetes.io/part-of: "{{- .Values.project_integration.project.name }}"
+    app.kubernetes.io/version: '0.1'
+  namespace: "{{- .Values.project_integration.project.name }}"
+  name: "{{ include "startx.appName" $root }}-firstrun"
+spec:
+  params:
+  - name: APP_NAME
+    value: frontend
+  - name: GIT_REPO
+    value: https://{{- .Values.integration_chain.github.user }}:{{- .Values.integration_chain.github.token }}@github.com/startxfr/nodejs-rest-http-crud.git
+  - name: GIT_RELEASE
+    value: "{{- .Values.context.version }}"
+  - name: IMAGE_NAME
+    value: image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-ci/frontend
+  - name: PATH_CONTEXT
+    value: .
+  - name: VERSION
+    value: latest
+  pipelineRef:
+    name: "{{ include "startx.appName" $root }}"
+  workspaces:
+  - name: img-url
+    emptyDir: {}
+  - name: ephemeral
+    emptyDir: {}
+  - name: github-credentials
+    secret:
+      secretName: github-credentials
+  - name: workspace-mainsrc
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          app: {{ include "startx.appName" $root }}-workspace-mainsrc
+          app.kubernetes.io/component: ci
+          app.kubernetes.io/instance: {{ include "startx.appName" $root }}
+          app.kubernetes.io/name: workspace-mainsrc
+          app.kubernetes.io/part-of: {{ include "startx.appName" $root }}-ci
+          startx.fr/app: {{ include "startx.appName" $root }}
+          tekton.dev/pipeline: {{ include "startx.appName" $root }}-ci
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  - name: workspace-devel
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          app: {{ include "startx.appName" $root }}-workspace-devel
+          app.kubernetes.io/component: ci
+          app.kubernetes.io/instance: {{ include "startx.appName" $root }}
+          app.kubernetes.io/name: workspace-devel
+          app.kubernetes.io/part-of: {{ include "startx.appName" $root }}-ci
+          startx.fr/app: {{ include "startx.appName" $root }}
+          tekton.dev/pipeline: {{ include "startx.appName" $root }}-ci
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  - name: workspace-main
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          app: {{ include "startx.appName" $root }}-workspace-main
+          app.kubernetes.io/component: ci
+          app.kubernetes.io/instance: {{ include "startx.appName" $root }}
+          app.kubernetes.io/name: workspace-main
+          app.kubernetes.io/part-of: {{ include "startx.appName" $root }}-ci
+          startx.fr/app: {{ include "startx.appName" $root }}
+          tekton.dev/pipeline: {{ include "startx.appName" $root }}-ci
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  - name: workspace-stable
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          app: {{ include "startx.appName" $root }}-workspace-stable
+          app.kubernetes.io/component: ci
+          app.kubernetes.io/instance: {{ include "startx.appName" $root }}
+          app.kubernetes.io/name: workspace-stable
+          app.kubernetes.io/part-of: {{ include "startx.appName" $root }}-ci
+          startx.fr/app: {{ include "startx.appName" $root }}
+          tekton.dev/pipeline: {{ include "startx.appName" $root }}-ci
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+{{- end }}{{- end }}

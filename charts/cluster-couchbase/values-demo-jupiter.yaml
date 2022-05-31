@@ -24,9 +24,9 @@ cluster:
     expose:
       enabled: true
     spec: |
-      image: registry.connect.redhat.com/couchbase/server:6.5.1
+      image: registry.connect.redhat.com/couchbase/server:7.0.3-1
       paused: false
-      antiAffinity: true
+      antiAffinity: false
       softwareUpdateNotifications: true
       serverGroups:
         - eu-west-3a
@@ -47,6 +47,10 @@ cluster:
         exposeAdminConsole: true
         adminConsoleServices:
         - data
+        - index
+        - query
+        - search
+        - eventing
       buckets:
         managed: true
         selector:
@@ -57,7 +61,7 @@ cluster:
         logRetentionCount: 20
       backup:
         managed: true
-        image: couchbase/operator-backup:6.5.0
+        image: registry.connect.redhat.com/couchbase/operator-backup:1.1.1-1
         serviceAccountName: couchbase-backup
         resources:
           requests:

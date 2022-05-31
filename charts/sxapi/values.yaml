@@ -21,7 +21,7 @@ context:
  version: "0.0.1"
 
 # Configuration of the sxapi application
-sxapi:
+sxapi: 
   # configuration of the service
   service:
     # Enable service for this application
@@ -30,10 +30,10 @@ sxapi:
   expose:
     # Enable exposition for this application
     enabled: false
-    # Kind of backend used for exposing application
+    # Kind of backend used for exposing application (choose between route, ingress, NodePort or LoadBalancer)
     kind: "route"
   # Sxapi image version to run
-  version: "0.3.57"
+  version: "0.3.63"
   # Profile to run inside the container
   profile: "prod:start"
   # Enable debuging of the container
@@ -45,7 +45,7 @@ sxapi:
     sxapi.yml: |-
       name: default
       description: Description of the default sxapi helm chart instance (defined in values.yaml)
-      version: "0.3.57"
+      version: "0.0.1"
       debug: false
       resources:
         serviceinfo-sample:

@@ -1,16 +1,17 @@
 #!/bin/bash
 
-SXV4_CONSOLE_VERSION=7.22.5
+SXV4_CONSOLE_VERSION=9.8.67
 SHARED_TEMPLATE_NAME=_startx.tpl
 SHARED_TEMPLATE=_tools/$SHARED_TEMPLATE_NAME
 SHARED_NAME=_sample_
 SHARED_SAMPLE=_tools/$SHARED_NAME
-SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
+export SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
 REPO_PACKAGE_DIR=docs/packages
 WORK_BRANCH=stable
 MASTER_BRANCH=master
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
+GITHUB_REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
 
 
 #####################
@@ -19,7 +20,7 @@ GITHUB_REPOSITORY=helm-repository
 # read chart version
 function chartReadVersion {
     if [[ "" != "$1" ]]; then
-        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq -r .version)
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq .version - | tr -d \")
     else
         echo ""
     fi
@@ -28,7 +29,7 @@ function chartReadVersion {
 # read chart description
 function chartReadDescription {
     if [[ "" != "$1" ]]; then
-        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq -r .description)
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq .description -)
     else
         echo ""
     fi
@@ -37,7 +38,7 @@ function chartReadDescription {
 # read chart name
 function chartReadName {
     if [[ "" != "$1" ]]; then
-        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq -r .name)
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq .name -)
     else
         echo ""
     fi
@@ -46,7 +47,7 @@ function chartReadName {
 # read chart appVersion
 function chartReadAppVersion {
     if [[ "" != "$1" ]]; then
-        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq -r .appVersion)
+        echo $(cat $PROJECT_CHARTPATH/$1/Chart.yaml | yq .appVersion - | tr -d \")
     else
         echo ""
     fi
@@ -54,10 +55,11 @@ function chartReadAppVersion {
 
 # get a list of all charts
 function chartList {
-    cd $PROJECT_CHARTPATH
-    local LIST=$(ls -d -I "_*" -I "docs" *)
-    cd - &>/dev/null
-    for chart in $LIST; do
+    cd "$PROJECT_CHARTPATH" || exit
+    local list=""
+    list=$(ls -d -I "_*" -I "docs" ./*)
+    cd - &>/dev/null || exit
+    for chart in $list; do
         echo " $chart"
     done
 }
@@ -71,37 +73,28 @@ function chartList {
 # router for delete sub-command
 function routerList {
     echo -e "\e[31mList\e[0m helm chart in $PROJECT_CHARTPATH"
-    local LIST=$(chartList)
-    for chart in $LIST; do
+    local list=""
+    list=$(chartList)
+    for chart in $list; do
         echo -e " - $chart"
     done
 }
 
 # router for publish command
 function routerPublish {
-    local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
-    echo -e "\e[36mPublish\e[0m Generate index for $repo_url"
-    helm repo index --url $repo_url/packages/ $PROJECT_PATH/docs/packages/
-    echo -e "\e[36mPublish\e[0m versionning of index for $repo_url"
-    git add $PROJECT_PATH/docs/packages &>/dev/null
-    git commit -m "[docs] update repository index" $PROJECT_PATH/docs/packages &>/dev/null
-    git push origin $WORK_BRANCH
-    echo -e "\e[36mPublish\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
-    git checkout $MASTER_BRANCH &>/dev/null
-    git merge --commit --no-edit $WORK_BRANCH
-    echo -e "\e[36mPublish\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
-    git push origin $MASTER_BRANCH $WORK_BRANCH
-    git checkout $WORK_BRANCH
+    doHelmrepositoryRefresh default packages $GITHUB_REPOURL Publish 36
 }
 
 # router for release command
 function routerRelease {
     local auto_feature=$1
-    local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
     local next_description="publish stable update for the full repository"
-    local current_release="$(cat $PROJECT_PATH/_tools/repo-release)"
-    local next_date="$(date +%Y-%m-%d)"
-    local next_release=$(cat $PROJECT_PATH/_tools/repo-release | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
+    local current_release=""
+    local next_date=""
+    local next_release=""
+    current_release="$(cat $PROJECT_PATH/_tools/repo-release)"
+    next_date="$(date +%Y-%m-%d)"
+    next_release=$(cat $PROJECT_PATH/_tools/repo-release  | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
     if [[ "auto" == "$auto_feature" || "-a" == "$auto_feature" ]]; then
         echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m auto-version to $next_release"
     else
@@ -139,6 +132,26 @@ function routerRelease {
     git checkout $WORK_BRANCH
 }
 
+# router for archive command
+function routerArchive {
+    doHelmrepositoryRefresh archive packages-archives $GITHUB_REPOURL Archive 37
+}
+
+# router for archive command
+function doHelmrepositoryRefresh {
+    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:-$GITHUB_REPOURL}"
+    helm repo index --url ${3:-$GITHUB_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
+    git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
+    git commit -m "[docs] update repository ${1:-default} index" $PROJECT_PATH/docs/${2:-packages} &>/dev/null
+    git push origin $WORK_BRANCH
+    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
+    git checkout $MASTER_BRANCH &>/dev/null
+    git merge --commit --no-edit $WORK_BRANCH
+    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
+    git push origin $MASTER_BRANCH $WORK_BRANCH
+    git checkout $WORK_BRANCH
+}
+
 # router for version sub-command
 function routerVersion {
     echo "sx console version : sx-helm $SXV4_CONSOLE_VERSION"
@@ -157,10 +170,14 @@ function routerVersion {
 function routerChartInfo {
     local chart_name=$1
     if [[ "" != "$chart_name" ]]; then
-        local current_name=$(chartReadName $chart_name)
-        local current_release=$(chartReadVersion $chart_name)
-        local current_desc=$(chartReadDescription $chart_name)
-        local current_apprelease=$(chartReadAppVersion $chart_name)
+        local current_name=""
+        local current_release=""
+        local current_desc=""
+        local current_apprelease=""
+        current_name=$(chartReadName $chart_name)
+        current_release=$(chartReadVersion $chart_name)
+        current_desc=$(chartReadDescription $chart_name)
+        current_apprelease=$(chartReadAppVersion $chart_name)
         echo -e "\e[32mInfo\e[0m about \e[1m$chart_name\e[0m helm chart"
         echo -e "- \e[1mPackage\e[0m     : $chart_name-$current_release"
         echo -e "- \e[1mVersion\e[0m     : $current_release"
@@ -177,7 +194,10 @@ function routerChartCreate {
     local template_name=_sample_
     local template_dir=$PROJECT_CHARTPATH/$chart_template
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
-    local next_date="$(date +%Y-%m-%d)"
+    local next_date=""
+    local chart_release=""
+    local message="Create chart"
+    next_date="$(date +%Y-%m-%d)"
     if [[ -r $chart_dir ]]; then
         echo -e "\e[32mCreate\e[0m \e[1m\e[31mERROR\e[0m \e[1m$chart_name\e[0m helm chart \e[1malready exist\e[0m in $PROJECT_CHARTPATH"
         exit
@@ -192,8 +212,8 @@ function routerChartCreate {
     sed -i "s/$template_name/$chart_name/g" $(find $chart_dir -type f)
     rm $chart_dir/templates/$SHARED_TEMPLATE_NAME &>/dev/null
     ln -P $PROJECT_PATH/$SHARED_TEMPLATE $chart_dir/templates/$SHARED_TEMPLATE_NAME &>/dev/null
-    local chart_release=$(cat $chart_dir/Chart.yaml | yq -r .version)
-    local message="Create chart $chart_name from $template_name"
+    chart_release=$(cat $chart_dir/Chart.yaml | yq .version -)
+    message="Create chart $chart_name from $template_name"
     echo "| $chart_release  | $next_date | $message" >> $chart_dir/README.md
     git add $chart_dir &>/dev/null
     git commit -m "[chart/$chart_name] $message" $chart_dir &>/dev/null
@@ -229,11 +249,12 @@ function routerChartTest {
 function routerChartPackage {
     local chart_name=$1
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    local current_release=""
     if [[ -r $chart_dir ]]; then
         echo -e "\e[34mPackage\e[0m \e[1m$chart_name\e[0m helm chart"
-        local current_release=$(chartReadVersion $chart_name)
+        current_release=$(chartReadVersion $chart_name)
         echo -e "\e[34mPackage\e[0m \e[1m$chart_name\e[0m helm chart version $current_release"
-        cd $PROJECT_CHARTPATH
+        cd $PROJECT_CHARTPATH || exit
         echo -e "\e[34mPackage\e[0m \e[1m$chart_name commit change\e[0m to git repository"
         git add $chart_name/* &>/dev/null
         git commit -m "[chart/$chart_name] package version $current_release" $chart_name &>/dev/null
@@ -241,7 +262,7 @@ function routerChartPackage {
         helm dependency update $chart_dir
         echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH"
         helm package $chart_name
-        cd - &>/dev/null
+        cd - &>/dev/null || exit
     else
         echo -e "\e[34mPackage\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
         routerList
@@ -258,11 +279,14 @@ function routerChartRelease {
     fi
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
     local next_description="Improve $chart_name options"
-    local next_date="$(date +%Y-%m-%d)"
+    local next_date=""
+    local current_release=""
+    local next_release=""
+    next_date="$(date +%Y-%m-%d)"
     if [[ -r $chart_dir ]]; then
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m helm chart"
-        local current_release=$(chartReadVersion $chart_name)
-        local next_release=$(cat $chart_dir/Chart.yaml | yq -r .version  | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
+        current_release=$(chartReadVersion $chart_name)
+        next_release=$(cat $chart_dir/Chart.yaml | yq .version - | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
         if [[ "" != "$force_version" ]]; then
             next_release=$force_version
         fi
@@ -318,10 +342,10 @@ function routerChartRelease {
 function routerChartPublish {
     local chart_name=$1
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
-    local repo_url="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
-    local current_release=$(chartReadVersion $chart_name)
     local branch_current="master"
     local branch_target="stable"
+    local current_release=""
+    current_release=$(chartReadVersion $chart_name)
     if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
         branch_current="$BRANCH_NAME"
     fi
@@ -362,14 +386,14 @@ function routerChartDelete {
             fi
         fi
         rm -f $PROJECT_PATH/docs/charts/${chart_name}.md &>/dev/null
-        git add $kustomize_dir $PROJECT_PATH/docs/charts/${chart_name}.md &>/dev/null
+        git add $PROJECT_PATH/docs/charts/${chart_name}.md &>/dev/null
         rm -rf $chart_dir &>/dev/null
         git add $chart_dir &>/dev/null
         git commit -m "[chart/$chart_name] deleted chart $chart_name" $chart_dir $PROJECT_PATH &>/dev/null
         if [[ "$remove_repository" == "yes" ]]; then
             rm -rf $PROJECT_PATH/docs/packages/$chart_name-*.tgz &>/dev/null
-            git add $PROJECT_PATH/docs/packages/$chart_name-*.tgz &>/dev/null
-            git commit -m "[chart/$chart_name] deleted chart $chart_name packages into repository" $PROJECT_PATH &>/dev/null
+            git add "$PROJECT_PATH"/docs/packages/"$chart_name"-*.tgz &>/dev/null
+            git commit -m "[chart/$chart_name] deleted chart $chart_name packages into repository" "$PROJECT_PATH" &>/dev/null
             if [[ "$publish_repository" == "yes" ]]; then
                 routerPublish
             fi
@@ -395,6 +419,7 @@ Usage:
   - list                           list all helm-chart managed
   - publish                        Publish all change into repository
   - release                        Upgrade all charts, publish all change into repository and tag this release
+  - archive                        Generate and ublish all charts into the archive directory 
   - version                        Get version of this tools
   - <chart-name>                   Use chart-named sub-command (see ./sx-helm chart-name help)
 
@@ -440,5 +465,5 @@ EOF
 
 # menu display AsciiArt
 function menuHeadArt {
-cat $PROJECT_LIBPATH/header.txt
+cat "$PROJECT_LIBPATH"/header.txt
 }

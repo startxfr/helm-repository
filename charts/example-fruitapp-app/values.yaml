@@ -1,0 +1,37 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-fruitapp-app
+# # Use it to Overrride the helm-chart version
+#versionOverride: 0.0.1
+
+# Application fruitapp-app context
+context: 
+  # Name of the global scope for this application (organisational tenant)
+  scope: startx
+  # Name of the cluster running this application (plateform tenant)
+  cluster: localhost
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: preprod
+  # Component name of this application (logical tenant)
+  component: fruitapp
+  # Application name (functionnal tenant, default use Chart name)
+  app: fruitapp
+  # Version name of this application (default use Chart appVersion)
+  version: "0.0.1"
+
+# Project used fot theses resources
+namespace: fruitapp-preprod
+
+# Configure frontend for project
+frontend:
+  # Enable frontend for this project
+  enabled: true
+  # frontend name used
+  name: frontend
+  # The appication version (should be one of latest, v3.2.8, v3.2.11)
+  version: v3.2.11
+  # The number of replicas to apply
+  replicas: 2
+  # Frontend memory limit
+  memory_limit: 256Mi

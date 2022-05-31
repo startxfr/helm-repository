@@ -1,7 +1,8 @@
 {{- if .Values.logforwarder.enabled }}
 {{- $root := . -}}
-{{- $name := .Values.eventrouter.name | default "instance" -}}
+{{- $name := .Values.logforwarder.name | default "instance" -}}
 {{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
+# complete avec https://docs.openshift.com/container-platform/4.10/logging/cluster-logging-external.html
 ---
 apiVersion: logging.openshift.io/v1
 kind: ClusterLogForwarder
@@ -14,15 +15,8 @@ metadata:
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "2"
-spec:
-  pipelines: 
-  - name: all-to-default
-    inputRefs:
-    - infrastructure
-    - application
-    - audit
-    outputRefs:
-    - default
+spec: 
+{{- .Values.logforwarder.spec | nindent 2 }}
 {{- end }}
 
 
