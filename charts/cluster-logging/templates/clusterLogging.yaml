@@ -43,7 +43,7 @@ spec:
       {{- end }}
       {{- if .resources }}
       resources:
-        {{- .resources | nindent 8 -}}
+        {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
       redundancyPolicy: "SingleRedundancy"
       storage:
@@ -65,7 +65,7 @@ spec:
       {{- end }}
       {{- if .resources }}
       resources:
-        {{- .resources | nindent 8 -}}
+        {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
   {{- end }}{{- end }}{{- end }}
   {{- if .Values.logging.curation }}{{- if .Values.logging.curation.enabled }}{{- with .Values.logging.curation }}
@@ -75,7 +75,7 @@ spec:
       schedule: {{ .schedule | default "30 3 * * *" | quote }}
       {{- if .resources }}
       resources:
-        {{- .resources | nindent 8 -}}
+        {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
   {{- end }}{{- end }}{{- end }}
   {{- if .Values.logging.fluentd }}{{- if .Values.logging.fluentd.enabled }}{{- with .Values.logging.fluentd }}
@@ -85,7 +85,7 @@ spec:
       {{- if .resources }}
       fluentd: 
         resources:
-          {{- .resources | nindent 10 -}}
+          {{- .resources | toYaml | nindent 10 -}}
       {{- else }}
       fluentd: {}
       {{- end }}
