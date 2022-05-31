@@ -9,7 +9,7 @@ metadata:
   labels:
     app.kubernetes.io/name: '{{- include "startx.appName" $root -}}-{{- include "startx.appVersion" $root -}}-deployment'
     {{- include "example-fruitapp-app.labels" $root | nindent 4 }}
-    app.kubernetes.io/part-of: '{{- .Values.frontend.name }}-{{- .Values.frontend.version | replace "." "-" }}'
+    app.kubernetes.io/part-of: '{{ include "startx.appName" $root }}'
     app: {{ include "startx.appName" $root }}
   annotations:
     {{- include "example-fruitapp-app.annotations" $root | nindent 4 }}

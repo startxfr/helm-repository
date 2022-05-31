@@ -7,7 +7,8 @@ metadata:
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" $root -}}"
     {{- include "example-fruitapp-shared.labels" $root | nindent 4 }}
-    app: {{ include "startx.appName" $root }}
+    app.kubernetes.io/part-of: '{{ include "startx.appName" $root }}'
+    app: db
   annotations:
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"postgresql:{{- .Values.database.version }}","namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
     {{- include "example-fruitapp-shared.annotations" $root | nindent 4 }}
