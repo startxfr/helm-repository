@@ -167,3 +167,4 @@ helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxf
 | 9.8.262 | 2022-05-30 | Improve cluster-machine options
 | 9.8.263 | 2022-05-30 | Improve cluster-machine options
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
+| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
