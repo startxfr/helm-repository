@@ -176,3 +176,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
 | 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
 | 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
+| 10.12.3 | 2022-06-01 | Align all charts to release 10.12.3
