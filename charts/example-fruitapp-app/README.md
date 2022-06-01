@@ -86,3 +86,4 @@ helm install startx/example-fruitapp-app
 | 9.8.239 | 2022-05-28 | Initial commit for this helm chart with default value example |
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
+| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
