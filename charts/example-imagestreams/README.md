@@ -258,3 +258,4 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
 | 9.15.2 | 2022-06-01 | Align all charts to release 9.15.1
 | 9.15.3 | 2022-06-01 | Align all charts to release 9.15.3
+| 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
