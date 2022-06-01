@@ -212,3 +212,4 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
 | 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
 | 10.12.3 | 2022-06-01 | publish stable update for the full repository
+| 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
