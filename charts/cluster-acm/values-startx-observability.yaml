@@ -40,7 +40,7 @@ observability:
             expr: sum(container_memory_cache{pod!=""}) BY (pod, container)
   custom_metrics:
     enabled: true
-    list: |
+    content: |
       names:
         - node_memory_MemTotal_bytes
         - -cluster_infrastructure_provider
