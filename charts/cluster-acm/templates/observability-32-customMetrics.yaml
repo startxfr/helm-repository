@@ -1,4 +1,4 @@
-{{- if .Values.observability.custom_rules -}}{{- if .Values.observability.custom_rules.enabled -}}
+{{- if .Values.observability.custom_metrics -}}{{- if .Values.observability.custom_metrics.enabled -}}
 {{- $root := . -}}
 {{- $namespace := .Values.projectObservability.project.name | default "open-cluster-management-observability" -}}
 kind: ConfigMap
@@ -14,5 +14,5 @@ metadata:
     argocd.argoproj.io/sync-wave: "30"
 data:
   metrics_list.yaml: |
-    {{- .Values.observability.custom_rules.list -}}
+    {{- .Values.observability.custom_metrics.content | nindent 4 -}}
 {{- end -}}{{- end -}}
