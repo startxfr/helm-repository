@@ -6,7 +6,7 @@ description: Helm chart used to configure Advanced Cluster Manager at the cluste
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.278
+version: 9.15.1
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.2.8
 # Version of Openshift 
@@ -45,22 +45,22 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.278"
+    version: "9.15.1"
     alias: project
     condition: project.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.278"
+    version: "9.15.1"
     alias: projectObservability
     condition: projectObservability.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.278"
+    version: "9.15.1"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade startx chart dependencies to version 9.8.251"
+      description: "Align all charts to this release"
   artifacthub.io/containsSecurityUpdates: "false"
