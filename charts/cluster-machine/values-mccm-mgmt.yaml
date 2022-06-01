@@ -62,6 +62,9 @@ machineAutoscaler:
     minReplicas: 1
     maxReplicas: 3
 
+
+"{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
+
 machineSet: 
   enabled: false
   list:
@@ -97,14 +100,14 @@ machineSet:
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
     volumeSize: 100
     replicas: 0
-  - name: b-small
-    az: b
-    type: worker
-    subnet_name: mgmt-subnet-private2-eu-west-3b
-    ami: ami-07b7248cf3c2b3190
-    instanceType: "c5a.xlarge"
-    volumeSize: 100
-    replicas: 0
+  # - name: b-small
+  #   az: b
+  #   type: worker
+  #   subnet_name: mgmt-subnet-private2-eu-west-3b
+  #   ami: ami-07b7248cf3c2b3190
+  #   instanceType: "c5a.xlarge"
+  #   volumeSize: 100
+  #   replicas: 0
   - name: c-small
     az: c
     type: worker
