@@ -12,7 +12,7 @@ metadata:
   annotations:
     {{- include "cluster-acm.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "30"
-data:
+stringData:
   custom_rules.yaml: |
     {{- .Values.observability.custom_rules.content | nindent 4 -}}
 {{- end -}}{{- end -}}
