@@ -29,9 +29,9 @@ observability:
     s3secretkey: "s3secretkey-value"
   clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
   alertmanager_config:
-    enabled: true
+    enabled: false
   custom_rules:
-    enabled: true
+    enabled: false
     content: |
       groups:
         - name: startx-container-memory
@@ -39,7 +39,7 @@ observability:
           - record: pod:container_memory_cache:sum
             expr: sum(container_memory_cache{pod!=""}) BY (pod, container)
   custom_metrics:
-    enabled: true
+    enabled: false
     content: |
       names:
         - node_memory_MemTotal_bytes
