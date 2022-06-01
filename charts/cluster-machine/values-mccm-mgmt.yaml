@@ -36,15 +36,39 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: a
+  - name: a-infra
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: b-infra
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: c-infra
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: a-small
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: b
+  # - name: b-small
+  #   type: worker
+  #   maxUnhealthy: 40%
+  #   timeouts: 300s
+  - name: c-small
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: c
+  - name: a-big
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: b-big
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: c-big
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
@@ -52,15 +76,42 @@ machineHealthCheck:
 machineAutoscaler: 
   enabled: true
   list: 
-  - name: a
+  - name: a-infra
+    type: infra
     minReplicas: 1
-    maxReplicas: 3
-  - name: b
+    maxReplicas: 2
+  - name: b-infra
+    type: infra
     minReplicas: 1
-    maxReplicas: 3
-  - name: c
+    maxReplicas: 2
+  - name: c-infra
+    type: infra
     minReplicas: 1
+    maxReplicas: 2
+  - name: a-small
+    type: worker
+    minReplicas: 0
     maxReplicas: 3
+  # - name: b-small
+  #   type: worker
+  #   minReplicas: 0
+  #   maxReplicas: 3
+  - name: c-small
+    type: worker
+    minReplicas: 0
+    maxReplicas: 3
+  - name: a-big
+    type: worker
+    minReplicas: 0
+    maxReplicas: 2
+  - name: b-big
+    type: worker
+    minReplicas: 0
+    maxReplicas: 2
+  - name: c-big
+    type: worker
+    minReplicas: 0
+    maxReplicas: 2
 
 machineSet: 
   enabled: false
