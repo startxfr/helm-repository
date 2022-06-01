@@ -14,7 +14,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "15"
 spec:
   # doc could be found at https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html-single/apis/index
-  replicas: 1
+  # replicas: 1
   observabilityAddonSpec:
     enableMetrics: {{ .Values.observability.mco.enableMetrics }}
     interval: {{ .Values.observability.mco.interval }}
@@ -30,11 +30,11 @@ spec:
       retentionResolutionRaw: {{ .Values.observability.mco.retentionResolutionRaw }}
       retentionResolution5m: {{ .Values.observability.mco.retentionResolution5m }}
       retentionResolution1h: {{ .Values.observability.mco.retentionResolution1h }}
-    receive:
-      resources:
-        limits:
-          memory: 4096Gi
-      replicas: 3
+    # receive:
+    #   resources:
+    #     limits:
+    #       memory: 4096Gi
+    #   replicas: 3
   # availabilityConfig: {{ .Values.observability.mco.availabilityConfig }}
   imagePullPolicy: {{ .Values.observability.mco.imagePullPolicy }}
   imagePullSecret: {{ .Values.observability.mco.imagePullSecret }}
