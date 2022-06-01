@@ -157,3 +157,4 @@ xxxx to do xxxxxx
 | 9.8.256 | 2022-05-30 | Change for test
 | 9.8.256 | 2022-05-30 | Debug the logging config with infra nodes
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
+| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
