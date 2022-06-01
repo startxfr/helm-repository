@@ -1,0 +1,18 @@
+{{- if .Values.observability.custom_rules -}}{{- if .Values.observability.custom_rules.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.projectObservability.project.name | default "open-cluster-management-observability" -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: thanos-ruler-custom-rules
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acm.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "thanos-ruler-custom-rules-configmap"
+  annotations:
+    {{- include "cluster-acm.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+data:
+  custom_rules.yaml: |
+    {{- .Values.observability.custom_rules.content | nindent 4 -}}
+{{- end -}}{{- end -}}
