@@ -156,3 +156,4 @@ helm install startx/cluster-acm -f https://raw.githubusercontent.com/startxfr/he
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
 | 9.8.278 | 2022-05-31 | Improve cluster-acm options
 | 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
+| 9.15.2 | 2022-06-01 | Align all charts to release 9.15.1
