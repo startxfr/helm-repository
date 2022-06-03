@@ -1,0 +1,17 @@
+
+Example of a basic application deployed using chaos resource packaged into helm chart. 
+The chaos have the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+-- Example -------------------------
+
+Your chaos managing pod example named {{ include "startx.appName" . }} is done
+
+you can execute `kubectl get chaos {{ include "startx.appName" . }}` to get detail about this chaos

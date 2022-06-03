@@ -1,0 +1,69 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-chaos
+# # Use it to Overrride the helm-chart version
+#versionOverride: 0.0.1
+
+# Application chaos context
+context:  &context
+# Name of the global scope for this application (organisational tenant)
+ scope: myscope
+# Name of the cluster running this application (plateform tenant)
+ cluster: localhost
+# Name of the environement for this application (ex: dev, factory, preprod or prod)
+ environment: myenv
+# Component name of this application (logical tenant)
+ component: helm
+# Application name (functionnal tenant, default use Chart name)
+ app: example-chaos
+# Version name of this application (default use Chart appVersion)
+ version: "0.0.1"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    type: project
+    name: startx-chaos
+    display_name: Chaos test suite
+    description: Chaos test suite configured by STARTX
+
+kraken: 
+  enabled: false
+  access:
+    # Access method (could be node-port, load-balancer)
+    method: 'load-balancer'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Image to run into the pod
+image: "quay.io/startx/apache:latest"
+# Command to run inside the container
+command: "/bin/sx-apache"
+# argunments to pass to the command exectuted inside the container
+args: run
+# Enable debuging of the container
+debug: true
+# Define the number of replicas for this sxapi instance
+replicas: 1
