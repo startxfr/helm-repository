@@ -1,0 +1,48 @@
+{{- if .Values.mesh.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.mesh_project.project.name -}}
+---
+kind: SecurityContextConstraints 
+apiVersion: security.openshift.io/v1
+metadata:
+  name: privilegied-mesh
+  labels:
+    app.kubernetes.io/name: "privilegied-mesh-scc"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    kubernetes.io/description: 'allows privilegied access to host'
+    release.openshift.io/create-only: "true"
+allowHostDirVolumePlugin: true
+allowHostIPC: true
+allowHostNetwork: true
+allowHostPID: true
+allowHostPorts: true
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities:
+- '*'
+allowedUnsafeSysctls:
+- '*'
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+- '*'
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+seccompProfiles:
+- '*'
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:{{- $namespace -}}:chaos-daemon
+volumes:
+- '*'
+{{- end -}}

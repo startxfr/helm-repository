@@ -11,10 +11,11 @@ context:  &context
  cluster: localhost
  environment: myenv
  component: helm
- app: example-chaos
+ app: startx-chaos
  version: "0.0.1"
+
 project: 
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   project: 
@@ -23,18 +24,13 @@ project:
     name: startx-chaos
     display_name: Chaos - Main
     description: Chaos test suite configured by STARTX
+
 kraken_project: 
   enabled: false
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    type: project
-    name: startx-chaos-kraken
-    display_name: Chaos - Kraken
-    description: Chaos kraken in test suite configured by STARTX
 kraken: 
   enabled: false
-  expose: true
-  access:
-    method: 'load-balancer'
+
+mesh_project: 
+  enabled: false
+mesh: 
+  enabled: false

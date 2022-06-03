@@ -7,89 +7,27 @@
 
 # Application chaos context
 context:  &context
-# Name of the global scope for this application (organisational tenant)
  scope: myscope
-# Name of the cluster running this application (plateform tenant)
  cluster: localhost
-# Name of the environement for this application (ex: dev, factory, preprod or prod)
  environment: myenv
-# Component name of this application (logical tenant)
  component: helm
-# Application name (functionnal tenant, default use Chart name)
- app: example-chaos
-# Version name of this application (default use Chart appVersion)
+ app: startx-chaos
  version: "0.0.1"
 
-# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   enabled: false
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    type: project
-    name: example-chaos
-    display_name: Chaos - Main
-    description: Chaos test suite configured by STARTX
 
-# Configuration of the kraken project (see https://startxfr.github.io/helm-repository/charts/project)
 kraken_project: 
   enabled: false
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    type: project
-    name: example-chaos-kraken
-    display_name: Chaos - Kraken
-    description: Chaos kraken in test suite configured by STARTX
-
-# Configuration of the kraken deployment (see https://kraken.ci/helm-repo/charts)
 kraken: 
-  # Unleash the kraken ;)
   enabled: false
-  # Enable exposition for this application (route based)
-  expose: true
-  # Control kraken exposition
-  access:
-    # Access method
-    # possible methods: external-ips, node-port, load-balancer
-    # default is node-port
-    method: 'load-balancer'
-    # # in case of external-ips method set these:
-    # external_ips:
-    # # in case of node-port method set these:
-    # ui_port: 31080
-    # clickhouse_port: 31901
-    # minio_port: 31999
-  # # Kraken image used
-  # image:
-  #   baseUrl: us-docker.pkg.dev/kraken-261806/kk
-  # # Kraken postgresql configuration
-  # postgresql:
-  #   db: kraken
-  #   user: kraken
-  #   password: kk123
-  # # Minio configuration
-  # minio:
-  #   access_key: access_key_CHANGEME
-  #   secret_key: secret_key_CHANGEME
 
-# Configuration of the mesh project (see https://startxfr.github.io/helm-repository/charts/project)
 mesh_project: 
   enabled: false
-  context: 
-    <<: *context
   project: 
-    enabled: true
-    type: project
-    name: example-chaos-mesh
-    display_name: Chaos - Mesh
-    description: Chaos mesh in test suite configured by STARTX
-
-# Configuration of the mesh deployment (see https://charts.chaos-mesh.org)
+    name: startx-chaos-mesh
 mesh: 
-  enabled: false
+  enabled: true
   expose: true
   chaosDaemon:
     runtime: crio
@@ -103,24 +41,55 @@ mesh:
   timezone: "Europe/Paris"
   enableProfiling: true
   enableCtrlServer: true
+  images:
+    registry: "ghcr.io"
+    tag: "v2.2.0"
   imagePullSecrets: []
-  controllerManager: 
+  controllerManager:
     hostNetwork: false
     serviceAccount: chaos-controller-manager
+    priorityClassName: ""
     replicaCount: 3
+    image:
+      registry: ""
+      repository: chaos-mesh/chaos-mesh
+      tag: ""
+    imagePullPolicy: IfNotPresent
     env:
       WEBHOOK_PORT: 9443
       METRICS_PORT: 10080
     enableFilterNamespace: false
+    # targetNamespace: startx-chaos
     service:
       type: ClusterIP
-    resources: {}
+    resources:
+      limits: {}
+      requests:
+        cpu: 25m
+        memory: 256Mi
     nodeSelector: {}
     tolerations: []
     affinity: {}
     podAnnotations: {}
+    enabledControllers:
+      - "*"
+    enabledWebhooks:
+      - "*"
+    podChaos:
+      podFailure:
+        pauseImage: gcr.io/google-containers/pause:latest
+    leaderElection:
+      enabled: true
+      leaseDuration: 15s
+      renewDeadline: 10s
+      retryPeriod: 2s
     chaosdSecurityMode: true
   chaosDaemon:
+    image:
+      registry: ""
+      repository: chaos-mesh/chaos-daemon
+      tag: ""
+    imagePullPolicy: IfNotPresent
     grpcPort: 31767
     httpPort: 31766
     env: {}
@@ -128,6 +97,7 @@ mesh:
     mtls:
       enabled: false
     privileged: true
+    priorityClassName: ""
     podAnnotations: {}
     serviceAccount: chaos-daemon
     podSecurityPolicy: false
@@ -139,10 +109,15 @@ mesh:
     affinity: {}
   dashboard:
     create: true
-    rootUrl: https://ui-startx-chaos-mesh.apps.mycluster.com
+    rootUrl: http://https://ui-startx-chaos-mesh.apps.mgmt1.mgmt1.ocp.aws
     hostNetwork: false
     replicaCount: 1
+    priorityClassName: ""
     serviceAccount: chaos-dashboard
+    image:
+      registry: ""
+      repository: chaos-mesh/chaos-dashboard
+      tag: ""
     imagePullPolicy: IfNotPresent
     securityMode: true
     nodeSelector: {}
@@ -158,7 +133,11 @@ mesh:
         cpu: 25m
         memory: 256Mi
     persistentVolume:
-      enabled: false
+      enabled: true
+      size: 8Gi
+      storageClassName: startx-aws-generic-retain
+      mountPath: /data
+      subPath: ""
     env:
       LISTEN_HOST: 0.0.0.0
       LISTEN_PORT: 2333
@@ -176,6 +155,9 @@ mesh:
   dnsServer:
     create: true
     serviceAccount: chaos-dns-server
+    image: pingcap/coredns:v0.2.1
+    imagePullPolicy: IfNotPresent
+    priorityClassName: ""
     nodeSelector: {}
     tolerations: []
     podAnnotations: {}
@@ -192,12 +174,17 @@ mesh:
   prometheus:
     create: true
     serviceAccount: prometheus
+    image: prom/prometheus:v2.18.1
+    imagePullPolicy: IfNotPresent
+    priorityClassName: ""
     nodeSelector: {}
     tolerations: []
     affinity: {}
     podAnnotations: {}
     resources:
-      limits: {}
+      limits:
+        cpu: 500m
+        memory: 1024Mi
       requests:
         cpu: 250m
         memory: 512Mi
@@ -205,7 +192,7 @@ mesh:
       type: ClusterIP
     volume:
       storage: 2Gi
-      storageClassName: gp2
+      storageClassName: startx-aws-generic-retain
   webhook:
     certManager:
       enabled: false
@@ -230,8 +217,21 @@ mesh:
       - physicalmachine
       - statuscheck
   bpfki:
+    # Enable chaos-kernel
     create: true
+    image:
+      registry: ""
+      repository: chaos-mesh/chaos-kernel
+      tag: ""
+    imagePullPolicy: IfNotPresent
     grpcPort: 50051
     resources: {}
   chaosDlv:
     enable: true
+    image:
+      registry: ""
+      repository: chaos-mesh/chaos-dlv
+      tag: ""
+    imagePullPolicy: IfNotPresent
+
+
