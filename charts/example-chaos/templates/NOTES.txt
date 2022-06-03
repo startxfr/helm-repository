@@ -9,9 +9,13 @@ The chaos have the following characteristics :
     component : {{ include "startx.appComponent" . }}
           app : {{ include "startx.appName" . }}
       version : {{ include "startx.appVersion" . }}
+      {{- if .Values.project.enabled -}}
+      project : {{ .Values.project.project.name }}
+      {{- end -}}
 
--- Example -------------------------
-
-Your chaos managing pod example named {{ include "startx.appName" . }} is done
-
-you can execute `kubectl get chaos {{ include "startx.appName" . }}` to get detail about this chaos
+{{- if .Values.kraken.enabled -}}
+-- Kraken --------------------------
+      {{- if .Values.kraken_project.enabled -}}
+      project : {{ .Values.kraken_project.project.name }}
+      {{- end -}}
+{{- end -}}
