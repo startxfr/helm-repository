@@ -15,15 +15,7 @@ context:  &context
  version: "0.0.1"
 
 project: 
-  enabled: true
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    type: project
-    name: startx-chaos
-    display_name: Chaos - Main
-    description: Chaos test suite configured by STARTX
+  enabled: false
 
 kraken_project: 
   enabled: false
@@ -31,6 +23,14 @@ kraken:
   enabled: false
 
 mesh_project: 
-  enabled: false
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: startx-chaos-mesh
+    display_name: Chaos - Mesh
+    description: Chaos mesh in test suite configured by STARTX
 mesh: 
   enabled: false
