@@ -116,3 +116,4 @@ helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/
 | 10.12.6 | 2022-06-03 | Create first release of chaos
 | 10.12.7 | 2022-06-03 | Stable version with startx values
 | 10.12.8 | 2022-06-04 | dding the kraken.ci and mesh
+| 10.12.9 | 2022-06-04 | Improve example-chaos options
