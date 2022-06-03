@@ -68,6 +68,7 @@ supplementalGroups:
   type: RunAsAny
 users:
 - system:serviceaccount:{{- $namespace -}}:kraken
+- system:serviceaccount:{{- $namespace -}}:default
 volumes:
 - configMap
 - downwardAPI
