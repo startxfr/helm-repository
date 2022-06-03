@@ -25,7 +25,8 @@ allowedCapabilities:
 - '*'
 allowedUnsafeSysctls:
 - '*'
-defaultAddCapabilities: null
+defaultAddCapabilities: 
+- '*'
 fsGroup:
   type: RunAsAny
 groups: []
@@ -43,6 +44,8 @@ supplementalGroups:
   type: RunAsAny
 users:
 - system:serviceaccount:{{- $namespace -}}:chaos-daemon
+- system:serviceaccount:{{- $namespace -}}:chaos-controller-manager
+- system:serviceaccount:{{- $namespace -}}:chaos-dashboard
 volumes:
 - '*'
 {{- end -}}
