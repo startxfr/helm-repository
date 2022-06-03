@@ -113,3 +113,4 @@ helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/
 | Release | Date       | Description                                                                                            |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 10.12.5 | 2022-06-03 | Initial commit for this helm chart with default value example
+| 10.12.6 | 2022-06-03 | Create first release of chaos
