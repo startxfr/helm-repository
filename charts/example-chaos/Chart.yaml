@@ -59,6 +59,16 @@ dependencies:
     version: "0.980.0"
     alias: kraken
     condition: kraken.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "9.8.277"
+    alias: mesh_project
+    condition: mesh_project.enabled
+  - name: chaos-mesh
+    repository: https://charts.chaos-mesh.org
+    version: "2.2.0"
+    alias: mesh
+    condition: mesh.enabled
 
 annotations:
   artifacthub.io/changes: |
@@ -70,4 +80,6 @@ annotations:
       description: "Create default example and startx based values files"
     - kind: changed
       description: "Add the basic values.schema.json"
+    - kind: changed
+      description: "Adding the kraken.ci service"
   artifacthub.io/containsSecurityUpdates: "false"
