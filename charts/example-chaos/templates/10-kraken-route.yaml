@@ -1,4 +1,4 @@
-{{- if .Values.kraken.expose -}}
+{{- if .Values.kraken.enabled -}}{{- if .Values.kraken.expose -}}
 {{- $appName := include "startx.appName" . -}}
 apiVersion: "route.openshift.io/v1"
 kind: Route
@@ -23,4 +23,4 @@ spec:
     kind: Service
     name: ui
     weight: 100
-{{- end -}}
+{{- end -}}{{- end -}}
