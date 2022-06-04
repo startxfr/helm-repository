@@ -176,3 +176,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 10.12.6 | 2022-06-01 | Move to global scope in openshift-operator
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
+| 10.12.24 | 2022-06-05 | Add sosreport and mustgather operator support
