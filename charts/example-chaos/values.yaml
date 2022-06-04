@@ -235,3 +235,44 @@ mesh:
     resources: {}
   chaosDlv:
     enable: true
+
+# Configuration of the kubemonkey project (see https://startxfr.github.io/helm-repository/charts/project)
+monkey_project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: example-chaos-kubemonkey
+    display_name: Chaos - Monkey
+    description: Chaos kubemonkey in test suite configured by STARTX
+
+# Configuration of the kubemonkey deployment (see https://github.com/asobti/kube-monkey)
+monkey:
+  enabled: false
+  nameOverride: monkey
+  fullnameOverride: example-monkey
+  replicaCount: 1
+  rbac:
+    enabled: true
+  image:
+    repository: ayushsobti/kube-monkey
+    tag: v0.4.1
+    pullPolicy: IfNotPresent
+  config:
+    dryRun: false
+    runHour: 8
+    startHour: 10
+    endHour: 16
+    blacklistedNamespaces: [ "kube-system", "openshift-*" ]
+    whitelistedNamespaces: [ "default", "demo-*", "example-*" ]
+    timeZone: Europe/Paris
+  args:
+    logLevel: 5
+    logDir: /var/log/kube-monkey
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  
