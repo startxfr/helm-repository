@@ -193,3 +193,4 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 | 10.12.6 | 2022-06-03 | Add chaos manpage
 | 10.12.7 | 2022-06-04 | Improve example-html options
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
