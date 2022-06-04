@@ -14,38 +14,39 @@ metadata:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
     kubernetes.io/description: 'allows privilegied access to host'
     release.openshift.io/create-only: "true"
-allowHostDirVolumePlugin: true
-allowHostIPC: true
-allowHostNetwork: true
-allowHostPID: true
-allowHostPorts: true
-allowPrivilegeEscalation: true
-allowPrivilegedContainer: true
-allowedCapabilities:
-- '*'
-allowedUnsafeSysctls:
-- '*'
-defaultAddCapabilities: 
-- '*'
-fsGroup:
-  type: RunAsAny
-groups: []
-priority: null
-readOnlyRootFilesystem: false
-requiredDropCapabilities:
-- '*'
-runAsUser:
-  type: RunAsAny
-seLinuxContext:
-  type: RunAsAny
-seccompProfiles:
-- '*'
-supplementalGroups:
-  type: RunAsAny
 users:
 - system:serviceaccount:{{- $namespace -}}:chaos-daemon
 - system:serviceaccount:{{- $namespace -}}:chaos-controller-manager
 - system:serviceaccount:{{- $namespace -}}:chaos-dashboard
+- system:serviceaccount:{{- $namespace -}}:chaos-dns-server
+- system:serviceaccount:{{- $namespace -}}:default
+allowHostPorts: true
+priority: null
+requiredDropCapabilities: null
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+allowHostDirVolumePlugin: true
+seccompProfiles:
+  - '*'
+allowHostIPC: true
+seLinuxContext:
+  type: RunAsAny
+readOnlyRootFilesystem: false
+fsGroup:
+  type: RunAsAny
+kind: SecurityContextConstraints
+defaultAddCapabilities: null
+allowedUnsafeSysctls:
+  - '*'
+supplementalGroups:
+  type: RunAsAny
 volumes:
-- '*'
+  - '*'
+allowHostPID: true
+allowHostNetwork: true
+allowPrivilegeEscalation: true
+apiVersion: security.openshift.io/v1
+allowedCapabilities:
+  - '*'
 {{- end -}}
