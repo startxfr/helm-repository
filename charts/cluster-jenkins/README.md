@@ -146,3 +146,4 @@ helm install startx/cluster-jenkins -f https://raw.githubusercontent.com/startxf
 | 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
 | 10.12.5 | 2022-06-01 | publish stable update for the full repository
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
