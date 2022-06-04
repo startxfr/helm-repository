@@ -190,3 +190,4 @@ helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/h
 | 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
 | 10.12.5 | 2022-06-01 | publish stable update for the full repository
 | 10.12.6 | 2022-06-03 | Add chaos manpage
+| 10.12.7 | 2022-06-04 | Improve example-html options
