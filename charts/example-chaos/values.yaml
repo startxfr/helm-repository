@@ -235,3 +235,20 @@ mesh:
     resources: {}
   chaosDlv:
     enable: true
+
+# Configuration of the kubemonkey project (see https://startxfr.github.io/helm-repository/charts/project)
+monkey_project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: example-chaos-kubemonkey
+    display_name: Chaos - Monkey
+    description: Chaos kubemonkey in test suite configured by STARTX
+
+# Configuration of the kubemonkey deployment (see https://github.com/asobti/kube-monkey)
+monkey:
+  enabled: false
+  
