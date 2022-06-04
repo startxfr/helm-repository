@@ -33,3 +33,27 @@ monkey_project:
     name: startx-chaos-monkey
 monkey: 
   enabled: true
+  nameOverride: monkey
+  fullnameOverride: startx-monkey
+  replicaCount: 2
+  rbac:
+    enabled: true
+  image:
+    repository: ayushsobti/kube-monkey
+    tag: v0.4.1
+    pullPolicy: IfNotPresent
+  config:
+    dryRun: false
+    runHour: 8
+    startHour: 10
+    endHour: 16
+    blacklistedNamespaces: [ "kube-system", "openshift-*" ]
+    whitelistedNamespaces: [ "default", "demo-*", "example-*" ]
+    timeZone: Europe/Paris
+  args:
+    logLevel: 5
+    logDir: /var/log/kube-monkey
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
