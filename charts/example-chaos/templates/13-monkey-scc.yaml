@@ -68,8 +68,10 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
+    namespace: {{ $namespace | default "default" | quote }}
   - kind: ServiceAccount
     name: startx-monkey
+    namespace: {{ $namespace | default "default" | quote }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88,8 +90,10 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: default
+    namespace: {{ $namespace | default "default" | quote }}
   - kind: ServiceAccount
     name: startx-monkey
+    namespace: {{ $namespace | default "default" | quote }}
 roleRef:
   kind: Role
   name: privilegied-monkey-scc-role
