@@ -22,6 +22,7 @@ users:
 - system:serviceaccount:{{- $namespace -}}:litmus
 - system:serviceaccount:{{- $namespace -}}:litmus-admin
 - system:serviceaccount:{{- $namespace -}}:litmus-namespace-scope
+- system:serviceaccount:{{- $namespace -}}:litmus-cluster-scope
 - system:serviceaccount:{{- $namespace -}}:litmus-server-account
 allowHostPorts: true
 priority: null
@@ -94,6 +95,8 @@ subjects:
     name: litmus-admin
   - kind: ServiceAccount
     name: litmus-namespace-scope
+  - kind: ServiceAccount
+    name: litmus-cluster-scope
   - kind: ServiceAccount
     name: litmus-server-account
 roleRef:
