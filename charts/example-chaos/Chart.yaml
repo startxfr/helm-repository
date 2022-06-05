@@ -79,17 +79,21 @@ dependencies:
     version: "1.4.0"
     alias: monkey
     condition: monkey.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.5"
+    alias: litmus_project
+    condition: litmus_project.enabled
+  - name: litmus
+    repository: https://litmuschaos.github.io/litmus-helm
+    version: "2.9.0"
+    alias: litmus
+    condition: litmus.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Create the first release of this chart"
+      description: "Adding the kube-monkey service"
     - kind: changed
-      description: "Adding the kraken.ci service"
-    - kind: changed
-      description: "Create default example and startx based values files"
-    - kind: changed
-      description: "Add the basic values.schema.json"
-    - kind: changed
-      description: "Adding the mesh service"
+      description: "Adding the litmus service"
   artifacthub.io/containsSecurityUpdates: "false"
