@@ -108,7 +108,7 @@ app.startx.fr/version: {{ include "startx.appVersion" . | default "0.0.1" | quot
 {{/* Common minimum kubernetes labels */}}
 {{- define "startx.labelsCommonK8SMin" -}}
 app.kubernetes.io/component: {{ include "startx.appComponent" . | default "mycomponent" | quote }}
-app.kubernetes.io/part-of: {{ include "startx.appEnvironment" . | default "myenv" | quote }}
+app.kubernetes.io/part-of: {{ include "startx.appName" . | default "myenv" | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote  }}
 {{- end -}}
 
