@@ -121,3 +121,4 @@ helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
 | 10.12.24 | 2022-06-05 | Add litmus and monkey support
+| 10.12.25 | 2022-06-05 | Update kubemonkey to version 1.4.1 with v1 support for rbac api
