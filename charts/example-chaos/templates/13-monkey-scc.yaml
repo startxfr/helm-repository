@@ -3,8 +3,8 @@
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.monkey_project.project.name -}}
 ---
-kind: SecurityContextConstraints 
 apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints 
 metadata:
   name: privilegied-monkey
   labels:
@@ -32,7 +32,7 @@ seLinuxContext:
 readOnlyRootFilesystem: false
 fsGroup:
   type: RunAsAny
-kind: SecurityContextConstraints
+kind: SecurityContextConstraints 
 defaultAddCapabilities: null
 allowedUnsafeSysctls:
   - '*'
@@ -43,7 +43,6 @@ volumes:
 allowHostPID: true
 allowHostNetwork: true
 allowPrivilegeEscalation: true
-apiVersion: security.openshift.io/v1
 allowedCapabilities:
   - '*'
 ---
