@@ -132,15 +132,9 @@ helm.sh/chart: {{ include "startx.chartName" . | default "mychart" | quote }}
 
 {{/* Common infrastructure labels */}}
 {{- define "startx.labelsInfra" -}}
-{{ include "startx.labelsCommonStartxMin" . }}
+{{ include "startx.labelsCommonStartx" . }}
 {{ include "startx.labelsCommonHelm" . }}
-app.kubernetes.io/component: {{ include "startx.appComponent" . | default "infra" | quote }}
-app.kubernetes.io/part-of: {{ include "startx.appCluster" . | default "cluster" | quote }}
-app.kubernetes.io/managed-by: {{ .Release.Service | default "helm" | quote  }}
-app.kubernetes.io/version: {{ include "startx.appVersion" . | default "0.0.1" | quote }}
-app.startx.fr/component: {{ include "startx.appComponent" . | default "infra" | quote }}
-app.startx.fr/app: {{ include "startx.appName" . | default "myapp" | quote }}
-app.startx.fr/version: {{ include "startx.appVersion" . | default "0.0.1" | quote }}
+{{ include "startx.labelsCommonK8S" . }}
 {{- end -}}
 
 {{- define "imagePullSecret" }}
