@@ -32,8 +32,8 @@ mesh:
   chaosDaemon:
     runtime: crio
     socketPath: /var/run/crio/crio.sock
-  nameOverride: ""
-  fullnameOverride: ""
+  # nameOverride: ""
+  # fullnameOverride: ""
   customLabels: {}
   clusterScoped: true
   rbac:
@@ -49,7 +49,7 @@ mesh:
     hostNetwork: false
     serviceAccount: chaos-controller-manager
     priorityClassName: ""
-    replicaCount: 3
+    replicaCount: 2
     image:
       registry: ""
       repository: chaos-mesh/chaos-mesh
@@ -109,9 +109,9 @@ mesh:
     affinity: {}
   dashboard:
     create: true
-    rootUrl: http://https://ui-startx-chaos-mesh.apps.mgmt1.mgmt1.ocp.aws
+    # rootUrl: https://ui-startx-chaos-mesh.apps.mgmt1.mgmt1.ocp.aws
     hostNetwork: false
-    replicaCount: 1
+    replicaCount: 2
     priorityClassName: ""
     serviceAccount: chaos-dashboard
     image:
