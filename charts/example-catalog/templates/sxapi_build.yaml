@@ -138,6 +138,8 @@ metadata:
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "sxapi-build-deploymentconfig"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
 spec:
   replicas: 2
