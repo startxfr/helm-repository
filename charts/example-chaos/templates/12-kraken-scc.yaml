@@ -29,6 +29,7 @@ metadata:
       in further OCP releases.
 users:
 - system:serviceaccount:{{- $namespace -}}:kraken
+- system:serviceaccount:{{- $namespace -}}:pipeline
 allowHostPorts: true
 priority: null
 requiredDropCapabilities: null
@@ -89,6 +90,8 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: kraken
+  - kind: ServiceAccount
+    name: pipeline
 roleRef:
   kind: Role
   name: privilegied-kraken-scc-role
