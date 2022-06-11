@@ -5,6 +5,8 @@ metadata:
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-secret"
     {{- include "example-deployment.labels" . | nindent 4 }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" . | default "cluster" | quote }}
   annotations:
     {{- include "example-deployment.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "30"
@@ -24,6 +26,8 @@ spec:
         app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}"
         {{- include "example-deployment.labels" . | nindent 8 }}
         app: {{ include "startx.appName" . }}
+        kube-monkey/enabled: enabled
+        kube-monkey/identifier: {{ include "startx.appName" . | default "cluster" | quote }}
       annotations:
         {{- include "example-deployment.annotations" . | nindent 8 }}
     spec: 
