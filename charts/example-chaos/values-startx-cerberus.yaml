@@ -24,7 +24,29 @@ cerberus_project:
 cerberus: 
   enabled: true
   expose: true
-  
+  watch_url_routes: []
+  kubeconfig: |
+    kind: Config
+    apiVersion: v1
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        certificate-authority-data: XXXXXXX
+        server: https://localhost:6443
+    users:
+    - name: default
+      user:
+        client-certificate-data: XXXXXXX
+        client-key-data: XXXXXXX
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
+
 kraken_project: 
   enabled: false
 kraken: 
