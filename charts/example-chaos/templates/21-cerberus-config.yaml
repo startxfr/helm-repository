@@ -22,7 +22,7 @@ data:
         port: 8080
         watch_nodes: True
         watch_cluster_operators: True
-        watch_url_routes: {{ .Values.cerberus.watch_url_routes }}
+        watch_url_routes: {{ toJson .Values.cerberus.watch_url_routes }}
         watch_master_schedulable:
             enabled: True
             label: node-role.kubernetes.io/master
@@ -73,7 +73,6 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: 
   name: cerberus-kubeconfig
   namespace: "{{- $namespace -}}"
   labels:

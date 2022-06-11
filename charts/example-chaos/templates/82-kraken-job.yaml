@@ -1,0 +1,80 @@
+{{- if .Values.kraken.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.kraken_project.project.name -}}
+{{- if eq .Values.kraken.mode "job" -}}{{- if .Values.kraken.job -}}
+{{- with .Values.kraken.job }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: "{{- .prefix -}}-"
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "{{- .prefix -}}-job"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+    tool: kraken
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+spec:
+  backoffLimit: 0
+  completionMode: NonIndexed
+  completions: 1
+  parallelism: 1
+  suspend: false
+  template:
+    metadata:
+      labels:
+        tool: kraken
+        app: {{ .prefix | quote }}
+    spec:
+      containers:
+      - name: kraken
+        image: quay.io/chaos-kubox/krkn
+        imagePullPolicy: Always
+        args:
+          - python3 run_kraken.py -c config/config.yaml
+        command:
+          - /bin/sh
+          - -c
+        env:
+          - name: KUBECONFIG
+        {{- if $root.Values.kraken.aws }}{{- if $root.Values.kraken.aws.enabled }}
+        envFrom:
+          - secretRef:
+              name: kraken-aws-creds
+        {{- end }}{{- end }}
+        resources: {}
+        securityContext:
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /root/.kube/config
+          name: kube-config
+          subPath: config
+        - mountPath: /root/kraken/config
+          name: kraken-config
+        - mountPath: /root/kraken/scenarios
+          name: scenarios-config
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      serviceAccount: useroot
+      serviceAccountName: useroot
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: kraken-kubeconfig
+        name: kube-config
+      - configMap:
+          defaultMode: 420
+          name: kraken-config
+        name: kraken-config
+      - configMap:
+          defaultMode: 420
+          name: kraken-scenarios-config
+        name: scenarios-config
+{{- end -}}{{- end -}}{{- end -}}
+{{- end -}}
