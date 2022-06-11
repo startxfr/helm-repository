@@ -59,11 +59,6 @@ dependencies:
     version: "10.12.5"
     alias: kraken_project
     condition: kraken_project.enabled
-  - name: kraken-ci
-    repository: https://kraken.ci/helm-repo/charts
-    version: "0.980.0"
-    alias: kraken
-    condition: kraken.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "10.12.5"
@@ -98,11 +93,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update kubemonkey to version 1.4.1 with v1 support for rbac api"
+      description: "Add support for cerberus deployment"
     - kind: changed
-      description: "Reduce kubemonkey to 1 replicas"
-    - kind: changed
-      description: "Improve security context distrubution under Openshift environments"
-    - kind: changed
-      description: "Blacklist infra namespace for monkey service"
+      description: "Move kraken configuration from kraken-ci to krkn (shame ;)"
   artifacthub.io/containsSecurityUpdates: "false"

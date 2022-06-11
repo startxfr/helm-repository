@@ -11,6 +11,7 @@ metadata:
   labels:
     app.kubernetes.io/name: "cerberus-deployment"
     {{- include "example-chaos.labels" $root | nindent 4 }}
+    tool: cerberus
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 spec:
@@ -20,6 +21,7 @@ spec:
   selector:
     matchLabels:
       app: cerberus
+      tool: cerberus
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -29,6 +31,7 @@ spec:
     metadata:
       labels:
         app: cerberus
+        tool: cerberus
     spec:
       containers:
       - name: cerberus

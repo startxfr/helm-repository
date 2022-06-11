@@ -28,9 +28,36 @@ kraken_project:
     name: startx-chaos-kraken
 kraken: 
   enabled: true
-  expose: true
-  access:
-    method: 'load-balancer'
+  mode: pipeline
+  pipeline: 
+    prefix: kraken-test
+  aws: 
+    enabled: true
+    credentials: 
+      region: eu-west-3
+      key_id: XXXXXX
+      secret: XXXXXX
+  kubeconfig: |
+    apiVersion: v1
+    kind: Config
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        certificate-authority-data: XXXXXXX
+        server: https://localhost:6443
+    users:
+    - name: default
+      user:
+        client-certificate-data: XXXXXXX
+        client-key-data: XXXXXXX
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
 
 mesh_project: 
   enabled: false
