@@ -52,6 +52,11 @@ dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "10.12.5"
+    alias: cerberus_project
+    condition: cerberus_project.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.5"
     alias: kraken_project
     condition: kraken_project.enabled
   - name: kraken-ci
