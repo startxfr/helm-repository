@@ -123,3 +123,4 @@ helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/
 | 10.12.24 | 2022-06-05 | Add litmus and monkey support
 | 10.12.25 | 2022-06-05 | Update kubemonkey to version 1.4.1 with v1 support for rbac api
 | 10.12.6 | 2022-06-11 | Move kraken to krkn with pipeline and job support. Add cerberus support
+| 10.12.7 | 2022-06-11 | Improve example-chaos options
