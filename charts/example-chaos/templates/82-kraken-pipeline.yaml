@@ -135,7 +135,6 @@ spec:
     - name: kraken-kubeconfig
       description: The kubeconfig configuration file of the targeted cluster
       mountPath: /root/.kube/config
-      # subPath: config
     - name: kraken-config
       description: The kraken configuration file of chaos scenario to run
       mountPath: /root/kraken/config
@@ -203,6 +202,7 @@ spec:
         workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
+        subPath: config
       - name: kraken-config
         workspace: kraken-config-monitoring
   - name: monitoring-cerberus-check
@@ -240,6 +240,7 @@ spec:
         workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
+        subPath: config
       - name: kraken-config
         workspace: kraken-config-logging
   - name: logging-cerberus-check
