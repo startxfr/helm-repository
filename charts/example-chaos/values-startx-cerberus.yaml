@@ -19,9 +19,12 @@ project:
 
 cerberus_project: 
   enabled: false
+  project: 
+    name: startx-chaos-cerberus
 cerberus: 
-  enabled: false
-
+  enabled: true
+  expose: true
+  
 kraken_project: 
   enabled: false
 kraken: 
@@ -38,14 +41,6 @@ monkey:
   enabled: false
 
 litmus_project: 
-  enabled: true
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    type: project
-    name: startx-chaos-litmus
-    display_name: Chaos - Litmus
-    description: Litmus chaos orchestrator in STARTX Chaos test suite
+  enabled: false
 litmus: 
   enabled: false

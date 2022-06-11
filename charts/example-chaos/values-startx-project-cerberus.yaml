@@ -18,7 +18,15 @@ project:
   enabled: false
 
 cerberus_project: 
-  enabled: false
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: startx-chaos-cerberus
+    display_name: Chaos - Cerberus
+    description: Cerberus watchdog in STARTX Chaos test suite
 cerberus: 
   enabled: false
 
@@ -38,14 +46,6 @@ monkey:
   enabled: false
 
 litmus_project: 
-  enabled: true
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    type: project
-    name: startx-chaos-litmus
-    display_name: Chaos - Litmus
-    description: Litmus chaos orchestrator in STARTX Chaos test suite
+  enabled: false
 litmus: 
   enabled: false
