@@ -88,6 +88,8 @@ metadata:
     app.openshift.io/runtime: spring
     app.kubernetes.io/part-of: details
     app.kubernetes.io/component: "details"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-details-v1-deployment"
 spec:
   replicas: 2
@@ -136,6 +138,8 @@ metadata:
     app.openshift.io/runtime: spring
     app.kubernetes.io/part-of: details
     app.kubernetes.io/component: "details"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-details-v2-deployment"
 spec:
   replicas: 2
@@ -205,6 +209,8 @@ metadata:
     app.openshift.io/runtime: spring
     app.kubernetes.io/part-of: ratings
     app.kubernetes.io/component: "ratings"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-ratings-v1-deployment"
 spec:
   replicas: 1
@@ -253,6 +259,8 @@ metadata:
     app.openshift.io/runtime: spring
     app.kubernetes.io/part-of: ratings
     app.kubernetes.io/component: "ratings"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-ratings-v2-deployment"
 spec:
   replicas: 1
@@ -334,6 +342,8 @@ metadata:
     app.openshift.io/runtime: spring
     app.kubernetes.io/part-of: reviews
     app.kubernetes.io/component: "reviews"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v1-deployment"
 spec:
   replicas: 1
@@ -382,6 +392,8 @@ metadata:
     app.openshift.io/runtime: spring
     app.kubernetes.io/part-of: reviews
     app.kubernetes.io/component: "reviews"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v2-deployment"
 spec:
   replicas: 1
@@ -430,6 +442,8 @@ metadata:
     app: reviews
     version: "v3"
     app.openshift.io/runtime: spring
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-reviews-v3-deployment"
     app.kubernetes.io/part-of: reviews
     app.kubernetes.io/component: "reviews"
@@ -513,6 +527,8 @@ metadata:
     app.openshift.io/runtime: spring
     app.kubernetes.io/part-of: productpage
     app.kubernetes.io/component: "productpage"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-istio-productpage-v1-deployment"
 spec:
   replicas: 1

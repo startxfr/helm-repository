@@ -43,7 +43,7 @@ spec:
         name: ""
         image: litmuschaos/litmus-app-deployer:2.8.0
         args:
-          - -namespace={{workflow.parameters.adminModeNamespace}}
+          - -namespace={{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}
           - -typeName=resilient
           - -operation=apply
           - -timeout=400
@@ -63,7 +63,7 @@ spec:
         args:
           - kubectl apply -f
             https://hub.litmuschaos.io/api/chaos/2.8.0?file=charts/generic/experiments.yaml
-            -n {{workflow.parameters.adminModeNamespace}} ; sleep 30
+            -n {{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}} ; sleep 30
         resources: {}
     - name: pod-delete
       inputs:
@@ -77,14 +77,14 @@ spec:
                 kind: ChaosEngine
 
                 metadata:
-                  namespace: "{{workflow.parameters.adminModeNamespace}}"
+                  namespace: "{{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}"
                   labels:
                     instance_id: 942facfe-fe70-4495-abf2-c1f9a53635ca
                     workflow_name: startx-workflow
                   generateName: podtato-main-pod-delete-chaos
                 spec:
                   appinfo:
-                    appns: "{{workflow.parameters.adminModeNamespace}}"
+                    appns: "{{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}"
                     applabel: name=podtato-main
                     appkind: deployment
                   engineState: active
@@ -100,7 +100,7 @@ spec:
                           - name: check-podtato-main-access-url
                             type: httpProbe
                             httpProbe/inputs:
-                              url: http://podtato-main.{{workflow.parameters.adminModeNamespace}}.svc.cluster.local:9000
+                              url: http://podtato-main.{{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}.svc.cluster.local:9000
                               insecureSkipVerify: false
                               method:
                                 get:
@@ -138,7 +138,7 @@ spec:
         name: ""
         image: litmuschaos/litmus-app-deployer:2.8.0
         args:
-          - -namespace={{workflow.parameters.adminModeNamespace}}
+          - -namespace={{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}
           - -typeName=resilient
           - -operation=delete
           - -app=podtato-head
@@ -156,7 +156,7 @@ spec:
         args:
           - "kubectl delete chaosengine -l 'instance_id in
             (942facfe-fe70-4495-abf2-c1f9a53635ca, )' -n
-            {{workflow.parameters.adminModeNamespace}} "
+            {{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}} "
         resources: {}
   entrypoint: argowf-chaos
   arguments:

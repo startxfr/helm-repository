@@ -141,6 +141,8 @@ metadata:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: toleration-repulse
     app.kubernetes.io/name: "toleration-repulse-deploymentconfig"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
 spec:
   replicas: 2
@@ -317,6 +319,8 @@ metadata:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: toleration
     app.kubernetes.io/name: "toleration-deploymentconfig"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
 spec:
   replicas: 2

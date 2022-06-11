@@ -1,0 +1,331 @@
+{{- if .Values.kraken.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.kraken_project.project.name -}}
+{{- if eq .Values.kraken.mode "pipeline" -}}{{- if .Values.kraken.pipeline -}}
+{{- with .Values.kraken.pipeline }}
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: cerberus-check
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "cerberus-check-task"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+    tool: cerberus
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/categories: Test
+    tekton.dev/displayName: Start a cerberus check
+    tekton.dev/pipelines.minVersion: 0.12.1
+    tekton.dev/platforms: linux/amd64
+    tekton.dev/tags: cerberus,chaos,test
+spec:
+  description: >-
+    This `task` can be used to check cerberus status as part of a chaos pipeline.
+
+    cerberus watchdog is a good way to get health status of openshift or kubernetes
+    cluster. This task allow you to check for cerberus status as part of your 
+    chaos infrastructure pipeline.
+  params:
+    - name: CERBERUS_SERVER
+      type: string
+      description: Full URL to the cerberus server
+      default: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+    - name: TIMEOUT
+      type: string
+      description: Timeout for the healthcheck performed against the cerberus server
+      default: "300"
+    - name: FREQUENCY
+      type: string
+      description: Freqency of the healthcheck in case of bad pulse
+      default: "15"
+  steps:
+    - image: "quay.io/startx/fedora:latest"
+      env:
+        - name: CERBERUS_URL
+          value: $(params.CERBERUS_SERVER)
+        - name: CERBERUS_TIMEOUT
+          value: $(params.TIMEOUT)
+        - name: CERBERUS_FREQUENCY
+          value: $(params.FREQUENCY)
+      script: |
+        #!/usr/bin/env bash
+        set -ex
+
+        function checkCerberus {
+          curl -s $1 | grep true &> /dev/null
+          if [[ "$?" == "0" ]]; then
+              echo "Cerberus check is OK at $1"
+              return 0
+         else
+              echo "Cerberus check is KO at $1"
+              return 1
+          fi
+        }
+
+        function loopCheckCerberus {
+          timeout=${2:-30}
+          step=0
+          increment=${3:-5}
+          url=${1:-localhost}
+          while [ $step -le $timeout ]
+          do
+            checkCerberus $url
+            if [[ "$?" == "0" ]]; then
+              exit 0;
+            fi
+            step=$(( $step + $increment ))
+            sleep $increment
+          done
+          echo "Cerberus check reach ${timeout}s timeout limit"
+        }
+
+        echo "Check ${CERBERUS_URL} for ${CERBERUS_TIMEOUT} seconds"
+        loopCheckCerberus "${CERBERUS_URL}" "${CERBERUS_TIMEOUT}" "${CERBERUS_FREQUENCY}"
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: kraken-scenario
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-task"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+    tool: kraken
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/categories: Test
+    tekton.dev/displayName: Start a kraken chaos test
+    tekton.dev/pipelines.minVersion: 0.12.1
+    tekton.dev/platforms: linux/amd64
+    tekton.dev/tags: kraken,chaos,test
+spec:
+  description: >-
+    This `task` can be used to start a kraken chaos scenarios as part of a chaos pipeline.
+
+    kraken chaos testing is a good way to execute chaos testing of openshift or kubernetes
+    cluster as well as application running on top of it. This task allow you to use kraken 
+    chaos scenarios as part of your application testing pipeline. It can also be part of
+    a complete chaos pipeline for your infrastructure layer.
+  params:
+    - name: AWS_CREDS_SECRET
+      type: string
+      description: Name of the secret key holding the aws-credentials (mandatory).
+      default: kraken-aws-creds
+  steps:
+    - image: quay.io/chaos-kubox/krkn
+      args:
+        - python3 run_kraken.py -c config/config.yaml
+      command:
+        - /bin/sh
+        - -c
+      env:
+        - name: KUBECONFIG
+      envFrom:
+        - secretRef:
+            name: $(params.AWS_CREDS_SECRET)
+      resources: {}
+      securityContext:
+        privileged: true
+  workspaces:
+    - name: kraken-kubeconfig
+      description: The kubeconfig configuration file of the targeted cluster
+      mountPath: /root/.kube/config
+      subPath: config
+    - name: kraken-config
+      description: The kraken configuration file of chaos scenario to run
+      mountPath: /root/kraken/config
+    - name: kraken-scenarios
+      description: The kraken library with various scenario files
+      mountPath: /root/kraken/scenarios
+    # volumes:
+    # - configMap:
+    #     defaultMode: 420
+    #     name: kraken-kubeconfig
+    #   name: kube-config
+    # - configMap:
+    #     defaultMode: 420
+    #     name: kraken-config
+    #   name: kraken-config
+    # - configMap:
+    #     defaultMode: 420
+    #     name: kraken-scenarios-config
+    #   name: scenarios-config
+  results:
+    - name: report
+      description: The final report of the chaos test
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: kraken-chaos-infra
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-infra-pipeline"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+    tool: kraken
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/displayName: Define a kraken chaos infrastructure pipeline
+spec:
+  params:
+    - name: monitoring
+      type: string
+      default: "yes"
+    - name: logging
+      type: string
+      default: "yes"
+    - name: aws_secret_creds
+      type: string
+      default: "kraken-aws-creds"
+    - name: cerberus_url
+      type: string
+      default: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  tasks:
+  - name: monitoring-chaos
+    when:
+      - input: "$(params.monitoring)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.AWS_CREDS_SECRET)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config
+        workspace: kraken-config-monitoring
+  - name: monitoring-cerberus-check
+    runAfter:
+      - monitoring-chaos
+    when:
+      - input: "$(params.monitoring)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: CERBERUS_SERVER
+        value: $(params.cerberus_url)
+      - name: TIMEOUT
+        value: "180"
+      - name: FREQUENCY
+        value: "10"
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+  - name: logging-chaos
+    runAfter:
+      - monitoring-cerberus-check
+    when:
+      - input: "$(params.logging)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.AWS_CREDS_SECRET)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config
+        workspace: kraken-config-logging
+  - name: logging-cerberus-check
+    runAfter:
+      - logging-chaos
+    when:
+      - input: "$(params.logging)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: CERBERUS_SERVER
+        value: $(params.cerberus_url)
+      - name: TIMEOUT
+        value: "180"
+      - name: FREQUENCY
+        value: "10"
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+  workspaces:
+  - name: kraken-kubeconfig
+  - name: kraken-config-logging
+  - name: kraken-config-monitoring
+  - name: kraken-scenarios
+  - name: kraken-pipeline-persistent
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  generateName: kraken-chaos-infra-
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-infra-pipelinerun"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+    tekton.dev/pipeline: kraken-chaos-infra
+    tool: kraken
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/displayName: Run a kraken chaos infrastructure pipeline
+spec:
+  params:
+    - name: monitoring
+      value: "yes"
+    - name: logging
+      value: "yes"
+    - name: aws_secret_creds
+      value: "kraken-aws-creds"
+    - name: cerberus_url
+      value: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  pipelineRef:
+    name: kraken-chaos-infra
+  workspaces:
+    - name: kraken-scenarios
+      configmap:
+        name: kraken-scenarios-config
+    - name: kraken-kubeconfig
+      configmap:
+        name: kraken-kubeconfig
+    - name: kraken-config-monitoring
+      configmap:
+        name: kraken-config
+    - name: kraken-config-logging
+      configmap:
+        name: kraken-config
+    - name: ephemeral
+      emptyDir: {}
+    - name: kraken-pipeline-persistent
+      volumeClaimTemplate:
+        metadata:
+          labels:
+            app.kubernetes.io/name: "kraken-pipeline-persistent-cache-pvc"
+            {{- include "example-chaos.labels" $root | nindent 12 }}
+            tekton.dev/pipeline: kraken-chaos-infra
+            app.kubernetes.io/part-of: kraken-chaos-infra
+            tekton.dev/pipeline: kraken-chaos-infra
+            tool: kraken
+          annotations:
+            {{- include "example-chaos.annotations" $root | nindent 12 }}
+            openshift.io/installed-from: startx
+            tekton.dev/displayName: Shared cache accros pipeline executions
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 3Gi
+{{- end -}}{{- end -}}{{- end -}}
+{{- end -}}

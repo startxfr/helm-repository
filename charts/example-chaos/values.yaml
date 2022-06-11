@@ -32,6 +32,49 @@ project:
     display_name: Chaos - Main
     description: Chaos test suite configured by STARTX
 
+# Configuration of the cerberus project (see https://startxfr.github.io/helm-repository/charts/project)
+cerberus_project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: example-chaos-cerberus
+    display_name: Chaos - Cerberus
+    description: Cerberus watchdog in STARTX Chaos test suite
+
+# Configuration of the cerberus deployment
+cerberus: 
+  # Depoy the cerberus watchdog
+  enabled: false
+  # Enable exposition for this application (route based)
+  expose: true
+  # Url list of endpoint to watch as part of the global healthcheck (double array)
+  watch_url_routes: []
+  # Kubeconfig of the supervised cluster (mandatory)
+  kubeconfig: |
+    apiVersion: v1
+    kind: Config
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        certificate-authority-data: XXXXXXX
+        server: https://localhost:6443
+    users:
+    - name: default
+      user:
+        client-certificate-data: XXXXXXX
+        client-key-data: XXXXXXX
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
+
 # Configuration of the kraken project (see https://startxfr.github.io/helm-repository/charts/project)
 kraken_project: 
   enabled: false
@@ -42,38 +85,56 @@ kraken_project:
     type: project
     name: example-chaos-kraken
     display_name: Chaos - Kraken
-    description: Chaos kraken in test suite configured by STARTX
+    description: Kraken chaos orchestrator in STARTX Chaos test suite
 
-# Configuration of the kraken deployment (see https://kraken.ci/helm-repo/charts)
+# Configuration of the kraken deployment
 kraken: 
   # Unleash the kraken ;)
   enabled: false
-  # Enable exposition for this application (route based)
-  expose: true
-  # Control kraken exposition
-  access:
-    # Access method
-    # possible methods: external-ips, node-port, load-balancer
-    # default is node-port
-    method: 'load-balancer'
-    # # in case of external-ips method set these:
-    # external_ips:
-    # # in case of node-port method set these:
-    # ui_port: 31080
-    # clickhouse_port: 31901
-    # minio_port: 31999
-  # # Kraken image used
-  # image:
-  #   baseUrl: us-docker.pkg.dev/kraken-261806/kk
-  # # Kraken postgresql configuration
-  # postgresql:
-  #   db: kraken
-  #   user: kraken
-  #   password: kk123
-  # # Minio configuration
-  # minio:
-  #   access_key: access_key_CHANGEME
-  #   secret_key: secret_key_CHANGEME
+  # Kraken mode (could be job or pipeline)
+  mode: pipeline
+  # configuration of the job mode
+  job: 
+    # Job name prefix
+    prefix: kraken-test
+  # configuration of the pipeline mode
+  pipeline: 
+    # pipelinerun name prefix
+    prefix: kraken-test
+  # AWS configuration section
+  aws: 
+    # enable the aws integration
+    enabled: false
+    # credentials (mandatory if enabled)
+    credentials: 
+      # used region
+      region: eu-west-3
+      # AWS access key ID
+      key_id: AKIAXXXXXXXXXXXXXXXX
+      # AWS secret access key
+      secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  # Kubeconfig of the chaos tested cluster (mandatory)
+  kubeconfig: |
+    kind: Config
+    apiVersion: v1
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        certificate-authority-data: XXXXXXX
+        server: https://localhost:6443
+    users:
+    - name: default
+      user:
+        client-certificate-data: XXXXXXX
+        client-key-data: XXXXXXX
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
 
 # Configuration of the mesh project (see https://startxfr.github.io/helm-repository/charts/project)
 mesh_project: 
@@ -85,7 +146,7 @@ mesh_project:
     type: project
     name: example-chaos-mesh
     display_name: Chaos - Mesh
-    description: Chaos mesh in test suite configured by STARTX
+    description: Chaos-mesh chaos orchestrator in STARTX Chaos test suite
 
 # Configuration of the mesh deployment (see https://charts.chaos-mesh.org)
 mesh: 
@@ -246,7 +307,7 @@ monkey_project:
     type: project
     name: example-chaos-kubemonkey
     display_name: Chaos - Monkey
-    description: Chaos kubemonkey in test suite configured by STARTX
+    description: Kubernetes chaos monkey in STARTX Chaos test suite
 
 # Configuration of the kubemonkey deployment (see https://github.com/asobti/kube-monkey)
 monkey:
@@ -275,7 +336,6 @@ monkey:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  
 
 # Configuration of the litmuschaos project (see https://startxfr.github.io/helm-repository/charts/project)
 litmus_project: 
@@ -287,7 +347,7 @@ litmus_project:
     type: project
     name: example-chaos-litmus
     display_name: Chaos - Litmus
-    description: Chaos litmus in test suite configured by STARTX
+    description: Litmus chaos orchestrator in STARTX Chaos test suite
 
 # Configuration of the litmus deployment (see https://litmuschaos.github.io/litmus-helm)
 litmus:
