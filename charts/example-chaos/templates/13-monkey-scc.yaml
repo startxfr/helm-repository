@@ -15,7 +15,6 @@ metadata:
     kubernetes.io/description: 'allows privilegied access to host'
     release.openshift.io/create-only: "true"
 users:
-- system:serviceaccount:{{- $namespace -}}:default
 - system:serviceaccount:{{- $namespace -}}:startx-monkey
 allowHostPorts: true
 priority: null
@@ -89,11 +88,7 @@ metadata:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 subjects:
   - kind: ServiceAccount
-    name: default
-    namespace: {{ $namespace | default "default" | quote }}
-  - kind: ServiceAccount
     name: startx-monkey
-    namespace: {{ $namespace | default "default" | quote }}
 roleRef:
   kind: Role
   name: privilegied-monkey-scc-role
