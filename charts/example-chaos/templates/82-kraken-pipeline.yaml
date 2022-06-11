@@ -56,7 +56,7 @@ spec:
         set -ex
 
         function checkCerberus {
-          curl -s $1 | grep true &> /dev/null
+          curl -s $1 | grep True &> /dev/null
           if [[ "$?" == "0" ]]; then
               echo "Cerberus check is OK at $1"
               return 0
@@ -221,7 +221,7 @@ spec:
         value: "10"
     taskRef:
       kind: Task
-      name: kraken-scenario
+      name: cerberus-check
   - name: logging-chaos
     runAfter:
       - monitoring-cerberus-check
@@ -258,7 +258,7 @@ spec:
         value: "10"
     taskRef:
       kind: Task
-      name: kraken-scenario
+      name: cerberus-check
   workspaces:
   - name: kraken-kubeconfig
   - name: kraken-config-logging
