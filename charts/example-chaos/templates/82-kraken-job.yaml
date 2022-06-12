@@ -53,12 +53,18 @@ spec:
         - mountPath: /root/.kube/config
           name: kube-config
           subPath: config
-        - mountPath: /root/kraken
+        - mountPath: /root/kraken/startx_alerts.yaml
           name: kraken-config-common
-          subPath: config
-        - mountPath: /root/kraken
+          subPath: startx_alerts.yaml
+        - mountPath: /root/kraken/kube_burner.yaml
+          name: kraken-config-common
+          subPath: kube_burner.yaml
+        - mountPath: /root/kraken/metrics-aggregated.yaml
+          name: kraken-config-common
+          subPath: metrics-aggregated.yaml
+        - mountPath: /root/kraken/config.yaml
           name: kraken-config
-          subPath: config
+          subPath: config.yaml
         - mountPath: /root/kraken/scenarios
           name: scenarios-config
       dnsPolicy: ClusterFirst
