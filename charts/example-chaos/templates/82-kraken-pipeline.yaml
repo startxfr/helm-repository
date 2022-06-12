@@ -206,26 +206,9 @@ spec:
         workspace: kraken-config-common-burner
       - name: kraken-config-common-metrics
         workspace: kraken-config-common-metrics
-  - name: monitoring-cerberus-check
-    runAfter:
-      - monitoring-chaos
-    when:
-      - input: "$(params.monitoring)"
-        operator: in
-        values: ["yes", "true" ]
-    params:
-      - name: CERBERUS_SERVER
-        value: $(params.cerberus_url)
-      - name: TIMEOUT
-        value: "180"
-      - name: FREQUENCY
-        value: "10"
-    taskRef:
-      kind: Task
-      name: cerberus-check
   - name: logging-chaos
     runAfter:
-      - monitoring-cerberus-check
+      - monitoring-chaos
     when:
       - input: "$(params.logging)"
         operator: in
@@ -249,9 +232,269 @@ spec:
         workspace: kraken-config-common-burner
       - name: kraken-config-common-metrics
         workspace: kraken-config-common-metrics
-  - name: logging-cerberus-check
+  - name: machines-chaos
     runAfter:
       - logging-chaos
+    when:
+      - input: "$(params.machines)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-machines
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: apiserver-chaos
+    runAfter:
+      - machines-chaos
+    when:
+      - input: "$(params.apiserver)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-apiserver
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: etcd-chaos
+    runAfter:
+      - apiserver-chaos
+    when:
+      - input: "$(params.etcd)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-etcd
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: releasemonkey-chaos
+    runAfter:
+      - etcd-chaos
+    when:
+      - input: "$(params.releasemonkey)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-releasemonkey
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: time-chaos
+    runAfter:
+      - releasemonkey-chaos
+    when:
+      - input: "$(params.time)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-time
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: nodes-chaos
+    runAfter:
+      - time-chaos
+    when:
+      - input: "$(params.nodes)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-nodes
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: network-chaos
+    runAfter:
+      - nodes-chaos
+    when:
+      - input: "$(params.network)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-network
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: zone-chaos
+    runAfter:
+      - network-chaos
+    when:
+      - input: "$(params.zone)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-zone
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: storage-chaos
+    runAfter:
+      - zone-chaos
+    when:
+      - input: "$(params.storage)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-storage
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: cluster-chaos
+    runAfter:
+      - storage-chaos
+    when:
+      - input: "$(params.cluster)"
+        operator: in
+        values: ["yes", "true" ]
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-cluster
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  - name: logging-cerberus-check
+    runAfter:
+      - cluster-chaos
     when:
       - input: "$(params.logging)"
         operator: in
@@ -270,6 +513,16 @@ spec:
   - name: kraken-kubeconfig
   - name: kraken-config-monitoring
   - name: kraken-config-logging
+  - name: kraken-config-machines
+  - name: kraken-config-apiserver
+  - name: kraken-config-etcd
+  - name: kraken-config-releasemonkey
+  - name: kraken-config-time
+  - name: kraken-config-nodes
+  - name: kraken-config-network
+  - name: kraken-config-zone
+  - name: kraken-config-storage
+  - name: kraken-config-cluster
   - name: kraken-scenarios
   - name: kraken-config-common-metrics
   - name: kraken-config-common-burner
@@ -322,18 +575,6 @@ spec:
       configMap:
         name: kraken-config-common
       subPath: metrics-aggregated.yaml
-    #   # subPath: kube_burner.yaml
-    #   # subPath: metrics-aggregated.yaml
-    #     # - mountPath: /root/kraken/startx_alerts.yaml
-    #     #   name: kraken-config-common
-    #     #   subPath: startx_alerts.yaml
-    # - name: kraken-config-logging
-    #   configMap:
-    #     name: kraken-config-chaos-logging
-    #   subPath: config.yaml
-    #     # - mountPath: /root/kraken/config/config.yaml
-    #     #   name: kraken-config
-    #     #   subPath: config.yaml
     - name: kraken-config-monitoring
       configMap:
         name: kraken-config-chaos-monitoring
@@ -341,6 +582,46 @@ spec:
     - name: kraken-config-logging
       configMap:
         name: kraken-config-chaos-logging
+      subPath: config.yaml
+    - name: kraken-config-machines
+      configMap:
+        name: kraken-config-chaos-machines
+      subPath: config.yaml
+    - name: kraken-config-apiserver
+      configMap:
+        name: kraken-config-chaos-apiserver
+      subPath: config.yaml
+    - name: kraken-config-etcd
+      configMap:
+        name: kraken-config-chaos-etcd
+      subPath: config.yaml
+    - name: kraken-config-releasemonkey
+      configMap:
+        name: kraken-config-chaos-releasemonkey
+      subPath: config.yaml
+    - name: kraken-config-time
+      configMap:
+        name: kraken-config-chaos-time
+      subPath: config.yaml
+    - name: kraken-config-nodes
+      configMap:
+        name: kraken-config-chaos-nodes
+      subPath: config.yaml
+    - name: kraken-config-network
+      configMap:
+        name: kraken-config-chaos-network
+      subPath: config.yaml
+    - name: kraken-config-zone
+      configMap:
+        name: kraken-config-chaos-zone
+      subPath: config.yaml
+    - name: kraken-config-storage
+      configMap:
+        name: kraken-config-chaos-storage
+      subPath: config.yaml
+    - name: kraken-config-cluster
+      configMap:
+        name: kraken-config-chaos-cluster
       subPath: config.yaml
     - name: ephemeral
       emptyDir: {}
