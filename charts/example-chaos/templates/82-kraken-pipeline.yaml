@@ -135,9 +135,9 @@ spec:
     - name: kraken-kubeconfig
       description: The kubeconfig configuration file of the targeted cluster
       mountPath: /root/.kube/config
-    # - name: kraken-config
-    #   description: The kraken configuration file of chaos scenario to run
-    #   mountPath: /root/kraken/config
+    - name: kraken-config
+      description: The kraken configuration file of chaos scenario to run
+      mountPath: /root/kraken/config
     # - name: kraken-scenarios
     #   description: The kraken library with various scenario files
     #   mountPath: /root/kraken/scenarios
@@ -192,8 +192,8 @@ spec:
       #   workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
-      # - name: kraken-config
-      #   workspace: kraken-config-monitoring
+      - name: kraken-config
+        workspace: kraken-config-monitoring
       # - name: kraken-config-common
       #   workspace: kraken-config-common
   - name: monitoring-cerberus-check
@@ -255,7 +255,7 @@ spec:
   workspaces:
   - name: kraken-kubeconfig
   # - name: kraken-config-logging
-  # - name: kraken-config-monitoring
+  - name: kraken-config-monitoring
   # - name: kraken-scenarios
   # - name: kraken-config-common
   - name: kraken-pipeline-persistent
@@ -310,13 +310,13 @@ spec:
     #     # - mountPath: /root/kraken/config/config.yaml
     #     #   name: kraken-config
     #     #   subPath: config.yaml
-    # - name: kraken-config-monitoring
-    #   configMap:
-    #     name: kraken-config-chaos-monitoring
-    #   subPath: config.yaml
-    #     # - mountPath: /root/kraken/config/config.yaml
-    #     #   name: kraken-config
-    #     #   subPath: config.yaml
+    - name: kraken-config-monitoring
+      configMap:
+        name: kraken-config-chaos-monitoring
+      subPath: config.yaml
+        # - mountPath: /root/kraken/config/config.yaml
+        #   name: kraken-config
+        #   subPath: config.yaml
     - name: ephemeral
       emptyDir: {}
     - name: kraken-pipeline-persistent
