@@ -729,24 +729,14 @@ data:
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: kraken-config
+  name: kraken-config-chaos_logging
   namespace: "{{- $namespace -}}"
   labels:
-    app.kubernetes.io/name: "kraken-config"
+    app.kubernetes.io/name: "kraken-config-chaos_logging"
     {{- include "example-chaos.labels" $root | nindent 4 }}
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 data:
-  startx_alerts.yaml: |-
-    - expr: avg_over_time(histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[2m]))[5m:]) > 0.01
-      description: 5 minutes avg. etcd fsync latency on {{`{{`}}$labels.pod{{`}}`}} higher than 10ms {{`{{`}}$value{{`}}`}}
-      severity: error
-    - expr: avg_over_time(histogram_quantile(0.99, rate(etcd_network_peer_round_trip_time_seconds_bucket[5m]))[5m:]) > 0.1
-      description: 5 minutes avg. etcd netowrk peer round trip on {{`{{`}}$labels.pod{{`}}`}} higher than 100ms {{`{{`}}$value{{`}}`}}
-      severity: info
-    - expr: increase(etcd_server_leader_changes_seen_total[2m]) > 0
-      description: etcd leader changes observed
-      severity: critical
   config.yaml: |-
     kraken:
       distribution: openshift
@@ -759,35 +749,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-          # -   pod_scenarios:
-          #     - - scenarios/startx_openshift_logging.yml
-          #     - - scenarios/startx_openshift_monitoring.yml
-          #     - - scenarios/startx_openshift_machines.yml
-          #     - - scenarios/startx_openshift-apiserver.yml
-          #     - - scenarios/startx_openshift_etcd_pod.yml
-          #     - - scenarios/startx_openshift_podmonkey.yml
-          # -   container_scenarios: 
-          #     - - scenarios/startx_openshift_etcd_container.yml
-          #-   time_scenarios: 
-          #     - scenarios/startx_time_pod.yml
-              # - scenarios/startx_time_node.yml
-          -   node_scenarios: 
-              - scenarios/startx_node_master.yml
-            #     -   scenarios/startx_node_infra.yml
-            #     -   scenarios/startx_node_app.yml
-          # -   network_chaos:
-          #       - scenarios/startx_node_app_network_chaos.yaml
-          #       - scenarios/startx_node_infra_network_chaos.yaml
-          #       - scenarios/startx_node_master_network_chaos.yaml
-          # -   zone_outages:
-          #       - scenarios/startx_zone_outage.yaml
-          #-   cluster_shut_down_scenarios:
-          #    - - scenarios/cluster_shut_down_scenario.yml
-                ######################## - scenarios/post_action_shut_down.py
-          # -   application_outages:
-          #     # - scenarios/app_outage.yaml
-          # -   pvc_scenarios:
-          #     # - scenarios/pvc_scenario.yaml
+        - pod_scenarios:
+          - - scenarios/startx_openshift_logging.yml
     cerberus:
         cerberus_enabled: True
         cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
@@ -808,6 +771,615 @@ data:
         wait_duration: 90
         iterations: 1
         daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_monitoring
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_monitoring"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_monitoring.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_machines
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_machines"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_machines.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_apiserver
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_apiserver"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift-apiserver.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_etcd
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_etcd"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_etcd_pod.yml
+        - container_scenarios: 
+          - - scenarios/startx_openshift_etcd_container.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_releasemonkey
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_releasemonkey"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_podmonkey.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_time
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_time"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - time_scenarios: 
+          - scenarios/startx_time_pod.yml
+          - scenarios/startx_time_node.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_nodes
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_nodes"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - node_scenarios: 
+          - scenarios/startx_node_master.yml
+          - scenarios/startx_node_infra.yml
+          - scenarios/startx_node_app.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_network
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_network"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - network_chaos:
+          - scenarios/startx_node_app_network_chaos.yaml
+          - scenarios/startx_node_infra_network_chaos.yaml
+          - scenarios/startx_node_master_network_chaos.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_zone
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_zone"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - zone_outages:
+          - scenarios/startx_zone_outage.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_storage
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_storage"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pvc_scenarios:
+          - scenarios/pvc_scenario.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos_cluster
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos_cluster"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - cluster_shut_down_scenarios:
+          - - scenarios/cluster_shut_down_scenario.yml
+          # - scenarios/post_action_shut_down.py
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-all
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-all"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+      - pod_scenarios:
+        - - scenarios/startx_openshift_logging.yml
+        - - scenarios/startx_openshift_monitoring.yml
+        - - scenarios/startx_openshift_machines.yml
+        - - scenarios/startx_openshift-apiserver.yml
+        - - scenarios/startx_openshift_etcd_pod.yml
+        - - scenarios/startx_openshift_podmonkey.yml
+      - container_scenarios: 
+        - - scenarios/startx_openshift_etcd_container.yml
+      - time_scenarios: 
+        - scenarios/startx_time_pod.yml
+        - scenarios/startx_time_node.yml
+      - node_scenarios: 
+        - scenarios/startx_node_master.yml
+        - scenarios/startx_node_infra.yml
+        - scenarios/startx_node_app.yml
+      - network_chaos:
+        - scenarios/startx_node_app_network_chaos.yaml
+        - scenarios/startx_node_infra_network_chaos.yaml
+        - scenarios/startx_node_master_network_chaos.yaml
+      - zone_outages:
+        - scenarios/startx_zone_outage.yaml
+      - cluster_shut_down_scenarios:
+        - - scenarios/cluster_shut_down_scenario.yml
+        # - scenarios/post_action_shut_down.py
+      - application_outages:
+        - scenarios/app_outage.yaml
+      - pvc_scenarios:
+        - scenarios/pvc_scenario.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-common
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-common"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  startx_alerts.yaml: |-
+    - expr: avg_over_time(histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[2m]))[5m:]) > 0.01
+      description: 5 minutes avg. etcd fsync latency on {{`{{`}}$labels.pod{{`}}`}} higher than 10ms {{`{{`}}$value{{`}}`}}
+      severity: error
+    - expr: avg_over_time(histogram_quantile(0.99, rate(etcd_network_peer_round_trip_time_seconds_bucket[5m]))[5m:]) > 0.1
+      description: 5 minutes avg. etcd netowrk peer round trip on {{`{{`}}$labels.pod{{`}}`}} higher than 100ms {{`{{`}}$value{{`}}`}}
+      severity: info
+    - expr: increase(etcd_server_leader_changes_seen_total[2m]) > 0
+      description: etcd leader changes observed
+      severity: critical
   kube_burner.yaml: |-
     ---
     global:
