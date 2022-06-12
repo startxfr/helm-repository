@@ -53,8 +53,12 @@ spec:
         - mountPath: /root/.kube/config
           name: kube-config
           subPath: config
-        - mountPath: /root/kraken/config
+        - mountPath: /root/kraken
+          name: kraken-config-common
+          subPath: config
+        - mountPath: /root/kraken
           name: kraken-config
+          subPath: config
         - mountPath: /root/kraken/scenarios
           name: scenarios-config
       dnsPolicy: ClusterFirst
@@ -68,13 +72,36 @@ spec:
           defaultMode: 420
           name: kraken-kubeconfig
         name: kube-config
-      - configMap:
+      - name: kraken-config-common
+        configMap:
           defaultMode: 420
-          name: kraken-config
-        name: kraken-config
+          name: kraken-config-common
+          items:
+          - key: startx_alerts.yaml
+            path: startx_alerts.yaml
+          - key: kube_burner.yaml
+            path: kube_burner.yaml
+          - key: metrics-aggregated.yaml
+            path: metrics-aggregated.yaml
+      - name: kraken-config
+        configMap:
+          defaultMode: 420
+          name: kraken-config-all
+          items:
+          - key: config.yaml
+            path: config.yaml
       - configMap:
           defaultMode: 420
           name: kraken-scenarios-config
+          items:
+          - key: config-all.yaml
+            path: config.yaml
+          - key: startx_alerts.yaml
+            path: startx_alerts.yaml
+          - key: kube_burner.yaml
+            path: kube_burner.yaml
+          - key: metrics-aggregated.yaml
+            path: metrics-aggregated.yaml
         name: scenarios-config
 {{- end -}}{{- end -}}{{- end -}}
 {{- end -}}
