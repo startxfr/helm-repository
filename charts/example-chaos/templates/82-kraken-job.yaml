@@ -18,7 +18,6 @@ metadata:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 spec:
   backoffLimit: 0
-  completionMode: NonIndexed
   completions: 1
   parallelism: 1
   suspend: false
@@ -67,12 +66,9 @@ spec:
           subPath: config.yaml
         - mountPath: /root/kraken/scenarios
           name: scenarios-config
-      dnsPolicy: ClusterFirst
       restartPolicy: Never
-      schedulerName: default-scheduler
-      serviceAccount: useroot
-      serviceAccountName: useroot
-      terminationGracePeriodSeconds: 30
+      serviceAccount: kraken
+      terminationGracePeriodSeconds: 8
       volumes:
       - configMap:
           defaultMode: 420
