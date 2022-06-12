@@ -135,12 +135,12 @@ spec:
     - name: kraken-kubeconfig
       description: The kubeconfig configuration file of the targeted cluster
       mountPath: /root/.kube/config
-    - name: kraken-config
-      description: The kraken configuration file of chaos scenario to run
-      mountPath: /root/kraken/config
-    - name: kraken-scenarios
-      description: The kraken library with various scenario files
-      mountPath: /root/kraken/scenarios
+    # - name: kraken-config
+    #   description: The kraken configuration file of chaos scenario to run
+    #   mountPath: /root/kraken/config
+    # - name: kraken-scenarios
+    #   description: The kraken library with various scenario files
+    #   mountPath: /root/kraken/scenarios
     # - name: kraken-config-common
     #   description: The kraken common library files
     #   mountPath: /root/kraken
@@ -188,12 +188,12 @@ spec:
       kind: Task
       name: kraken-scenario
     workspaces:
-      - name: kraken-scenarios
-        workspace: kraken-scenarios
+      # - name: kraken-scenarios
+      #   workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
-      - name: kraken-config
-        workspace: kraken-config-monitoring
+      # - name: kraken-config
+      #   workspace: kraken-config-monitoring
       # - name: kraken-config-common
       #   workspace: kraken-config-common
   - name: monitoring-cerberus-check
@@ -227,12 +227,12 @@ spec:
       kind: Task
       name: kraken-scenario
     workspaces:
-      - name: kraken-scenarios 
-        workspace: kraken-scenarios
+      # - name: kraken-scenarios 
+      #   workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
-      - name: kraken-config
-        workspace: kraken-config-logging
+      # - name: kraken-config
+      #   workspace: kraken-config-logging
       # - name: kraken-config-common
       #   workspace: kraken-config-common
   - name: logging-cerberus-check
@@ -254,9 +254,9 @@ spec:
       name: cerberus-check
   workspaces:
   - name: kraken-kubeconfig
-  - name: kraken-config-logging
-  - name: kraken-config-monitoring
-  - name: kraken-scenarios
+  # - name: kraken-config-logging
+  # - name: kraken-config-monitoring
+  # - name: kraken-scenarios
   # - name: kraken-config-common
   - name: kraken-pipeline-persistent
 ---
@@ -291,9 +291,9 @@ spec:
       configMap:
         name: kraken-kubeconfig
       subPath: config
-    - name: kraken-scenarios
-      configMap:
-        name: kraken-scenarios-config
+    # - name: kraken-scenarios
+    #   configMap:
+    #     name: kraken-scenarios-config
     # - name: kraken-config-common
     #   configMap:
     #     name: kraken-config-common
@@ -303,20 +303,20 @@ spec:
     #     # - mountPath: /root/kraken/startx_alerts.yaml
     #     #   name: kraken-config-common
     #     #   subPath: startx_alerts.yaml
-    - name: kraken-config-logging
-      configMap:
-        name: kraken-config-chaos-logging
-      subPath: config.yaml
-        # - mountPath: /root/kraken/config/config.yaml
-        #   name: kraken-config
-        #   subPath: config.yaml
-    - name: kraken-config-monitoring
-      configMap:
-        name: kraken-config-chaos-monitoring
-      subPath: config.yaml
-        # - mountPath: /root/kraken/config/config.yaml
-        #   name: kraken-config
-        #   subPath: config.yaml
+    # - name: kraken-config-logging
+    #   configMap:
+    #     name: kraken-config-chaos-logging
+    #   subPath: config.yaml
+    #     # - mountPath: /root/kraken/config/config.yaml
+    #     #   name: kraken-config
+    #     #   subPath: config.yaml
+    # - name: kraken-config-monitoring
+    #   configMap:
+    #     name: kraken-config-chaos-monitoring
+    #   subPath: config.yaml
+    #     # - mountPath: /root/kraken/config/config.yaml
+    #     #   name: kraken-config
+    #     #   subPath: config.yaml
     - name: ephemeral
       emptyDir: {}
     - name: kraken-pipeline-persistent
