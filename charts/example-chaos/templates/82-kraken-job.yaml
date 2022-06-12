@@ -52,11 +52,11 @@ spec:
         - mountPath: /root/.kube/config
           name: kube-config
           subPath: config
+        - mountPath: /root/kraken/scenarios
+          name: kraken-scenarios-config
         - mountPath: /root/kraken/config.yaml
           name: kraken-config
           subPath: config.yaml
-        - mountPath: /root/kraken/scenarios
-          name: scenarios-config
         - mountPath: /root/kraken/kube_burner.yaml
           name: kraken-config-common
           subPath: kube_burner.yaml
@@ -81,7 +81,7 @@ spec:
           items:
           - key: config.yaml
             path: config.yaml
-      - name: scenarios-config
+      - name: kraken-scenarios-config
         configMap:
           defaultMode: 420
           name: kraken-scenarios-config
