@@ -63,12 +63,12 @@ spec:
         - mountPath: /root/kraken/metrics-aggregated.yaml
           name: kraken-config-common
           subPath: metrics-aggregated.yaml
-        # - mountPath: /root/kraken/startx_alerts.yaml
-        #   name: kraken-config-common
-        #   subPath: startx_alerts.yaml
+        - mountPath: /root/kraken/startx_alerts.yaml
+          name: kraken-config-common
+          subPath: startx_alerts.yaml
       restartPolicy: Never
       serviceAccount: kraken
-      terminationGracePeriodSeconds: 8
+      terminationGracePeriodSeconds: 10
       volumes:
       - name: kube-config
         configMap:
@@ -85,13 +85,6 @@ spec:
         configMap:
           defaultMode: 420
           name: kraken-scenarios-config
-          items:
-          # - key: startx_alerts.yaml
-          #   path: startx_alerts.yaml
-          - key: kube_burner.yaml
-            path: kube_burner.yaml
-          - key: metrics-aggregated.yaml
-            path: metrics-aggregated.yaml
       - name: kraken-config-common
         configMap:
           defaultMode: 420
