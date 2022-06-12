@@ -788,6 +788,26 @@ data:
           #     # - scenarios/app_outage.yaml
           # -   pvc_scenarios:
           #     # - scenarios/pvc_scenario.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus-service.startx-cerbxxx.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 90
+        iterations: 1
+        daemon_mode: False
   kube_burner.yaml: |-
     ---
     global:
