@@ -194,6 +194,8 @@ spec:
         workspace: kraken-kubeconfig
       - name: kraken-config
         workspace: kraken-config-monitoring
+      - name: kraken-config-common
+        workspace: kraken-config-common
   - name: monitoring-cerberus-check
     runAfter:
       - monitoring-chaos
@@ -231,6 +233,8 @@ spec:
         workspace: kraken-kubeconfig
       - name: kraken-config
         workspace: kraken-config-logging
+      - name: kraken-config-common
+        workspace: kraken-config-common
   - name: logging-cerberus-check
     runAfter:
       - logging-chaos
@@ -253,6 +257,7 @@ spec:
   - name: kraken-config-logging
   - name: kraken-config-monitoring
   - name: kraken-scenarios
+  - name: kraken-config-common
   - name: kraken-pipeline-persistent
 ---
 kind: PipelineRun
