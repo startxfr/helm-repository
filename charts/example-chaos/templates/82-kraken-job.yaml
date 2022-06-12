@@ -52,28 +52,46 @@ spec:
         - mountPath: /root/.kube/config
           name: kube-config
           subPath: config
-        - mountPath: /root/kraken/startx_alerts.yaml
-          name: kraken-config-common
-          subPath: startx_alerts.yaml
+        - mountPath: /root/kraken/config.yaml
+          name: kraken-config
+          subPath: config.yaml
+        - mountPath: /root/kraken/scenarios
+          name: scenarios-config
         - mountPath: /root/kraken/kube_burner.yaml
           name: kraken-config-common
           subPath: kube_burner.yaml
         - mountPath: /root/kraken/metrics-aggregated.yaml
           name: kraken-config-common
           subPath: metrics-aggregated.yaml
-        - mountPath: /root/kraken/config.yaml
-          name: kraken-config
-          subPath: config.yaml
-        - mountPath: /root/kraken/scenarios
-          name: scenarios-config
+        - mountPath: /root/kraken/startx_alerts.yaml
+          name: kraken-config-common
+          subPath: startx_alerts.yaml
       restartPolicy: Never
       serviceAccount: kraken
       terminationGracePeriodSeconds: 8
       volumes:
-      - configMap:
+      - name: kube-config
+        configMap:
           defaultMode: 420
           name: kraken-kubeconfig
-        name: kube-config
+      - name: kraken-config
+        configMap:
+          defaultMode: 420
+          name: kraken-config-all
+          items:
+          - key: config.yaml
+            path: config.yaml
+      - name: scenarios-config
+        configMap:
+          defaultMode: 420
+          name: kraken-scenarios-config
+          items:
+          - key: startx_alerts.yaml
+            path: startx_alerts.yaml
+          - key: kube_burner.yaml
+            path: kube_burner.yaml
+          - key: metrics-aggregated.yaml
+            path: metrics-aggregated.yaml
       - name: kraken-config-common
         configMap:
           defaultMode: 420
@@ -85,23 +103,5 @@ spec:
             path: kube_burner.yaml
           - key: metrics-aggregated.yaml
             path: metrics-aggregated.yaml
-      - name: kraken-config
-        configMap:
-          defaultMode: 420
-          name: kraken-config-all
-          items:
-          - key: config.yaml
-            path: config.yaml
-      - configMap:
-          defaultMode: 420
-          name: kraken-scenarios-config
-          items:
-          - key: startx_alerts.yaml
-            path: startx_alerts.yaml
-          - key: kube_burner.yaml
-            path: kube_burner.yaml
-          - key: metrics-aggregated.yaml
-            path: metrics-aggregated.yaml
-        name: scenarios-config
 {{- end -}}{{- end -}}{{- end -}}
 {{- end -}}
