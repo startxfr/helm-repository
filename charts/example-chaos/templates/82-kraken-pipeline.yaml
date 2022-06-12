@@ -141,9 +141,9 @@ spec:
     # - name: kraken-scenarios
     #   description: The kraken library with various scenario files
     #   mountPath: /root/kraken/scenarios
-    # - name: kraken-config-common
-    #   description: The kraken common library files
-    #   mountPath: /root/kraken
+    - name: kraken-config-common
+      description: The kraken common library files
+      mountPath: /root/kraken/startx_alerts.yaml
   results:
     - name: report
       description: The final report of the chaos test
@@ -194,8 +194,8 @@ spec:
         workspace: kraken-kubeconfig
       - name: kraken-config
         workspace: kraken-config-monitoring
-      # - name: kraken-config-common
-      #   workspace: kraken-config-common
+      - name: kraken-config-common
+        workspace: kraken-config-common
   - name: monitoring-cerberus-check
     runAfter:
       - monitoring-chaos
@@ -231,10 +231,10 @@ spec:
       #   workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
-      # - name: kraken-config
-      #   workspace: kraken-config-logging
-      # - name: kraken-config-common
-      #   workspace: kraken-config-common
+      - name: kraken-config
+        workspace: kraken-config-logging
+      - name: kraken-config-common
+        workspace: kraken-config-common
   - name: logging-cerberus-check
     runAfter:
       - logging-chaos
@@ -254,10 +254,10 @@ spec:
       name: cerberus-check
   workspaces:
   - name: kraken-kubeconfig
-  # - name: kraken-config-logging
+  - name: kraken-config-logging
   - name: kraken-config-monitoring
   # - name: kraken-scenarios
-  # - name: kraken-config-common
+  - name: kraken-config-common
   - name: kraken-pipeline-persistent
 ---
 kind: PipelineRun
@@ -294,12 +294,12 @@ spec:
     # - name: kraken-scenarios
     #   configMap:
     #     name: kraken-scenarios-config
-    # - name: kraken-config-common
-    #   configMap:
-    #     name: kraken-config-common
+    - name: kraken-config-common
+      configMap:
+        name: kraken-config-common
+      subPath: startx_alerts.yaml
     #   # subPath: kube_burner.yaml
     #   # subPath: metrics-aggregated.yaml
-    #   # subPath: startx_alerts.yaml
     #     # - mountPath: /root/kraken/startx_alerts.yaml
     #     #   name: kraken-config-common
     #     #   subPath: startx_alerts.yaml
@@ -314,9 +314,10 @@ spec:
       configMap:
         name: kraken-config-chaos-monitoring
       subPath: config.yaml
-        # - mountPath: /root/kraken/config/config.yaml
-        #   name: kraken-config
-        #   subPath: config.yaml
+    - name: kraken-config-logging
+      configMap:
+        name: kraken-config-chaos-logging
+      subPath: config.yaml
     - name: ephemeral
       emptyDir: {}
     - name: kraken-pipeline-persistent
