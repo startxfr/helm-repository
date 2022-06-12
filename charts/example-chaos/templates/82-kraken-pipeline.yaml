@@ -194,12 +194,12 @@ spec:
       kind: Task
       name: kraken-scenario
     workspaces:
+      - name: kraken-config
+        workspace: kraken-config-monitoring
       # - name: kraken-scenarios
       #   workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
-      - name: kraken-config
-        workspace: kraken-config-monitoring
       - name: kraken-config-common-alerts
         workspace: kraken-config-common
       - name: kraken-config-common-burner
@@ -237,12 +237,12 @@ spec:
       kind: Task
       name: kraken-scenario
     workspaces:
-      # - name: kraken-scenarios 
+      - name: kraken-config
+        workspace: kraken-config-logging
+      # - name: kraken-scenarios
       #   workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
-      - name: kraken-config
-        workspace: kraken-config-logging
       - name: kraken-config-common-alerts
         workspace: kraken-config-common
       - name: kraken-config-common-burner
@@ -269,7 +269,6 @@ spec:
   workspaces:
   - name: kraken-kubeconfig
   - name: kraken-config-logging
-  - name: kraken-config-monitoring
   # - name: kraken-scenarios
   - name: kraken-config-common-metrics
   - name: kraken-config-common-burner
