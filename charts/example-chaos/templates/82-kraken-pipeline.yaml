@@ -142,8 +142,14 @@ spec:
     #   description: The kraken library with various scenario files
     #   mountPath: /root/kraken/scenarios
     - name: kraken-config-common
-      description: The kraken common library files
+      description: The kraken startx_alerts ommon library files
       mountPath: /root/kraken/startx_alerts.yaml
+    - name: kraken-config-common
+      description: The kraken metrics-aggregated common library files
+      mountPath: /root/kraken/metrics-aggregated.yaml
+    - name: kraken-config-common
+      description: The kraken kube_burner common library files
+      mountPath: /root/kraken/kube_burner.yaml
   results:
     - name: report
       description: The final report of the chaos test
@@ -298,6 +304,14 @@ spec:
       configMap:
         name: kraken-config-common
       subPath: startx_alerts.yaml
+    - name: kraken-config-common
+      configMap:
+        name: kraken-config-common
+      subPath: kube_burner.yaml
+    - name: kraken-config-common
+      configMap:
+        name: kraken-config-common
+      subPath: metrics-aggregated.yaml
     #   # subPath: kube_burner.yaml
     #   # subPath: metrics-aggregated.yaml
     #     # - mountPath: /root/kraken/startx_alerts.yaml
