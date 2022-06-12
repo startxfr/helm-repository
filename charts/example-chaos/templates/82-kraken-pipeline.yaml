@@ -138,9 +138,9 @@ spec:
     - name: kraken-config
       description: The kraken configuration file of chaos scenario to run
       mountPath: /root/kraken/config/config.yaml
-    # - name: kraken-scenarios
-    #   description: The kraken library with various scenario files
-    #   mountPath: /root/kraken/scenarios
+    - name: kraken-scenarios
+      description: The kraken library with various scenario files
+      mountPath: /root/kraken/scenarios
     - name: kraken-config-common-alerts
       description: The kraken startx_alerts ommon library files
       mountPath: /root/kraken/startx_alerts.yaml
@@ -196,8 +196,8 @@ spec:
     workspaces:
       - name: kraken-config
         workspace: kraken-config-monitoring
-      # - name: kraken-scenarios
-      #   workspace: kraken-scenarios
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
       - name: kraken-config-common-alerts
@@ -239,8 +239,8 @@ spec:
     workspaces:
       - name: kraken-config
         workspace: kraken-config-logging
-      # - name: kraken-scenarios
-      #   workspace: kraken-scenarios
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
       - name: kraken-kubeconfig
         workspace: kraken-kubeconfig
       - name: kraken-config-common-alerts
@@ -270,7 +270,7 @@ spec:
   - name: kraken-kubeconfig
   - name: kraken-config-monitoring
   - name: kraken-config-logging
-  # - name: kraken-scenarios
+  - name: kraken-scenarios
   - name: kraken-config-common-metrics
   - name: kraken-config-common-burner
   - name: kraken-config-common-alerts
@@ -307,9 +307,9 @@ spec:
       configMap:
         name: kraken-kubeconfig
       subPath: config
-    # - name: kraken-scenarios
-    #   configMap:
-    #     name: kraken-scenarios-config
+    - name: kraken-scenarios
+      configMap:
+        name: kraken-scenarios-config
     - name: kraken-config-common-alerts
       configMap:
         name: kraken-config-common
