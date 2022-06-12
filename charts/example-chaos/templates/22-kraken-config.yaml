@@ -790,7 +790,7 @@ data:
           #     # - scenarios/pvc_scenario.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{- $root.Values.cerberus_project.project.name | default 'startx-chaos-cerberus' -}}.svc.cluster.local:8080
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False

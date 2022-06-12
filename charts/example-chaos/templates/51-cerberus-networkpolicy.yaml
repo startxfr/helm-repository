@@ -23,7 +23,7 @@ spec:
         - podSelector: {}
           namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: "{{- $root.Values.kraken_project.project.name | default 'startx-chaos-kraken' -}}"
+              name: "{{ $root.Values.kraken_project.project.name }}"
   policyTypes:
     - Ingress
 ---
