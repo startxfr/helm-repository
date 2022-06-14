@@ -683,27 +683,27 @@ spec:
       configMap:
         name: kraken-config-chaos-monitoring
       subPath: config.yaml
-    - name: ephemeral
-      emptyDir: {}
-    - name: kraken-pipeline-persistent
-      volumeClaimTemplate:
-        metadata:
-          labels:
-            app.kubernetes.io/name: "kraken-pipeline-persistent-cache-pvc"
-            {{- include "example-chaos.labels" $root | nindent 12 }}
-            tekton.dev/pipeline: kraken-chaos-standalone-monitoring
-            app.kubernetes.io/part-of: kraken-chaos-standalone-monitoring
-            tekton.dev/pipeline: kraken-chaos-standalone-monitoring
-            tool: kraken
-          annotations:
-            {{- include "example-chaos.annotations" $root | nindent 12 }}
-            openshift.io/installed-from: startx
-            tekton.dev/displayName: Shared cache accros pipeline executions
-        spec:
-          accessModes:
-          - ReadWriteOnce
-          resources:
-            requests:
-              storage: 3Gi
+    # - name: ephemeral
+    #   emptyDir: {}
+    # - name: kraken-pipeline-persistent
+    #   volumeClaimTemplate:
+    #     metadata:
+    #       labels:
+    #         app.kubernetes.io/name: "kraken-pipeline-persistent-cache-pvc"
+    #         {{- include "example-chaos.labels" $root | nindent 12 }}
+    #         tekton.dev/pipeline: kraken-chaos-standalone-monitoring
+    #         app.kubernetes.io/part-of: kraken-chaos-standalone-monitoring
+    #         tekton.dev/pipeline: kraken-chaos-standalone-monitoring
+    #         tool: kraken
+    #       annotations:
+    #         {{- include "example-chaos.annotations" $root | nindent 12 }}
+    #         openshift.io/installed-from: startx
+    #         tekton.dev/displayName: Shared cache accros pipeline executions
+    #     spec:
+    #       accessModes:
+    #       - ReadWriteOnce
+    #       resources:
+    #         requests:
+    #           storage: 3Gi
 {{- end -}}{{- end -}}{{- end -}}
 {{- end -}}
