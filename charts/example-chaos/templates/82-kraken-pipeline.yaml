@@ -169,54 +169,16 @@ metadata:
     tekton.dev/displayName: Define a kraken chaos infrastructure pipeline
 spec:
   params:
-    - name: monitoring
-      type: string
-      default: "yes"
-    - name: logging
-      type: string
-      default: "yes"
-    - name: machines
-      type: string
-      default: "yes"
-    - name: apiserver
-      type: string
-      default: "yes"
-    - name: etcd
-      type: string
-      default: "yes"
-    - name: releasemonkey
-      type: string
-      default: "yes"
-    - name: time
-      type: string
-      default: "yes"
-    - name: nodes
-      type: string
-      default: "yes"
-    - name: network
-      type: string
-      default: "yes"
-    - name: zone
-      type: string
-      default: "yes"
-    - name: storage
-      type: string
-      default: "yes"
-    - name: cluster
-      type: string
-      default: "yes"
     - name: aws_secret_creds
       type: string
       default: "kraken-aws-creds"
+      description: ConfigMap name holding the kubeconfig of the targeted cluster
     - name: cerberus_url
       type: string
       default: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+      description: Cerberus URL to use for getting cluster health checks
   tasks:
   - name: monitoring-chaos
-    when:
-      - input: "$(params.monitoring)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -239,10 +201,6 @@ spec:
   - name: logging-chaos
     runAfter:
       - monitoring-chaos
-    when:
-      - input: "$(params.logging)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -265,10 +223,6 @@ spec:
   - name: machines-chaos
     runAfter:
       - logging-chaos
-    when:
-      - input: "$(params.machines)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -291,10 +245,6 @@ spec:
   - name: apiserver-chaos
     runAfter:
       - machines-chaos
-    when:
-      - input: "$(params.apiserver)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -317,10 +267,6 @@ spec:
   - name: etcd-chaos
     runAfter:
       - apiserver-chaos
-    when:
-      - input: "$(params.etcd)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -343,10 +289,6 @@ spec:
   - name: releasemonkey-chaos
     runAfter:
       - etcd-chaos
-    when:
-      - input: "$(params.releasemonkey)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -369,10 +311,6 @@ spec:
   - name: time-chaos
     runAfter:
       - releasemonkey-chaos
-    when:
-      - input: "$(params.time)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -395,10 +333,6 @@ spec:
   - name: nodes-chaos
     runAfter:
       - time-chaos
-    when:
-      - input: "$(params.nodes)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -421,10 +355,6 @@ spec:
   - name: network-chaos
     runAfter:
       - nodes-chaos
-    when:
-      - input: "$(params.network)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -447,10 +377,6 @@ spec:
   - name: zone-chaos
     runAfter:
       - network-chaos
-    when:
-      - input: "$(params.zone)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -473,10 +399,6 @@ spec:
   - name: storage-chaos
     runAfter:
       - zone-chaos
-    when:
-      - input: "$(params.storage)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -499,10 +421,6 @@ spec:
   - name: cluster-chaos
     runAfter:
       - storage-chaos
-    when:
-      - input: "$(params.cluster)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: AWS_CREDS_SECRET
         value: $(params.aws_secret_creds)
@@ -525,10 +443,6 @@ spec:
   - name: logging-cerberus-check
     runAfter:
       - cluster-chaos
-    when:
-      - input: "$(params.logging)"
-        operator: in
-        values: ["yes", "true" ]
     params:
       - name: CERBERUS_SERVER
         value: $(params.cerberus_url)
@@ -575,30 +489,6 @@ metadata:
     tekton.dev/displayName: Run a kraken chaos infrastructure pipeline
 spec:
   params:
-    - name: monitoring
-      value: "yes"
-    - name: logging
-      value: "yes"
-    - name: machines
-      value: "yes"
-    - name: apiserver
-      value: "yes"
-    - name: etcd
-      value: "yes"
-    - name: releasemonkey
-      value: "yes"
-    - name: time
-      value: "yes"
-    - name: nodes
-      value: "yes"
-    - name: network
-      value: "yes"
-    - name: zone
-      value: "yes"
-    - name: storage
-      value: "yes"
-    - name: cluster
-      value: "yes"
     - name: aws_secret_creds
       value: "kraken-aws-creds"
     - name: cerberus_url
@@ -712,6 +602,7 @@ metadata:
 spec:
   params:
     - name: aws_secret_creds
+      description: Secret config for AWS credentials
       type: string
       default: "kraken-aws-creds"
     - name: cerberus_url
@@ -746,54 +637,73 @@ spec:
   - name: kraken-config-common-burner
   - name: kraken-config-common-alerts
 ---
-kind: Pipeline
+kind: PipelineRun
 apiVersion: tekton.dev/v1beta1
 metadata:
-  name: kraken-chaos-standalone-logging
+  name: kraken-chaos-standalone-monitoring-run
   namespace: "{{- $namespace -}}"
   labels:
-    app.kubernetes.io/name: "kraken-chaos-standalone-logging-pipeline"
+    app.kubernetes.io/name: "kraken-chaos-standalone-monitoring-pipelinerun"
     {{- include "example-chaos.labels" $root | nindent 4 }}
+    tekton.dev/pipeline: kraken-chaos-standalone-monitoring
     tool: kraken
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
     openshift.io/installed-from: startx
-    tekton.dev/displayName: Define a kraken chaos pipeline for Openshift logging cluster service
+    tekton.dev/displayName: Run a kraken chaos on monitoring cluster service
 spec:
   params:
     - name: aws_secret_creds
-      type: string
-      default: "kraken-aws-creds"
+      value: "kraken-aws-creds"
     - name: cerberus_url
-      type: string
-      default: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
-  tasks:
-  - name: logging-chaos
-    params:
-      - name: AWS_CREDS_SECRET
-        value: $(params.aws_secret_creds)
-    taskRef:
-      kind: Task
-      name: kraken-scenario
-    workspaces:
-      - name: kraken-config
-        workspace: kraken-config-logging
-      - name: kraken-scenarios
-        workspace: kraken-scenarios
-      - name: kraken-kubeconfig
-        workspace: kraken-kubeconfig
-      - name: kraken-config-common-alerts
-        workspace: kraken-config-common-alerts
-      - name: kraken-config-common-burner
-        workspace: kraken-config-common-burner
-      - name: kraken-config-common-metrics
-        workspace: kraken-config-common-metrics
+      value: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  pipelineRef:
+    name: kraken-chaos-standalone-monitoring
   workspaces:
-  - name: kraken-config-logging
-  - name: kraken-scenarios
-  - name: kraken-kubeconfig
-  - name: kraken-config-common-metrics
-  - name: kraken-config-common-burner
-  - name: kraken-config-common-alerts
+    - name: kraken-kubeconfig
+      configMap:
+        name: kraken-kubeconfig
+      subPath: config
+    - name: kraken-scenarios
+      configMap:
+        name: kraken-scenarios-config
+    - name: kraken-config-common-alerts
+      configMap:
+        name: kraken-config-common
+      subPath: startx_alerts.yaml
+    - name: kraken-config-common-burner
+      configMap:
+        name: kraken-config-common
+      subPath: kube_burner.yaml
+    - name: kraken-config-common-metrics
+      configMap:
+        name: kraken-config-common
+      subPath: metrics-aggregated.yaml
+    - name: kraken-config-monitoring
+      configMap:
+        name: kraken-config-chaos-monitoring
+      subPath: config.yaml
+    - name: ephemeral
+      emptyDir: {}
+    - name: kraken-pipeline-persistent
+      volumeClaimTemplate:
+        metadata:
+          labels:
+            app.kubernetes.io/name: "kraken-pipeline-persistent-cache-pvc"
+            {{- include "example-chaos.labels" $root | nindent 12 }}
+            tekton.dev/pipeline: kraken-chaos-standalone-monitoring
+            app.kubernetes.io/part-of: kraken-chaos-standalone-monitoring
+            tekton.dev/pipeline: kraken-chaos-standalone-monitoring
+            tool: kraken
+          annotations:
+            {{- include "example-chaos.annotations" $root | nindent 12 }}
+            openshift.io/installed-from: startx
+            tekton.dev/displayName: Shared cache accros chaos pipeline
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 3Gi
 {{- end -}}{{- end -}}{{- end -}}
 {{- end -}}
