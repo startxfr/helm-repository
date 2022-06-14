@@ -79,38 +79,6 @@ data:
             actions:
               - checkPodCount:
                   count: 8
-  network_chaos.yaml: |
-    network_chaos:                       # Scenario to create an outage by simulating random variations in the network.
-      duration: 300                      # seconds
-      node_name:                         # node on which scenario has to be injected;
-      label_selector: <label_selector>   # when node_name is not specified, a node with matching label_selector is selected for running the scenario.
-      instance_count: 1
-      interfaces:                        # Interface name would be the Kernel host network interface name.
-      - "<interface_name>"
-      execution: serial
-      egress:
-        latency: 50ms                    # 50ms
-        loss: 0.02                       # percentage
-        bandwidth: 100mbit
-  node_scenarios_example.yml: |
-    node_scenarios:
-      - actions:                                                        # node chaos scenarios to be injected
-        - node_stop_start_scenario
-        - stop_start_kubelet_scenario
-        - node_crash_scenario
-        node_name:                                                      # node on which scenario has to be injected; can set multiple names separated by comma
-        label_selector: node-role.kubernetes.io/worker                  # when node_name is not specified, a node with matching label_selector is selected for node chaos scenario injection
-        instance_count: 1                                               # Number of nodes to perform action/select that match the label selector
-        runs: 1                                                         # number of times to inject each scenario under actions (will perform on same node each time)
-        timeout: 120                                                    # duration to wait for completion of node scenario injection
-        cloud_type: aws                                                 # cloud type on which Kubernetes/OpenShift runs
-      - actions:
-        - node_reboot_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/infra
-        instance_count: 1
-        timeout: 120
-        cloud_type: aws
   post_action_etcd_container.py: |
     #!/usr/bin/env python3
     import subprocess
@@ -241,13 +209,18 @@ data:
     print("Master nodes list \n" + str(master_nodes))
     infra_nodes = run("oc get nodes --no-headers | grep infra | egrep -v NotReady | awk '{print $1}'").rstrip()
     print("Infra nodes list \n" + str(infra_nodes))
-  pvc_scenario.yaml: |
+  startx_pvc_fruitapp1-preprod-postgresql.yaml: |
     pvc_scenario:
-      pvc_name: <pvc_name>          # Name of the target PVC
-      pod_name: <pod_name>          # Name of the pod where the PVC is mounted, it will be ignored if the pvc_name is defined
-      namespace: <namespace_name>   # Namespace where the PVC is
-      fill_percentage: 50           # Target percentage to fill up the cluster, value must be higher than current percentage, valid values are between 0 and 99
-      duration: 60                  # Duration in seconds for the fault
+      pvc_name: fruitapp1-preprod-postgresql
+      namespace: fruitapp1-preprod
+      fill_percentage: 99
+      duration: 30
+  startx_pvc_fruitapp2-prod-postgresql.yaml: |
+    pvc_scenario:
+      pvc_name: fruitapp2-prod-postgresql
+      namespace: fruitapp2-prod
+      fill_percentage: 99
+      duration: 30
   startx_node_app_cpu_chaos.yaml: |
     apiVersion: litmuschaos.io/v1alpha1
     kind: ChaosEngine
@@ -310,6 +283,8 @@ data:
       label_selector: 'node-role.kubernetes.io/infra'
       instance_count: 1
       interfaces:
+      # - "tun0"
+      # - "lo"
       - "ens5"
       execution: serial
       egress:
@@ -1388,7 +1363,8 @@ data:
       litmus_uninstall_before_run: False
       chaos_scenarios:
         - pvc_scenarios:
-          - scenarios/pvc_scenario.yaml
+          - scenarios/startx_pvc_fruitapp1-preprod-postgresql.yaml
+          - scenarios/startx_pvc_fruitapp2-prod-postgresql.yaml
     cerberus:
         cerberus_enabled: True
         cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
@@ -1406,7 +1382,7 @@ data:
         enable_alerts: False
         alert_profile: config/alerts
     tunings:
-        wait_duration: 420
+        wait_duration: 60
         iterations: 1
         daemon_mode: False
 ---
