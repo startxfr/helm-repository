@@ -305,13 +305,13 @@ data:
         bandwidth: 100mbit
   startx_node_infra_network_chaos.yaml: |
     network_chaos:
-      duration: 200
+      duration: 60
       node_name: 
       label_selector: 'node-role.kubernetes.io/infra'
       instance_count: 1
       interfaces:
-      - "tun"
-      - "lo"
+      # - "tun0"
+      # - "lo"
       - "ens5"
       execution: serial
       egress:
