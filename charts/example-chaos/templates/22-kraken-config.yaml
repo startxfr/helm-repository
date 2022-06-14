@@ -43,9 +43,9 @@ data:
   cluster_shut_down_scenario.yml: |
     cluster_shut_down_scenario:                          # Scenario to stop all the nodes for specified duration and restart the nodes
       runs: 1                                            # Number of times to execute the cluster_shut_down scenario
-      shut_down_duration: 150                            # duration in seconds to shut down the cluster
+      shut_down_duration: 120                            # duration in seconds to shut down the cluster
       cloud_type: aws                                    # cloud type on which Kubernetes/OpenShift runs
-      timeout: 60                                        # Number of seconds to wait for each node to be stopped or running
+      timeout: 120                                       # Number of seconds to wait for each node to be stopped or running
   customapp_pod.yaml: |
     config:
       runStrategy:
@@ -880,7 +880,7 @@ data:
   startx_zone_outage.yaml: |
     zone_outage:
       cloud_type: aws
-      duration: 600
+      duration: 120
       vpc_id: vpc-0a06fb82c7deef947
       subnet_id: ["subnet-08c7f41c25bc51eb9"]
       # subnet_id: ["subnet-08c7f41c25bc51eb9", "subnet-04441df42fd95bfbd", "subnet-092a12092c3205e17"]
@@ -1079,7 +1079,7 @@ data:
         enable_alerts: False
         alert_profile: config/alerts
     tunings:
-        wait_duration: 300
+        wait_duration: 180
         iterations: 1
         daemon_mode: False
 ---
@@ -1362,7 +1362,7 @@ data:
         enable_alerts: False
         alert_profile: config/alerts
     tunings:
-        wait_duration: 900
+        wait_duration: 600
         iterations: 1
         daemon_mode: False
 ---
@@ -1455,7 +1455,7 @@ data:
         enable_alerts: False
         alert_profile: config/alerts
     tunings:
-        wait_duration: 900
+        wait_duration: 600
         iterations: 1
         daemon_mode: False
 ---
