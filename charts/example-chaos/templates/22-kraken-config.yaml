@@ -248,12 +248,13 @@ data:
                   value: 'node-role.kubernetes.io/app'
   startx_node_app_network_chaos.yaml: |
     network_chaos:
-      duration: 100
+      duration: 20
       node_name: 
       label_selector: 'node-role.kubernetes.io/app'
       instance_count: 1
       interfaces:
-      - "tun"
+      - "tun0"
+      - "br0"
       - "lo"
       - "ens5"
       execution: serial
@@ -263,12 +264,13 @@ data:
         bandwidth: 100mbit
   startx_node_master_network_chaos.yaml: |
     network_chaos:
-      duration: 100
+      duration: 20
       node_name: 
       label_selector: 'node-role.kubernetes.io/master'
       instance_count: 1
       interfaces:
-      - "tun"
+      - "tun0"
+      - "br0"
       - "lo"
       - "ens5"
       execution: serial
@@ -278,13 +280,14 @@ data:
         bandwidth: 100mbit
   startx_node_infra_network_chaos.yaml: |
     network_chaos:
-      duration: 60
+      duration: 20
       node_name: 
       label_selector: 'node-role.kubernetes.io/infra'
       instance_count: 1
       interfaces:
-      # - "tun0"
-      # - "lo"
+      - "tun0"
+      - "br0"
+      - "lo"
       - "ens5"
       execution: serial
       egress:
