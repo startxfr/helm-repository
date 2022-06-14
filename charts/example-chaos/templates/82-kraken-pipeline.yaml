@@ -695,5 +695,105 @@ spec:
           resources:
             requests:
               storage: 3Gi
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: kraken-chaos-standalone-monitoring
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-standalone-monitoring-pipeline"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+    tool: kraken
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/displayName: Define a kraken chaos pipeline for Openshift monitoring cluster service
+spec:
+  params:
+    - name: aws_secret_creds
+      type: string
+      default: "kraken-aws-creds"
+    - name: cerberus_url
+      type: string
+      default: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  tasks:
+  - name: monitoring-chaos
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-monitoring
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  workspaces:
+  - name: kraken-config-monitoring
+  - name: kraken-scenarios
+  - name: kraken-kubeconfig
+  - name: kraken-config-common-metrics
+  - name: kraken-config-common-burner
+  - name: kraken-config-common-alerts
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: kraken-chaos-standalone-logging
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-standalone-logging-pipeline"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+    tool: kraken
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/displayName: Define a kraken chaos pipeline for Openshift logging cluster service
+spec:
+  params:
+    - name: aws_secret_creds
+      type: string
+      default: "kraken-aws-creds"
+    - name: cerberus_url
+      type: string
+      default: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  tasks:
+  - name: logging-chaos
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-logging
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  workspaces:
+  - name: kraken-config-logging
+  - name: kraken-scenarios
+  - name: kraken-kubeconfig
+  - name: kraken-config-common-metrics
+  - name: kraken-config-common-burner
+  - name: kraken-config-common-alerts
 {{- end -}}{{- end -}}{{- end -}}
 {{- end -}}
