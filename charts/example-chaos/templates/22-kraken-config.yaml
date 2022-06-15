@@ -873,8 +873,31 @@ metadata:
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 data:
+{{- if eq .Values.kraken.kubeconfig.mode "file" -}}
   config: |
-    {{- .Values.kraken.kubeconfig | nindent 4 }}
+    {{- .Values.kraken.kubeconfig.file | nindent 4 }}
+{{- end -}}
+{{- if eq .Values.kraken.kubeconfig.mode "token" -}}
+  config: |
+    kind: Config
+    apiVersion: v1
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        insecure-skip-tls-verify: true
+        server: {{ .Values.kraken.kubeconfig.token.server | default "https://localhost:6443" -}}
+    - name: default
+      user:
+        token: {{ .Values.kraken.kubeconfig.token.token | default "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX" -}}
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
+{{- end -}}
 ---
 kind: ConfigMap
 apiVersion: v1
