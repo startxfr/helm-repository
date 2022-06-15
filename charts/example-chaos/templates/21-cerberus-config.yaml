@@ -94,10 +94,10 @@ data:
     - name: default
       cluster:
         insecure-skip-tls-verify: true
-        server: "{{ .Values.cerberus.kubeconfig.token.server | default 'https://localhost:6443' }}"
+        server: "{{ .Values.cerberus.kubeconfig.token.server }}"
     - name: default
       user:
-        token: "{{ .Values.cerberus.kubeconfig.token.token | default 'sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX' }}"
+        token: "{{ .Values.cerberus.kubeconfig.token.token }}"
     contexts:
     - name: default
       context:
