@@ -886,10 +886,10 @@ data:
     - name: default
       cluster:
         insecure-skip-tls-verify: true
-        server: "{{ .Values.kraken.kubeconfig.token.server | default 'https://localhost:6443' }}"
+        server: "{{ .Values.kraken.kubeconfig.token.server }}"
     - name: default
       user:
-        token: "{{ .Values.kraken.kubeconfig.token.token | default 'sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX' }}"
+        token: "{{ .Values.kraken.kubeconfig.token.token }}"
     contexts:
     - name: default
       context:
