@@ -81,7 +81,7 @@ metadata:
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 data:
-{{- if eq .Values.cerberus.kubeconfig.mode "file" -}}
+{{ if eq .Values.cerberus.kubeconfig.mode "file" -}}
   config: |
     {{- .Values.cerberus.kubeconfig.file | nindent 4 }}
 {{- end -}}
@@ -105,5 +105,5 @@ data:
         namespace: default
         user: default
     preferences: {}
-{{- end -}}
+{{- end }}
 {{- end -}}
