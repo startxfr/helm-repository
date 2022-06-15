@@ -873,10 +873,10 @@ metadata:
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 data:
-{{- if eq .Values.kraken.kubeconfig.mode "file" -}}
+{{ if eq .Values.kraken.kubeconfig.mode "file" -}}
   config: |
     {{- .Values.kraken.kubeconfig.file | nindent 4 }}
-{{- end -}}
+{{- end }}
 {{- if eq .Values.kraken.kubeconfig.mode "token" -}}
   config: |
     kind: Config
@@ -897,7 +897,7 @@ data:
         namespace: default
         user: default
     preferences: {}
-{{- end -}}
+{{- end }}
 ---
 kind: ConfigMap
 apiVersion: v1
