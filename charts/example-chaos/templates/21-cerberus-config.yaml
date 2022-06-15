@@ -81,6 +81,29 @@ metadata:
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 data:
+{{- if eq .Values.cerberus.kubeconfig.mode "file" -}}
   config: |
-    {{- .Values.cerberus.kubeconfig | nindent 4 }}
+    {{- .Values.cerberus.kubeconfig.file | nindent 4 }}
+{{- end -}}
+{{- if eq .Values.cerberus.kubeconfig.mode "token" -}}
+  config: |
+    kind: Config
+    apiVersion: v1
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        insecure-skip-tls-verify: true
+        server: {{ .Values.cerberus.kubeconfig.token.server | default "https://localhost:6443" -}}
+    - name: default
+      user:
+        token: {{ .Values.cerberus.kubeconfig.token.token | default "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX" -}}
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
+{{- end -}}
 {{- end -}}
