@@ -81,11 +81,11 @@ metadata:
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 data:
-{{ if eq .Values.cerberus.kubeconfig.mode "file" -}}
+{{- if eq .Values.cerberus.kubeconfig.mode "file" }}
   config: |
     {{- .Values.cerberus.kubeconfig.file | nindent 4 }}
 {{- end -}}
-{{- if eq .Values.cerberus.kubeconfig.mode "token" -}}
+{{- if eq .Values.cerberus.kubeconfig.mode "token" }}
   config: |
     kind: Config
     apiVersion: v1
