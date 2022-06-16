@@ -7,34 +7,19 @@
 
 # Application chaos context
 context:  &context
-# Name of the global scope for this application (organisational tenant)
  scope: myscope
-# Name of the cluster running this application (plateform tenant)
  cluster: localhost
-# Name of the environement for this application (ex: dev, factory, preprod or prod)
  environment: myenv
-# Component name of this application (logical tenant)
  component: helm
-# Application name (functionnal tenant, default use Chart name)
- app: chaos-litmus
-# Version name of this application (default use Chart appVersion)
+ app: startx-chaos
  version: "0.0.1"
 
-# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
   enabled: false
-  context: 
-    <<: *context
   project: 
-    enabled: true
-    type: project
-    name: chaos-litmus
-    display_name: Chaos - Litmus
-    description: Litmus chaos orchestrator in STARTX Chaos test suite
-
-# Configuration of the litmus deployment (see https://litmuschaos.github.io/litmus-helm)
-litmus:
-  enabled: false
+    name: startx-chaos-litmus
+litmus: 
+  enabled: true
   nameOverride: litmus
   portalScope: cluster
   customLabels: {}
