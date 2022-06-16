@@ -1,0 +1,47 @@
+{{- if .Values.cerberus.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.cerberus_project.project.name -}}
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: kraken-to-cerberus
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-to-cerberus-networkpolicy"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: cerberus
+      tool: cerberus
+  ingress:
+    - from:
+        - podSelector: {}
+          namespaceSelector:
+            matchLabels:
+              name: "{{ $root.Values.kraken_project.project.name }}"
+  policyTypes:
+    - Ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cerberus-allow-external
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "cerberus-allow-external-networkpolicy"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: cerberus
+      tool: cerberus
+  ingress:
+    - {}
+{{- end -}}
