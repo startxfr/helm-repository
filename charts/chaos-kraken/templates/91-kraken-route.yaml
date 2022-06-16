@@ -6,10 +6,10 @@ metadata:
   name: "kraken"
   labels:
     app.kubernetes.io/name: "kraken-route"
-    {{- include "example-chaos.labels" . | nindent 4 }}
+    {{- include "chaos-kraken.labels" . | nindent 4 }}
     app: "kraken"
   annotations:
-    {{- include "example-chaos.annotations" . | nindent 4 }}
+    {{- include "chaos-kraken.annotations" . | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
     haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"

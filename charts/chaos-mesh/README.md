@@ -26,13 +26,13 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ### 3. Get information about this chart
 
 ```bash
-helm show chart startx/example-chaos
+helm show chart startx/chaos-mesh
 ```
 
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-chaos
+helm install startx/chaos-mesh
 ```
 
 ## Values dictionary
@@ -48,7 +48,7 @@ helm install startx/example-chaos
 | context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
 
-### example-chaos values dictionary
+### chaos-mesh values dictionary
 
 | Key      | Default       | Description                                                      |
 | -------- | ------------- | ---------------------------------------------------------------- |
@@ -64,12 +64,12 @@ helm install startx/example-chaos
 
 Simple chaos of a container image with the following characteristics :
 
-- 1 **chaos** named **example-chaos** of **1 pod** running **quay.io/startx/fedora:latest** image
-- 1 **service** named **example-chaos**
+- 1 **chaos** named **chaos-mesh** of **1 pod** running **quay.io/startx/fedora:latest** image
+- 1 **service** named **chaos-mesh**
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-chaos
+helm install startx/chaos-mesh
 ```
 
 ### Demo values file (values-demo.yaml)
@@ -81,31 +81,31 @@ chaos of an demo container image with the following characteristics :
 
 ```bash
 # Configuration running demo example configuration
-helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
+helm install startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
 ### Apache values file (values-apache.yaml)
 
 chaos of an apache container image with the following characteristics :
 
-- 1 **pod** named **example-chaos-apache** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **example-chaos-apache**
+- 1 **pod** named **chaos-mesh-apache** of **2 pods** running **quay.io/startx/apache:latest** image
+- 1 **service** named **chaos-mesh-apache**
 
 ```bash
 # Configuration running apache example configuration
-helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
+helm install startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
 ```
 
 ### MariaDB values file (values-mariadb.yaml)
 
 chaos of an mariadb container image with the following characteristics :
 
-- 1 **pod** named **example-chaos-mariadb** of **2 pods** running **quay.io/startx/mariadb:latest** image
-- 1 **service** named **example-chaos-mariadb**
+- 1 **pod** named **chaos-mesh-mariadb** of **2 pods** running **quay.io/startx/mariadb:latest** image
+- 1 **service** named **chaos-mesh-mariadb**
 
 ```bash
 # Configuration running mariadb example configuration
-helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
+helm install startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
 ## History
@@ -116,12 +116,12 @@ helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/
 | 10.12.6 | 2022-06-03 | Create first release of chaos
 | 10.12.7 | 2022-06-03 | Stable version with startx values
 | 10.12.8 | 2022-06-04 | dding the kraken.ci and mesh
-| 10.12.9 | 2022-06-04 | Improve example-chaos options
+| 10.12.9 | 2022-06-04 | Improve chaos-mesh options
 | 10.13.0 | 2022-06-04 | Improved SCC
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
 | 10.12.24 | 2022-06-05 | Add litmus and monkey support
 | 10.12.25 | 2022-06-05 | Update kubemonkey to version 1.4.1 with v1 support for rbac api
 | 10.12.6 | 2022-06-11 | Move kraken to krkn with pipeline and job support. Add cerberus support
-| 10.12.7 | 2022-06-11 | Improve example-chaos options
+| 10.12.7 | 2022-06-11 | Improve chaos-mesh options
 | 10.12.8 | 2022-06-11 | debug project dependencies

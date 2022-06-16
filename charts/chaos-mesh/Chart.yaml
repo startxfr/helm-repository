@@ -1,6 +1,6 @@
 apiVersion: v2
 # Name of this Helm chart
-name: example-chaos
+name: chaos-mesh
 # Description of this Helm chart
 description: Helm chart used to deploy a chaos testing suit composed of chaos mesh, kube-monkey and kraken.ci.
 # Helm chart application
@@ -12,7 +12,7 @@ appVersion: 4.10.12
 # Version of Openshift 
 version: "10.12.8"
 # Icon of this helm-chart
-icon: https://startxfr.github.io/helm-repository/img/example-chaos.svg
+icon: https://startxfr.github.io/helm-repository/img/chaos-mesh.svg
 # category associated to this package
 category: example
 # tags
@@ -28,7 +28,7 @@ keywords:
   - monkey
   - test
   - benchmark
-  - chaos-mesh
+  - chaos-litmus
   - kube-monkey
   - kraken-ci
 # STARTX helm chart repository homepage
@@ -64,8 +64,8 @@ dependencies:
     version: "10.12.5"
     alias: mesh_project
     condition: mesh_project.enabled
-  - name: chaos-mesh
-    repository: https://charts.chaos-mesh.org
+  - name: chaos-litmus
+    repository: https://charts.chaos-litmus.org
     version: "2.2.0"
     alias: mesh
     condition: mesh.enabled

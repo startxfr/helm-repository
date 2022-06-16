@@ -1,12 +1,12 @@
 {{/* vim: set filetype=mustache: */}}
-{{/* STARTX example-chaos helpers */}}
+{{/* STARTX chaos-monkey helpers */}}
 
 {{/* Common labels */}}
-{{- define "example-chaos.labels" -}}
+{{- define "chaos-monkey.labels" -}}
 {{ include "startx.labelsCommon" . }}
 {{- end -}}
 
-{{/* Common example-chaos annotations */}}
-{{- define "example-chaos.annotations" -}}
+{{/* Common chaos-monkey annotations */}}
+{{- define "chaos-monkey.annotations" -}}
 {{- include "startx.annotationsCommon" . -}}
 {{- end -}}

@@ -9,9 +9,9 @@ metadata:
   name: privilegied-monkey
   labels:
     app.kubernetes.io/name: "privilegied-monkey-scc"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
     kubernetes.io/description: 'allows privilegied access to host'
     release.openshift.io/create-only: "true"
 users:
@@ -51,9 +51,9 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "privilegied-monkey-scc-role"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
@@ -83,9 +83,9 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "privilegied-monkey-scc-rb"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: startx-monkey
