@@ -1,7 +1,7 @@
 
 
 # # Use it to Overrride the helm-chart name
-#nameOverride: example-chaos
+#nameOverride: chaos-mesh
 # # Use it to Overrride the helm-chart version
 #versionOverride: 0.0.1
 
@@ -30,7 +30,7 @@ kraken:
 mesh_project: 
   enabled: false
   project: 
-    name: startx-chaos-mesh
+    name: startx-chaos-litmus
 mesh: 
   enabled: false
   expose: true
@@ -57,7 +57,7 @@ mesh:
     replicaCount: 1
     image:
       registry: ""
-      repository: chaos-mesh/chaos-mesh
+      repository: chaos-litmus/chaos-litmus
       tag: ""
     imagePullPolicy: IfNotPresent
     env:
@@ -92,7 +92,7 @@ mesh:
   chaosDaemon:
     image:
       registry: ""
-      repository: chaos-mesh/chaos-daemon
+      repository: chaos-litmus/chaos-daemon
       tag: ""
     imagePullPolicy: IfNotPresent
     grpcPort: 31767
@@ -114,14 +114,14 @@ mesh:
     affinity: {}
   dashboard:
     create: true
-    # rootUrl: https://ui-startx-chaos-mesh.apps.mycluster.local
+    # rootUrl: https://ui-startx-chaos-litmus.apps.mycluster.local
     hostNetwork: false
     replicaCount: 1
     priorityClassName: ""
     serviceAccount: chaos-dashboard
     image:
       registry: ""
-      repository: chaos-mesh/chaos-dashboard
+      repository: chaos-litmus/chaos-dashboard
       tag: ""
     imagePullPolicy: IfNotPresent
     securityMode: true
@@ -166,7 +166,7 @@ mesh:
     nodeSelector: {}
     tolerations: []
     podAnnotations: {}
-    name: chaos-mesh-dns-server
+    name: chaos-litmus-dns-server
     grpcPort: 9288
     resources:
       limits: {}
@@ -226,7 +226,7 @@ mesh:
     create: true
     image:
       registry: ""
-      repository: chaos-mesh/chaos-kernel
+      repository: chaos-litmus/chaos-kernel
       tag: ""
     imagePullPolicy: IfNotPresent
     grpcPort: 50051
@@ -235,7 +235,7 @@ mesh:
     enable: true
     image:
       registry: ""
-      repository: chaos-mesh/chaos-dlv
+      repository: chaos-litmus/chaos-dlv
       tag: ""
     imagePullPolicy: IfNotPresent
 

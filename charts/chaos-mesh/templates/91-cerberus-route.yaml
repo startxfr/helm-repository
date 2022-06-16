@@ -6,10 +6,10 @@ metadata:
   name: "ui"
   labels:
     app.kubernetes.io/name: "ui-route"
-    {{- include "example-chaos.labels" . | nindent 4 }}
+    {{- include "chaos-mesh.labels" . | nindent 4 }}
     app: "ui-cerberus"
   annotations:
-    {{- include "example-chaos.annotations" . | nindent 4 }}
+    {{- include "chaos-mesh.annotations" . | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
     haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"

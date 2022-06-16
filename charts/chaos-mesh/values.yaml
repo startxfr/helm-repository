@@ -1,7 +1,7 @@
 
 
 # # Use it to Overrride the helm-chart name
-#nameOverride: example-chaos
+#nameOverride: chaos-mesh
 # # Use it to Overrride the helm-chart version
 #versionOverride: 0.0.1
 
@@ -16,7 +16,7 @@ context:  &context
 # Component name of this application (logical tenant)
  component: helm
 # Application name (functionnal tenant, default use Chart name)
- app: example-chaos
+ app: chaos-mesh
 # Version name of this application (default use Chart appVersion)
  version: "0.0.1"
 
@@ -28,7 +28,7 @@ project:
   project: 
     enabled: true
     type: project
-    name: example-chaos
+    name: chaos-mesh
     display_name: Chaos - Main
     description: Chaos test suite configured by STARTX
 
@@ -40,7 +40,7 @@ cerberus_project:
   project: 
     enabled: true
     type: project
-    name: example-chaos-cerberus
+    name: chaos-mesh-cerberus
     display_name: Chaos - Cerberus
     description: Cerberus watchdog in STARTX Chaos test suite
 
@@ -94,7 +94,7 @@ kraken_project:
   project: 
     enabled: true
     type: project
-    name: example-chaos-kraken
+    name: chaos-mesh-kraken
     display_name: Chaos - Kraken
     description: Kraken chaos orchestrator in STARTX Chaos test suite
 
@@ -168,11 +168,11 @@ mesh_project:
   project: 
     enabled: true
     type: project
-    name: example-chaos-mesh
+    name: chaos-mesh-litmus
     display_name: Chaos - Mesh
-    description: Chaos-mesh chaos orchestrator in STARTX Chaos test suite
+    description: chaos-litmus chaos orchestrator in STARTX Chaos test suite
 
-# Configuration of the mesh deployment (see https://charts.chaos-mesh.org)
+# Configuration of the mesh deployment (see https://charts.chaos-litmus.org)
 mesh: 
   enabled: false
   expose: true
@@ -224,7 +224,7 @@ mesh:
     affinity: {}
   dashboard:
     create: true
-    rootUrl: https://ui-startx-chaos-mesh.apps.mycluster.com
+    rootUrl: https://ui-startx-chaos-litmus.apps.mycluster.com
     hostNetwork: false
     replicaCount: 1
     serviceAccount: chaos-dashboard
@@ -264,7 +264,7 @@ mesh:
     nodeSelector: {}
     tolerations: []
     podAnnotations: {}
-    name: chaos-mesh-dns-server
+    name: chaos-litmus-dns-server
     grpcPort: 9288
     resources:
       limits: {}
@@ -329,7 +329,7 @@ monkey_project:
   project: 
     enabled: true
     type: project
-    name: example-chaos-kubemonkey
+    name: chaos-mesh-kubemonkey
     display_name: Chaos - Monkey
     description: Kubernetes chaos monkey in STARTX Chaos test suite
 
@@ -369,7 +369,7 @@ litmus_project:
   project: 
     enabled: true
     type: project
-    name: example-chaos-litmus
+    name: chaos-mesh-litmus
     display_name: Chaos - Litmus
     description: Litmus chaos orchestrator in STARTX Chaos test suite
 

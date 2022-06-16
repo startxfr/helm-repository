@@ -13,9 +13,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-aws-creds"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 stringData:
   AWS_ACCESS_KEY_ID: {{ .credentials.key_id | default "AWS_ACCESS_KEY_ID" | quote }}
   AWS_DEFAULT_REGION: {{ .credentials.region | default "AWS_DEFAULT_REGION" | quote }}
@@ -31,9 +31,9 @@ metadata:
   labels:
     test: essai
     app.kubernetes.io/name: "kraken-scenarios-config"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   app_outage.yaml: |
     application_outage:                                  # Scenario to create an outage of an application by blocking traffic
@@ -869,9 +869,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-kubeconfig"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
 {{- if eq .Values.kraken.kubeconfig.mode "file" }}
   config: |
@@ -907,9 +907,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-logging"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -953,9 +953,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-monitoring"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -999,9 +999,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-machines"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1045,9 +1045,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-apiserver"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1091,9 +1091,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-etcd"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1139,9 +1139,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-releasemonkey"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1185,9 +1185,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-time"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1232,9 +1232,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-nodes"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1280,9 +1280,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-network"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1328,9 +1328,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-zone"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1374,9 +1374,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-storage"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1421,9 +1421,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-cluster"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1468,9 +1468,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-all"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1541,9 +1541,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-common"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 data:
   startx_alerts.yaml: |-
     - expr: avg_over_time(histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[2m]))[5m:]) > 0.01
