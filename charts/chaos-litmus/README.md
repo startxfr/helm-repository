@@ -95,3 +95,4 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 10.12.28 | 2022-06-17 | Upgrade the chaos-litmus helm chart schema with limited support for litmus external chart (no external schema). Link to upstream project release 2.9.0
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
 | 10.12.29 | 2022-06-17 | publish stable update for the full repository
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation
