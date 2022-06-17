@@ -114,3 +114,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 10.12.5 | 2022-06-03 | Initial commit of the example and poc chart example-chaos     |
 | 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
 | 10.12.26 | 2022-06-17 | Create the chaos-kraken chart as part of the startx chaos chart suite
+| 10.12.28 | 2022-06-17 | Upgrade the chaos-kraken helm chart schema with full option support. Link to upstream project release latest (no stable release)
