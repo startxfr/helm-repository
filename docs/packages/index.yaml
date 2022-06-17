@@ -4,11 +4,77 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: "Improve the Chart.yaml definition"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
+    created: "2022-06-18T00:27:37.534984703+02:00"
+    dependencies:
+    - alias: cerberus
+      condition: cerberus.enabled
+      name: chaos-cerberus
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.28
+    - alias: kraken
+      condition: kraken.enabled
+      name: chaos-kraken
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.28
+    - alias: litmus
+      condition: litmus.enabled
+      name: chaos-litmus
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.28
+    - alias: mesh
+      condition: mesh.enabled
+      name: chaos-mesh
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.28
+    - alias: monkey
+      condition: monkey.enabled
+      name: chaos-monkey
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.28
+    description: Helm chart used to deploy a full chaos-testing toolkit composed kraken,
+      cerberus, litmus, chaos-mesh and kube-monkey configured for Openshift clusters.
+      This chart is part of the startx chaos helm chart suite.
+    digest: f22a3e60d79a800537780dfd068537d4a40cc99c20956daa454e705e0df64b97
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/chaos.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - cerberus
+    - kraken
+    - chaos-mesh
+    - litmus
+    - kube-monkey
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/chaos
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos
+    tags: infra,cerberus,chaos,testing,cluster,application
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/chaos-10.12.35.tgz
+    version: 10.12.35
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Move chaos chart to a hub for other chaos-xxx sub-chart"
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.353493723+02:00"
+    created: "2022-06-18T00:27:37.512540132+02:00"
     dependencies:
     - alias: cerberus
       condition: cerberus.enabled
@@ -72,7 +138,53 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:37.357061713+02:00"
+    created: "2022-06-18T00:27:37.541448337+02:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.31
+    description: Helm chart used to deploy cerberus on Openshift or Kubernetes cluster.  Cerberus
+      is as a watchdog who act as a cluster healthcheck.  This chart is part of the
+      startx chaos helm chart suite.
+    digest: d3bee320a96623ce568ea2c0e0934555191de855b24ad3c380cbfbaa1e517ad3
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/chaos-cerberus.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - cerberus
+    - cluster
+    - healthcheck
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-cerberus
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/chaos-cerberus
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-cerberus
+    tags: infra,cerberus,chaos,testing,cluster,application
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/chaos-cerberus-10.12.35.tgz
+    version: 10.12.35
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Upgrade the chaos-cerberus helm chart schema with full option support."
+        - kind: changed
+          description: "Link to upstream project release latest (no stable release)"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.10.12
+    created: "2022-06-18T00:27:37.538794568+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -118,7 +230,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:37.355319584+02:00"
+    created: "2022-06-18T00:27:37.536899543+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -165,7 +277,53 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:37.361942715+02:00"
+    created: "2022-06-18T00:27:37.548581063+02:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.31
+    description: Helm chart used to deploy kraken on Openshift or Kubernetes cluster.  Kraken
+      is as a chaos engine with chaos scenarios for Openshift clusters.  This chart
+      is part of the startx chaos helm chart suite.
+    digest: 553cd4824b64bfa3a4821453fa762d9eed0598981efbaa2c9becbcb3f14fa04c
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/chaos-kraken.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - kraken
+    - monkey
+    - pipeline
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-kraken
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/chaos-kraken
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-kraken
+    tags: infra,cerberus,chaos,testing,cluster,application
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/chaos-kraken-10.12.35.tgz
+    version: 10.12.35
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Upgrade the chaos-kraken helm chart schema with full option support"
+        - kind: changed
+          description: "Link to upstream project release latest (no stable release)"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.10.12
+    created: "2022-06-18T00:27:37.545838109+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -211,7 +369,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:37.359491282+02:00"
+    created: "2022-06-18T00:27:37.543679365+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -258,7 +416,57 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:37.370612082+02:00"
+    created: "2022-06-18T00:27:37.560235782+02:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.31
+    - alias: litmus
+      condition: litmus.enabled
+      name: litmus
+      repository: https://litmuschaos.github.io/litmus-helm
+      version: 2.9.0
+    description: Helm chart used to deploy litmus on Openshift or Kubernetes cluster.  Litmus
+      is as a chaos engine with chaos git or gui configuration backend.  This chart
+      is part of the startx chaos helm chart suite.
+    digest: 94ec01a1f00fc6691295f828cad8675f15273a12451bdbe3b9da89bc6a6210a3
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/chaos-litmus.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - litmus
+    - monkey
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-litmus
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/chaos-litmus
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus
+    tags: infra,litmus,chaos,testing,cluster,application
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/chaos-litmus-10.12.35.tgz
+    version: 10.12.35
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Upgrade the chaos-litmus helm chart schema with limited support for litmus external chart (no external schema)"
+        - kind: changed
+          description: "Link to upstream project release 2.9.0"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.10.12
+    created: "2022-06-18T00:27:37.556716475+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -308,7 +516,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:37.367002334+02:00"
+    created: "2022-06-18T00:27:37.552191105+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -359,7 +567,56 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:37.398645855+02:00"
+    created: "2022-06-18T00:27:37.592792486+02:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.31
+    - alias: mesh
+      condition: mesh.enabled
+      name: chaos-mesh
+      repository: https://charts.chaos-mesh.org
+      version: 2.2.0
+    description: Helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster.  Chaos-mesh
+      is as a chaos engine with a gui to define and execute chaos scenarios for Kubernetes
+      clusters.  This chart is part of the startx chaos helm chart suite.
+    digest: 8d782ff621e07ad94d9864a4379f3cb80003ede1c59e3154daf4ec3880a92acc
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/chaos-mesh.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - mesh
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-mesh
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/chaos-mesh
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh
+    tags: infra,chaos,mesh,testing,cluster,application
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/chaos-mesh-10.12.35.tgz
+    version: 10.12.35
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Upgrade the chaos-mesh helm chart schema with limited support for chaos-mesh external chart (no external schema)"
+        - kind: changed
+          description: "Link to upstream project release 2.2.0"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.10.12
+    created: "2022-06-18T00:27:37.582281033+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -408,7 +665,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:37.38268173+02:00"
+    created: "2022-06-18T00:27:37.571433401+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -458,7 +715,59 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.4.1
-    created: "2022-06-17T23:35:37.404774192+02:00"
+    created: "2022-06-18T00:27:37.598562028+02:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://startxfr.github.io/helm-repository/packages/
+      version: 10.12.31
+    - alias: monkey
+      condition: monkey.enabled
+      name: kube-monkey
+      repository: https://asobti.github.io/kube-monkey/charts/repo
+      version: 1.4.1
+    description: Helm chart used to deploy chaos monkey on Openshift or Kubernetes
+      cluster.  Chaos monkey are simple litle monkey released into your K8S cluster,
+      they could be evil or kind according to your need.  This chart is part of the
+      startx chaos helm chart suite.
+    digest: 0f6c473ecd525a0a7b50cab99704950704f7b03640ccb6f24a7696ea27cb6025
+    home: https://startxfr.github.io/helm-repository
+    icon: https://startxfr.github.io/helm-repository/img/chaos-monkey.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - chaos
+    - monkey
+    - chaos monkey
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-monkey
+    sources:
+    - https://startxfr.github.io/helm-repository/charts/chaos-monkey
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-monkey
+    tags: infra,chaos,monkey,testing,cluster,application
+    type: application
+    urls:
+    - https://startxfr.github.io/helm-repository/packages/chaos-monkey-10.12.35.tgz
+    version: 10.12.35
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Upgrade the chaos-monkey helm chart schema with limited support for kube-monkey external chart (no external schema)"
+        - kind: changed
+          description: "Link to upstream project release 1.4.1"
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 1.4.1
+    created: "2022-06-18T00:27:37.59662064+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -510,7 +819,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.4.1
-    created: "2022-06-17T23:35:37.401792838+02:00"
+    created: "2022-06-18T00:27:37.594675217+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -560,7 +869,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.8.3{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.407447143+02:00"
+    created: "2022-06-18T00:27:37.601108208+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -610,7 +919,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-06-17T23:35:37.415243723+02:00"
+    created: "2022-06-18T00:27:37.60884866+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -660,7 +969,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2022-06-17T23:35:37.417848824+02:00"
+    created: "2022-06-18T00:27:37.612076013+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -711,7 +1020,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-06-17T23:35:37.412649916+02:00"
+    created: "2022-06-18T00:27:37.606397747+02:00"
     dependencies:
     - alias: project
       name: project
@@ -754,7 +1063,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 0.7.0
-    created: "2022-06-17T23:35:37.409445312+02:00"
+    created: "2022-06-18T00:27:37.60391799+02:00"
     dependencies:
     - alias: project
       name: project
@@ -798,7 +1107,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.421799176+02:00"
+    created: "2022-06-18T00:27:37.615018408+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -851,7 +1160,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-06-17T23:35:37.42932752+02:00"
+    created: "2022-06-18T00:27:37.622821018+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -904,7 +1213,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-06-17T23:35:37.434737651+02:00"
+    created: "2022-06-18T00:27:37.629036436+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -952,7 +1261,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-06-17T23:35:37.432005124+02:00"
+    created: "2022-06-18T00:27:37.62562184+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1000,7 +1309,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.8
-    created: "2022-06-17T23:35:37.425811863+02:00"
+    created: "2022-06-18T00:27:37.620079517+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1041,7 +1350,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 2.2.5
-    created: "2022-06-17T23:35:37.423605392+02:00"
+    created: "2022-06-18T00:27:37.616851936+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1083,7 +1392,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.437724464+02:00"
+    created: "2022-06-18T00:27:37.631432409+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1131,7 +1440,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-06-17T23:35:37.442129482+02:00"
+    created: "2022-06-18T00:27:37.636556309+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1179,7 +1488,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.67.0
-    created: "2022-06-17T23:35:37.445408252+02:00"
+    created: "2022-06-18T00:27:37.638760663+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1227,7 +1536,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.66.1
-    created: "2022-06-17T23:35:37.439842454+02:00"
+    created: "2022-06-18T00:27:37.633536085+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1274,7 +1583,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.447729857+02:00"
+    created: "2022-06-18T00:27:37.640885245+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1323,7 +1632,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-06-17T23:35:37.449905243+02:00"
+    created: "2022-06-18T00:27:37.643854904+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1372,7 +1681,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-06-17T23:35:37.452831112+02:00"
+    created: "2022-06-18T00:27:37.645940224+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1422,7 +1731,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.455371902+02:00"
+    created: "2022-06-18T00:27:37.648428558+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1469,7 +1778,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-06-17T23:35:37.457913472+02:00"
+    created: "2022-06-18T00:27:37.651701532+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1516,7 +1825,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-06-17T23:35:37.465228328+02:00"
+    created: "2022-06-18T00:27:37.6565412+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1563,7 +1872,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-06-17T23:35:37.4690306+02:00"
+    created: "2022-06-18T00:27:37.659889176+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1610,7 +1919,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.5.4
-    created: "2022-06-17T23:35:37.461532898+02:00"
+    created: "2022-06-18T00:27:37.653958557+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1656,7 +1965,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.532280405+02:00"
+    created: "2022-06-18T00:27:37.719135894+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 4ca38eab2f21f3285bd302de4ffe303351622ce21c09adfb839b34d13019eb6a
     home: https://startxfr.github.io/helm-repository
@@ -1691,7 +2000,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.692460812+02:00"
+    created: "2022-06-18T00:27:37.86849322+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: dd1c3496f07b1ab108716d7df110a9fce0107c3ff9625f593626a0d08605ed18
     home: https://startxfr.github.io/helm-repository
@@ -1726,7 +2035,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.763941496+02:00"
+    created: "2022-06-18T00:27:37.928087107+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 2d2fdeae8d310a5861504f0bb49f218bc3039576a005f473020539497ad87708
     home: https://startxfr.github.io/helm-repository
@@ -1761,7 +2070,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:37.629706116+02:00"
+    created: "2022-06-18T00:27:37.808283058+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 16d08f6c7ea81370e102c30db80bf8991b9a56184fd62f1ff265be6baf92dba6
     home: https://startxfr.github.io/helm-repository
@@ -1791,7 +2100,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:37.582584327+02:00"
+    created: "2022-06-18T00:27:37.764235235+02:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: e4bba6419f9582d694813b5702c1de283f5b0b1c3ef91083318effd7266d7cb3
     home: https://startxfr.github.io/helm-repository
@@ -1822,7 +2131,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.766518523+02:00"
+    created: "2022-06-18T00:27:37.931411631+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1868,7 +2177,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-06-17T23:35:37.773247995+02:00"
+    created: "2022-06-18T00:27:37.937502381+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1914,7 +2223,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.48
-    created: "2022-06-17T23:35:37.776425411+02:00"
+    created: "2022-06-18T00:27:37.940451991+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1960,7 +2269,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.1.44
-    created: "2022-06-17T23:35:37.770721635+02:00"
+    created: "2022-06-18T00:27:37.935193553+02:00"
     dependencies:
     - alias: project
       name: project
@@ -1999,7 +2308,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 0.1.35
-    created: "2022-06-17T23:35:37.768411157+02:00"
+    created: "2022-06-18T00:27:37.933114135+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2045,7 +2354,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.782875541+02:00"
+    created: "2022-06-18T00:27:37.946862602+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2121,7 +2430,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.77984602+02:00"
+    created: "2022-06-18T00:27:37.943362124+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2197,7 +2506,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.78624876+02:00"
+    created: "2022-06-18T00:27:37.949463779+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2253,7 +2562,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.794181558+02:00"
+    created: "2022-06-18T00:27:37.956979292+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2309,7 +2618,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.799478413+02:00"
+    created: "2022-06-18T00:27:37.962629689+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2361,7 +2670,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.796824405+02:00"
+    created: "2022-06-18T00:27:37.959503542+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2413,7 +2722,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:37.79079624+02:00"
+    created: "2022-06-18T00:27:37.954467571+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2457,7 +2766,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:37.788326552+02:00"
+    created: "2022-06-18T00:27:37.951457774+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2502,7 +2811,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.808394525+02:00"
+    created: "2022-06-18T00:27:37.968613334+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 4ba07ad458552ae26981c1236e2a5be5e7f14735bf153ff1f52b0ed60bcbccc8
     home: https://startxfr.github.io/helm-repository
@@ -2537,7 +2846,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.828068206+02:00"
+    created: "2022-06-18T00:27:37.986024188+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: f2e934e91ec08eccdb65915a3cd1b6f4ff2792a01a3cdc401a6a8d2b877a6e12
     home: https://startxfr.github.io/helm-repository
@@ -2572,7 +2881,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:37.835259895+02:00"
+    created: "2022-06-18T00:27:37.991980978+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 0c7a04dfbe55bff8b18f30da1a9403f55194be332ca5896cf952bceb2615cf77
     home: https://startxfr.github.io/helm-repository
@@ -2607,7 +2916,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:37.821913357+02:00"
+    created: "2022-06-18T00:27:37.979309249+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 15531a14eb5f5f2a3a88b3a2c4c1e2dbd447905eefbaabb4d215427938d5c114
     home: https://startxfr.github.io/helm-repository
@@ -2637,7 +2946,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:37.815688852+02:00"
+    created: "2022-06-18T00:27:37.974378386+02:00"
     description: Helm chart used to configure openshift console at the cluster level
     digest: 6801437ff73ed832f168d47f4198afe3705dd0501e288551c319eb5cead706b6
     home: https://startxfr.github.io/helm-repository
@@ -2668,7 +2977,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.837860462+02:00"
+    created: "2022-06-18T00:27:37.994475554+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2718,7 +3027,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-06-17T23:35:37.84561522+02:00"
+    created: "2022-06-18T00:27:38.003643665+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2768,7 +3077,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.1
-    created: "2022-06-17T23:35:37.849031092+02:00"
+    created: "2022-06-18T00:27:38.00890231+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2818,7 +3127,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-06-17T23:35:37.843162761+02:00"
+    created: "2022-06-18T00:27:37.999901331+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2861,7 +3170,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2022-06-17T23:35:37.840816309+02:00"
+    created: "2022-06-18T00:27:37.997099463+02:00"
     dependencies:
     - alias: project
       name: project
@@ -2904,7 +3213,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.885323207+02:00"
+    created: "2022-06-18T00:27:38.045436418+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2953,7 +3262,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-06-17T23:35:37.927882074+02:00"
+    created: "2022-06-18T00:27:38.086373299+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3002,7 +3311,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-06-17T23:35:37.964950959+02:00"
+    created: "2022-06-18T00:27:38.12277528+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3051,7 +3360,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-06-17T23:35:37.889546764+02:00"
+    created: "2022-06-18T00:27:38.049372105+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3093,7 +3402,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-06-17T23:35:37.887249391+02:00"
+    created: "2022-06-18T00:27:38.047173052+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3135,7 +3444,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.1{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.967777406+02:00"
+    created: "2022-06-18T00:27:38.12561695+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3204,7 +3513,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-06-17T23:35:37.975544598+02:00"
+    created: "2022-06-18T00:27:38.133147876+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3273,7 +3582,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-06-17T23:35:37.978473439+02:00"
+    created: "2022-06-18T00:27:38.136073262+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3341,7 +3650,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.1
-    created: "2022-06-17T23:35:37.972699317+02:00"
+    created: "2022-06-18T00:27:38.130393553+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3399,7 +3708,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 2.0.6.2
-    created: "2022-06-17T23:35:37.970016359+02:00"
+    created: "2022-06-18T00:27:38.127825869+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3455,7 +3764,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.981688202+02:00"
+    created: "2022-06-18T00:27:38.138529944+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3504,7 +3813,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-06-17T23:35:37.991261748+02:00"
+    created: "2022-06-18T00:27:38.1452601+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3553,7 +3862,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-06-17T23:35:37.994862705+02:00"
+    created: "2022-06-18T00:27:38.147580043+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3602,7 +3911,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.7.3
-    created: "2022-06-17T23:35:37.987693596+02:00"
+    created: "2022-06-18T00:27:38.142852146+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3644,7 +3953,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 0.7.1
-    created: "2022-06-17T23:35:37.984913245+02:00"
+    created: "2022-06-18T00:27:38.14112286+02:00"
     dependencies:
     - alias: project
       name: project
@@ -3686,7 +3995,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.20.1{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:37.999842892+02:00"
+    created: "2022-06-18T00:27:38.150888244+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -3744,7 +4053,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-06-17T23:35:38.013325877+02:00"
+    created: "2022-06-18T00:27:38.15822706+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -3802,7 +4111,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 1.20.1
-    created: "2022-06-17T23:35:38.017990913+02:00"
+    created: "2022-06-18T00:27:38.160630985+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -3860,7 +4169,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.18.0
-    created: "2022-06-17T23:35:38.008090834+02:00"
+    created: "2022-06-18T00:27:38.155219346+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -3909,7 +4218,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-06-17T23:35:38.00351694+02:00"
+    created: "2022-06-18T00:27:38.152846702+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -3957,7 +4266,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.022523209+02:00"
+    created: "2022-06-18T00:27:38.163791018+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4006,7 +4315,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-06-17T23:35:38.036196065+02:00"
+    created: "2022-06-18T00:27:38.170928002+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4055,7 +4364,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.9.3
-    created: "2022-06-17T23:35:38.041042838+02:00"
+    created: "2022-06-18T00:27:38.173552348+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4104,7 +4413,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.2
-    created: "2022-06-17T23:35:38.031427269+02:00"
+    created: "2022-06-18T00:27:38.167979646+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4146,7 +4455,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.026972714+02:00"
+    created: "2022-06-18T00:27:38.165705969+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4187,7 +4496,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.043592321+02:00"
+    created: "2022-06-18T00:27:38.175856645+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4235,7 +4544,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-06-17T23:35:38.046020818+02:00"
+    created: "2022-06-18T00:27:38.17855525+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4283,7 +4592,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.0
-    created: "2022-06-17T23:35:38.049272196+02:00"
+    created: "2022-06-18T00:27:38.181257643+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4332,7 +4641,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.3.5{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.052166096+02:00"
+    created: "2022-06-18T00:27:38.183736321+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4386,7 +4695,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-06-17T23:35:38.060012029+02:00"
+    created: "2022-06-18T00:27:38.191167215+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4440,7 +4749,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-06-17T23:35:38.07286325+02:00"
+    created: "2022-06-18T00:27:38.202792042+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4494,7 +4803,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-06-17T23:35:38.07023252+02:00"
+    created: "2022-06-18T00:27:38.199496296+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4548,7 +4857,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-06-17T23:35:38.067526158+02:00"
+    created: "2022-06-18T00:27:38.196991842+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4602,7 +4911,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 5.3.5
-    created: "2022-06-17T23:35:38.063709557+02:00"
+    created: "2022-06-18T00:27:38.193729444+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4656,7 +4965,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 5.2.2
-    created: "2022-06-17T23:35:38.057371503+02:00"
+    created: "2022-06-18T00:27:38.188649607+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4702,7 +5011,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 5.1.0
-    created: "2022-06-17T23:35:38.054129573+02:00"
+    created: "2022-06-18T00:27:38.185633201+02:00"
     dependencies:
     - alias: project
       name: project
@@ -4746,7 +5055,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.073600665+02:00"
+    created: "2022-06-18T00:27:38.203582087+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 4650a736c16c0ae99e6919158ddf196c3fe8ff88ac94c29f1438fa725cdb138f
     home: https://startxfr.github.io/helm-repository
@@ -4781,7 +5090,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.076186045+02:00"
+    created: "2022-06-18T00:27:38.205307112+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 563d9db4f3ab871e0b5fe4ca59c67b6c99d5c1af3b584c70a691d850b0facf71
     home: https://startxfr.github.io/helm-repository
@@ -4816,7 +5125,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.083971295+02:00"
+    created: "2022-06-18T00:27:38.21305531+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 3374637183240dadfe4708454a9ccac40024f4445dea67baa2ce3f2f1083847a
     home: https://startxfr.github.io/helm-repository
@@ -4852,7 +5161,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.083260307+02:00"
+    created: "2022-06-18T00:27:38.212389924+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 9fceea75381794cc2f01f09734fec1ba68b399826a922a355ea4d53a6dfc7b91
     home: https://startxfr.github.io/helm-repository
@@ -4888,7 +5197,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.082552138+02:00"
+    created: "2022-06-18T00:27:38.211157894+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 6b205d4996116a604f8fa932e38c3b98bb0554e707fb4a594d42c98e5f1681ed
     home: https://startxfr.github.io/helm-repository
@@ -4924,7 +5233,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.081832882+02:00"
+    created: "2022-06-18T00:27:38.210509183+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: ec1317217f42c145e39b2fe8d8bd80b7f6016289358a790eff7dd42916a8f4e1
     home: https://startxfr.github.io/helm-repository
@@ -4960,7 +5269,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.081101365+02:00"
+    created: "2022-06-18T00:27:38.209814107+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: e9e8848bf3445e82e1e940755058e30687a2bf21a9a3a4221517498056e13cd5
     home: https://startxfr.github.io/helm-repository
@@ -4996,7 +5305,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.08042291+02:00"
+    created: "2022-06-18T00:27:38.209154891+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 02e3e41fdd6ea2cca0b31b75db331a6134c3f05d70d8341b2e64e66b2bad983a
     home: https://startxfr.github.io/helm-repository
@@ -5032,7 +5341,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.079703604+02:00"
+    created: "2022-06-18T00:27:38.20854569+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 637040a7a378bca09e9de59da2ffd26b25fbc3722485c8c97b59a10b95de80b4
     home: https://startxfr.github.io/helm-repository
@@ -5068,7 +5377,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.078984768+02:00"
+    created: "2022-06-18T00:27:38.207853218+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 2e3f95dc37e702b53cd56c237a894b5d0b4ac01959de0dc17ae7dcae410d874d
     home: https://startxfr.github.io/helm-repository
@@ -5104,7 +5413,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.078286755+02:00"
+    created: "2022-06-18T00:27:38.207211745+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 9536a76842364ceffd0e908d150f10914ceed6a708b2c8ef6d2e4d3a90b2a407
     home: https://startxfr.github.io/helm-repository
@@ -5140,7 +5449,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.07757459+02:00"
+    created: "2022-06-18T00:27:38.206611629+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: 219fabd133e6aa15be8a814224ebd46992e2129d68b2ba6a4a32f2143e58c85e
     home: https://startxfr.github.io/helm-repository
@@ -5176,7 +5485,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.076890243+02:00"
+    created: "2022-06-18T00:27:38.205946603+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: fb481e1dc84a5f06acc639758ee1ab6bebd3ee6b1a59d21d5255c49e6000faff
     home: https://startxfr.github.io/helm-repository
@@ -5211,7 +5520,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.075111351+02:00"
+    created: "2022-06-18T00:27:38.204644033+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: d2855a981846df32b081c275ace2e145b1cd9c17291ae3f43f222b48adc55ba9
     home: https://startxfr.github.io/helm-repository
@@ -5242,7 +5551,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.074152927+02:00"
+    created: "2022-06-18T00:27:38.204066139+02:00"
     description: Helm chart used to configure various state of the machine api
     digest: c61789270d70e1e120dbe30478dc3421190fddda8c640732e8a2efcf06c03247
     home: https://startxfr.github.io/helm-repository
@@ -5275,7 +5584,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12
-    created: "2022-06-17T23:35:38.087315935+02:00"
+    created: "2022-06-18T00:27:38.21547655+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5322,7 +5631,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.096446229+02:00"
+    created: "2022-06-18T00:27:38.222588652+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5369,7 +5678,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.100755071+02:00"
+    created: "2022-06-18T00:27:38.224871143+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5416,7 +5725,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.092160699+02:00"
+    created: "2022-06-18T00:27:38.220225595+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5456,7 +5765,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-06-17T23:35:38.089535797+02:00"
+    created: "2022-06-18T00:27:38.217215951+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5496,7 +5805,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.105035877+02:00"
+    created: "2022-06-18T00:27:38.227839837+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5543,7 +5852,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-06-17T23:35:38.114347988+02:00"
+    created: "2022-06-18T00:27:38.234031684+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5590,7 +5899,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-06-17T23:35:38.116833202+02:00"
+    created: "2022-06-18T00:27:38.237032268+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5637,7 +5946,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.32.0
-    created: "2022-06-17T23:35:38.11187807+02:00"
+    created: "2022-06-18T00:27:38.231834047+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5677,7 +5986,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 3.27.0
-    created: "2022-06-17T23:35:38.108432513+02:00"
+    created: "2022-06-18T00:27:38.229660686+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5719,7 +6028,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.120950306+02:00"
+    created: "2022-06-18T00:27:38.239337959+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5772,7 +6081,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.132848483+02:00"
+    created: "2022-06-18T00:27:38.246171472+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5825,7 +6134,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.136742882+02:00"
+    created: "2022-06-18T00:27:38.248407434+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5878,7 +6187,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.3
-    created: "2022-06-17T23:35:38.128447519+02:00"
+    created: "2022-06-18T00:27:38.243156716+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5924,7 +6233,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.2
-    created: "2022-06-17T23:35:38.124232868+02:00"
+    created: "2022-06-18T00:27:38.241005298+02:00"
     dependencies:
     - alias: project
       name: project
@@ -5965,7 +6274,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.139345123+02:00"
+    created: "2022-06-18T00:27:38.250577717+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6013,7 +6322,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-06-17T23:35:38.146834317+02:00"
+    created: "2022-06-18T00:27:38.257181793+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6061,7 +6370,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-06-17T23:35:38.149309714+02:00"
+    created: "2022-06-18T00:27:38.259378481+02:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -6109,7 +6418,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2022-06-17T23:35:38.144210913+02:00"
+    created: "2022-06-18T00:27:38.254985273+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -6150,7 +6459,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 1.4.1
-    created: "2022-06-17T23:35:38.141296633+02:00"
+    created: "2022-06-18T00:27:38.252821368+02:00"
     dependencies:
     - alias: projectOperator
       name: project
@@ -6190,7 +6499,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.151848434+02:00"
+    created: "2022-06-18T00:27:38.262271924+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6238,7 +6547,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.159451401+02:00"
+    created: "2022-06-18T00:27:38.269114194+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6286,7 +6595,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.161913073+02:00"
+    created: "2022-06-18T00:27:38.271415351+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6334,7 +6643,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.156982974+02:00"
+    created: "2022-06-18T00:27:38.266005953+02:00"
     dependencies:
     - alias: project
       name: project
@@ -6375,7 +6684,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-06-17T23:35:38.154651842+02:00"
+    created: "2022-06-18T00:27:38.263925484+02:00"
     dependencies:
     - alias: project
       name: project
@@ -6418,7 +6727,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.165430974+02:00"
+    created: "2022-06-18T00:27:38.273904013+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6473,7 +6782,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-06-17T23:35:38.174664941+02:00"
+    created: "2022-06-18T00:27:38.281395738+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6528,7 +6837,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-06-17T23:35:38.178437897+02:00"
+    created: "2022-06-18T00:27:38.28371221+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6583,7 +6892,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 3.6.0
-    created: "2022-06-17T23:35:38.170441644+02:00"
+    created: "2022-06-18T00:27:38.27905197+02:00"
     dependencies:
     - alias: project
       name: project
@@ -6630,7 +6939,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 3.5.4
-    created: "2022-06-17T23:35:38.167616027+02:00"
+    created: "2022-06-18T00:27:38.276490344+02:00"
     dependencies:
     - alias: project
       name: project
@@ -6675,7 +6984,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.179119622+02:00"
+    created: "2022-06-18T00:27:38.284652051+02:00"
     description: Helm chart used to configure RBAC
     digest: ba214b2709b988a5106799f91de6e0dc67b813011a27187ccd6fd83842fcb1ec
     home: https://startxfr.github.io/helm-repository
@@ -6711,7 +7020,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.180386219+02:00"
+    created: "2022-06-18T00:27:38.28595612+02:00"
     description: Helm chart used to configure RBAC
     digest: ba75a32da98f03c00f39e9acc538a988ef4d2610ab59afc0092aa7ead9816f4e
     home: https://startxfr.github.io/helm-repository
@@ -6747,7 +7056,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.18084954+02:00"
+    created: "2022-06-18T00:27:38.286390998+02:00"
     description: Helm chart used to configure RBAC
     digest: f9098c575bc0f4ab2e1eaa015578b127d8af42f97a28a055ce6e2d5f12ce47e6
     home: https://startxfr.github.io/helm-repository
@@ -6783,7 +7092,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.179919918+02:00"
+    created: "2022-06-18T00:27:38.285560293+02:00"
     description: Helm chart used to configure RBAC
     digest: 0ec57d750f8dba9666cd90c132f56aafa68befe3fccd275cd027eeaacb02549d
     home: https://startxfr.github.io/helm-repository
@@ -6814,7 +7123,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.179497088+02:00"
+    created: "2022-06-18T00:27:38.285165525+02:00"
     description: Helm chart used to configure RBAC
     digest: e0a1159d0363531731e278574536a9a37f1d7f6980b695e63336c77c012e4a5a
     home: https://startxfr.github.io/helm-repository
@@ -6845,7 +7154,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 7.5.1{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.184058256+02:00"
+    created: "2022-06-18T00:27:38.288593141+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6893,7 +7202,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-06-17T23:35:38.190245238+02:00"
+    created: "2022-06-18T00:27:38.295411495+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6941,7 +7250,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "true"
     apiVersion: v2
     appVersion: 7.5.1
-    created: "2022-06-17T23:35:38.193687295+02:00"
+    created: "2022-06-18T00:27:38.297539536+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6989,7 +7298,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 7.5.0
-    created: "2022-06-17T23:35:38.187889222+02:00"
+    created: "2022-06-18T00:27:38.293271698+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7030,7 +7339,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 7.4.7
-    created: "2022-06-17T23:35:38.185820135+02:00"
+    created: "2022-06-18T00:27:38.290178212+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7072,7 +7381,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.194220342+02:00"
+    created: "2022-06-18T00:27:38.297974241+02:00"
     description: Helm chart used to configure various storageClass
     digest: 473308a2d530e39dc603610c6966fe24427195697bba26c1fa8bc086db62bd90
     home: https://startxfr.github.io/helm-repository
@@ -7107,7 +7416,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.195598312+02:00"
+    created: "2022-06-18T00:27:38.299200611+02:00"
     description: Helm chart used to configure various storageClass
     digest: d1841269c67067e439b32a438c152323b560a61313747606bfea8107da8bd2e7
     home: https://startxfr.github.io/helm-repository
@@ -7142,7 +7451,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.196093538+02:00"
+    created: "2022-06-18T00:27:38.299659286+02:00"
     description: Helm chart used to configure various storageClass
     digest: cd435c71f27af4537df127b3522a07b5bd7a2461ccdcce3cd9175cbb864556d1
     home: https://startxfr.github.io/helm-repository
@@ -7177,7 +7486,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.195103983+02:00"
+    created: "2022-06-18T00:27:38.298776596+02:00"
     description: Helm chart used to configure various storageClass
     digest: 3e4546b358366c4ca6fb6a58fda748108a5ab734c7c0b7b61e0d2cd17f77dc88
     home: https://startxfr.github.io/helm-repository
@@ -7207,7 +7516,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.194625115+02:00"
+    created: "2022-06-18T00:27:38.298372764+02:00"
     description: Helm chart used to configure various storageClass
     digest: f3fa9a5c38eed05168e83dd157b14d3d6c21bb5f725bb91bd596cc795261904a
     home: https://startxfr.github.io/helm-repository
@@ -7238,7 +7547,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.201163064+02:00"
+    created: "2022-06-18T00:27:38.304400671+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7285,7 +7594,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-06-17T23:35:38.215231712+02:00"
+    created: "2022-06-18T00:27:38.316918621+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7332,7 +7641,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-06-17T23:35:38.219253561+02:00"
+    created: "2022-06-18T00:27:38.32174381+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7379,7 +7688,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 1.9.0
-    created: "2022-06-17T23:35:38.210029946+02:00"
+    created: "2022-06-18T00:27:38.312907128+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7419,7 +7728,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 0.9.0
-    created: "2022-06-17T23:35:38.205713715+02:00"
+    created: "2022-06-18T00:27:38.308396356+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7459,7 +7768,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.222178573+02:00"
+    created: "2022-06-18T00:27:38.324018177+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7507,7 +7816,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-06-17T23:35:38.230056898+02:00"
+    created: "2022-06-18T00:27:38.332414229+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7555,7 +7864,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-06-17T23:35:38.234633115+02:00"
+    created: "2022-06-18T00:27:38.336306389+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7603,7 +7912,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2022-06-17T23:35:38.225989074+02:00"
+    created: "2022-06-18T00:27:38.327771524+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7650,7 +7959,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.236884242+02:00"
+    created: "2022-06-18T00:27:38.339311679+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7697,7 +8006,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.243981746+02:00"
+    created: "2022-06-18T00:27:38.345328118+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7744,7 +8053,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.246306207+02:00"
+    created: "2022-06-18T00:27:38.348360576+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7791,7 +8100,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.0
-    created: "2022-06-17T23:35:38.241687033+02:00"
+    created: "2022-06-18T00:27:38.343056369+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7831,7 +8140,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.0
-    created: "2022-06-17T23:35:38.239412052+02:00"
+    created: "2022-06-18T00:27:38.341008688+02:00"
     dependencies:
     - alias: project
       name: project
@@ -7873,7 +8182,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-06-17T23:35:38.249173148+02:00"
+    created: "2022-06-18T00:27:38.350591719+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7920,7 +8229,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-06-17T23:35:38.256056043+02:00"
+    created: "2022-06-18T00:27:38.357672941+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7967,7 +8276,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.13.100
-    created: "2022-06-17T23:35:38.258395508+02:00"
+    created: "2022-06-18T00:27:38.359883478+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8014,7 +8323,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 2.11.0
-    created: "2022-06-17T23:35:38.253012899+02:00"
+    created: "2022-06-18T00:27:38.35441987+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8054,7 +8363,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 2.11.0
-    created: "2022-06-17T23:35:38.250948223+02:00"
+    created: "2022-06-18T00:27:38.352320086+02:00"
     dependencies:
     - alias: project
       name: project
@@ -8095,7 +8404,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.284609641+02:00"
+    created: "2022-06-18T00:27:38.384681498+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 63a242667f642a9ebc0668fa3c2f45a8c244db0432221f84e8c4857d7159b4dc
@@ -8131,7 +8440,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.352000994+02:00"
+    created: "2022-06-18T00:27:38.438056314+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: a1073afd90800cd6614e83d27e7f401e55da921ce822673df58aabd7db5d0c35
@@ -8167,7 +8476,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.378781475+02:00"
+    created: "2022-06-18T00:27:38.46404046+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 5df6a42702f008eb493bee895f85a65a339457493ca90dbdb45b42a39302db21
@@ -8203,7 +8512,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.32204119+02:00"
+    created: "2022-06-18T00:27:38.41134372+02:00"
     description: Helm chart used to deploy various example of application used in
       Startx demo.
     digest: 0df92d630ed1b3e3595ee2e366641eaa05b655936d1cfda0427a09fd39925f8c
@@ -8248,7 +8557,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.406686309+02:00"
+    created: "2022-06-18T00:27:38.492423778+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8314,7 +8623,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.39367028+02:00"
+    created: "2022-06-18T00:27:38.479493246+02:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -8399,7 +8708,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.408023789+02:00"
+    created: "2022-06-18T00:27:38.493746503+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -8442,7 +8751,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.410505004+02:00"
+    created: "2022-06-18T00:27:38.496174263+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -8486,7 +8795,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.41252797+02:00"
+    created: "2022-06-18T00:27:38.497438906+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -8530,7 +8839,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.409228254+02:00"
+    created: "2022-06-18T00:27:38.49492586+02:00"
     dependencies:
     - alias: application
       name: sxapi
@@ -8575,7 +8884,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.413027166+02:00"
+    created: "2022-06-18T00:27:38.497969812+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 23a525ae5fe7f7e39f6626f8e904f2e1358b095aef8192975d334c91fb511edf
@@ -8613,7 +8922,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.414375571+02:00"
+    created: "2022-06-18T00:27:38.499349991+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: d771b6318a00f7f327dfe45a84cb54451ea9e913ede57566adf96ba3df6679e5
@@ -8651,7 +8960,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.414877025+02:00"
+    created: "2022-06-18T00:27:38.499833833+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: e07f0f1a9d27e75fbc7dbf46d489e16e876536d2489adc998f9d64e985e6f0db
@@ -8689,7 +8998,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.413876117+02:00"
+    created: "2022-06-18T00:27:38.498857671+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 962bfeb5f53514fe32de7fd3ad9435dbd76f5cd433c3a2472d1427c8711e3506
@@ -8722,7 +9031,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.413423561+02:00"
+    created: "2022-06-18T00:27:38.498377828+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: c38eff92da21132f1e54240fb6f146339bb212dd3e036b5a953db4c801e83870
@@ -8754,7 +9063,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.415344645+02:00"
+    created: "2022-06-18T00:27:38.500297124+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: bb4dcd6c3ad896e96e9444fde10f2e7f16b2789fdfbe329b0823fbb9b0ac6161
@@ -8792,7 +9101,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.415797093+02:00"
+    created: "2022-06-18T00:27:38.500746021+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 447f4984e0bc0b4c10ce2a9e5dd67f2f6bc8854b1c1a0569367c9a27e4903971
@@ -8830,7 +9139,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.416251437+02:00"
+    created: "2022-06-18T00:27:38.501214466+02:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: ad428c000847d6096b42f70cf5ee0f0dfbf4a4e3779649d48917c64ee7fd6483
@@ -8869,7 +9178,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.419412028+02:00"
+    created: "2022-06-18T00:27:38.505328039+02:00"
     dependencies:
     - alias: project_devel
       condition: project_devel.enabled
@@ -8932,7 +9241,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.423121049+02:00"
+    created: "2022-06-18T00:27:38.50840765+02:00"
     dependencies:
     - alias: project_devel
       condition: project_devel.enabled
@@ -8995,7 +9304,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.436023717+02:00"
+    created: "2022-06-18T00:27:38.517644217+02:00"
     dependencies:
     - alias: project_devel
       condition: project_devel.enabled
@@ -9058,7 +9367,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.430978377+02:00"
+    created: "2022-06-18T00:27:38.514728835+02:00"
     dependencies:
     - alias: project_devel
       condition: project_devel.enabled
@@ -9121,7 +9430,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.426031409+02:00"
+    created: "2022-06-18T00:27:38.511302062+02:00"
     dependencies:
     - alias: project_devel
       condition: project_devel.enabled
@@ -9185,7 +9494,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.436826536+02:00"
+    created: "2022-06-18T00:27:38.5181126+02:00"
     description: Helm chart used to deploy shared services for a given environment
       (preprod or prod).  Include deployment of database and shared secrets.
     digest: b3e72643a69e9e7ad2d86711bfd1aac5a4ff8fa51b5f3a92e8e850a68951dee3
@@ -9223,7 +9532,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.437621412+02:00"
+    created: "2022-06-18T00:27:38.518578242+02:00"
     description: Helm chart used to deploy shared services for a given environment
       (preprod or prod).  Include deployment of database and shared secrets.
     digest: 55b7eaf26e02942d7a827764f1fec5d9cb41ea33d153f2c328c968cde3db421f
@@ -9261,7 +9570,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.438401256+02:00"
+    created: "2022-06-18T00:27:38.518999997+02:00"
     description: Helm chart used to deploy shared services for a given environment
       (preprod or prod).  Include deployment of database and shared secrets.
     digest: f6ace6eec403ccc290edbc2dcdbb9240b34e22d1acdda9e4b0842ec90ed97b6e
@@ -9300,7 +9609,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.439607584+02:00"
+    created: "2022-06-18T00:27:38.520448139+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: ac5f05e7954aba17e7fd7db6abf75cc28cf08a609c255d0c65e9c9294d9c8fee
     home: https://startxfr.github.io/helm-repository
@@ -9336,7 +9645,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.442562492+02:00"
+    created: "2022-06-18T00:27:38.522517716+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 936f1f2f64183d716823f54523a92260e8b4993349d9c282708affa4fb5f74cd
     home: https://startxfr.github.io/helm-repository
@@ -9372,7 +9681,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.443368622+02:00"
+    created: "2022-06-18T00:27:38.523179586+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 5591f15f635b64c3494c6cbfa0a757935236eead109f581afde9a216d8c38479
     home: https://startxfr.github.io/helm-repository
@@ -9408,7 +9717,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.44174873+02:00"
+    created: "2022-06-18T00:27:38.521772083+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 81b2a7b2e4f1eba090bdebd66c498cf076495b6ee4f4821aed545d97d2592620
     home: https://startxfr.github.io/helm-repository
@@ -9439,7 +9748,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.440300101+02:00"
+    created: "2022-06-18T00:27:38.521040961+02:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: a005b410954f437ba108d3cf974513f27a8772a3da692cfdfc0fa2cff9b9c80b
     home: https://startxfr.github.io/helm-repository
@@ -9471,7 +9780,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.444138467+02:00"
+    created: "2022-06-18T00:27:38.523950137+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: bee2e154bf7847a2912884564152caa8e9180526a7db0c37c51fbad33772648b
     home: https://startxfr.github.io/helm-repository
@@ -9505,7 +9814,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.44640575+02:00"
+    created: "2022-06-18T00:27:38.525977569+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: e6590378a61861a2d9e51abb96f0ef07df4df2c6a7ab314684c56da7cfb3b060
     home: https://startxfr.github.io/helm-repository
@@ -9539,7 +9848,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.447872809+02:00"
+    created: "2022-06-18T00:27:38.528078517+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 518bbc95c01c6d1da4b2356c1139bcd391de6831f3be09442f2c35c15c524973
     home: https://startxfr.github.io/helm-repository
@@ -9573,7 +9882,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.447132729+02:00"
+    created: "2022-06-18T00:27:38.526702131+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 9792eb775c97425200e6254d4f91493ee24fbbd8cf71bc6f56e47b172198c89b
     home: https://startxfr.github.io/helm-repository
@@ -9607,7 +9916,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.445657214+02:00"
+    created: "2022-06-18T00:27:38.525303641+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 4950fdea957c7db43c6f3c0a3546ba0db6d8b3e8a30516a0e29d52a0e007a01c
     home: https://startxfr.github.io/helm-repository
@@ -9636,7 +9945,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.444909984+02:00"
+    created: "2022-06-18T00:27:38.524600417+02:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 3190deb7662761167d79db587cbdb2358700cd7b5758999928e9d0444db10782
     home: https://startxfr.github.io/helm-repository
@@ -9667,7 +9976,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.44900989+02:00"
+    created: "2022-06-18T00:27:38.528561119+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: d820fc9b3e5ac360df9aabadd4bd0dab64ce266088a64e942bb9dba806d227fe
@@ -9703,7 +10012,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.45040113+02:00"
+    created: "2022-06-18T00:27:38.529832709+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 0df3a8531a4f89f66b3ea0d6655faee3122ea06c9ddafdd333f6a8d867fa7f1d
@@ -9739,7 +10048,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.450922527+02:00"
+    created: "2022-06-18T00:27:38.530306646+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 0f87a3e827353cf8ce6e6ca14efe619c8e61612f94452827b0570b784f9da8db
@@ -9775,7 +10084,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.449927967+02:00"
+    created: "2022-06-18T00:27:38.529405029+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: e67296685b5788fd2a94bdeaf9b60453cf53c7d097b53552c42293d434711905
@@ -9806,7 +10115,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.449455463+02:00"
+    created: "2022-06-18T00:27:38.528947714+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: a03e026fe44c19b480d181d4ace2be6a4af8e36ccd51ad95b5ce3a1ac9576bd7
@@ -9838,7 +10147,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.451468363+02:00"
+    created: "2022-06-18T00:27:38.530772992+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 4ecf04f8ee0ca5a8822c8a596479b0972f39e570247b8d169abc9cd484e6da92
@@ -9876,7 +10185,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.452900281+02:00"
+    created: "2022-06-18T00:27:38.532145887+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 0c2270670f29876244fe4ffe7cf5563b80230bfe224f41d685d35dbead752980
@@ -9914,7 +10223,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.45343191+02:00"
+    created: "2022-06-18T00:27:38.53269961+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 1547570959ce5ba2f3c66472033b70cb4270504dcd8fd543a2011c4b185b55f1
@@ -9952,7 +10261,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.45242569+02:00"
+    created: "2022-06-18T00:27:38.531682058+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 9a23b0fe785fdf6bcd84e9c92e24135da1d197046389c883f1fb6b2dd29a3f10
@@ -9985,7 +10294,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.45188739+02:00"
+    created: "2022-06-18T00:27:38.531196845+02:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 18a2525fd39b692bcbbb2957eb65f9b855d2eed33a2f77fcddb5ba415c950789
@@ -10017,7 +10326,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.453856423+02:00"
+    created: "2022-06-18T00:27:38.533094792+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: bd228094876164d17f4766d0745e397a9034efe5b4155884716657115fb42973
     home: https://startxfr.github.io/helm-repository
@@ -10051,7 +10360,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.455111702+02:00"
+    created: "2022-06-18T00:27:38.534289199+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 905e46696c298da6a5ecb7a3dcaee47f8ef00703fb60da0c6366b78e76128bc7
     home: https://startxfr.github.io/helm-repository
@@ -10085,7 +10394,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.455601405+02:00"
+    created: "2022-06-18T00:27:38.534741655+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 79640c63219b093b596f1336f5cf11089f20fca43d87f1ac2b19dde2972b4b38
     home: https://startxfr.github.io/helm-repository
@@ -10119,7 +10428,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.454709422+02:00"
+    created: "2022-06-18T00:27:38.53386619+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: b7cac0a7550553c0bd7e399841de667f3e555a9d35845ec1f2b27827a8438ef4
     home: https://startxfr.github.io/helm-repository
@@ -10148,7 +10457,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.45419486+02:00"
+    created: "2022-06-18T00:27:38.533456282+02:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 7820d094c22b5f0606965fe672883b33924aa74598d6efc7f5742a95403d49ba
     home: https://startxfr.github.io/helm-repository
@@ -10179,7 +10488,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.45689948+02:00"
+    created: "2022-06-18T00:27:38.535977733+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -10224,7 +10533,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.461107752+02:00"
+    created: "2022-06-18T00:27:38.540079026+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -10269,7 +10578,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.462396063+02:00"
+    created: "2022-06-18T00:27:38.541327731+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -10314,7 +10623,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.459779129+02:00"
+    created: "2022-06-18T00:27:38.538871328+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -10354,7 +10663,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.458598398+02:00"
+    created: "2022-06-18T00:27:38.537651156+02:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -10391,7 +10700,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.463727508+02:00"
+    created: "2022-06-18T00:27:38.542569897+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 9f839c39bf4bb3eb5a0c11aaaff90766bcd36ae6c522365921c050bd17769b65
@@ -10428,7 +10737,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.463073176+02:00"
+    created: "2022-06-18T00:27:38.541933508+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: f2a424aea05cbce88e2e5e5267402ca6bbcae3571b95c6fcecc8b10de23b8166
@@ -10465,7 +10774,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.46547297+02:00"
+    created: "2022-06-18T00:27:38.544292188+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: ab5d509dea854baca62641b02ac4503ced9b30380c64047fa7f944e58be69fd2
@@ -10502,7 +10811,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.468078954+02:00"
+    created: "2022-06-18T00:27:38.547087877+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: c5ac70c8cd3833557bfcc82cb7e301b2d47b7792e850399982018e48ff0824b3
@@ -10539,7 +10848,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.466719238+02:00"
+    created: "2022-06-18T00:27:38.54555028+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 6add20d671b393e647e8b1ff124ad72bdaf5dd5f9f3b058758c3ca1fdcca39e0
@@ -10576,7 +10885,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.466090666+02:00"
+    created: "2022-06-18T00:27:38.544896392+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 9edd4a7c9cb1a526c34cc247f4efa003cc7cb77f144bdb9301583a562624e54d
@@ -10613,7 +10922,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.464844914+02:00"
+    created: "2022-06-18T00:27:38.543663123+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 99b02a6df83294e2c669b34ef215630e04422440bf2d2c0c30e29d5757b3fbf1
@@ -10645,7 +10954,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.464179048+02:00"
+    created: "2022-06-18T00:27:38.543075279+02:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 6cbf461a1fe293e447e9f80da303f5c6ae3c52ed56d7815c7ae5fb71dab8a713
@@ -10677,7 +10986,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.470334761+02:00"
+    created: "2022-06-18T00:27:38.549352519+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: abbed29c96fb12c8e12a3f134bf8efd72807953e72c1656b88f7a3eb3320b46c
@@ -10715,7 +11024,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.46920896+02:00"
+    created: "2022-06-18T00:27:38.548212908+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: a545a019da2a859c513e38dd0ed1f0e294933da408298598b6e8fcfebfbe83f4
@@ -10753,7 +11062,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.473877537+02:00"
+    created: "2022-06-18T00:27:38.552360418+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 662d9cd16e1da4b37e578b766229f7d3722729fccd349f07469c8003a71f38cf
@@ -10791,7 +11100,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.478889655+02:00"
+    created: "2022-06-18T00:27:38.556338375+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 89b081499c40b1683f3a4b57439cc06e995da6dd04ab5ecc2b3798147590a84d
@@ -10829,7 +11138,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.477210847+02:00"
+    created: "2022-06-18T00:27:38.555282596+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 79ba1d55c5eb30bc99bb1612c766f631c6cfb0c76728434679513e4d79c0c2d2
@@ -10867,7 +11176,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.9.8
-    created: "2022-06-17T23:35:38.475688132+02:00"
+    created: "2022-06-18T00:27:38.554196581+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 3ad86c8cb00a1dd20c4b2cd35a7556b16bcc353f678635ae5ef71c670e4e82ac
@@ -10905,7 +11214,7 @@ entries:
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
     appVersion: 4.8.21
-    created: "2022-06-17T23:35:38.472179319+02:00"
+    created: "2022-06-18T00:27:38.551250603+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 1af2e54e624a387740aa8861f0c66d2a599138e656d6e5d65a232a1bc82691db
@@ -10938,7 +11247,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.471171155+02:00"
+    created: "2022-06-18T00:27:38.550172977+02:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 41f1888f86a5d91915593b6ea3f9b46600d1ce2b9c4fb1079f2bedbfa6aec166
@@ -10980,7 +11289,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.481020787+02:00"
+    created: "2022-06-18T00:27:38.557750898+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: d44e2943c8fad2ea2e6761ff965e49cd61f157cfb931fc03dcddeeb7a274cd3c
@@ -11025,7 +11334,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63{{ $root.Values.kraken.cerberusUrl | quote }}
-    created: "2022-06-17T23:35:38.479955985+02:00"
+    created: "2022-06-18T00:27:38.55700942+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: dc412c52343faae5c5d6f94f913ed00734c615a6c1a3e21b1d7e2a6fd05b8e43
@@ -11070,7 +11379,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-06-17T23:35:38.483981069+02:00"
+    created: "2022-06-18T00:27:38.559603476+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: b92cf52a00b6e342d431ca984c10b72c0780e0c6e6389c82805c0d0cd082529b
@@ -11115,7 +11424,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-06-17T23:35:38.487375307+02:00"
+    created: "2022-06-18T00:27:38.562302693+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: d1002dcc1614b43a7d100c96444f4ade0ed94aeef63b555a19d5b10a4c6cdfe4
@@ -11160,7 +11469,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-06-17T23:35:38.486571356+02:00"
+    created: "2022-06-18T00:27:38.561598684+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 2fdb46d76fa622f7544fce3b46a80a64191d475b719fa016c0eaa897a20e9cde
@@ -11205,7 +11514,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2022-06-17T23:35:38.485722245+02:00"
+    created: "2022-06-18T00:27:38.560899623+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 823b4238c94fe341dd6293833cd299930f920b0cbac1d1eabac5cf265e604605
@@ -11250,7 +11559,7 @@ entries:
           url: https://github.com/startxfr/sxapi-core/issues
     apiVersion: v2
     appVersion: 0.3.58
-    created: "2022-06-17T23:35:38.482856248+02:00"
+    created: "2022-06-18T00:27:38.558897226+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: ca96a039232bcef1458d75689bbd5c3d3a686fc54e07c99535bfc39810c2d849
@@ -11280,7 +11589,7 @@ entries:
     version: 8.20.71
   - apiVersion: v2
     appVersion: 4.7.22
-    created: "2022-06-17T23:35:38.481796687+02:00"
+    created: "2022-06-18T00:27:38.558245177+02:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: e2056b6f82e4b88860429221e8831651f62c69036573b8bac029eb2721b41096
@@ -11304,4 +11613,4 @@ entries:
     urls:
     - https://startxfr.github.io/helm-repository/packages/sxapi-7.22.27.tgz
     version: 7.22.27
-generated: "2022-06-17T23:35:37.326132069+02:00"
+generated: "2022-06-18T00:27:37.485931191+02:00"
