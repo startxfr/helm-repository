@@ -351,3 +351,4 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
 | 10.12.29 | 2022-06-17 | publish stable update for the full repository
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation
+| 10.12.31 | 2022-06-17 | align basic charts
