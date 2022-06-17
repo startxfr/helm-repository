@@ -1,8 +1,9 @@
-# Example chaos
+# Chaos - Mesh
 
-This helm chart is used to deploy a chaos testing suit composed of chaos mesh and kraken test suite.
+This helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster. 
+Chaos-mesh is as a chaos engine with a gui to define and execute chaos scenarios for Kubernetes clusters. 
 
-This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
 
 ## Requirements and guidelines
 
@@ -50,78 +51,43 @@ helm install startx/chaos-mesh
 
 ### chaos-mesh values dictionary
 
-| Key      | Default       | Description                                                      |
-| -------- | ------------- | ---------------------------------------------------------------- |
-| image    | fedora:latest | Image to run into the pod                                        |
-| command  | /bin/sx       | Command to run inside the container                              |
-| args     | run           | argunments to pass to the command exectuted inside the container |
-| debug    | true          | Enable debuging of the container                                 |
-| replicas | 1             | Define the number of replicas for this sxapi instance            |
+| Key                              | Default                | Description                                                                                                                                                                                                                                                                       |
+| -------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| project                          | {...}                  | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
+| project.enable                   | false                  | Enable creation of the namespace                                                                                                                                                                                                                                                  |
+| mesh                          | {...}                  | Configuration of the chaos-mesh deployment. Inherit from the [official chaos-mesh chart](https://charts.chaos-mesh.org) (see [chart options](https://charts.chaos-mesh.org) for more options) |
+| mesh.enable                  | false                  | Enable deploying the chaos-mesh watchdog                                                                                                                                                                                                                                            |
 
 ## Values files
 
 ### Default values file (values.yaml)
 
-Simple chaos of a container image with the following characteristics :
+Simple mesh with default configuration :
 
-- 1 **chaos** named **chaos-mesh** of **1 pod** running **quay.io/startx/fedora:latest** image
-- 1 **service** named **chaos-mesh**
+- 1 **project** named **chaos-mesh**
+- 1 **scc** with privilegied context for 9 **mesh** serviceaccount
+- 1 **mesh** deployment using official helm chart
+- 1 **route** to the **mesh** service
 
 ```bash
-# base configuration running default configuration
-helm install startx/chaos-mesh
+# Running the default configuration
+helm install --set project.enable=true chaos-mesh-project startx/chaos-mesh
+helm install --set mesh.enable=true chaos-mesh-instance startx/chaos-mesh
 ```
 
-### Demo values file (values-demo.yaml)
+### STARTX values file (values-startx-xxx.yaml)
 
-chaos of an demo container image with the following characteristics :
-
-- 1 **pod** named **demo-helm-chaos** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **demo-helm-chaos**
+Same as the default configuration but with namespace prefixed with startx-
 
 ```bash
 # Configuration running demo example configuration
-helm install startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
-```
-
-### Apache values file (values-apache.yaml)
-
-chaos of an apache container image with the following characteristics :
-
-- 1 **pod** named **chaos-mesh-apache** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **chaos-mesh-apache**
-
-```bash
-# Configuration running apache example configuration
-helm install startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
-```
-
-### MariaDB values file (values-mariadb.yaml)
-
-chaos of an mariadb container image with the following characteristics :
-
-- 1 **pod** named **chaos-mesh-mariadb** of **2 pods** running **quay.io/startx/mariadb:latest** image
-- 1 **service** named **chaos-mesh-mariadb**
-
-```bash
-# Configuration running mariadb example configuration
-helm install startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
+helm install chaos-mesh-project startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml
+helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml
 ```
 
 ## History
 
-| Release | Date       | Description                                                                                            |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 10.12.5 | 2022-06-03 | Initial commit for this helm chart with default value example
-| 10.12.6 | 2022-06-03 | Create first release of chaos
-| 10.12.7 | 2022-06-03 | Stable version with startx values
-| 10.12.8 | 2022-06-04 | dding the kraken.ci and mesh
-| 10.12.9 | 2022-06-04 | Improve chaos-mesh options
-| 10.13.0 | 2022-06-04 | Improved SCC
-| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
-| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
-| 10.12.24 | 2022-06-05 | Add litmus and monkey support
-| 10.12.25 | 2022-06-05 | Update kubemonkey to version 1.4.1 with v1 support for rbac api
-| 10.12.6 | 2022-06-11 | Move kraken to krkn with pipeline and job support. Add cerberus support
-| 10.12.7 | 2022-06-11 | Improve chaos-mesh options
-| 10.12.8 | 2022-06-11 | debug project dependencies
+| Release | Date       | Description                                                   |
+| ------- | ---------- | ------------------------------------------------------------- |
+| 10.12.5 | 2022-06-03 | Initial commit of the example and poc chart example-chaos     |
+| 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
