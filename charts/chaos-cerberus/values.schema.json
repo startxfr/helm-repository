@@ -58,10 +58,10 @@
                     "maxLength": 25,
                     "title": "Component name",
                     "description": "Name of the component consisting of this application. Define a logical tenant.",
-                    "default": "sxapi",
+                    "default": "chaos",
                     "examples": [
-                        "mycomp",
-                        "myservice"
+                        "startx-chaos",
+                        "chaos"
                     ]
                 },
                 "app": {
@@ -70,10 +70,10 @@
                     "maxLength": 40,
                     "title": "Application name",
                     "description": "Name of the application name. Define a functionnal tenant.",
-                    "default": "default-sxapi",
+                    "default": "cerberus",
                     "examples": [
-                        "myapp",
-                        "mymicroservice"
+                        "cerberus",
+                        "watchdog"
                     ]
                 },
                 "version": {
@@ -92,615 +92,126 @@
                 }
             }
         },
-        "kraken": {
+        "cerberus": {
             "type": "object",
             "properties": {
-                "access": {
-                    "type": "object",
-                    "properties": {
-                        "method": {
-                            "type": "string"
-                        }
-                    }
-                },
                 "enabled": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "title": "Enable cerberus",
+                    "description": "Enable deploying the cerberus watchdog",
+                    "default": true
                 },
                 "expose": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "kraken_project": {
-            "type": "object",
-            "properties": {
-                "context": {
+                    "type": "boolean",
+                    "title": "Expose signal",
+                    "description": "Enable exposition for this application (route based)",
+                    "default": true
+                },
+                "kraken_allowed": {
+                    "type": "boolean",
+                    "title": "Allow kraken communication",
+                    "description": "Is kraken is allowed (networkPolicy) to talk to cerberus server",
+                    "default": true
+                },
+                "kraken_ns": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Kraken namespace",
+                    "description": "Namespace of the kraken pod that would be allowed",
+                    "default": "chaos-kraken",
+                    "examples": [
+                        "chaos-kraken",
+                        "chaos"
+                    ]
+                },
+                "kubeconfig": {
                     "type": "object",
                     "properties": {
-                        "app": {
-                            "type": "string"
+                        "mode": {
+                            "enum": [
+                                "token",
+                                "file"
+                            ],
+                            "title": "Kubeconfig mode",
+                            "description": "Connection mode to use for the cluster (could be token or file)",
+                            "default": "token"
                         },
-                        "cluster": {
-                            "type": "string"
+                        "file": {
+                            "type": "string",
+                            "minLength": 50,
+                            "maxLength": 500,
+                            "title": "Kubeconfig file",
+                            "description": "If mode is file, this property must be set with a full kubeconfig content",
+                            "default": "kind: Config\napiVersion: v1",
+                            "examples": [
+                                "kind: Config\napiVersion: v1",
+                                "kind: Config\napiVersion: v1\ncurrent-context: default"
+                            ]
                         },
-                        "component": {
-                            "type": "string"
-                        },
-                        "environment": {
-                            "type": "string"
-                        },
-                        "scope": {
-                            "type": "string"
-                        },
-                        "version": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "project": {
-                    "type": "object",
-                    "properties": {
-                        "description": {
-                            "type": "string"
-                        },
-                        "display_name": {
-                            "type": "string"
-                        },
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "type": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "mesh": {
-            "type": "object",
-            "properties": {
-                "bpfki": {
-                    "type": "object",
-                    "properties": {
-                        "create": {
-                            "type": "boolean"
-                        },
-                        "grpcPort": {
-                            "type": "integer"
-                        },
-                        "resources": {
-                            "type": "object"
-                        }
-                    }
-                },
-                "chaosDaemon": {
-                    "type": "object",
-                    "properties": {
-                        "affinity": {
-                            "type": "object"
-                        },
-                        "env": {
-                            "type": "object"
-                        },
-                        "grpcPort": {
-                            "type": "integer"
-                        },
-                        "hostNetwork": {
-                            "type": "boolean"
-                        },
-                        "httpPort": {
-                            "type": "integer"
-                        },
-                        "mtls": {
+                        "token": {
                             "type": "object",
                             "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                }
-                            }
-                        },
-                        "nodeSelector": {
-                            "type": "object"
-                        },
-                        "podAnnotations": {
-                            "type": "object"
-                        },
-                        "podSecurityPolicy": {
-                            "type": "boolean"
-                        },
-                        "privileged": {
-                            "type": "boolean"
-                        },
-                        "resources": {
-                            "type": "object"
-                        },
-                        "runtime": {
-                            "type": "string"
-                        },
-                        "serviceAccount": {
-                            "type": "string"
-                        },
-                        "socketPath": {
-                            "type": "string"
-                        },
-                        "tolerations": {
-                            "type": "array"
-                        }
-                    }
-                },
-                "chaosDlv": {
-                    "type": "object",
-                    "properties": {
-                        "enable": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "clusterScoped": {
-                    "type": "boolean"
-                },
-                "controllerManager": {
-                    "type": "object",
-                    "properties": {
-                        "affinity": {
-                            "type": "object"
-                        },
-                        "chaosdSecurityMode": {
-                            "type": "boolean"
-                        },
-                        "enableFilterNamespace": {
-                            "type": "boolean"
-                        },
-                        "env": {
-                            "type": "object",
-                            "properties": {
-                                "METRICS_PORT": {
-                                    "type": "integer"
+                                "server": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 200,
+                                    "title": "API endpoint",
+                                    "description": "The server URL to the target cluster API",
+                                    "default": "https://localhost:6443",
+                                    "examples": [
+                                        "https://localhost:6443",
+                                        "https://api.mycluster.local:6443"
+                                    ]
                                 },
-                                "WEBHOOK_PORT": {
-                                    "type": "integer"
-                                }
-                            }
-                        },
-                        "hostNetwork": {
-                            "type": "boolean"
-                        },
-                        "nodeSelector": {
-                            "type": "object"
-                        },
-                        "podAnnotations": {
-                            "type": "object"
-                        },
-                        "replicaCount": {
-                            "type": "integer"
-                        },
-                        "resources": {
-                            "type": "object"
-                        },
-                        "service": {
-                            "type": "object",
-                            "properties": {
-                                "type": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "serviceAccount": {
-                            "type": "string"
-                        },
-                        "tolerations": {
-                            "type": "array"
-                        }
-                    }
-                },
-                "customLabels": {
-                    "type": "object"
-                },
-                "dashboard": {
-                    "type": "object",
-                    "properties": {
-                        "affinity": {
-                            "type": "object"
-                        },
-                        "create": {
-                            "type": "boolean"
-                        },
-                        "env": {
-                            "type": "object",
-                            "properties": {
-                                "CLEAN_SYNC_PERIOD": {
-                                    "type": "string"
-                                },
-                                "DATABASE_DATASOURCE": {
-                                    "type": "string"
-                                },
-                                "DATABASE_DRIVER": {
-                                    "type": "string"
-                                },
-                                "LISTEN_HOST": {
-                                    "type": "string"
-                                },
-                                "LISTEN_PORT": {
-                                    "type": "integer"
-                                },
-                                "METRIC_HOST": {
-                                    "type": "string"
-                                },
-                                "METRIC_PORT": {
-                                    "type": "integer"
-                                },
-                                "TTL_EVENT": {
-                                    "type": "string"
-                                },
-                                "TTL_EXPERIMENT": {
-                                    "type": "string"
-                                },
-                                "TTL_SCHEDULE": {
-                                    "type": "string"
-                                },
-                                "TTL_WORKFLOW": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "hostNetwork": {
-                            "type": "boolean"
-                        },
-                        "imagePullPolicy": {
-                            "type": "string"
-                        },
-                        "ingress": {
-                            "type": "object",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                }
-                            }
-                        },
-                        "nodeSelector": {
-                            "type": "object"
-                        },
-                        "persistentVolume": {
-                            "type": "object",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                }
-                            }
-                        },
-                        "podAnnotations": {
-                            "type": "object"
-                        },
-                        "replicaCount": {
-                            "type": "integer"
-                        },
-                        "resources": {
-                            "type": "object",
-                            "properties": {
-                                "limits": {
-                                    "type": "object"
-                                },
-                                "requests": {
-                                    "type": "object",
-                                    "properties": {
-                                        "cpu": {
-                                            "type": "string"
-                                        },
-                                        "memory": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "rootUrl": {
-                            "type": "string"
-                        },
-                        "securityMode": {
-                            "type": "boolean"
-                        },
-                        "service": {
-                            "type": "object",
-                            "properties": {
-                                "annotations": {
-                                    "type": "object"
-                                },
-                                "type": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "serviceAccount": {
-                            "type": "string"
-                        },
-                        "tolerations": {
-                            "type": "array"
-                        }
-                    }
-                },
-                "dnsServer": {
-                    "type": "object",
-                    "properties": {
-                        "create": {
-                            "type": "boolean"
-                        },
-                        "env": {
-                            "type": "object",
-                            "properties": {
-                                "LISTEN_HOST": {
-                                    "type": "string"
-                                },
-                                "LISTEN_PORT": {
-                                    "type": "integer"
-                                }
-                            }
-                        },
-                        "grpcPort": {
-                            "type": "integer"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "nodeSelector": {
-                            "type": "object"
-                        },
-                        "podAnnotations": {
-                            "type": "object"
-                        },
-                        "resources": {
-                            "type": "object",
-                            "properties": {
-                                "limits": {
-                                    "type": "object"
-                                },
-                                "requests": {
-                                    "type": "object",
-                                    "properties": {
-                                        "cpu": {
-                                            "type": "string"
-                                        },
-                                        "memory": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "serviceAccount": {
-                            "type": "string"
-                        },
-                        "tolerations": {
-                            "type": "array"
-                        }
-                    }
-                },
-                "enableCtrlServer": {
-                    "type": "boolean"
-                },
-                "enableProfiling": {
-                    "type": "boolean"
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "expose": {
-                    "type": "boolean"
-                },
-                "fullnameOverride": {
-                    "type": "string"
-                },
-                "imagePullSecrets": {
-                    "type": "array"
-                },
-                "nameOverride": {
-                    "type": "string"
-                },
-                "prometheus": {
-                    "type": "object",
-                    "properties": {
-                        "affinity": {
-                            "type": "object"
-                        },
-                        "create": {
-                            "type": "boolean"
-                        },
-                        "nodeSelector": {
-                            "type": "object"
-                        },
-                        "podAnnotations": {
-                            "type": "object"
-                        },
-                        "resources": {
-                            "type": "object",
-                            "properties": {
-                                "limits": {
-                                    "type": "object"
-                                },
-                                "requests": {
-                                    "type": "object",
-                                    "properties": {
-                                        "cpu": {
-                                            "type": "string"
-                                        },
-                                        "memory": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "service": {
-                            "type": "object",
-                            "properties": {
-                                "type": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "serviceAccount": {
-                            "type": "string"
-                        },
-                        "tolerations": {
-                            "type": "array"
-                        },
-                        "volume": {
-                            "type": "object",
-                            "properties": {
-                                "storage": {
-                                    "type": "string"
-                                },
-                                "storageClassName": {
-                                    "type": "string"
+                                "token": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 200,
+                                    "title": "API token",
+                                    "description": "The token to use to get access. This token must have full cluster admin access to perform some chaos scenarios",
+                                    "default": "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                                    "examples": [
+                                        "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                                        "mytoken"
+                                    ]
                                 }
                             }
                         }
-                    }
-                },
-                "rbac": {
-                    "type": "object",
-                    "properties": {
-                        "create": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "timezone": {
-                    "type": "string"
-                },
-                "webhook": {
-                    "type": "object",
-                    "properties": {
-                        "CRDS": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "FailurePolicy": {
-                            "type": "string"
-                        },
-                        "certManager": {
-                            "type": "object",
+                    },
+                    "anyOf": [
+                        {
                             "properties": {
-                                "enabled": {
-                                    "type": "boolean"
+                                "mode": {
+                                    "const": "token"
                                 }
-                            }
+                            },
+                            "required": [
+                                "token"
+                            ]
                         },
-                        "timeoutSeconds": {
-                            "type": "integer"
+                        {
+                            "properties": {
+                                "mode": {
+                                    "const": "file"
+                                }
+                            },
+                            "required": [
+                                "file"
+                            ]
                         }
-                    }
-                }
-            }
-        },
-        "mesh_project": {
-            "type": "object",
-            "properties": {
-                "context": {
-                    "type": "object",
-                    "properties": {
-                        "app": {
-                            "type": "string"
-                        },
-                        "cluster": {
-                            "type": "string"
-                        },
-                        "component": {
-                            "type": "string"
-                        },
-                        "environment": {
-                            "type": "string"
-                        },
-                        "scope": {
-                            "type": "string"
-                        },
-                        "version": {
-                            "type": "string"
-                        }
-                    }
+                    ]
                 },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "project": {
-                    "type": "object",
-                    "properties": {
-                        "description": {
-                            "type": "string"
-                        },
-                        "display_name": {
-                            "type": "string"
-                        },
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "type": {
-                            "type": "string"
-                        }
-                    }
+                "watch_url_routes": {
+                    "type": "array",
+                    "title": "Watch routes",
+                    "description": "Url list of endpoint to watch as part of the global healthcheck (double array)",
+                    "default": []
                 }
             }
         },
         "project": {
-            "type": "object",
-            "properties": {
-                "context": {
-                    "type": "object",
-                    "properties": {
-                        "app": {
-                            "type": "string"
-                        },
-                        "cluster": {
-                            "type": "string"
-                        },
-                        "component": {
-                            "type": "string"
-                        },
-                        "environment": {
-                            "type": "string"
-                        },
-                        "scope": {
-                            "type": "string"
-                        },
-                        "version": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "project": {
-                    "type": "object",
-                    "properties": {
-                        "description": {
-                            "type": "string"
-                        },
-                        "display_name": {
-                            "type": "string"
-                        },
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "type": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
+            "$ref": "https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values.schema.json"
         }
     }
 }
