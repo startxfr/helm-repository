@@ -91,3 +91,4 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 | 10.12.5 | 2022-06-03 | Initial commit of the example and poc chart example-chaos     |
 | 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
 | 10.12.26 | 2022-06-17 | Create the chaos-monkey chart as part of the startx chaos chart suite
+| 10.12.28 | 2022-06-17 | Upgrade the chaos-monkey helm chart schema with limited support for kube-monkey external chart (no external schema). Link to upstream project release 1.4.1
