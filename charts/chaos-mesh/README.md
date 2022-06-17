@@ -91,3 +91,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | ------- | ---------- | ------------------------------------------------------------- |
 | 10.12.5 | 2022-06-03 | Initial commit of the example and poc chart example-chaos     |
 | 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
+| 10.12.26 | 2022-06-17 | Create the chaos-mesh chart as part of the startx chaos chart suite
