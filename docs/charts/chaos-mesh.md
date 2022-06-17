@@ -93,3 +93,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
 | 10.12.26 | 2022-06-17 | Create the chaos-mesh chart as part of the startx chaos chart suite
 | 10.12.28 | 2022-06-17 | Upgrade the chaos-mesh helm chart schema with limited support for chaos-mesh external chart (no external schema). Link to upstream project release 2.2.0
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
