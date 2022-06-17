@@ -101,3 +101,4 @@ helm install startx/example-fruitapp-shared
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
 | 10.12.29 | 2022-06-17 | publish stable update for the full repository
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation

@@ -95,3 +95,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 10.12.28 | 2022-06-17 | Upgrade the chaos-mesh helm chart schema with limited support for chaos-mesh external chart (no external schema). Link to upstream project release 2.2.0
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
 | 10.12.29 | 2022-06-17 | publish stable update for the full repository
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation
