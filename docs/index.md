@@ -195,7 +195,26 @@ spec:
 EOF
 ```
 
-#### 2.2. List all charts
+#### 2.2. Deploy via HelmChartRepository (archive)
+
+If you need to run your in an older version of Openshift, or access to archived version of helm chart, 
+you can load the archive repository
+```bash
+cat <<EOF | oc apply -f -
+apiVersion: helm.openshift.io/v1beta1
+kind: HelmChartRepository
+metadata:
+  name: "startx-archives"
+  labels:
+    app.kubernetes.io/name: "startx-archives-chart"
+spec:
+  name: "startx-archives"
+  connectionConfig:
+    url: "https://startxfr.github.io/helm-repository/packages-archives"
+EOF
+```
+
+#### 2.3. List all charts
 
 You can use the [Openshift developper perspective of your console](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html-single/web_console/#odc-about-developer-perspective)
 
