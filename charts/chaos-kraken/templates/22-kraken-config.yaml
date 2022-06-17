@@ -788,14 +788,13 @@ data:
         maxSecondsBetweenRuns: 10
         minSecondsBetweenRuns: 5
     scenarios:
-      - name: kill 1 Prometeus pod in openshift-monitoring namespace
+      - name: kill 1 cluster-manager pod in open-cluster-management namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
               - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=prometheus"
+                  namespace: "open-cluster-management"
+                  selector: "app=cluster-manager"
             filters:
               - property:
                   name: "state"
@@ -806,14 +805,13 @@ data:
               - kill:
                   probability: 1
                   force: true
-      - name: kill 2 node-exporter pod in openshift-monitoring namespace
+      - name: kill up to 2 application-chart pod in open-cluster-management namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
               - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=node-exporter"
+                  namespace: "open-cluster-management"
+                  selector: "app=application-chart"
             filters:
               - property:
                   name: "state"
@@ -822,16 +820,15 @@ data:
                   size: 2
             actions:
               - kill:
-                  probability: 1
+                  probability: .8
                   force: true
-      - name: kill 1 alertmanager pod in openshift-monitoring namespace
+      - name: kill 1 klusterlet-addon-controller pod in open-cluster-management namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
               - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=alertmanager"
+                  namespace: "open-cluster-management"
+                  selector: "app=klusterlet-addon-controller-v2"
             filters:
               - property:
                   name: "state"
@@ -842,14 +839,13 @@ data:
               - kill:
                   probability: 1
                   force: true
-      - name: kill 1 thanos-querier pod in openshift-monitoring namespace
+      - name: kill 1 ocm-controller pod in open-cluster-management namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
               - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=thanos-query"
+                  namespace: "open-cluster-management"
+                  selector: "app=ocm-controller"
             filters:
               - property:
                   name: "state"
@@ -860,11 +856,11 @@ data:
               - kill:
                   probability: 1
                   force: true
-      - name: kill up to 5 pods in openshift-monitoring namespace
+      - name: kill up to 5 pods in open-cluster-management namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
+              - namespace: "open-cluster-management"
             filters:
               - property:
                   name: "state"
@@ -881,32 +877,30 @@ data:
         maxSecondsBetweenRuns: 10
         minSecondsBetweenRuns: 5
     scenarios:
-      - name: kill 1 Prometeus pod in openshift-monitoring namespace
+      - name: kill up to 5 collector pod in stackrox namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
               - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=prometheus"
+                  namespace: "stackrox"
+                  selector: "app=collector"
             filters:
               - property:
                   name: "state"
                   value: "Running"
               - randomSample:
-                  size: 1
+                  size: 4
             actions:
               - kill:
-                  probability: 1
+                  probability: .75
                   force: true
-      - name: kill 2 node-exporter pod in openshift-monitoring namespace
+      - name: kill up to 2 admission-control pod in stackrox namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
               - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=node-exporter"
+                  namespace: "stackrox"
+                  selector: "app=admission-control"
             filters:
               - property:
                   name: "state"
@@ -915,16 +909,15 @@ data:
                   size: 2
             actions:
               - kill:
-                  probability: 1
+                  probability: .66
                   force: true
-      - name: kill 1 alertmanager pod in openshift-monitoring namespace
+      - name: kill 1 scanner pod in stackrox namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
               - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=alertmanager"
+                  namespace: "stackrox"
+                  selector: "app=scanner"
             filters:
               - property:
                   name: "state"
@@ -935,29 +928,11 @@ data:
               - kill:
                   probability: 1
                   force: true
-      - name: kill 1 thanos-querier pod in openshift-monitoring namespace
+      - name: kill up to 5 pods in stackrox namespace
         steps:
         - podAction:
             matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=thanos-query"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 pods in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
+              - namespace: "stackrox"
             filters:
               - property:
                   name: "state"
