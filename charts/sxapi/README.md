@@ -358,3 +358,4 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation
 | 10.12.31 | 2022-06-17 | align basic charts
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
