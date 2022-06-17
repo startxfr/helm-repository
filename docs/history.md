@@ -15,9 +15,10 @@ The objectif of this version is :
 
 | Release                                                                       | Date       | Description                                                 |
 | ----------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------- |
-| [10.12.29](https://github.com/startxfr/helm-repository/releases/tag/10.12.29) | 2022-06-17 | Align all charts to version 10.12.29                        |
-| [10.12.23](https://github.com/startxfr/helm-repository/releases/tag/9.8.47)   | 2022-04-12 | Align all charts to version 10.12.23                        |
-| [10.12.5](https://github.com/startxfr/helm-repository/releases/tag/9.8.9)     | 2022-03-30 | Upgrade charts to be aligned with Openshift version 4.10.12 |
+| [10.12.34](https://github.com/startxfr/helm-repository/releases/tag/10.12.34) | 2022-06-17 | Stable release of all charts                                |
+| [10.12.31](https://github.com/startxfr/helm-repository/releases/tag/10.12.31) | 2022-06-16 | Stable release for all basic charts                         |
+| [10.12.28](https://github.com/startxfr/helm-repository/releases/tag/10.12.28) | 2022-06-15 | Stable release for all chaos charts                         |
+| [10.12.5](https://github.com/startxfr/helm-repository/releases/tag/10.12.5)   | 2022-03-30 | Upgrade charts to be aligned with Openshift version 4.10.12 |
 
 ## version 9.x.x (claux)
 
