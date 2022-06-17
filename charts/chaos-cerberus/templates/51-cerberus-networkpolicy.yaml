@@ -1,4 +1,4 @@
-{{- if .Values.cerberus.enabled -}}
+{{- if .Values.cerberus.enabled -}}{{- if .Values.cerberus.kraken_allowed -}}
 {{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
@@ -23,7 +23,7 @@ spec:
         - podSelector: {}
           namespaceSelector:
             matchLabels:
-              name: "{{ $root.Values.kraken_project.project.name }}"
+              name: "{{ $root.Values.cerberus.kraken_ns }}"
   policyTypes:
     - Ingress
 ---
@@ -44,4 +44,4 @@ spec:
       tool: cerberus
   ingress:
     - {}
-{{- end -}}
+{{- end -}}{{- end -}}

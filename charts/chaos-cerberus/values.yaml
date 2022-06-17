@@ -38,6 +38,10 @@ cerberus:
   enabled: false
   # Enable exposition for this application (route based)
   expose: true
+  # Enable kraken pod to query the cerberus healthcheck (networkpolicy)
+  kraken_allowed: true
+  # Namespace of the kraken pod that would be allowed
+  kraken_ns: chaos-kraken
   # Url list of endpoint to watch as part of the global healthcheck (double array)
   watch_url_routes: []
   # Kubeconfig of the supervised tested cluster (mandatory)
