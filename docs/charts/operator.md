@@ -278,3 +278,4 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 10.12.29 | 2022-06-17 | publish stable update for the full repository
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation
 | 10.12.31 | 2022-06-17 | align basic charts
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository
