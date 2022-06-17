@@ -9,9 +9,9 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 10.12.26
+version: 10.12.28
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 4.10.12
+appVersion: 1.4.1
 # Icon of this helm-chart
 icon: https://startxfr.github.io/helm-repository/img/chaos-monkey.svg
 # category associated to this package
@@ -58,5 +58,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Create the chaos-monkey chart as part of the startx chaos chart suite"
+      description: "Upgrade the chaos-monkey helm chart schema with limited support for kube-monkey external chart (no external schema)"
+    - kind: changed
+      description: "Link to upstream project release 1.4.1"
   artifacthub.io/containsSecurityUpdates: "false"
