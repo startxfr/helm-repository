@@ -1,6 +1,5 @@
 
-Example of a basic application deployed using chaos resource packaged into helm chart. 
-The chaos have the following characteristics :
+The Cerberus watchdog you've require is deploying with the following characteristics :
 
 -- Context -------------------------
         scope : {{ include "startx.appScope" . }}
@@ -13,9 +12,7 @@ The chaos have the following characteristics :
       project : {{ .Values.project.project.name }}
       {{- end -}}
 
-{{- if .Values.kraken.enabled -}}
--- Kraken --------------------------
-      {{- if .Values.kraken_project.enabled -}}
-      project : {{ .Values.kraken_project.project.name }}
-      {{- end -}}
+{{- if .Values.cerberus.enabled -}}
+-- Cerberus environment ------------
+kubeconfig mode : {{ .Values.cerberus.mode.kubeconfig.mode }}
 {{- end -}}

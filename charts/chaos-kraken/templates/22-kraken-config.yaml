@@ -927,7 +927,7 @@ data:
           - - scenarios/startx_openshift_logging.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -973,7 +973,7 @@ data:
           - - scenarios/startx_openshift_monitoring.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1019,7 +1019,7 @@ data:
           - - scenarios/startx_openshift_machines.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1065,7 +1065,7 @@ data:
           - - scenarios/startx_openshift-apiserver.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1113,7 +1113,7 @@ data:
           - - scenarios/startx_openshift_etcd_container.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1159,7 +1159,7 @@ data:
           - - scenarios/startx_openshift_podmonkey.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1206,7 +1206,7 @@ data:
           - scenarios/startx_time_node.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1254,7 +1254,7 @@ data:
           - scenarios/startx_node_app.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1302,7 +1302,7 @@ data:
           - scenarios/startx_node_master_network_chaos.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1348,7 +1348,7 @@ data:
           - scenarios/startx_zone_outage.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1395,7 +1395,7 @@ data:
           - scenarios/startx_pvc_fruitapp2-prod-postgresql.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1442,7 +1442,7 @@ data:
           # - scenarios/post_action_shut_down.py
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1515,7 +1515,7 @@ data:
         - scenarios/pvc_scenario.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False

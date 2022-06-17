@@ -1,6 +1,5 @@
 
-Example of a basic application deployed using chaos resource packaged into helm chart. 
-The chaos have the following characteristics :
+The Kraken chaos framework you've require is deploying with the following characteristics :
 
 -- Context -------------------------
         scope : {{ include "startx.appScope" . }}
@@ -14,8 +13,7 @@ The chaos have the following characteristics :
       {{- end -}}
 
 {{- if .Values.kraken.enabled -}}
--- Kraken --------------------------
-      {{- if .Values.project.enabled -}}
-      project : {{ .Values.project.project.name }}
-      {{- end -}}
+-- Kraken environment --------------
+           mode : {{ .Values.kraken.mode }}
+kubeconfig mode : {{ .Values.kraken.kubeconfig.mode }}
 {{- end -}}
