@@ -8,7 +8,7 @@ For more informations and access to the helm index, you can visit the [startx he
 ## Helm repository content
 
 This repository host various helm chart targeting the Openshift Container Platform environment. Charts could be
-divided into 3 main category ([basic charts](index.md#basic-helm-charts), [cluster charts](index.md#cluster-helm-charts) and [examples charts](index.md#examples-helm-charts))
+divided into 3 main category ([basic charts](index.md#basic-helm-charts), [cluster charts](index.md#cluster-helm-charts), , [chaos charts](index.md#chaos-helm-charts) and [examples charts](index.md#examples-helm-charts))
 
 ### Cluster Helm charts
 
@@ -16,12 +16,6 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 
 | Chart                                                      | Source                                                                                        | Description                                                                        |
 | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **[chaos](charts/chaos.md)**                               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos)                | Deploy a full chaos tool suite for infrastructure and/or application chaos-testing |
-| **[chaos-cerberus](charts/chaos-cerberus.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-cerberus)       | Deploy Cerberus component as part of a chaos environment                           |
-| **[chaos-kraken](charts/chaos-kraken.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-kraken)         | Deploy Kraken component as part of a chaos environment                             |
-| **[chaos-mesh](charts/chaos-mesh.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh)           | Deploy Chaos-mesh component as part of a chaos environment                         |
-| **[chaos-litmus](charts/chaos-litmus.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus)         | Deploy litmus component as part of a chaos environment                             |
-| **[chaos-monkey](charts/chaos-monkey.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-monkey)         | Deploy kubemonkey component as part of a chaos environment                         |
 | **[cluster-config](charts/cluster-config.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-config)       | global configuration of an openshift cluster                                       |
 | **[cluster-rbac](charts/cluster-rbac.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rbac)         | configure various RBAC aspects                                                     |
 | **[cluster-auth](charts/cluster-auth.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-auth)         | configure Auth at the cluster level                                                |
@@ -55,7 +49,6 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 
 ```bash
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
-helm install startx/chaos
 helm install startx/cluster-config
 helm install startx/cluster-rbac
 helm install startx/cluster-auth
@@ -183,25 +176,54 @@ oc login -t <my-token> <my-openshift-api>
 If you don't have access to an openshift cluster, consider using codeready-container to
 run locally a simulated cluster.
 
-### 2. Install repository copy
+### 2. Install helm-repository
 
-#### 2.1. Clonning this repository
+#### 2.1. Deploy via HelmChartRepository
+
+```bash
+cat <<EOF | oc apply -f -
+apiVersion: helm.openshift.io/v1beta1
+kind: HelmChartRepository
+metadata:
+  name: "startx"
+  labels:
+    app.kubernetes.io/name: "startx-chart"
+spec:
+  name: "startx"
+  connectionConfig:
+    url: "https://startxfr.github.io/helm-repository/packages"
+EOF
+```
+
+#### 2.2. List all charts
+
+You can use the [Openshift developper perspective of your console](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html-single/web_console/#odc-about-developer-perspective)
+
+### 3. Install local helm
+
+#### 3.1. Clonning this repository
 
 ```bash
 git clone https://startxfr.github.io/helm-repository.git
 cd helm-repository
 ```
 
-#### 2.2. List all charts
+#### 3.2. List all charts
 
 ```bash
 ls charts
 ```
 
-### 3. Install a local chart
+#### 3.3 Install a local chart
 
 ```bash
 # oc apply -k charts/<chart>
+helm install startx/chaos
+helm install startx/chaos-cerberus
+helm install startx/chaos-kraken
+helm install startx/chaos-mesh
+helm install startx/chaos-litmmus
+helm install startx/chaos-monkey
 helm install charts/cluster-config
 helm install charts/cluster-rbac
 helm install charts/cluster-auth
