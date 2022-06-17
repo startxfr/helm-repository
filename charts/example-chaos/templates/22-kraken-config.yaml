@@ -29,6 +29,7 @@ metadata:
   name: kraken-scenarios-config
   namespace: "{{- $namespace -}}"
   labels:
+    test: essai
     app.kubernetes.io/name: "kraken-scenarios-config"
     {{- include "example-chaos.labels" $root | nindent 4 }}
   annotations:
@@ -43,9 +44,9 @@ data:
   cluster_shut_down_scenario.yml: |
     cluster_shut_down_scenario:                          # Scenario to stop all the nodes for specified duration and restart the nodes
       runs: 1                                            # Number of times to execute the cluster_shut_down scenario
-      shut_down_duration: 150                            # duration in seconds to shut down the cluster
+      shut_down_duration: 120                            # duration in seconds to shut down the cluster
       cloud_type: aws                                    # cloud type on which Kubernetes/OpenShift runs
-      timeout: 60                                        # Number of seconds to wait for each node to be stopped or running
+      timeout: 120                                       # Number of seconds to wait for each node to be stopped or running
   customapp_pod.yaml: |
     config:
       runStrategy:
@@ -79,38 +80,6 @@ data:
             actions:
               - checkPodCount:
                   count: 8
-  network_chaos.yaml: |
-    network_chaos:                       # Scenario to create an outage by simulating random variations in the network.
-      duration: 300                      # seconds
-      node_name:                         # node on which scenario has to be injected;
-      label_selector: <label_selector>   # when node_name is not specified, a node with matching label_selector is selected for running the scenario.
-      instance_count: 1
-      interfaces:                        # Interface name would be the Kernel host network interface name.
-      - "<interface_name>"
-      execution: serial
-      egress:
-        latency: 50ms                    # 50ms
-        loss: 0.02                       # percentage
-        bandwidth: 100mbit
-  node_scenarios_example.yml: |
-    node_scenarios:
-      - actions:                                                        # node chaos scenarios to be injected
-        - node_stop_start_scenario
-        - stop_start_kubelet_scenario
-        - node_crash_scenario
-        node_name:                                                      # node on which scenario has to be injected; can set multiple names separated by comma
-        label_selector: node-role.kubernetes.io/worker                  # when node_name is not specified, a node with matching label_selector is selected for node chaos scenario injection
-        instance_count: 1                                               # Number of nodes to perform action/select that match the label selector
-        runs: 1                                                         # number of times to inject each scenario under actions (will perform on same node each time)
-        timeout: 120                                                    # duration to wait for completion of node scenario injection
-        cloud_type: aws                                                 # cloud type on which Kubernetes/OpenShift runs
-      - actions:
-        - node_reboot_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/infra
-        instance_count: 1
-        timeout: 120
-        cloud_type: aws
   post_action_etcd_container.py: |
     #!/usr/bin/env python3
     import subprocess
@@ -241,13 +210,18 @@ data:
     print("Master nodes list \n" + str(master_nodes))
     infra_nodes = run("oc get nodes --no-headers | grep infra | egrep -v NotReady | awk '{print $1}'").rstrip()
     print("Infra nodes list \n" + str(infra_nodes))
-  pvc_scenario.yaml: |
+  startx_pvc_fruitapp1-preprod-postgresql.yaml: |
     pvc_scenario:
-      pvc_name: <pvc_name>          # Name of the target PVC
-      pod_name: <pod_name>          # Name of the pod where the PVC is mounted, it will be ignored if the pvc_name is defined
-      namespace: <namespace_name>   # Namespace where the PVC is
-      fill_percentage: 50           # Target percentage to fill up the cluster, value must be higher than current percentage, valid values are between 0 and 99
-      duration: 60                  # Duration in seconds for the fault
+      pvc_name: fruitapp1-preprod-postgresql
+      namespace: fruitapp1-preprod
+      fill_percentage: 99
+      duration: 30
+  startx_pvc_fruitapp2-prod-postgresql.yaml: |
+    pvc_scenario:
+      pvc_name: fruitapp2-prod-postgresql
+      namespace: fruitapp2-prod
+      fill_percentage: 99
+      duration: 30
   startx_node_app_cpu_chaos.yaml: |
     apiVersion: litmuschaos.io/v1alpha1
     kind: ChaosEngine
@@ -273,34 +247,192 @@ data:
                   value: '75'
                 - name: NODE_LABEL
                   value: 'node-role.kubernetes.io/app'
-  startx_node_app_network_chaos.yaml: "network_chaos:\n  duration: 100\n  node_name:
-    \n  label_selector: 'node-role.kubernetes.io/master'\n  instance_count: 1\n
-    \ interfaces:\n  - \"tun\"\n  - \"lo\"\n  - \"ens5\"\n  execution: serial\n
-    \ egress:\n    latency: 50ms  \n    loss: 0.05\n    bandwidth: 100mbit\n"
-  startx_node_infra_network_chaos.yaml: "network_chaos:\n  duration: 200\n  node_name:
-    \n  label_selector: 'node-role.kubernetes.io/infra'\n  instance_count: 1\n  interfaces:\n
-    \ - \"tun\"\n  - \"lo\"\n  - \"ens5\"\n  execution: serial\n  egress:\n    latency:
-    50ms  \n    loss: 0.05\n    bandwidth: 100mbit\n"
-  startx_node_master.yml: "config:\n  runStrategy:\n    runs: 1\n    maxSecondsBetweenRuns:
-    10\n    minSecondsBetweenRuns: 5\nnode_scenarios:\n  - actions:\n      - stop_kubelet_scenario\n
-    \     - start_kubelet_scenario\n    node_name:\n    label_selector: node-role.kubernetes.io/app\n
-    \   instance_count: 1\n    runs: 1\n    timeout: 300 \n    cloud_type: generic
-    \n  - actions:\n      - node_crash_scenario\n    node_name:\n    label_selector:
-    node-role.kubernetes.io/app\n    instance_count: 1\n    runs: 1\n    timeout:
-    300 \n    cloud_type: generic \n  - actions: \n      - node_start_scenario             #
-    Scenario to stop the node instance.\n      - node_stop_start_scenario        #
-    Scenario to stop and then start the node instance\n      - node_termination_scenario
-    \      # Scenario to terminate the node instance\n      - node_reboot_scenario
-    \           # Scenario to reboot the node instance\n      - stop_kubelet_scenario
-    \          # Scenario to stop the kubelet of the node instance\n      - stop_start_kubelet_scenario
-    \    # Scenario to stop and start the kubelet of the node instance\n      -
-    node_crash_scenario             # Scenario to crash the node instance\n      -
-    stop_start_helper_node_scenario # Scenario to stop and start the helper node
-    and check service status\n    node_name:\n    label_selector: node-role.kubernetes.io/app\n
-    \   instance_count: 1\n    runs: 1\n    timeout: 300 \n    cloud_type: aws \n
-    \ - actions:\n    - node_reboot_scenario\n    node_name:\n    label_selector:
-    node-role.kubernetes.io/infra\n    instance_count: 1\n    timeout: 300\n    cloud_type:
-    aws\n"
+  startx_node_app_network_chaos.yaml: |
+    network_chaos:
+      duration: 30
+      node_name: 
+      label_selector: 'node-role.kubernetes.io/app'
+      instance_count: 1
+      interfaces:
+      - "tun0"
+      - "br0"
+      - "lo"
+      - "ens5"
+      execution: serial
+      egress:
+        latency: 50ms  
+        loss: 0.05
+        bandwidth: 100mbit
+  startx_node_master_network_chaos.yaml: |
+    network_chaos:
+      duration: 30
+      node_name: 
+      label_selector: 'node-role.kubernetes.io/master'
+      instance_count: 1
+      interfaces:
+      - "tun0"
+      - "br0"
+      - "lo"
+      - "ens5"
+      execution: serial
+      egress:
+        latency: 50ms  
+        loss: 0.05
+        bandwidth: 100mbit
+  startx_node_infra_network_chaos.yaml: |
+    network_chaos:
+      duration: 30
+      node_name: 
+      label_selector: 'node-role.kubernetes.io/infra'
+      instance_count: 1
+      interfaces:
+      - "tun0"
+      - "br0"
+      - "lo"
+      - "ens5"
+      execution: serial
+      egress:
+        latency: 50ms  
+        loss: 0.05
+        bandwidth: 100mbit
+  startx_node_master.yml: |
+    config:
+      runStrategy:
+        runs: 1
+        maxSecondsBetweenRuns: 60
+        minSecondsBetweenRuns: 30
+    node_scenarios:
+      - actions:
+          - stop_kubelet_scenario
+          - start_kubelet_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/master
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: generic 
+      - actions:
+          - node_crash_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/master
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: generic 
+      - actions: 
+          - node_start_scenario
+          - node_stop_start_scenario
+          - node_termination_scenario
+          - node_reboot_scenario
+          - stop_kubelet_scenario
+          - stop_start_kubelet_scenario
+          - node_crash_scenario
+          - stop_start_helper_node_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/master
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: aws 
+      - actions:
+        - node_reboot_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/master
+        instance_count: 1
+        timeout: 300
+        cloud_type: aws
+  startx_node_infra.yml: |
+    config:
+      runStrategy:
+        runs: 1
+        maxSecondsBetweenRuns: 60
+        minSecondsBetweenRuns: 30
+    node_scenarios:
+      - actions:
+          - stop_kubelet_scenario
+          - start_kubelet_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/infra
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: generic 
+      - actions:
+          - node_crash_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/infra
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: generic 
+      - actions: 
+          - node_start_scenario
+          - node_stop_start_scenario
+          - node_termination_scenario
+          - node_reboot_scenario
+          - stop_kubelet_scenario
+          - stop_start_kubelet_scenario
+          - node_crash_scenario
+          - stop_start_helper_node_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/infra
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: aws 
+      - actions:
+        - node_reboot_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/infra
+        instance_count: 1
+        timeout: 300
+        cloud_type: aws
+  startx_node_app.yml: |
+    config:
+      runStrategy:
+        runs: 1
+        maxSecondsBetweenRuns: 40
+        minSecondsBetweenRuns: 20
+    node_scenarios:
+      - actions:
+          - stop_kubelet_scenario
+          - start_kubelet_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/app
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: generic 
+      - actions:
+          - node_crash_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/app
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: generic 
+      - actions: 
+          - node_start_scenario
+          - node_stop_start_scenario
+          - node_termination_scenario
+          - node_reboot_scenario
+          - stop_kubelet_scenario
+          - stop_start_kubelet_scenario
+          - node_crash_scenario
+          - stop_start_helper_node_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/app
+        instance_count: 1
+        runs: 1
+        timeout: 300 
+        cloud_type: aws 
+      - actions:
+        - node_reboot_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/app
+        instance_count: 1
+        timeout: 300
+        cloud_type: aws
   startx_openshift-apiserver.yml: |
     config:
       runStrategy:
@@ -690,27 +822,45 @@ data:
       - action: skew_time
         object_type: node
         label_selector: node-role.kubernetes.io/app
-  startx_time_pod.yml: "time_scenarios:\n  - action: skew_date\n    object_type:
-    pod\n    namespace: openshift-etcd\n    container_name: etcd\n    label_selector:
-    app=etcd\n  - action: skew_date\n    object_type: pod\n    namespace: openshift-machine-config-operator\n
-    \   container_name: \n    label_selector: \"k8s-app=machine-config-daemon\"\n
-    \ - action: skew_date\n    object_type: pod\n    namespace: openshift-apiserver\n
-    \   container_name: \n    label_selector: \"app=openshift-apiserver-a\"\n  -
-    action: skew_time\n    object_type: pod\n    namespace: openshift-etcd\n    container_name:
-    etcd\n    label_selector: app=etcd\n  - action: skew_time\n    object_type:
-    pod\n    namespace: openshift-machine-config-operator\n    container_name: \n
-    \   label_selector: \"k8s-app=machine-config-daemon\"\n  - action: skew_time\n
-    \   object_type: pod\n    namespace: openshift-apiserver\n    container_name:
-    \n    label_selector: \"app=openshift-apiserver-a\"\n"
-  startx_zone_outage.yaml: "zone_outage:                                         #
-    Scenario to create an outage of a zone by tweaking network ACL\n  cloud_type:
-    aws                                    # cloud type on which Kubernetes/OpenShift
-    runs. aws is only platform supported currently for this scenario.\n  duration:
-    600                                      # duration in seconds after which the
-    zone will be back online\n  vpc_id: vpc-0a06fb82c7deef947                      #
-    cluster virtual private network to target\n  subnet_id: [\"subnet-08c7f41c25bc51eb9\",
-    \"subnet-04441df42fd95bfbd\", \"subnet-092a12092c3205e17\"]        # List of
-    subnet-id's to deny both ingress and egress traffic  \n"
+  startx_time_pod.yml: |
+    time_scenarios:
+      - action: skew_date
+        object_type: pod
+        namespace: openshift-etcd
+        container_name: etcd
+        label_selector: app=etcd
+      - action: skew_date
+        object_type: pod
+        namespace: openshift-machine-config-operator
+        container_name: 
+        label_selector: "k8s-app=machine-config-daemon"
+      - action: skew_date
+        object_type: pod
+        namespace: openshift-apiserver
+        container_name: 
+        label_selector: "app=openshift-apiserver-a"
+      - action: skew_time
+        object_type: pod
+        namespace: openshift-etcd
+        container_name: etcd
+        label_selector: app=etcd
+      - action: skew_time
+        object_type: pod
+        namespace: openshift-machine-config-operator
+        container_name: 
+        label_selector: "k8s-app=machine-config-daemon"
+      - action: skew_time
+        object_type: pod
+        namespace: openshift-apiserver
+        container_name: 
+        label_selector: "app=openshift-apiserver-a"
+  startx_zone_outage.yaml: |
+    zone_outage:
+      cloud_type: aws
+      duration: 120
+      vpc_id: vpc-0a06fb82c7deef947
+      subnet_id: ["subnet-08c7f41c25bc51eb9"]
+      # subnet_id: ["subnet-08c7f41c25bc51eb9", "subnet-04441df42fd95bfbd", "subnet-092a12092c3205e17"]
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -723,16 +873,674 @@ metadata:
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 data:
+{{- if eq .Values.kraken.kubeconfig.mode "file" }}
   config: |
-    {{ .Values.kraken.kubeconfig | nindent 4 }}
+    {{- .Values.kraken.kubeconfig.file | nindent 4 }}
+{{- end }}
+{{- if eq .Values.kraken.kubeconfig.mode "token" }}
+  config: |
+    kind: Config
+    apiVersion: v1
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        insecure-skip-tls-verify: true
+        server: "{{ .Values.kraken.kubeconfig.token.server }}"
+    users:
+    - name: default
+      user:
+        token: "{{ .Values.kraken.kubeconfig.token.token }}"
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
+{{- end }}
 ---
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: kraken-config
+  name: kraken-config-chaos-logging
   namespace: "{{- $namespace -}}"
   labels:
-    app.kubernetes.io/name: "kraken-config"
+    app.kubernetes.io/name: "kraken-config-chaos-logging"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_logging.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 180
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-monitoring
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-monitoring"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_monitoring.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 180
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-machines
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-machines"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_machines.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 300
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-apiserver
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-apiserver"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift-apiserver.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 180
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-etcd
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-etcd"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_etcd_pod.yml
+        - container_scenarios: 
+          - - scenarios/startx_openshift_etcd_container.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 480
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-releasemonkey
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-releasemonkey"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_scenarios:
+          - - scenarios/startx_openshift_podmonkey.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 240
+        iterations: 2
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-time
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-time"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - time_scenarios: 
+          - scenarios/startx_time_pod.yml
+          - scenarios/startx_time_node.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 420
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-nodes
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-nodes"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - node_scenarios: 
+          - scenarios/startx_node_master.yml
+          - scenarios/startx_node_infra.yml
+          - scenarios/startx_node_app.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 600
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-network
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-network"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - network_chaos:
+          - scenarios/startx_node_app_network_chaos.yaml
+          - scenarios/startx_node_infra_network_chaos.yaml
+          - scenarios/startx_node_master_network_chaos.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 300
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-zone
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-zone"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - zone_outages:
+          - scenarios/startx_zone_outage.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 600
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-storage
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-storage"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pvc_scenarios:
+          - scenarios/startx_pvc_fruitapp1-preprod-postgresql.yaml
+          - scenarios/startx_pvc_fruitapp2-prod-postgresql.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 60
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-cluster
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-cluster"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - cluster_shut_down_scenarios:
+          - - scenarios/cluster_shut_down_scenario.yml
+          # - scenarios/post_action_shut_down.py
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 600
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-all
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-all"
+    {{- include "example-chaos.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "example-chaos.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: True
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+      - pod_scenarios:
+        - - scenarios/startx_openshift_logging.yml
+        - - scenarios/startx_openshift_monitoring.yml
+        - - scenarios/startx_openshift_machines.yml
+        - - scenarios/startx_openshift-apiserver.yml
+        - - scenarios/startx_openshift_etcd_pod.yml
+        - - scenarios/startx_openshift_podmonkey.yml
+      - container_scenarios: 
+        - - scenarios/startx_openshift_etcd_container.yml
+      - time_scenarios: 
+        - scenarios/startx_time_pod.yml
+        - scenarios/startx_time_node.yml
+      - node_scenarios: 
+        - scenarios/startx_node_master.yml
+        - scenarios/startx_node_infra.yml
+        - scenarios/startx_node_app.yml
+      - network_chaos:
+        - scenarios/startx_node_app_network_chaos.yaml
+        - scenarios/startx_node_infra_network_chaos.yaml
+        - scenarios/startx_node_master_network_chaos.yaml
+      - zone_outages:
+        - scenarios/startx_zone_outage.yaml
+      - cluster_shut_down_scenarios:
+        - - scenarios/cluster_shut_down_scenario.yml
+        # - scenarios/post_action_shut_down.py
+      - application_outages:
+        - scenarios/app_outage.yaml
+      - pvc_scenarios:
+        - scenarios/pvc_scenario.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: http://cerberus.{{ $root.Values.cerberus_project.project.name }}.svc.cluster.local:8080
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 420
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-common
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-common"
     {{- include "example-chaos.labels" $root | nindent 4 }}
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
@@ -747,47 +1555,6 @@ data:
     - expr: increase(etcd_server_leader_changes_seen_total[2m]) > 0
       description: etcd leader changes observed
       severity: critical
-  config.yaml: |-
-    kraken:
-      distribution: openshift
-      kubeconfig_path: /root/.kube/config
-      exit_on_failure: False
-      port: 8081
-      publish_kraken_status: True
-      signal_state: RUN
-      litmus_version: v1.13.6
-      litmus_uninstall: False
-      litmus_uninstall_before_run: False
-      chaos_scenarios:
-          # -   pod_scenarios:
-          #     - - scenarios/startx_openshift_logging.yml
-          #     - - scenarios/startx_openshift_monitoring.yml
-          #     - - scenarios/startx_openshift_machines.yml
-          #     - - scenarios/startx_openshift-apiserver.yml
-          #     - - scenarios/startx_openshift_etcd_pod.yml
-          #     - - scenarios/startx_openshift_podmonkey.yml
-          # -   container_scenarios: 
-          #     - - scenarios/startx_openshift_etcd_container.yml
-          #-   time_scenarios: 
-          #     - scenarios/startx_time_pod.yml
-              # - scenarios/startx_time_node.yml
-          -   node_scenarios: 
-              - scenarios/startx_node_master.yml
-            #     -   scenarios/startx_node_infra.yml
-            #     -   scenarios/startx_node_app.yml
-          # -   network_chaos:
-          #       - scenarios/startx_node_app_network_chaos.yaml
-          #       - scenarios/startx_node_infra_network_chaos.yaml
-          #       - scenarios/startx_node_master_network_chaos.yaml
-          # -   zone_outages:
-          #       - scenarios/startx_zone_outage.yaml
-          #-   cluster_shut_down_scenarios:
-          #    - - scenarios/cluster_shut_down_scenario.yml
-                ######################## - scenarios/post_action_shut_down.py
-          # -   application_outages:
-          #     # - scenarios/app_outage.yaml
-          # -   pvc_scenarios:
-          #     # - scenarios/pvc_scenario.yaml
   kube_burner.yaml: |-
     ---
     global:

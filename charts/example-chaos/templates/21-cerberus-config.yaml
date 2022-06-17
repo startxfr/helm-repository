@@ -28,7 +28,7 @@ data:
             label: node-role.kubernetes.io/master
         watch_namespaces:
         - openshift
-        - ^openshift-(?!must-gather.*|debug.*).*$
+        - ^openshift-(?!must-gather.*|debug.*|marketplace.*).*$
         - ^kube-.*$
         - ^startx-.*$
         cerberus_publish_status: True 
@@ -53,7 +53,7 @@ data:
         sleep_time: 5
         kube_api_request_chunk_size: 500
         daemon_mode: True
-        cores_usage_percentage: 0.8
+        cores_usage_percentage: 0.6
     database:
         database_path: /tmp/cerberus.db
         reuse_database: False
@@ -81,6 +81,30 @@ metadata:
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 data:
+{{- if eq .Values.cerberus.kubeconfig.mode "file" }}
   config: |
-    {{ .Values.cerberus.kubeconfig | nindent 4 }}
+    {{- .Values.cerberus.kubeconfig.file | nindent 4 }}
+{{- end -}}
+{{- if eq .Values.cerberus.kubeconfig.mode "token" }}
+  config: |
+    kind: Config
+    apiVersion: v1
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        insecure-skip-tls-verify: true
+        server: "{{ .Values.cerberus.kubeconfig.token.server }}"
+    users:
+    - name: default
+      user:
+        token: "{{ .Values.cerberus.kubeconfig.token.token }}"
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
+{{- end }}
 {{- end -}}

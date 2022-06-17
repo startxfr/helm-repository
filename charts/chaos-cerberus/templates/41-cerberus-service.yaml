@@ -1,0 +1,25 @@
+{{- if .Values.cerberus.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cerberus
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "cerberus-service"
+    {{- include "chaos-cerberus.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $root | nindent 4 }}
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: cerberus
+  sessionAffinity: None
+  type: ClusterIP
+{{- end -}}

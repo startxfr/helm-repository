@@ -3,11 +3,11 @@
 apiVersion: "route.openshift.io/v1"
 kind: Route
 metadata:
-  name: "ui"
+  name: "kraken"
   labels:
-    app.kubernetes.io/name: "ui-route"
+    app.kubernetes.io/name: "kraken-route"
     {{- include "example-chaos.labels" . | nindent 4 }}
-    app: "ui-kraken"
+    app: "kraken"
   annotations:
     {{- include "example-chaos.annotations" . | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
@@ -21,6 +21,6 @@ spec:
   wildcardPolicy: None
   to:
     kind: Service
-    name: ui
+    name: kraken
     weight: 100
 {{- end -}}{{- end -}}
