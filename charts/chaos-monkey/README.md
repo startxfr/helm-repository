@@ -93,3 +93,4 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 | 10.12.26 | 2022-06-17 | Create the chaos-monkey chart as part of the startx chaos chart suite
 | 10.12.28 | 2022-06-17 | Upgrade the chaos-monkey helm chart schema with limited support for kube-monkey external chart (no external schema). Link to upstream project release 1.4.1
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository
