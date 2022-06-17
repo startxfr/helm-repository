@@ -52,28 +52,39 @@ cerberus:
   expose: true
   # Url list of endpoint to watch as part of the global healthcheck (double array)
   watch_url_routes: []
-  # Kubeconfig of the supervised cluster (mandatory)
-  kubeconfig: |
-    apiVersion: v1
-    kind: Config
-    current-context: default
-    clusters:
-    - name: default
-      cluster:
-        certificate-authority-data: XXXXXXX
-        server: https://localhost:6443
-    users:
-    - name: default
-      user:
-        client-certificate-data: XXXXXXX
-        client-key-data: XXXXXXX
-    contexts:
-    - name: default
-      context:
-        cluster: default
-        namespace: default
-        user: default
-    preferences: {}
+  # Kubeconfig of the supervised tested cluster (mandatory)
+  kubeconfig:
+    # Connection mode to use for the cluster (could be token or file)
+    mode: token
+    # If mode is token, this section must be filled
+    token: 
+      # The server URL to the target cluster API
+      server: https://localhost:6443
+      # The token to use to get access. This token must have full 
+      # cluster admin access to perform some chaos scenarios
+      token: sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
+    # # If mode is token, this property must be set with a full kubeconfig content
+    # file: |
+    #   kind: Config
+    #   apiVersion: v1
+    #   current-context: default
+    #   clusters:
+    #   - name: default
+    #     cluster:
+    #       certificate-authority-data: XXXXXXX
+    #       server: https://localhost:6443
+    #   users:
+    #   - name: default
+    #     user:
+    #       client-certificate-data: XXXXXXX
+    #       client-key-data: XXXXXXX
+    #   contexts:
+    #   - name: default
+    #     context:
+    #       cluster: default
+    #       namespace: default
+    #       user: default
+    #   preferences: {}
 
 # Configuration of the kraken project (see https://startxfr.github.io/helm-repository/charts/project)
 kraken_project: 
@@ -91,6 +102,8 @@ kraken_project:
 kraken: 
   # Unleash the kraken ;)
   enabled: false
+  # Enable exposition for this application (route based)
+  expose: true
   # Kraken mode (could be job or pipeline)
   mode: pipeline
   # configuration of the job mode
@@ -114,27 +127,38 @@ kraken:
       # AWS secret access key
       secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   # Kubeconfig of the chaos tested cluster (mandatory)
-  kubeconfig: |
-    kind: Config
-    apiVersion: v1
-    current-context: default
-    clusters:
-    - name: default
-      cluster:
-        certificate-authority-data: XXXXXXX
-        server: https://localhost:6443
-    users:
-    - name: default
-      user:
-        client-certificate-data: XXXXXXX
-        client-key-data: XXXXXXX
-    contexts:
-    - name: default
-      context:
-        cluster: default
-        namespace: default
-        user: default
-    preferences: {}
+  kubeconfig:
+    # Connection mode to use for the cluster (could be token or file)
+    mode: token
+    # If mode is token, this section must be filled
+    token: 
+      # The server URL to the target cluster API
+      server: https://localhost:6443
+      # The token to use to get access. This token must have full 
+      # cluster admin access to perform some chaos scenarios
+      token: sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
+    # # If mode is token, this property must be set with a full kubeconfig content
+    # file: |
+    #   kind: Config
+    #   apiVersion: v1
+    #   current-context: default
+    #   clusters:
+    #   - name: default
+    #     cluster:
+    #       certificate-authority-data: XXXXXXX
+    #       server: https://localhost:6443
+    #   users:
+    #   - name: default
+    #     user:
+    #       client-certificate-data: XXXXXXX
+    #       client-key-data: XXXXXXX
+    #   contexts:
+    #   - name: default
+    #     context:
+    #       cluster: default
+    #       namespace: default
+    #       user: default
+    #   preferences: {}
 
 # Configuration of the mesh project (see https://startxfr.github.io/helm-repository/charts/project)
 mesh_project: 

@@ -1,0 +1,21 @@
+
+Example of a basic application deployed using chaos resource packaged into helm chart. 
+The chaos have the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+      {{- if .Values.project.enabled -}}
+      project : {{ .Values.project.project.name }}
+      {{- end -}}
+
+{{- if .Values.kraken.enabled -}}
+-- Kraken --------------------------
+      {{- if .Values.kraken_project.enabled -}}
+      project : {{ .Values.kraken_project.project.name }}
+      {{- end -}}
+{{- end -}}

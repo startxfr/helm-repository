@@ -25,30 +25,16 @@ cerberus:
   enabled: true
   expose: true
   watch_url_routes: []
-  kubeconfig: |
-    kind: Config
-    apiVersion: v1
-    current-context: default
-    clusters:
-    - name: default
-      cluster:
-        certificate-authority-data: XXXXXXX
-        server: https://localhost:6443
-    users:
-    - name: default
-      user:
-        client-certificate-data: XXXXXXX
-        client-key-data: XXXXXXX
-    contexts:
-    - name: default
-      context:
-        cluster: default
-        namespace: default
-        user: default
-    preferences: {}
+  kubeconfig:
+    mode: token
+    token: 
+      server: "https://api.mycluster.startx.fr:6443"
+      token: "sha256~XXXXXXX_PUT_YOUR_STARTX_TOKEN_HERE_XXXXXXXX"
 
 kraken_project: 
   enabled: false
+  project: 
+    name: startx-chaos-kraken
 kraken: 
   enabled: false
 

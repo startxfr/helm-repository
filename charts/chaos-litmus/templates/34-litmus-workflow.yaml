@@ -1,0 +1,170 @@
+{{- if .Values.litmus.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+kind: Workflow
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: startx-workflow
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "startx-workflow"
+    {{- include "chaos-litmus.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-litmus.annotations" $root | nindent 4 }}
+spec:
+  templates:
+    - name: argowf-chaos
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      steps:
+        - - name: install-application
+            template: install-application
+            arguments: {}
+        - - name: install-chaos-experiments
+            template: install-chaos-experiments
+            arguments: {}
+        - - name: pod-delete
+            template: pod-delete
+            arguments: {}
+        - - name: revert-chaos
+            template: revert-chaos
+            arguments: {}
+          - name: delete-application
+            template: delete-application
+            arguments: {}
+    - name: install-application
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ""
+        image: litmuschaos/litmus-app-deployer:2.8.0
+        args:
+          - -namespace={{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}
+          - -typeName=resilient
+          - -operation=apply
+          - -timeout=400
+          - -app=podtato-head
+          - -scope=namespace
+        resources: {}
+    - name: install-chaos-experiments
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ""
+        image: litmuschaos/k8s:2.8.0
+        command:
+          - sh
+          - -c
+        args:
+          - kubectl apply -f
+            https://hub.litmuschaos.io/api/chaos/2.8.0?file=charts/generic/experiments.yaml
+            -n {{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}} ; sleep 30
+        resources: {}
+    - name: pod-delete
+      inputs:
+        artifacts:
+          - name: pod-delete
+            path: /tmp/chaosengine.yaml
+            raw:
+              data: >
+                apiVersion: litmuschaos.io/v1alpha1
+
+                kind: ChaosEngine
+
+                metadata:
+                  namespace: "{{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}"
+                  labels:
+                    instance_id: 942facfe-fe70-4495-abf2-c1f9a53635ca
+                    workflow_name: startx-workflow
+                  generateName: podtato-main-pod-delete-chaos
+                spec:
+                  appinfo:
+                    appns: "{{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}"
+                    applabel: name=podtato-main
+                    appkind: deployment
+                  engineState: active
+                  chaosServiceAccount: litmus-admin
+                  jobCleanUpPolicy: retain
+                  components:
+                    runner:
+                      imagePullPolicy: Always
+                  experiments:
+                    - name: pod-delete
+                      spec:
+                        probe:
+                          - name: check-podtato-main-access-url
+                            type: httpProbe
+                            httpProbe/inputs:
+                              url: http://podtato-main.{{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}.svc.cluster.local:9000
+                              insecureSkipVerify: false
+                              method:
+                                get:
+                                  criteria: ==
+                                  responseCode: "200"
+                            mode: Continuous
+                            runProperties:
+                              probeTimeout: 1
+                              interval: 1
+                              retry: 1
+                        components:
+                          env:
+                            - name: TOTAL_CHAOS_DURATION
+                              value: "30"
+                            - name: CHAOS_INTERVAL
+                              value: "10"
+                            - name: FORCE
+                              value: "false"
+      outputs: {}
+      metadata:
+        labels:
+          weight: "8"
+      container:
+        name: ""
+        image: litmuschaos/litmus-checker:2.8.0
+        args:
+          - -file=/tmp/chaosengine.yaml
+          - -saveName=/tmp/engine-name
+        resources: {}
+    - name: delete-application
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ""
+        image: litmuschaos/litmus-app-deployer:2.8.0
+        args:
+          - -namespace={{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}}
+          - -typeName=resilient
+          - -operation=delete
+          - -app=podtato-head
+        resources: {}
+    - name: revert-chaos
+      inputs: {}
+      outputs: {}
+      metadata: {}
+      container:
+        name: ""
+        image: litmuschaos/k8s:2.8.0
+        command:
+          - sh
+          - -c
+        args:
+          - "kubectl delete chaosengine -l 'instance_id in
+            (942facfe-fe70-4495-abf2-c1f9a53635ca, )' -n
+            {{`{{`}}workflow.parameters.adminModeNamespace{{`}}`}} "
+        resources: {}
+  entrypoint: argowf-chaos
+  arguments:
+    parameters:
+      - name: adminModeNamespace
+        value: startx-chaos-litmus
+  serviceAccountName: argo-chaos
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+{{- end -}}

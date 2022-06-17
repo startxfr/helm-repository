@@ -8,7 +8,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: "{{- .prefix -}}-"
+  name: "{{- .prefix -}}"
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "{{- .prefix -}}-job"
@@ -18,7 +18,6 @@ metadata:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 spec:
   backoffLimit: 0
-  completionMode: NonIndexed
   completions: 1
   parallelism: 1
   suspend: false
@@ -53,28 +52,49 @@ spec:
         - mountPath: /root/.kube/config
           name: kube-config
           subPath: config
-        - mountPath: /root/kraken/config
-          name: kraken-config
         - mountPath: /root/kraken/scenarios
-          name: scenarios-config
-      dnsPolicy: ClusterFirst
+          name: kraken-scenarios-config
+        - mountPath: /root/kraken/config/config.yaml
+          name: kraken-config
+          subPath: config.yaml
+        - mountPath: /root/kraken/kube_burner.yaml
+          name: kraken-config-common
+          subPath: kube_burner.yaml
+        - mountPath: /root/kraken/metrics-aggregated.yaml
+          name: kraken-config-common
+          subPath: metrics-aggregated.yaml
+        - mountPath: /root/kraken/startx_alerts.yaml
+          name: kraken-config-common
+          subPath: startx_alerts.yaml
       restartPolicy: Never
-      schedulerName: default-scheduler
-      serviceAccount: useroot
-      serviceAccountName: useroot
-      terminationGracePeriodSeconds: 30
+      serviceAccount: kraken
+      terminationGracePeriodSeconds: 10
       volumes:
-      - configMap:
+      - name: kube-config
+        configMap:
           defaultMode: 420
           name: kraken-kubeconfig
-        name: kube-config
-      - configMap:
+      - name: kraken-config
+        configMap:
           defaultMode: 420
-          name: kraken-config
-        name: kraken-config
-      - configMap:
+          name: kraken-config-all
+          items:
+          - key: config.yaml
+            path: config.yaml
+      - name: kraken-scenarios-config
+        configMap:
           defaultMode: 420
           name: kraken-scenarios-config
-        name: scenarios-config
+      - name: kraken-config-common
+        configMap:
+          defaultMode: 420
+          name: kraken-config-common
+          items:
+          - key: startx_alerts.yaml
+            path: startx_alerts.yaml
+          - key: kube_burner.yaml
+            path: kube_burner.yaml
+          - key: metrics-aggregated.yaml
+            path: metrics-aggregated.yaml
 {{- end -}}{{- end -}}{{- end -}}
 {{- end -}}
