@@ -130,3 +130,4 @@ helm install startx/chaos -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation
 | 10.12.33 | 2022-06-17 | version all dependencies charts
 | 10.12.33 | 2022-06-17 | Improve chaos options
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository
