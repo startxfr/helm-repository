@@ -1,8 +1,9 @@
-# Example chaos
+# Chaos - Cerberus
 
-This helm chart is used to deploy a chaos testing suit composed of chaos mesh and kraken test suite.
+This helm chart used to deploy cerberus on Openshift or Kubernetes cluster. 
+Cerberus is as a watchdog who act as a global cluster healthcheck. 
 
-This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
 
 ## Requirements and guidelines
 
@@ -50,78 +51,60 @@ helm install startx/chaos-cerberus
 
 ### chaos-cerberus values dictionary
 
-| Key      | Default       | Description                                                      |
-| -------- | ------------- | ---------------------------------------------------------------- |
-| image    | fedora:latest | Image to run into the pod                                        |
-| command  | /bin/sx       | Command to run inside the container                              |
-| args     | run           | argunments to pass to the command exectuted inside the container |
-| debug    | true          | Enable debuging of the container                                 |
-| replicas | 1             | Define the number of replicas for this sxapi instance            |
+| Key                              | Default                | Description                                                                                                                                                                                                                                                                       |
+| -------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| project                          | {...}                  | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
+| project.enable                   | false                  | Enable creation of the namespace                                                                                                                                                                                                                                                  |
+| cerberus                         | {...}                  | Configuration of the cerberus deployment                                                                                                                                                                                                                                          |
+| cerberus.enable                  | false                  | Enable deploying the cerberus watchdog                                                                                                                                                                                                                                            |
+| cerberus.expose                  | true                   | Enable exposition for this application (route based)                                                                                                                                                                                                                              |
+| cerberus.kraken_allowed          | true                   | Enable kraken pod to query the cerberus healthcheck (networkpolicy)                                                                                                                                                                                                               |
+| cerberus.kraken_ns               | chaos-kraken           | Namespace of the kraken pod that would be allowed                                                                                                                                                                                                                                 |
+| cerberus.watch_url_routes        | []                     | Url list of endpoint to watch as part of the global healthcheck (double array)                                                                                                                                                                                                    |
+| cerberus.kubeconfig              | {...}                  | Kubeconfig of the supervised tested cluster (mandatory)                                                                                                                                                                                                                           |
+| cerberus.kubeconfig.mode         | token                  | Connection mode to use for the cluster (could be token or file)                                                                                                                                                                                                                   |
+| cerberus.kubeconfig.token        | {...}                  | If mode is token, this section must be filled                                                                                                                                                                                                                                     |
+| cerberus.kubeconfig.token.server | https://localhost:6443 | The server URL to the target cluster API                                                                                                                                                                                                                                          |
+| cerberus.kubeconfig.token.token  | sha256~XXX             | The token to use to get access. This token must have full cluster admin access to perform some chaos scenarios                                                                                                                                                                    |
+| cerberus.kubeconfig.file         | ""                     | If mode is token, this property must be set with a full kubeconfig content                                                                                                                                                                                                        |
 
 ## Values files
 
 ### Default values file (values.yaml)
 
-Simple chaos of a container image with the following characteristics :
+Simple cerberus with default configuration :
 
-- 1 **chaos** named **chaos-cerberus** of **1 pod** running **quay.io/startx/fedora:latest** image
-- 1 **service** named **chaos-cerberus**
+- 1 **project** named **chaos-cerberus**
+- 1 **scc** with privilegied context for **cerberus** deployment
+- 1 **configmap** with cerberus server configuration
+- 1 **configmap** with kubeconfig of the targeted cluster
+- 2 **networkpolicy** allowing route and kraken pods in chaos-kraken namespace, to get cerberus signal
+- 1 **deployment** named **cerberus** 
+  - watching the cluster https://localhost:6443
+  - using token sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
+  - watching no particular routes (as part of the watchdog)
+- 1 **service** to the **cerberus** pods
+- 1 **route** to the **cerberus** service
 
 ```bash
-# base configuration running default configuration
-helm install startx/chaos-cerberus
+# Running the default configuration
+helm install --set project.enable=true chaos-cerberus-project startx/chaos-cerberus
+helm install --set cerberus.enable=true chaos-cerberus-instance startx/chaos-cerberus
 ```
 
-### Demo values file (values-demo.yaml)
+### STARTX values file (values-startx-xxx.yaml)
 
-chaos of an demo container image with the following characteristics :
-
-- 1 **pod** named **demo-helm-chaos** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **demo-helm-chaos**
+Same as the default configuration but with namespace prefixed with startx-
 
 ```bash
 # Configuration running demo example configuration
-helm install startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
-```
-
-### Apache values file (values-apache.yaml)
-
-chaos of an apache container image with the following characteristics :
-
-- 1 **pod** named **chaos-cerberus-apache** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **chaos-cerberus-apache**
-
-```bash
-# Configuration running apache example configuration
-helm install startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
-```
-
-### MariaDB values file (values-mariadb.yaml)
-
-chaos of an mariadb container image with the following characteristics :
-
-- 1 **pod** named **chaos-cerberus-mariadb** of **2 pods** running **quay.io/startx/mariadb:latest** image
-- 1 **service** named **chaos-cerberus-mariadb**
-
-```bash
-# Configuration running mariadb example configuration
-helm install startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
+helm install chaos-cerberus-project startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml
+helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml
 ```
 
 ## History
 
-| Release | Date       | Description                                                                                            |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 10.12.5 | 2022-06-03 | Initial commit for this helm chart with default value example
-| 10.12.6 | 2022-06-03 | Create first release of chaos
-| 10.12.7 | 2022-06-03 | Stable version with startx values
-| 10.12.8 | 2022-06-04 | dding the kraken.ci and mesh
-| 10.12.9 | 2022-06-04 | Improve chaos-cerberus options
-| 10.13.0 | 2022-06-04 | Improved SCC
-| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
-| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
-| 10.12.24 | 2022-06-05 | Add litmus and monkey support
-| 10.12.25 | 2022-06-05 | Update kubemonkey to version 1.4.1 with v1 support for rbac api
-| 10.12.6 | 2022-06-11 | Move kraken to krkn with pipeline and job support. Add cerberus support
-| 10.12.7 | 2022-06-11 | Improve chaos-cerberus options
-| 10.12.8 | 2022-06-11 | debug project dependencies
+| Release | Date       | Description                                                   |
+| ------- | ---------- | ------------------------------------------------------------- |
+| 10.12.5 | 2022-06-03 | Initial commit of the example and poc chart example-chaos     |
+| 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
