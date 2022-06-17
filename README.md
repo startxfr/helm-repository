@@ -46,13 +46,13 @@ helm search repo startx
 #### 3.1. Show chart detail
 
 ```bash
-helm show chart startx/cluster-config
+helm show chart startx/sxapi
 ```
 
 #### 3.2. Install chart into cluster
 
 ```bash
-helm install startx/cluster-config
+helm install sxapi-demo startx/sxapi
 ```
 
 ## Install chart building environment
