@@ -781,6 +781,192 @@ data:
             actions:
               - kill:
                   probability: .75
+  startx_openshift_acm.yml: |
+    config:
+      runStrategy:
+        runs: 1
+        maxSecondsBetweenRuns: 10
+        minSecondsBetweenRuns: 5
+    scenarios:
+      - name: kill 1 Prometeus pod in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+              - labels:
+                  namespace: "openshift-monitoring"
+                  selector: "app.kubernetes.io/name=prometheus"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 1
+            actions:
+              - kill:
+                  probability: 1
+                  force: true
+      - name: kill 2 node-exporter pod in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+              - labels:
+                  namespace: "openshift-monitoring"
+                  selector: "app.kubernetes.io/name=node-exporter"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 2
+            actions:
+              - kill:
+                  probability: 1
+                  force: true
+      - name: kill 1 alertmanager pod in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+              - labels:
+                  namespace: "openshift-monitoring"
+                  selector: "app.kubernetes.io/name=alertmanager"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 1
+            actions:
+              - kill:
+                  probability: 1
+                  force: true
+      - name: kill 1 thanos-querier pod in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+              - labels:
+                  namespace: "openshift-monitoring"
+                  selector: "app.kubernetes.io/name=thanos-query"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 1
+            actions:
+              - kill:
+                  probability: 1
+                  force: true
+      - name: kill up to 5 pods in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 5
+            actions:
+              - kill:
+                  probability: .75
+  startx_openshift_acs.yml: |
+    config:
+      runStrategy:
+        runs: 1
+        maxSecondsBetweenRuns: 10
+        minSecondsBetweenRuns: 5
+    scenarios:
+      - name: kill 1 Prometeus pod in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+              - labels:
+                  namespace: "openshift-monitoring"
+                  selector: "app.kubernetes.io/name=prometheus"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 1
+            actions:
+              - kill:
+                  probability: 1
+                  force: true
+      - name: kill 2 node-exporter pod in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+              - labels:
+                  namespace: "openshift-monitoring"
+                  selector: "app.kubernetes.io/name=node-exporter"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 2
+            actions:
+              - kill:
+                  probability: 1
+                  force: true
+      - name: kill 1 alertmanager pod in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+              - labels:
+                  namespace: "openshift-monitoring"
+                  selector: "app.kubernetes.io/name=alertmanager"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 1
+            actions:
+              - kill:
+                  probability: 1
+                  force: true
+      - name: kill 1 thanos-querier pod in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+              - labels:
+                  namespace: "openshift-monitoring"
+                  selector: "app.kubernetes.io/name=thanos-query"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 1
+            actions:
+              - kill:
+                  probability: 1
+                  force: true
+      - name: kill up to 5 pods in openshift-monitoring namespace
+        steps:
+        - podAction:
+            matches:
+              - namespace: "openshift-monitoring"
+            filters:
+              - property:
+                  name: "state"
+                  value: "Running"
+              - randomSample:
+                  size: 5
+            actions:
+              - kill:
+                  probability: .75
   startx_openshift_podmonkey.yml: |
     config:
       runStrategy:

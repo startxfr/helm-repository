@@ -687,6 +687,202 @@ spec:
 kind: Pipeline
 apiVersion: tekton.dev/v1beta1
 metadata:
+  name: kraken-chaos-standalone-acm
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-standalone-acm-pipeline"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    tool: kraken
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/displayName: Define a kraken chaos pipeline for Openshift acm cluster service
+spec:
+  params:
+    - name: aws_secret_creds
+      description: Secret config for AWS credentials
+      type: string
+      default: "kraken-aws-creds"
+    - name: cerberus_url
+      type: string
+      default: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  tasks:
+  - name: acm-chaos
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-acm
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  workspaces:
+  - name: kraken-config-acm
+  - name: kraken-scenarios
+  - name: kraken-kubeconfig
+  - name: kraken-config-common-metrics
+  - name: kraken-config-common-burner
+  - name: kraken-config-common-alerts
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: kraken-chaos-standalone-acm-run
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-standalone-acm-pipelinerun"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    tekton.dev/pipeline: kraken-chaos-standalone-acm
+    tool: kraken
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/displayName: Run a kraken chaos on acm cluster service
+spec:
+  params:
+    - name: aws_secret_creds
+      value: "kraken-aws-creds"
+    - name: cerberus_url
+      value: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  pipelineRef:
+    name: kraken-chaos-standalone-acm
+  workspaces:
+    - name: kraken-kubeconfig
+      configMap:
+        name: kraken-kubeconfig
+      subPath: config
+    - name: kraken-scenarios
+      configMap:
+        name: kraken-scenarios-config
+    - name: kraken-config-common-alerts
+      configMap:
+        name: kraken-config-common
+      subPath: startx_alerts.yaml
+    - name: kraken-config-common-burner
+      configMap:
+        name: kraken-config-common
+      subPath: kube_burner.yaml
+    - name: kraken-config-common-metrics
+      configMap:
+        name: kraken-config-common
+      subPath: metrics-aggregated.yaml
+    - name: kraken-config-acm
+      configMap:
+        name: kraken-config-chaos-acm
+      subPath: config.yaml
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: kraken-chaos-standalone-acs
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-standalone-acs-pipeline"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    tool: kraken
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/displayName: Define a kraken chaos pipeline for Openshift acs cluster service
+spec:
+  params:
+    - name: aws_secret_creds
+      description: Secret config for AWS credentials
+      type: string
+      default: "kraken-aws-creds"
+    - name: cerberus_url
+      type: string
+      default: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  tasks:
+  - name: acs-chaos
+    params:
+      - name: AWS_CREDS_SECRET
+        value: $(params.aws_secret_creds)
+    taskRef:
+      kind: Task
+      name: kraken-scenario
+    workspaces:
+      - name: kraken-config
+        workspace: kraken-config-acs
+      - name: kraken-scenarios
+        workspace: kraken-scenarios
+      - name: kraken-kubeconfig
+        workspace: kraken-kubeconfig
+      - name: kraken-config-common-alerts
+        workspace: kraken-config-common-alerts
+      - name: kraken-config-common-burner
+        workspace: kraken-config-common-burner
+      - name: kraken-config-common-metrics
+        workspace: kraken-config-common-metrics
+  workspaces:
+  - name: kraken-config-acs
+  - name: kraken-scenarios
+  - name: kraken-kubeconfig
+  - name: kraken-config-common-metrics
+  - name: kraken-config-common-burner
+  - name: kraken-config-common-alerts
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: kraken-chaos-standalone-acs-run
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-standalone-acs-pipelinerun"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    tekton.dev/pipeline: kraken-chaos-standalone-acs
+    tool: kraken
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    openshift.io/installed-from: startx
+    tekton.dev/displayName: Run a kraken chaos on acs cluster service
+spec:
+  params:
+    - name: aws_secret_creds
+      value: "kraken-aws-creds"
+    - name: cerberus_url
+      value: "http://cerberus.startx-cerberus.svc.cluster.local:8080"
+  pipelineRef:
+    name: kraken-chaos-standalone-acs
+  workspaces:
+    - name: kraken-kubeconfig
+      configMap:
+        name: kraken-kubeconfig
+      subPath: config
+    - name: kraken-scenarios
+      configMap:
+        name: kraken-scenarios-config
+    - name: kraken-config-common-alerts
+      configMap:
+        name: kraken-config-common
+      subPath: startx_alerts.yaml
+    - name: kraken-config-common-burner
+      configMap:
+        name: kraken-config-common
+      subPath: kube_burner.yaml
+    - name: kraken-config-common-metrics
+      configMap:
+        name: kraken-config-common
+      subPath: metrics-aggregated.yaml
+    - name: kraken-config-acs
+      configMap:
+        name: kraken-config-chaos-acs
+      subPath: config.yaml
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
   name: kraken-chaos-standalone-logging
   namespace: "{{- $namespace -}}"
   labels:
