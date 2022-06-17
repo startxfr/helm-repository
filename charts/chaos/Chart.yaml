@@ -39,56 +39,34 @@ maintainers:
     url: "https://www.startx.fr"
 
 dependencies:
-  - name: project
+  - name: chaos-cerberus
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "10.12.5"
-    alias: project
-    condition: project.enabled
-  - name: project
+    alias: cerberus
+    condition: cerberus.enabled
+  - name: chaos-kraken
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "10.12.5"
-    alias: cerberus_project
-    condition: cerberus_project.enabled
-  - name: project
+    alias: kraken
+    condition: kraken.enabled
+  - name: chaos-litmus
     repository: https://startxfr.github.io/helm-repository/packages/
     version: "10.12.5"
-    alias: kraken_project
-    condition: kraken_project.enabled
-  - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
-    version: "10.12.5"
-    alias: mesh_project
-    condition: mesh_project.enabled
-  - name: chaos-mesh
-    repository: https://charts.chaos-mesh.org
-    version: "2.2.0"
-    alias: mesh
-    condition: mesh.enabled
-  - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
-    version: "10.12.5"
-    alias: monkey_project
-    condition: monkey_project.enabled
-  - name: kube-monkey
-    repository: https://asobti.github.io/kube-monkey/charts/repo
-    version: "1.4.1"
-    alias: monkey
-    condition: monkey.enabled
-  - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
-    version: "10.12.5"
-    alias: litmus_project
-    condition: litmus_project.enabled
-  - name: litmus
-    repository: https://litmuschaos.github.io/litmus-helm
-    version: "2.9.0"
     alias: litmus
     condition: litmus.enabled
+  - name: chaos-mesh
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.5"
+    alias: mesh
+    condition: mesh.enabled
+  - name: chaos-monkey
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.5"
+    alias: monkey
+    condition: monkey.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Add support for kubeconfig mode file or token in cerberus"
-    - kind: changed
-      description: "Add support for kubeconfig mode file or token in kraken"
+      description: "Move chaos chart to a hub for other chaos-xxx sub-chart"
   artifacthub.io/containsSecurityUpdates: "false"
