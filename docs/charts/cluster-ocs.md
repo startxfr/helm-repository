@@ -31,7 +31,7 @@ helm show chart startx/cluster-ocs
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-ocs
+helm install cluster-ocs startx/cluster-ocs
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxx to do xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-ocs
+helm install cluster-ocs startx/cluster-ocs
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-ocs
 - **startx** : Startx OCS cluster wide service configuration using OCS operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml
+helm install cluster-ocs startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml
 ```
 
 ## History
@@ -173,3 +173,4 @@ helm install startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/he
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
