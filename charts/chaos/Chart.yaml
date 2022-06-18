@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 10.12.49
+version: 10.12.53
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.10.12
 # Icon of this helm-chart
@@ -48,32 +48,32 @@ maintainers:
 dependencies:
   - name: "chaos-cerberus"
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 10.12.28
+    version: 10.12.43
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 10.12.28
+    version: 10.12.43
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 10.12.28
+    version: 10.12.43
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 10.12.28
+    version: 10.12.43
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: 10.12.28
+    version: 10.12.43
     alias: monkey
     condition: monkey.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Minor improvment in doc and sample values"
+      description: "All chart are aligned to release 10.12.53"
   artifacthub.io/containsSecurityUpdates: "false"

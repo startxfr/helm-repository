@@ -301,3 +301,4 @@ helm install cluster-workspace startx/cluster-workspace -f https://raw.githubuse
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
 | 10.12.46 | 2022-06-18 | publish stable update for the full repository
 | 10.12.49 | 2022-06-18 | publish stable update for the full repository
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository
