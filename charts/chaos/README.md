@@ -144,3 +144,4 @@ chaos-monkey startx/chaos-monkey
 | 10.12.35 | 2022-06-18 | Improve icon                                                                                                                       |
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
