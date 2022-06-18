@@ -31,7 +31,7 @@ helm show chart startx/cluster-sso
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-sso
+helm install cluster-sso startx/cluster-sso
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxxxx TO DO xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-sso
+helm install cluster-sso startx/cluster-sso
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-sso
 - **startx** : Redhat-SSO operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-sso/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-sso -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-sso/values-startx.yaml
+helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-sso/values-startx.yaml
 ```
 
 ## History

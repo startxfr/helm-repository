@@ -30,10 +30,13 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 helm show chart startx/chaos-monkey
 ```
 
-### 4. Install this chart
+### 4. Install this component
 
 ```bash
-helm install startx/chaos-monkey
+# Install the monkey project
+helm install --set project.enabled=true chaos-monkey-project  startx/chaos-monkey
+# Deploy the monkey instance
+helm install --set monkey.enabled=true  chaos-monkey-instance startx/chaos-monkey
 ```
 
 ## Values dictionary
@@ -51,12 +54,12 @@ helm install startx/chaos-monkey
 
 ### chaos-monkey values dictionary
 
-| Key                              | Default                | Description                                                                                                                                                                                                                                                                       |
-| -------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| project                          | {...}                  | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
-| project.enable                   | false                  | Enable creation of the namespace                                                                                                                                                                                                                                                  |
-| monkey                          | {...}                  | Configuration of the kube-monkey deployment. Inherit from the [asobti kube-monkey chart](https://asobti.github.io/kube-monkey/charts/repo) (see [chart options](https://asobti.github.io/kube-monkey/charts/repo) for more options) |
-| monkey.enable                  | false                  | Enable deploying the kube-monkey watchdog                                                                                                                                                                                                                                            |
+| Key            | Default | Description                                                                                                                                                                                                                                                                       |
+| -------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| project        | {...}   | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
+| project.enable | false   | Enable creation of the namespace                                                                                                                                                                                                                                                  |
+| monkey         | {...}   | Configuration of the kube-monkey deployment. Inherit from the [asobti kube-monkey chart](https://asobti.github.io/kube-monkey/charts/repo) (see [chart options](https://asobti.github.io/kube-monkey/charts/repo) for more options)                                               |
+| monkey.enable  | false   | Enable deploying the kube-monkey watchdog                                                                                                                                                                                                                                         |
 
 ## Values files
 
@@ -86,17 +89,18 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 
 ## History
 
-| Release | Date       | Description                                                   |
-| ------- | ---------- | ------------------------------------------------------------- |
-| 10.12.5 | 2022-06-03 | Initial commit of the example and poc chart example-chaos     |
-| 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
-| 10.12.26 | 2022-06-17 | Create the chaos-monkey chart as part of the startx chaos chart suite
-| 10.12.28 | 2022-06-17 | Upgrade the chaos-monkey helm chart schema with limited support for kube-monkey external chart (no external schema). Link to upstream project release 1.4.1
-| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository
-| 10.12.30 | 2022-06-17 | Improved logo and global documentation
-| 10.12.33 | 2022-06-17 | publish stable update for the full repository
-| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
-| 10.12.35 | 2022-06-18 | Improve icon
-| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
-| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| Release  | Date       | Description                                                                                                                                                 |
+| -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 10.12.5  | 2022-06-03 | Initial commit of the example and poc chart example-chaos                                                                                                   |
+| 10.12.8  | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite                                                                                               |
+| 10.12.26 | 2022-06-17 | Create the chaos-monkey chart as part of the startx chaos chart suite                                                                                       |
+| 10.12.28 | 2022-06-17 | Upgrade the chaos-monkey helm chart schema with limited support for kube-monkey external chart (no external schema). Link to upstream project release 1.4.1 |
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                                                                        |
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                                                                               |
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                                                                      |
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                                                                               |
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                                                                   |
+| 10.12.35 | 2022-06-18 | Improve icon                                                                                                                                                |
+| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                                                        |
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                                                        |
+| 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation

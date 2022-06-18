@@ -32,7 +32,7 @@ helm show chart startx/example-html
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-html
+helm install example-html startx/example-html
 ```
 
 ## Values dictionary
@@ -71,7 +71,7 @@ Complete deployment of an html application with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-html
+helm install example-html startx/example-html
 ```
 
 ### Development values file (values-demo-hpa.yaml)
@@ -84,7 +84,7 @@ Complete deployment of a html demo application for stress test (used in HPA test
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-hpa.yaml
+helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-hpa.yaml
 ```
 
 ## History

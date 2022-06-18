@@ -30,10 +30,13 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 helm show chart startx/chaos-mesh
 ```
 
-### 4. Install this chart
+### 4. Install this component
 
 ```bash
-helm install startx/chaos-mesh
+# Install the chaos-mesh project
+helm install --set project.enabled=true chaos-mesh-project  startx/chaos-mesh
+# Deploy the chaos-mesh instance
+helm install --set mesh.enabled=true  chaos-mesh-instance startx/chaos-mesh
 ```
 
 ## Values dictionary
@@ -51,12 +54,12 @@ helm install startx/chaos-mesh
 
 ### chaos-mesh values dictionary
 
-| Key                              | Default                | Description                                                                                                                                                                                                                                                                       |
-| -------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| project                          | {...}                  | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
-| project.enable                   | false                  | Enable creation of the namespace                                                                                                                                                                                                                                                  |
-| mesh                          | {...}                  | Configuration of the chaos-mesh deployment. Inherit from the [official chaos-mesh chart](https://charts.chaos-mesh.org) (see [chart options](https://charts.chaos-mesh.org) for more options) |
-| mesh.enable                  | false                  | Enable deploying the chaos-mesh watchdog                                                                                                                                                                                                                                            |
+| Key            | Default | Description                                                                                                                                                                                                                                                                       |
+| -------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| project        | {...}   | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
+| project.enable | false   | Enable creation of the namespace                                                                                                                                                                                                                                                  |
+| mesh           | {...}   | Configuration of the chaos-mesh deployment. Inherit from the [official chaos-mesh chart](https://charts.chaos-mesh.org) (see [chart options](https://charts.chaos-mesh.org) for more options)                                                                                     |
+| mesh.enable    | false   | Enable deploying the chaos-mesh watchdog                                                                                                                                                                                                                                          |
 
 ## Values files
 
@@ -87,17 +90,18 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 
 ## History
 
-| Release | Date       | Description                                                   |
-| ------- | ---------- | ------------------------------------------------------------- |
-| 10.12.5 | 2022-06-03 | Initial commit of the example and poc chart example-chaos     |
-| 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
-| 10.12.26 | 2022-06-17 | Create the chaos-mesh chart as part of the startx chaos chart suite
-| 10.12.28 | 2022-06-17 | Upgrade the chaos-mesh helm chart schema with limited support for chaos-mesh external chart (no external schema). Link to upstream project release 2.2.0
-| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository
-| 10.12.30 | 2022-06-17 | Improved logo and global documentation
-| 10.12.33 | 2022-06-17 | publish stable update for the full repository
-| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
-| 10.12.35 | 2022-06-18 | Improve icon
-| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
-| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| Release  | Date       | Description                                                                                                                                              |
+| -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 10.12.5  | 2022-06-03 | Initial commit of the example and poc chart example-chaos                                                                                                |
+| 10.12.8  | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite                                                                                            |
+| 10.12.26 | 2022-06-17 | Create the chaos-mesh chart as part of the startx chaos chart suite                                                                                      |
+| 10.12.28 | 2022-06-17 | Upgrade the chaos-mesh helm chart schema with limited support for chaos-mesh external chart (no external schema). Link to upstream project release 2.2.0 |
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                                                                     |
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                                                                            |
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                                                                   |
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                                                                            |
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                                                                |
+| 10.12.35 | 2022-06-18 | Improve icon                                                                                                                                             |
+| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                                                     |
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                                                     |
+| 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation

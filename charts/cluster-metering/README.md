@@ -31,7 +31,7 @@ helm show chart startx/cluster-metering
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-metering
+helm install cluster-metering startx/cluster-metering
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxx to do xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-metering
+helm install cluster-metering startx/cluster-metering
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-metering
 - **startx** : metering cluster wide service configuration using metering operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-metering/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-metering -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-metering/values-startx.yaml
+helm install cluster-metering startx/cluster-metering -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-metering/values-startx.yaml
 ```
 
 ## History

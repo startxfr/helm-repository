@@ -30,10 +30,13 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 helm show chart startx/chaos-cerberus
 ```
 
-### 4. Install this chart
+### 4. Install this component
 
 ```bash
-helm install startx/chaos-cerberus
+# Install the cerberus project
+helm install --set project.enabled=true chaos-cerberus-project  startx/chaos-cerberus
+# Deploy the cerberus instance
+helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-cerberus
 ```
 
 ## Values dictionary
@@ -104,18 +107,19 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 
 ## History
 
-| Release | Date       | Description                                                   |
-| ------- | ---------- | ------------------------------------------------------------- |
-| 10.12.5 | 2022-06-03 | Initial commit of the example and poc chart example-chaos     |
-| 10.12.8 | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite |
-| 10.12.26 | 2022-06-17 | Create the chaos-mesh chart as part of the startx chaos chart suite
-| 10.12.28 | 2022-06-17 | Upgrade the chaos-cerberus helm chart schema with full option support. Link to upstream project release latest (no stable release)
-| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository
-| 10.12.30 | 2022-06-17 | Improved logo and global documentation
-| 10.12.33 | 2022-06-17 | version all dependencies charts
-| 10.12.33 | 2022-06-17 | publish stable update for the full repository
-| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
-| 10.12.35 | 2022-06-18 | Improve icon
-| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
-| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| Release  | Date       | Description                                                                                                                        |
+| -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 10.12.5  | 2022-06-03 | Initial commit of the example and poc chart example-chaos                                                                          |
+| 10.12.8  | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite                                                                      |
+| 10.12.26 | 2022-06-17 | Create the chaos-mesh chart as part of the startx chaos chart suite                                                                |
+| 10.12.28 | 2022-06-17 | Upgrade the chaos-cerberus helm chart schema with full option support. Link to upstream project release latest (no stable release) |
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                                               |
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                                                      |
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                                             |
+| 10.12.33 | 2022-06-17 | version all dependencies charts                                                                                                    |
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                                                      |
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                                          |
+| 10.12.35 | 2022-06-18 | Improve icon                                                                                                                       |
+| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                               |
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                               |
+| 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation

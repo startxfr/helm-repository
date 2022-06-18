@@ -31,7 +31,7 @@ helm show chart startx/cluster-localstorage
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-localstorage
+helm install cluster-localstorage startx/cluster-localstorage
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxx to do xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-localstorage
+helm install cluster-localstorage startx/cluster-localstorage
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-localstorage
 - **startx** : Startx local storage cluster wide service configuration using localstorage operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-localstorage/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-localstorage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-localstorage/values-startx.yaml
+helm install cluster-localstorage startx/cluster-localstorage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-localstorage/values-startx.yaml
 ```
 
 ## History
