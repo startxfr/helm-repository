@@ -32,7 +32,7 @@ helm show chart startx/example-fruitapp-shared
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-fruitapp-shared
+helm install example-fruitapp-shared startx/example-fruitapp-shared
 ```
 
 ## Values dictionary
@@ -80,7 +80,7 @@ Deploy all shared services for a given namespace with the following characterist
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-fruitapp-shared
+helm install example-fruitapp-shared startx/example-fruitapp-shared
 ```
 
 ## History
@@ -105,3 +105,4 @@ helm install startx/example-fruitapp-shared
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
