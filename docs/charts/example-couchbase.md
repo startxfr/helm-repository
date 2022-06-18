@@ -32,7 +32,7 @@ helm show chart startx/example-couchbase
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-couchbase
+helm install example-couchbase startx/example-couchbase
 ```
 
 ## Values dictionary
@@ -71,7 +71,7 @@ Complete deployment of an couchbase application with the following characteristi
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-couchbase
+helm install example-couchbase startx/example-couchbase
 ```
 
 ### Development values file (values-demo-hpa.yaml)
@@ -84,7 +84,7 @@ Complete deployment of a couchbase demo application for stress test (used in HPA
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-hpa.yaml
+helm install example-couchbase startx/example-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-hpa.yaml
 ```
 
 ## History
@@ -179,3 +179,4 @@ helm install startx/example-couchbase -f https://raw.githubusercontent.com/start
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
