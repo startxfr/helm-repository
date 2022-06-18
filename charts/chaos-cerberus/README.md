@@ -90,9 +90,10 @@ Simple cerberus with default configuration :
 - 1 **route** to the **cerberus** service
 
 ```bash
-# Running the default configuration
+# Install the cerberus project
 helm install --set project.enable=true chaos-cerberus-project startx/chaos-cerberus
-helm install --set cerberus.enable=true chaos-cerberus-instance startx/chaos-cerberus
+# Deploy the cerberus instance
+helm install --set cerberus.enable=true -n chaos-cerberus chaos-cerberus-instance startx/chaos-cerberus
 ```
 
 ### STARTX values file (values-startx-xxx.yaml)
@@ -123,3 +124,4 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                               |
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                               |
 | 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
+| 10.12.43 | 2022-06-18 | Improve doc for helm deployment
