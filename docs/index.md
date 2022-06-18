@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![latest](https://img.shields.io/badge/latest-v10.12.34-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/10.12.34) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
+[![latest](https://img.shields.io/badge/latest-v10.12.41-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/10.12.34) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 For more informations and access to the helm index, you can visit the [startx helm-repository homepage](https://startxfr.github.io/helm-repository).
@@ -199,6 +199,7 @@ EOF
 
 If you need to run your in an older version of Openshift, or access to archived version of helm chart, 
 you can load the archive repository
+
 ```bash
 cat <<EOF | oc apply -f -
 apiVersion: helm.openshift.io/v1beta1
@@ -283,6 +284,10 @@ helm install startx/example-fruitapp-project
 helm install startx/example-fruitapp-shared
 helm install startx/example-fruitapp-app
 ```
+
+## Install using ArgoCD
+
+If you whan to deploy theses charts using ArgoCD, you can follow the [install using ArgoCD guide](install-argocd)
 
 ## Install building environment
 
