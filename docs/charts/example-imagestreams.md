@@ -32,7 +32,7 @@ helm show chart startx/example-imagestreams
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-imagestreams
+helm install example-imagestreams startx/example-imagestreams
 ```
 
 ## Values dictionary
@@ -96,7 +96,7 @@ Simple imageStream deployment of a container image with the following characteri
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-imagestreams
+helm install example-imagestreams startx/example-imagestreams
 ```
 
 ### STARTX values file (values-startx.yaml)
@@ -132,7 +132,7 @@ Imagestreams of startx public images hosted on quay.io and dockerhub. Theses str
 
 ```bash
 # configuration for the startx public images
-helm install startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-startx.yaml
+helm install example-imagestreams-startx startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-startx.yaml
 ```
 
 ### SXV4 values file (values-sxv4.yaml)
@@ -158,7 +158,7 @@ Imagestreams of container image used in the sxv4 project (depend on the sxtartx 
 
 ```bash
 # configuration for the sxv4 project
-helm install startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-sxv4.yaml
+helm install example-imagestreams-sxv4 startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-sxv4.yaml
 ```
 
 ## History
@@ -270,3 +270,4 @@ helm install startx/example-imagestreams -f https://raw.githubusercontent.com/st
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository

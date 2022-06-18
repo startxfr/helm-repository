@@ -31,7 +31,7 @@ helm show chart startx/cluster-knative
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-knative
+helm install cluster-knative startx/cluster-knative
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxx to do xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-knative
+helm install cluster-knative startx/cluster-knative
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-knative
 - **startx** : Startx knative cluster wide service configuration using serverless operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-knative/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-knative/values-startx.yaml
+helm install cluster-knative startx/cluster-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-knative/values-startx.yaml
 ```
 
 ## History
@@ -169,3 +169,4 @@ helm install startx/cluster-knative -f https://raw.githubusercontent.com/startxf
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository

@@ -34,7 +34,7 @@ helm show chart startx/example-fruitapp-app
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-fruitapp-app
+helm install example-fruitapp-app startx/example-fruitapp-app
 ```
 
 ## Values dictionary
@@ -76,7 +76,7 @@ Deploy all app services for a given namespace with the following characteristics
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-fruitapp-app
+helm install example-fruitapp-app startx/example-fruitapp-app
 ```
 
 ## History
@@ -100,3 +100,4 @@ helm install startx/example-fruitapp-app
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository

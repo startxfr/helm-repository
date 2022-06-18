@@ -31,7 +31,7 @@ helm show chart startx/cluster-kubevirt
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-kubevirt
+helm install cluster-kubevirt startx/cluster-kubevirt
 ```
 
 ## Default values
@@ -156,3 +156,4 @@ xxxx to do xxxxxxxx
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository

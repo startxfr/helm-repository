@@ -32,7 +32,7 @@ helm show chart startx/example-chaos
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-chaos
+helm install example-chaos startx/example-chaos
 ```
 
 ## Values dictionary
@@ -69,7 +69,7 @@ Simple chaos of a container image with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-chaos
+helm install example-chaos startx/example-chaos
 ```
 
 ### Demo values file (values-demo.yaml)
@@ -81,7 +81,7 @@ chaos of an demo container image with the following characteristics :
 
 ```bash
 # Configuration running demo example configuration
-helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
+helm install example-chaos startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
 ### Apache values file (values-apache.yaml)
@@ -93,7 +93,7 @@ chaos of an apache container image with the following characteristics :
 
 ```bash
 # Configuration running apache example configuration
-helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
+helm install example-chaos startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
 ```
 
 ### MariaDB values file (values-mariadb.yaml)
@@ -105,7 +105,7 @@ chaos of an mariadb container image with the following characteristics :
 
 ```bash
 # Configuration running mariadb example configuration
-helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
+helm install example-chaos startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
 ## History
@@ -131,3 +131,4 @@ helm install startx/example-chaos -f https://raw.githubusercontent.com/startxfr/
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
