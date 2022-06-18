@@ -14,13 +14,7 @@ If gitops is not enabled in your cluster, you could perform it with :
 
 ```bash
 echo "begin deploying argocd project"
-oc process -f https://gitlab.com/sxcm/cli/-/raw/main/src/resources/argocd-project.yml \
-    -p ARGOCD_NS=openshift-gitops \
-    -p DOCKERHUB_LOGIN=my_dockerhub_login \
-    -p DOCKERHUB_PWD=my_dockerhub_password \
-    -p QUAYIO_LOGIN=my_quayio_login \
-    -p QUAYIO_PWD=my_quayio_password | \
-oc apply -f -
+oc process -f https://gitlab.com/sxcm/cli/-/raw/main/src/resources/argocd-project.yml | oc apply -f -
 echo "switching to openshift-gitops namespace"
 oc project openshift-gitops
 echo "deploying secrets links for gitops deployments"
@@ -46,43 +40,23 @@ If gitops is not enabled in your cluster, you must perform the following procedu
 
 ```bash
 echo "begin deploying argocd control-plane"
-oc process -f https://gitlab.com/sxcm/cli/-/raw/main/src/resources/argocd-deploy-small.yml \
-    -p CLUSTER_PROFILE=default \
-    -p AWS_ZONE=eu-west-3 \
-    -p AWS_ACCESS_ID=AKIAXXXXXXXXXXXXXXXX \
-    -p AWS_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \
-    -p AWS_SMTP_ZONE=eu-west-3 \
-    -p AWS_SMTP_USER=AKIAXXXXXXXXXXXXXXXX \
-    -p AWS_SMTP_PASSWORD=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX \
-    -p AWS_SMTP_FROM=mymail@example.com \
-    -p DOCKERHUB_LOGIN=my_dockerhub_login \
-    -p DOCKERHUB_PWD=my_dockerhub_password \
-    -p QUAYIO_LOGIN=my_quayio_login \
-    -p QUAYIO_PWD=my_quayio_password \
-    -p HELM_RELEASE=devel | \
-oc apply -f -
+oc process -f https://gitlab.com/sxcm/cli/-/raw/main/src/resources/argocd-deploy-small.yml | oc apply -f -
 echo "pause deploying argocd control-plane"
-sleep 120
+sleep 90
 echo "end deploying argocd control-plane"
 ```
 
 ## 0.3. Check ArgoCD deployments
 
-If gitops is not enabled in your cluster, you must perform the following procedure ater the previous deployment (instance) :
+Wait for all pod in your gitops namespace to be ready :
 
 ```bash
-echo "begin getting gitops deployments"
-echo "get status for gitops deployments"
-oc get pod -n openshift-gitops
-sleep 20
-echo "second status for gitops deployments"
-oc get pod -n openshift-gitops
-echo "end getting gitops deployments"
+oc get pod -n openshift-gitops -w
 ```
 
 ## 1. Create an application
 
-In order to use your helm chart instance using ArgoCD, you should create an `Application` resource.
+In order to deploy your helm chart instance using ArgoCD, you should create an `Application` resource.
 
 ## 1. Create an application
 
@@ -92,14 +66,14 @@ kind: Application
 apiVersion: argoproj.io/v1alpha1
 metadata:
 name: startx-gitops-example
-namespace: "openshift-gitops"
+namespace: "default"
 labels:  &basic_labels
     app.startx.fr/component: "example"
     app.kubernetes.io/name: "startx-sxapi-example-application"
     app.kubernetes.io/component: "sxapi-example"
 spec:
 destination:
-    namespace: "openshift-gitops"
+    namespace: "default"
     server: 'https://kubernetes.default.svc'
 project: default
 source:
@@ -118,55 +92,4 @@ ignoreDifferences:
     - kind: Secret
     jsonPointers: [ "/" ]
 EOF
-```
-
-
-
-
-## 2. Create your first chart
-
-Create a new helm chart based on the sx-helm template.
-
-```bash
-./sx-helm myhelm create
-```
-
-## 3. Test your chart
-
-Execute `helm template` and `helm lint` on the given chart
-
-```bash
-./sx-helm myhelm test
-```
-
-## 4. Package your chart
-
-Record all code change into the git repository. Afterwork, execute `helm dependency update` and `helm package` on this updated content. Produce a chart archive (tgz).
-
-```bash
-./sx-helm myhelm package
-```
-
-## 5. Release your chart
-
-Upgrade release version and update history log under the git repository. Execute the _package step_ and move chart package into index directory.
-
-```bash
-./sx-helm myhelm release
-```
-
-## 5. Publish your chart
-
-Execute the _release step_ and move chart package into index directory. Update the repository index and merge to the master branch for publication. Push all change to remote repository.
-
-```bash
-./sx-helm myhelm release
-```
-
-## 5. Delete a helm
-
-Remove local directory, commit locally and push to remote repository this deletion. Keep .
-
-```bash
-./sx-helm myhelm delete
 ```
