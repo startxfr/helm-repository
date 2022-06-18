@@ -31,7 +31,7 @@ helm show chart startx/cluster-gitlab
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-gitlab
+helm install cluster-gitlab startx/cluster-gitlab
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxxxx TO DO xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-gitlab
+helm install cluster-gitlab startx/cluster-gitlab
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-gitlab
 - **startx** : Gitlab operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml
+helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml
 ```
 
 ## History

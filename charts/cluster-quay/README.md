@@ -31,7 +31,7 @@ helm show chart startx/cluster-quay
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-quay
+helm install cluster-quay startx/cluster-quay
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxxxx TO DO xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-quay
+helm install cluster-quay startx/cluster-quay
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-quay
 - **startx** : Quay operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx.yaml
+helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx.yaml
 ```
 
 ## History

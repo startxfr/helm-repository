@@ -8,11 +8,13 @@ The chaos-mesh you've require is deploying with the following characteristics :
     component : {{ include "startx.appComponent" . }}
           app : {{ include "startx.appName" . }}
       version : {{ include "startx.appVersion" . }}
-      {{- if .Values.project.enabled -}}
-      project : {{ .Values.project.project.name }}
-      {{- end -}}
 
-{{- if .Values.mesh.enabled -}}
--- Chaos-Mesh ----------------------
+{{ if .Values.project.enabled }}
+-- Chaos-Mesh Project --------------
+         name : {{ .Values.project.project.name }}
+{{ end }}
+
+{{ if .Values.mesh.enabled }}
+-- Chaos-Mesh Instance -------------
  replicaCount : 1
-{{- end -}}
+{{ end }}

@@ -32,7 +32,7 @@ helm show chart startx/example-deployment
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-deployment
+helm install example-deployment startx/example-deployment
 ```
 
 ## Values dictionary
@@ -69,7 +69,7 @@ Simple deployment of a container image with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-deployment
+helm install example-deployment startx/example-deployment
 ```
 
 ### Demo values file (values-demo.yaml)
@@ -81,7 +81,7 @@ Deployment of an demo container image with the following characteristics :
 
 ```bash
 # Configuration running demo example configuration
-helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
+helm install example-deployment-demo startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
 ### Apache values file (values-apache.yaml)
@@ -93,7 +93,7 @@ Deployment of an apache container image with the following characteristics :
 
 ```bash
 # Configuration running apache example configuration
-helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
+helm install example-deployment-apache startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
 ```
 
 ### MariaDB values file (values-mariadb.yaml)
@@ -105,7 +105,7 @@ Deployment of an mariadb container image with the following characteristics :
 
 ```bash
 # Configuration running mariadb example configuration
-helm install startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
+helm install example-deployment-mariadb startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
 ## History

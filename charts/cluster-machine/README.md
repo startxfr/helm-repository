@@ -31,7 +31,7 @@ helm show chart startx/cluster-machine
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-machine
+helm install cluster-machine startx/cluster-machine
 ```
 
 ## Default values
@@ -47,7 +47,7 @@ Deployment of machine classes :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-machine
+helm install cluster-machine startx/cluster-machine
 ```
 
 ## Others values availables
@@ -61,7 +61,7 @@ helm install startx/cluster-machine
   - **startx-aws-slow-delete** (AWS EBS sc1 level with encryption and expansion enabled with delete policy)
 
 ```bash
-helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml
+helm install cluster-machine startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml
 ```
 
 - **startx-ocs** : Startx machine classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml)) creating the following machine classes
@@ -71,7 +71,7 @@ helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxf
   - **startx-ocs-fs-delete** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with delete policy)
 
 ```bash
-helm install startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml
+helm install cluster-machine startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml
 ``` -->
 
 ## History

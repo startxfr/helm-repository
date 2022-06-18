@@ -31,7 +31,7 @@ helm show chart startx/cluster-compliance
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-compliance
+helm install cluster-compliance startx/cluster-compliance
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxxxx TO DO xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-compliance
+helm install cluster-compliance startx/cluster-compliance
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-compliance
 - **startx** : Compliance operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-compliance -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml
+helm install cluster-compliance startx/cluster-compliance -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml
 ```
 
 ## History

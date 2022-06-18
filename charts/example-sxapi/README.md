@@ -32,7 +32,7 @@ helm show chart startx/example-sxapi
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-sxapi
+helm install example-sxapi startx/example-sxapi
 ```
 
 ## Values dictionary
@@ -71,7 +71,7 @@ Complete deployment of an sxapi application with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-sxapi
+helm install example-sxapi startx/example-sxapi
 ```
 
 ### Development values file (values-dev.yaml)
@@ -84,7 +84,7 @@ Complete deployment of a sxapi development application with the following charac
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml
+helm install example-sxapi-dev startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml
 ```
 
 ### Version 0.0.1 values file (values-v0.0.1.yaml)
@@ -96,8 +96,8 @@ Complete deployment of a sxapi production application (v0.0.1) with the followin
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
-# base configuration running tekton v1.0.1 configuration
-helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.1.yaml
+# base configuration running tekton v0.0.1 configuration
+helm install example-sxapi-v0.0.1 startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.1.yaml
 ```
 
 ### Version 0.0.2 values file (values-v0.0.2.yaml)
@@ -109,8 +109,8 @@ Complete deployment of a sxapi production application (v0.0.2) with the followin
 - 2 **configMap** holding sxapi configuration and pod environment variable context
 
 ```bash
-# base configuration running tekton v1.0.1 configuration
-helm install startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml
+# base configuration running tekton v0.0.2 configuration
+helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml
 ```
 
 ## History
