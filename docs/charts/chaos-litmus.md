@@ -36,7 +36,7 @@ helm show chart startx/chaos-litmus
 # Install the litmus project
 helm install --set project.enabled=true chaos-litmus-project  startx/chaos-litmus
 # Deploy the litmus instance
-helm install --set litmus.enabled=true  chaos-litmus-instance startx/chaos-litmus
+helm install --set litmus.enabled=true -n chaos-litmus chaos-litmus-instance startx/chaos-litmus
 ```
 
 ## Values dictionary
@@ -105,3 +105,4 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                                                   |
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                                                   |
 | 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
+| 10.12.43 | 2022-06-18 | Improve doc for helm deployment
