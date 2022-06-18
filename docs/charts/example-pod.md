@@ -191,3 +191,4 @@ helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/he
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41

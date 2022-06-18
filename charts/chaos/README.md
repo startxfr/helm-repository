@@ -1,8 +1,8 @@
-# Example chaos
+# Chaos - Cerberus
 
-This helm chart is used to deploy a chaos testing suit composed of chaos mesh and kraken test suite.
+This helm chart is used to deploy a chaos test suite composed of cerberus, kraken, litmus, chaos mesh and kube-monkey.
 
-This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
 
 ## Requirements and guidelines
 
@@ -39,98 +39,108 @@ helm install startx/chaos
 
 ### context values dictionary
 
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)                   |
-| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### chaos values dictionary
-
-| Key      | Default       | Description                                                      |
-| -------- | ------------- | ---------------------------------------------------------------- |
-| image    | fedora:latest | Image to run into the pod                                        |
-| command  | /bin/sx       | Command to run inside the container                              |
-| args     | run           | argunments to pass to the command exectuted inside the container |
-| debug    | true          | Enable debuging of the container                                 |
-| replicas | 1             | Define the number of replicas for this sxapi instance            |
+| Key                 | Default   | Description                                                                                                                                                                                                                                                                                               |
+| ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)                                                                                                                                                                                                                                     |
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)                                                                                                                                                                                                                                           |
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)                                                                                                                                                                                                                         |
+| context.component   | demo      | Component name of this application (logical tenant)                                                                                                                                                                                                                                                       |
+| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                                                                                                                                                                                                                                             |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                                                                                                                                                                                                                                           |
+| cerberus            | {...}     | Configuration of the cerberus component. Inherit from the [chaos-cerberus chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus/#chaos-cerberus-values-dictionary) for more options) |
+| kraken              | {...}     | Configuration of the kraken component. Inherit from the [chaos-kraken chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken/#chaos-kraken-values-dictionary) for more options)           |
+| litmus              | {...}     | Configuration of the litmus component. Inherit from the [chaos-litmus chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus/#chaos-litmus-values-dictionary) for more options)           |
+| mesh                | {...}     | Configuration of the chaos-mesh component. Inherit from the [chaos-mesh chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh/#chaos-mesh-values-dictionary) for more options)               |
+| monkey              | {...}     | Configuration of the kube-monkey component. Inherit from the [chaos-monkey chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey/#chaos-monkey-values-dictionary) for more options)      |
 
 ## Values files
 
 ### Default values file (values.yaml)
 
-Simple chaos of a container image with the following characteristics :
+#### Deploy chaos namespaces
 
-- 1 **chaos** named **chaos** of **1 pod** running **quay.io/startx/fedora:latest** image
-- 1 **service** named **chaos**
+Deploy the chaos test suite environment :
+
+- 1 **project** named **chaos-cerberus**
+- 1 **project** named **chaos-kraken**
+- 1 **project** named **chaos-litmus**
+- 1 **project** named **chaos-mesh**
+- 1 **project** named **chaos-monkey**
 
 ```bash
-# base configuration running default configuration
-helm install startx/chaos
+helm install \
+ --set cerberus.enable=true --set cerberus.project.enable=true \
+ --set kraken.enable=true   --set kraken.project.enable=true \
+ --set litmus.enable=true   --set litmus.project.enable=true \
+ --set mesh.enable=true     --set mesh.project.enable=true \
+ --set monkey.enable=true   --set monkey.project.enable=true \
+ chaos startx/chaos
 ```
 
-### Demo values file (values-demo.yaml)
+#### Deploy cerberus
 
-chaos of an demo container image with the following characteristics :
-
-- 1 **pod** named **demo-helm-chaos** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **demo-helm-chaos**
+Deploy the cerberus component
 
 ```bash
-# Configuration running demo example configuration
-helm install startx/chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
+helm install \
+--set cerberus.enable=true --set cerberus.cerberus.enable=true \
+chaos-cerberus startx/chaos-cerberus
 ```
 
-### Apache values file (values-apache.yaml)
+#### Deploy kraken
 
-chaos of an apache container image with the following characteristics :
-
-- 1 **pod** named **chaos-apache** of **2 pods** running **quay.io/startx/apache:latest** image
-- 1 **service** named **chaos-apache**
+Deploy the kraken component
 
 ```bash
-# Configuration running apache example configuration
-helm install startx/chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-apache.yaml
+helm install \
+--set kraken.enable=true --set kraken.kraken.enable=true \
+chaos-kraken startx/chaos-kraken
 ```
 
-### MariaDB values file (values-mariadb.yaml)
+#### Deploy litmus
 
-chaos of an mariadb container image with the following characteristics :
-
-- 1 **pod** named **chaos-mariadb** of **2 pods** running **quay.io/startx/mariadb:latest** image
-- 1 **service** named **chaos-mariadb**
+Deploy the litmus component
 
 ```bash
-# Configuration running mariadb example configuration
-helm install startx/chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
+helm install \
+--set litmus.enable=true --set litmus.litmus.enable=true \
+chaos-litmus startx/chaos-litmus
+```
+
+#### Deploy Chaos-mesh
+
+Deploy the chaos-mesh component
+
+```bash
+helm install \
+--set mesh.enable=true --set mesh.mesh.enable=true \
+chaos-mesh startx/chaos-mesh
+```
+
+#### Deploy Kube-monkey
+
+Deploy the kube-monkey component
+
+```bash
+helm install \
+--set monkey.enable=true --set monkey.monkey.enable=true \
+chaos-monkey startx/chaos-monkey
 ```
 
 ## History
 
-| Release | Date       | Description                                                                                            |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 10.12.5 | 2022-06-03 | Initial commit for this helm chart with default value example
-| 10.12.6 | 2022-06-03 | Create first release of chaos
-| 10.12.7 | 2022-06-03 | Stable version with startx values
-| 10.12.8 | 2022-06-04 | dding the kraken.ci and mesh
-| 10.12.9 | 2022-06-04 | Improve chaos options
-| 10.13.0 | 2022-06-04 | Improved SCC
-| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
-| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
-| 10.12.24 | 2022-06-05 | Add litmus and monkey support
-| 10.12.25 | 2022-06-05 | Update kubemonkey to version 1.4.1 with v1 support for rbac api
-| 10.12.6 | 2022-06-11 | Move kraken to krkn with pipeline and job support. Add cerberus support
-| 10.12.7 | 2022-06-11 | Improve chaos options
-| 10.12.8 | 2022-06-11 | debug project dependencies
-| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository
-| 10.12.30 | 2022-06-17 | Improved logo and global documentation
-| 10.12.33 | 2022-06-17 | version all dependencies charts
-| 10.12.33 | 2022-06-17 | Improve chaos options
-| 10.12.33 | 2022-06-17 | publish stable update for the full repository
-| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
-| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
-| 10.12.35 | 2022-06-18 | Improve icon
+| Release  | Date       | Description                                                                                                                        |
+| -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 10.12.5  | 2022-06-03 | Initial commit of the example and poc chart example-chaos                                                                          |
+| 10.12.8  | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite                                                                      |
+| 10.12.26 | 2022-06-17 | Create the chaos-mesh chart as part of the startx chaos chart suite                                                                |
+| 10.12.28 | 2022-06-17 | Upgrade the chaos-cerberus helm chart schema with full option support. Link to upstream project release latest (no stable release) |
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                                               |
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                                                      |
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                                             |
+| 10.12.33 | 2022-06-17 | version all dependencies charts                                                                                                    |
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                                                      |
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                                          |
+| 10.12.35 | 2022-06-18 | Improve icon                                                                                                                       |
+| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
