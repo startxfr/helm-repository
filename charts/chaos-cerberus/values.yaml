@@ -42,6 +42,14 @@ cerberus:
   kraken_allowed: true
   # Namespace of the kraken pod that would be allowed
   kraken_ns: chaos-kraken
+  # Enable kraken in a daemon mode (infinity instead of 25 runs)
+  isDaemon: true
+  # Sleep time beetween 2 checks
+  sleep_time: 15
+  # Enable watching nodes health as part of the global health signal
+  watch_nodes: true
+  # Enable watching cluster operator health as part of the global health signal
+  watch_cluster_operators: true
   # Url list of endpoint to watch as part of the global healthcheck (double array)
   watch_url_routes: []
   # Kubeconfig of the supervised tested cluster (mandatory)

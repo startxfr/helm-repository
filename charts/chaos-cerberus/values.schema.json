@@ -118,6 +118,30 @@
                     "description": "Is kraken is allowed (networkPolicy) to talk to cerberus server",
                     "default": true
                 },
+                "sleep_time": {
+                    "type": "integer",
+                    "title": "Sleep time",
+                    "description": "Sleep time beetween 2 checks of the targeted cluster",
+                    "default": 15
+                },
+                "watch_nodes": {
+                    "type": "boolean",
+                    "title": "Watch nodes",
+                    "description": "Enable watching nodes health as part of the global health signal",
+                    "default": true
+                },
+                "watch_cluster_operators": {
+                    "type": "boolean",
+                    "title": "Watch cluster operators",
+                    "description": "Enable watching cluster operator health as part of the global health signal",
+                    "default": true
+                },
+                "isDaemon": {
+                    "type": "boolean",
+                    "title": "Cerberus is daemon",
+                    "description": "Enable kraken in a daemon mode (infinity instead of 25 runs)",
+                    "default": true
+                },
                 "kraken_ns": {
                     "type": "string",
                     "minLength": 1,
