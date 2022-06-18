@@ -31,7 +31,7 @@ helm show chart startx/cluster-console
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-console
+helm install cluster-console startx/cluster-console
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxx to do xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-console
+helm install cluster-console startx/cluster-console
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-console
 - **startx** : Startx Openshift Console customization (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-console -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml
+helm install cluster-console startx/cluster-console -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml
 ```
 
 ## History

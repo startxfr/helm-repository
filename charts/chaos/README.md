@@ -1,4 +1,4 @@
-# Chaos - Cerberus
+# Chaos
 
 This helm chart is used to deploy a chaos test suite composed of cerberus, kraken, litmus, chaos mesh and kube-monkey.
 
@@ -32,7 +32,7 @@ helm show chart startx/chaos
 ### 4. Install this chart
 
 ```bash
-helm install startx/chaos
+helm install chaos startx/chaos
 ```
 
 ## Values dictionary

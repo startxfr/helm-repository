@@ -11,13 +11,13 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 ## Get information about this chart
 
 ```bash
-helm show chart startx/cluster-acm
+helm show chart cluster-acm startx/cluster-acm
 ```
 
 ## Install this chart
 
 ```bash
-helm install startx/cluster-acm
+helm install cluster-acm startx/cluster-acm
 ```
 
 ## Default values
@@ -39,7 +39,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-acm
+helm install cluster-acm startx/cluster-acm
 ```
 
 ## Others values availables
@@ -47,7 +47,7 @@ helm install startx/cluster-acm
 - **startx** : Startx ACM cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-acm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx.yaml
+helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx.yaml
 ```
 
 ## History

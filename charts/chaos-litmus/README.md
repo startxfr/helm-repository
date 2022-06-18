@@ -33,7 +33,7 @@ helm show chart startx/chaos-litmus
 ### 4. Install this chart
 
 ```bash
-helm install startx/chaos-litmus
+helm install chaos-litmus startx/chaos-litmus
 ```
 
 ## Values dictionary

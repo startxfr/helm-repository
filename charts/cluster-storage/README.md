@@ -31,7 +31,7 @@ helm show chart startx/cluster-storage
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-storage
+helm install cluster-storage startx/cluster-storage
 ```
 
 ## Default values
@@ -47,7 +47,7 @@ Deployment of storage classes :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-storage
+helm install cluster-storage startx/cluster-storage
 ```
 
 ## Others values availables
@@ -61,7 +61,7 @@ helm install startx/cluster-storage
   - **startx-aws-slow-delete** (AWS EBS sc1 level with encryption and expansion enabled with delete policy)
 
 ```bash
-helm install startx/cluster-storage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx.yaml
+helm install cluster-storage startx/cluster-storage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx.yaml
 ```
 
 - **startx-ocs** : Startx storage classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-ocs.yaml)) creating the following storage classes
@@ -71,7 +71,7 @@ helm install startx/cluster-storage -f https://raw.githubusercontent.com/startxf
   - **startx-ocs-fs-delete** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with delete policy)
 
 ```bash
-helm install startx/cluster-storage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-ocs.yaml
+helm install cluster-storage startx/cluster-storage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-ocs.yaml
 ```
 
 ## History

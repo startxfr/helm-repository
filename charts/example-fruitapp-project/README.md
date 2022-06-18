@@ -32,7 +32,7 @@ helm show chart startx/example-fruitapp-project
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-fruitapp-project
+helm install example-fruitapp-project startx/example-fruitapp-project
 ```
 
 ## Values dictionary
@@ -75,7 +75,7 @@ Deploy the full fruitapp CI/CD context with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-fruitapp-project
+helm install example-fruitapp-project startx/example-fruitapp-project
 ```
 
 ## History

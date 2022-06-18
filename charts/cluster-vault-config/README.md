@@ -31,7 +31,7 @@ helm show chart startx/cluster-vault-config
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-vault-config
+helm install cluster-vault-config startx/cluster-vault-config
 ```
 
 ## Values dictionary
@@ -118,7 +118,7 @@ Configuration of default properties all disabled by default. This mean no resour
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-vault-config
+helm install cluster-vault-config startx/cluster-vault-config
 ```
 
 ### Default values file (values-startx.yaml)
@@ -137,7 +137,7 @@ Configuration of startx properties with the following characteristics :
 
 ```bash
 # base configuration running startx configuration
-helm install startx/cluster-vault-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx.yaml
+helm install cluster-vault-config startx/cluster-vault-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx.yaml
 ```
 
 ## History

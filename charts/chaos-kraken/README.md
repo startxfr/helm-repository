@@ -33,7 +33,7 @@ helm show chart startx/chaos-kraken
 ### 4. Install this chart
 
 ```bash
-helm install startx/chaos-kraken
+helm install chaos-kraken startx/chaos-kraken
 ```
 
 ## Values dictionary

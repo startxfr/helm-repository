@@ -32,7 +32,7 @@ helm show chart startx/example-catalog
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-catalog
+helm install example-catalog startx/example-catalog
 ```
 
 ## Values dictionary
@@ -71,7 +71,7 @@ Complete deployment of an sxapi application with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-catalog
+helm install example-catalog startx/example-catalog
 ```
 
 ### Development values file (values-dev.yaml)
@@ -84,7 +84,7 @@ Complete deployment of a sxapi development application with the following charac
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/example-catalog -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-dev.yaml
+helm install example-catalog startx/example-catalog -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-dev.yaml
 ```
 
 ## History

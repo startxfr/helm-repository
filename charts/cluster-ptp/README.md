@@ -31,7 +31,7 @@ helm show chart startx/cluster-ptp
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-ptp
+helm install cluster-ptp startx/cluster-ptp
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxxxx TO DO xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-ptp
+helm install cluster-ptp startx/cluster-ptp
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-ptp
 - **startx** : PTP operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml
+helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml
 ```
 
 ## History

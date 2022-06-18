@@ -31,7 +31,7 @@ helm show chart startx/cluster-workspace
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-workspace
+helm install cluster-workspace startx/cluster-workspace
 ```
 
 ## Values dictionary
@@ -150,7 +150,7 @@ Configuration of default properties all disabled by default. This mean no resour
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-workspace
+helm install cluster-workspace startx/cluster-workspace
 ```
 
 ### Default values file (values-startx.yaml)
@@ -169,7 +169,7 @@ Configuration of startx properties with the following characteristics :
 
 ```bash
 # base configuration running startx configuration
-helm install startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
+helm install cluster-workspace startx/cluster-workspace -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-workspace/values-startx.yaml
 ```
 
 ## History

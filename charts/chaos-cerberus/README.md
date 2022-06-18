@@ -33,7 +33,7 @@ helm show chart startx/chaos-cerberus
 ### 4. Install this chart
 
 ```bash
-helm install startx/chaos-cerberus
+helm install chaos-cerberus startx/chaos-cerberus
 ```
 
 ## Values dictionary
