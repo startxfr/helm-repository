@@ -129,3 +129,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
 | 10.12.43 | 2022-06-18 | Improve doc for helm deployment
 | 10.12.46 | 2022-06-18 | publish stable update for the full repository
+| 10.12.47 | 2022-06-18 | Minor improvment in doc and sample values
