@@ -44,10 +44,16 @@ chaos-projects  startx/chaos
 helm install \
 --set cerberus.enabled=true --set cerberus.cerberus.enabled=true  \
 chaos-cerberus-instance  startx/chaos-cerberus
-# Deploy the kraken instance
+# Deploy the kraken instance in a job mode
 helm install \
 --set kraken.enabled=true --set kraken.kraken.enabled=true  \
-chaos-kraken-instance  startx/chaos-kraken
+--set kraken.kraken.mode=job  \
+chaos-kraken-instance-job  startx/chaos-kraken
+# Deploy the kraken instance with tekton pipeline (require pipeline been installed)
+helm install \
+--set kraken.enabled=true --set kraken.kraken.enabled=true  \
+--set kraken.kraken.mode=pipeline \
+chaos-kraken-instance-pipeline  startx/chaos-kraken
 # Deploy the litmus instance
 helm install \
 --set litmus.enabled=true --set litmus.litmus.enabled=true  \
@@ -174,3 +180,5 @@ chaos-monkey startx/chaos-monkey
 | 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
 | 10.12.43 | 2022-06-18 | Improve doc for helm deployment
 | 10.12.46 | 2022-06-18 | publish stable update for the full repository
+| 10.12.47 | 2022-06-18 | Minor improvment in doc and sample values
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository
