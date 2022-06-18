@@ -20,8 +20,8 @@ data:
         distribution: openshift
         kubeconfig_path: /root/kubeconfig
         port: 8080
-        watch_nodes: True
-        watch_cluster_operators: True
+        watch_nodes: {{ .Values.cerberus.watch_nodes | default true }}
+        watch_cluster_operators: {{ .Values.cerberus.watch_cluster_operators | default true }}
         watch_url_routes: {{ toJson .Values.cerberus.watch_url_routes }}
         watch_master_schedulable:
             enabled: True
@@ -48,11 +48,11 @@ data:
         custom_checks:
           - startx_check.py
     tunings:
-        timeout: 30
-        iterations: 5
-        sleep_time: 5
+        timeout: 10
+        iterations: 25
+        sleep_time: {{ .Values.cerberus.sleep_time | default 10 }}
         kube_api_request_chunk_size: 500
-        daemon_mode: True
+        daemon_mode: {{ .Values.cerberus.isDaemon | default true }}
         cores_usage_percentage: 0.6
     database:
         database_path: /tmp/cerberus.db
