@@ -3,11 +3,11 @@
 apiVersion: "route.openshift.io/v1"
 kind: Route
 metadata:
-  name: "ui"
+  name: "server"
   labels:
-    app.kubernetes.io/name: "ui-route"
+    app.kubernetes.io/name: "server-route"
     {{- include "chaos-mesh.labels" . | nindent 4 }}
-    app: "ui-mesh"
+    app: "server-mesh"
   annotations:
     {{- include "chaos-mesh.annotations" . | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
