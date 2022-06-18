@@ -183,3 +183,4 @@ chaos-monkey startx/chaos-monkey
 | 10.12.47 | 2022-06-18 | Minor improvment in doc and sample values
 | 10.12.49 | 2022-06-18 | publish stable update for the full repository
 | 10.12.51 | 2022-06-18 | Update chaos chart dependencies to version 10.12.47
+| 10.12.52 | 2022-06-18 | Update chaos chart dependencies to version 10.12.46
