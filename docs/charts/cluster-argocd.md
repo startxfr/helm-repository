@@ -31,7 +31,7 @@ helm show chart startx/cluster-argocd
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-argocd
+helm install cluster-argocd startx/cluster-argocd
 ```
 
 ## Default values
@@ -53,7 +53,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-argocd
+helm install cluster-argocd startx/cluster-argocd
 ```
 
 ## Others values availables
@@ -61,13 +61,13 @@ helm install startx/cluster-argocd
 - **startx** : Startx argocd cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx.yaml
+helm install cluster-argocd startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx.yaml
 ```
 
 - **startx-gitops** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-gitops.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx-gitops.yaml))
 
 ```bash
-helm install startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx-gitops.yaml
+helm install cluster-argocd startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx-gitops.yaml
 ```
 
 ## History
@@ -187,3 +187,4 @@ helm install startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
