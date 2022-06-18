@@ -36,7 +36,7 @@ helm show chart startx/chaos-kraken
 # Install the kraken project
 helm install --set project.enabled=true chaos-kraken-project  startx/chaos-kraken
 # Deploy the kraken instance
-helm install --set kraken.enabled=true  chaos-kraken-instance startx/chaos-kraken
+helm install --set kraken.enabled=true -n chaos-kraken chaos-kraken-instance startx/chaos-kraken
 ```
 
 ## Values dictionary
@@ -127,3 +127,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                             |
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                             |
 | 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
+| 10.12.43 | 2022-06-18 | Improve doc for helm deployment

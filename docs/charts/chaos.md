@@ -29,10 +29,37 @@ helm repo add startx https://startxfr.github.io/helm-repository/packages/
 helm show chart startx/chaos
 ```
 
-### 4. Install this chart
+### 4. Install this suite
 
 ```bash
-helm install chaos startx/chaos
+# Install the projects
+helm install \
+--set cerberus.enabled=true --set cerberus.project.enabled=true  \
+--set kraken.enabled=true --set kraken.project.enabled=true  \
+--set litmus.enabled=true --set litmus.project.enabled=true  \
+--set mesh.enabled=true --set mesh.project.enabled=true  \
+--set monkey.enabled=true --set monkey.project.enabled=true  \
+chaos-projects  startx/chaos
+# Deploy the cerberus instance
+helm install \
+--set cerberus.enabled=true --set cerberus.cerberus.enabled=true  \
+chaos-cerberus-instance  startx/chaos-cerberus
+# Deploy the kraken instance
+helm install \
+--set kraken.enabled=true --set kraken.kraken.enabled=true  \
+chaos-kraken-instance  startx/chaos-kraken
+# Deploy the litmus instance
+helm install \
+--set litmus.enabled=true --set litmus.litmus.enabled=true  \
+chaos-litmus-instance  startx/chaos-litmus
+# Deploy the mesh instance
+helm install \
+--set mesh.enabled=true --set mesh.mesh.enabled=true  \
+chaos-mesh-instance  startx/chaos-mesh
+# Deploy the monkey instance
+helm install \
+--set monkey.enabled=true --set monkey.monkey.enabled=true  \
+chaos-monkey-instance  startx/chaos-monkey
 ```
 
 ## Values dictionary
@@ -145,3 +172,4 @@ chaos-monkey startx/chaos-monkey
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
 | 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
+| 10.12.43 | 2022-06-18 | Improve doc for helm deployment
