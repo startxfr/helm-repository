@@ -32,7 +32,7 @@ project:
     display_name: Chaos - Mesh
     description: chaos-mesh orchestrator in STARTX Chaos test suite
 
-# Configuration of the mesh deployment (see https://charts.chaos-litmus.org)
+# Configuration of the chaos-mesh deployment (see https://charts.chaos-mesh.org)
 mesh: 
   enabled: false
   expose: true
@@ -84,7 +84,7 @@ mesh:
     affinity: {}
   dashboard:
     create: true
-    rootUrl: https://ui-startx-chaos-litmus.apps.mycluster.com
+    rootUrl: https://server-chaos-mesh.apps.mycluster.com
     hostNetwork: false
     replicaCount: 1
     serviceAccount: chaos-dashboard
@@ -124,7 +124,7 @@ mesh:
     nodeSelector: {}
     tolerations: []
     podAnnotations: {}
-    name: chaos-litmus-dns-server
+    name: chaos-mesh-dns-server
     grpcPort: 9288
     resources:
       limits: {}

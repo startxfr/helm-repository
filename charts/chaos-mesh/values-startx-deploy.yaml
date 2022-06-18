@@ -17,15 +17,15 @@ context:  &context
 project: 
   enabled: false
   project: 
-    name: startx-chaos-litmus
+    name: startx-chaos-mesh
 mesh: 
-  enabled: true
+  enabled: false
   expose: true
   chaosDaemon:
     runtime: crio
     socketPath: /var/run/crio/crio.sock
-  # nameOverride: ""
-  # fullnameOverride: ""
+  nameOverride: ""
+  fullnameOverride: ""
   customLabels: {}
   clusterScoped: true
   rbac:
@@ -33,55 +33,24 @@ mesh:
   timezone: "Europe/Paris"
   enableProfiling: true
   enableCtrlServer: true
-  images:
-    registry: "ghcr.io"
-    tag: "v2.2.0"
   imagePullSecrets: []
-  controllerManager:
+  controllerManager: 
     hostNetwork: false
     serviceAccount: chaos-controller-manager
-    priorityClassName: ""
-    replicaCount: 1
-    image:
-      registry: ""
-      repository: chaos-litmus/chaos-litmus
-      tag: ""
-    imagePullPolicy: IfNotPresent
+    replicaCount: 3
     env:
       WEBHOOK_PORT: 9443
       METRICS_PORT: 10080
     enableFilterNamespace: false
-    # targetNamespace: startx-chaos
     service:
       type: ClusterIP
-    resources:
-      limits: {}
-      requests:
-        cpu: 25m
-        memory: 256Mi
+    resources: {}
     nodeSelector: {}
     tolerations: []
     affinity: {}
     podAnnotations: {}
-    enabledControllers:
-      - "*"
-    enabledWebhooks:
-      - "*"
-    podChaos:
-      podFailure:
-        pauseImage: gcr.io/google-containers/pause:latest
-    leaderElection:
-      enabled: true
-      leaseDuration: 15s
-      renewDeadline: 10s
-      retryPeriod: 2s
     chaosdSecurityMode: true
   chaosDaemon:
-    image:
-      registry: ""
-      repository: chaos-litmus/chaos-daemon
-      tag: ""
-    imagePullPolicy: IfNotPresent
     grpcPort: 31767
     httpPort: 31766
     env: {}
@@ -89,7 +58,6 @@ mesh:
     mtls:
       enabled: false
     privileged: true
-    priorityClassName: ""
     podAnnotations: {}
     serviceAccount: chaos-daemon
     podSecurityPolicy: false
@@ -101,15 +69,10 @@ mesh:
     affinity: {}
   dashboard:
     create: true
-    # rootUrl: https://ui-startx-chaos-litmus.apps.mycluster.local
+    rootUrl: https://server-startx-chaos-mesh.apps.mycluster.com
     hostNetwork: false
     replicaCount: 1
-    priorityClassName: ""
     serviceAccount: chaos-dashboard
-    image:
-      registry: ""
-      repository: chaos-litmus/chaos-dashboard
-      tag: ""
     imagePullPolicy: IfNotPresent
     securityMode: true
     nodeSelector: {}
@@ -125,11 +88,7 @@ mesh:
         cpu: 25m
         memory: 256Mi
     persistentVolume:
-      enabled: true
-      size: 8Gi
-      storageClassName: startx-aws-generic-retain
-      mountPath: /data
-      subPath: ""
+      enabled: false
     env:
       LISTEN_HOST: 0.0.0.0
       LISTEN_PORT: 2333
@@ -147,13 +106,10 @@ mesh:
   dnsServer:
     create: true
     serviceAccount: chaos-dns-server
-    image: pingcap/coredns:v0.2.1
-    imagePullPolicy: IfNotPresent
-    priorityClassName: ""
     nodeSelector: {}
     tolerations: []
     podAnnotations: {}
-    name: chaos-litmus-dns-server
+    name: chaos-mesh-dns-server
     grpcPort: 9288
     resources:
       limits: {}
@@ -166,17 +122,12 @@ mesh:
   prometheus:
     create: true
     serviceAccount: prometheus
-    image: prom/prometheus:v2.18.1
-    imagePullPolicy: IfNotPresent
-    priorityClassName: ""
     nodeSelector: {}
     tolerations: []
     affinity: {}
     podAnnotations: {}
     resources:
-      limits:
-        cpu: 500m
-        memory: 1024Mi
+      limits: {}
       requests:
         cpu: 250m
         memory: 512Mi
@@ -184,7 +135,7 @@ mesh:
       type: ClusterIP
     volume:
       storage: 2Gi
-      storageClassName: startx-aws-generic-retain
+      storageClassName: gp2
   webhook:
     certManager:
       enabled: false
@@ -209,19 +160,8 @@ mesh:
       - physicalmachine
       - statuscheck
   bpfki:
-    # Enable chaos-kernel
     create: true
-    image:
-      registry: ""
-      repository: chaos-litmus/chaos-kernel
-      tag: ""
-    imagePullPolicy: IfNotPresent
     grpcPort: 50051
     resources: {}
   chaosDlv:
-    enable: true
-    image:
-      registry: ""
-      repository: chaos-litmus/chaos-dlv
-      tag: ""
-    imagePullPolicy: IfNotPresent
+    enable: True
