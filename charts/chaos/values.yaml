@@ -30,9 +30,9 @@ cerberus:
     project: 
       enabled: true
       type: project
-      name: chaos
-      display_name: Chaos - Main
-      description: Chaos test suite configured by STARTX
+      name: chaos-cerberus
+      display_name: Chaos - Cerberus
+      description: Cerberus watchdog in STARTX Chaos test suite
   cerberus: 
     enabled: false
     expose: true
@@ -62,7 +62,9 @@ kraken:
     enabled: false
     expose: true
     cerberusUrl: "http://cerberus.startx-chaos-kraken.svc.cluster.local:8080"
-    mode: pipeline
+    mode: job
+    job: 
+      prefix: kraken-test
     pipeline: 
       prefix: kraken-test
     aws: 

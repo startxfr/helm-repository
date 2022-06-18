@@ -8,12 +8,10 @@ The Cerberus watchdog you've require is deploying with the following characteris
     component : {{ include "startx.appComponent" . }}
           app : {{ include "startx.appName" . }}
       version : {{ include "startx.appVersion" . }}
-
 {{ if .Values.project.enabled }}
 -- Cerberus Project ----------------
          name : {{ .Values.project.project.name }}
 {{ end }}
-
 {{ if .Values.cerberus.enabled }}
 -- Cerberus Instance ---------------
 kubeconfig mode : {{ .Values.cerberus.kubeconfig.mode }}
