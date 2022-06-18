@@ -72,9 +72,10 @@ Simple monkey with default configuration :
 - 1 **kube-monkey** deployment using asobti helm chart
 
 ```bash
-# Running the default configuration
+# Install the kube-monkey project
 helm install --set project.enable=true chaos-monkey-project startx/chaos-monkey
-helm install --set monkey.enable=true chaos-monkey-instance startx/chaos-monkey
+# Deploy the kube-monkey instance
+helm install --set monkey.enable=true -n chaos-monkey chaos-monkey-instance startx/chaos-monkey
 ```
 
 ### STARTX values file (values-startx-xxx.yaml)
@@ -104,3 +105,4 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                                                        |
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                                                        |
 | 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
+| 10.12.43 | 2022-06-18 | Improve doc for helm deployment
