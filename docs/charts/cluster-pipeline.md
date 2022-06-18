@@ -31,7 +31,7 @@ helm show chart startx/cluster-pipeline
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-pipeline
+helm install cluster-pipeline startx/cluster-pipeline
 ```
 
 ## Default values
@@ -45,7 +45,7 @@ Deployment of tekton :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-pipeline
+helm install cluster-pipeline startx/cluster-pipeline
 ```
 
 ## Others values availables
@@ -57,7 +57,7 @@ helm install startx/cluster-pipeline
     - operator catalog is **redhat-operators** located in **openshift-marketplace**
 
 ```bash
-helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml
+helm install cluster-pipeline startx/cluster-pipeline -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml
 ```
 
 ## History
@@ -175,3 +175,4 @@ helm install startx/cluster-pipeline -f https://raw.githubusercontent.com/startx
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
