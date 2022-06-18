@@ -36,7 +36,7 @@ helm show chart startx/chaos-mesh
 # Install the chaos-mesh project
 helm install --set project.enabled=true chaos-mesh-project  startx/chaos-mesh
 # Deploy the chaos-mesh instance
-helm install --set mesh.enabled=true  chaos-mesh-instance startx/chaos-mesh
+helm install --set mesh.enabled=true -n chaos-mesh chaos-mesh-instance startx/chaos-mesh
 ```
 
 ## Values dictionary
@@ -105,3 +105,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                                                     |
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                                                     |
 | 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
+| 10.12.43 | 2022-06-18 | Improve doc for helm deployment
