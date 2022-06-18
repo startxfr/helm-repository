@@ -186,3 +186,4 @@ chaos-monkey startx/chaos-monkey
 | 10.12.52 | 2022-06-18 | Update chaos chart dependencies to version 10.12.46
 | 10.12.52 | 2022-06-18 | Update chaos chart dependencies to version 10.12.47
 | 10.12.53 | 2022-06-18 | Update chaos chart dependencies to version 10.12.46
+| 10.12.53 | 2022-06-18 | Update chaos chart dependencies to version 10.12.43
