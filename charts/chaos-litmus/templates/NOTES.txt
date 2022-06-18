@@ -8,11 +8,14 @@ The litmus environment you've require is deploying with the following characteri
     component : {{ include "startx.appComponent" . }}
           app : {{ include "startx.appName" . }}
       version : {{ include "startx.appVersion" . }}
-      {{- if .Values.project.enabled -}}
-      project : {{ .Values.project.project.name }}
-      {{- end -}}
 
-{{- if .Values.litmus.enabled -}}
--- Litmus engine -------------------
+{{ if .Values.project.enabled }}
+-- Litmus Project ------------------
+         name : {{ .Values.project.project.name }}
+{{ end }}
+
+{{ if .Values.litmus.enabled }}
+-- Litmus Instance -----------------
          name : {{ .Values.litmus.nameOverride }}
-{{- end -}}
+ replicaCount : 1
+{{ end }}
