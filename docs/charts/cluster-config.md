@@ -31,7 +31,7 @@ helm show chart startx/cluster-config
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-config
+helm install cluster-config startx/cluster-config
 ```
 
 ## Default values
@@ -60,7 +60,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-config
+helm install cluster-config startx/cluster-config
 ```
 
 ## Others values availables
@@ -68,7 +68,7 @@ helm install startx/cluster-config
 - **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml
+helm install cluster-config startx/cluster-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml
 ```
 
 ## History
@@ -184,3 +184,4 @@ helm install startx/cluster-config -f https://raw.githubusercontent.com/startxfr
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository

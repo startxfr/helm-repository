@@ -31,7 +31,7 @@ helm show chart startx/cluster-ansible
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-ansible
+helm install cluster-ansible startx/cluster-ansible
 ```
 
 ## Default values
@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-ansible
+helm install cluster-ansible startx/cluster-ansible
 ```
 
 ## Others values availables
@@ -56,7 +56,7 @@ helm install startx/cluster-ansible
 - **startx** : Startx ansible cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-ansible -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml
+helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml
 ```
 
 ## History
@@ -110,3 +110,4 @@ helm install startx/cluster-ansible -f https://raw.githubusercontent.com/startxf
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository

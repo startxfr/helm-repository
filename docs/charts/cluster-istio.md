@@ -31,7 +31,7 @@ helm show chart startx/cluster-istio
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-istio
+helm install cluster-istio startx/cluster-istio
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxx to do xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-istio
+helm install cluster-istio startx/cluster-istio
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-istio
 - **startx** : Startx Istio service configuration using service-mesh operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-istio/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-istio/values-startx.yaml
+helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-istio/values-startx.yaml
 ```
 
 ## History
@@ -187,3 +187,4 @@ helm install startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository

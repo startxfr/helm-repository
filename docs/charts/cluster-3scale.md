@@ -31,7 +31,7 @@ helm show chart startx/cluster-3scale
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-3scale
+helm install cluster-3scale startx/cluster-3scale
 ```
 
 ## Default values
@@ -51,7 +51,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-3scale
+helm install cluster-3scale startx/cluster-3scale
 ```
 
 ## Others values availables
@@ -59,7 +59,7 @@ helm install startx/cluster-3scale
 - **startx** : Startx 3scale cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml
+helm install cluster-3scale startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml
 ```
 
 ## History
@@ -191,3 +191,4 @@ helm install startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository

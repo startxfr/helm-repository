@@ -31,7 +31,7 @@ helm show chart startx/cluster-vpa
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-vpa
+helm install cluster-vpa startx/cluster-vpa
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxxxx TO DO xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-vpa
+helm install cluster-vpa startx/cluster-vpa
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-vpa
 - **startx** : VerticalPodAutoscaler operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml
+helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml
 ```
 
 ## History
@@ -154,3 +154,4 @@ helm install startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/he
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
