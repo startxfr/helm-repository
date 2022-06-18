@@ -199,6 +199,7 @@ EOF
 
 If you need to run your in an older version of Openshift, or access to archived version of helm chart, 
 you can load the archive repository
+
 ```bash
 cat <<EOF | oc apply -f -
 apiVersion: helm.openshift.io/v1beta1
@@ -283,6 +284,10 @@ helm install startx/example-fruitapp-project
 helm install startx/example-fruitapp-shared
 helm install startx/example-fruitapp-app
 ```
+
+## Install using ArgoCD
+
+If you whan to deploy theses charts using ArgoCD, you can follow the [install using ArgoCD guide](install-argocd)
 
 ## Install building environment
 
