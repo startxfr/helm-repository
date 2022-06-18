@@ -32,7 +32,7 @@ helm show chart startx/project
 ### 4. Install this chart
 
 ```bash
-helm install startx/project
+helm install project startx/project
 ```
 
 ## Values dictionary
@@ -84,7 +84,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/project
+helm install project startx/project
 ```
 
 ### Demo kustomize values file (values-demo-kustomize.yaml)
@@ -103,7 +103,7 @@ Complete deployment of a demo kustomize project with the following characteristi
 
 ```bash
 # base configuration running demo kustomize configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml
+helm install project-demo-kustomize startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml
 ```
 
 ### Demo helm values file (values-demo-helm.yaml)
@@ -124,7 +124,7 @@ Complete deployment of a demo helm project with the following characteristics :
 
 ```bash
 # base configuration running demo helm configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml
+helm install project-demo-helm startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml
 ```
 
 ### Demo argocd values file (values-demo-argocd.yaml)
@@ -143,7 +143,7 @@ Complete deployment of a demo argocd project with the following characteristics 
 
 ```bash
 # base configuration running demo argocd configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml
+helm install project-demo-argocd startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml
 ```
 
 ### Demo example values file (values-demo-example.yaml)
@@ -162,7 +162,7 @@ Complete deployment of a demo example project with the following characteristics
 
 ```bash
 # base configuration running demo example configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-example.yaml
+helm install project-example-project startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-example.yaml
 ```
 
 ### Startx values file (values-startx.yaml)
@@ -183,7 +183,7 @@ Complete deployment of a startx project with the following characteristics :
 
 ```bash
 # base configuration running startx configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
+helm install project-startx startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
 ```
 
 ## History

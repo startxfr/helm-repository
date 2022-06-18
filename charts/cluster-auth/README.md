@@ -31,7 +31,7 @@ helm show chart startx/cluster-auth
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-auth
+helm install cluster-auth startx/cluster-auth
 ```
 
 ## Default values
@@ -47,7 +47,7 @@ Complete configuration of the OCP authentification with the following characteri
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-auth
+helm install cluster-auth startx/cluster-auth
 ```
 
 ## Others values availables
@@ -64,43 +64,43 @@ helm install startx/cluster-auth
     - 1 user **admin**
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml
 ```
 
 - **startx-afd** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-afd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml
 ```
 
 - **startx-cisval** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-cisval.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml
 ```
 
 - **startx-lumiplan** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-lumiplan.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml
 ```
 
 - **startx-manutan** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-manutan.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml
 ```
 
 - **startx-monaco** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-monaco.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml
 ```
 
 - **startx-photoweb** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-photoweb.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml
 ```
 
 ## History

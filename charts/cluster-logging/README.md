@@ -31,7 +31,7 @@ helm show chart startx/cluster-logging
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-logging
+helm install cluster-logging startx/cluster-logging
 ```
 
 ## Default values

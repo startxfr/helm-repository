@@ -33,7 +33,7 @@ helm show chart startx/chaos-monkey
 ### 4. Install this chart
 
 ```bash
-helm install startx/chaos-monkey
+helm install chaos-monkey startx/chaos-monkey
 ```
 
 ## Values dictionary

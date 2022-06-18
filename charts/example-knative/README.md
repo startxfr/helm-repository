@@ -32,7 +32,7 @@ helm show chart startx/example-knative
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-knative
+helm install example-knative startx/example-knative
 ```
 
 ## Values dictionary
@@ -69,7 +69,7 @@ Serverless service with the following characteristics (deployment is disable) :
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-knative
+helm install example-knative startx/example-knative
 ```
 
 ### Development values file (values-demo-sxapi-knative.yaml)
@@ -80,7 +80,7 @@ Complete deployment of a knative development application with the following char
 
 ```bash
 # base configuration running  demo sxapi with a knative configuration
-helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-sxapi-knative.yaml
+helm install example-knative-sxapi startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-sxapi-knative.yaml
 ```
 
 ### Development values file (values-demo-knative-helloworld-go.yaml)
@@ -91,7 +91,7 @@ Complete deployment of a knative development application with the following char
 
 ```bash
 # base configuration running  demo sxapi with a knative configuration
-helm install startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-knative-helloworld-go.yaml
+helm install example-knative-helloworld-go startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-knative-helloworld-go.yaml
 ```
 
 ## History

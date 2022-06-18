@@ -31,7 +31,7 @@ helm show chart startx/cluster-rbac
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-rbac
+helm install cluster-rbac startx/cluster-rbac
 ```
 
 ## Default values
@@ -43,7 +43,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-rbac
+helm install cluster-rbac startx/cluster-rbac
 ```
 
 ## Others values availables
@@ -51,7 +51,7 @@ helm install startx/cluster-rbac
 - **startx** : Startx RBAC default context with dev, devops, ops and admin groups (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml
+helm install cluster-rbac startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml
 ```
 
 ## History

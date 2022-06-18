@@ -31,7 +31,7 @@ helm show chart startx/cluster-nexus
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-nexus
+helm install cluster-nexus startx/cluster-nexus
 ```
 
 ## Default values
@@ -42,7 +42,7 @@ xxxxxx TO DO xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-nexus
+helm install cluster-nexus startx/cluster-nexus
 ```
 
 ## Others values availables
@@ -50,7 +50,7 @@ helm install startx/cluster-nexus
 - **startx** : Nexus operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml
+helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml
 ```
 
 ## History

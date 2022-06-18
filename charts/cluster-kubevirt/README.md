@@ -31,7 +31,7 @@ helm show chart startx/cluster-kubevirt
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-kubevirt
+helm install cluster-kubevirt startx/cluster-kubevirt
 ```
 
 ## Default values

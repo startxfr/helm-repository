@@ -33,7 +33,7 @@ helm show chart startx/chaos-mesh
 ### 4. Install this chart
 
 ```bash
-helm install startx/chaos-mesh
+helm install chaos-mesh startx/chaos-mesh
 ```
 
 ## Values dictionary

@@ -32,7 +32,7 @@ helm show chart startx/example-pod
 ### 4. Install this chart
 
 ```bash
-helm install startx/example-pod
+helm install example-pod startx/example-pod
 ```
 
 ## Values dictionary
@@ -67,7 +67,7 @@ Simple pod deployment of a container image with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/example-pod
+helm install example-pod startx/example-pod
 ```
 
 ### Development values file (values-demo.yaml)
@@ -78,7 +78,7 @@ Demo pod deployment of a container image with the following characteristics :
 
 ```bash
 # base configuration running demo configuration
-helm install startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
+helm install example-pod startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
 ## History
