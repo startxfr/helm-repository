@@ -67,7 +67,7 @@ helm install --set kraken.enabled=true -n chaos-kraken chaos-kraken-instance sta
 | kraken.job.prefix              | kraken-test            | Job name prefix                                                                                                                                                                                                                                                                   |
 | kraken.pipeline                | {...}                  | configuration of the pipeline mode                                                                                                                                                                                                                                                |
 | kraken.pipeline.prefix         | kraken-test            | pipelinerun name prefix                                                                                                                                                                                                                                                           |
-| kraken.aws                     | {...}                  | AWS configuration section (must have privilegied access to Openshift deployed resources like VPC, subnet, EC2 instance)                                                                                                                                                           |
+| kraken.aws                     | {...}                  | AWS configuration section (must have privileged access to Openshift deployed resources like VPC, subnet, EC2 instance)                                                                                                                                                           |
 | kraken.aws.enabled             | false                  | enable the aws integration                                                                                                                                                                                                                                                        |
 | kraken.aws.credentials         | {...}                  | credentials (mandatory if enabled)                                                                                                                                                                                                                                                |
 | kraken.aws.credentials.region  | eu-west-3              | used AWS region                                                                                                                                                                                                                                                                   |
@@ -87,7 +87,7 @@ helm install --set kraken.enabled=true -n chaos-kraken chaos-kraken-instance sta
 Simple kraken with default configuration :
 
 - 1 **project** named **chaos-kraken**
-- 1 **scc** with privilegied context for **kraken** deployment
+- 1 **scc** with privileged context for **kraken** deployment
 - 1 **configmap** with kraken 21 generic scenarios, various scripts and configuration
 - 1 **configmap** with kubeconfig of the targeted cluster
 - 12 **pipeline** named **kraken-test-xxx** 

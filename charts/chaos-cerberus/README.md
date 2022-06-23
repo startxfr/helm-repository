@@ -78,7 +78,7 @@ helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-c
 Simple cerberus with default configuration :
 
 - 1 **project** named **chaos-cerberus**
-- 1 **scc** with privilegied context for **cerberus** deployment
+- 1 **scc** with privileged context for **cerberus** deployment
 - 1 **configmap** with cerberus server configuration
 - 1 **configmap** with kubeconfig of the targeted cluster
 - 2 **networkpolicy** allowing route and kraken pods in chaos-kraken namespace, to get cerberus signal

@@ -6,13 +6,13 @@
 kind: SecurityContextConstraints 
 apiVersion: security.openshift.io/v1
 metadata:
-  name: privilegied-litmus
+  name: privileged-litmus
   labels:
-    app.kubernetes.io/name: "privilegied-litmus-scc"
+    app.kubernetes.io/name: "privileged-litmus-scc"
     {{- include "chaos-litmus.labels" $root | nindent 4 }}
   annotations:
     {{- include "chaos-litmus.annotations" $root | nindent 4 }}
-    kubernetes.io/description: 'allows privilegied access to host'
+    kubernetes.io/description: 'allows privileged access to host'
     release.openshift.io/create-only: "true"
 users:
 - system:serviceaccount:{{- $namespace -}}:argo
@@ -55,26 +55,26 @@ allowedCapabilities:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: privilegied-litmus-scc-role
+  name: privileged-litmus-scc-role
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    app.kubernetes.io/name: "privilegied-litmus-scc-role"
+    app.kubernetes.io/name: "privileged-litmus-scc-role"
     {{- include "chaos-litmus.labels" $root | nindent 4 }}
   annotations:
     {{- include "chaos-litmus.annotations" $root | nindent 4 }}
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
-    resourceNames: ["privilegied-litmus"]
+    resourceNames: ["privileged-litmus"]
     verbs: ["use"]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: privilegied-litmus-scc-rb
+  name: privileged-litmus-scc-rb
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    app.kubernetes.io/name: "privilegied-litmus-scc-rb"
+    app.kubernetes.io/name: "privileged-litmus-scc-rb"
     {{- include "chaos-litmus.labels" $root | nindent 4 }}
   annotations:
     {{- include "chaos-litmus.annotations" $root | nindent 4 }}
@@ -99,6 +99,6 @@ subjects:
     name: litmus-server-account
 roleRef:
   kind: Role
-  name: privilegied-litmus-scc-role
+  name: privileged-litmus-scc-role
   apiGroup: rbac.authorization.k8s.io
 {{- end -}}
