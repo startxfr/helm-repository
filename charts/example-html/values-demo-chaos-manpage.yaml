@@ -1,0 +1,117 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: chaos
+  app: manpage
+  version: "0.0.1"
+html:
+  namespace: startx-chaos
+  expose:
+    enabled: true
+  version: "alpine3"
+  replicas: 1
+  data: |
+    index.html: |-
+      <!DOCTYPE html>
+      <html lang="en-us">
+        <head>
+          <title>Manpage of the STARTX Chaos environment</title>
+        </head>
+        <body>
+          <h1>Manpage of the STARTX Chaos environment</h1>
+          <h2>Kraken</h2> 
+          <h3>Introduction</h3> 
+          <p>
+              Kraken CI is a continuous integration and testing system. Kraken CI takes as input build 
+              scripts and different kinds of testing and validations tools and outputs build artifacts, 
+              test results, found regression and fixes, and other issues.
+              <img src="https://kraken.ci/assets/images/kraken-diagram-a49d40692dfb69cf13b72777dd8899a5.png"/>
+          </p>
+          <h3>Links and help pages</h3> 
+          <p>
+              <ul>
+                  <li><a href="https://kraken.ci/docs/architecture" target="_blank">
+                    Kraken architecture
+                  </a></li>
+                  <li><a href="https://kraken.ci/docs/guide-kubernetes/" target="_blank">
+                    Kraken deployment in kubernetes
+                  </a></li>
+                  <li><a href="https://helm-repository.readthedocs.io/en/latest/charts/example-chaos/" target="_blank">
+                    Kraken deployment with startx chaos helm
+                  </a></li>
+                  <li><a href="https://kraken.ci/docs/schema" target="_blank">
+                    Using the kraken schema
+                  </a></li>
+              </ul>
+          </p>
+          <h2>Chaos Mesh</h2> 
+          <h3>Introduction</h3> 
+          <p>
+              Chaos Mesh is a Cloud Native Computing Foundation (CNCF) hosted project. 
+              It is a cloud-native Chaos Engineering platform that orchestrates chaos on Kubernetes environments
+          </p>
+          <h3>Links and help pages</h3> 
+          <p>
+              <ul>
+                  <li><a href="https://charts.chaos-mesh.org" target="_blank">
+                    chaos-mesh deployment in kubernetes
+                  </a></li>
+                  <li><a href="https://helm-repository.readthedocs.io/en/latest/charts/example-chaos/" target="_blank">
+                    chaos-mesh deployment with startx chaos helm
+                  </a></li>
+                  <li><a href="https://chaos-mesh.org/docs/configure-enabled-namespace/" target="_blank">
+                    Using the chaos-mesh utility
+                  </a></li>
+              </ul>
+          </p>
+          <h2>Kube-monkey</h2> 
+          <h3>Introduction</h3> 
+          <p>
+              kube-monkey is an implementation of Netflix's Chaos Monkey for Kubernetes clusters. 
+              It randomly deletes Kubernetes (k8s) pods in the cluster encouraging and validating the 
+              development of failure-resilient services.
+          </p>
+          <h3>Links and help pages</h3> 
+          <p>
+              <ul>
+                  <li><a href="https://github.com/asobti/kube-monkey" target="_blank">
+                    kube-monkey deployment in kubernetes
+                  </a></li>
+                  <li><a href="https://helm-repository.readthedocs.io/en/latest/charts/example-chaos/" target="_blank">
+                    kube-monkey deployment with startx chaos helm
+                  </a></li>
+                  <li><a href="https://github.com/asobti/kube-monkey/tree/master/helm/kubemonkey#customising-configurations" target="_blank">
+                    Using the kube-monkey chaos monkey
+                  </a></li>
+              </ul>
+          </p>
+          <h2>Litmus Chaos</h2> 
+          <h3>Introduction</h3> 
+          <p>
+              Litmus is an end-to-end chaos engineering platform for cloud native infrastructure and applications. 
+              Cloud native SREs, QA teams and developers use Litmus to design, orchestrate and analyse chaos in their environments.
+              <img src="https://docs.litmuschaos.io/img/header.png"/>
+          </p>
+          <h3>Links and help pages</h3> 
+          <p>
+              <ul>
+                  <li><a href="https://docs.litmuschaos.io/docs/architecture/architecture-summary" target="_blank">
+                    Litmus architecture
+                  </a></li>
+                  <li><a href="https://litmuschaos.github.io/tutorials/tutorial-getting-started/index.html#1" target="_blank">
+                    Litmus deployment in kubernetes
+                  </a></li>
+                  <li><a href="https://helm-repository.readthedocs.io/en/latest/charts/example-chaos/" target="_blank">
+                    Litmus deployment with startx chaos helm
+                  </a></li>
+                  <li><a href="https://litmuschaos.github.io/tutorials/tutorial-getting-started/index.html#3" target="_blank">
+                    Using the Litmus workflow
+                  </a></li>
+              </ul>
+          </p>
+        </body>
+      </html>

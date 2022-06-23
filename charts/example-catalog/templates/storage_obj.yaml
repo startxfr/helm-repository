@@ -184,6 +184,8 @@ metadata:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "obj-aws-s3"
     app.kubernetes.io/name: "obj-aws-s3-deployment"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}

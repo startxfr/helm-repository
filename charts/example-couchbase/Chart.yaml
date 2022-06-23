@@ -6,11 +6,9 @@ description: Helm chart used to deploy an example of a simple micro-service usin
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.277
+version: 10.12.53
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 4.9.8
-# Version of Openshift 
-engineVersion: 4.9.8
+appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
 # Icon of this helm-chart
 icon: https://startxfr.github.io/helm-repository/img/example-couchbase.svg
 # category associated to this package
@@ -47,11 +45,10 @@ maintainers:
 dependencies:
   - name: sxapi
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.251"
     alias: application
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade startx chart dependencies to version 9.8.251"
+      description: "All chart are aligned to release 10.12.61"
   artifacthub.io/containsSecurityUpdates: "false"

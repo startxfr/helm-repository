@@ -238,6 +238,8 @@ metadata:
     alpha.image.policy.openshift.io/resolve-names: '*'
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $namespace -}}-flask-deployment"
 spec:
   progressDeadlineSeconds: 600
@@ -415,6 +417,8 @@ metadata:
     alpha.image.policy.openshift.io/resolve-names: '*'
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "{{- $namespace -}}-spring-boot-deployment"
 spec:
   progressDeadlineSeconds: 600

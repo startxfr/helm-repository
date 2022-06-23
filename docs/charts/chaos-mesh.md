@@ -1,0 +1,112 @@
+# Chaos - Mesh
+
+This helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster. 
+Chaos-mesh is as a chaos engine with a gui to define and execute chaos scenarios for Kubernetes clusters. 
+
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/chaos-mesh
+```
+
+### 4. Install this component
+
+```bash
+# Install the chaos-mesh project
+helm install --set project.enabled=true chaos-mesh-project  startx/chaos-mesh
+# Deploy the chaos-mesh instance
+helm install --set mesh.enabled=true -n chaos-mesh chaos-mesh-instance startx/chaos-mesh
+```
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)                   |
+| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### chaos-mesh values dictionary
+
+| Key            | Default | Description                                                                                                                                                                                                                                                                       |
+| -------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| project        | {...}   | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
+| project.enable | false   | Enable creation of the namespace                                                                                                                                                                                                                                                  |
+| mesh           | {...}   | Configuration of the chaos-mesh deployment. Inherit from the [official chaos-mesh chart](https://charts.chaos-mesh.org) (see [chart options](https://charts.chaos-mesh.org) for more options)                                                                                     |
+| mesh.enable    | false   | Enable deploying the chaos-mesh watchdog                                                                                                                                                                                                                                          |
+
+## Values files
+
+### Default values file (values.yaml)
+
+Simple mesh with default configuration :
+
+- 1 **project** named **chaos-mesh**
+- 1 **scc** with privileged context for 9 **mesh** serviceaccount
+- 1 **mesh** deployment using official helm chart
+- 1 **route** to the **mesh** service
+
+```bash
+# Running the default configuration
+helm install --set project.enable=true chaos-mesh-project startx/chaos-mesh
+helm install --set mesh.enable=true chaos-mesh-instance startx/chaos-mesh
+```
+
+### STARTX values file (values-startx-xxx.yaml)
+
+Same as the default configuration but with namespace prefixed with startx-
+
+```bash
+# Configuration running demo example configuration
+helm install chaos-mesh-project startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml
+helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml
+```
+
+## History
+
+| Release  | Date       | Description                                                                                                                                              |
+| -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 10.12.5  | 2022-06-03 | Initial commit of the example and poc chart example-chaos                                                                                                |
+| 10.12.8  | 2022-06-11 | Initial commit for this helm chart as part of the chaos suite                                                                                            |
+| 10.12.26 | 2022-06-17 | Create the chaos-mesh chart as part of the startx chaos chart suite                                                                                      |
+| 10.12.28 | 2022-06-17 | Upgrade the chaos-mesh helm chart schema with limited support for chaos-mesh external chart (no external schema). Link to upstream project release 2.2.0 |
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                                                                     |
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                                                                            |
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                                                                   |
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                                                                            |
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                                                                |
+| 10.12.35 | 2022-06-18 | Improve icon                                                                                                                                             |
+| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                                                     |
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                                                     |
+| 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
+| 10.12.43 | 2022-06-18 | Improve doc for helm deployment
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
+| 10.12.47 | 2022-06-18 | Minor improvment in doc and sample values
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository

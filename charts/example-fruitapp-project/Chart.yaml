@@ -6,11 +6,9 @@ description: Helm chart used to deploy all project required to deploy a full CI/
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 9.8.277
+version: 10.12.53
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 4.9.8
-# Version of Openshift 
-engineVersion: 4.9.8
+appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
 # Icon of this helm-chart
 icon: https://startxfr.github.io/helm-repository/img/example-fruitapp-project.svg
 # category associated to this package
@@ -46,32 +44,32 @@ maintainers:
 dependencies: 
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.251"
+    version: "10.12.31"
     alias: project_devel
     condition: project_devel.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.251"
+    version: "10.12.31"
     alias: project_integration
     condition: project_integration.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.251"
+    version: "10.12.31"
     alias: project_preprod
     condition: project_preprod.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.251"
+    version: "10.12.31"
     alias: project_prod
     condition: project_prod.enabled
   - name: example-imagestreams
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "9.8.251"
+    version: "10.12.31"
     alias: imagestreams
     condition: imagestreams.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Minor fix on the rolebinding"
+      description: "All chart are aligned to release 10.12.61"
   artifacthub.io/containsSecurityUpdates: "false"

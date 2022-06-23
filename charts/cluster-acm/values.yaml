@@ -142,6 +142,8 @@ create:
 observability:
   # Enable the deployment of the thanos service
   enabled: false
+  # Enable the deployment of the thanos service on infra nodes
+  infra: false
   # Activate the manager as a helm hook
   hooked: false
   # Bucket configuration for the storage backend
@@ -202,6 +204,27 @@ project:
   quotas: 
     enabled: false
 
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+projectObservability: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "open-cluster-management-observability"
+    display_name: ACM Observability
+    description: ACM Observability configured by startx
+  rbac: 
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
   enabled: false
@@ -220,6 +243,8 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config:
+        infra: false
   operatorGroup:
     enabled: true
     name: "advanced-cluster-management-operator"

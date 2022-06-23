@@ -1,7 +1,7 @@
 {{- if .Values.observability.enabled -}}
 {{- $root := . -}}
-{{- $namespace := .Values.project.project.name | default "open-cluster-management-observability" -}}
-apiVersion: observability.open-cluster-management.io/v1beta1
+{{- $namespace := .Values.project.project.name | default "open-cluster-management" -}}
+apiVersion: observability.open-cluster-management.io/v1beta2
 kind: MultiClusterObservability
 metadata:
   name: "observability"
@@ -13,19 +13,39 @@ metadata:
     {{- include "cluster-acm.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "15"
 spec:
-  # availabilityConfig: {{ .Values.observability.mco.availabilityConfig }}
-  imagePullPolicy: {{ .Values.observability.mco.imagePullPolicy }}
-  imagePullSecret: {{ .Values.observability.mco.imagePullSecret }}
+  # doc could be found at https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html-single/apis/index
+  # replicas: 1
   observabilityAddonSpec:
     enableMetrics: {{ .Values.observability.mco.enableMetrics }}
     interval: {{ .Values.observability.mco.interval }}
-  retentionResolution1h: {{ .Values.observability.mco.retentionResolution1h }}
-  retentionResolution5m: {{ .Values.observability.mco.retentionResolution5m }}
-  retentionResolutionRaw: {{ .Values.observability.mco.retentionResolutionRaw }}
-  storageConfigObject:
+  storageConfig:
     metricObjectStorage:
       name: thanos-object-storage
       key: thanos.yaml
-    statefulSetSize: {{ .Values.observability.mco.statefulSetSize }}
-    statefulSetStorageClass: {{ .Values.observability.mco.statefulSetStorageClass }}
+  advanced:
+    retentionConfig:
+      blockDuration: 2h
+      deleteDelay: 48h
+      retentionInLocal: 24h
+      retentionResolutionRaw: {{ .Values.observability.mco.retentionResolutionRaw }}
+      retentionResolution5m: {{ .Values.observability.mco.retentionResolution5m }}
+      retentionResolution1h: {{ .Values.observability.mco.retentionResolution1h }}
+    # receive:
+    #   resources:
+    #     limits:
+    #       memory: 4096Gi
+    #   replicas: 3
+  # availabilityConfig: {{ .Values.observability.mco.availabilityConfig }}
+  imagePullPolicy: {{ .Values.observability.mco.imagePullPolicy }}
+  imagePullSecret: {{ .Values.observability.mco.imagePullSecret }}
+  statefulSetSize: {{ .Values.observability.mco.statefulSetSize }}
+  statefulSetStorageClass: {{ .Values.observability.mco.statefulSetStorageClass }}
+{{- if .Values.observability.infra }}
+  nodeSelector:
+    node-role.kubernetes.io/infra: '' 
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/infra
+      operator: Exists
+{{- end }}
 {{- end -}}

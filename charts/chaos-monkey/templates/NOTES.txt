@@ -1,0 +1,21 @@
+
+The chaos monkey you've require is deploying with the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+{{ if .Values.project.enabled }}
+-- Chaos Monkey Project ------------
+         name : {{ .Values.project.project.name }}
+{{ end }}
+
+{{ if .Values.monkey.enabled }}
+-- Chaos Monkey Instance -----------
+         name : {{ .Values.monkey.fullnameOverride }}
+ replicaCount : 1
+{{ end }}

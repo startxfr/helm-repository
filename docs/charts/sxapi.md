@@ -35,7 +35,7 @@ helm show chart startx/sxapi
 ### 4. Install this chart
 
 ```bash
-helm install startx/sxapi
+helm install sxapi startx/sxapi
 ```
 
 ## Deploy this helm chart on kubernetes
@@ -61,7 +61,7 @@ helm show chart startx/sxapi
 ### 4. Install sxapi chart
 
 ```bash
-helm install startx/sxapi
+helm install sxapi startx/sxapi
 ```
 
 ## Values dictionary
@@ -107,7 +107,7 @@ The [values.yaml example file](https://raw.githubusercontent.com/startxfr/helm-r
 
 ```bash
 # base configuration running default configuration
-helm install startx/sxapi
+helm install sxapi startx/sxapi
 ```
 
 ### Dev values file (values-dev.yaml)
@@ -127,7 +127,7 @@ The [values-dev.yaml example file](https://raw.githubusercontent.com/startxfr/he
 
 ```bash
 # base configuration running dev configuration
-helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml
+helm install sxapi-dev startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml
 ```
 
 ### Test values file (values-test.yaml)
@@ -147,7 +147,7 @@ The [values-test.yaml example file](https://raw.githubusercontent.com/startxfr/h
 
 ```bash
 # base configuration running dev configuration
-helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml
+helm install sxapi-test startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml
 ```
 
 ### Pre-prod-v1 values file (values-pprod-v1.yaml)
@@ -166,7 +166,7 @@ The [values-pprod-v1.yaml example file](https://raw.githubusercontent.com/startx
 
 ```bash
 # base configuration running dev configuration
-helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml
+helm install sxapi-pprod-v1 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml
 ```
 
 ### Prod-v1 values file (values-prod-v1.yaml)
@@ -185,7 +185,7 @@ The [values-prod-v1.yaml example file](https://raw.githubusercontent.com/startxf
 
 ```bash
 # base configuration running dev configuration
-helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml
+helm install sxapi-prod-v1 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml
 ```
 
 ### Pre-prod-v2 values file (values-pprod-v2.yaml)
@@ -205,7 +205,7 @@ The [values-pprod-v2.yaml example file](https://raw.githubusercontent.com/startx
 
 ```bash
 # base configuration running dev configuration
-helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml
+helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml
 ```
 
 ## History
@@ -344,3 +344,22 @@ helm install startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-rep
 | 9.8.251 | 2022-05-29 | Align basic charts to release 9.8.251
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
+| 9.8.278 | 2022-05-31 | Improve sxapi options
+| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
+| 9.15.2 | 2022-06-01 | Align all charts to release 9.15.1
+| 9.15.3 | 2022-06-01 | Align all charts to release 9.15.3
+| 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
+| 10.12.3 | 2022-06-01 | publish stable update for the full repository
+| 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
+| 10.12.5 | 2022-06-01 | publish stable update for the full repository
+| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation
+| 10.12.31 | 2022-06-17 | align basic charts
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository

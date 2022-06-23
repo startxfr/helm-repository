@@ -20,6 +20,12 @@ create:
 observability:
   enabled: false
   hooked: false
+projectObservability: 
+  enabled: false
+  project: 
+    enabled: false
+    hooked: false
+    name: "open-cluster-management-observability"
 project: 
   enabled: true
   context: 
@@ -50,6 +56,8 @@ operator:
   enabled: true
   context: 
     <<: *context
+  config:
+    infra: true
   subscription:
     enabled: true
     name: "advanced-cluster-management"

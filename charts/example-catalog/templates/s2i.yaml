@@ -264,6 +264,8 @@ metadata:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "s2i"
     version: "1.0.0"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "app-v1-deploymentconfig"
     app.openshift.io/runtime: nodejs
 spec:
@@ -382,6 +384,8 @@ metadata:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "s2i"
     version: "2.0.0"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "app-v2-deploymentconfig"
     app.openshift.io/runtime: nodejs
 spec:

@@ -23,7 +23,7 @@ context: &context
 # Configuration of the development stack
 devel_chain:
   # Enable creation of the application stack for developpment
-  enabled: true
+  enabled: false
   # The postgresql version (should be one of latest, 10-el7, 10-el8, 9.6-el8, 13-el8, 12-el8, 12-el7)
   pg_version: latest
   # The version of the NodeJS builder. (should be one of latest, 12-ubi7, 12-ubi8, 14-ubi7, 14-ubi8, 14-ubi8-minimal)
@@ -32,7 +32,7 @@ devel_chain:
 # Configuration of the integration stack
 integration_chain:
   # Enable creation of the integration stack
-  enabled: true
+  enabled: false
   # Enable creation of the test environment
   enabled_test: true
   # Enable creation of the r7t environment
@@ -56,7 +56,7 @@ integration_chain:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project_devel: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
@@ -87,7 +87,7 @@ project_devel:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project_integration: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
@@ -118,7 +118,7 @@ project_integration:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project_preprod: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
@@ -152,7 +152,7 @@ project_preprod:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project_prod: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
@@ -186,7 +186,7 @@ project_prod:
 
 # Configuration of the example-imagestreams (see https://startxfr.github.io/helm-repository/charts/example-imagestreams)
 imagestreams:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   imagestreams:

@@ -11,6 +11,8 @@ metadata:
     app.openshift.io/runtime: postgresql
     app.openshift.io/runtime-version: "{{- .Values.database.version }}"
     app: db
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
   annotations:
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"postgresql:{{- .Values.database.version }}","namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
     {{- include "example-fruitapp-shared.annotations" $root | nindent 4 }}
@@ -29,6 +31,8 @@ spec:
       labels:
         app: db
         startx.fr/app: "{{- .Values.context.app }}"
+        kube-monkey/enabled: enabled
+        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
     spec:
       containers:
         - env:

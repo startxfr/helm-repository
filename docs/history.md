@@ -1,8 +1,24 @@
 # Release history
 
-## version 10.0.x (chanteix)
+## version 11.0.x (chazal)
 
 _The objectif of this release is to stabilize the full repository content and offer a dev (regular ehancements) to stable (regular secfix) content for a global coverage of environements requirements._
+
+## version 10.0.x (chauvignac)
+
+This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.10 release](https://docs.openshift.com/container-platform/4.10)**.
+
+The objectif of this version is :
+
+- Stable support for cluster service running under an Openshift 4.10.x cluster
+- Introduce the chaos chart suite with various components
+
+| Release                                                                       | Date       | Description                                                 |
+| ----------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------- |
+| [10.12.34](https://github.com/startxfr/helm-repository/releases/tag/10.12.34) | 2022-06-17 | Stable release of all charts                                |
+| [10.12.31](https://github.com/startxfr/helm-repository/releases/tag/10.12.31) | 2022-06-16 | Stable release for all basic charts                         |
+| [10.12.28](https://github.com/startxfr/helm-repository/releases/tag/10.12.28) | 2022-06-15 | Stable release for all chaos charts                         |
+| [10.12.5](https://github.com/startxfr/helm-repository/releases/tag/10.12.5)   | 2022-03-30 | Upgrade charts to be aligned with Openshift version 4.10.12 |
 
 ## version 9.x.x (claux)
 
@@ -14,11 +30,11 @@ The objectif of this version is :
 - Stabilize versionning of chart aligned with the openshift minor-patch lifecycle
 - Stabilize and check helm-repository catalog lifecycle management
 
-| Release                                                                     | Date       | Description                                                                       |
-| --------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------- |
-| [9.8.67](https://github.com/startxfr/helm-repository/releases/tag/9.8.67)   | 2021-12-18 | Align all charts to version 9.8.67                                                |
-| [9.8.47](https://github.com/startxfr/helm-repository/releases/tag/9.8.47)   | 2021-11-21 | Upgrade all charts annotation for artifacthub                                     |
-| [9.8.9](https://github.com/startxfr/helm-repository/releases/tag/9.8.9)     | 2021-11-20 | Upgrade charts to be aligned with Openshift version 4.9.8                         |
+| Release                                                                   | Date       | Description                                               |
+| ------------------------------------------------------------------------- | ---------- | --------------------------------------------------------- |
+| [9.8.67](https://github.com/startxfr/helm-repository/releases/tag/9.8.67) | 2021-12-18 | Align all charts to version 9.8.67                        |
+| [9.8.47](https://github.com/startxfr/helm-repository/releases/tag/9.8.47) | 2021-11-21 | Upgrade all charts annotation for artifacthub             |
+| [9.8.9](https://github.com/startxfr/helm-repository/releases/tag/9.8.9)   | 2021-11-20 | Upgrade charts to be aligned with Openshift version 4.9.8 |
 
 ## version 8.x.x (charbonnel)
 

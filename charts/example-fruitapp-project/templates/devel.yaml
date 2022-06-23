@@ -30,6 +30,8 @@ metadata:
     app.kubernetes.io/name: 'db-deployment'
     {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app: db
   annotations:
     {{- include "example-fruitapp-project.annotations" $root | nindent 4 }}
@@ -126,6 +128,8 @@ metadata:
     app.kubernetes.io/name: 'frontend-deployment'
     {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app: frontend
   annotations:
     {{- include "example-fruitapp-project.annotations" $root | nindent 4 }}

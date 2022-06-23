@@ -1,0 +1,18 @@
+{{- if .Values.observability.custom_metrics -}}{{- if .Values.observability.custom_metrics.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.projectObservability.project.name | default "open-cluster-management-observability" -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: observability-metrics-custom-allowlist
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acm.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "observability-metrics-custom-allowlist-configmap"
+  annotations:
+    {{- include "cluster-acm.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+data:
+  metrics_list.yaml: |
+    {{- .Values.observability.custom_metrics.content | nindent 4 -}}
+{{- end -}}{{- end -}}
