@@ -68,7 +68,7 @@ helm install --set mesh.enabled=true -n chaos-mesh chaos-mesh-instance startx/ch
 Simple mesh with default configuration :
 
 - 1 **project** named **chaos-mesh**
-- 1 **scc** with privilegied context for 9 **mesh** serviceaccount
+- 1 **scc** with privileged context for 9 **mesh** serviceaccount
 - 1 **mesh** deployment using official helm chart
 - 1 **route** to the **mesh** service
 

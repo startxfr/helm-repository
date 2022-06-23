@@ -68,7 +68,7 @@ helm install --set monkey.enabled=true  chaos-monkey-instance startx/chaos-monke
 Simple monkey with default configuration :
 
 - 1 **project** named **chaos-monkey**
-- 1 **scc** with privilegied context for **monkey** deployment
+- 1 **scc** with privileged context for **monkey** deployment
 - 1 **kube-monkey** deployment using asobti helm chart
 
 ```bash

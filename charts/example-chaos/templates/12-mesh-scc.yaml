@@ -53,13 +53,13 @@ allowedCapabilities: null
 kind: SecurityContextConstraints 
 apiVersion: security.openshift.io/v1
 metadata:
-  name: privilegied-mesh
+  name: privileged-mesh
   labels:
-    app.kubernetes.io/name: "privilegied-mesh-scc"
+    app.kubernetes.io/name: "privileged-mesh-scc"
     {{- include "example-chaos.labels" $root | nindent 4 }}
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
-    kubernetes.io/description: 'allows privilegied access to host'
+    kubernetes.io/description: 'allows privileged access to host'
     release.openshift.io/create-only: "true"
 users:
 - system:serviceaccount:{{- $namespace -}}:chaos-daemon
@@ -99,26 +99,26 @@ allowedCapabilities:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: privilegied-mesh-scc-role
+  name: privileged-mesh-scc-role
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    app.kubernetes.io/name: "privilegied-mesh-scc-role"
+    app.kubernetes.io/name: "privileged-mesh-scc-role"
     {{- include "example-chaos.labels" $root | nindent 4 }}
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
-    resourceNames: ["privilegied-mesh", "anyuid-mesh"]
+    resourceNames: ["privileged-mesh", "anyuid-mesh"]
     verbs: ["use"]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: privilegied-mesh-scc-rb
+  name: privileged-mesh-scc-rb
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    app.kubernetes.io/name: "privilegied-mesh-scc-rb"
+    app.kubernetes.io/name: "privileged-mesh-scc-rb"
     {{- include "example-chaos.labels" $root | nindent 4 }}
   annotations:
     {{- include "example-chaos.annotations" $root | nindent 4 }}
@@ -135,6 +135,6 @@ subjects:
     name: chaos-dns-server
 roleRef:
   kind: Role
-  name: privilegied-mesh-scc-role
+  name: privileged-mesh-scc-role
   apiGroup: rbac.authorization.k8s.io
 {{- end -}}
