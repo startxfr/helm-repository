@@ -6,13 +6,13 @@
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints 
 metadata:
-  name: privilegied-monkey
+  name: privileged-monkey
   labels:
-    app.kubernetes.io/name: "privilegied-monkey-scc"
+    app.kubernetes.io/name: "privileged-monkey-scc"
     {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
     {{- include "chaos-monkey.annotations" $root | nindent 4 }}
-    kubernetes.io/description: 'allows privilegied access to host'
+    kubernetes.io/description: 'allows privileged access to host'
     release.openshift.io/create-only: "true"
 users:
 - system:serviceaccount:{{- $namespace -}}:startx-monkey
@@ -47,17 +47,17 @@ allowedCapabilities:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: privilegied-monkey-scc-role
+  name: privileged-monkey-scc-role
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    app.kubernetes.io/name: "privilegied-monkey-scc-role"
+    app.kubernetes.io/name: "privileged-monkey-scc-role"
     {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
     {{- include "chaos-monkey.annotations" $root | nindent 4 }}
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
-    resourceNames: ["privilegied-monkey"]
+    resourceNames: ["privileged-monkey"]
     verbs: ["use"]
 ---
 kind: ClusterRoleBinding
@@ -79,10 +79,10 @@ roleRef:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: privilegied-monkey-scc-rb
+  name: privileged-monkey-scc-rb
   namespace: {{ $namespace | default "default" | quote }}
   labels:
-    app.kubernetes.io/name: "privilegied-monkey-scc-rb"
+    app.kubernetes.io/name: "privileged-monkey-scc-rb"
     {{- include "chaos-monkey.labels" $root | nindent 4 }}
   annotations:
     {{- include "chaos-monkey.annotations" $root | nindent 4 }}
@@ -91,6 +91,6 @@ subjects:
     name: startx-monkey
 roleRef:
   kind: Role
-  name: privilegied-monkey-scc-role
+  name: privileged-monkey-scc-role
   apiGroup: rbac.authorization.k8s.io
 {{- end -}}
