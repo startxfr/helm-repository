@@ -68,7 +68,7 @@ helm install --set litmus.enabled=true -n chaos-litmus chaos-litmus-instance sta
 Simple litmus with default configuration :
 
 - 1 **project** named **chaos-litmus**
-- 1 **scc** with privilegied context for 9 **litmus** serviceaccount
+- 1 **scc** with privileged context for 9 **litmus** serviceaccount
 - 1 **litmus** deployment using official helm chart
 - 1 **route** to the **litmus** service
 
