@@ -8,11 +8,12 @@ context: &context
   app: startx-acm
 acm:
   enabled: true
+  infra: false ## set this to true if infra node available
   mch:
     enabled: true
     hooked: false
     name: "startx-mch"
-    availabilityConfig: Basic
+    availabilityConfig: High
     hive:
         enabled: true
         spec: |
@@ -38,6 +39,12 @@ create:
 observability:
   enabled: false
   hooked: false
+projectObservability: 
+  enabled: false
+  project: 
+    enabled: false
+    hooked: false
+    name: "open-cluster-management-observability"
 project: 
   enabled: false
   project: 
@@ -48,3 +55,5 @@ operator:
   enabled: false
   subscription:
     enabled: false
+  config:
+    infra: true

@@ -32,7 +32,7 @@ helm show chart startx/project
 ### 4. Install this chart
 
 ```bash
-helm install startx/project
+helm install project startx/project
 ```
 
 ## Values dictionary
@@ -84,7 +84,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/project
+helm install project startx/project
 ```
 
 ### Demo kustomize values file (values-demo-kustomize.yaml)
@@ -103,7 +103,7 @@ Complete deployment of a demo kustomize project with the following characteristi
 
 ```bash
 # base configuration running demo kustomize configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml
+helm install project-demo-kustomize startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml
 ```
 
 ### Demo helm values file (values-demo-helm.yaml)
@@ -124,7 +124,7 @@ Complete deployment of a demo helm project with the following characteristics :
 
 ```bash
 # base configuration running demo helm configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml
+helm install project-demo-helm startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml
 ```
 
 ### Demo argocd values file (values-demo-argocd.yaml)
@@ -143,7 +143,7 @@ Complete deployment of a demo argocd project with the following characteristics 
 
 ```bash
 # base configuration running demo argocd configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml
+helm install project-demo-argocd startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml
 ```
 
 ### Demo example values file (values-demo-example.yaml)
@@ -162,7 +162,7 @@ Complete deployment of a demo example project with the following characteristics
 
 ```bash
 # base configuration running demo example configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-example.yaml
+helm install project-example-project startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-example.yaml
 ```
 
 ### Startx values file (values-startx.yaml)
@@ -183,7 +183,7 @@ Complete deployment of a startx project with the following characteristics :
 
 ```bash
 # base configuration running startx configuration
-helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
+helm install project-startx startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
 ```
 
 ## History
@@ -339,3 +339,22 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 | 9.8.251 | 2022-05-29 | Align basic charts to release 9.8.251
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
+| 9.8.278 | 2022-05-31 | Improve project options
+| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
+| 9.15.2 | 2022-06-01 | Align all charts to release 9.15.1
+| 9.15.3 | 2022-06-01 | Align all charts to release 9.15.3
+| 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
+| 10.12.3 | 2022-06-01 | publish stable update for the full repository
+| 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
+| 10.12.5 | 2022-06-01 | publish stable update for the full repository
+| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation
+| 10.12.31 | 2022-06-17 | align basic charts
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository

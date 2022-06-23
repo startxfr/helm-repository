@@ -1,0 +1,43 @@
+{{- if .Values.observability.alertmanager_config -}}{{- if .Values.observability.alertmanager_config.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.projectObservability.project.name | default "open-cluster-management-observability" -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: alertmanager-config
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acm.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "alertmanager-config"
+  annotations:
+    {{- include "cluster-acm.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+data:
+  # global:
+  #   slack_api_url: '<slack_webhook_url>'
+  # route:
+  #   receiver: 'slack-notifications'
+  #   group_by: [alertname, datacenter, app]
+  # receivers:
+  # - name: 'slack-notifications'
+  #   slack_configs:
+  #   - channel: '#alerts'
+  #     text: 'https://internal.myorg.net/wiki/alerts/{{ printf "{{ .GroupLabels.app }}/{{ .GroupLabels.alertname }}" }}'
+  global: |
+    smtp_smarthost: 'localhost:25'
+    smtp_from: 'alertmanager@example.org'
+    smtp_auth_username: 'alertmanager'
+    smtp_auth_password: 'password'
+  templates: |
+    - '/etc/alertmanager/template/*.tmpl'
+    route: |
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 3h
+      receiver: team-X-mails
+      routes:
+      - match_re:
+          service: ^(foo1|foo2|baz)$
+        receiver: team-X-mails
+{{- end -}}{{- end -}}

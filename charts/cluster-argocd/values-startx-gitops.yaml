@@ -93,14 +93,14 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: project
-    name: startx-gitops
-    display_name: "Startx GITOPS"
-    requester: startx
-    description: ArgoCD and gitops features configured by STARTX
+    name: openshift-operators
+    # display_name: "Startx GITOPS"
+    # requester: startx
+    # description: ArgoCD and gitops features configured by STARTX
   rbac: 
-    enabled: true
+    enabled: false
     groups: 
     - id: devops-gitops-admin
       name: devops
@@ -120,7 +120,7 @@ project:
       type: cluster
       role: cluster-admin
   networkpolicy: 
-    enabled: true
+    enabled: false
     rules: 
       - id: registry-allow-all-ns
         spec: |
@@ -133,7 +133,7 @@ project:
             - from:
                 - namespaceSelector: {}
   limits: 
-    enabled: true
+    enabled: false
     rules:  |
       limits:
         - type: "Pod"
@@ -160,7 +160,7 @@ project:
             ephemeral-storage: "512Mi"
             memory: "4Gi"
   quotas: 
-    enabled: true
+    enabled: false
     rules:  |
       hard:
         limits.cpu: "12000m"
@@ -218,7 +218,7 @@ operator:
     hooked: false
     name: "openshift-gitops-operator"
     namespace: "openshift-operators"
-    version: "v1.5.0"
+    version: "v1.5.2"
     operator: 
       channel: "stable"
       name: openshift-gitops-operator
@@ -228,7 +228,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     name: "gitops"
     target: "all-ns"

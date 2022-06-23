@@ -8,6 +8,8 @@ metadata:
   labels:
     app.kubernetes.io/name: "{{- $appName -}}-{{- include "startx.appVersion" . -}}-deployment"
     {{- include "example-html.labels" . | nindent 4 }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" . | default "cluster" | quote }}
   annotations:
     {{- include "example-html.annotations" . | nindent 4 }}
     checksum/config: {{ include (print $.Template.BasePath "/cm-lib.yaml") . | sha256sum }}
@@ -28,6 +30,8 @@ spec:
         app.kubernetes.io/name: "{{ $appName }}-{{ include "startx.appVersion" . }}-pod"
         {{- include "example-html.labels" . | nindent 8 }}
         app: {{ $appName }}
+        kube-monkey/enabled: enabled
+        kube-monkey/identifier: {{ include "startx.appName" . | default "cluster" | quote }}
       annotations:
         {{- include "example-html.annotations" . | nindent 8 }}
     spec: 

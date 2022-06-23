@@ -31,7 +31,7 @@ helm show chart startx/cluster-auth
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-auth
+helm install cluster-auth startx/cluster-auth
 ```
 
 ## Default values
@@ -47,7 +47,7 @@ Complete configuration of the OCP authentification with the following characteri
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-auth
+helm install cluster-auth startx/cluster-auth
 ```
 
 ## Others values availables
@@ -64,43 +64,43 @@ helm install startx/cluster-auth
     - 1 user **admin**
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml
 ```
 
 - **startx-afd** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-afd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml
 ```
 
 - **startx-cisval** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-cisval.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml
 ```
 
 - **startx-lumiplan** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-lumiplan.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml
 ```
 
 - **startx-manutan** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-manutan.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml
 ```
 
 - **startx-monaco** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-monaco.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml
 ```
 
 - **startx-photoweb** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-photoweb.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml))
 
 ```bash
-helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml
 ```
 
 ## History
@@ -208,3 +208,23 @@ helm install startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
+| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
+| 9.15.2 | 2022-06-01 | Align all charts to release 9.15.1
+| 9.15.3 | 2022-06-01 | Align all charts to release 9.15.3
+| 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
+| 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
+| 10.12.3 | 2022-06-01 | publish stable update for the full repository
+| 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
+| 10.12.5 | 2022-06-01 | publish stable update for the full repository
+| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
+| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository

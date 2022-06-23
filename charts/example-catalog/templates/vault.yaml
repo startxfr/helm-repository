@@ -84,6 +84,8 @@ metadata:
     #   [{"from":{"kind":"ImageStreamTag","name":"startx-apache:alpine3"},"fieldPath":"spec.template.spec.containers[?(@.name==\"{{- $appName -}}\")].image"}]
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app: "{{- $appName -}}"
     app.openshift.io/runtime: sso
     app.kubernetes.io/instance: "{{- $appName -}}"

@@ -21,7 +21,7 @@ autoscaling:
 clusterversion:
   enabled: false
   channel: fast
-  version: "4.9"
+  version: "4.10"
 alertmanager:
   enabled: false
   receiverName: PagerDutyStartx
@@ -64,7 +64,7 @@ helm_reposistory:
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   project: 
@@ -147,6 +147,42 @@ project:
 
 # Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operatorElastic:
+  enabled: false
+
+# Configuration of the SosReport project (see https://startxfr.github.io/helm-repository/charts/project)
+projectSosReport: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-sosreport"
+    display_name: "Startx SosReport"
+    requester: startx
+    description: Startx SOS Report area
+
+# Configuration of the sosreport operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorSosReport:
+  enabled: false
+
+# Configuration of the MustGather project (see https://startxfr.github.io/helm-repository/charts/project)
+projectMustGather: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-mustgather"
+    display_name: "Startx MustGather"
+    requester: startx
+    description: Startx Must Gather area
+
+# Configuration of the mustgather operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorMustGather:
   enabled: false
 
 # Configuration of the globals operators (see https://startxfr.github.io/helm-repository/charts/operator)

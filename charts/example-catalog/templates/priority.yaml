@@ -321,6 +321,8 @@ metadata:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: high-priority
     app.kubernetes.io/name: "high-priority-deploymentconfig"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
 spec:
   replicas: 2
@@ -344,6 +346,8 @@ spec:
         {{- include "example-catalog.labels" $root | nindent 8 }}
         app: "high-priority"
         app.kubernetes.io/name: "high-priority-deploymentconfig"
+        kube-monkey/enabled: enabled
+        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
         deploymentconfig: "high-priority"
     spec:
       priorityClassName: high-priority
@@ -472,6 +476,8 @@ metadata:
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: veryhigh-priority
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "veryhigh-priority-deploymentconfig"
     app.openshift.io/runtime: nodejs
 spec:
@@ -624,6 +630,8 @@ metadata:
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: verylow-priority
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "verylow-priority-deploymentconfig"
     app.openshift.io/runtime: nodejs
 spec:
@@ -776,6 +784,8 @@ metadata:
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: low-priority
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.kubernetes.io/name: "low-priority-deploymentconfig"
     app.openshift.io/runtime: nodejs
 spec:

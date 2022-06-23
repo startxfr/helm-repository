@@ -71,7 +71,7 @@ data:
       "sink": "stdout"
     }
 ---
-kind: Deployment 
+kind: Deployment  
 apiVersion: apps/v1
 metadata:
   name: {{ $name | quote }}
@@ -81,6 +81,8 @@ metadata:
     app.kubernetes.io/name: "{{ $name }}-deployment"
     component: {{ $name | quote }}
     logging-infra: {{ $name | quote }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "2"
@@ -95,6 +97,8 @@ spec:
       labels:
         component: {{ $name | quote }}
         logging-infra: {{ $name | quote }}
+        kube-monkey/enabled: enabled
+        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
       name: {{ $name | quote }}
     spec:
       serviceAccount: {{ $name | quote }}

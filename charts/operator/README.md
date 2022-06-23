@@ -32,7 +32,7 @@ helm show chart startx/operator
 ### 4. Install this chart
 
 ```bash
-helm install startx/operator
+helm install operator startx/operator
 ```
 
 ## Values dictionary
@@ -81,7 +81,7 @@ Complete deployment of an operator with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/operator
+helm install operator-workspaces startx/operator
 ```
 
 ### Tekton v1.0.1 values file (values-tekton-1.0.1.yaml)
@@ -95,7 +95,7 @@ Complete deployment of a tekton v1.0.1 operator with the following characteristi
 
 ```bash
 # base configuration running tekton v1.0.1 configuration
-helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.0.1.yaml
+helm install operator-pipelines startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.0.1.yaml
 ```
 
 ### CRW v2.3.0 values file (values-crw-2.3.0.yaml)
@@ -110,7 +110,7 @@ Complete deployment of a CRW v2.3.0 operator with the following characteristics 
 
 ```bash
 # base configuration running CRW v2.3.0 configuration
-helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.3.0.yaml
+helm install operator-workspaces startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.3.0.yaml
 ```
 
 ### 3scale v0.6.0 values file (values-3scale-0.6.0.yaml)
@@ -125,7 +125,7 @@ Complete deployment of a 3scale v0.6.0 operator with the following characteristi
 
 ```bash
 # base configuration running 3scale v0.6.0 configuration
-helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml
+helm install operator-3scale startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml
 ```
 
 ## History
@@ -265,3 +265,22 @@ helm install startx/operator -f https://raw.githubusercontent.com/startxfr/helm-
 | 9.8.251 | 2022-05-29 | Align basic charts to release 9.8.251
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
+| 9.8.278 | 2022-05-31 | Improve operator options
+| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
+| 9.15.2 | 2022-06-01 | Align all charts to release 9.15.1
+| 9.15.3 | 2022-06-01 | Align all charts to release 9.15.3
+| 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
+| 10.12.3 | 2022-06-01 | publish stable update for the full repository
+| 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
+| 10.12.5 | 2022-06-01 | publish stable update for the full repository
+| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation
+| 10.12.31 | 2022-06-17 | align basic charts
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository

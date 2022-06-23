@@ -1,0 +1,95 @@
+apiVersion: v2
+# Name of this Helm chart
+name: example-chaos
+# Description of this Helm chart
+description: Helm chart used to deploy a chaos testing suit composed of chaos mesh, kube-monkey and kraken.ci.
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 10.12.53
+# Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 4.10.12{{ $root.Values.kraken.cerberusUrl | quote }}
+# Icon of this helm-chart
+icon: https://startxfr.github.io/helm-repository/img/example-chaos.svg
+# category associated to this package
+category: example
+# tags
+tags: infra,example,chaos
+# Kube minimum version
+kubeVersion: ">=1.21.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - chaos
+  - monkey
+  - test
+  - benchmark
+  - chaos-mesh
+  - kube-monkey
+  - kraken-ci
+# STARTX helm chart repository homepage
+home: https://startxfr.github.io/helm-repository
+# Sources and documentation for this chart
+sources:
+  - https://startxfr.github.io/helm-repository/charts/example-sxapi
+  - https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.31"
+    alias: project
+    condition: project.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.31"
+    alias: cerberus_project
+    condition: cerberus_project.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.31"
+    alias: kraken_project
+    condition: kraken_project.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.31"
+    alias: mesh_project
+    condition: mesh_project.enabled
+  - name: chaos-mesh
+    repository: https://charts.chaos-mesh.org
+    version: "2.2.0"
+    alias: mesh
+    condition: mesh.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.31"
+    alias: monkey_project
+    condition: monkey_project.enabled
+  - name: kube-monkey
+    repository: https://asobti.github.io/kube-monkey/charts/repo
+    version: "1.4.1"
+    alias: monkey
+    condition: monkey.enabled
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "10.12.31"
+    alias: litmus_project
+    condition: litmus_project.enabled
+  - name: litmus
+    repository: https://litmuschaos.github.io/litmus-helm
+    version: "2.9.0"
+    alias: litmus
+    condition: litmus.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "All chart are aligned to release 10.12.61"
+  artifacthub.io/containsSecurityUpdates: "false"

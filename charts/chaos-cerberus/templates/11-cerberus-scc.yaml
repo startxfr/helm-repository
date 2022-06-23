@@ -1,0 +1,93 @@
+{{- if .Values.cerberus.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cerberus
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-cerberus-scc"
+    {{- include "chaos-cerberus.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $root | nindent 4 }}
+---
+kind: SecurityContextConstraints 
+apiVersion: security.openshift.io/v1
+metadata:
+  name: privileged-cerberus
+  labels:
+    app.kubernetes.io/name: "privileged-cerberus-scc"
+    {{- include "chaos-cerberus.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $root | nindent 4 }}
+    kubernetes.io/description: >-
+      copy of the OCP 4.9.10 privileged SCC dedicated to the cerberus SA. 
+      Should be updated if any change occur in the default privileged SCC
+      in further OCP releases.
+users:
+- system:serviceaccount:{{- $namespace -}}:cerberus
+allowHostPorts: true
+priority: null
+requiredDropCapabilities: null
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+allowHostDirVolumePlugin: true
+seccompProfiles:
+  - '*'
+allowHostIPC: true
+seLinuxContext:
+  type: RunAsAny
+readOnlyRootFilesystem: false
+fsGroup:
+  type: RunAsAny
+defaultAddCapabilities: null
+allowedUnsafeSysctls:
+  - '*'
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - '*'
+allowHostPID: true
+allowHostNetwork: true
+allowPrivilegeEscalation: true
+allowedCapabilities:
+  - '*'
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: privileged-cerberus-scc-role
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-cerberus-scc-role"
+    {{- include "chaos-cerberus.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $root | nindent 4 }}
+rules:
+  - apiGroups: ["security.openshift.io"]
+    resources: ["securitycontextconstraints"]
+    resourceNames: ["privileged-cerberus"]
+    verbs: ["use"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: privileged-cerberus-scc-rb
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-cerberus-scc-rb"
+    {{- include "chaos-cerberus.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $root | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: cerberus
+roleRef:
+  kind: Role
+  name: privileged-cerberus-scc-role
+  apiGroup: rbac.authorization.k8s.io
+{{- end -}}

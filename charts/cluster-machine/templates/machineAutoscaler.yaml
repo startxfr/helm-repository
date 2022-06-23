@@ -20,6 +20,6 @@ spec:
   scaleTargetRef:
     apiVersion: machine.openshift.io/v1beta1
     kind: MachineSet
-    name: "{{ $clusterid }}-worker-{{ $region }}{{ .name | default "a" }}"
+    name: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
 {{- end -}}
 {{ end }}

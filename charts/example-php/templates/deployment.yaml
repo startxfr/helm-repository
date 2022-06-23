@@ -5,6 +5,8 @@ metadata:
   labels:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-deployment"
     {{- include "example-php.labels" . | nindent 4 }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" . | default "cluster" | quote }}
   annotations:
     {{- include "example-php.annotations" . | nindent 4 }}
     checksum/config: {{ include (print $.Template.BasePath "/cm-lib.yaml") . | sha256sum }}
@@ -25,6 +27,8 @@ spec:
         app.kubernetes.io/name: "{{ include "startx.appName" . }}-{{ include "startx.appVersion" . }}-pod"
         {{- include "example-php.labels" . | nindent 8 }}
         app: {{ include "startx.appName" . }}
+        kube-monkey/enabled: enabled
+        kube-monkey/identifier: {{ include "startx.appName" . | default "cluster" | quote }}
       annotations:
         {{- include "example-php.annotations" . | nindent 8 }}
     spec: 

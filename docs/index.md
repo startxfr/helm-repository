@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![startx helm repository](https://img.shields.io/badge/latest-v9.8.277-blue.svg)](https://github.com/startxfr/helm-repository)
+[![latest](https://img.shields.io/badge/latest-v10.12.53-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/10.12.34) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 For more informations and access to the helm index, you can visit the [startx helm-repository homepage](https://startxfr.github.io/helm-repository).
@@ -8,7 +8,7 @@ For more informations and access to the helm index, you can visit the [startx he
 ## Helm repository content
 
 This repository host various helm chart targeting the Openshift Container Platform environment. Charts could be
-divided into 3 main category ([basic charts](index.md#basic-helm-charts), [cluster charts](index.md#cluster-helm-charts) and [examples charts](index.md#examples-helm-charts))
+divided into 3 main category ([basic charts](index.md#basic-helm-charts), [cluster charts](index.md#cluster-helm-charts), , [chaos charts](index.md#chaos-helm-charts) and [examples charts](index.md#examples-helm-charts))
 
 ### Cluster Helm charts
 
@@ -95,6 +95,32 @@ helm install startx/operator
 helm install startx/sxapi
 ```
 
+### Chaos Helm charts
+
+Helm chart prefixed with `chaos-` are part of the chaos suite. 
+You can deploy various tools used for chaos-testing openshift and kubernetes clusters.
+
+| Chart                                          | Source                                                                                  | Description                                                |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| **[chaos](charts/chaos.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos)          | Deploy a full chaos test suite                             |
+| **[chaos-cerberus](charts/chaos-cerberus.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-cerberus) | Deploy Cerberus component as part of a chaos environment   |
+| **[chaos-kraken](charts/chaos-kraken.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-kraken)   | Deploy Kraken component as part of a chaos environment     |
+| **[chaos-mesh](charts/chaos-mesh.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh)     | Deploy Chaos-mesh component as part of a chaos environment |
+| **[chaos-litmus](charts/chaos-litmus.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus)   | Deploy Litmus component as part of a chaos environment     |
+| **[chaos-monkey](charts/chaos-monkey.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-monkey)   | Deploy Kubemonkey component as part of a chaos environment |
+
+#### Use Chaos charts
+
+```bash
+helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm install startx/chaos
+helm install startx/chaos-cerberus
+helm install startx/chaos-kraken
+helm install startx/chaos-mesh
+helm install startx/chaos-litmmus
+helm install startx/chaos-monkey
+```
+
 ### Examples Helm charts
 
 Helm chart prefixed with `example-` are Example chart. Example are used in demo and various workshop to show how to use helm as part of a gitops toolchain.
@@ -109,6 +135,7 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 | **[example-pod](charts/example-pod.md)**                           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-pod)              | An example on how to deploy simple applications using helm and a pod                  |
 | **[example-sxapi](charts/example-sxapi.md)**                       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi)            | An example on how to deploy simple micro-applications using helm and an sxapi toolkit |
 | **[example-catalog](charts/example-catalog.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-catalog)          | Various demo examples                                                                 |
+| **[example-chaos](charts/example-chaos.md)**                       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-chaos)            | An example for deploying a choas test suite                                           |
 | **[example-fruitapp-project](charts/example-fruitapp-project.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-project) | Deploy fruitapp CI/CD demo with common and project structure (like namespaces)        |
 | **[example-fruitapp-shared](charts/example-fruitapp-shared.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-shared)  | Deploy shared component like database and secrets                                     |
 | **[example-fruitapp-app](charts/example-fruitapp-app.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-app)     | Deploy application stack into an environment                                          |
@@ -124,6 +151,7 @@ helm install startx/example-knative
 helm install startx/example-php
 helm install startx/example-pod
 helm install startx/example-sxapi
+helm install startx/example-chaos
 helm install startx/example-fruitapp-project
 helm install startx/example-fruitapp-shared
 helm install startx/example-fruitapp-app
@@ -148,25 +176,74 @@ oc login -t <my-token> <my-openshift-api>
 If you don't have access to an openshift cluster, consider using codeready-container to
 run locally a simulated cluster.
 
-### 2. Install repository copy
+### 2. Install helm-repository
 
-#### 2.1. Clonning this repository
+#### 2.1. Deploy via HelmChartRepository
+
+```bash
+cat <<EOF | oc apply -f -
+apiVersion: helm.openshift.io/v1beta1
+kind: HelmChartRepository
+metadata:
+  name: "startx"
+  labels:
+    app.kubernetes.io/name: "startx-chart"
+spec:
+  name: "startx"
+  connectionConfig:
+    url: "https://startxfr.github.io/helm-repository/packages"
+EOF
+```
+
+#### 2.2. Deploy via HelmChartRepository (archive)
+
+If you need to run your in an older version of Openshift, or access to archived version of helm chart, 
+you can load the archive repository
+
+```bash
+cat <<EOF | oc apply -f -
+apiVersion: helm.openshift.io/v1beta1
+kind: HelmChartRepository
+metadata:
+  name: "startx-archives"
+  labels:
+    app.kubernetes.io/name: "startx-archives-chart"
+spec:
+  name: "startx-archives"
+  connectionConfig:
+    url: "https://startxfr.github.io/helm-repository/packages-archives"
+EOF
+```
+
+#### 2.3. List all charts
+
+You can use the [Openshift developper perspective of your console](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html-single/web_console/#odc-about-developer-perspective)
+
+### 3. Install local helm
+
+#### 3.1. Clonning this repository
 
 ```bash
 git clone https://startxfr.github.io/helm-repository.git
 cd helm-repository
 ```
 
-#### 2.2. List all charts
+#### 3.2. List all charts
 
 ```bash
 ls charts
 ```
 
-### 3. Install a local chart
+#### 3.3 Install a local chart
 
 ```bash
 # oc apply -k charts/<chart>
+helm install startx/chaos
+helm install startx/chaos-cerberus
+helm install startx/chaos-kraken
+helm install startx/chaos-mesh
+helm install startx/chaos-litmmus
+helm install startx/chaos-monkey
 helm install charts/cluster-config
 helm install charts/cluster-rbac
 helm install charts/cluster-auth
@@ -201,11 +278,16 @@ helm install startx/example-imagestreams
 helm install startx/example-knative
 helm install startx/example-php
 helm install charts/example-pod
+helm install charts/example-chaos
 helm install charts/example-sxapi
 helm install startx/example-fruitapp-project
 helm install startx/example-fruitapp-shared
 helm install startx/example-fruitapp-app
 ```
+
+## Install using ArgoCD
+
+If you whan to deploy theses charts using ArgoCD, you can follow the [install using ArgoCD guide](install-argocd)
 
 ## Install building environment
 

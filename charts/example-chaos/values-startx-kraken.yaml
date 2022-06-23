@@ -1,0 +1,62 @@
+
+
+# # Use it to Overrride the helm-chart name
+#nameOverride: example-chaos
+# # Use it to Overrride the helm-chart version
+#versionOverride: 0.0.1
+
+# Application chaos context
+context:  &context
+ scope: myscope
+ cluster: localhost
+ environment: myenv
+ component: helm
+ app: startx-chaos
+ version: "0.0.1"
+
+project: 
+  enabled: false
+
+cerberus_project: 
+  enabled: false
+  project: 
+    name: startx-chaos-cerberus
+cerberus: 
+  enabled: false
+
+kraken_project: 
+  enabled: false
+  project: 
+    name: startx-chaos-kraken
+kraken: 
+  enabled: true
+  expose: true
+  mode: pipeline
+  pipeline: 
+    prefix: kraken-test
+  aws: 
+    enabled: true
+    credentials: 
+      region: eu-west-3
+      key_id: AKIAXXXXXXXXXXXXXXXX
+      secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  kubeconfig:
+    mode: token
+    token: 
+      server: "https://api.mycluster.startx.fr:6443"
+      token: "sha256~XXXXXXX_PUT_YOUR_STARTX_TOKEN_HERE_XXXXXXXX"
+
+mesh_project: 
+  enabled: false
+mesh: 
+  enabled: false
+
+monkey_project: 
+  enabled: false
+monkey: 
+  enabled: false
+
+litmus_project: 
+  enabled: false
+litmus: 
+  enabled: false

@@ -31,7 +31,7 @@ helm show chart startx/cluster-rbac
 ### 4. Install this chart
 
 ```bash
-helm install startx/cluster-rbac
+helm install cluster-rbac startx/cluster-rbac
 ```
 
 ## Default values
@@ -43,7 +43,7 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install startx/cluster-rbac
+helm install cluster-rbac startx/cluster-rbac
 ```
 
 ## Others values availables
@@ -51,7 +51,7 @@ helm install startx/cluster-rbac
 - **startx** : Startx RBAC default context with dev, devops, ops and admin groups (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml))
 
 ```bash
-helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml
+helm install cluster-rbac startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml
 ```
 
 ## History
@@ -159,3 +159,21 @@ helm install startx/cluster-rbac -f https://raw.githubusercontent.com/startxfr/h
 | 9.8.239 | 2022-05-17 | Remove default csv from all charts. global release 9.8.239
 | 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
 | 9.8.277 | 2022-05-31 | publish stable update for the full repository
+| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
+| 9.15.2 | 2022-06-01 | Align all charts to release 9.15.1
+| 9.15.3 | 2022-06-01 | Align all charts to release 9.15.3
+| 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
+| 10.12.3 | 2022-06-01 | publish stable update for the full repository
+| 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
+| 10.12.5 | 2022-06-01 | publish stable update for the full repository
+| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository

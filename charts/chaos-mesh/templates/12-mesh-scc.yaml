@@ -1,0 +1,140 @@
+{{- if .Values.mesh.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+kind: SecurityContextConstraints
+apiVersion: security.openshift.io/v1
+metadata:
+  name: anyuid-mesh
+  labels:
+    app.kubernetes.io/name: "anyuid-mesh-scc"
+    {{- include "chaos-mesh.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-mesh.annotations" $root | nindent 4 }}
+    kubernetes.io/description: 'allows anyuid access to host'
+users:
+- system:serviceaccount:{{- $namespace -}}:chaos-daemon
+- system:serviceaccount:{{- $namespace -}}:chaos-controller-manager
+- system:serviceaccount:{{- $namespace -}}:chaos-dashboard
+- system:serviceaccount:{{- $namespace -}}:chaos-dns-server
+- system:serviceaccount:{{- $namespace -}}:default
+allowHostPorts: false
+priority: 10
+requiredDropCapabilities:
+  - MKNOD
+allowPrivilegedContainer: false
+runAsUser:
+  type: RunAsAny
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+seLinuxContext:
+  type: MustRunAs
+readOnlyRootFilesystem: false
+fsGroup:
+  type: RunAsAny
+groups:
+  - 'system:cluster-admins'
+defaultAddCapabilities: null
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret
+allowHostPID: false
+allowHostNetwork: false
+allowPrivilegeEscalation: true
+allowedCapabilities: null
+---
+kind: SecurityContextConstraints 
+apiVersion: security.openshift.io/v1
+metadata:
+  name: privileged-mesh
+  labels:
+    app.kubernetes.io/name: "privileged-mesh-scc"
+    {{- include "chaos-mesh.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-mesh.annotations" $root | nindent 4 }}
+    kubernetes.io/description: 'allows privileged access to host'
+    release.openshift.io/create-only: "true"
+users:
+- system:serviceaccount:{{- $namespace -}}:chaos-daemon
+- system:serviceaccount:{{- $namespace -}}:chaos-controller-manager
+- system:serviceaccount:{{- $namespace -}}:chaos-dashboard
+- system:serviceaccount:{{- $namespace -}}:chaos-dns-server
+- system:serviceaccount:{{- $namespace -}}:default
+allowHostPorts: true
+priority: null
+requiredDropCapabilities: null
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+allowHostDirVolumePlugin: true
+seccompProfiles:
+  - '*'
+allowHostIPC: true
+seLinuxContext:
+  type: RunAsAny
+readOnlyRootFilesystem: false
+fsGroup:
+  type: RunAsAny
+defaultAddCapabilities: null
+allowedUnsafeSysctls:
+  - '*'
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - '*'
+allowHostPID: true
+allowHostNetwork: true
+allowPrivilegeEscalation: true
+allowedCapabilities:
+  - '*'
+  - SYS_PTRACE
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: privileged-mesh-scc-role
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-mesh-scc-role"
+    {{- include "chaos-mesh.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-mesh.annotations" $root | nindent 4 }}
+rules:
+  - apiGroups: ["security.openshift.io"]
+    resources: ["securitycontextconstraints"]
+    resourceNames: ["privileged-mesh", "anyuid-mesh"]
+    verbs: ["use"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: privileged-mesh-scc-rb
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-mesh-scc-rb"
+    {{- include "chaos-mesh.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-mesh.annotations" $root | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: default
+  - kind: ServiceAccount
+    name: chaos-daemon
+  - kind: ServiceAccount
+    name: chaos-controller-manager
+  - kind: ServiceAccount
+    name: chaos-dashboard
+  - kind: ServiceAccount
+    name: chaos-dns-server
+roleRef:
+  kind: Role
+  name: privileged-mesh-scc-role
+  apiGroup: rbac.authorization.k8s.io
+{{- end -}}

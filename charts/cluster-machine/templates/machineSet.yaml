@@ -77,8 +77,10 @@ spec:
             filters:
               - name: tag:Name
                 values:
-                  - "{{ $root.Values.cluster.id }}-private-{{ $root.Values.cluster.region }}{{ .az }}"
-          tags:
+                  - "{{ .subnet_name }}"
+                  # - "{{ $root.Values.cluster.id }}-worker-subnet"
+                  # - "{{ $root.Values.cluster.id }}-private-{{ $root.Values.cluster.region }}{{ .az }}"
+          tags: 
             - name: kubernetes.io/cluster/{{ $root.Values.cluster.id }}
               value: owned
           userDataSecret:

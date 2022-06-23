@@ -13,6 +13,8 @@ metadata:
     app.openshift.io/runtime: nodejs
     app.openshift.io/runtime-version: "{{- .Values.frontend.version }}"
     app: {{ .Values.frontend.name }}
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
   annotations:
     {{- include "example-fruitapp-app.annotations" $root | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:{{- .Values.frontend.version }}","namespace":"{{- .Values.namespace }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image","pause":"false"}]'
@@ -39,6 +41,8 @@ spec:
       labels:
         app: frontend
         version: "{{- .Values.frontend.version }}"
+        kube-monkey/enabled: enabled
+        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
     spec:
       containers:
       - env:

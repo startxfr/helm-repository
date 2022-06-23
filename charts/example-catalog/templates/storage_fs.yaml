@@ -395,6 +395,8 @@ metadata:
     app: "fs-k8snode-emptydir-rwo"
     app.kubernetes.io/part-of: local
     app.kubernetes.io/name: "fs-k8snode-emptydir-rwo-deployment"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -557,6 +559,8 @@ metadata:
     app: "fs-k8snode-hostpath-rwo"
     app.kubernetes.io/part-of: local
     app.kubernetes.io/name: "fs-k8snode-hostpath-rwo-deployment"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
@@ -783,6 +787,8 @@ metadata:
     app: "fs-k8snode-hostpath2-rwo"
     app.kubernetes.io/part-of: local
     app.kubernetes.io/name: "fs-k8snode-hostpath2-rwo-deployment"
+    kube-monkey/enabled: enabled
+    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
