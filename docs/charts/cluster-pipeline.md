@@ -178,3 +178,4 @@ helm install cluster-pipeline startx/cluster-pipeline -f https://raw.githubuserc
 | 10.12.46 | 2022-06-18 | publish stable update for the full repository
 | 10.12.49 | 2022-06-18 | publish stable update for the full repository
 | 10.12.53 | 2022-06-18 | publish stable update for the full repository
+| 10.12.71 | 2022-06-28 | Debug the appVersion in all charts
