@@ -36,6 +36,15 @@ cluster:
         delayAfterFailure: 40s 
         unneededTime: 60s 
 
+machineConfigPool: 
+  enabled: false
+machineConfig: 
+  enabled: false
+  kubelet_gc_enabled: false
+  kubelet_connectiontimeout_enabled: false
+  kubelet_protectkerneldefaults: false
+  infra_specialconfig: false
+
 machineHealthCheck:
   enabled: false
   list:
@@ -43,15 +52,15 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: a
+  - name: app-a
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: b
+  - name: app-b
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: c
+  - name: app-c
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
@@ -59,13 +68,13 @@ machineHealthCheck:
 machineAutoscaler: 
   enabled: false
   list: 
-  - name: a
+  - name: app-a
     minReplicas: 1
     maxReplicas: 2
-  - name: b
+  - name: app-b
     minReplicas: 1
     maxReplicas: 2
-  - name: c
+  - name: app-c
     minReplicas: 1
     maxReplicas: 2
 
@@ -73,23 +82,23 @@ machineAutoscaler:
 machineSet: 
   enabled: false
   list:
-  - name: a-infra
+  - name: app-a
     az: a
-    type: infra
+    type: worker
     ami: ami-046fe691f52a953f9
     instanceType: "m6i.xlarge"
     volumeSize: 120
     replicas: 1
-  - name: b-infra
+  - name: app-b
     az: b
-    type: infra
+    type: worker
     ami: ami-046fe691f52a953f9
     instanceType: "m6i.xlarge"
     volumeSize: 120
     replicas: 1
-  - name: c-infra
+  - name: app-c
     az: c
-    type: infra
+    type: worker
     ami: ami-046fe691f52a953f9
     instanceType: "m6i.xlarge"
     volumeSize: 120
