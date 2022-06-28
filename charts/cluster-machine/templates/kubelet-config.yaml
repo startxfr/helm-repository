@@ -1,0 +1,69 @@
+{{- if .Values.machineConfig.enabled }}
+{{- $root := . -}}
+{{- if .Values.machineConfig.kubelet_gc_enabled }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: 05-worker-kubelet-garbagecollection
+  labels:
+    app.kubernetes.io/name: "05-worker-kubelet-garbagecollection"
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/worker: ''
+  kubeletConfig:
+    evictionSoft:
+      memory.available: "500Mi"
+      nodefs.available: "10%"
+      nodefs.inodesFree: "5%"
+      imagefs.available: "15%"
+      imagefs.inodesFree: "10%"
+    evictionSoftGracePeriod:
+      memory.available: "1m30s"
+      nodefs.available: "1m30s"
+      nodefs.inodesFree: "1m30s"
+      imagefs.available: "1m30s"
+      imagefs.inodesFree: "1m30s"
+    evictionHard:
+      memory.available: "200Mi"
+      nodefs.available: "5%"
+      nodefs.inodesFree: "4%"
+      imagefs.available: "10%"
+      imagefs.inodesFree: "5%"
+    evictionPressureTransitionPeriod: 0s
+    imageMinimumGCAge: 5m
+    imageGCHighThresholdPercent: 80
+    imageGCLowThresholdPercent: 75
+{{ end }}
+{{- if .Values.machineConfig.kubelet_connectiontimeout_enabled }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: 05-worker-kubelet-connectiontimeout
+  labels:
+    app.kubernetes.io/name: "05-worker-kubelet-connectiontimeout"
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/worker: ''
+  kubeletConfig:
+    streamingConnectionIdleTimeout: "4h"
+{{ end }}
+{{- if .Values.machineConfig.kubelet_connectiontimeout_enabled }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: 05-worker-kubelet-protectKernelDefaults
+  labels:
+    app.kubernetes.io/name: "05-worker-kubelet-protectKernelDefaults"
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/worker: ''
+  kubeletConfig:
+    protectKernelDefaults: false
+{{ end }}
+{{ end }}
