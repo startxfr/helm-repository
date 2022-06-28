@@ -5,9 +5,9 @@
 apiVersion: machineconfiguration.openshift.io/v1
 kind: KubeletConfig
 metadata:
-  name: 02-worker-kubelet-garbagecollection
+  name: 05-worker-kubelet-garbagecollection
   labels:
-    app.kubernetes.io/name: "02-worker-kubelet-garbagecollection"
+    app.kubernetes.io/name: "05-worker-kubelet-garbagecollection"
 spec:
   machineConfigPoolSelector:
     matchLabels:
@@ -35,5 +35,35 @@ spec:
     imageMinimumGCAge: 5m
     imageGCHighThresholdPercent: 80
     imageGCLowThresholdPercent: 75
+{{ end }}
+{{- if .Values.machineConfig.kubelet_connectiontimeout_enabled }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: 05-worker-kubelet-connectiontimeout
+  labels:
+    app.kubernetes.io/name: "05-worker-kubelet-connectiontimeout"
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/worker: ''
+  kubeletConfig:
+    streamingConnectionIdleTimeout: "4h"
+{{ end }}
+{{- if .Values.machineConfig.kubelet_connectiontimeout_enabled }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: 05-worker-kubelet-protectKernelDefaults
+  labels:
+    app.kubernetes.io/name: "05-worker-kubelet-protectKernelDefaults"
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/worker: ''
+  kubeletConfig:
+    protectKernelDefaults: false
 {{ end }}
 {{ end }}
