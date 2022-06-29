@@ -32,11 +32,13 @@ cluster:
 machineConfigPool:
   enabled: true
 machineConfig: 
-  enabled: true
+  enabled: false
   kubelet_gc_enabled: true
   kubelet_connectiontimeout_enabled: true
   kubelet_protectkerneldefaults: true
   infra_specialconfig: true
+  add_scc_netraw: true
+  add_clusterimageconfig: true
 
 machineHealthCheck:
   enabled: false

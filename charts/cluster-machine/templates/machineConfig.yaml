@@ -52,40 +52,43 @@ spec:
     streamingConnectionIdleTimeout: "4h"
 {{ end }}
 {{- if .Values.machineConfig.kubelet_protectkerneldefaults }}
----
-apiVersion: machineconfiguration.openshift.io/v1
-kind: MachineConfig
-metadata:
-  name: 75-master-kubelet-protectkerneldefaults
-  labels:
-    machineconfiguration.openshift.io/role: master
-spec:
-  config:
-    ignition:
-      version: 3.2.0
-    storage:
-      files:
-        - contents:
-            source: 'data:,data:,vm.overcommit_memory%3D1%0Avm.panic_on_oom%3D0%0Akernel.panic%3D10%0Akernel.panic_on_oops%3D1%0Akernel.keys.root_maxkeys%3D1000000%0Akernel.keys.root_maxbytes%3D25000000'
-          mode: 0644
-          path: /etc/sysctl.d/90-kubelet.conf
----
-apiVersion: machineconfiguration.openshift.io/v1
-kind: MachineConfig
-metadata:
-  name: 75-worker-kubelet-protectkerneldefaults
-  labels:
-    machineconfiguration.openshift.io/role: worker
-spec:
-  config:
-    ignition:
-      version: 3.2.0
-    storage:
-      files:
-        - contents:
-            source: 'data:,data:,vm.overcommit_memory%3D1%0Avm.panic_on_oom%3D0%0Akernel.panic%3D10%0Akernel.panic_on_oops%3D1%0Akernel.keys.root_maxkeys%3D1000000%0Akernel.keys.root_maxbytes%3D25000000'
-          mode: 0644
-          path: /etc/sysctl.d/90-kubelet.conf
+
+# TODO via Compliancy operator
+
+# ---
+# apiVersion: machineconfiguration.openshift.io/v1
+# kind: MachineConfig
+# metadata:
+#   name: 75-master-kubelet-protectkerneldefaults
+#   labels:
+#     machineconfiguration.openshift.io/role: master
+# spec:
+#   config:
+#     ignition:
+#       version: 3.2.0
+#     storage:
+#       files:
+#         - contents:
+#             source: 'data:,data:,vm.overcommit_memory%3D1%0Avm.panic_on_oom%3D0%0Akernel.panic%3D10%0Akernel.panic_on_oops%3D1%0Akernel.keys.root_maxkeys%3D1000000%0Akernel.keys.root_maxbytes%3D25000000'
+#           mode: 0644
+#           path: /etc/sysctl.d/90-kubelet.conf
+# ---
+# apiVersion: machineconfiguration.openshift.io/v1
+# kind: MachineConfig
+# metadata:
+#   name: 75-worker-kubelet-protectkerneldefaults
+#   labels:
+#     machineconfiguration.openshift.io/role: worker
+# spec:
+#   config:
+#     ignition:
+#       version: 3.2.0
+#     storage:
+#       files:
+#         - contents:
+#             source: 'data:,data:,vm.overcommit_memory%3D1%0Avm.panic_on_oom%3D0%0Akernel.panic%3D10%0Akernel.panic_on_oops%3D1%0Akernel.keys.root_maxkeys%3D1000000%0Akernel.keys.root_maxbytes%3D25000000'
+#           mode: 0644
+#           path: /etc/sysctl.d/90-kubelet.conf
 # ---
 # apiVersion: machineconfiguration.openshift.io/v1
 # kind: KubeletConfig
@@ -132,4 +135,79 @@ spec:
           mode: 0644
           path: /etc/testinfra
 {{ end }}
+{{- if .Values.machineConfig.add_scc_netraw }}
+---
+kind: SecurityContextConstraints
+apiVersion: security.openshift.io/v1
+metadata:
+  name: restricted-all
+  annotations:
+    kubernetes.io/description: >-
+      same as the restricted SCC but with dropCapabilities set to ALL
+      to comply with the CIS check
+    release.openshift.io/create-only: 'true'
+allowHostPorts: false
+priority: null
+requiredDropCapabilities:
+  - ALL
+allowPrivilegedContainer: false
+runAsUser:
+  type: MustRunAsRange
+users: []
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+seLinuxContext:
+  type: MustRunAs
+readOnlyRootFilesystem: false
+fsGroup:
+  type: MustRunAs
+groups: []
+defaultAddCapabilities: null
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret
+allowHostPID: false
+allowHostNetwork: false
+allowPrivilegeEscalation: true
+allowedCapabilities: null
 {{ end }}
+{{- if .Values.machineConfig.add_clusterimageconfig }}
+---
+apiVersion: config.openshift.io/v1
+kind: Image
+metadata:
+  name: cluster
+  annotations:
+    include.release.openshift.io/ibm-cloud-managed: 'true'
+    include.release.openshift.io/self-managed-high-availability: 'true'
+    include.release.openshift.io/single-node-developer: 'true'
+    release.openshift.io/create-only: 'true'
+    docs.startx.fr/redhat: "https://docs.openshift.com/container-platform/4.10/openshift_images/image-configuration.html#images-configuration-file_image-configuration"
+spec:
+  # allowedRegistriesForImport: 
+  #   - domainName: quay.io
+  #     insecure: false
+  # additionalTrustedCA: 
+  #   name: myconfigmapwithca
+  registrySources: 
+    # blockedRegistries: 
+    #   - untrusted.com
+    #   - untrusted2.com/myrepo/myapp:latest
+    allowedRegistries:
+    - quay.io
+    - registry.redhat.io
+    - image-registry.openshift-image-registry.svc:5000
+    - reg1.io/myrepo/myapp:latest
+    - example.com
+    insecureRegistries:
+    - insecure.com
+{{ end }}
+{{ end }}
+
+
