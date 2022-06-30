@@ -2,8 +2,8 @@
 # see values.yaml for explanation on each params
 context: &context
   scope: monaco
-  cluster: monaco
-  environment: default
+  cluster: monaco-grace
+  environment: preprod
   component: console
   app: startx-console
 console:
@@ -14,7 +14,7 @@ console:
     name: monaco Console
     logo: 
       name: monaco-logo
-      tplFile: webtpl/mg-logo.svg
+      tplFile: webtpl/mg-logo-pdd-p2.svg
   links:
     - name: nsdashboard-gouvmc
       spec: |
@@ -26,6 +26,11 @@ console:
         href: 'https://www.gouv.mc/Gouvernement-et-Institutions/Le-Gouvernement/Ministere-d-Etat/Secretariat-General-du-Gouvernement/Direction-des-Plateformes-et-des-Ressources-Numeriques'
         location: NamespaceDashboard
         text: Gouv Monegasque - DPRN
+    - name: nsdashboard-mgppfd
+      spec: |
+        href: 'https://data.gouv.mc'
+        location: NamespaceDashboard
+        text: Gouv Monegasque - OpenData
     - name: applicationmenu-gouvmc
       spec: |
         href: 'https://https://www.gouv.mc'
@@ -42,6 +47,14 @@ console:
         applicationMenu:
           section: Monaco
           imageURL: "https://upload.wikimedia.org/wikipedia/commons/1/12/Blason_pays_Monaco.svg"
+    - name: applicationmenu-mgppfd
+      spec: |
+        href: 'https://data.gouv.mc'
+        location: ApplicationMenu
+        text: Gouv Monegasque - OpenData
+        applicationMenu:
+          section: Monaco
+          imageURL: "https://upload.wikimedia.org/wikipedia/commons/1/12/Blason_pays_Monaco.svg"
     - name: helpmenu-gouvmc
       spec: |
         href: 'https://https://www.gouv.mc'
@@ -52,6 +65,11 @@ console:
         href: 'https://www.gouv.mc/Gouvernement-et-Institutions/Le-Gouvernement/Ministere-d-Etat/Secretariat-General-du-Gouvernement/Direction-des-Plateformes-et-des-Ressources-Numeriques'
         location: HelpMenu
         text: Gouv Monegasque - DPRN
+    - name: helpmenu-mgppfd
+      spec: |
+        href: 'https://data.gouv.mc?help'
+        location: HelpMenu
+        text: Gouv Monegasque - OpenData
   logLinks:
   - name: mg-externallog-mgmt
     spec: |
@@ -59,16 +77,16 @@ console:
         https://kibana-openshift-logging.apps.mgmt1.mc.aws/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
       text: MonacoGov central logs
   notifications:
-  - name: monaco-console-notification-top
+  - name: mg-pdd-p2-console-notification-top
     spec: |
-      backgroundColor: '#96232d'
+      backgroundColor: '#ff4c4c'
       color: '#fff'
       location: BannerTop 
-      text: Vous etes sur le cluster de demo de monacoCloud
-  - name: monaco-console-notification-bottom
+      text: Vous etes sur le cluster du Gouvernement de Monaco - Plateforme De Donnees - Production 2
+  - name: mg-pdd-p2-console-notification-bottom
     spec: |
-      backgroundColor: '#fff'
-      color: '#96232d'
+      backgroundColor: '#ff4c4c'
+      color: '#fff'
       location: BannerBottom
       text: En cas de probleme sur ce cluster, vous pouvez
       link:

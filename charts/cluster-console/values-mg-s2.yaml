@@ -2,8 +2,8 @@
 # see values.yaml for explanation on each params
 context: &context
   scope: monaco
-  cluster: monaco
-  environment: default
+  cluster: monaco-grace
+  environment: preprod
   component: console
   app: startx-console
 console:
@@ -14,7 +14,7 @@ console:
     name: monaco Console
     logo: 
       name: monaco-logo
-      tplFile: webtpl/mg-logo.svg
+      tplFile: webtpl/mg-logo-s2.svg
   links:
     - name: nsdashboard-gouvmc
       spec: |
@@ -53,22 +53,22 @@ console:
         location: HelpMenu
         text: Gouv Monegasque - DPRN
   logLinks:
-  - name: mg-externallog-mgmt
+  - name: monaco-externallog
     spec: |
       hrefTemplate: >-
         https://kibana-openshift-logging.apps.mgmt1.mc.aws/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
-      text: MonacoGov central logs
+      text: Show in monaco central logs
   notifications:
-  - name: monaco-console-notification-top
+  - name: mg-s2-console-notification-top
     spec: |
-      backgroundColor: '#96232d'
+      backgroundColor: '#a3a329'
       color: '#fff'
       location: BannerTop 
-      text: Vous etes sur le cluster de demo de monacoCloud
-  - name: monaco-console-notification-bottom
+      text: Vous etes sur le cluster du Gouvernement de Monaco - Sandbox 2
+  - name: mg-s2-console-notification-bottom
     spec: |
       backgroundColor: '#fff'
-      color: '#96232d'
+      color: '#a3a329'
       location: BannerBottom
       text: En cas de probleme sur ce cluster, vous pouvez
       link:
