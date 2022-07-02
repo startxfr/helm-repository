@@ -2,13 +2,14 @@
 
 SXV4_CONSOLE_VERSION=9.8.67
 SHARED_TEMPLATE_NAME=_startx.tpl
-SHARED_TEMPLATE=_tools/$SHARED_TEMPLATE_NAME
+SHARED_TEMPLATE=.tools/$SHARED_TEMPLATE_NAME
 SHARED_NAME=_sample_
-SHARED_SAMPLE=_tools/$SHARED_NAME
-export SHARED_SAMPLE_RESOURCE=_tools/sample/templates/example.yaml
+SHARED_SAMPLE=.tools/$SHARED_NAME
+export SHARED_SAMPLE_RESOURCE=.tools/sample/templates/example.yaml
 REPO_PACKAGE_DIR=docs/packages
 WORK_BRANCH=devel
 MASTER_BRANCH=master
+STABLE_BRANCH=stable
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
 GITHUB_REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
@@ -92,9 +93,9 @@ function routerRelease {
     local current_release=""
     local next_date=""
     local next_release=""
-    current_release="$(cat $PROJECT_PATH/_tools/repo-release)"
+    current_release="$(cat $PROJECT_PATH/.tools/repo-release)"
     next_date="$(date +%Y-%m-%d)"
-    next_release=$(cat $PROJECT_PATH/_tools/repo-release  | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
+    next_release=$(cat $PROJECT_PATH/.tools/repo-release  | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
     if [[ "auto" == "$auto_feature" || "-a" == "$auto_feature" ]]; then
         echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m auto-version to $next_release"
     else
@@ -113,22 +114,27 @@ function routerRelease {
     for chart in $(chartList); do
         routerChartRelease $chart $next_release "$next_description"
     done
-    echo -e "\e[36mRelease\e[0m commit all change to $GITHUB_REPOSITORY respository"
-    echo $next_release > $PROJECT_PATH/_tools/repo-release
+    echo -e "\e[36mRelease\e[0m - Update content in $WORK_BRANCH to $next_release"
+    echo $next_release > $PROJECT_PATH/.tools/repo-release
     sed -i "s/latest-v$current_release/latest-v$next_release/" $PROJECT_PATH/README.md
     sed -i "s/latest-v$current_release/latest-v$next_release/" $PROJECT_PATH/docs/index.md
     git add $PROJECT_PATH &>/dev/null
+    echo -e "\e[36mRelease\e[0m Commit all change to $GITHUB_REPOSITORY $WORK_BRANCH branch"
     git commit -m "[docs] update repository content to $next_release" $PROJECT_PATH &>/dev/null
+    echo -e "\e[36mRelease\e[0m Merge change to $MASTER_BRANCH branch"
     git checkout $MASTER_BRANCH &>/dev/null
     git merge $WORK_BRANCH --commit --no-edit
+    echo -e "\e[36mRelease\e[0m Merge change to $STABLE_BRANCH branch"
+    git checkout $STABLE_BRANCH &>/dev/null
+    git merge $MASTER_BRANCH --commit --no-edit
     echo -e "\e[36mRelease\e[0m Jump into \e[1m$current_release\e[0m"
     git checkout $current_release &>/dev/null
-    echo -e "\e[36mRelease\e[0m Merge \e[1m$MASTER_BRANCH\e[0m update to \e[1m$current_release\e[0m"
-    git merge --commit --no-edit $MASTER_BRANCH &>/dev/null
+    echo -e "\e[36mRelease\e[0m Merge \e[1m$STABLE_BRANCH\e[0m update to \e[1m$current_release\e[0m"
+    git merge --commit --no-edit $STABLE_BRANCH &>/dev/null
     echo -e "\e[36mRelease\e[0m Create \e[1m$next_release\e[0m tag"
     git tag $next_release -m "[release/$next_release] $next_description"
     echo -e "\e[36mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
-    git push origin $next_release $MASTER_BRANCH $WORK_BRANCH
+    git push origin $next_release $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
     git checkout $WORK_BRANCH
 }
 
@@ -143,7 +149,6 @@ function doHelmrepositoryRefresh {
     helm repo index --url ${3:-$GITHUB_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
     git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
     git commit -m "[docs] update repository ${1:-default} index" $PROJECT_PATH/docs/${2:-packages} &>/dev/null
-    git push origin $WORK_BRANCH
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
     git checkout $MASTER_BRANCH &>/dev/null
     git merge --commit --no-edit $WORK_BRANCH
