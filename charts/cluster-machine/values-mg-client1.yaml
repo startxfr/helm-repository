@@ -15,19 +15,19 @@ cluster:
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
-        maxNodesTotal: 9
+        maxNodesTotal: 20
         cores:
-          min: 6
-          max: 24
+          min: 24
+          max: 160
         memory:
-          min: 12
-          max: 48
+          min: 80
+          max: 640
       scaleDown: 
         enabled: true 
         delayAfterAdd: 5m 
         delayAfterDelete: 3m 
-        delayAfterFailure: 40s 
-        unneededTime: 60s 
+        delayAfterFailure: 30s 
+        unneededTime: 120s 
 
 machineConfigPool:
   enabled: false
@@ -67,39 +67,39 @@ machineHealthCheck:
 machineAutoscaler: 
   enabled: false
   list: 
-  - name: infra-a
+  - name: client1-infra-a
     type: infra
     minReplicas: 1
     maxReplicas: 2
-  - name: infra-b
+  - name: client1-infra-b
     type: infra
     minReplicas: 1
     maxReplicas: 2
-  - name: infra-c
+  - name: client1-infra-c
     type: infra
     minReplicas: 1
     maxReplicas: 2
-  - name: small-a
+  - name: client1-app-small-a
     type: worker
     minReplicas: 0
     maxReplicas: 3
-  # - name: small-b
+  # - name: client1-app-small-b
   #   type: worker
   #   minReplicas: 0
   #   maxReplicas: 3
-  - name: small-c
+  - name: client1-app-small-c
     type: worker
     minReplicas: 0
     maxReplicas: 3
-  - name: big-a
+  - name: client1-app-big-a
     type: worker
     minReplicas: 0
     maxReplicas: 2
-  - name: big-b
+  - name: client1-app-big-b
     type: worker
     minReplicas: 0
     maxReplicas: 2
-  - name: big-c
+  - name: client1-app-big-c
     type: worker
     minReplicas: 0
     maxReplicas: 2
@@ -107,7 +107,7 @@ machineAutoscaler:
 machineSet: 
   enabled: false
   list:
-  - name: infra-a
+  - name: client1-infra-a
     az: a
     type: infra
     subnet_name: client1-subnet-private1-eu-west-3a
@@ -115,7 +115,7 @@ machineSet:
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
     volumeSize: 120
     replicas: 1
-  - name: infra-b
+  - name: client1-infra-b
     az: b
     type: infra
     subnet_name: client1-subnet-private2-eu-west-3b
@@ -123,7 +123,7 @@ machineSet:
     instanceType: "m5a.2xlarge"
     volumeSize: 120
     replicas: 1
-  - name: infra-c
+  - name: client1-infra-c
     az: c
     type: infra
     subnet_name: client1-subnet-private3-eu-west-3c
@@ -131,7 +131,7 @@ machineSet:
     instanceType: "m5a.2xlarge"
     volumeSize: 120
     replicas: 1
-  - name: app-small-a
+  - name: client1-app-small-a
     az: a
     type: worker
     group: app-small
@@ -140,7 +140,7 @@ machineSet:
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
     volumeSize: 100
     replicas: 0
-  # - name: app-small-b
+  # - name: client1-app-small-b
   #   az: b
   #   type: worker
   #   group: app-small
@@ -149,7 +149,7 @@ machineSet:
   #   instanceType: "c5a.xlarge"
   #   volumeSize: 100
   #   replicas: 0
-  - name: app-small-c
+  - name: client1-app-small-c
     az: c
     type: worker
     group: app-small
@@ -158,7 +158,7 @@ machineSet:
     instanceType: "c5a.xlarge"
     volumeSize: 100
     replicas: 0
-  - name: app-big-a
+  - name: client1-app-big-a
     az: a
     type: worker
     group: app-big
@@ -167,7 +167,7 @@ machineSet:
     instanceType: "m5a.2xlarge"
     volumeSize: 100
     replicas: 0
-  - name: app-big-b
+  - name: client1-app-big-b
     az: b
     type: worker
     group: app-big
@@ -176,7 +176,7 @@ machineSet:
     instanceType: "m5a.2xlarge"
     volumeSize: 100
     replicas: 0
-  - name: app-big-c
+  - name: client1-app-big-c
     az: c
     type: worker
     group: app-big
