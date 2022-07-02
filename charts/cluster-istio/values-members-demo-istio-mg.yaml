@@ -1,0 +1,58 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: istio
+  app: monaco-istio
+istio:
+  enabled: false
+  hooked: false
+  name: startx
+  members:
+    enabled: true
+    list: 
+    - namespace: demo-istio
+      controlePlane: startx
+      controlePlaneNS: monaco-istio
+project: 
+  enabled: false
+  project: 
+    enabled: false
+  rbac: 
+    enabled: false
+  serviceAccounts:
+    enabled: false
+  dockercfg:
+    enabled: false
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operatorElastic:
+  enabled: false
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
+operatorKiali:
+  enabled: false
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
+operatorJaeger:
+  enabled: false
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
+operatorIstio:
+  enabled: false
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
