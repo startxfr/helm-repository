@@ -11,7 +11,7 @@ metadata:
   namespace: openshift-machine-api
   labels:
     {{- include "cluster-machine.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{ $clusterid }}-worker-{{ $region }}{{ .name | default "a" }}-machineautoscaler"
+    app.kubernetes.io/name: "{{ .name | default "app-a" }}-machineautoscaler"
   annotations:
     {{- include "cluster-machine.annotations" $root | nindent 4 }}
 spec:
