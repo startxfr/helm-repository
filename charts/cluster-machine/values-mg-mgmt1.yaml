@@ -47,29 +47,14 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 100%
     timeouts: 300s
-  - name: infra-a
+  - name: infra
     type: infra
-    maxUnhealthy: 100%
+    maxUnhealthy: 40%
     timeouts: 300s
-  - name: infra-b
-    type: infra
-    maxUnhealthy: 100%
-    timeouts: 300s
-  - name: infra-c
-    type: infra
-    maxUnhealthy: 100%
-    timeouts: 300s
-  - name: app-a
+  - name: app
     type: worker
-    maxUnhealthy: 100%
-    timeouts: 300s
-  # - name: app-b
-  #   type: worker
-  #   maxUnhealthy: 100%
-  #   timeouts: 300s
-  - name: app-c
-    type: worker
-    maxUnhealthy: 100%
+    group: app
+    maxUnhealthy: 0%
     timeouts: 300s
 
 machineAutoscaler: 
@@ -130,6 +115,7 @@ machineSet:
   - name: app-a
     az: a
     type: worker
+    group: app
     subnet_name: mgmt-subnet-private1-eu-west-3a
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
@@ -138,6 +124,7 @@ machineSet:
   # - name: app-b
   #   az: b
   #   type: worker
+  #   group: app
   #   subnet_name: mgmt-subnet-private2-eu-west-3b
   #   ami: ami-07b7248cf3c2b3190
   #   instanceType: "c5a.xlarge"
@@ -146,6 +133,7 @@ machineSet:
   - name: app-c
     az: c
     type: worker
+    group: app
     subnet_name: mgmt-subnet-private3-eu-west-3c
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge"
