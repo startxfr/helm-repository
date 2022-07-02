@@ -47,40 +47,18 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 100%
     timeouts: 300s
-  - name: infra-a
+  - name: infra
     type: infra
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: infra-b
-    type: infra
-    maxUnhealthy: 40%
-    timeouts: 300s
-  - name: infra-c
-    type: infra
-    maxUnhealthy: 40%
-    timeouts: 300s
-  - name: small-a
+  - name: app-big
     type: worker
+    group: app-big
     maxUnhealthy: 40%
     timeouts: 300s
-  # - name: small-b
-  #   type: worker
-  #   maxUnhealthy: 40%
-  #   timeouts: 300s
-  - name: small-c
+  - name: app-small
     type: worker
-    maxUnhealthy: 40%
-    timeouts: 300s
-  - name: big-a
-    type: worker
-    maxUnhealthy: 40%
-    timeouts: 300s
-  - name: big-b
-    type: worker
-    maxUnhealthy: 40%
-    timeouts: 300s
-  - name: big-c
-    type: worker
+    group: app-small
     maxUnhealthy: 40%
     timeouts: 300s
 
@@ -154,6 +132,7 @@ machineSet:
   - name: app-small-a
     az: a
     type: worker
+    group: app-small
     subnet_name: client2-subnet-private1-eu-west-3a
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
@@ -162,6 +141,7 @@ machineSet:
   # - name: app-small-b
   #   az: b
   #   type: worker
+  #   group: app-small
   #   subnet_name: client2-subnet-private2-eu-west-3b
   #   ami: ami-07b7248cf3c2b3190
   #   instanceType: "c5a.xlarge"
@@ -170,6 +150,7 @@ machineSet:
   - name: app-small-c
     az: c
     type: worker
+    group: app-small
     subnet_name: client2-subnet-private3-eu-west-3c
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge"
@@ -178,6 +159,7 @@ machineSet:
   - name: app-big-a
     az: a
     type: worker
+    group: app-big
     subnet_name: client2-subnet-private1-eu-west-3a
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"
@@ -186,6 +168,7 @@ machineSet:
   - name: app-big-b
     az: b
     type: worker
+    group: app-big
     subnet_name: client2-subnet-private2-eu-west-3b
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"
@@ -194,6 +177,7 @@ machineSet:
   - name: app-big-c
     az: c
     type: worker
+    group: app-big
     subnet_name: client2-subnet-private3-eu-west-3c
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"

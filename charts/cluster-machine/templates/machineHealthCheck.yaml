@@ -28,6 +28,9 @@ spec:
       machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
       machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
     {{- end }}
+    {{- if .group }}
+      machine.startx.io/group: "{{ .group }}"
+    {{- end }}
   unhealthyConditions:
     - type: Ready
       status: Unknown
