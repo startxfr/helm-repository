@@ -14,6 +14,9 @@ metadata:
     machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
     machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
     machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
+    {{- if .group }}
+    machine.startx.io/group: "{{ .group }}"
+    {{- end }}
   namespace: openshift-machine-api
   annotations:
     {{- include "cluster-machine.annotations" $root | nindent 4 }}
@@ -28,6 +31,9 @@ spec:
         machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
         machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
         machine.openshift.io/cluster-api-machineset: "{{ .name }}"
+        {{- if .group }}
+        machine.startx.io/group: "{{ .group }}"
+        {{- end }}
     spec:
       metadata:
         labels:
