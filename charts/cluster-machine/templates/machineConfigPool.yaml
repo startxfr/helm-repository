@@ -1,4 +1,5 @@
 {{- if .Values.machineConfigPool.enabled }}
+{{- if .Values.machineConfigPool.infra }}
 ---
 apiVersion: machineconfiguration.openshift.io/v1
 kind: MachineConfigPool
@@ -13,6 +14,8 @@ spec:
     matchLabels:
       node-role.kubernetes.io/infra: ""
   paused: false
+{{ end }}
+{{- if .Values.machineConfigPool.storage }}
 ---
 apiVersion: machineconfiguration.openshift.io/v1
 kind: MachineConfigPool
@@ -27,4 +30,5 @@ spec:
     matchLabels:
       node-role.kubernetes.io/storage: ""
   paused: false
+{{ end }}
 {{ end }}
