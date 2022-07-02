@@ -15,19 +15,19 @@ cluster:
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
-        maxNodesTotal: 9
+        maxNodesTotal: 20
         cores:
-          min: 6
-          max: 24
+          min: 24
+          max: 160
         memory:
-          min: 12
-          max: 48
+          min: 80
+          max: 640
       scaleDown: 
         enabled: true 
         delayAfterAdd: 5m 
         delayAfterDelete: 3m 
-        delayAfterFailure: 40s 
-        unneededTime: 60s 
+        delayAfterFailure: 30s 
+        unneededTime: 120s 
 
 machineConfigPool: 
   enabled: false
@@ -62,27 +62,27 @@ machineHealthCheck:
 machineAutoscaler: 
   enabled: false
   list: 
-  - name: infra-a
+  - name: mgmt1-infra-a
     type: infra
     minReplicas: 1
     maxReplicas: 2
-  - name: infra-b
+  - name: mgmt1-infra-b
     type: infra
     minReplicas: 1
     maxReplicas: 2
-  - name: infra-c
+  - name: mgmt1-infra-c
     type: infra
     minReplicas: 1
     maxReplicas: 2
-  - name: app-a
+  - name: mgmt1-app-a
     type: worker
     minReplicas: 0
     maxReplicas: 3
-  # - name: app-b
+  # - name: mgmt1-app-b
   #   type: worker
   #   minReplicas: 0
   #   maxReplicas: 3
-  - name: app-c
+  - name: mgmt1-app-c
     type: worker
     minReplicas: 0
     maxReplicas: 3
@@ -90,7 +90,7 @@ machineAutoscaler:
 machineSet: 
   enabled: false
   list:
-  - name: infra-a
+  - name: mgmt1-infra-a
     az: a
     type: infra
     subnet_name: mgmt-subnet-private1-eu-west-3a
@@ -98,7 +98,7 @@ machineSet:
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
     volumeSize: 120
     replicas: 1
-  - name: infra-b
+  - name: mgmt1-infra-b
     az: b
     type: infra
     subnet_name: mgmt-subnet-private2-eu-west-3b
@@ -106,7 +106,7 @@ machineSet:
     instanceType: "m5a.2xlarge"
     volumeSize: 120
     replicas: 1
-  - name: infra-c
+  - name: mgmt1-infra-c
     az: c
     type: infra
     subnet_name: mgmt-subnet-private3-eu-west-3c
@@ -114,7 +114,7 @@ machineSet:
     instanceType: "m5a.2xlarge"
     volumeSize: 120
     replicas: 1
-  - name: app-a
+  - name: mgmt1-app-a
     az: a
     type: worker
     group: app
@@ -123,7 +123,7 @@ machineSet:
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
     volumeSize: 100
     replicas: 0
-  # - name: app-b
+  # - name: mgmt1-app-b
   #   az: b
   #   type: worker
   #   group: app
@@ -132,7 +132,7 @@ machineSet:
   #   instanceType: "c5a.xlarge"
   #   volumeSize: 100
   #   replicas: 0
-  - name: app-c
+  - name: mgmt1-app-c
     az: c
     type: worker
     group: app
