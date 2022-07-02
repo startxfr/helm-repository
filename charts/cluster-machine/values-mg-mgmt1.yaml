@@ -53,6 +53,10 @@ machineHealthCheck:
     type: infra
     maxUnhealthy: 40%
     timeouts: 300s
+  - name: storage
+    type: storage
+    maxUnhealthy: 40%
+    timeouts: 300s
   - name: app
     type: worker
     group: app
@@ -72,6 +76,18 @@ machineAutoscaler:
     maxReplicas: 2
   - name: mgmt1-infra-c
     type: infra
+    minReplicas: 1
+    maxReplicas: 2
+  - name: mgmt1-storage-a
+    type: storage
+    minReplicas: 1
+    maxReplicas: 2
+  - name: mgmt1-storage-b
+    type: storage
+    minReplicas: 1
+    maxReplicas: 2
+  - name: mgmt1-storage-c
+    type: storage
     minReplicas: 1
     maxReplicas: 2
   - name: mgmt1-app-a
@@ -109,6 +125,30 @@ machineSet:
   - name: mgmt1-infra-c
     az: c
     type: infra
+    subnet_name: mgmt-subnet-private3-eu-west-3c
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: mgmt1-storage-a
+    az: a
+    type: storage
+    subnet_name: mgmt-subnet-private1-eu-west-3a
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge" # 8cpu, 32Gi
+    volumeSize: 120
+    replicas: 1
+  - name: mgmt1-storage-b
+    az: b
+    type: storage
+    subnet_name: mgmt-subnet-private2-eu-west-3b
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: mgmt1-storage-c
+    az: c
+    type: storage
     subnet_name: mgmt-subnet-private3-eu-west-3c
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"
