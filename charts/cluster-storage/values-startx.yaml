@@ -9,25 +9,25 @@ context:
 storageClasses:
 - id: startx-aws-generic-retain
   name: startx-aws-generic-retain
-  provisioner: "kubernetes.io/aws-ebs"
+  provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "true"
-    type: gp2
+    encrypted: "false"
+    type: gp3
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
 - id: startx-aws-generic-delete
   name: startx-aws-generic-delete
-  provisioner: "kubernetes.io/aws-ebs"
+  provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "true"
+    encrypted: "false"
     type: gp2
   reclaimPolicy: Delete
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
 - id: startx-aws-fast-retain
   name: startx-aws-fast-retain
-  provisioner: "kubernetes.io/aws-ebs"
+  provisioner: "ebs.csi.aws.com"
   parameters: |
     encrypted: "false"
     type: io1
@@ -36,7 +36,7 @@ storageClasses:
   volumeBindingMode: WaitForFirstConsumer
 - id: startx-aws-fast-delete
   name: startx-aws-fast-delete
-  provisioner: "kubernetes.io/aws-ebs"
+  provisioner: "ebs.csi.aws.com"
   parameters: |
     encrypted: "false"
     type: io1
@@ -45,18 +45,18 @@ storageClasses:
   volumeBindingMode: WaitForFirstConsumer
 - id: startx-aws-slow-retain
   name: startx-aws-slow-retain
-  provisioner: "kubernetes.io/aws-ebs"
+  provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "true"
+    encrypted: "false"
     type: sc1
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
 - id: startx-aws-slow-delete
   name: startx-aws-slow-delete
-  provisioner: "kubernetes.io/aws-ebs"
+  provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "true"
+    encrypted: "false"
     type: sc1
   reclaimPolicy: Delete
   allowVolumeExpansion: true

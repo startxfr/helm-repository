@@ -1,0 +1,38 @@
+# Default values for configuration of a monaco cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: monaco
+  cluster: monaco-grace
+  environment: preprod
+  component: console
+  app: startx-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: monaco Console
+    logo: 
+      name: monaco-logo
+      tplFile: webtpl/mccloud-logo.svg
+  links:
+  - name: monaco-link-all-namespaces-dashboard
+    spec: |
+      href: 'https://www.monacocloud.mc'
+      location: NamespaceDashboard
+      text: monacoCloud
+  - name: monaco-consolelink-application-menu
+    spec: |
+      href: 'https://www.monacocloud.mc'
+      location: ApplicationMenu
+      text: monacoCloud
+      # applicationMenu:
+      #   section: monaco Content
+      #   imageURL: https://www.monacocloud.mc/images/logo.monaco.24x24.png
+  notifications:
+  - name: monaco-console-notification-top
+    spec: |
+      backgroundColor: '#fff'
+      color: '#000'
+      location: BannerTop 
+      text: Vous etes sur le cluster de demo MonacoCloud

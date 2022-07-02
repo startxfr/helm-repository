@@ -5,23 +5,23 @@ context: &context
   cluster: default
   environment: infra
   component: auth
-  app: monaco-auth
+  app: mcgov-auth
 auth:
   enabled: true
   namespace: openshift-config
   templates:
     login: 
-      name: monaco-login
-      tplFile: webtpl/monaco-login.html
+      name: mg-login
+      tplFile: webtpl/mg-login.html
     errors: 
-      name: monaco-errors
-      tplFile: webtpl/monaco-errors.html
+      name: mg-errors
+      tplFile: webtpl/mg-errors.html
     providers: 
-      name: monaco-providers
-      tplFile: webtpl/monaco-providers.html
+      name: mg-providers
+      tplFile: webtpl/mg-providers.html
   authBackend:
     type: htpasswd
-    name: monaco-htpasswd
+    name: mg-htpasswd
     comment: |
       htpasswd -c -b _console/ocp.passwd admin secretdemerde
       htpasswd -b _console/ocp.passwd dev dev
