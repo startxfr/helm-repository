@@ -1,0 +1,94 @@
+# Default values for configuration of a monaco cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: monaco
+  cluster: monaco-c1
+  environment: client1
+  component: console
+  app: startx-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: monaco Console
+    logo: 
+      name: mg-c1-logo
+      tplFile: webtpl/mg-logo-pdd-r1.svg
+  links:
+    - name: nsdashboard-gouvmc
+      spec: |
+        href: 'https://https://www.gouv.mc'
+        location: NamespaceDashboard
+        text: Gouv Monegasque
+    - name: nsdashboard-dprn
+      spec: |
+        href: 'https://www.gouv.mc/Gouvernement-et-Institutions/Le-Gouvernement/Ministere-d-Etat/Secretariat-General-du-Gouvernement/Direction-des-Plateformes-et-des-Ressources-Numeriques'
+        location: NamespaceDashboard
+        text: Gouv Monegasque - DPRN
+    - name: nsdashboard-mgppfd
+      spec: |
+        href: 'https://data.gouv.mc'
+        location: NamespaceDashboard
+        text: Gouv Monegasque - OpenData
+    - name: applicationmenu-gouvmc
+      spec: |
+        href: 'https://https://www.gouv.mc'
+        location: ApplicationMenu
+        text: Gouvernement
+        applicationMenu:
+          section: Monaco
+          imageURL: "https://upload.wikimedia.org/wikipedia/commons/1/12/Blason_pays_Monaco.svg"
+    - name: applicationmenu-dprn
+      spec: |
+        href: 'https://www.gouv.mc/Gouvernement-et-Institutions/Le-Gouvernement/Ministere-d-Etat/Secretariat-General-du-Gouvernement/Direction-des-Plateformes-et-des-Ressources-Numeriques'
+        location: ApplicationMenu
+        text: Gouv Monegasque - DPRN
+        applicationMenu:
+          section: Monaco
+          imageURL: "https://upload.wikimedia.org/wikipedia/commons/1/12/Blason_pays_Monaco.svg"
+    - name: applicationmenu-mgppfd
+      spec: |
+        href: 'https://data.gouv.mc'
+        location: ApplicationMenu
+        text: Gouv Monegasque - OpenData
+        applicationMenu:
+          section: Monaco
+          imageURL: "https://upload.wikimedia.org/wikipedia/commons/1/12/Blason_pays_Monaco.svg"
+    - name: helpmenu-gouvmc
+      spec: |
+        href: 'https://https://www.gouv.mc'
+        location: HelpMenu
+        text: Gouv Monegasque
+    - name: helpmenu-dprn
+      spec: |
+        href: 'https://www.gouv.mc/Gouvernement-et-Institutions/Le-Gouvernement/Ministere-d-Etat/Secretariat-General-du-Gouvernement/Direction-des-Plateformes-et-des-Ressources-Numeriques'
+        location: HelpMenu
+        text: Gouv Monegasque - DPRN
+    - name: helpmenu-mgppfd
+      spec: |
+        href: 'https://data.gouv.mc?help'
+        location: HelpMenu
+        text: Gouv Monegasque - OpenData
+  logLinks:
+  - name: mg-externallog-mgmt
+    spec: |
+      hrefTemplate: >-
+        https://kibana-openshift-logging.apps.mgmt1.mc.aws/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: MonacoGov central logs
+  notifications:
+  - name: mg--pdd-r1-console-notification-top
+    spec: |
+      backgroundColor: '#2ba329'
+      color: '#fff'
+      location: BannerTop 
+      text: Vous etes sur le cluster du Gouvernement de Monaco - Plateforme De Donnees - Recette 1
+  - name: mg-pdd-r1-console-notification-bottom
+    spec: |
+      backgroundColor: '#2ba329'
+      color: '#fff'
+      location: BannerBottom
+      text: En cas de probleme sur ce cluster, vous pouvez
+      link:
+        href: 'https://github.com/startxfr/mccloud/issues/new'
+        text: creer un ticket d'incident
