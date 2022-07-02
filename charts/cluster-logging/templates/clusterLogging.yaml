@@ -52,7 +52,7 @@ spec:
         storageClassName: {{ .storage.class | default "gp2" | quote }}
         size: {{ .storage.size | default "200G" | quote }}
     {{- end }}
-    {{- if .Values.logging.infra }}
+    {{- if .Values.logging.infra_enabled }}
       nodeSelector:
         node-role.kubernetes.io/infra: ''
       tolerations:
@@ -82,7 +82,7 @@ spec:
         {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
     {{- end }}
-    {{- if .Values.logging.infra }}
+    {{- if .Values.logging.infra_enabled }}
       nodeSelector:
         node-role.kubernetes.io/infra: ''
       tolerations:
@@ -107,16 +107,21 @@ spec:
     logs:
       type: "fluentd"
       {{- with .Values.logging.fluentd}}
-      {{- if .resources }}
       fluentd: 
+      {{- if .resources }}
         resources:
           {{- .resources | toYaml | nindent 10 -}}
       {{- else }}
-      fluentd: {}
+        resources: {}
       {{- end }}
-        {{- if .Values.logging.infra }}
+      {{- end }}
+      {{- if .Values.logging.infra_enabled }}
+        nodeSelector:
+          node-role.kubernetes.io/infra: ''
         tolerations:
-          - operator: "Exists"
-        {{- end }}
+        - key: "node-role.kubernetes.io/infra"
+          operator: "Exists"
+          effect: "NoSchedule"
+      {{- end }}
   {{- end }}{{- end }}
 {{- end }}
