@@ -104,3 +104,4 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 | 10.12.49 | 2022-06-18 | publish stable update for the full repository
 | 10.12.53 | 2022-06-18 | publish stable update for the full repository
 | 10.12.71 | 2022-06-28 | Debug the appVersion in all charts
+| 10.12.72 | 2022-07-02 | Common release
