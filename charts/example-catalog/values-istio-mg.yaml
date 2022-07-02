@@ -1,19 +1,19 @@
 
 # Default values for configuration of a dev demo
 # see values.yaml for explanation on each params
-nameOverride: example-catalog-storage_block
+nameOverride: example-catalog-istio
 versionOverride: "0.0.2"
 context: &context
   scope: startx
   cluster: default
   environment: dev
-  component: storage
-  app: example-catalog-storage_block
+  component: istio
+  app: example-catalog-istio
   version: "0.0.2"
 
 demo:
-  storage_block: 
+  istio: 
     <<: *context
     enabled: true 
-    namespace: demo-storage
-    storageClass: startx-aws-generic-delete
+    namespace: demo-istio
+    namespaceIstio: monaco-istio
