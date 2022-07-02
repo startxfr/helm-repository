@@ -7,32 +7,26 @@
 apiVersion: machine.openshift.io/v1beta1
 kind: MachineHealthCheck
 metadata:
-  {{- if eq .type "master" }}
-  name: "{{ $clusterid }}-{{ .name | default "master" }}"
-  {{- else }}
-  name: "{{ $clusterid }}-{{ .type }}-{{ $region }}{{ .name | default "a" }}"
-  {{- end }}
+  name: "{{ .name | default "app" }}"
   namespace: openshift-machine-api
   labels:
     {{- include "cluster-machine.labels" $root | nindent 4 }}
     {{- if eq .type "master" }}
-    app.kubernetes.io/name: "{{ $clusterid }}-{{ .name | default "master" }}-machinehealthcheck"
+    app.kubernetes.io/name: "{{ .name | default "master" }}-machinehealthcheck"
     {{- else }}
-    app.kubernetes.io/name: "{{ $clusterid }}-{{ .type }}-{{ $region }}{{ .name | default "a" }}-machinehealthcheck"
+    app.kubernetes.io/name: "{{ .name | default "a" }}-machinehealthcheck"
     {{- end }}
   annotations:
     {{- include "cluster-machine.annotations" $root | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: "{{ $clusterid }}"
     {{- if eq .type "master" }}
       machine.openshift.io/cluster-api-machine-role: master
       machine.openshift.io/cluster-api-machine-type: master
     {{- else }}
       machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
       machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
-      machine.openshift.io/cluster-api-machineset: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
     {{- end }}
   unhealthyConditions:
     - type: Ready
