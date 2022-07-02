@@ -401,7 +401,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: startx-aws-generic-delete
+  storageClassName: "{{ .storageClass }}"
   volumeMode: Block
   accessModes:
     - ReadWriteOnce
@@ -632,7 +632,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: startx-aws-generic-delete
+  storageClassName: "{{ .storageClass }}"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce

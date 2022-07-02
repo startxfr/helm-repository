@@ -12,11 +12,11 @@ php:
   service:
     enabled: true
   expose:
-    enabled: false
+    enabled: true
     kind: "route"
   version: "alpine3"
   debug: true 
-  replicas: 2
+  replicas: 1
   data: |
     index.html: |-
       <h1>try <a href="./stress.php"><b>stress.php</b></a> for intense CPU usage.</h1>
