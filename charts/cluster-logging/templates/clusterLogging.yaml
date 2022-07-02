@@ -22,7 +22,7 @@ metadata:
 spec:
   managementState: {{ .Values.logging.managementState | default "Managed" | quote }}
   logStore:
-    type: "elasticsearch"  
+    type: "elasticsearch" 
     retentionPolicy: 
       application:
         maxAge: 1d
@@ -30,7 +30,9 @@ spec:
         maxAge: 7d
       audit:
         maxAge: 7d
-    {{- if .Values.logging.elasticsearch }}{{- if .Values.logging.elasticsearch.enabled }}{{- with .Values.logging.elasticsearch }}
+    {{- if .Values.logging.elasticsearch }}
+    {{- if .Values.logging.elasticsearch.enabled }}
+    {{- with .Values.logging.elasticsearch }}
     elasticsearch:
       nodeCount: {{ .replicas | default 3 }}
       {{- if $root.Values.logging.infra_enabled }}
@@ -49,10 +51,22 @@ spec:
       storage:
         storageClassName: {{ .storage.class | default "gp2" | quote }}
         size: {{ .storage.size | default "200G" | quote }}
-    {{- end }}{{- end }}{{- end }}
-  {{- if .Values.logging.kibana }}{{- if .Values.logging.kibana.enabled }}{{- with .Values.logging.kibana }}
+    {{- end }}
+    {{- if .Values.logging.infra_enabled }}
+      nodeSelector:
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+      - key: "node-role.kubernetes.io/infra"
+        operator: "Exists"
+        effect: "NoSchedule"
+    {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- if .Values.logging.kibana }}
+  {{- if .Values.logging.kibana.enabled }}
   visualization:
-    type: "kibana"  
+    type: "kibana"
+    {{- with .Values.logging.kibana }}
     kibana:
       replicas: {{ .replicas | default 1 }}
       {{- if $root.Values.logging.infra_enabled }}
@@ -67,7 +81,17 @@ spec:
       resources:
         {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
-  {{- end }}{{- end }}{{- end }}
+    {{- end }}
+    {{- if .Values.logging.infra_enabled }}
+      nodeSelector:
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+      - key: "node-role.kubernetes.io/infra"
+        operator: "Exists"
+        effect: "NoSchedule"
+    {{- end }}
+  {{- end }}
+  {{- end }}
   {{- if .Values.logging.curation }}{{- if .Values.logging.curation.enabled }}{{- with .Values.logging.curation }}
   curation:
     type: "curator"
@@ -78,16 +102,26 @@ spec:
         {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
   {{- end }}{{- end }}{{- end }}
-  {{- if .Values.logging.fluentd }}{{- if .Values.logging.fluentd.enabled }}{{- with .Values.logging.fluentd }}
+  {{- if .Values.logging.fluentd }}{{- if .Values.logging.fluentd.enabled }}
   collection:
     logs:
-      type: "fluentd"  
-      {{- if .resources }}
+      type: "fluentd"
+      {{- with .Values.logging.fluentd}}
       fluentd: 
+      {{- if .resources }}
         resources:
           {{- .resources | toYaml | nindent 10 -}}
       {{- else }}
-      fluentd: {}
+        resources: {}
       {{- end }}
-  {{- end }}{{- end }}{{- end }}
+      {{- end }}
+      {{- if .Values.logging.infra_enabled }}
+        nodeSelector:
+          node-role.kubernetes.io/infra: ''
+        tolerations:
+        - key: "node-role.kubernetes.io/infra"
+          operator: "Exists"
+          effect: "NoSchedule"
+      {{- end }}
+  {{- end }}{{- end }}
 {{- end }}
