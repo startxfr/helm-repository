@@ -1,0 +1,87 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: localstorage
+  app: startx-localstorage
+localstorage:
+  enabled: false
+  name: gov-localstorage
+  list:
+    - name: gov-local
+      mode: fs
+      fsType: ext4
+      path: /data-localstorage
+localstorageset:
+  enabled: false
+  list:
+    - name: gov-local
+      mode: fs
+      fsType: ext4
+      max: 20
+      minSize: 256Mi
+      maxSize: 2Gi
+      nodeKey: "kubernetes.io/os"
+      nodeValue: "linux"
+localstoragediscovery:
+  enabled: false
+  list:
+    - name: os-linux
+      nodeKey: "kubernetes.io/os"
+      nodeValue: "linux"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "openshift-local-storage"
+    display_name: "Monaco Local Storage"
+    requester: startx
+    description: Local Storage configured by MonacoGov
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev-view
+      name: dev
+      role: view
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "local-storage-operator"
+    namespace: "openshift-local-storage"
+    version: "4.10.0-202206010417"
+    operator: 
+      channel: "4.10"
+      name: local-storage-operator
+      installPlanApproval: Automatic
+      # csv: local-storage-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-local-storage"
+    namespace: "openshift-local-storage"
+    providedAPIs: "LocalVolume.v1.local.storage.openshift.io,LocalVolumeDiscovery.v1alpha1.local.storage.openshift.io,LocalVolumeDiscoveryResult.v1alpha1.local.storage.openshift.io,LocalVolumeSet.v1alpha1.local.storage.openshift.io"

@@ -7,56 +7,56 @@ context:
   component: config
   app: startx-storage
 storageClasses:
-- id: startx-aws-generic-retain
-  name: startx-aws-generic-retain
+- id: gov-default-retain
+  name: gov-default-retain
   provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "false"
+    encrypted: "true"
     type: gp3
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: startx-aws-generic-delete
-  name: startx-aws-generic-delete
+- id: gov-default-delete
+  name: gov-default-delete
   provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "false"
-    type: gp2
+    encrypted: "true"
+    type: gp3
   reclaimPolicy: Delete
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: startx-aws-fast-retain
-  name: startx-aws-fast-retain
+- id: gov-fast-retain
+  name: gov-fast-retain
   provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "false"
+    encrypted: "true"
     type: io1
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: startx-aws-fast-delete
-  name: startx-aws-fast-delete
+- id: gov-fast-delete
+  name: gov-fast-delete
   provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "false"
+    encrypted: "true"
     type: io1
   reclaimPolicy: Delete
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: startx-aws-slow-retain
-  name: startx-aws-slow-retain
+- id: gov-slow-retain
+  name: gov-slow-retain
   provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "false"
+    encrypted: "true"
     type: sc1
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: startx-aws-slow-delete
-  name: startx-aws-slow-delete
+- id: gov-slow-delete
+  name: gov-slow-delete
   provisioner: "ebs.csi.aws.com"
   parameters: |
-    encrypted: "false"
+    encrypted: "true"
     type: sc1
   reclaimPolicy: Delete
   allowVolumeExpansion: true
