@@ -29,6 +29,11 @@ cluster:
         delayAfterFailure: 40s 
         unneededTime: 60s 
 
+machineConfigPool: 
+  enabled: false
+machineConfig: 
+  enabled: false
+
 machineHealthCheck:
   enabled: false
   list: 
@@ -36,15 +41,15 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: a
+  - name: app-a
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: b
+  - name: app-b
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: c
+  - name: app-c
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
@@ -52,34 +57,34 @@ machineHealthCheck:
 machineAutoscaler: 
   enabled: true
   list: 
-  - name: a
+  - name: app-a
     minReplicas: 2
     maxReplicas: 4
-  - name: b
+  - name: app-b
     minReplicas: 2
     maxReplicas: 4
-  - name: c
+  - name: app-c
     minReplicas: 2
     maxReplicas: 4
 
 machineSet: 
   enabled: false
   list:
-  - name: a-infra
+  - name: infra-a
     az: a
     type: infra
     ami: ami-085a97ac58c1199b8
     instanceType: "r5a.2xlarge"
     volumeSize: 120
     replicas: 0
-  - name: b-infra
+  - name: infra-b
     az: b
     type: infra
     ami: ami-085a97ac58c1199b8
     instanceType: "r5a.2xlarge"
     volumeSize: 120
     replicas: 0
-  - name: c-infra
+  - name: infra-c
     az: c
     type: infra
     ami: ami-085a97ac58c1199b8

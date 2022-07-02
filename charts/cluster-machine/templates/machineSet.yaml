@@ -7,10 +7,10 @@
 apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
-  name: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
+  name: "{{ .name }}"
   labels:
     {{- include "cluster-machine.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}-machineset"
+    app.kubernetes.io/name: "{{ .name }}-machineset"
     machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
     machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
     machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
@@ -21,15 +21,13 @@ spec:
   replicas: {{ .replicas }}
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
-      machine.openshift.io/cluster-api-machineset: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
+      machine.openshift.io/cluster-api-machineset: "{{ .name }}"
   template:
     metadata:
       labels:
-        machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
         machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
         machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
-        machine.openshift.io/cluster-api-machineset: "{{ $root.Values.cluster.id }}-{{ .type }}-{{ $root.Values.cluster.region }}{{ .name }}"
+        machine.openshift.io/cluster-api-machineset: "{{ .name }}"
     spec:
       metadata:
         labels:

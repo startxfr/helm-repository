@@ -1,0 +1,201 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: mccm
+  cluster: mccm-client
+  environment: client
+  component: machine
+  app: mccm-machine
+
+cluster:
+  id: startx-6jhzk
+  region: eu-west-3
+  autoscaler: 
+    enabled: true
+    spec: |
+      podPriorityThreshold: -10 
+      resourceLimits:
+        maxNodesTotal: 9
+        cores:
+          min: 6
+          max: 24
+        memory:
+          min: 12
+          max: 48
+      scaleDown: 
+        enabled: true 
+        delayAfterAdd: 5m 
+        delayAfterDelete: 3m 
+        delayAfterFailure: 40s 
+        unneededTime: 60s 
+
+machineConfigPool:
+  enabled: true
+machineConfig: 
+  enabled: false
+  kubelet_gc_enabled: true
+  kubelet_connectiontimeout_enabled: true
+  kubelet_protectkerneldefaults: true
+  infra_specialconfig: true
+  add_scc_netraw: true
+  add_clusterimageconfig: true
+
+machineHealthCheck:
+  enabled: false
+  list: 
+  - name: master
+    type: master
+    maxUnhealthy: 100%
+    timeouts: 300s
+  - name: infra-a
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: infra-b
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: infra-c
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: small-a
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  # - name: small-b
+  #   type: worker
+  #   maxUnhealthy: 40%
+  #   timeouts: 300s
+  - name: small-c
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: big-a
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: big-b
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: big-c
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+
+machineAutoscaler: 
+  enabled: true
+  list: 
+  - name: infra-a
+    type: infra
+    minReplicas: 1
+    maxReplicas: 2
+  - name: infra-b
+    type: infra
+    minReplicas: 1
+    maxReplicas: 2
+  - name: infra-c
+    type: infra
+    minReplicas: 1
+    maxReplicas: 2
+  - name: small-a
+    type: worker
+    minReplicas: 0
+    maxReplicas: 3
+  # - name: small-b
+  #   type: worker
+  #   minReplicas: 0
+  #   maxReplicas: 3
+  - name: small-c
+    type: worker
+    minReplicas: 0
+    maxReplicas: 3
+  - name: big-a
+    type: worker
+    minReplicas: 0
+    maxReplicas: 2
+  - name: big-b
+    type: worker
+    minReplicas: 0
+    maxReplicas: 2
+  - name: big-c
+    type: worker
+    minReplicas: 0
+    maxReplicas: 2
+
+machineSet: 
+  enabled: false
+  list:
+  - name: infra-a
+    az: a
+    type: infra
+    subnet_name: client2-subnet-private1-eu-west-3a
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge" # 8cpu, 32Gi
+    volumeSize: 120
+    replicas: 1
+  - name: infra-b
+    az: b
+    type: infra
+    subnet_name: client2-subnet-private2-eu-west-3b
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: infra-c
+    az: c
+    type: infra
+    subnet_name: client2-subnet-private3-eu-west-3c
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: app-small-a
+    az: a
+    type: worker
+    subnet_name: client2-subnet-private1-eu-west-3a
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "c5a.xlarge" # 4cpu, 8Gi
+    volumeSize: 100
+    replicas: 0
+  # - name: app-small-b
+  #   az: b
+  #   type: worker
+  #   subnet_name: client2-subnet-private2-eu-west-3b
+  #   ami: ami-07b7248cf3c2b3190
+  #   instanceType: "c5a.xlarge"
+  #   volumeSize: 100
+  #   replicas: 0
+  - name: app-small-c
+    az: c
+    type: worker
+    subnet_name: client2-subnet-private3-eu-west-3c
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "c5a.xlarge"
+    volumeSize: 100
+    replicas: 0
+  - name: app-big-a
+    az: a
+    type: worker
+    subnet_name: client2-subnet-private1-eu-west-3a
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge"
+    volumeSize: 100
+    replicas: 0
+  - name: app-big-b
+    az: b
+    type: worker
+    subnet_name: client2-subnet-private2-eu-west-3b
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge"
+    volumeSize: 100
+    replicas: 0
+  - name: app-big-c
+    az: c
+    type: worker
+    subnet_name: client2-subnet-private3-eu-west-3c
+    ami: ami-07b7248cf3c2b3190
+    instanceType: "m5a.2xlarge"
+    volumeSize: 100
+    replicas: 0

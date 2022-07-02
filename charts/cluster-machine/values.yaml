@@ -31,6 +31,31 @@ cluster:
       scaleDown: 
         enabled: true 
 
+# Enable the creation of additionnal machinepool
+machineConfigPool: 
+  # Enable the management of machineconfigurationpool
+  enabled: false
+
+# Enable the configuration of machines
+machineConfig: 
+  # Enable the management of machineconfiguration
+  enabled: false
+  # Enable the configuration for garbage collection
+  kubelet_gc_enabled: false
+  # Enable the configuration for streamingConnectionIdleTimeout
+  kubelet_connectiontimeout_enabled: false
+  # Enable the configuration for protectkerneldefaults
+  kubelet_protectkerneldefaults: false
+  # Enable the creation of a dedicated MachineConfig
+  infra_specialconfig: false
+  # Enable the creation of a dedicated SCC for NET_RAW disable
+  add_scc_netraw: false
+  # Enable the configuration of the image cluster access
+  add_clusterimageconfig: false
+
+
+  
+  
 # List of machineAutoscaler to manage
 machineAutoscaler: 
   # Enable the management of machineAutoscaler
