@@ -160,3 +160,4 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 10.12.72 | 2022-07-02 | Common release
 | 10.12.77 | 2022-07-02 | Stable for clients
 | 10.12.81 | 2022-07-02 | publish stable update for the full repository
+| 10.12.91 | 2022-07-03 | publish stable update for the full repository
