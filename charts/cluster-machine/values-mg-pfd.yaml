@@ -94,15 +94,15 @@ machineAutoscaler:
   - name: pfd-app-big-a
     type: worker
     minReplicas: 0
-    maxReplicas: 2
+    maxReplicas: 3
   - name: pfd-app-big-b
     type: worker
     minReplicas: 0
-    maxReplicas: 2
+    maxReplicas: 3
   - name: pfd-app-big-c
     type: worker
     minReplicas: 0
-    maxReplicas: 2
+    maxReplicas: 3
 
 machineSet: 
   enabled: false
@@ -139,7 +139,7 @@ machineSet:
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
     volumeSize: 100
-    replicas: 0
+    replicas: 1
   # - name: pfd-app-small-b
   #   az: b
   #   type: worker
@@ -157,7 +157,7 @@ machineSet:
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge"
     volumeSize: 100
-    replicas: 0
+    replicas: 1
   - name: pfd-app-big-a
     az: a
     type: worker
@@ -166,7 +166,7 @@ machineSet:
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"
     volumeSize: 100
-    replicas: 0
+    replicas: 1
   - name: pfd-app-big-b
     az: b
     type: worker
@@ -175,7 +175,7 @@ machineSet:
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"
     volumeSize: 100
-    replicas: 0
+    replicas: 1
   - name: pfd-app-big-c
     az: c
     type: worker
@@ -184,4 +184,4 @@ machineSet:
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"
     volumeSize: 100
-    replicas: 0
+    replicas: 1
