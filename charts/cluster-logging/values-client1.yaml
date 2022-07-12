@@ -1,0 +1,128 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: logging
+  app: openshift-logging
+
+# see https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html/logging/configuring-your-logging-deployment
+logging:
+  enabled: false
+logforwarder:
+  enabled: false
+  spec: |
+    outputs:
+    - name: elasticsearch-mgmt1
+      type: "elasticsearch"
+      url: https://elasticsearch-openshift-logging.apps.mgmt1.mgmt1.ocp.aws
+      secret:
+          name: elasticsearch-mgmt1
+    pipelines: 
+    - name: all-to-default
+      inputRefs:
+      - infrastructure
+      - application
+      - audit
+      outputRefs:
+      - default
+    - name: all-to-mgmt1
+      inputRefs:
+      - infrastructure
+      - application
+      - audit
+      outputRefs:
+      - elasticsearch-mgmt1
+      labels:
+        cluster: "client1"
+
+# Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "openshift-logging"
+    display_name: "Startx LOGGING"
+    requester: startx
+    description: Openshift logging configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+    rules: 
+    - id: allow-openshift-operators-redhat
+      spec: |
+        podSelector: null
+        ingress:
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                project: openshift-operators-redhat
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+    
+# Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "cluster-logging"
+    namespace: "openshift-logging"
+    version: "5.4.0-138"
+    operator: 
+      channel: "stable-5.4"
+      name: cluster-logging
+      installPlanApproval: Automatic
+      # csv: cluster-logging
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-logging"
+    namespace: "openshift-logging"
+    providedAPIs: "ClusterLogForwarder.v1.logging.openshift.io,ClusterLogging.v1.logging.openshift.io"
+
+
+# Configuration of the elasticSearch operator (see https://startxfr.github.io/helm-repository/charts/operator)
+operatorElastic:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "5.4.0-152"
+    operator: 
+      channel: "stable-5.4"
+      name: elasticsearch-operator
+      installPlanApproval: Automatic
+      # csv: elasticsearch-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"

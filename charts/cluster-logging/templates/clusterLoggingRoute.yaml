@@ -1,0 +1,26 @@
+{{- if .Values.logging.expose }}{{- if .Values.logging.expose.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: elasticsearch
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.logging.name | default "instance" }}-clusterlogging"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+spec:
+  host:
+  to:
+    kind: Service
+    name: elasticsearch
+  {{- with .Values.logging.expose.destinationCACert }}
+  tls:
+    termination: reencrypt
+    destinationCACertificate: |
+      {{- . | nindent 6 -}}
+  {{- end }}
+{{- end }}{{- end }}
