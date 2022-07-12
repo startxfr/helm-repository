@@ -11,6 +11,16 @@ logging:
   infra_enabled: false
   hooked: false
   managementState: "Managed"
+  expose:
+    enabled: false
+    destinationCACert: |
+      -----BEGIN CERTIFICATE-----
+      place here your elasticsearch certificate. 
+      You can get it with 
+      oc extract secret/elasticsearch \
+      -n openshift-logging --to=. --keys=admin-ca && \
+      cat admin-ca
+      -----END CERTIFICATE-----
   elasticsearch:
     enabled: true
     replicas: 3
