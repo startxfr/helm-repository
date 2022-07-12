@@ -1,35 +1,20 @@
-# Default values for cluster-logging.
-
-# Application deployment context
-context:  &context
-  # Name of the global scope for this application (organisational tenant)
-  scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
-  environment: myenv
-  # Component name of this application (logical tenant)
-  component: mycomponent
-  # Application name (functionnal tenant, default use Chart name)
-  app: default-logging
-  # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  environment: infra
+  component: logging
+  app: openshift-logging
 
-# configuration of the logging service
+# see https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html/logging/configuring-your-logging-deployment
 logging:
-  # Enable the deployment of the logging service
-  enabled: true
-  # Enable the deployment of the logging service into infra nodes
-  infra_enabled: false
-  # Activate the manager as a helm hook
-  hooked: true
-  # set the management state to use
+  enabled: false
+  infra_enabled: true
+  hooked: false
   managementState: "Managed"
-  # Section for external exposition of elasticsearch
   exposed:
-    # Enable creating the route
     enabled: true
-    # CACertificate for the elasticsearch. Defined in a secret (see bellow)
     destinationCACert: |
       -----BEGIN CERTIFICATE-----
       place here your elasticsearch certificate. 
@@ -38,66 +23,47 @@ logging:
       -n openshift-logging --to=. --keys=admin-ca && \
       cat admin-ca
       -----END CERTIFICATE-----
-  # configuration of the elasticsearch service
   elasticsearch:
-    # Enable the deployment of the elasticsearch service
     enabled: true
-    # number of elasticsearch instances
     replicas: 3
-    # Resource spec for elasticsearch pods
     resources:
       limits:
-        cpu: 1
-        memory: 500Mi
+        memory: 16Gi
       requests:
         cpu: 500m
-        memory: 100Mi
-    # configuration of the storage
-    storage: 
-      # name of the storageclass to use
-      class: gp2
-      # the size of the storage to provision
+        memory: 16Gi
+    storage:
+      class: "gov-default-retain"
       size: "200G"
-  # configuration of the kibana service
   kibana:
-    # Enable the deployment of the kibana service
     enabled: true
-    # number of kibana instances
-    replicas: 3
-    # Resource spec for kibana pods
+    replicas: 1
     resources:
       limits:
-        cpu: 1
-        memory: 500Mi
+        memory: 736Mi
       requests:
-        cpu: 500m
-        memory: 100Mi
-  # configuration of the curation service
+        cpu: 100m
+        memory: 736Mi
   curation:
-    # Enable the deployment of the curation service
     enabled: true
-    # Configuration the schedulling of curator
     schedule: "30 3 * * *"
-    # # Resource spec for curation pods
-    # resources:
-    #   requests:
-    #     cpu: "100m"
-  # configuration of the fluentd service
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
   fluentd:
-    # Enable the deployment of the fluentd service
     enabled: true
-    # # Resource spec for fluentd pods
-    # resources:
-    #   requests:
-    #     cpu: "100m"
-
-# configuration of the eventrouter service
+    resources:
+      limits:
+        memory: 736Mi
+      requests:
+        cpu: 100m
+        memory: 736Mi
 eventrouter:
-  # Enable the deployment of the eventrouter service
   enabled: false
-  # number of eventrouter instances
   replicas: 1
-  # Resource spec for eventrouter pods
   resources:
     limits:
       cpu: 400m
@@ -105,13 +71,15 @@ eventrouter:
     requests:
       cpu: "100m"
       memory: 128Mi
-
-# configuration of the logforwarder service
 logforwarder:
-  # Enable the deployment of the logforwarder service
   enabled: false
-  # spec of the og forwarder
   spec: |
+    outputs:
+    - name: elasticsearch-mgmt1
+      type: "elasticsearch"
+      url: https://elasticsearch-openshift-logging.apps.mgmt1.mgmt1.ocp.aws
+      secret:
+          name: elasticsearch-mgmt1
     pipelines: 
     - name: all-to-default
       inputRefs:
@@ -120,6 +88,15 @@ logforwarder:
       - audit
       outputRefs:
       - default
+    - name: all-to-mgmt1
+      inputRefs:
+      - infrastructure
+      - application
+      - audit
+      outputRefs:
+      - elasticsearch-mgmt1
+      labels:
+        cluster: "pfd"
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
@@ -127,13 +104,14 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     type: namespace
-    name: "logging-operator"
-    display_name: Operator LOGGING
-    description: LOGGING operators configured by startx
+    name: "openshift-logging"
+    display_name: "Startx LOGGING"
+    requester: startx
+    description: Openshift logging configured by STARTX
   rbac: 
-    enabled: false
+    enabled: true
     groups: 
     - id: devops-view
       name: devops
@@ -143,13 +121,25 @@ project:
       role: admin
   networkpolicy: 
     enabled: false
+    rules: 
+    - id: allow-openshift-operators-redhat
+      spec: |
+        podSelector: null
+        ingress:
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                project: openshift-operators-redhat
   limits: 
     enabled: false
   quotas: 
     enabled: false
-
+    
 # Configuration of the operator (see https://startxfr.github.io/helm-repository/charts/operator)
 operator:
+  enabled: false
+  context: 
+    <<: *context
   subscription:
     enabled: true
     name: "cluster-logging"

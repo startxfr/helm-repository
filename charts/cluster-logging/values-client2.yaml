@@ -6,62 +6,19 @@ context: &context
   environment: infra
   component: logging
   app: openshift-logging
+
+# see https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html/logging/configuring-your-logging-deployment
 logging:
   enabled: false
-  infra_enabled: true
-  hooked: false
-  managementState: "Managed"
-  elasticsearch:
-    enabled: true
-    replicas: 3
-    resources:
-      limits:
-        memory: 16Gi
-      requests:
-        cpu: 500m
-        memory: 16Gi
-    storage:
-      class: "gov-default-retain"
-      size: "200G"
-  kibana:
-    enabled: true
-    replicas: 1
-    resources:
-      limits:
-        memory: 736Mi
-      requests:
-        cpu: 100m
-        memory: 736Mi
-  curation:
-    enabled: true
-    schedule: "30 3 * * *"
-    resources:
-      limits:
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 256Mi
-  fluentd:
-    enabled: true
-    resources:
-      limits:
-        memory: 736Mi
-      requests:
-        cpu: 100m
-        memory: 736Mi
-eventrouter:
-  enabled: false
-  replicas: 1
-  resources:
-    limits:
-      cpu: 400m
-      memory: 512Mi
-    requests:
-      cpu: "100m"
-      memory: 128Mi
 logforwarder:
-  enabled: false
+  enabled: true
   spec: |
+    outputs:
+    - name: elasticsearch-mgmt1
+      type: "elasticsearch"
+      url: https://elasticsearch-openshift-logging.apps.mgmt1.mgmt1.ocp.aws
+      secret:
+          name: elasticsearch-mgmt1
     pipelines: 
     - name: all-to-default
       inputRefs:
@@ -70,6 +27,15 @@ logforwarder:
       - audit
       outputRefs:
       - default
+    - name: all-to-mgmt1
+      inputRefs:
+      - infrastructure
+      - application
+      - audit
+      outputRefs:
+      - elasticsearch-mgmt1
+      labels:
+        cluster: "client2"
 
 # Configuration of the project (see https://startxfr.github.io/helm-repository/charts/project)
 project: 
