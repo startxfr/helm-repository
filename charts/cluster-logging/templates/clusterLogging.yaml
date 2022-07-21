@@ -116,8 +116,6 @@ spec:
       {{- end }}
       {{- end }}
       {{- if .Values.logging.infra_enabled }}
-        nodeSelector:
-          node-role.kubernetes.io/infra: ''
         tolerations:
         - key: "node-role.kubernetes.io/infra"
           operator: "Exists"
