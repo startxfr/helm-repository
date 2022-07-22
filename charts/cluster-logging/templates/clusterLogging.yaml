@@ -115,13 +115,5 @@ spec:
         resources: {}
       {{- end }}
       {{- end }}
-      {{- if .Values.logging.infra_enabled }}
-        nodeSelector:
-          node-role.kubernetes.io/infra: ''
-        tolerations:
-        - key: "node-role.kubernetes.io/infra"
-          operator: "Exists"
-          effect: "NoSchedule"
-      {{- end }}
   {{- end }}{{- end }}
 {{- end }}
