@@ -161,3 +161,4 @@ helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent
 | 10.12.81 | 2022-07-02 | publish stable update for the full repository
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository
 | 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
+| 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
