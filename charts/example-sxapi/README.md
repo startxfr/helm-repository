@@ -232,6 +232,6 @@ helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubuser
 | 10.12.71 | 2022-06-28 | Debug the appVersion in all charts
 | 10.12.72 | 2022-07-02 | Common release
 | 10.12.77 | 2022-07-02 | Stable for clients
-| 10.12.81 | 2022-07-02 | publish stable update for the full repository
-| 10.12.91 | 2022-07-03 | publish stable update for the full repository
-| 10.12.97 | 2022-09-16 | All chart are aligned to release 10.12.97
+| 10.12.81 | 2022-07-02 | publish stable update for the full repository| 10.12.91 | 2022-07-03 | publish stable update for the full repository
+| 10.12.97 | 2022-09-16 | publish stable update for the full repository
+| 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.99
