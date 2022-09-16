@@ -32,7 +32,7 @@ to run locally a simulated cluster.
 #### 2.1. Install this repository
 
 ```bash
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
 ```
 
 #### 2.2. List all chart in this repository

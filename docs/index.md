@@ -3,12 +3,11 @@
 [![latest](https://img.shields.io/badge/latest-v11.5.3-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/11.5.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
-For more informations and access to the helm index, you can visit the [startx helm-repository homepage](https://startxfr.github.io/helm-repository).
 
 ## Helm repository content
 
 This repository host various helm chart targeting the Openshift Container Platform environment. Charts could be
-divided into 3 main category ([basic charts](index.md#basic-helm-charts), [cluster charts](index.md#cluster-helm-charts), , [chaos charts](index.md#chaos-helm-charts) and [examples charts](index.md#examples-helm-charts))
+divided into 4 main category ([basic charts](index.md#basic-helm-charts), [cluster charts](index.md#cluster-helm-charts), [chaos charts](index.md#chaos-helm-charts) and [examples charts](index.md#examples-helm-charts))
 
 ### Cluster Helm charts
 
@@ -48,7 +47,9 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 #### Use Cluster charts
 
 ```bash
+# Add the STARTX helm repository
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
+# Add individual charts
 helm install startx/cluster-config
 helm install startx/cluster-rbac
 helm install startx/cluster-auth
@@ -89,7 +90,9 @@ Helm chart without prefix are basic chart. Basic charts configure basic element 
 #### Use Basic charts
 
 ```bash
+# Add the STARTX helm repository
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
+# Add individual charts
 helm install startx/project
 helm install startx/operator
 helm install startx/sxapi
@@ -112,7 +115,9 @@ You can deploy various tools used for chaos-testing openshift and kubernetes clu
 #### Use Chaos charts
 
 ```bash
+# Add the STARTX helm repository
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
+# Add individual charts
 helm install startx/chaos
 helm install startx/chaos-cerberus
 helm install startx/chaos-kraken
@@ -143,7 +148,9 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 #### Use Examples charts
 
 ```bash
+# Add the STARTX helm repository
 helm repo add startx https://startxfr.github.io/helm-repository/packages/
+# Add individual charts
 helm install startx/example-deployment
 helm install startx/example-html
 helm install startx/example-imagestreams

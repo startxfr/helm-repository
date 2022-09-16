@@ -22,7 +22,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
 ```
 
 ### 3. Get information about this chart
