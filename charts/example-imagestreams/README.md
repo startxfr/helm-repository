@@ -281,3 +281,4 @@ helm install example-imagestreams-sxv4 startx/example-imagestreams -f https://ra
 | 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.101
 | 10.12.101 | 2022-09-16 | All chart are aligned to release 10.12.101
 | 10.12.105 | 2022-09-17 | All chart are aligned to release 10.12.105
+| 11.5.1 | 2022-09-17 | Initialize OCP 4.11 upgrade on all chart
