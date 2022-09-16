@@ -139,4 +139,4 @@ helm install example-chaos startx/example-chaos -f https://raw.githubusercontent
 | 10.12.77 | 2022-07-02 | Stable for clients
 | 10.12.81 | 2022-07-02 | publish stable update for the full repository
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository
-| 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.105
+| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
