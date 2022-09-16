@@ -159,7 +159,4 @@ helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com
 | 10.12.77 | 2022-07-02 | Stable for clients
 | 10.12.81 | 2022-07-02 | publish stable update for the full repository
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository
-| 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.101
-| 10.12.101 | 2022-09-16 | All chart are aligned to release 10.12.101
-| 10.12.105 | 2022-09-17 | All chart are aligned to release 10.12.105
-| 11.5.1 | 2022-09-17 | Initialize OCP 4.11 upgrade on all chart
+| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
