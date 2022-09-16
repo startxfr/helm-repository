@@ -7,7 +7,7 @@ SHARED_NAME=_sample_
 SHARED_SAMPLE=.tools/$SHARED_NAME
 export SHARED_SAMPLE_RESOURCE=.tools/sample/templates/example.yaml
 REPO_PACKAGE_DIR=docs/packages
-WORK_BRANCH=master
+WORK_BRANCH=stable
 MASTER_BRANCH=master
 STABLE_BRANCH=stable
 GITHUB_USER=startxfr
@@ -348,7 +348,7 @@ function routerChartPublish {
     local chart_name=$1
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
     local branch_current="master"
-    # local branch_target="master"
+    local branch_target="stable"
     local current_release=""
     current_release=$(chartReadVersion $chart_name)
     if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
