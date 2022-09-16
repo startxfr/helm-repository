@@ -197,10 +197,6 @@ helm install example-php-hpa startx/example-php -f https://raw.githubusercontent
 | 10.12.72 | 2022-07-02 | Common release
 | 10.12.77 | 2022-07-02 | Stable for clients
 | 10.12.81 | 2022-07-02 | publish stable update for the full repository
-<<<<<<< HEAD
-| 10.12.91 | 2022-07-03 | publish stable update for the full repository
-| 10.12.97 | 2022-09-16 | All chart are aligned to release 10.12.97
-=======
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository
-| 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.99
->>>>>>> devel
+| 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.101
+| 10.12.101 | 2022-09-16 | All chart are aligned to release 10.12.101
