@@ -135,3 +135,4 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 10.12.81 | 2022-07-02 | publish stable update for the full repository
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository
 | 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.101
+| 10.12.101 | 2022-09-16 | All chart are aligned to release 10.12.101
