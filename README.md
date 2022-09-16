@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# helm-repository [![latest](https://img.shields.io/badge/latest-v10.12.97-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/10.12.34) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
-=======
-# helm-repository [![latest](https://img.shields.io/badge/latest-v10.12.101-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/10.12.34) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
->>>>>>> devel
+# helm-repository [![latest](https://img.shields.io/badge/latest-v11.5.1-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/10.12.34) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 
