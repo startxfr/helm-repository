@@ -199,3 +199,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository
 | 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.101
 | 10.12.101 | 2022-09-16 | All chart are aligned to release 10.12.101
+| 10.12.105 | 2022-09-17 | All chart are aligned to release 10.12.105
