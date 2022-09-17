@@ -198,3 +198,4 @@ chaos-monkey startx/chaos-monkey
 | 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
 | 11.5.5 | 2022-09-17 | Released but must be tested release
 | 11.5.5 | 2022-09-17 | Released but must be tested release
+| 11.5.5 | 2022-09-17 | Move STARTX chart dependencies to release 11.5.1
