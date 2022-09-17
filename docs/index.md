@@ -164,9 +164,9 @@ helm install startx/example-fruitapp-shared
 helm install startx/example-fruitapp-app
 ```
 
-## Install a local copy of this repository
+## Install STARTX repository
 
-### 1. Requirements
+### 1. Using Helm
 
 #### 1.1. install cli dependencies
 
@@ -183,7 +183,7 @@ oc login -t <my-token> <my-openshift-api>
 If you don't have access to an openshift cluster, consider using codeready-container to
 run locally a simulated cluster.
 
-### 2. Install helm-repository
+### 2. Using Openshift
 
 #### 2.1. Deploy via HelmChartRepository
 
@@ -224,7 +224,7 @@ EOF
 
 #### 2.3. List all charts
 
-You can use the [Openshift developper perspective of your console](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html-single/web_console/#odc-about-developer-perspective)
+You can use the [Openshift developper perspective of your console](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html-single/web_console/#odc-about-developer-perspective)
 
 ### 3. Install local helm
 
@@ -238,58 +238,19 @@ cd helm-repository
 #### 3.2. List all charts
 
 ```bash
-ls charts
+# Add the STARTX helm repository
+helm repo add startx .
+# List all charts in the STARTX repository
+helm list startx
 ```
 
 #### 3.3 Install a local chart
 
 ```bash
-# oc apply -k charts/<chart>
-helm install startx/chaos
-helm install startx/chaos-cerberus
-helm install startx/chaos-kraken
-helm install startx/chaos-mesh
-helm install startx/chaos-litmmus
-helm install startx/chaos-monkey
-helm install charts/cluster-config
-helm install charts/cluster-rbac
-helm install charts/cluster-auth
-helm install charts/cluster-console
-helm install charts/cluster-storage
-helm install charts/cluster-logging
-helm install charts/cluster-pipeline
-helm install charts/cluster-metering
-helm install charts/cluster-istio
-helm install charts/cluster-knative
-helm install charts/cluster-ocs
-helm install charts/cluster-kubevirt
-helm install charts/cluster-vault
-helm install charts/cluster-quay
-helm install charts/cluster-3scale
-helm install charts/cluster-workspace
-helm install startx/cluster-vpa
-helm install startx/cluster-sso
-helm install startx/cluster-ptp
-helm install startx/cluster-nexus
-helm install startx/cluster-keycloak
-helm install startx/cluster-jenkins
-helm install startx/cluster-gitlab
-helm install startx/cluster-compliance
-helm install startx/cluster-machine
-helm install charts/project
-helm install charts/operator
-helm install charts/sxapi
-helm install charts/example-deployment
-helm install startx/example-html
-helm install startx/example-imagestreams
-helm install startx/example-knative
-helm install startx/example-php
-helm install charts/example-pod
-helm install charts/example-chaos
-helm install charts/example-sxapi
-helm install startx/example-fruitapp-project
-helm install startx/example-fruitapp-shared
-helm install startx/example-fruitapp-app
+# Add the STARTX helm repository
+helm repo add startx .
+# Install the STARTX available chart
+helm install <chart-name>
 ```
 
 ## Install using ArgoCD
