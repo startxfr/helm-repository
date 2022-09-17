@@ -8,6 +8,16 @@ _The objectif of this release is to stabilize the full repository content and of
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.11 release](https://docs.openshift.com/container-platform/4.11)**.
 
+The objectif of this version is :
+
+- Stable support for cluster service running under an Openshift 4.11.x cluster
+- Move to as stable interface with sxcm nad ansible-managed deployments
+
+| Release                                                                       | Date       | Description                                                 |
+| ----------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------- |
+| [11.5.5](https://github.com/startxfr/helm-repository/releases/tag/11.5.5)     | 2022-09-16 | Upgrade charts to be aligned with Openshift version 4.11.5  |
+
+
 ## version 10.0.x (chauvignac)
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.10 release](https://docs.openshift.com/container-platform/4.10)**.
