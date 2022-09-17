@@ -6,11 +6,11 @@ description: Helm chart used to deploy all project required to deploy a full CI/
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.5.1
+version: 11.5.3
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.11.5
 # Icon of this helm-chart
-icon: https://startxfr.github.io/helm-repository/img/example-fruitapp-project.svg
+icon: https://helm-repository.readthedocs.io/en/latest/img/example-fruitapp-project.svg
 # category associated to this package
 category: example
 # tags
@@ -30,10 +30,10 @@ keywords:
   - microservice
   - cicd
 # STARTX helm chart repository homepage
-home: https://startxfr.github.io/helm-repository
+home: https://helm-repository.readthedocs.io/en/latest
 # Sources and documentation for this chart
 sources:
-  - https://startxfr.github.io/helm-repository/charts/example-sxapi
+  - https://helm-repository.readthedocs.io/en/latest/charts/example-sxapi
   - https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi
 # Main maintainer contact for this helm chart
 maintainers: 
@@ -43,27 +43,27 @@ maintainers:
 
 dependencies: 
   - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: project_devel
     condition: project_devel.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: project_integration
     condition: project_integration.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: project_preprod
     condition: project_preprod.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: project_prod
     condition: project_prod.enabled
   - name: example-imagestreams
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: imagestreams
     condition: imagestreams.enabled

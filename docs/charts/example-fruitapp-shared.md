@@ -113,4 +113,5 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 10.12.77 | 2022-07-02 | Stable for clients
 | 10.12.81 | 2022-07-02 | publish stable update for the full repository
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository
-| 10.12.99 | 2022-09-16 | All chart are aligned to release 10.12.99
+| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
+| 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
