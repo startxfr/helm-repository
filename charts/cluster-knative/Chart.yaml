@@ -6,11 +6,11 @@ description: Helm chart used to configure Knative at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.5.1
+version: 11.5.3
 # Version name of the knative operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.20.1
 # Icon of this helm-chart
-icon: https://startxfr.github.io/helm-repository/img/cluster-knative.svg
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-knative.svg
 # category associated to this package
 category: cluster
 # tags
@@ -30,10 +30,10 @@ keywords:
   - saas
   - idle
 # STARTX helm chart repository homepage
-home: https://startxfr.github.io/helm-repository
+home: https://helm-repository.readthedocs.io/en/latest
 # Sources and documentation for this chart
 sources:
-  - https://startxfr.github.io/helm-repository/charts/cluster-knative
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-knative
   - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-knative
 # Main maintainer contact for this helm chart
 maintainers: 
@@ -43,22 +43,22 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: projectKServing
     condition: projectKServing.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: projectKEventing
     condition: projectKEventing.enabled
   - name: operator
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "10.12.31"
     alias: operator
     condition: operator.enabled

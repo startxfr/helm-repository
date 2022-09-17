@@ -1,4 +1,4 @@
-# helm-repository [![latest](https://img.shields.io/badge/latest-v11.5.1-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/11.5.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
+# helm-repository [![latest](https://img.shields.io/badge/latest-v11.5.3-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/11.5.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 
@@ -32,7 +32,7 @@ to run locally a simulated cluster.
 #### 2.1. Install this repository
 
 ```bash
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
 ```
 
 #### 2.2. List all chart in this repository
