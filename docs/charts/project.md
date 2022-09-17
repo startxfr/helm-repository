@@ -20,7 +20,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
 ```
 
 ### 3. Get information about this chart
@@ -365,3 +365,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository
 | 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
 | 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
+| 11.5.5 | 2022-09-17 | Released but must be tested release
