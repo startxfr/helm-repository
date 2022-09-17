@@ -167,3 +167,4 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
 | 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
 | 11.5.5 | 2022-09-17 | Released but must be tested release
+| 11.5.5 | 2022-09-17 | Released but must be tested release
