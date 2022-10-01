@@ -120,3 +120,4 @@ helm install example-fruitapp-project startx/example-fruitapp-project
 | 11.7.2 | 2022-10-01 | publish stable update for the full repository
 | 11.7.2 | 2022-10-01 | publish stable update for the full repository
 | 11.7.3 | 2022-10-01 | Update all dependencies packages to release 11.7.1
+| 11.7.2 | 2022-10-02 | publish stable update for the full repository
