@@ -101,3 +101,4 @@ helm install cluster-localstorage startx/cluster-localstorage -f https://raw.git
 | 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
 | 11.5.5 | 2022-09-17 | Released but must be tested release
 | 11.5.5 | 2022-09-17 | Move STARTX chart dependencies to release 11.5.1
+| 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
