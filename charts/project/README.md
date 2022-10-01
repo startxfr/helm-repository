@@ -373,3 +373,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 11.7.3 | 2022-10-01 | Update all dependencies packages to release 11.7.1
 | 11.7.1 | 2022-10-02 | Improve project options
 | 11.7.3# | 2022-10-02 | Improve project options
+| 11.7.1 | 2022-10-02 | Improve project options
