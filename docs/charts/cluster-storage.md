@@ -199,3 +199,4 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
 | 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
 | 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
+| 11.7.3 | 2022-10-02 | publish stable update for the full repository
