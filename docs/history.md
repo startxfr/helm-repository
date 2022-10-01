@@ -15,6 +15,7 @@ The objectif of this version is :
 
 | Release                                                                       | Date       | Description                                                 |
 | ----------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------- |
+| [11.7.3](https://github.com/startxfr/helm-repository/releases/tag/11.7.3)     | 2022-10-01 | Upgrade charts to be aligned with Openshift version 4.11.7  |
 | [11.5.5](https://github.com/startxfr/helm-repository/releases/tag/11.5.5)     | 2022-09-16 | Upgrade charts to be aligned with Openshift version 4.11.5  |
 
 

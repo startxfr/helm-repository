@@ -30,7 +30,7 @@ Complete deployment of a project with the following characteristics :
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **rhacs-operator** configured with
   - The **latest** channel
-  - The **3.67.0** version
+  - The **3.72.0** version
   - Deployed under the **openshift-operators** project
   - The **acs** deployed
 - 1 **acs:** enabled
@@ -140,3 +140,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
 | 11.5.5 | 2022-09-17 | Released but must be tested release
 | 11.5.5 | 2022-09-17 | Move STARTX chart dependencies to release 11.5.1
+| 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release

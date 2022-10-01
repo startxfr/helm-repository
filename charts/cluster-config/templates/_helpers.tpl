@@ -50,6 +50,12 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
  - Cluster redhat projects enabled (with{{ if .redhat.operators }}{{ else }}out{{ end }} RH operators)
   # oc describe ns openshift-operators-redhat
 {{ else }}
- - Cluster project template disabled
+ - Cluster Redhat namespace disabled
+{{ end }}
+{{ if .tracing.enabled }}
+ - Cluster opentracing projects enabled (with{{ if .tracing.operators }}{{ else }}out{{ end }} OpenTracing operators)
+  # oc describe ns openshift-distributed-tracing
+{{ else }}
+ - Cluster OpenTracing namespace disabled
 {{ end }}
 {{- end -}}
