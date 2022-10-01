@@ -301,3 +301,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 11.7.3 | 2022-10-02 | Improve operator options
 | 11.7.1 | 2022-10-02 | Improve operator options
 | 11.7.2 | 2022-10-02 | publish stable update for the full repository
+| 11.7.3 | 2022-10-02 | publish stable update for the full repository
