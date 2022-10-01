@@ -12,7 +12,10 @@ MASTER_BRANCH=master
 STABLE_BRANCH=stable
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
+GITHUB_REPONAME="origin"
 GITHUB_REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
+GITLAB_REPONAME="gitlab"
+GITLAB_REPOURL="https://gitlab.com/startx1/helm"
 RTD_URL="https://$GITHUB_REPOSITORY.readthedocs.io/en/latest"
 
 
@@ -136,7 +139,8 @@ function routerRelease {
     echo -e "\e[36mRelease\e[0m Create \e[1m$next_release\e[0m tag"
     git tag $next_release -m "[release/$next_release] $next_description"
     echo -e "\e[36mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
-    git push origin $next_release $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
+    git push $GITHUB_REPONAME $next_release $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
+    git push $GITLAB_REPONAME $next_release $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
     git checkout $WORK_BRANCH
 }
 
@@ -155,7 +159,8 @@ function doHelmrepositoryRefresh {
     git checkout $MASTER_BRANCH &>/dev/null
     git merge --commit --no-edit $WORK_BRANCH
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
-    git push origin $MASTER_BRANCH $WORK_BRANCH
+    git push $GITHUB_REPONAME $MASTER_BRANCH $WORK_BRANCH
+    git push $GITLAB_REPONAME $MASTER_BRANCH $WORK_BRANCH
     git checkout $WORK_BRANCH
 }
 
