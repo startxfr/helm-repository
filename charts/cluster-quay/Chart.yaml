@@ -45,24 +45,22 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: operator
     condition: operator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: operatorsec
     condition: operatorsec.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all STARTX charts to release 11.7.3 aligned to OCP 4.11.7 release"
-    - kind: changed
-      description: "Update to Quay operator version 3.7.8"
+      description: "Update all dependencies packages to release 11.7.1"
   artifacthub.io/containsSecurityUpdates: "false"

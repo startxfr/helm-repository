@@ -44,20 +44,18 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all STARTX charts to release 11.7.3 aligned to OCP 4.11.7 release"
-    - kind: changed
-      description: "Update to Hashicrop Vault-config operator version 0.6.5"
+      description: "Update all dependencies packages to release 11.7.1"
   artifacthub.io/containsSecurityUpdates: "false"
 
