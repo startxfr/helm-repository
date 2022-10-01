@@ -184,3 +184,4 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 | 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
 | 11.7.2 | 2022-10-01 | publish stable update for the full repository
 | 11.7.2 | 2022-10-01 | publish stable update for the full repository
+| 11.7.3 | 2022-10-01 | Update all dependencies packages to release 11.7.1
