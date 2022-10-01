@@ -132,6 +132,11 @@ redhat:
   # Enable redhat operator namespace
   operators: false
 
+# Configuration of cluster config for opentracing tools
+tracing:
+  # Enable opentracing operator namespace
+  operators: false
+
 # Configuration of the cluster-version feature
 helm_reposistory:
   # Enable the cluster-version
@@ -169,9 +174,9 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.4.0-152"
+    version: "5.5.2"
     operator: 
-      channel: "stable-5.4"
+      channel: "stable"
       name: elasticsearch-operator
       installPlanApproval: Automatic
       # csv: elasticsearch-operator
