@@ -81,10 +81,10 @@ project:
     enabled: true
     user:
     - id: vault-config-sa-edit
-      name: "system:serviceaccount:default-vault-config:vault"
+      name: "system:serviceaccount:default-vault-config:{{ .Release.name }}"
       role: edit
     - id: vault-config-agent-injector-sa-admin
-      name: "system:serviceaccount:default-vault-config:vault-agent-injector"
+      name: "system:serviceaccount:default-vault-config:{{ .Release.name }}-agent-injector"
       role: admin
 
 
@@ -207,3 +207,4 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 11.7.2 | 2022-10-01 | publish stable update for the full repository
 | 11.7.2 | 2022-10-01 | publish stable update for the full repository
 | 11.7.3 | 2022-10-01 | Update all dependencies packages to release 11.7.1
+| 11.7.2 | 2022-10-02 | publish stable update for the full repository
