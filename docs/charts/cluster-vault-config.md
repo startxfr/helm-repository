@@ -81,10 +81,10 @@ project:
     enabled: true
     user:
     - id: vault-config-sa-edit
-      name: "system:serviceaccount:default-vault-config:{{ .Release.name }}"
+      name: "system:serviceaccount:default-vault-config:vault"
       role: edit
     - id: vault-config-agent-injector-sa-admin
-      name: "system:serviceaccount:default-vault-config:{{ .Release.name }}-agent-injector"
+      name: "system:serviceaccount:default-vault-config:vault-agent-injector"
       role: admin
 
 

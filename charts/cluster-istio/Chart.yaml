@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.7.1
+version: 11.7.3
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.2.2
 # Icon of this helm-chart
@@ -45,39 +45,37 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: project
     condition: project.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: operatorJaeger
     condition: operatorJaeger.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.5.1"
+    version: "11.7.1"
     alias: operatorIstio
     condition: operatorIstio.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all STARTX charts to release 11.7.1 aligned to OCP 4.11.7 release"
-    - kind: changed
-      description: "Update to servicemesh operator version 2.2.2 running Istio version 1.12.7, elastic 5.5.2, Envoy Proxy version 1.20.6, Jaeger version 1.36 and Kiali version 1.48.2"
+      description: "Update all dependencies packages to release 11.7.1"
   artifacthub.io/containsSecurityUpdates: "false"
