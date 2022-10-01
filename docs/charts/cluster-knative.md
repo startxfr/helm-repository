@@ -183,3 +183,4 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 | 11.5.5 | 2022-09-17 | Move STARTX chart dependencies to release 11.5.1
 | 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
 | 11.7.3 | 2022-10-02 | publish stable update for the full repository
+| 11.7.4 | 2022-10-02 | publish stable update for the full repository
