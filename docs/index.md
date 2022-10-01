@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![latest](https://img.shields.io/badge/latest-v11.5.3-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/11.5.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
+[![latest](https://img.shields.io/badge/latest-v11.7.1-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/11.7.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 
