@@ -8,7 +8,7 @@ type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
 version: 11.7.1
 # Version name of the gitlab operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 1.0.0
+appVersion: 6.4.1
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-gitlab.svg
 # category associated to this package
@@ -50,7 +50,7 @@ dependencies:
     condition: project.enabled
   - name: gitlab
     repository: https://charts.gitlab.io/
-    version: "5.8.2"
+    version: "6.4.1"
     alias: gitlab
     condition: gitlab.enabled
 
@@ -58,5 +58,7 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: "Align all STARTX charts to release 11.7.1 aligned to OCP 4.11.7 release"
+    - kind: changed
+      description: "Update to gitlab operator version 6.4.1"
   artifacthub.io/containsSecurityUpdates: "false"
 
