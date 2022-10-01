@@ -98,6 +98,7 @@ function routerRelease {
     local current_release=""
     local next_date=""
     local next_release=""
+    git checkout $WORK_BRANCH &>/dev/null
     current_release="$(cat $PROJECT_PATH/.tools/repo-release)"
     next_date="$(date +%Y-%m-%d)"
     next_release=$(cat $PROJECT_PATH/.tools/repo-release  | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
@@ -152,6 +153,7 @@ function routerArchive {
 # router for archive command
 function doHelmrepositoryRefresh {
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:-$RTD_URL}"
+    git checkout $WORK_BRANCH &>/dev/null
     helm repo index --url ${3:-$RTD_URL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
     git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
     git commit -m "[docs] update repository ${1:-default} index" $PROJECT_PATH/docs/${2:-packages} &>/dev/null
@@ -161,7 +163,7 @@ function doHelmrepositoryRefresh {
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
     git push $GITHUB_REPONAME $MASTER_BRANCH $WORK_BRANCH
     git push $GITLAB_REPONAME $MASTER_BRANCH $WORK_BRANCH
-    git checkout $WORK_BRANCH
+    git checkout $WORK_BRANCH &>/dev/null
 }
 
 # router for version sub-command

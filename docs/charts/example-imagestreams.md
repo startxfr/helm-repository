@@ -283,8 +283,4 @@ helm install example-imagestreams-sxv4 startx/example-imagestreams -f https://ra
 | 11.5.5 | 2022-09-17 | Released but must be tested release
 | 11.5.5 | 2022-09-17 | Move STARTX chart dependencies to release 11.5.1
 | 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
-| 11.7.2 | 2022-10-01 | publish stable update for the full repository
-| 11.7.2 | 2022-10-01 | publish stable update for the full repository
-| 11.7.3 | 2022-10-01 | Update all dependencies packages to release 11.7.1
-| 11.7.2 | 2022-10-02 | publish stable update for the full repository
 | 11.7.3 | 2022-10-02 | publish stable update for the full repository
