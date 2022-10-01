@@ -81,10 +81,10 @@ project:
     enabled: true
     user:
     - id: vault-config-sa-edit
-      name: "system:serviceaccount:default-vault-config:vault"
+      name: "system:serviceaccount:default-vault-config:{{ .Release.name }}"
       role: edit
     - id: vault-config-agent-injector-sa-admin
-      name: "system:serviceaccount:default-vault-config:vault-agent-injector"
+      name: "system:serviceaccount:default-vault-config:{{ .Release.name }}-agent-injector"
       role: admin
 
 
@@ -202,3 +202,4 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
 | 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
 | 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
+| 11.7.3 | 2022-10-02 | publish stable update for the full repository
