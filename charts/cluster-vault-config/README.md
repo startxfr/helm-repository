@@ -107,14 +107,11 @@ more information on the availables options you can set under this **vault** prop
 Configuration of default properties all disabled by default. This mean no resource will be created unless overwriting default parameters. Default configuration have the following characteristics :
 
 - 1 **project** named **default-vault-config**
-- 1 **operatorGroup** named **vault-config** to enable codeready operator in the project
-- 1 **subscription** named **vault-config** to deploy codeready operator in the project with the following characteristics
-  - operator name is **vault-config**
-  - operator version is **2.3.0**
-  - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **vault-config** to deploy cheCluster in the project with the following characteristics
-  - storage class **gp2**
-  - storage size defined to **1Gi**
+- 1 **operatorGroup** named **vault-config** to enable vault-config operator in the project
+- 1 **subscription** named **vault-config-operator** to deploy vault-config operator in the project with the following characteristics
+  - operator name is **vault-config-operator**
+  - operator version is **0.6.5**
+  - operator catalog is **community-operators** located in **openshift-marketplace**
 
 ```bash
 # base configuration running default configuration
@@ -125,15 +122,12 @@ helm install cluster-vault-config startx/cluster-vault-config
 
 Configuration of startx properties with the following characteristics :
 
-- 1 **project** named **openshift-vault-config** (disabled by default)
-- 1 **operatorGroup** named **vault-config** (disabled by default)
-- 1 **subscription** named **vault-config** (disabled by default)
-  - operator name is **vault-config**
-  - operator version is **2.3.0**
-  - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **vault-config** to deploy cheCluster in the project with the following characteristics
-  - storage class **startx-aws-generic-retain**
-  - storage size defined to **2Gi**
+- 1 **project** named **startx-vault-config** (disabled by default)
+- 1 **operatorGroup** named **vault-config** to enable vault-config operator in the project
+- 1 **subscription** named **vault-config-operator** to deploy vault-config operator in the project with the following characteristics
+  - operator name is **vault-config-operator**
+  - operator version is **0.6.5**
+  - operator catalog is **community-operators** located in **openshift-marketplace**
 
 ```bash
 # base configuration running startx configuration
