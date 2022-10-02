@@ -5,11 +5,11 @@ context: &context
   scope: startx
   cluster: default
   environment: demo
-  component: hugo
+  component: sso
   app: manpage
   version: "0.0.1"
 html:
-  namespace: demo-hugo
+  namespace: demo-sso
   expose:
     enabled: true
   version: "alpine3"
@@ -19,14 +19,14 @@ html:
       <!DOCTYPE html>
       <html lang="en-us">
         <head>
-          <title>Manpage of the hugo demo</title>
+          <title>Manpage of the Redhat SSO demo</title>
         </head>
         <body>
-          <h1>Manpage of the hugo demo</h1> 
+          <h1>Manpage of the Redhat SSO demo</h1> 
           <h2>Purpose of this demo</h2> 
           <p>
-            The purpose of this demo is to show you how Hugo work and how
-            it can help you dealing with document generation challenges.
+            The purpose of this demo is to show you how sso integration with Openshift work and how
+            it can help you dealing with SSO and federation of authentication challenges.
           </p> 
           <h2>Installing this demo</h2> 
           <h3>Requirements</h3> 
@@ -39,19 +39,20 @@ html:
             for a complete guideline on how to deploy an SXCM-managed cluster. 
           </p> 
           <h4>SXCM Cluster-service</h4> 
-          <i>No additionnal SXCM cluster service required.</i> 
+          <p>Install the sso cluster service. This cluster service is based on the <a href="https://artifacthub.io/packages/helm/startx/cluster-sso" target="_blank" alt="startx cluster-sso Helm-chart">STARTX cluster-sso Helm-chart</a>.</p> 
+          <code>sxcm resource enable sso</code>
           <h3>Initialize this demo</h3> 
           <p>Start the demo context with the following command :</p> 
-          <code>sxcm demo run hugo begin</code>
+          <code>sxcm demo run sso begin</code>
           <h2>Running the demo scenario</h2> 
           <h3>Step 1</h3> 
           <p>Run first step with the following command :</p> 
-          <code>sxcm demo run hugo step 1</code>
+          <code>sxcm demo run sso step 1</code>
           <h3>Step 2</h3> 
           <p>Run second step with the following command :</p> 
-          <code>sxcm demo run hugo step 2</code>
+          <code>sxcm demo run sso step 2</code>
           <h2>Finishing this demo</h2> 
           <p>Cleanup the demo context with the following command :</p> 
-          <code>sxcm demo run hugo end</code>
+          <code>sxcm demo run sso end</code>
         </body>
       </html>

@@ -19,13 +19,40 @@ html:
       <!DOCTYPE html>
       <html lang="en-us">
         <head>
-          <title>Manpage of the Ansible Automation runner demo</title>
+          <title>Manpage of the automation-runner demo</title>
         </head>
         <body>
-          <h1>Manpage of the Ansible Automation runner demo</h1> 
-          <h1>Information</h1> 
+          <h1>Manpage of the automation-runner demo</h1> 
+          <h2>Purpose of this demo</h2> 
           <p>
-            Content TO DO
+            The purpose of this demo is to show you how automation-runner work under an Openshift platform and how
+            it can help you dealing with IT Automation workload challenges.
           </p> 
+          <h2>Installing this demo</h2> 
+          <h3>Requirements</h3> 
+          <h4>STARTX cluster manager (SXCM)</h4> 
+          <p>
+           Installing your cluster with <a href="https://sxcm.readthedocs.io/en/latest/" target="_blank" alt="STARTX SXCM">STARTX SXCM</a>
+            Allow you to instanciate this demo as well as its requirements. 
+            You can follow <a href="https://sxcm.readthedocs.io/en/latest/1-installation/" target="_blank" alt="SXCM installation docs">SXCM installation guide</a>
+            and <a href="https://sxcm.readthedocs.io/en/latest/2-cluster-management/" target="_blank" alt="SXCM cluster creation docs">SXCM cluster management</a> 
+            for a complete guideline on how to deploy an SXCM-managed cluster. 
+          </p> 
+          <h4>SXCM Cluster-service</h4> 
+          <p>Install the automation-runner cluster service. This cluster service is based on the <a href="https://artifacthub.io/packages/helm/startx/cluster-automation-runner" target="_blank" alt="startx cluster-automation-runner Helm-chart">STARTX cluster-automation-runner Helm-chart</a>.</p> 
+          <code>sxcm resource enable automation-runner</code>
+          <h3>Initialize this demo</h3> 
+          <p>Start the demo context with the following command :</p> 
+          <code>sxcm demo run automation-runner begin</code>
+          <h2>Running the demo scenario</h2> 
+          <h3>Step 1</h3> 
+          <p>Run first step with the following command :</p> 
+          <code>sxcm demo run automation-runner step 1</code>
+          <h3>Step 2</h3> 
+          <p>Run second step with the following command :</p> 
+          <code>sxcm demo run automation-runner step 2</code>
+          <h2>Finishing this demo</h2> 
+          <p>Cleanup the demo context with the following command :</p> 
+          <code>sxcm demo run automation-runner end</code>
         </body>
       </html>
