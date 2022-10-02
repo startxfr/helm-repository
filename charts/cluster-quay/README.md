@@ -184,3 +184,4 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 | 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
 | 11.7.3 | 2022-10-02 | publish stable update for the full repository
 | 11.7.4 | 2022-10-02 | publish stable update for the full repository
+| 11.7.5 | 2022-10-02 | publish stable update for the full repository
