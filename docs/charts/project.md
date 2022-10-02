@@ -370,3 +370,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 11.7.4 | 2022-10-02 | publish stable update for the full repository
 | 11.7.5 | 2022-10-02 | publish stable update for the full repository
 | 11.7.6 | 2022-10-02 | New stabel package for project chart
+| 11.7.9 | 2022-10-02 | publish stable update for the full repository
