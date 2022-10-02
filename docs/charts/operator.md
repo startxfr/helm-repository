@@ -298,3 +298,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 11.7.4 | 2022-10-02 | publish stable update for the full repository
 | 11.7.5 | 2022-10-02 | publish stable update for the full repository
 | 11.7.6 | 2022-10-02 | New stabel package for operator chart
+| 11.7.9 | 2022-10-02 | publish stable update for the full repository
