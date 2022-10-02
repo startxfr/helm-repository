@@ -17,7 +17,7 @@ GITHUB_REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
 GITLAB_REPONAME="gitlab"
 GITLAB_REPOURL="https://gitlab.com/startx1/helm"
 RTD_URL="https://$GITHUB_REPOSITORY.readthedocs.io/en/latest"
-
+HELM_REPOURL="https://startxfr.github.io/$GITHUB_REPOSITORY"
 
 
 #####################
@@ -88,7 +88,7 @@ function routerList {
 
 # router for publish command
 function routerPublish {
-    doHelmrepositoryRefresh default packages $RTD_URL Publish 36
+    doHelmrepositoryRefresh default packages $HELM_REPOURL Publish 36
 }
 
 # router for release command
@@ -146,13 +146,13 @@ function routerRelease {
 
 # router for archive command
 function routerArchive {
-    doHelmrepositoryRefresh archive packages-archives $RTD_URL Archive 37
+    doHelmrepositoryRefresh archive packages-archives $HELM_REPOURL Archive 37
 }
 
 # router for archive command
 function doHelmrepositoryRefresh {
-    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:-$RTD_URL}"
-    helm repo index --url ${3:-$RTD_URL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
+    echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:-$HELM_REPOURL}"
+    helm repo index --url ${3:-$HELM_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
     git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
     git commit -m "[docs] update repository ${1:-default} index" $PROJECT_PATH/docs/${2:-packages} &>/dev/null
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
