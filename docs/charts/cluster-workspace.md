@@ -116,7 +116,7 @@ operator:
     hooked: true
     name: "codeready-workspaces"
     namespace: "workspaces-operator"
-    version: "v2.3.0"
+    version: "v2.13.100"
     operator:
       channel: latest
       name: codeready-workspaces
@@ -142,7 +142,7 @@ Configuration of default properties all disabled by default. This mean no resour
 - 1 **operatorGroup** named **codeready-workspaces** to enable codeready operator in the project
 - 1 **subscription** named **codeready-workspaces** to deploy codeready operator in the project with the following characteristics
   - operator name is **codeready-workspaces**
-  - operator version is **2.3.0**
+  - operator version is **2.13.100**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
 - 1 **cheCluster** named **codeready-workspaces** to deploy cheCluster in the project with the following characteristics
   - storage class **gp2**
@@ -161,7 +161,7 @@ Configuration of startx properties with the following characteristics :
 - 1 **operatorGroup** named **codeready-workspaces** (disabled by default)
 - 1 **subscription** named **codeready-workspaces** (disabled by default)
   - operator name is **codeready-workspaces**
-  - operator version is **2.3.0**
+  - operator version is **2.13.100**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
 - 1 **cheCluster** named **codeready-workspaces** to deploy cheCluster in the project with the following characteristics
   - storage class **startx-aws-generic-retain**
@@ -315,3 +315,4 @@ helm install cluster-workspace startx/cluster-workspace -f https://raw.githubuse
 | 11.7.10 | 2022-10-02 | Stable release for all packages
 | 11.7.11 | 2022-10-02 | publish stable update for the full repository
 | 11.7.15 | 2022-10-02 | publish stable update for the full repository
+| 11.7.17 | 2022-10-02 | publish stable update for the full repository
