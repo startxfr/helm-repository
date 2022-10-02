@@ -38,12 +38,12 @@ helm install cluster-ansible startx/cluster-ansible
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **project:** named **ansible-automation-platform** with the following properties
+- 1 **project:** named **ansible-automation-platform-operator** with the following properties
 - 1 **operator:** named **ansible-automation-platform-operator** configured with
-  - The **early-access-cluster-scoped** channel
-  - The **2.1.0** version
-  - Deployed under the **ansible-automation-platform** project
-  - The **ansible** deployed
+  - The **stable-2.2-cluster-scoped** channel
+  - The **2.2.1** version
+  - Deployed under the **ansible-automation-platform-operator** project
+- 1 **ansible** deployed
 - 1 **ansibleHub:** enabled
 
 ```bash
@@ -126,3 +126,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 11.7.10 | 2022-10-02 | Stable release for all packages
 | 11.7.11 | 2022-10-02 | publish stable update for the full repository
 | 11.7.15 | 2022-10-02 | publish stable update for the full repository
+| 11.7.17 | 2022-10-02 | publish stable update for the full repository

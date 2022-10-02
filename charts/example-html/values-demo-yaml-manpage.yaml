@@ -1,111 +1,141 @@
-
 # Default values for configuration of a dev demo
 # see values.yaml for explanation on each params
 context: &context
-  scope: startx
-  cluster: default
-  environment: demo
-  component: yaml
-  app: manpage
-  version: "0.0.1"
+    scope: startx
+    cluster: default
+    environment: demo
+    component: yaml
+    app: manpage
+    version: "0.0.1"
 html:
-  namespace: demo-yaml
-  expose:
-    enabled: true
-  version: "alpine3"
-  replicas: 1
-  data: |
-    index.html: |-
-      <!DOCTYPE html>
-      <html lang="en-us">
-          <head>
-              <title>STARTX Demo - YAML</title>
+    namespace: demo-yaml
+    expose:
+        enabled: true
+    version: "alpine3"
+    replicas: 1
+    data: |
+        index.html: |-
+          <!DOCTYPE html>
+          <html lang="en-us">
+            <head>
+              <title>Manpage of the yaml demo</title>
               <link rel="stylesheet" href="https://goo.gl/4kFNLH">
-          </head>
-          <body>
-              <div class="container">
-                  <h1><span class="glyphicon glyphicon-eye-open"></span> STARTX Demo - Manual of the YAML demo</h1>
-                  <h2>Puprose of the demo</h2>
-                  <p>
-                      The puprose of this demo is to explain and demonstrate the use of YAML file and resources in a
-                      Kubernetes environment.
-                  </p>
-                  <p>
-                      Build around basic YAML file, this demo will show how you can change the state of a
-                      resource by changing the content of it description in a YAML format.
-                  </p>
-                  <h2>Opening this demo</h2>
-                  <p>
-                      You must use the <a href="https://sxcm.readthedocs.io/" target="_blank">sxcm cluster manager</a>
-                      to deploy this demo into an appropriate openshift cluster. This demo should be opened by running :
-                  </p>
-                  <code><b>$</b> sxcm demo enable yaml</code>
-                  <h2>Workflow of this demo</h2>
-                  <p>
-                      You must use the <a href="https://sxcm.readthedocs.io/" target="_blank">sxcm cluster manager</a>
-                      to deploy this demo into an appropriate openshift cluster. This demo should be prepared by running
-                      <code><b>$</b> sxcm demo enable yaml</code>
-                  </p>
-                  <ol>
-                      <li>
-                          <h3>Step 1</h3>
-                          <p>
-                              The first step of this demo is to observe how data could be stored into kubernetes configMap.
-                              This
-                              demo use the yaml representation of a object to illustrate how to record change into the K8S
-                              API.
-                              To run this step, you can execute the following command and follow the instructions :
-                          </p>
-                          <code>
+            </head>
+            <body>
+              <h1>Manpage of the yaml demo</h1> 
+              <h2>Purpose of this demo</h2> 
+              <p>
+                The purpose of this demo is to show you how yaml work and how
+                it can help you dealing with Application deployment challenges.
+              </p> 
+              <h2>Installing this demo</h2> 
+              <h3>Requirements</h3> 
+              <h4>STARTX cluster manager (SXCM)</h4> 
+              <p>
+               Installing your cluster with <a href="https://sxcm.readthedocs.io/en/latest/" target="_blank" alt="STARTX SXCM">STARTX SXCM</a>
+                Allow you to instanciate this demo as well as its requirements. 
+                You can follow <a href="https://sxcm.readthedocs.io/en/latest/1-installation/" target="_blank" alt="SXCM installation docs">SXCM installation guide</a>
+                and <a href="https://sxcm.readthedocs.io/en/latest/2-cluster-management/" target="_blank" alt="SXCM cluster creation docs">SXCM cluster management</a> 
+                for a complete guideline on how to deploy an SXCM-managed cluster. 
+              </p> 
+              <h4>SXCM Cluster-service</h4> 
+              <i>No additionnal SXCM cluster service required.</i> 
+              <h3>Initialize this demo</h3> 
+              <p>Start the demo context with the following command :</p> 
+              <code>sxcm demo run yaml begin</code>
+              <h2>Running the demo scenario</h2> 
+              <h3>Step 1</h3> 
+              <p>Run first step with the following command :</p> 
+              <code>sxcm demo run yaml step 1</code>
+              <h3>Step 2</h3> 
+              <p>Run second step with the following command :</p> 
+              <code>sxcm demo run yaml step 2</code>
+              <h2>Finishing this demo</h2> 
+              <p>Cleanup the demo context with the following command :</p> 
+              <code>sxcm demo run yaml end</code>
+                <div class="container">
+                    <h1><span class="glyphicon glyphicon-eye-open"></span> STARTX Demo - Manual of the YAML demo</h1>
+                    <h2>Puprose of the demo</h2>
+                    <p>
+                        The puprose of this demo is to explain and demonstrate the use of YAML file and resources in a
+                        Kubernetes environment.
+                    </p>
+                    <p>
+                        Build around basic YAML file, this demo will show how you can change the state of a
+                        resource by changing the content of it description in a YAML format.
+                    </p>
+                    <h2>Opening this demo</h2>
+                    <p>
+                        You must use the <a href="https://sxcm.readthedocs.io/" target="_blank">sxcm cluster manager</a>
+                        to deploy this demo into an appropriate openshift cluster. This demo should be opened by running :
+                    </p>
+                    <code><b>$</b> sxcm demo enable yaml</code>
+                    <h2>Workflow of this demo</h2>
+                    <p>
+                        You must use the <a href="https://sxcm.readthedocs.io/" target="_blank">sxcm cluster manager</a>
+                        to deploy this demo into an appropriate openshift cluster. This demo should be prepared by running
+                        <code><b>$</b> sxcm demo enable yaml</code>
+                    </p>
+                    <ol>
+                        <li>
+                            <h3>Step 1</h3>
+                            <p>
+                                The first step of this demo is to observe how data could be stored into kubernetes configMap.
+                                This
+                                demo use the yaml representation of a object to illustrate how to record change into the K8S
+                                API.
+                                To run this step, you can execute the following command and follow the instructions :
+                            </p>
+                            <code>
                     <b>$</b> sxcm demo run yaml step 1
                     </code>
-                      </li>
-                      <li>
-                          <h3>Step 2</h3>
-                          <p>
-                              The second step of this demo is to observe how data could be exposed into kubernetes configMap
-                              and how
-                              change are propagated to the underlying resources (like pods).
-                              To run this step, you can execute the following command and follow the instructions :
-                          </p>
-                          <code>
+                        </li>
+                        <li>
+                            <h3>Step 2</h3>
+                            <p>
+                                The second step of this demo is to observe how data could be exposed into kubernetes configMap
+                                and how
+                                change are propagated to the underlying resources (like pods).
+                                To run this step, you can execute the following command and follow the instructions :
+                            </p>
+                            <code>
                     <b>$</b> sxcm demo run yaml step 2
                     </code>
-                      </li>
-                      <li>
-                          <h3>Step 3</h3>
-                          <p>
-                              The third step of this demo is to observe how we can edit a resource and have a direct impact on
-                              it state
-                              To run this step, you can execute the following command and follow the instructions :
-                          </p>
-                          <code>
+                        </li>
+                        <li>
+                            <h3>Step 3</h3>
+                            <p>
+                                The third step of this demo is to observe how we can edit a resource and have a direct impact on
+                                it state
+                                To run this step, you can execute the following command and follow the instructions :
+                            </p>
+                            <code>
                     <b>$</b> sxcm demo run yaml step 3
                     </code>
-                          <h3>Step 4</h3>
-                          <p>
-                              The fourth step of this demo is to observe how change are reflected into the running pod :
-                          </p>
-                          <code>
+                            <h3>Step 4</h3>
+                            <p>
+                                The fourth step of this demo is to observe how change are reflected into the running pod :
+                            </p>
+                            <code>
                     <b>$</b> sxcm demo run yaml step 4
                     </code>
-                          <h3>Step 5</h3>
-                          <p>
-                              The fifh step of this demo is to observe how we can export the state of various resource, keep
-                              track of
-                              if state and apply change in a gitops way of working,
-                              To run this step, you can execute the following command and follow the instructions :
-                          </p>
-                          <code>
+                            <h3>Step 5</h3>
+                            <p>
+                                The fifh step of this demo is to observe how we can export the state of various resource, keep
+                                track of
+                                if state and apply change in a gitops way of working,
+                                To run this step, you can execute the following command and follow the instructions :
+                            </p>
+                            <code>
                     <b>$</b> sxcm demo run yaml step 5
                     </code>
-                      </li>
-                  </ol>
-                  <h2>Closing this demo</h2>
-                  <p>
-                      This demo should be closed by running
-                  </p>
-                  <code><b>$</b> sxcm demo disable yaml</code>
-              </div>
-          </body>
-      </html>
+                        </li>
+                    </ol>
+                    <h2>Closing this demo</h2>
+                    <p>
+                        This demo should be closed by running
+                    </p>
+                    <code><b>$</b> sxcm demo disable yaml</code>
+                </div>
+              </body>
+          </html>
