@@ -114,14 +114,9 @@ more information on the availables options you can set under this **vault** prop
 Configuration of default properties all disabled by default. This mean no resource will be created unless overwriting default parameters. Default configuration have the following characteristics :
 
 - 1 **project** named **default-vault**
-- 1 **operatorGroup** named **vault** to enable codeready operator in the project
-- 1 **subscription** named **vault** to deploy codeready operator in the project with the following characteristics
-  - operator name is **vault**
-  - operator version is **2.3.0**
-  - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **vault** to deploy cheCluster in the project with the following characteristics
-  - storage class **gp2**
-  - storage size defined to **1Gi**
+- 1 **chart** named **vault** to deploy vault server in the project with the following characteristics
+  - helm chart version is **0.22.0**
+  - vault server is in version **1.11.3**
 
 ```bash
 # base configuration running default configuration
@@ -132,15 +127,10 @@ helm install cluster-vault startx/cluster-vault
 
 Configuration of startx properties with the following characteristics :
 
-- 1 **project** named **openshift-vault** (disabled by default)
-- 1 **operatorGroup** named **vault** (disabled by default)
-- 1 **subscription** named **vault** (disabled by default)
-  - operator name is **vault**
-  - operator version is **2.3.0**
-  - operator catalog is **redhat-operators** located in **openshift-marketplace**
-- 1 **cheCluster** named **vault** to deploy cheCluster in the project with the following characteristics
-  - storage class **startx-aws-generic-retain**
-  - storage size defined to **2Gi**
+- 1 **project** named **startx-vault** (disabled by default)
+- 1 **chart** named **vault** to deploy vault server in the project with the following characteristics
+  - helm chart version is **0.22.0**
+  - vault server is in version **1.11.3**
 
 ```bash
 # base configuration running startx configuration
@@ -280,3 +270,4 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 11.7.10 | 2022-10-02 | Stable release for all packages
 | 11.7.11 | 2022-10-02 | publish stable update for the full repository
 | 11.7.15 | 2022-10-02 | publish stable update for the full repository
+| 11.7.17 | 2022-10-02 | publish stable update for the full repository
