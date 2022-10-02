@@ -44,7 +44,7 @@ Complete deployment of a project with the following characteristics :
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **openshift-gitops-operator** configured with
   - The **stable** channel
-  - The **1.5.0** version
+  - The **1.5.6** version
   - Deployed under the **openshift-operators** project
 - 1 **argocd:** named **openshift-gitops**
 - 1 **argocd_export:** every days
