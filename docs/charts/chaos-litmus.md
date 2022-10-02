@@ -104,24 +104,20 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 10.12.35 | 2022-06-18 | Improve icon                                                                                                                                           |
 | 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                                                                                   |
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                                                                                   |
-| 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation
-| 10.12.43 | 2022-06-18 | Improve doc for helm deployment
-| 10.12.46 | 2022-06-18 | publish stable update for the full repository
-| 10.12.47 | 2022-06-18 | Minor improvment in doc and sample values
-| 10.12.49 | 2022-06-18 | publish stable update for the full repository
-| 10.12.53 | 2022-06-18 | publish stable update for the full repository
-| 10.12.71 | 2022-06-28 | Debug the appVersion in all charts
-| 10.12.72 | 2022-07-02 | Common release
-| 10.12.77 | 2022-07-02 | Stable for clients
-| 10.12.81 | 2022-07-02 | publish stable update for the full repository
-| 10.12.97 | 2022-07-03 | publish stable update for the full repository
-| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
-| 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3| 11.5.5 | 2022-09-17 | Released but must be tested release
-| 11.5.5 | 2022-09-17 | Move STARTX chart dependencies to release 11.5.1
-| 11.5.5 | 2022-09-17 | Move STARTX chart dependencies to release 11.5.1
-| 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
-| 11.7.3 | 2022-10-02 | publish stable update for the full repository
-| 11.7.4 | 2022-10-02 | publish stable update for the full repository
-| 11.7.5 | 2022-10-02 | publish stable update for the full repository
-| 11.7.9 | 2022-10-02 | publish stable update for the full repository
-| 11.7.9 | 2022-10-02 | publish stable update for the full repository
+| 10.12.42 | 2022-06-18 | Improve schema default values, notes and polish helm deployment documentation                                                                          |
+| 10.12.43 | 2022-06-18 | Improve doc for helm deployment                                                                                                                        |
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository                                                                                                          |
+| 10.12.47 | 2022-06-18 | Minor improvment in doc and sample values                                                                                                              |
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository                                                                                                          |
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository                                                                                                          |
+| 10.12.71 | 2022-06-28 | Debug the appVersion in all charts                                                                                                                     |
+| 10.12.72 | 2022-07-02 | Common release                                                                                                                                         |
+| 10.12.77 | 2022-07-02 | Stable for clients                                                                                                                                     |
+| 10.12.81 | 2022-07-02 | publish stable update for the full repository                                                                                                          |
+| 10.12.97 | 2022-07-03 | publish stable update for the full repository                                                                                                          |
+| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart                                                                                                               |
+| 11.5.3   | 2022-09-17 | Align all STARTX charts to release 11.5.3                                                                                                              |
+| 11.7.1   | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release                                                                                       |
+| 11.7.3   | 2022-10-02 | publish stable update for the full repository                                                                                                          |
+| 11.7.9   | 2022-10-02 | publish stable update for the full repository                                                                                                          |
+| 11.7.10 | 2022-10-02 | Stable release for all packages

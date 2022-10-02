@@ -110,41 +110,38 @@ helm install example-chaos startx/example-chaos -f https://raw.githubusercontent
 
 ## History
 
-| Release | Date       | Description                                                                                            |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 10.12.5 | 2022-06-03 | Initial commit for this helm chart with default value example
-| 10.12.6 | 2022-06-03 | Create first release of chaos
-| 10.12.7 | 2022-06-03 | Stable version with startx values
-| 10.12.8 | 2022-06-04 | dding the kraken.ci and mesh
-| 10.12.9 | 2022-06-04 | Improve example-chaos options
-| 10.13.0 | 2022-06-04 | Improved SCC
-| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
-| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
-| 10.12.24 | 2022-06-05 | Add litmus and monkey support
-| 10.12.25 | 2022-06-05 | Update kubemonkey to version 1.4.1 with v1 support for rbac api
-| 10.12.6 | 2022-06-11 | Move kraken to krkn with pipeline and job support. Add cerberus support
-| 10.12.7 | 2022-06-11 | Improve example-chaos options
-| 10.12.8 | 2022-06-11 | debug project dependencies
-| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository
-| 10.12.30 | 2022-06-17 | Improved logo and global documentation
-| 10.12.33 | 2022-06-17 | publish stable update for the full repository
-| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
-| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
-| 10.12.46 | 2022-06-18 | publish stable update for the full repository
-| 10.12.49 | 2022-06-18 | publish stable update for the full repository
-| 10.12.53 | 2022-06-18 | publish stable update for the full repository
-| 10.12.71 | 2022-06-28 | Debug the appVersion in all charts
-| 10.12.72 | 2022-07-02 | Common release
-| 10.12.77 | 2022-07-02 | Stable for clients
-| 10.12.81 | 2022-07-02 | publish stable update for the full repository
-| 10.12.97 | 2022-07-03 | publish stable update for the full repository
-| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
-| 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
-| 11.5.5 | 2022-09-17 | Released but must be tested release
-| 11.5.5 | 2022-09-17 | Move STARTX chart dependencies to release 11.5.1
-| 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
-| 11.7.3 | 2022-10-02 | publish stable update for the full repository
-| 11.7.4 | 2022-10-02 | publish stable update for the full repository
-| 11.7.5 | 2022-10-02 | publish stable update for the full repository
-| 11.7.9 | 2022-10-02 | publish stable update for the full repository
+| Release  | Date       | Description                                                             |
+| -------- | ---------- | ----------------------------------------------------------------------- |
+| 10.12.5  | 2022-06-03 | Initial commit for this helm chart with default value example           |
+| 10.12.6  | 2022-06-03 | Create first release of chaos                                           |
+| 10.12.7  | 2022-06-03 | Stable version with startx values                                       |
+| 10.12.8  | 2022-06-04 | dding the kraken.ci and mesh                                            |
+| 10.12.9  | 2022-06-04 | Improve example-chaos options                                           |
+| 10.13.0  | 2022-06-04 | Improved SCC                                                            |
+| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                             |
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                     |
+| 10.12.24 | 2022-06-05 | Add litmus and monkey support                                           |
+| 10.12.25 | 2022-06-05 | Update kubemonkey to version 1.4.1 with v1 support for rbac api         |
+| 10.12.6  | 2022-06-11 | Move kraken to krkn with pipeline and job support. Add cerberus support |
+| 10.12.7  | 2022-06-11 | Improve example-chaos options                                           |
+| 10.12.8  | 2022-06-11 | debug project dependencies                                              |
+| 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                    |
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository                           |
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation                                  |
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository                           |
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                               |
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                    |
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository                           |
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository                           |
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository                           |
+| 10.12.71 | 2022-06-28 | Debug the appVersion in all charts                                      |
+| 10.12.72 | 2022-07-02 | Common release                                                          |
+| 10.12.77 | 2022-07-02 | Stable for clients                                                      |
+| 10.12.81 | 2022-07-02 | publish stable update for the full repository                           |
+| 10.12.97 | 2022-07-03 | publish stable update for the full repository                           |
+| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart                                |
+| 11.5.3   | 2022-09-17 | Align all STARTX charts to release 11.5.3                               |
+| 11.7.1   | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release        |
+| 11.7.3   | 2022-10-02 | publish stable update for the full repository                           |
+| 11.7.9   | 2022-10-02 | publish stable update for the full repository                           |
+| 11.7.10 | 2022-10-02 | Stable release for all packages
