@@ -23,10 +23,38 @@ html:
         </head>
         <body>
           <h1>Manpage of the Horizontal Pod Autoscaler (HPA) demo</h1> 
-          <h1>Information</h1> 
+          <h2>Purpose of this demo</h2> 
           <p>
-            Observe the HPA demo route with <strong>oc get route -n &lt;demo-hpa&gt;<strong> and send multiple request with
-            tools like ab <strong>ab -n 1000 -c 10 &lt;demo-hpa-route-url&gt;<strong>.
+            The purpose of this demo is to show you how Horizontal Pod Autoscaler work and how
+            it can help you dealing with load peaks and increased activities challenges.
           </p> 
+          <h2>Installing this demo</h2> 
+          <h3>Requirements</h3> 
+          <h4>STARTX cluster manager (SXCM)</h4> 
+          <p>
+           Installing your cluster with <a href="https://sxcm.readthedocs.io/en/latest/" target="_blank" alt="STARTX SXCM">STARTX SXCM</a>
+            Allow you to instanciate this demo as well as its requirements. 
+            You can follow <a href="https://sxcm.readthedocs.io/en/latest/1-installation/" target="_blank" alt="SXCM installation docs">SXCM installation guide</a>
+            and <a href="https://sxcm.readthedocs.io/en/latest/2-cluster-management/" target="_blank" alt="SXCM cluster creation docs">SXCM cluster management</a> 
+            for a complete guideline on how to deploy an SXCM-managed cluster. 
+          </p> 
+          <h4>SXCM Cluster-service</h4> 
+          <i>No additionnal SXCM cluster service required.</i> 
+          <code>sxcm resource enable hpa</code>
+          <h3>Initialize this demo</h3> 
+          <p>Start the demo context with the following command :</p> 
+          <code>sxcm demo run hpa begin</code>
+          <h2>Running the demo scenario</h2> 
+          <h3>Step 1</h3> 
+          <p>Run first step with the following command :</p> 
+          <code>sxcm demo run hpa step 1</code>
+          <p>Observe the HPA demo route with <strong>oc get route -n &lt;demo-hpa&gt;<strong> and send multiple request with
+            tools like ab <strong>ab -n 1000 -c 10 &lt;demo-hpa-route-url&gt;<strong>.</p>
+          <h3>Step 2</h3> 
+          <p>Run second step with the following command :</p> 
+          <code>sxcm demo run hpa step 2</code>
+          <h2>Finishing this demo</h2> 
+          <p>Cleanup the demo context with the following command :</p> 
+          <code>sxcm demo run hpa end</code>
         </body>
       </html>

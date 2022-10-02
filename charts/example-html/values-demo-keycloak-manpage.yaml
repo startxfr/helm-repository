@@ -19,13 +19,40 @@ html:
       <!DOCTYPE html>
       <html lang="en-us">
         <head>
-          <title>Manpage of the Keycloak demo</title>
+          <title>Manpage of the keycloak demo</title>
         </head>
         <body>
-          <h1>Manpage of the Keycloak demo</h1> 
-          <h1>Information</h1> 
+          <h1>Manpage of the keycloak demo</h1> 
+          <h2>Purpose of this demo</h2> 
           <p>
-            Content TO DO
+            The purpose of this demo is to show you how keycloak integration with Openshift work and how
+            it can help you dealing with SSO and federation of authentication challenges.
           </p> 
+          <h2>Installing this demo</h2> 
+          <h3>Requirements</h3> 
+          <h4>STARTX cluster manager (SXCM)</h4> 
+          <p>
+           Installing your cluster with <a href="https://sxcm.readthedocs.io/en/latest/" target="_blank" alt="STARTX SXCM">STARTX SXCM</a>
+            Allow you to instanciate this demo as well as its requirements. 
+            You can follow <a href="https://sxcm.readthedocs.io/en/latest/1-installation/" target="_blank" alt="SXCM installation docs">SXCM installation guide</a>
+            and <a href="https://sxcm.readthedocs.io/en/latest/2-cluster-management/" target="_blank" alt="SXCM cluster creation docs">SXCM cluster management</a> 
+            for a complete guideline on how to deploy an SXCM-managed cluster. 
+          </p> 
+          <h4>SXCM Cluster-service</h4> 
+          <p>Install the keycloak cluster service. This cluster service is based on the <a href="https://artifacthub.io/packages/helm/startx/cluster-sso" target="_blank" alt="startx cluster-sso Helm-chart">STARTX cluster-sso Helm-chart</a>.</p> 
+          <code>sxcm resource enable sso</code>
+          <h3>Initialize this demo</h3> 
+          <p>Start the demo context with the following command :</p> 
+          <code>sxcm demo run keycloak begin</code>
+          <h2>Running the demo scenario</h2> 
+          <h3>Step 1</h3> 
+          <p>Run first step with the following command :</p> 
+          <code>sxcm demo run keycloak step 1</code>
+          <h3>Step 2</h3> 
+          <p>Run second step with the following command :</p> 
+          <code>sxcm demo run keycloak step 2</code>
+          <h2>Finishing this demo</h2> 
+          <p>Cleanup the demo context with the following command :</p> 
+          <code>sxcm demo run keycloak end</code>
         </body>
       </html>
