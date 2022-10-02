@@ -187,3 +187,4 @@ helm install cluster-metering startx/cluster-metering -f https://raw.githubuserc
 | 11.7.3 | 2022-10-02 | publish stable update for the full repository
 | 11.7.4 | 2022-10-02 | publish stable update for the full repository
 | 11.7.5 | 2022-10-02 | publish stable update for the full repository
+| 11.7.9 | 2022-10-02 | publish stable update for the full repository
