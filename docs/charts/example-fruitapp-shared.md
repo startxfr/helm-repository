@@ -85,36 +85,37 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 
 ## History
 
-| Release | Date       | Description                                                   |
-| ------- | ---------- | ------------------------------------------------------------- |
-| 9.8.239 | 2022-05-28 | Initial commit for this helm chart with default value example |
-| 9.8.240 | 2022-05-29 | Improve the schema                                            |
-| 9.8.253 | 2022-05-29 | Align all charts dependencies to release 9.8.251
-| 9.8.277 | 2022-05-31 | publish stable update for the full repository
-| 9.15.1 | 2022-06-01 | Align all chart for Openshift 4.9.15
-| 9.15.2 | 2022-06-01 | Align all charts to release 9.15.1
-| 9.15.3 | 2022-06-01 | Align all charts to release 9.15.3
-| 10.12.1 | 2022-06-01 | Align all charts to release 10.12.1
-| 10.12.3 | 2022-06-01 | publish stable update for the full repository
-| 10.12.4 | 2022-06-01 | Align all charts to release 10.12.4
-| 10.12.5 | 2022-06-01 | publish stable update for the full repository
-| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22
-| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository
-| 10.12.30 | 2022-06-17 | Improved logo and global documentation
-| 10.12.33 | 2022-06-17 | publish stable update for the full repository
-| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31
-| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41
-| 10.12.46 | 2022-06-18 | publish stable update for the full repository
-| 10.12.49 | 2022-06-18 | publish stable update for the full repository
-| 10.12.53 | 2022-06-18 | publish stable update for the full repository
-| 10.12.71 | 2022-06-28 | Debug the appVersion in all charts
-| 10.12.72 | 2022-07-02 | Common release
-| 10.12.77 | 2022-07-02 | Stable for clients
-| 10.12.81 | 2022-07-02 | publish stable update for the full repository
-| 10.12.97 | 2022-07-03 | publish stable update for the full repository
-| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart
-| 11.5.3 | 2022-09-17 | Align all STARTX charts to release 11.5.3
-| 11.7.1 | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release
-| 11.7.3 | 2022-10-02 | publish stable update for the full repository
-| 11.7.9 | 2022-10-02 | publish stable update for the full repository
+| Release  | Date       | Description                                                      |
+| -------- | ---------- | ---------------------------------------------------------------- |
+| 9.8.239  | 2022-05-28 | Initial commit for this helm chart with default value example    |
+| 9.8.240  | 2022-05-29 | Improve the schema                                               |
+| 9.8.253  | 2022-05-29 | Align all charts dependencies to release 9.8.251                 |
+| 9.8.277  | 2022-05-31 | publish stable update for the full repository                    |
+| 9.15.1   | 2022-06-01 | Align all chart for Openshift 4.9.15                             |
+| 9.15.2   | 2022-06-01 | Align all charts to release 9.15.1                               |
+| 9.15.3   | 2022-06-01 | Align all charts to release 9.15.3                               |
+| 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                              |
+| 10.12.3  | 2022-06-01 | publish stable update for the full repository                    |
+| 10.12.4  | 2022-06-01 | Align all charts to release 10.12.4                              |
+| 10.12.5  | 2022-06-01 | publish stable update for the full repository                    |
+| 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                      |
+| 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5              |
+| 10.12.29 | 2022-06-17 | publish stable update for the full repository                    |
+| 10.12.30 | 2022-06-17 | Improved logo and global documentation                           |
+| 10.12.33 | 2022-06-17 | publish stable update for the full repository                    |
+| 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                        |
+| 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                             |
+| 10.12.46 | 2022-06-18 | publish stable update for the full repository                    |
+| 10.12.49 | 2022-06-18 | publish stable update for the full repository                    |
+| 10.12.53 | 2022-06-18 | publish stable update for the full repository                    |
+| 10.12.71 | 2022-06-28 | Debug the appVersion in all charts                               |
+| 10.12.72 | 2022-07-02 | Common release                                                   |
+| 10.12.77 | 2022-07-02 | Stable for clients                                               |
+| 10.12.81 | 2022-07-02 | publish stable update for the full repository                    |
+| 10.12.97 | 2022-07-03 | publish stable update for the full repository                    |
+| 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart                         |
+| 11.5.3   | 2022-09-17 | Align all STARTX charts to release 11.5.3                        |
+| 11.7.1   | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release |
+| 11.7.3   | 2022-10-02 | publish stable update for the full repository                    |
+| 11.7.9   | 2022-10-02 | publish stable update for the full repository                    |
+| 11.7.10 | 2022-10-02 | Stable release for all packages
