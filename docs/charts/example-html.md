@@ -215,3 +215,4 @@ helm install example-html startx/example-html -f https://raw.githubusercontent.c
 | 11.7.10 | 2022-10-02 | Stable release for all packages
 | 11.7.11 | 2022-10-02 | publish stable update for the full repository
 | 11.7.15 | 2022-10-02 | publish stable update for the full repository
+| 11.7.17 | 2022-10-02 | publish stable update for the full repository
