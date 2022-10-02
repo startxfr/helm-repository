@@ -239,3 +239,4 @@ helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubuser
 | 11.7.1   | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release                                       |
 | 11.7.3   | 2022-10-02 | publish stable update for the full repository                                                          |
 | 11.7.9   | 2022-10-02 | publish stable update for the full repository                                                          |
+| 11.7.10 | 2022-10-02 | Stable release for all packages
