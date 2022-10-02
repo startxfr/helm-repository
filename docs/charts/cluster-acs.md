@@ -29,10 +29,9 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **rhacs-operator** configured with
-  - The **latest** channel
+  - The **rhacs-3.72** channel
   - The **3.72.0** version
   - Deployed under the **openshift-operators** project
-  - The **acs** deployed
 - 1 **acs:** enabled
   - **central** enabled
   - **scanner** enabled
@@ -144,3 +143,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 11.7.10 | 2022-10-02 | Stable release for all packages
 | 11.7.11 | 2022-10-02 | publish stable update for the full repository
 | 11.7.15 | 2022-10-02 | publish stable update for the full repository
+| 11.7.17 | 2022-10-02 | publish stable update for the full repository
