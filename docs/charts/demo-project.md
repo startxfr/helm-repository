@@ -90,12 +90,12 @@ helm install startx/project -f https://raw.githubusercontent.com/startxfr/helm-r
 
 ## History
 
-| Release | Date       | Description
-| ------- | ---------- | -----------------------------------------------------
-| 0.0.1   | 2020-09-14 | Initial commit for this repository
-| 0.2.5   | 2020-10-23 | Create project context
-| 0.2.8   | 2020-10-24 | Improve project options
-| 0.2.11  | 2020-10-25 | publish stable update for the full repository
-| 0.2.22  | 2020-10-26 | Align all releases to 0.2.22
-| 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts
-| 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release
+| Release | Date       | Description                                                   |
+| ------- | ---------- | ------------------------------------------------------------- |
+| 0.0.1   | 2020-09-14 | Initial commit for this repository                            |
+| 0.2.5   | 2020-10-23 | Create project context                                        |
+| 0.2.8   | 2020-10-24 | Improve project options                                       |
+| 0.2.11  | 2020-10-25 | publish stable update for the full repository                 |
+| 0.2.22  | 2020-10-26 | Align all releases to 0.2.22                                  |
+| 0.2.31  | 2020-10-26 | unstable common release for all startx helm-repository charts |
+| 0.2.33  | 2020-10-26 | Align all startx helm chart to 0.2.33 release                 |
