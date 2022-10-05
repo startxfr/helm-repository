@@ -74,7 +74,31 @@ spec:
             {{- .name | nindent 12 }}
           preferredUsername:
             {{- .preferredUsername | nindent 12 }}
-        {{ end }}
+        {{- end -}}
+  {{- else if eq .type "oidc" }}
+    - name: "{{- .name | default "default-oidc" -}}_auth"
+      type: OpenID
+      mappingMethod: claim
+      openID:
+        clientID: "{{- .oidcClientID -}}"
+        issuer: "{{- .oidcIssuer -}}"
+        {{-  if .oidcCA }}
+        ca: 
+          name: "{{- .name | default "default-oidc" -}}-oidc-ca"
+        {{- end -}}
+        {{  with .oidcClaims }}
+        claims:
+          email:
+            {{- .email | nindent 12 }}
+          name:
+            {{- .name | nindent 12 }}
+          preferredUsername:
+            {{- .preferredUsername | nindent 12 }}
+        {{- end -}}
+        {{  if .oidcClientSecret }}
+        clientSecret: 
+          name: "{{- .name | default "default-oidc" -}}-oidc-auth"
+        {{- end -}}
   {{- end -}}
   {{ end }}
   {{- else -}}
