@@ -33,19 +33,18 @@ spec:
     {{- end }}
   {{ else }}
   templates: {}
-  {{ end }}
+  {{ end }} 
   {{- if .Values.auth.authBackend -}}
-  {{-  if eq .Values.auth.authBackend.type "htpasswd" -}}
   identityProviders:
-    - name: "{{- .Values.auth.authBackend.name | default "default-htpasswd" -}}_auth"
+  {{- range .Values.auth.authBackend -}} 
+  {{-  if eq .type "htpasswd" }}
+    - name: "{{- .name | default "default-htpasswd" -}}_auth"
       type: HTPasswd
       mappingMethod: claim
       htpasswd:
         fileData:
-          name: "{{- .Values.auth.authBackend.name | default "default-htpasswd" -}}-htpasswd-auth"
-  {{- else if eq .Values.auth.authBackend.type "ldap" -}}
-  {{- with .Values.auth.authBackend -}}
-  identityProviders:
+          name: "{{- .name | default "default-htpasswd" -}}-htpasswd-auth"
+  {{- else if eq .type "ldap" }}
     - name: "{{- .name | default "default-ldap" -}}_auth"
       type: LDAP
       mappingMethod: claim
@@ -56,14 +55,14 @@ spec:
         {{- end -}}
         {{  if .ldapCA }}
         ca: 
-          name: "{{- $root.Values.auth.authBackend.name | default "default-ldap" -}}-ldap-ca"
+          name: "{{- .name | default "default-ldap" -}}-ldap-ca"
         {{- end -}}
         {{  if .ldapBindDN }}
         bindDN: "{{- .ldapBindDN -}}"
         {{- end -}}
         {{  if .ldapBindPassword }}
         bindPassword: 
-          name: "{{- $root.Values.auth.authBackend.name | default "default-ldap" -}}-ldap-auth"
+          name: "{{- .name | default "default-ldap" -}}-ldap-auth"
         {{- end -}}
         {{  with .ldapBindAttributes }}
         attributes:
@@ -77,21 +76,7 @@ spec:
             {{- .preferredUsername | nindent 12 }}
         {{ end }}
   {{- end -}}
-
-
-
-
-
-
-
-
-
-
-
-
-  {{- else -}}
-  identityProviders: {}
-  {{- end -}}
+  {{ end }}
   {{- else -}}
   identityProviders: {}
   {{- end -}}

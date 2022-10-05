@@ -1,10 +1,9 @@
 {{- if .Values.auth.enabled -}}
 {{- if .Values.auth.authBackend -}}
-{{-  if eq .Values.auth.authBackend.type "ldap" -}}
-{{-  if .Values.auth.authBackend.ldapCA -}}
 {{- $root := . -}}
 {{- $namespace := .Values.auth.namespace | default "openshift-config" -}}
-{{- with .Values.auth.authBackend -}}
+{{ range .Values.auth.authBackend }} 
+{{-  if eq .type "ldap" -}}
 ---
 kind: Configmap
 apiVersion: v1
@@ -20,7 +19,6 @@ data:
   ca.crt:  |-
     {{- .ldapCA | nindent 4 }}
 {{- end }}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
+{{ end }}
+{{ end }}
+{{ end }}
