@@ -13,6 +13,10 @@ metadata:
     {{- include "cluster-auth.annotations" $root | nindent 4 }}
     helm.sh/resource-policy: keep
 spec:
+  {{- if .Values.auth.tokenMaxAge }}
+  tokenConfig:
+    accessTokenMaxAgeSeconds: {{ .Values.auth.tokenMaxAge | default 86400 }}
+  {{- end -}}
   {{ if .Values.auth.templates }}
   templates:
     {{- with .Values.auth.templates.login }}
