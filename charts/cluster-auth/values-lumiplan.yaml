@@ -20,9 +20,9 @@ auth:
       name: lumiplan-providers
       tplFile: webtpl/lumiplan-providers.html
   authBackend:
+  - name: lumiplan-htpasswd
     type: htpasswd
-    name: lumiplan-htpasswd
-    comment: |
+    htpasswdComment: |
       htpasswd -c -b _console/ocp.passwd admin secretdemerde
       htpasswd -b _console/ocp.passwd dev dev
       htpasswd -b _console/ocp.passwd devops devops
@@ -34,4 +34,3 @@ auth:
       dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
       devops:$apr1$V.QRjS8L$qsecQFnwOyaZ/coTqDZ9h/
       ops:$apr1$LHdhpqJk$3qNVW4uqTR7sSnlZBP.9d/
-

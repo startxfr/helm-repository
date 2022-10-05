@@ -13,6 +13,10 @@ metadata:
     {{- include "cluster-auth.annotations" $root | nindent 4 }}
     helm.sh/resource-policy: keep
 spec:
+  {{- if .Values.auth.tokenMaxAge }}
+  tokenConfig:
+    accessTokenMaxAgeSeconds: {{ .Values.auth.tokenMaxAge | default 86400 }}
+  {{- end -}}
   {{ if .Values.auth.templates }}
   templates:
     {{- with .Values.auth.templates.login }}
@@ -29,18 +33,50 @@ spec:
     {{- end }}
   {{ else }}
   templates: {}
-  {{ end }}
-  {{- if .Values.auth.authBackend -}}{{-  if eq .Values.auth.authBackend.type "htpasswd" -}}
+  {{ end }} 
+  {{- if .Values.auth.authBackend -}}
   identityProviders:
-    - name: "{{- .Values.auth.authBackend.name | default "default-htpasswd" -}}_auth"
+  {{- range .Values.auth.authBackend -}} 
+  {{-  if eq .type "htpasswd" }}
+    - name: "{{- .name | default "default-htpasswd" -}}_auth"
       type: HTPasswd
       mappingMethod: claim
       htpasswd:
         fileData:
-          name: "{{- .Values.auth.authBackend.name | default "default-htpasswd" -}}-auth"
-  {{- else -}}
-  identityProviders: {}
+          name: "{{- .name | default "default-htpasswd" -}}-htpasswd-auth"
+  {{- else if eq .type "ldap" }}
+    - name: "{{- .name | default "default-ldap" -}}_auth"
+      type: LDAP
+      mappingMethod: claim
+      ldap:
+        url: "{{- .ldapURL -}}"
+        {{-  if .ldapInsecure }}
+        insecure: {{ .ldapInsecure }}
+        {{- end -}}
+        {{  if .ldapCA }}
+        ca: 
+          name: "{{- .name | default "default-ldap" -}}-ldap-ca"
+        {{- end -}}
+        {{  if .ldapBindDN }}
+        bindDN: "{{- .ldapBindDN -}}"
+        {{- end -}}
+        {{  if .ldapBindPassword }}
+        bindPassword: 
+          name: "{{- .name | default "default-ldap" -}}-ldap-auth"
+        {{- end -}}
+        {{  with .ldapBindAttributes }}
+        attributes:
+          id:
+            {{- .id | nindent 12 }}
+          email:
+            {{- .email | nindent 12 }}
+          name:
+            {{- .name | nindent 12 }}
+          preferredUsername:
+            {{- .preferredUsername | nindent 12 }}
+        {{ end }}
   {{- end -}}
+  {{ end }}
   {{- else -}}
   identityProviders: {}
   {{- end -}}

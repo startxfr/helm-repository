@@ -28,10 +28,16 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
  tpl provider : {{ .name | default "default-providers" }}-template
 {{- end }}
 {{- end }}
-{{- if .auth.authBackend }}{{-  if eq .auth.authBackend.type "htpasswd" }}
+{{- if .auth.authBackend -}}
+{{ range .auth.authBackend }} 
+{{-  if eq .type "htpasswd" -}}
      identity : {{ .name | default "default-htpasswd" }}_auth
          type : HTPasswd
-       secret : {{ .name | default "default-htpasswd" }}-auth
-{{- end }}{{- end }}
+{{- else if eq .type "ldap" -}}
+     identity : {{ .name | default "default-ldap" }}_auth
+         type : LDAP
+{{- end }}
+{{ end }}
+{{- end -}}
 {{- end }}{{- end }}
 {{- end -}}
