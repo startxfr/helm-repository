@@ -232,6 +232,69 @@
                                         ]
                                     }
                                 }
+                            },
+                            "oidcClientID": {
+                                "type": "string",
+                                "title": "OIDC Client ID",
+                                "description": "The client ID of a client registered with the OpenID provider. The client must be allowed to redirect to https://oauth-openshift.apps.<cluster_name>.<cluster_domain>/oauth2callback/<idp_provider_name>.",
+                                "examples": [
+                                    "XXXXXXXXXXXXXXX"
+                                ]
+                            },
+                            "oidcIssuer": {
+                                "type": "string",
+                                "minLength": 10,
+                                "maxLength": 500,
+                                "title": "OIDC Issuer",
+                                "description": "Issuer Identifier described in the OpenID spec. Must use https without query or fragment component.",
+                                "examples": [
+                                    "https://www.idp-issuer.com"
+                                ]
+                            },
+                            "oidcCA": {
+                                "type": "string",
+                                "title": "CA Certificate",
+                                "description": "PEM-encoded certificate authority bundle to use in validating server certificates for the configured URL.",
+                                "examples": [
+                                    "-----BEGIN CERTIFICATE-----\nMIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV\n.......\nhEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=\n-----END CERTIFICATE-----"
+                                ]
+                            },
+                            "oidcClientSecret": {
+                                "type": "string",
+                                "title": "OIDC client secret.",
+                                "description": "The OIDC client secret.",
+                                "examples": [
+                                    "xxxxxxxxxxxxxxx"
+                                ]
+                            },
+                            "oidcClaims": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "title": "E-mail Binding",
+                                        "description": "List of attributes to use as the email address. First non-empty attribute is used.",
+                                        "examples": [
+                                            "- mail"
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "title": "Display-name Binding",
+                                        "description": "List of attributes to use as the display name. First non-empty attribute is used.",
+                                        "examples": [
+                                            "- cn"
+                                        ]
+                                    },
+                                    "preferredUsername": {
+                                        "type": "string",
+                                        "title": "Identity Binding",
+                                        "description": "List of attributes to use as the preferred user name when provisioning a user for this identity. First non-empty attribute is used.",
+                                        "examples": [
+                                            "- uid"
+                                        ]
+                                    }
+                                }
                             }
                         }
                     },
