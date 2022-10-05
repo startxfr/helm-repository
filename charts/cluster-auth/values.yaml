@@ -41,7 +41,7 @@ auth:
       tplFile: webtpl/default-providers.html
   # configuration of the authentication backend
   authBackend: 
-    - name: default-htpasswd
+    - name: myhtpasswd
       # Type of auth backend (htpasswd, ldap or oidc)
       type: htpasswd
       # If type is htpasswd, the following parameters are allowed
@@ -53,7 +53,7 @@ auth:
       # Content of the htpasswd file secret
       htpasswdContent: |
         dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
-    - name: default-ldap
+    - name: myldap
       # Type of auth backend (htpasswd, ldap or oidc)
       type: ldap
       # If type is ldap, the following parameters are allowed
@@ -91,3 +91,34 @@ auth:
         # List of attributes to use as the preferred user name when provisioning a user for this identity. First non-empty attribute is used.
         preferredUsername: |-
           - uid
+    - name: myoidc
+      # Type of auth backend (htpasswd, ldap or oidc)
+      type: oidc
+      # The client ID of a client registered with the OpenID provider.
+      # The client must be allowed to redirect to https://oauth-openshift.apps.<cluster_name>.<cluster_domain>/oauth2callback/<idp_provider_name>.
+      oidcClientID: "..."
+      # Issuer Identifier described in the OpenID spec. Must use https without query or fragment component.
+      oidcIssuer: "https://www.idp-issuer.com"
+      # PEM-encoded certificate authority bundle to use in validating server certificates for the configured URL.
+      oidcCA: |-
+        -----BEGIN CERTIFICATE-----
+        MIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV
+        ...
+        hEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=
+        -----END CERTIFICATE-----
+      # Client secret.
+      oidcClientSecret: myoidcsecret
+      # List of claims to use as the identity. First non-empty claim is used. At least one claim is required. If none of the listed claims have a value, authentication fails.
+      oidcClaims:
+        email: |-
+          - custom_email_claim
+          - email
+        # List of claims to use as the display name. First non-empty claim is used.
+        name: |-
+          - nickname
+          - given_name
+          - name
+        # List of claims to use as the preferred user name when provisioning a user for this identity. First non-empty claim is used.
+        preferredUsername: |-
+          - preferred_username
+          - email
