@@ -6,7 +6,7 @@ description: Helm chart used to configure Auth at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.7.17
+version: 11.7.18
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.11.7
 # Icon of this helm-chart
@@ -42,6 +42,9 @@ maintainers:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update all dependencies packages to release 11.7.1"
+      description: "Add support to control AccessTokens lifetime"
+    - kind: changed
+      description: "Add support for LDAP OAuth connection"
+    - kind: changed
+      description: "Allow support for multiple OAuth backend within the same helm deployment."
   artifacthub.io/containsSecurityUpdates: "false"
-
