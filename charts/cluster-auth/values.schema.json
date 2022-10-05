@@ -106,146 +106,175 @@
                     ]
                 },
                 "authBackend": {
-                    "type": "object",
-                    "properties": {
-                        "comment": {
-                            "type": "string"
-                        },
-                        "htpasswdContent": {
-                            "type": "string"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "type": {
-                            "type": "string",
-                            "title": "Auth backend",
-                            "description": "Type of auth backend (htpasswd, ldap or oidc)",
-                            "default": "htpasswd",
-                            "enum": [
-                                "htpasswd",
-                                "ldap",
-                                "oidc"
-                            ]
-                        },
-                        "ldapURL": {
-                            "type": "string",
-                            "minLength": 10,
-                            "maxLength": 500,
-                            "title": "LDAP URL",
-                            "description": "An RFC 2255 URL which specifies the LDAP host and search parameters to use.",
-                            "examples": [
-                                "ldap://ldap.example.com/ou=users,dc=acme,dc=com?uid"
-                            ]
-                        },
-                        "ldapInsecure": {
-                            "type": "boolean",
-                            "title": "LDAP insecure",
-                            "description": "Define if connection should secured. When true, no TLS connection is made to the server. When false, ldaps:// URLs connect using TLS, and ldap:// URLs are upgraded to TLS. This should be set to false when ldaps:// URLs are in use, as these URLs always attempt to connect using TLS.",
-                            "default": true
-                        },
-                        "ldapCA": {
-                            "type": "string",
-                            "title": "CA Certificate",
-                            "description": "PEM-encoded certificate authority bundle to use in validating LDAP server certificates for the configured URL. Only used when insecure is false.",
-                            "examples": [
-                                "-----BEGIN CERTIFICATE-----\nMIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV\n.......\nhEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=\n-----END CERTIFICATE-----"
-                            ]
-                        },
-                        "ldapBindDN": {
-                            "type": "string",
-                            "title": "Query user DN",
-                            "description": "Optional DN to use to bind during the search phase.",
-                            "examples": [
-                                "cn=admin,dc=example,dc=com"
-                            ]
-                        },
-                        "ldapBindPassword": {
-                            "type": "string",
-                            "title": "Query password DN",
-                            "description": "Define the password associated to the bindDN user used to query LDAP server. (mandatory if ldapBindDN is set, otherwise optional)",
-                            "examples": [
-                                "mybindldappwd"
-                            ]
-                        },
-                        "ldapBindAttributes": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string",
-                                    "title": "ID Binding",
-                                    "description": "Attribute used to define the unique id. First non-empty attribute is used and at least one attribute is required. If none of the listed attribute have a value, authentication fails.",
-                                    "examples": [
-                                        "- dn"
-                                    ]
-                                },
-                                "email": {
-                                    "type": "string",
-                                    "title": "E-mail Binding",
-                                    "description": "List of attributes to use as the email address. First non-empty attribute is used.",
-                                    "examples": [
-                                        "- mail"
-                                    ]
-                                },
-                                "name": {
-                                    "type": "string",
-                                    "title": "Display-name Binding",
-                                    "description": "List of attributes to use as the display name. First non-empty attribute is used.",
-                                    "examples": [
-                                        "- cn"
-                                    ]
-                                },
-                                "preferredUsername": {
-                                    "type": "string",
-                                    "title": "Identity Binding",
-                                    "description": "List of attributes to use as the preferred user name when provisioning a user for this identity. First non-empty attribute is used.",
-                                    "examples": [
-                                        "- uid"
-                                    ]
+                    "title": "OAuth backends",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "name"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "title": "Auth backend",
+                                "description": "Type of auth backend (htpasswd, ldap or oidc)",
+                                "default": "htpasswd",
+                                "enum": [
+                                    "htpasswd",
+                                    "ldap",
+                                    "oidc"
+                                ]
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "IDP provider name",
+                                "description": "Name of the IDP provider",
+                                "default": "corp_auth",
+                                "examples": [
+                                    "corp_htpasswd",
+                                    "corp_ldap",
+                                    "corp_oidc"
+                                ]
+                            },
+                            "htpasswdComment": {
+                                "type": "string",
+                                "title": "Comment",
+                                "description": "Comment in secret holding password. Could be used to explain how to add or remove users.",
+                                "examples": [
+                                    "htpasswd -b _console/ocp.passwd dev dev\noc create secret generic htpass-secret --from-file=htpasswd=_console/ocp.passwd -n openshift-config.",
+                                    "You can add or remove user by executing the following procedure ..."
+                                ]
+                            },
+                            "htpasswdContent": {
+                                "type": "string",
+                                "title": "HttpPassword file content",
+                                "description": "Content of the htpasswd file secret",
+                                "default": "htpasswd",
+                                "examples": [
+                                    "dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.",
+                                    "exampleuser:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/."
+                                ]
+                            },
+                            "ldapURL": {
+                                "type": "string",
+                                "minLength": 10,
+                                "maxLength": 500,
+                                "title": "LDAP URL",
+                                "description": "An RFC 2255 URL which specifies the LDAP host and search parameters to use.",
+                                "examples": [
+                                    "ldap://ldap.example.com/ou=users,dc=acme,dc=com?uid"
+                                ]
+                            },
+                            "ldapInsecure": {
+                                "type": "boolean",
+                                "title": "LDAP insecure",
+                                "description": "Define if connection should secured. When true, no TLS connection is made to the server. When false, ldaps:// URLs connect using TLS, and ldap:// URLs are upgraded to TLS. This should be set to false when ldaps:// URLs are in use, as these URLs always attempt to connect using TLS.",
+                                "default": true
+                            },
+                            "ldapCA": {
+                                "type": "string",
+                                "title": "CA Certificate",
+                                "description": "PEM-encoded certificate authority bundle to use in validating LDAP server certificates for the configured URL. Only used when insecure is false.",
+                                "examples": [
+                                    "-----BEGIN CERTIFICATE-----\nMIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV\n.......\nhEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=\n-----END CERTIFICATE-----"
+                                ]
+                            },
+                            "ldapBindDN": {
+                                "type": "string",
+                                "title": "Query user DN",
+                                "description": "Optional DN to use to bind during the search phase.",
+                                "examples": [
+                                    "cn=admin,dc=example,dc=com"
+                                ]
+                            },
+                            "ldapBindPassword": {
+                                "type": "string",
+                                "title": "Query password DN",
+                                "description": "Define the password associated to the bindDN user used to query LDAP server. (mandatory if ldapBindDN is set, otherwise optional)",
+                                "examples": [
+                                    "mybindldappwd"
+                                ]
+                            },
+                            "ldapBindAttributes": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "title": "ID Binding",
+                                        "description": "Attribute used to define the unique id. First non-empty attribute is used and at least one attribute is required. If none of the listed attribute have a value, authentication fails.",
+                                        "examples": [
+                                            "- dn"
+                                        ]
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "title": "E-mail Binding",
+                                        "description": "List of attributes to use as the email address. First non-empty attribute is used.",
+                                        "examples": [
+                                            "- mail"
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "title": "Display-name Binding",
+                                        "description": "List of attributes to use as the display name. First non-empty attribute is used.",
+                                        "examples": [
+                                            "- cn"
+                                        ]
+                                    },
+                                    "preferredUsername": {
+                                        "type": "string",
+                                        "title": "Identity Binding",
+                                        "description": "List of attributes to use as the preferred user name when provisioning a user for this identity. First non-empty attribute is used.",
+                                        "examples": [
+                                            "- uid"
+                                        ]
+                                    }
                                 }
                             }
                         }
-                    }
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "namespace": {
-                    "type": "string"
-                },
-                "templates": {
-                    "type": "object",
-                    "properties": {
-                        "errors": {
-                            "type": "object",
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "tplFile": {
-                                    "type": "string"
+                    },
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "namespace": {
+                        "type": "string"
+                    },
+                    "templates": {
+                        "type": "object",
+                        "properties": {
+                            "errors": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "tplFile": {
+                                        "type": "string"
+                                    }
                                 }
-                            }
-                        },
-                        "login": {
-                            "type": "object",
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "tplFile": {
-                                    "type": "string"
+                            },
+                            "login": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "tplFile": {
+                                        "type": "string"
+                                    }
                                 }
-                            }
-                        },
-                        "providers": {
-                            "type": "object",
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "tplFile": {
-                                    "type": "string"
+                            },
+                            "providers": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "tplFile": {
+                                        "type": "string"
+                                    }
                                 }
                             }
                         }
