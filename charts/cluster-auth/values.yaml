@@ -41,10 +41,11 @@ auth:
       tplFile: webtpl/default-providers.html
   # configuration of the authentication backend
   authBackend:
-    # Type of auth backend
-    type: htpasswd
+    # Type of auth backend (htpasswd, ldap or oidc)
+    type: ldap
     # Name of the auth secret secret
     name: default-htpasswd
+    # If type is htpasswd, the following parameters are allowed
     # Example of command to generate the htpasswd
     comment: |
       htpasswd -b _console/ocp.passwd dev dev
@@ -53,3 +54,38 @@ auth:
     # Content of the htpasswd file secret
     htpasswdContent: |
       dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
+    # If type is ldap, the following parameters are allowed
+    # An RFC 2255 URL which specifies the LDAP host and search parameters to use.
+    ldapURL: "ldap://ldap.example.com/ou=users,dc=acme,dc=com?uid"
+    # Define if connection should secured
+    # When true, no TLS connection is made to the server. 
+    # When false, ldaps:// URLs connect using TLS, and ldap:// URLs are upgraded to TLS. 
+    # This should be set to false when ldaps:// URLs are in use, as these URLs always attempt to connect using TLS.
+    ldapInsecure: true
+    # PEM-encoded certificate authority bundle to use in validating LDAP server certificates for the configured URL. Only used when insecure is false.
+    ldapCA: |-
+      -----BEGIN CERTIFICATE-----
+      MIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV
+      ...
+      hEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=
+      -----END CERTIFICATE-----
+    # Optional DN to use to bind during the search phase. (optional)
+    ldapBindDN: "cn=admin,dc=example,dc=com"
+    # Define the password associated to the ldapBindDN user used to query LDAP server. (mandatory if ldapBindDN is set, otherwise optional)
+    ldapBindPassword: mybindldappwd
+    # List of attributes to use as the identity. 
+    ldapBindAttributes:
+      # Attribute used to define the unique id.
+      # First non-empty attribute is used and at least one attribute is required. 
+      # If none of the listed attribute have a value, authentication fails.
+      id: |-
+        - dn
+      # List of attributes to use as the email address. First non-empty attribute is used. 
+      email: |-
+        - mail
+      # List of attributes to use as the display name. First non-empty attribute is used.
+      name: |-
+        - cn
+      # List of attributes to use as the preferred user name when provisioning a user for this identity. First non-empty attribute is used.
+      preferredUsername: |-
+        - uid
