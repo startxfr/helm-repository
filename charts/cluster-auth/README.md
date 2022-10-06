@@ -67,40 +67,10 @@ helm install cluster-auth startx/cluster-auth
 helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml
 ```
 
-- **startx-afd** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-afd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml))
+- **startx-mg** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml))
 
 ```bash
-helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-afd.yaml
-```
-
-- **startx-cisval** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-cisval.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml))
-
-```bash
-helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-cisval.yaml
-```
-
-- **startx-lumiplan** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-lumiplan.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml))
-
-```bash
-helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-lumiplan.yaml
-```
-
-- **startx-manutan** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-manutan.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml))
-
-```bash
-helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-manutan.yaml
-```
-
-- **startx-monaco** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-monaco.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml))
-
-```bash
-helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-monaco.yaml
-```
-
-- **startx-photoweb** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-photoweb.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml))
-
-```bash
-helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-photoweb.yaml
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml
 ```
 
 ## History
@@ -244,3 +214,4 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 11.7.17 | 2022-10-02 | publish stable update for the full repository
 | 11.7.18 | 2022-10-06 | Add support for AccessTokens lifetime, support for LDAP OAuth connection and Allow support for multiple OAuth backend within the same helm deployment.
 | 11.7.19 | 2022-10-06 | Add support for OIDC OAuth connection
+| 11.7.21 | 2022-10-06 | Remove old dedicated configs
