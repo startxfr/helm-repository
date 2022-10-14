@@ -9,7 +9,7 @@ context:
 
 cluster:
   id: startx-xyzab
-  region: eu-west-1
+  region: eu-west-3
   autoscaler: 
     enabled: true
     spec: |
@@ -41,15 +41,27 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: a
+  - name: a-infra
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: b-infra
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: c-infra
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: a-app
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: b
+  - name: b-app
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: c
+  - name: c-app
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
@@ -57,12 +69,73 @@ machineHealthCheck:
 machineAutoscaler: 
   enabled: true
   list: 
-  - name: a
+  - name: a-infra
     minReplicas: 1
     maxReplicas: 3
-  - name: b
+  - name: b-infra
     minReplicas: 1
     maxReplicas: 3
-  - name: c
+  - name: c-infra
     minReplicas: 1
     maxReplicas: 3
+  - name: a-app
+    minReplicas: 1
+    maxReplicas: 3
+  - name: b-app
+    minReplicas: 1
+    maxReplicas: 3
+  - name: c-app
+    minReplicas: 1
+    maxReplicas: 3
+
+machineSet: 
+  enabled: false
+  list:
+  - name: a-infra
+    az: a
+    type: infra
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "pragmatik-tfx7t-private-eu-west-3a"
+    instanceType: "r5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: b-infra
+    az: b
+    type: infra
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "pragmatik-tfx7t-private-eu-west-3b"
+    instanceType: "r5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: c-infra
+    az: c
+    type: infra
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "pragmatik-tfx7t-private-eu-west-3c"
+    instanceType: "r5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: a-app
+    az: a
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "pragmatik-tfx7t-private-eu-west-3a"
+    instanceType: "t3a.large"
+    volumeSize: 120
+    replicas: 1
+  - name: b-app
+    az: b
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "pragmatik-tfx7t-private-eu-west-3b"
+    instanceType: "t3a.large"
+    volumeSize: 120
+    replicas: 1
+  - name: c-app
+    az: c
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "pragmatik-tfx7t-private-eu-west-3c"
+    instanceType: "t3a.large"
+    volumeSize: 120
+    replicas: 1
