@@ -9,7 +9,7 @@ context:
 
 cluster:
   id: startx-xyzab
-  region: eu-west-1
+  region: ap-south-1
   autoscaler: 
     enabled: true
     spec: |
@@ -41,53 +41,146 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: a
+  - name: infra-a
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: infra-b
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: infra-c
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-a
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: b
+  - name: app-b
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: c
+  - name: app-c
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: virt-a
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: virt-b
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: virt-c
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
 
 machineAutoscaler: 
-  enabled: true
+  enabled: false
   list: 
-  - name: a
+  - name: infra-a
+    minReplicas: 1
+    maxReplicas: 3
+  - name: infra-b
+    minReplicas: 1
+    maxReplicas: 3
+  - name: infra-c
+    minReplicas: 1
+    maxReplicas: 3
+  - name: app-a
+    minReplicas: 0
+    maxReplicas: 2
+  - name: app-b
     minReplicas: 1
     maxReplicas: 2
-  - name: b
+  - name: app-c
     minReplicas: 1
     maxReplicas: 2
-  - name: c
+  - name: virt-a
     minReplicas: 1
+    maxReplicas: 2
+  - name: virt-b
+    minReplicas: 0
+    maxReplicas: 2
+  - name: virt-c
+    minReplicas: 0
     maxReplicas: 2
 
 machineSet: 
   enabled: false
   list:
-  - name: a-infra
+  - name: infra-a
     az: a
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1a"
     instanceType: "r5a.2xlarge"
     volumeSize: 120
     replicas: 0
-  - name: b-infra
+  - name: infra-b
     az: b
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1b"
     instanceType: "r5a.2xlarge"
     volumeSize: 120
     replicas: 0
-  - name: c-infra
+  - name: infra-c
     az: c
     type: infra
-    ami: ami-085a97ac58c1199b8
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1c"
     instanceType: "r5a.2xlarge"
+    volumeSize: 120
+    replicas: 0
+  - name: app-a
+    az: a
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1a"
+    instanceType: "t3a.large"
+    volumeSize: 120
+    replicas: 0
+  - name: app-b
+    az: b
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1b"
+    instanceType: "t3a.large"
+    volumeSize: 120
+    replicas: 1
+  - name: app-c
+    az: c
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1c"
+    instanceType: "t3a.large"
+    volumeSize: 120
+    replicas: 1
+  - name: virt-a
+    az: a
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1a"
+    instanceType: "c5.metal"
+    volumeSize: 120
+    replicas: 1
+  - name: virt-b
+    az: b
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1b"
+    instanceType: "c5.metal"
+    volumeSize: 120
+    replicas: 0
+  - name: virt-c
+    az: c
+    type: worker
+    ami: ami-07e37de7d9e861df5
+    subnet_name: "startx-xyzab-private-ap-south-1c"
+    instanceType: "c5.metal"
     volumeSize: 120
     replicas: 0
