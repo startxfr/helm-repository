@@ -41,81 +41,81 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: a-infra
+  - name: infra-a
     type: infra
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: b-infra
+  - name: infra-b
     type: infra
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: c-infra
+  - name: infra-c
     type: infra
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: a-app
+  - name: app-a
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: b-app
+  - name: app-b
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: c-app
+  - name: app-c
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
 
 machineAutoscaler: 
-  enabled: true
+  enabled: false
   list: 
-  - name: a-infra
+  - name: infra-a
     minReplicas: 1
     maxReplicas: 3
-  - name: b-infra
+  - name: infra-b
     minReplicas: 1
     maxReplicas: 3
-  - name: c-infra
+  - name: infra-c
     minReplicas: 1
     maxReplicas: 3
-  - name: a-app
+  - name: app-a
     minReplicas: 1
     maxReplicas: 3
-  - name: b-app
+  - name: app-b
     minReplicas: 1
     maxReplicas: 3
-  - name: c-app
+  - name: app-c
     minReplicas: 1
     maxReplicas: 3
 
 machineSet: 
   enabled: false
   list:
-  - name: a-infra
+  - name: infra-a
     az: a
     type: infra
     ami: ami-07e37de7d9e861df5
     subnet_name: "pragmatik-tfx7t-private-eu-west-3a"
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 1
-  - name: b-infra
+    replicas: 0
+  - name: infra-b
     az: b
     type: infra
     ami: ami-07e37de7d9e861df5
     subnet_name: "pragmatik-tfx7t-private-eu-west-3b"
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 1
-  - name: c-infra
+    replicas: 0
+  - name: infra-c
     az: c
     type: infra
     ami: ami-07e37de7d9e861df5
     subnet_name: "pragmatik-tfx7t-private-eu-west-3c"
     instanceType: "r5a.2xlarge"
     volumeSize: 120
-    replicas: 1
-  - name: a-app
+    replicas: 0
+  - name: app-a
     az: a
     type: worker
     ami: ami-07e37de7d9e861df5
@@ -123,7 +123,7 @@ machineSet:
     instanceType: "t3a.large"
     volumeSize: 120
     replicas: 1
-  - name: b-app
+  - name: app-b
     az: b
     type: worker
     ami: ami-07e37de7d9e861df5
@@ -131,7 +131,7 @@ machineSet:
     instanceType: "t3a.large"
     volumeSize: 120
     replicas: 1
-  - name: c-app
+  - name: app-c
     az: c
     type: worker
     ami: ami-07e37de7d9e861df5
