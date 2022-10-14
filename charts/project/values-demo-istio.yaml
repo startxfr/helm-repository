@@ -33,6 +33,20 @@ rbac:
     role: admin
 networkpolicy: 
   enabled: false
+  rules: 
+  - id: allow-manpage-openshift-ingress
+    spec: |
+      podSelector:
+        matchLabels:
+          app: 'manpage'
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  network.openshift.io/policy-group: ingress
+      policyTypes:
+        - Ingress
+
 limits: 
   enabled: true
   rules:  |
