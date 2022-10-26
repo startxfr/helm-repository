@@ -32,7 +32,21 @@ rbac:
     name: ops
     role: admin
 networkpolicy: 
-  enabled: false
+  enabled: true
+  rules: 
+  - id: allow-manpage-openshift-ingress
+    spec: |
+      podSelector:
+        matchLabels:
+          app: 'manpage'
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  network.openshift.io/policy-group: ingress
+      policyTypes:
+        - Ingress
+
 limits: 
   enabled: true
   rules:  |
@@ -42,8 +56,8 @@ limits:
           cpu: "10m"
           memory: "32Mi"
         max:
-          cpu: "1100m"
-          memory: "1200Mi"
+          cpu: "3000m"
+          memory: "2Gi"
       - type: "Container"
         default:
           cpu: "200m"
@@ -55,19 +69,19 @@ limits:
           cpu: "10m"
           memory: "32Mi"
         max:
-          cpu: "500m"
-          memory: "512Mi"
+          cpu: "2000m"
+          memory: "1Gi"
 quotas: 
   enabled: true
   rules: |
     hard:
-      limits.cpu: "9"
-      limits.memory: "10Gi"
-      requests.cpu: "5"
-      requests.memory: "6Gi"
-      requests.storage: "2Gi"
+      limits.cpu: "20"
+      limits.memory: "30Gi"
+      requests.cpu: "12"
+      requests.memory: "15Gi"
+      requests.storage: "5Gi"
       persistentvolumeclaims: "0"
-      ephemeral-storage: "2Gi" 
+      ephemeral-storage: "5Gi" 
       gp2.storageclass.storage.k8s.io/requests.storage: "0"
       gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       gp2-csi.storageclass.storage.k8s.io/requests.storage: "0"
@@ -96,14 +110,14 @@ quotas:
       ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
       openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
-      pods: "10"
-      services: "5"
+      pods: "26"
+      services: "10"
       services.loadbalancers: "0"
       services.nodeports: "0"
       secrets: "30"
       configmaps: "10"
       replicationcontrollers: "0"
       openshift.io/imagestreams: "0"
-      count/replicasets.apps: "20"
+      count/replicasets.apps: "30"
       count/daemonsets.apps: "0"
-      count/deployments.apps: "10"
+      count/deployments.apps: "20"

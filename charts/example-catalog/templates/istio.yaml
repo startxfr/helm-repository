@@ -31,7 +31,8 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - "{{- $scope -}}-istio.apps.{{- $cluster -}}.startx.fr"
+        - "*"
+{{- if .route }}
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
@@ -53,6 +54,7 @@ spec:
   port:
     targetPort: 8080
   wildcardPolicy: None
+{{- end }}
 ---
 kind: Service
 apiVersion: v1
