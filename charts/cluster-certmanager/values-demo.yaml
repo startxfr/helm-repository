@@ -1,0 +1,42 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: certmanager
+  app: demo-certmanager
+certmanager:
+  enabled: false
+  certificateRequest: 
+  - xxxxxx
+  certificate: 
+  - xxxxxx
+  challenge: 
+  - xxxxxx
+  order: 
+  - xxxxxx
+  issuer: 
+  - xxxxxx
+  clusterIssuer: 
+  - xxxxxx
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "demo-certmanager"
+    display_name: "Demo CertManager"
+    requester: startx
+    description: Demo of Cert-Manager configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
