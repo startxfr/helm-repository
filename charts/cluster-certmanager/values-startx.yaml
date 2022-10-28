@@ -1,0 +1,57 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: certmanager
+  app: startx-certmanager
+certmanager:
+  enabled: false
+  certificateRequest: 
+  - xxxxxx
+  certificate: 
+  - xxxxxx
+  challenge: 
+  - xxxxxx
+  order: 
+  - xxxxxx
+  issuer: 
+  - xxxxxx
+  clusterIssuer: 
+  - xxxxxx
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-cert-manager-operator"
+    display_name: Operator CertManager
+    description: CertManager configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "openshift-cert-manager-operator"
+    namespace: "openshift-cert-manager-operator"
+    version: "v1.7.1"
+    operator: 
+      channel: "tech-preview"
+      name: openshift-cert-manager-operator
+      installPlanApproval: Automatic
+      # csv: openshift-cert-manager
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "openshift-cert-manager-operator"
+    namespace: "openshift-cert-manager-operator"
+    providedAPIs: "Certificate.v1.cert-manager.io,CertificateRequest.v1.cert-manager.io,Challenge.v1.acme.cert-manager.io,ClusterIssuer.v1.cert-manager.io"
