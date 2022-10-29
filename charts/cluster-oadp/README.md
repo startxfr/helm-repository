@@ -1,6 +1,6 @@
-# Cluster gitlab
+# Cluster OADP
 
-This helm chart is used to deploy Gitlab instances managed by a dedicated operator.
+This helm chart is used to deploy Openshift Application Data Protection handled by an operator to configure application and cluster backup strategies.
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -25,13 +25,13 @@ helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
 ### 3. Get information about this chart
 
 ```bash
-helm show chart startx/cluster-gitlab
+helm show chart startx/cluster-oadp
 ```
 
 ### 4. Install this chart
 
 ```bash
-helm install cluster-gitlab startx/cluster-gitlab
+helm install cluster-oadp startx/cluster-oadp
 ```
 
 ## Default values
@@ -42,22 +42,22 @@ xxxxxx TO DO xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install cluster-gitlab startx/cluster-gitlab
+helm install cluster-oadp startx/cluster-oadp
 ```
 
 ## Others values availables
 
-- **startx** : Gitlab operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml))
+- **startx** : OADP operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx.yaml))
 
 ```bash
-helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml
+helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx.yaml
 ```
 
 ## History
 
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
-| 0.3.179  | 2021-02-10 | Create chart cluster-gitlab from cluster-ptp                                                   |
+| 0.3.179  | 2021-02-09 | Create chart cluster-oadp from cluster-quay                                                     |
 | 0.3.187  | 2021-02-13 | Align cluster chart release to 0.3.187                                                         |
 | 0.3.191  | 2021-02-13 | Update cluster chart dependencies to 0.3.189                                                   |
 | 0.3.199  | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts                                    |
@@ -66,10 +66,10 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 0.3.207  | 2021-04-19 | Core chart dependencies moved to v0.3.205                                                      |
 | 0.3.209  | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD                                                |
 | 0.3.215  | 2021-05-06 | Align all chart to release 0.3.215                                                             |
+| 0.3.221  | 2021-05-06 | Move to OADP operator version 5.0.3-6 (OCP 4.7 compat)                                          |
 | 0.3.225  | 2021-05-10 | Update all chart to use new RBAC naming                                                        |
-| 0.3.226  | 2021-06-02 | Update to gitlab-runner operator version 1.0.0                                                 |
-| 0.3.227  | 2021-06-02 | Debug the ProvidedAPI in OperatorGroup                                                         |
-| 0.3.303  | 2021-06-02 | Update documentation and align all charts to release 0.3.303                                   |
+| 0.3.227  | 2021-05-27 | Update oadp operator to 4.7.0                                                                   |
+| 0.3.228  | 2021-06-02 | Update operator to version 4.7.0                                                               |
 | 0.3.305  | 2021-06-04 | publish stable update for the full repository                                                  |
 | 0.3.343  | 2021-06-06 | publish stable update for the full repository                                                  |
 | 0.3.381  | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377                   |
@@ -95,10 +95,10 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                  |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                              |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
+| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23 |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                  |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                   |
-| 8.20.3   | 2021-11-11 | stable release for all chart for openshift version 4.8.20                                      |
 | 8.20.5   | 2021-11-12 | Upgrade all appVersion and align chart release                                                 |
 | 8.20.9   | 2021-11-12 | Align all startx chart to version 8.20.9                                                       |
 | 0.20.11  | 2021-11-12 | Move chart dependencies to version 8.20.5                                                      |
@@ -121,12 +121,12 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 9.8.45   | 2021-11-21 | Update the values schema limits for context properties                                         |
 | 9.8.47   | 2021-11-21 | Improve version management for chart                                                           |
 | 9.8.51   | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                             |
+| 9.8.52   | 2021-11-23 | Update oadp operator to version 4.9.0-202111151318                                              |
 | 9.8.67   | 2021-12-18 | Align all charts to release 9.8.67                                                             |
 | 9.8.71   | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                               |
 | 9.8.75   | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                     |
 | 9.8.76   | 2021-12-19 | Change helm.sh/chart name                                                                      |
 | 9.8.81   | 2021-12-20 | Update the storage context                                                                     |
-| 9.8.82   | 2022-02-23 | add dedicated chart for runner                                                                 |
 | 9.8.91   | 2022-03-06 | publish stable update for the full repository                                                  |
 | 9.8.93   | 2022-03-07 | Enable conditionnal loading of charts dependencies                                             |
 | 9.8.109  | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                            |
@@ -154,7 +154,6 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
-| 10.12.39 | 2022-06-18 | Align all chart to revision 10.12.39                                                           |
 | 10.12.41 | 2022-06-18 | Align all charts to version 10.12.41                                                           |
 | 10.12.46 | 2022-06-18 | publish stable update for the full repository                                                  |
 | 10.12.49 | 2022-06-18 | publish stable update for the full repository                                                  |

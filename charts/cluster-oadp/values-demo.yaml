@@ -1,0 +1,81 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: oadp
+  app: demo-oadp
+oadp:
+  enabled: false
+  dataProtectionApplication:
+    enabled: true
+    name: default
+    spec: |
+      backupImages: true
+      backupLocations:
+        - velero:
+            config:
+              profile: default
+              region: eu-west-3
+            credential:
+              key: cloud
+              name: cloud-credentials
+            default: true
+            objectStorage:
+              bucket: demo-oadp
+              prefix: velero
+            provider: aws
+      configuration:
+        restic:
+          enable: true
+        velero:
+          defaultPlugins:
+            - openshift
+            - aws
+          podConfig:
+            resourceAllocations:
+              limits:
+                cpu: '2'
+                memory: 1024Mi
+              requests:
+                cpu: '1'
+                memory: 512Mi
+      snapshotLocations:
+        - velero:
+            config:
+              profile: default
+              region: eu-west-3
+            provider: aws
+  schedule:
+    enabled: true
+    name: daily-demo
+    spec: |
+      schedule: 0 2 * * *
+      template:
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - demo-oadp
+        storageLocation: startx-backup-demo
+        ttl: 720h0m0s
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "demo-oadp"
+    display_name: "Demo OADP"
+    requester: startx
+    description: Demo of Openshift Application Data Protection configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
