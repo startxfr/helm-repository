@@ -1,0 +1,121 @@
+# Default values for cluster-oadp.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-oadp
+  # Version name of this application (default use Chart appVersion)
+  # version: "0.0.3"
+
+# Configure various OADP ressources
+oadp:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Configuration section of the dataProtectionApplication resource (unique)
+  dataProtectionApplication:
+    # Enable the dataProtectionApplication
+    enabled: true
+    # Name of the deployed instance of dataProtectionApplication
+    name: default
+    # The dataProtectionApplication specifications
+    spec: |
+      backupImages: true
+      backupLocations:
+        - velero:
+            config:
+              profile: default
+              region: eu-west-3
+            credential:
+              key: cloud
+              name: cloud-credentials
+            default: true
+            objectStorage:
+              bucket: oadp-backup
+              prefix: velero
+            provider: aws
+      configuration:
+        restic:
+          enable: true
+        velero:
+          defaultPlugins:
+            - openshift
+            - aws
+          podConfig:
+            resourceAllocations:
+              limits:
+                cpu: '2'
+                memory: 1024Mi
+              requests:
+                cpu: '1'
+                memory: 512Mi
+      snapshotLocations:
+        - velero:
+            config:
+              profile: default
+              region: eu-west-3
+            provider: aws
+  # Configuration section of the Schedule resource (unique)
+  schedule:
+    # Enable the Schedule
+    enabled: true
+    # Name of the deployed instance of Schedule
+    name: daily-app
+    # The Schedule specifications
+    spec: |
+      schedule: 0 2 * * *
+      template:
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - myapp-dev
+          - myapp-test
+        storageLocation: default-backup-storage
+        ttl: 720h0m0s
+
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-adp"
+    display_name: Operator OADP
+    description: Openshift Application Data Protection configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "redhat-oadp-operator"
+    namespace: "openshift-adp"
+    version: "v1.1.0"
+    operator: 
+      channel: "stable-1.1"
+      name: redhat-oadp-operator
+      installPlanApproval: Automatic
+      # csv: oadp-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-adp"
+    namespace: "openshift-adp"
+    providedAPIs: "Backup.v1.velero.io,BackupStorageLocation.v1.velero.io,CloudStorage.v1alpha1.oadp.openshift.io,DataProtectionApplication.v1alpha1.oadp.openshift.io,DeleteBackupRequest.v1.velero.io,DownloadRequest.v1.velero.io,PodVolumeBackup.v1.velero.io,PodVolumeRestore.v1.velero.io,ResticRepository.v1.velero.io,Restore.v1.velero.io,Schedule.v1.velero.io,ServerStatusRequest.v1.velero.io,VolumeSnapshotBackup.v1alpha1.datamover.oadp.openshift.io,VolumeSnapshotLocation.v1.velero.io,VolumeSnapshotRestore.v1alpha1.datamover.oadp.openshift.io"
