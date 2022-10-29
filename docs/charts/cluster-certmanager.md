@@ -60,3 +60,4 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp
 | 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp
 | 11.7.31 | 2022-10-29 | publish stable update for the full repository
+| 11.7.33 | 2022-10-29 | Update all startx packages to release 11.7.33
