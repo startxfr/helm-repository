@@ -1,0 +1,18 @@
+{{- if .Values.oadp.enabled -}}{{- if .Values.oadp.schedule -}}{{- if .Values.oadp.schedule.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-adp" -}}
+{{- $spec := .Values.oadp.schedule.spec | default "{}" -}}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ .Values.oadp.schedule.name | default "daily_app" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-oadp.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.oadp.schedule.name | default "daily_app" -}}-schedule"
+  annotations:
+    {{- include "cluster-oadp.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}{{- end -}}
