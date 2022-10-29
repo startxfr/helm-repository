@@ -215,3 +215,4 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 11.7.18 | 2022-10-06 | Add support for AccessTokens lifetime, support for LDAP OAuth connection and Allow support for multiple OAuth backend within the same helm deployment.
 | 11.7.19 | 2022-10-06 | Add support for OIDC OAuth connection
 | 11.7.21 | 2022-10-06 | Remove old dedicated configs
+| 11.7.31 | 2022-10-29 | publish stable update for the full repository
