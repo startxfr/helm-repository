@@ -1,0 +1,18 @@
+{{- if .Values.oadp.enabled -}}{{- if .Values.oadp.dataProtectionApplication -}}{{- if .Values.oadp.dataProtectionApplication.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-adp" -}}
+{{- $spec := .Values.oadp.dataProtectionApplication.spec | default "{}" -}}
+apiVersion: oadp.openshift.io/v1alpha1
+kind: DataProtectionApplication
+metadata:
+  name: {{ .Values.oadp.dataProtectionApplication.name | default "myadp" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-oadp.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.oadp.dataProtectionApplication.name | default "myadp" -}}-dataprotectionapplication"
+  annotations:
+    {{- include "cluster-oadp.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}{{- end -}}
