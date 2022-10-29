@@ -1,7 +1,7 @@
 # Cluster CertManager
 
 This helm chart is used to deploy Cert-Manager handled by an operator to configure Certificate management at the cluster level.
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deployment pod but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
@@ -59,3 +59,4 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp
 | 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp
+| 11.7.31 | 2022-10-29 | publish stable update for the full repository
