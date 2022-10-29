@@ -1,7 +1,7 @@
 # Cluster workspace
 
 This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deployment pod but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
@@ -316,3 +316,4 @@ helm install cluster-workspace startx/cluster-workspace -f https://raw.githubuse
 | 11.7.11 | 2022-10-02 | publish stable update for the full repository
 | 11.7.15 | 2022-10-02 | publish stable update for the full repository
 | 11.7.17 | 2022-10-02 | publish stable update for the full repository
+| 11.7.31 | 2022-10-29 | publish stable update for the full repository
