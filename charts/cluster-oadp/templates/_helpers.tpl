@@ -24,7 +24,11 @@ dataProtection name : {{ .oadp.dataProtectionApplication.name | default "myadp" 
 {{- end }}{{- end }}
 {{- if .oadp.schedule }}{{- if .oadp.schedule.enabled }}
            Schedule : enabled
-      Schedule name : {{ .oadp.schedule.name | default "daily_app" }}
+      Schedule name : {{ .oadp.schedule.name | default "default-restore" }}
+{{- end }}{{- end }}
+{{- if .oadp.restore }}{{- if .oadp.restore.enabled }}
+            Restore : enabled
+       Restore name : {{ .oadp.restore.name | default "default-restore" }}
 {{- end }}{{- end }}
 {{- end }}{{- end }}
 {{- end -}}
