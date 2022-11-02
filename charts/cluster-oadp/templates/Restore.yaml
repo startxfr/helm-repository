@@ -1,0 +1,18 @@
+{{- if .Values.oadp.enabled -}}{{- if .Values.oadp.restore -}}{{- if .Values.oadp.restore.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-adp" -}}
+{{- $spec := .Values.oadp.restore.spec | default "{}" -}}
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  name: {{ .Values.oadp.restore.name | default "default-restore" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-oadp.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.oadp.restore.name | default "default-restore" -}}-restore"
+  annotations:
+    {{- include "cluster-oadp.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}{{- end -}}
