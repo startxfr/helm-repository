@@ -30,22 +30,28 @@ helm show chart startx/cluster-oadp
 
 ### 4. Install this chart
 
-```bash
-helm install cluster-oadp startx/cluster-oadp
-```
-
-## Default values
+#### Default values
 
 Complete deployment of a project with the following characteristics :
 
-xxxxxx TO DO xxxxxx
+- 1 **namespace:** named **openshift-adp** without constraints
+- 1 **operator:** named **redhat-oadp-operator** configured with
+  - The **stable-1.1** channel
+  - The **v1.1.0** version
+  - Deployed under the **openshift-adp** project
+- 1 **DataProtectionApplication:** named **default** configured with default values for AWS backend
+- 1 **schedule:** named **daily-app** configured with default values for demo backup
 
 ```bash
-# base configuration running default configuration
-helm install cluster-oadp startx/cluster-oadp
+# Create the project
+helm install cluster-oadp-project startx/cluster-oadp --set project.enabled=true,operator.enabled=false,oadp.enabled=false
+# Deploy the OADP operator
+helm install cluster-oadp-operator startx/cluster-oadp --set project.enabled=false,operator.enabled=true,oadp.enabled=false && sleep 10
+# Configure default OADP ressources
+helm install cluster-oadp-instance startx/cluster-oadp --set project.enabled=false,operator.enabled=false,oadp.enabled=true
 ```
 
-## Others values availables
+#### Others values availables
 
 - **startx** : OADP operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx.yaml))
 
@@ -57,7 +63,7 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
-| 0.3.179  | 2021-02-09 | Create chart cluster-oadp from cluster-quay                                                     |
+| 0.3.179  | 2021-02-09 | Create chart cluster-oadp from cluster-quay                                                    |
 | 0.3.187  | 2021-02-13 | Align cluster chart release to 0.3.187                                                         |
 | 0.3.191  | 2021-02-13 | Update cluster chart dependencies to 0.3.189                                                   |
 | 0.3.199  | 2021-02-20 | prepare alpha release of 0.4 and update dependencies charts                                    |
@@ -66,9 +72,9 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 0.3.207  | 2021-04-19 | Core chart dependencies moved to v0.3.205                                                      |
 | 0.3.209  | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD                                                |
 | 0.3.215  | 2021-05-06 | Align all chart to release 0.3.215                                                             |
-| 0.3.221  | 2021-05-06 | Move to OADP operator version 5.0.3-6 (OCP 4.7 compat)                                          |
+| 0.3.221  | 2021-05-06 | Move to OADP operator version 5.0.3-6 (OCP 4.7 compat)                                         |
 | 0.3.225  | 2021-05-10 | Update all chart to use new RBAC naming                                                        |
-| 0.3.227  | 2021-05-27 | Update oadp operator to 4.7.0                                                                   |
+| 0.3.227  | 2021-05-27 | Update oadp operator to 4.7.0                                                                  |
 | 0.3.228  | 2021-06-02 | Update operator to version 4.7.0                                                               |
 | 0.3.305  | 2021-06-04 | publish stable update for the full repository                                                  |
 | 0.3.343  | 2021-06-06 | publish stable update for the full repository                                                  |
@@ -121,7 +127,7 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 9.8.45   | 2021-11-21 | Update the values schema limits for context properties                                         |
 | 9.8.47   | 2021-11-21 | Improve version management for chart                                                           |
 | 9.8.51   | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                             |
-| 9.8.52   | 2021-11-23 | Update oadp operator to version 4.9.0-202111151318                                              |
+| 9.8.52   | 2021-11-23 | Update oadp operator to version 4.9.0-202111151318                                             |
 | 9.8.67   | 2021-12-18 | Align all charts to release 9.8.67                                                             |
 | 9.8.71   | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                               |
 | 9.8.75   | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                     |
@@ -168,9 +174,10 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 11.7.1   | 2022-10-01 | Upgrade chart to latest release available for OCP 4.11.7 release                               |
 | 11.7.3   | 2022-10-02 | publish stable update for the full repository                                                  |
 | 11.7.9   | 2022-10-02 | publish stable update for the full repository                                                  |
-| 11.7.10 | 2022-10-02 | Stable release for all packages
-| 11.7.11 | 2022-10-02 | publish stable update for the full repository
-| 11.7.15 | 2022-10-02 | publish stable update for the full repository
-| 11.7.17 | 2022-10-02 | publish stable update for the full repository
-| 11.7.31 | 2022-10-29 | publish stable update for the full repository
-| 11.7.33 | 2022-10-29 | Update all startx packages to release 11.7.33
+| 11.7.10  | 2022-10-02 | Stable release for all packages                                                                |
+| 11.7.11  | 2022-10-02 | publish stable update for the full repository                                                  |
+| 11.7.15  | 2022-10-02 | publish stable update for the full repository                                                  |
+| 11.7.17  | 2022-10-02 | publish stable update for the full repository                                                  |
+| 11.7.31  | 2022-10-29 | publish stable update for the full repository                                                  |
+| 11.7.33  | 2022-10-29 | Update all startx packages to release 11.7.33                                                  |
+| 11.7.41 | 2022-11-02 | publish stable update for the full repository
