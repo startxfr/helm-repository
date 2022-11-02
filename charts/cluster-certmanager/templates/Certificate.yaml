@@ -1,0 +1,33 @@
+{{- if .Values.certmanager -}}{{- if .Values.certmanager.enabled -}}
+{{- $root := . -}}
+{{- $defaultns := .Values.project.project.name | default "openshift-certmanager" -}}
+{{ range .Values.certmanager.list }}
+{{- $name := .name | default "cet-issuer" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .name | default "default-certificate" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-certmanager.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name | default "default-certificate" -}}-certificate"
+  annotations:
+    {{- include "cluster-certmanager.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+{{- if eq .kind "ingress" }}
+spec:
+  commonName: {{ .ingress.host | default "default.example.com" | quote }}
+  dnsNames:
+  - {{ .ingress.host | default "default.example.com" }}
+  issuerRef:
+    kind: ClusterIssuer
+    name: {{ .ingress.issuer | default "cert-issuer" | quote }}
+  secretName: "{{ .name | default "default-certificate" }}-tls"
+{{- else }}
+spec:
+  {{- .manual.spec | default "{}" | nindent 2 }}
+{{ end }}
+{{ end }}
+{{- end -}}{{- end -}}

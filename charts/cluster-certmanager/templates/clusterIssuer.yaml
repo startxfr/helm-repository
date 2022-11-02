@@ -1,0 +1,23 @@
+{{- if .Values.clusterIssuer -}}{{- if .Values.clusterIssuer.enabled -}}
+{{- $root := . -}}
+{{- $defaultns := .Values.project.project.name | default "openshift-certmanager" -}}
+{{ range .Values.clusterIssuer.list }}
+{{- $name := .name | default "cert-issuer" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $spec := .spec | default "{}" -}}
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .name | default "default_issuer" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-certmanager.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name | default "default_issuer" -}}-clusterissuer"
+  annotations:
+    {{- include "cluster-certmanager.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  {{- $spec | nindent 2 }}
+{{ end }}
+{{- end -}}{{- end -}}
