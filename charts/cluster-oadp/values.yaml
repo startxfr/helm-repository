@@ -18,7 +18,7 @@ context:  &context
 # Configure various OADP ressources
 oadp:
   # Enable the configuration of the API manager
-  enabled: true
+  enabled: false
   # Configuration section of the dataProtectionApplication resource (unique)
   dataProtectionApplication:
     # Enable the dataProtectionApplication
@@ -79,7 +79,24 @@ oadp:
           - myapp-test
         storageLocation: default-backup-storage
         ttl: 720h0m0s
-
+  # Configuration section of the restore resource (unique)
+  restore:
+    # Enable the restore
+    enabled: false
+    # Name of the deployed instance of Schedule
+    name: restore-app
+    # The restore specifications
+    spec: |
+      backupName: backup-app
+      excludedResources:
+        - nodes
+        - events
+        - events.events.k8s.io
+        - backups.velero.io
+        - restores.velero.io
+        - resticrepositories.velero.io
+      includedResources: []
+      restorePVs: true
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -87,7 +104,7 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "openshift-adp"
