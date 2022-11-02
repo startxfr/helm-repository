@@ -1,0 +1,155 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: certmanager
+  app: startx-certmanager
+certmanager:
+  enabled: false
+  list:
+    - name: airflow
+      namespace: data-platform-airflow
+      kind: ingress
+      ingress: 
+        host: airflow.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: airflow-webserver
+        servicePort: 8080
+    - name: datahub
+      namespace: data-platform-datahub
+      kind: ingress
+      ingress: 
+        host: datahub.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: datahub-datahub-frontend
+        servicePort: 9002
+    - name: gitlab
+      namespace: gitlab-system
+      kind: ingress
+      ingress: 
+        host: gitlab.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: gitlab-webservice-default
+        servicePort: 8181
+    - name: jupyterhub-external
+      namespace: data-platform-jupyterhub-external
+      kind: ingress
+      ingress: 
+        host: jupyterhub-external.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: proxy-public
+        servicePort: 80
+    - name: jupyterhub-internal
+      namespace: data-platform-jupyterhub-internal
+      kind: ingress
+      ingress: 
+        host: jupyterhub-internal.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: proxy-public
+        servicePort: 80
+    - name: superset
+      namespace: data-platform-superset
+      kind: ingress
+      ingress: 
+        host: superset.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: superset
+        servicePort: 8088
+    - name: usecases-electromagnetic
+      namespace: data-platform-usecases
+      kind: ingress
+      ingress: 
+        host: usecases-electromagnetic.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: usecases-electromagnetic
+        servicePort: 8050
+    - name: usecases-monabike
+      namespace: data-platform-usecases
+      kind: ingress
+      ingress: 
+        host: usecases-monabike.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: usecases-monabike
+        servicePort: 8050
+    - name: usecases-twitter
+      namespace: data-platform-usecases
+      kind: ingress
+      ingress: 
+        host: usecases-twitter.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: usecases-twitter
+        servicePort: 8050
+    - name: usecases-xmobility
+      namespace: data-platform-usecases
+      kind: ingress
+      ingress: 
+        host: usecases-xmobility.apps.monaco-lab.com
+        issuer: letsencrypt-prod
+        serviceName: usecases-xmobility
+        servicePort: 8050
+clusterIssuer: 
+  enabled: false
+  list:
+    - name: letsencrypt-prod
+      namespace: openshift-certmanager
+      spec: |-
+        acme:
+          email: asouabni.ext@gouv.mc
+          preferredChain: ""
+          privateKeySecretRef:
+            name: prod-issuer-account-key
+          server: https://acme-v02.api.letsencrypt.org/directory
+          solvers:
+          - http01:
+              ingress:
+                class: openshift-default
+    - name: letsencrypt-staging
+      namespace: openshift-certmanager
+      spec: |-
+        acme:
+          email: asouabni.ext@gouv.mc
+          preferredChain: ""
+          privateKeySecretRef:
+            name: example-issuer-account-key
+          server: https://acme-staging-v02.api.letsencrypt.org/directory
+          solvers:
+          - http01:
+              ingress:
+                class: openshift-default
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-cert-manager-operator"
+    display_name: Operator CertManager
+    description: CertManager configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "openshift-cert-manager-operator"
+    namespace: "openshift-cert-manager-operator"
+    version: "v1.7.1"
+    operator: 
+      channel: "tech-preview"
+      name: openshift-cert-manager-operator
+      installPlanApproval: Automatic
+      # csv: openshift-cert-manager
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "openshift-cert-manager-operator"
+    namespace: "openshift-cert-manager-operator"
+    providedAPIs: "Certificate.v1.cert-manager.io,CertificateRequest.v1.cert-manager.io,Challenge.v1.acme.cert-manager.io,ClusterIssuer.v1.cert-manager.io"
