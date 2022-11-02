@@ -8,18 +8,43 @@ context: &context
   app: demo-certmanager
 certmanager:
   enabled: false
-  certificateRequest: 
-  - xxxxxx
-  certificate: 
-  - xxxxxx
-  challenge: 
-  - xxxxxx
-  order: 
-  - xxxxxx
-  issuer: 
-  - xxxxxx
-  clusterIssuer: 
-  - xxxxxx
+  list:
+    - name: example-manual-demo-certmanager
+      namespace: demo-certmanager
+      kind: manual
+      manual: 
+        spec: |-
+          commonName: example-manual-demo-certmanager.example.com
+          dnsNames:
+          - example-manual-demo-certmanager.example.com
+          issuerRef:
+            kind: ClusterIssuer
+            name: letsencrypt-demo
+          secretName: example-manual-demo-certmanager-tls
+    - name: example-ingress-demo-certmanager
+      namespace: demo-certmanager
+      kind: ingress
+      ingress: 
+        host: example-demo-certmanager.example.com
+        issuer: letsencrypt-demo
+        serviceName: example
+        servicePort: 8080
+clusterIssuer: 
+  enabled: false
+  list:
+    - name: letsencrypt-demo
+      namespace: openshift-certmanager
+      spec: |-
+        acme:
+        email: myemail@corp.com
+        preferredChain: ""
+        privateKeySecretRef:
+          name: letsencrypt-demo-cert
+        server: https://demo-letsencrypt-demo.api.letsencrypt.org/directory
+        solvers:
+        - http01:
+            ingress:
+              class: openshift-default
 project: 
   enabled: false
   context: 

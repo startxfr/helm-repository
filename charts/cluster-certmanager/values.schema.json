@@ -253,23 +253,47 @@
                 "enabled": {
                     "type": "boolean"
                 },
-                "certificateRequest": {
-                    "type": "array"
-                },
-                "certificate": {
-                    "type": "array"
-                },
-                "challenge": {
-                    "type": "array"
-                },
-                "order": {
-                    "type": "array"
-                },
-                "issuer": {
-                    "type": "array"
-                },
-                "clusterIssuer": {
-                    "type": "array"
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "kind": {
+                                "type": "string"
+                            },
+                            "manual": {
+                                "type": "object",
+                                "properties": {
+                                    "spec": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "ingress": {
+                                "type": "object",
+                                "properties": {
+                                    "host": {
+                                        "type": "string"
+                                    },
+                                    "issuer": {
+                                        "type": "string"
+                                    },
+                                    "serviceName": {
+                                        "type": "string"
+                                    },
+                                    "servicePort": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
