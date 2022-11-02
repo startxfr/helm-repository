@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/name: "{{- .Values.oadp.dataProtectionApplication.name | default "myadp" -}}-dataprotectionapplication"
   annotations:
     {{- include "cluster-oadp.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   {{- $spec | nindent 2 }}
 {{- end -}}{{- end -}}{{- end -}}
