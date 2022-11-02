@@ -1,7 +1,7 @@
 # Cluster CertManager
 
 This helm chart is used to deploy Cert-Manager handled by an operator to configure Certificate management at the cluster level.
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deployment pod but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
@@ -30,22 +30,26 @@ helm show chart startx/cluster-certmanager
 
 ### 4. Install this chart
 
-```bash
-helm install cluster-certmanager startx/cluster-certmanager
-```
-
-## Default values
+#### Default values
 
 Complete deployment of a project with the following characteristics :
 
-xxxxxx TO DO xxxxxx
+- 1 **namespace:** named **startx-certmanager** without constraints
+- 1 **operator:** named **cert-manager-operator** configured with
+  - The **stable** channel for community release
+  - The **v1.7.2** version
+  - Deployed under the **openshift-operators** project
 
 ```bash
-# base configuration running default configuration
-helm install cluster-certmanager startx/cluster-certmanager
+# Create the project
+helm install cluster-certmanager-project startx/cluster-certmanager --set project.enabled=true,operator.enabled=false,certmanager.enabled=false
+# Deploy the OADP operator
+helm install cluster-certmanager-operator startx/cluster-certmanager --set project.enabled=false,operator.enabled=true,certmanager.enabled=false && sleep 10
+# Configure default OADP ressources
+helm install cluster-certmanager-instance startx/cluster-certmanager --set project.enabled=false,operator.enabled=false,certmanager.enabled=true
 ```
 
-## Others values availables
+#### Others values availables
 
 - **startx** : CertManager operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml))
 
@@ -55,7 +59,9 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 
 ## History
 
-| Release  | Date       | Description                                                                                    |
-| -------- | ---------- | ---------------------------------------------------------------------------------------------- |
-| 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp
-| 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp
+| Release | Date       | Description                                       |
+| ------- | ---------- | ------------------------------------------------- |
+| 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp |
+| 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp |
+| 11.7.31 | 2022-10-29 | publish stable update for the full repository     |
+| 11.7.33 | 2022-10-29 | Update all startx packages to release 11.7.33     |

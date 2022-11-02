@@ -15,28 +15,67 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   # version: "0.0.3"
 
-# Deploy an API manager
+# Deploy a certificate
 certmanager:
-  # Enable the configuration of the API manager
-  enabled: true
-  # Create certificate request
-  certificateRequest: 
-  - xxxxxx
-  # Create certificate
-  certificate: 
-  - xxxxxx
-  # Create Challenge
-  challenge: 
-  - xxxxxx
-  # Create Order
-  order: 
-  - xxxxxx
-  # Create Issuer
-  issuer: 
-  - xxxxxx
-  # Create ClusterIssuer
-  clusterIssuer: 
-  - xxxxxx
+  # Enable creation of certificates
+  enabled: false
+  # List of certificate resource to deploy
+  list:
+      # name of the certificate
+    - name: example-manual-demo-certmanager
+      # namespace of the certificate (default is project namespace)
+      namespace: demo-certmanager
+      # kind of certificate (manual or ingress)
+      kind: manual
+      # Properties for a manual kind
+      manual: 
+        # spec of the certificate
+        spec: |-
+          commonName: example-manual-demo-certmanager.example.com
+          dnsNames:
+          - example-manual-demo-certmanager.example.com
+          issuerRef:
+            kind: ClusterIssuer
+            name: letsencrypt-demo
+          secretName: example-manual-demo-certmanager-tls
+      # name of the certificate
+    - name: example-ingress-demo-certmanager
+      # namespace of the certificate (default is project namespace)
+      namespace: demo-certmanager
+      # kind of certificate (manual or ingress)
+      kind: ingress
+      # Properties for a ingress kind
+      ingress: 
+        # Hostname for the certificate
+        host: example-demo-certmanager.example.com
+        # Issuer of the certificate
+        issuer: letsencrypt-demo
+        # The service name used to expose application
+        serviceName: example
+        # Service port number where ingress should route traffic to
+        servicePort: 8080
+# Create a certmanager Issuer
+clusterIssuer: 
+  # Enable creation of clusterIssuers
+  enabled: false
+  # List of clusterIssuer resource to deploy
+  list:
+      # name of the clusterIssuer
+    - name: letsencrypt-demo
+      # namespace of the clusterIssuer (default is project namespace)
+      namespace: openshift-certmanager
+      # spec of the clusterIssuer
+      spec: |-
+        acme:
+        email: myemail@corp.com
+        preferredChain: ""
+        privateKeySecretRef:
+          name: letsencrypt-demo-cert
+        server: https://demo-letsencrypt-demo.api.letsencrypt.org/directory
+        solvers:
+        - http01:
+            ingress:
+              class: openshift-default
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
@@ -62,7 +101,7 @@ operator:
     hooked: false
     name: "cert-manager"
     namespace: "openshift-operators"
-    version: "v1.8.0"
+    version: "v1.7.2"
     operator: 
       channel: "stable"
       name: cert-manager
