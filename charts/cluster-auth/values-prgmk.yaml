@@ -1,0 +1,48 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: pragmatik
+  cluster: default
+  environment: infra
+  component: auth
+  app: pragmatik-auth
+auth:
+  enabled: true
+  namespace: openshift-config
+  templates:
+    login: 
+      name: prgmk-login
+      tplFile: webtpl/prgmk-login.html
+    errors: 
+      name: prgmk-errors
+      tplFile: webtpl/prgmk-errors.html
+    providers: 
+      name: prgmk-providers
+      tplFile: webtpl/prgmk-providers.html
+  authBackend:
+    - name: startx-htpasswd
+      type: htpasswd
+      htpasswdComment: |
+        htpasswd -c -b _console/ocp.passwd admin secretdemerde
+      htpasswdContent: |
+        admin:$apr1$NF6RwJ2m$LZptFKgY.K.h7WKPG1X4w.
+        dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
+        devops:$apr1$V.QRjS8L$qsecQFnwOyaZ/coTqDZ9h/
+        ops:$apr1$LHdhpqJk$3qNVW4uqTR7sSnlZBP.9d/
+    - name: pragmatik-ad
+      type: ldap
+      ldapURL: "ldap://pragmatik.local:389/DC=pragmatik,DC=local?sAMAccountName?sub"
+      ldapInsecure: true
+      ldapBindDN: "svc_openshift@pragmatik.local"
+      ldapBindPassword: "dahQH@0sG%5I0E2QI&KgLYY9"
+      ldapBindAttributes:
+        id: |-
+          - sAMAccountName
+        email: |-
+          - mail
+        name: |-
+          - cn
+        preferredUsername: |-
+          - sAMAccountName
+
+
