@@ -31,10 +31,10 @@ auth:
         ops:$apr1$LHdhpqJk$3qNVW4uqTR7sSnlZBP.9d/
     - name: pragmatik-ad
       type: ldap
-      ldapURL: "ldap://pragmatik.local:389/DC=pragmatik,DC=local?sAMAccountName?sub"
+      ldapURL: "ldap://myldap:389/DC=example,DC=local?uid?sub"
       ldapInsecure: true
-      ldapBindDN: "svc_openshift@pragmatik.local"
-      ldapBindPassword: "dahQH@0sG%5I0E2QI&KgLYY9"
+      ldapBindDN: "svc_openshift@localhost"
+      ldapBindPassword: "XXXXXXXX"
       ldapBindAttributes:
         id: |-
           - sAMAccountName
