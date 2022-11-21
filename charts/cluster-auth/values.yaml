@@ -40,85 +40,85 @@ auth:
       name: default-providers
       tplFile: webtpl/default-providers.html
   # configuration of the authentication backend
-  authBackend: 
-    - name: myhtpasswd
-      # Type of auth backend (htpasswd, ldap or oidc)
-      type: htpasswd
-      # If type is htpasswd, the following parameters are allowed
-      # Example of command to generate the htpasswd
-      htpasswdComment: |
-        htpasswd -b _console/ocp.passwd dev dev
-        oc create secret generic htpass-secret --from-file=htpasswd=_console/ocp.passwd -n openshift-config
-        oc export secret startx-htpasswd-secret -n openshift-config
-      # Content of the htpasswd file secret
-      htpasswdContent: |
-        dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
-    - name: myldap
-      # Type of auth backend (htpasswd, ldap or oidc)
-      type: ldap
-      # If type is ldap, the following parameters are allowed
-      # An RFC 2255 URL which specifies the LDAP host and search parameters to use.
-      ldapURL: "ldap://ldap.example.com/ou=users,dc=acme,dc=com?uid"
-      # Define if connection should secured
-      # When true, no TLS connection is made to the server. 
-      # When false, ldaps:// URLs connect using TLS, and ldap:// URLs are upgraded to TLS. 
-      # This should be set to false when ldaps:// URLs are in use, as these URLs always attempt to connect using TLS.
-      ldapInsecure: true
-      # PEM-encoded certificate authority bundle to use in validating LDAP server certificates for the configured URL. Only used when insecure is false.
-      ldapCA: |-
-        -----BEGIN CERTIFICATE-----
-        MIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV
-        ...
-        hEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=
-        -----END CERTIFICATE-----
-      # Optional DN to use to bind during the search phase. (optional)
-      ldapBindDN: "cn=admin,dc=example,dc=com"
-      # Define the password associated to the ldapBindDN user used to query LDAP server. (mandatory if ldapBindDN is set, otherwise optional)
-      ldapBindPassword: mybindldappwd
-      # List of attributes to use as the identity. 
-      ldapBindAttributes:
-        # Attribute used to define the unique id.
-        # First non-empty attribute is used and at least one attribute is required. 
-        # If none of the listed attribute have a value, authentication fails.
-        id: |-
-          - dn
-        # List of attributes to use as the email address. First non-empty attribute is used. 
-        email: |-
-          - mail
-        # List of attributes to use as the display name. First non-empty attribute is used.
-        name: |-
-          - cn
-        # List of attributes to use as the preferred user name when provisioning a user for this identity. First non-empty attribute is used.
-        preferredUsername: |-
-          - uid
-    - name: myoidc
-      # Type of auth backend (htpasswd, ldap or oidc)
-      type: oidc
-      # The client ID of a client registered with the OpenID provider.
-      # The client must be allowed to redirect to https://oauth-openshift.apps.<cluster_name>.<cluster_domain>/oauth2callback/<idp_provider_name>.
-      oidcClientID: "..."
-      # Issuer Identifier described in the OpenID spec. Must use https without query or fragment component.
-      oidcIssuer: "https://www.idp-issuer.com"
-      # PEM-encoded certificate authority bundle to use in validating server certificates for the configured URL.
-      oidcCA: |-
-        -----BEGIN CERTIFICATE-----
-        MIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV
-        ...
-        hEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=
-        -----END CERTIFICATE-----
-      # Client secret.
-      oidcClientSecret: myoidcsecret
-      # List of claims to use as the identity. First non-empty claim is used. At least one claim is required. If none of the listed claims have a value, authentication fails.
-      oidcClaims:
-        email: |-
-          - custom_email_claim
-          - email
-        # List of claims to use as the display name. First non-empty claim is used.
-        name: |-
-          - nickname
-          - given_name
-          - name
-        # List of claims to use as the preferred user name when provisioning a user for this identity. First non-empty claim is used.
-        preferredUsername: |-
-          - preferred_username
-          - email
+  authBackend: []
+    # - name: myhtpasswd
+    #   # Type of auth backend (htpasswd, ldap or oidc)
+    #   type: htpasswd
+    #   # If type is htpasswd, the following parameters are allowed
+    #   # Example of command to generate the htpasswd
+    #   htpasswdComment: |
+    #     htpasswd -b _console/ocp.passwd dev dev
+    #     oc create secret generic htpass-secret --from-file=htpasswd=_console/ocp.passwd -n openshift-config
+    #     oc export secret startx-htpasswd-secret -n openshift-config
+    #   # Content of the htpasswd file secret
+    #   htpasswdContent: |
+    #     dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
+    # - name: myldap
+    #   # Type of auth backend (htpasswd, ldap or oidc)
+    #   type: ldap
+    #   # If type is ldap, the following parameters are allowed
+    #   # An RFC 2255 URL which specifies the LDAP host and search parameters to use.
+    #   ldapURL: "ldap://ldap.example.com/ou=users,dc=acme,dc=com?uid"
+    #   # Define if connection should secured
+    #   # When true, no TLS connection is made to the server. 
+    #   # When false, ldaps:// URLs connect using TLS, and ldap:// URLs are upgraded to TLS. 
+    #   # This should be set to false when ldaps:// URLs are in use, as these URLs always attempt to connect using TLS.
+    #   ldapInsecure: true
+    #   # PEM-encoded certificate authority bundle to use in validating LDAP server certificates for the configured URL. Only used when insecure is false.
+    #   ldapCA: |-
+    #     -----BEGIN CERTIFICATE-----
+    #     MIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV
+    #     ...
+    #     hEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=
+    #     -----END CERTIFICATE-----
+    #   # Optional DN to use to bind during the search phase. (optional)
+    #   ldapBindDN: "cn=admin,dc=example,dc=com"
+    #   # Define the password associated to the ldapBindDN user used to query LDAP server. (mandatory if ldapBindDN is set, otherwise optional)
+    #   ldapBindPassword: mybindldappwd
+    #   # List of attributes to use as the identity. 
+    #   ldapBindAttributes:
+    #     # Attribute used to define the unique id.
+    #     # First non-empty attribute is used and at least one attribute is required. 
+    #     # If none of the listed attribute have a value, authentication fails.
+    #     id: |-
+    #       - dn
+    #     # List of attributes to use as the email address. First non-empty attribute is used. 
+    #     email: |-
+    #       - mail
+    #     # List of attributes to use as the display name. First non-empty attribute is used.
+    #     name: |-
+    #       - cn
+    #     # List of attributes to use as the preferred user name when provisioning a user for this identity. First non-empty attribute is used.
+    #     preferredUsername: |-
+    #       - uid
+    # - name: myoidc
+    #   # Type of auth backend (htpasswd, ldap or oidc)
+    #   type: oidc
+    #   # The client ID of a client registered with the OpenID provider.
+    #   # The client must be allowed to redirect to https://oauth-openshift.apps.<cluster_name>.<cluster_domain>/oauth2callback/<idp_provider_name>.
+    #   oidcClientID: "..."
+    #   # Issuer Identifier described in the OpenID spec. Must use https without query or fragment component.
+    #   oidcIssuer: "https://www.idp-issuer.com"
+    #   # PEM-encoded certificate authority bundle to use in validating server certificates for the configured URL.
+    #   oidcCA: |-
+    #     -----BEGIN CERTIFICATE-----
+    #     MIIGKDCCBBCgAwIBAgIJAKFO3vqQ8q6BMA0GCSqGSIb3DQEBCwUAMGYxCzAJBgNV
+    #     ...
+    #     hEi44aHbPXt9opdssz/hdGfd8Wo7vEJrbg7c6zR6C/Akav1Rzy9oohIdgOw=
+    #     -----END CERTIFICATE-----
+    #   # Client secret.
+    #   oidcClientSecret: myoidcsecret
+    #   # List of claims to use as the identity. First non-empty claim is used. At least one claim is required. If none of the listed claims have a value, authentication fails.
+    #   oidcClaims:
+    #     email: |-
+    #       - custom_email_claim
+    #       - email
+    #     # List of claims to use as the display name. First non-empty claim is used.
+    #     name: |-
+    #       - nickname
+    #       - given_name
+    #       - name
+    #     # List of claims to use as the preferred user name when provisioning a user for this identity. First non-empty claim is used.
+    #     preferredUsername: |-
+    #       - preferred_username
+    #       - email
