@@ -1,0 +1,57 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: pragmatik
+  cluster: default
+  environment: infra
+  component: config
+  app: pragmatik-storage
+storageClasses:
+- id: pragmatik-default-retain
+  name: pragmatik-default-retain
+  provisioner: "csi.vsphere.vmware.com"
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Retain
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: pragmatik-default-delete
+  name: pragmatik-default-delete
+  provisioner: "csi.vsphere.vmware.com"
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Delete
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: pragmatik-fast-retain
+  name: pragmatik-fast-retain
+  provisioner: "csi.vsphere.vmware.com"
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Retain
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: pragmatik-fast-delete
+  name: pragmatik-fast-delete
+  provisioner: "csi.vsphere.vmware.com"
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Delete
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: pragmatik-slow-retain
+  name: pragmatik-slow-retain
+  provisioner: "csi.vsphere.vmware.com"
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Retain
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: pragmatik-slow-delete
+  name: pragmatik-slow-delete
+  provisioner: "csi.vsphere.vmware.com"
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Delete
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
