@@ -1,0 +1,221 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: pragmatik
+  cluster: default
+  environment: infra
+  component: istio
+  app: default
+istio:
+  enabled: true
+  hooked: false
+  name: pragmatik
+  members:
+    enabled: false
+    list:
+      - namespace: default
+        controlePlane: pragmatik
+        controlePlaneNS: pragmatik-istio
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: project
+    name: "pragmatik-istio"
+    display_name: "Pragmatik ISTIO"
+    requester: startx
+    description: Service mesh using ISTIO System running tracing, monitoring, management and routing tools configured by STARTX
+  rbac:
+    enabled: true
+    groups:
+      - id: dev-view
+        name: dev
+        role: view
+      - id: devops-edit
+        name: devops
+        role: edit
+      - id: ops-admin
+        name: ops
+        role: admin
+  serviceAccounts:
+    enabled: false
+  dockercfg:
+    enabled: false
+  networkpolicy:
+    enabled: false
+  limits:
+    enabled: true
+    rules: |
+      limits:
+        - type: "Pod"
+          min:
+            cpu: "10m"
+            memory: "32Mi"
+          max:
+            cpu: "6800m"
+            memory: "10Gi"
+        - type: "Container"
+          default:
+            cpu: "200m"
+            memory: "256Mi"
+          defaultRequest:
+            cpu: "50m"
+            memory: "64Mi"
+          min:
+            cpu: "10m"
+            memory: "32Mi"
+          max:
+            cpu: "4800m"
+            memory: "6Gi"
+  quotas:
+    enabled: true
+    rules: |
+      hard:
+        limits.cpu: "15"
+        limits.memory: "18Gi"
+        requests.cpu: "6"
+        requests.memory: "7Gi"
+        requests.storage: "2Gi"
+        persistentvolumeclaims: "0"
+        ephemeral-storage: "2Gi"
+        gp2.storageclass.storage.k8s.io/requests.storage: "0"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp2-csi.storageclass.storage.k8s.io/requests.storage: "0"
+        gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3-csi.storageclass.storage.k8s.io/requests.storage: "0"
+        gp3-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gov-default-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        gov-default-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gov-default-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        gov-default-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gov-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        gov-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gov-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        gov-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gov-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        gov-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gov-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        gov-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gov-local.storageclass.storage.k8s.io/requests.storage: "0"
+        gov-local.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        pods: "20"
+        services: "20"
+        secrets: "80"
+        configmaps: "25"
+        replicationcontrollers: "0"
+        openshift.io/imagestreams: "0"
+projectOperator:
+  enabled: false
+
+# Configuration of the elasticSearch operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorElastic:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "5.5.2"
+    operator: 
+      channel: "stable-5.5"
+      name: elasticsearch-operator
+      # csv: elasticsearch-operator
+      installPlanApproval: Automatic
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
+
+# Configuration of the kiali operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorKiali:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "kiali-ossm"
+    namespace: "openshift-operators"
+    version: "v1.48.2"
+    operator:
+      channel: "stable"
+      name: kiali-ossm
+      installPlanApproval: Automatic
+      # csv: kiali-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "kiali-ossm"
+    namespace: "openshift-operators"
+    providedAPIs: "Kiali.v1alpha1.kiali.io,MonitoringDashboard.v1alpha1.monitoring.kiali.io"
+
+# Configuration of the jaeger operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorJaeger:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "jaeger-product"
+    namespace: "openshift-distributed-tracing"
+    version: "v1.36.0-2"
+    operator: 
+      channel: "stable"
+      name: jaeger-product
+      installPlanApproval: Automatic
+      # csv: jaeger-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "jaeger-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "Jaeger.v1.jaegertracing.io"
+
+# Configuration of the istio operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorIstio:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "servicemeshoperator"
+    namespace: "openshift-operators"
+    version: "v2.2.2"
+    operator:
+      channel: "stable"
+      name: servicemeshoperator
+      installPlanApproval: Automatic
+      # csv: servicemeshoperator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "ServiceMeshControlPlane.v2.maistra.io,ServiceMeshMember.v2.maistra.io,ServiceMeshMemberRoll.v2.maistra.io"
