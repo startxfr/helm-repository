@@ -1,0 +1,114 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: pragmatik
+  cluster: pragmatik-client
+  environment: client
+  component: machine
+  app: pragmatik-machine
+
+cluster:
+  id: ocp-rec-b9p2g
+  autoscaler: 
+    enabled: false
+    spec: |
+      podPriorityThreshold: -10 
+      resourceLimits:
+        maxNodesTotal: 20
+        cores:
+          min: 24
+          max: 160
+        memory:
+          min: 80
+          max: 640
+      scaleDown: 
+        enabled: true 
+        delayAfterAdd: 5m 
+        delayAfterDelete: 3m 
+        delayAfterFailure: 30s 
+        unneededTime: 120s 
+
+machineConfigPool: 
+  enabled: false
+  infra: true
+  storage: false
+machineConfig: 
+  enabled: false
+  kubelet_gc_enabled: false
+  kubelet_connectiontimeout_enabled: false
+  kubelet_protectkerneldefaults: false
+  infra_specialconfig: false
+  add_scc_netraw: false
+  add_clusterimageconfig: false
+
+machineHealthCheck:
+  enabled: false
+  list: 
+  - name: master
+    type: master
+    maxUnhealthy: 100%
+    timeouts: 300s
+  - name: infra
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: ada-dev
+    type: worker
+    group: ada-dev
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: ada-rec
+    type: worker
+    group: ada-rec
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: homebox-dev
+    type: worker
+    group: homebox-dev
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: homebox-rec
+    type: worker
+    group: homebox-rec
+    maxUnhealthy: 40%
+    timeouts: 300s
+
+machineAutoscaler: 
+  enabled: false
+  list: 
+  - name: infra
+    type: infra
+    minReplicas: 0
+    maxReplicas: 4
+  - name: ada-dev
+    type: worker
+    minReplicas: 0
+    maxReplicas: 4
+  - name: ada-rec
+    type: worker
+    minReplicas: 0
+    maxReplicas: 4
+  - name: homebox-dev
+    type: worker
+    minReplicas: 0
+    maxReplicas: 4
+  - name: homebox-rec
+    type: worker
+    minReplicas: 0
+    maxReplicas: 4
+
+machineSet: 
+  enabled: true
+  list:
+  - name: infra
+    provider: "vsphere"
+    numCoresPerSocket: 4
+    numCPUs: 4
+    diskGiB: 120
+    memoryMiB: 16384
+    networkName: "VLANXXX"
+    datacenter: "OpenShift"
+    datastore: "VOLUMENAME"
+    folder: "/OpenShift/vm/ocp-rec-b9p2g"
+    server: "vcenter.example.local"
+    replicas: 1
