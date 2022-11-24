@@ -2,13 +2,13 @@
 # see values.yaml for explanation on each params
 context: 
   scope: pragmatik
-  cluster: pragmatik-client
-  environment: client
+  cluster: ocp-prod
+  environment: prod
   component: machine
   app: pragmatik-machine
 
 cluster:
-  id: ocp-rec-b9p2g
+  id: ocp-prod-b9p2g
   autoscaler: 
     enabled: false
     spec: |
@@ -54,62 +54,61 @@ machineHealthCheck:
     timeouts: 300s
   - name: ada-dev
     type: worker
-    group: ada-dev
+    group: ocp-ada-pprod-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: ada-rec
     type: worker
-    group: ada-rec
+    group: ocp-ada-prod-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: homebox-dev
     type: worker
-    group: homebox-dev
+    group: ocp-homebox-pprod-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: homebox-rec
     type: worker
-    group: homebox-rec
+    group: ocp-homebox-prod-worker
     maxUnhealthy: 40%
     timeouts: 300s
 
 machineAutoscaler: 
   enabled: false
   list: 
-  - name: infra
+  - name: ocp-infra
     type: infra
     minReplicas: 0
     maxReplicas: 4
-  - name: ada-dev
+  - name: ocp-ada-pprod-worker
     type: worker
     minReplicas: 0
     maxReplicas: 4
-  - name: ada-rec
+  - name: ocp-ada-prod-worker
     type: worker
     minReplicas: 0
     maxReplicas: 4
-  - name: homebox-dev
+  - name: ocp-homebox-pprod-worker
     type: worker
     minReplicas: 0
     maxReplicas: 4
-  - name: homebox-rec
+  - name: ocp-homebox-prod-worker
     type: worker
     minReplicas: 0
     maxReplicas: 4
 
 machineSet: 
-  enabled: true
+  enabled: false
   list:
-  - name: infra
+  - name: ocp-infra-prod
     provider: "vsphere"
     numCoresPerSocket: 4
     numCPUs: 4
     diskGiB: 120
     memoryMiB: 16384
-    networkName: "VLAN1241 - OCP REC"
+    networkName: "VLANXXX"
     datacenter: "OpenShift"
-    datastore: "VOL-OCP-REC"
-    folder: "/OpenShift/vm/ocp-rec-b9p2g"
-    resourcePool: "/OpenShift/host/OpenShift/Resources"
-    server: "vcsa.pragmatik.local"
+    datastore: "VOLUMENAME"
+    folder: "/OpenShift/vm/ocp-prod-b9p2g"
+    server: "vcenter.example.local"
     replicas: 1

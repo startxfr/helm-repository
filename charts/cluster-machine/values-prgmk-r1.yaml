@@ -2,8 +2,8 @@
 # see values.yaml for explanation on each params
 context: 
   scope: pragmatik
-  cluster: pragmatik-client
-  environment: client
+  cluster: ocp-rec
+  environment: recette
   component: machine
   app: pragmatik-machine
 
@@ -54,45 +54,45 @@ machineHealthCheck:
     timeouts: 300s
   - name: ada-dev
     type: worker
-    group: ada-dev
+    group: ocp-ada-dev-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: ada-rec
     type: worker
-    group: ada-rec
+    group: ocp-ada-rec-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: homebox-dev
     type: worker
-    group: homebox-dev
+    group: ocp-homebox-dev-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: homebox-rec
     type: worker
-    group: homebox-rec
+    group: ocp-homebox-rec-worker
     maxUnhealthy: 40%
     timeouts: 300s
 
 machineAutoscaler: 
   enabled: false
   list: 
-  - name: infra
+  - name: ocp-infra
     type: infra
     minReplicas: 0
     maxReplicas: 4
-  - name: ada-dev
+  - name: ocp-ada-dev-worker
     type: worker
     minReplicas: 0
     maxReplicas: 4
-  - name: ada-rec
+  - name: ocp-ada-rec-worker
     type: worker
     minReplicas: 0
     maxReplicas: 4
-  - name: homebox-dev
+  - name: ocp-homebox-dev-worker
     type: worker
     minReplicas: 0
     maxReplicas: 4
-  - name: homebox-rec
+  - name: ocp-homebox-rec-worker
     type: worker
     minReplicas: 0
     maxReplicas: 4
@@ -100,8 +100,11 @@ machineAutoscaler:
 machineSet: 
   enabled: true
   list:
-  - name: infra
+  - name: ocp-infra-rec
     provider: "vsphere"
+    additionnalsLabels: |
+      client: pragmatik
+      env: rec
     numCoresPerSocket: 4
     numCPUs: 4
     diskGiB: 120

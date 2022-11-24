@@ -44,14 +44,18 @@ spec:
           {{- else }}
           node-role.kubernetes.io/app: ""
           {{ end }}
+          {{- if .additionnalsLabels -}}
+          {{- .additionnalsLabels | nindent 10 -}}
+          {{- end }}
+      {{- if eq .type "infra" }}
       taints: 
-        {{- if eq .type "infra" }}
         - key: "node-role.kubernetes.io/infra"
           effect: NoSchedule
-        {{- else if eq .type "storage" }}
+      {{- else if eq .type "storage" }}
+      taints: 
         - key: "node-role.kubernetes.io/storage"
           effect: NoSchedule
-        {{ end }}
+      {{ end }}
       providerSpec:
         value:
           {{- if eq .provider "vsphere" }}
