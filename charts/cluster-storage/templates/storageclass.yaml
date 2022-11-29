@@ -1,4 +1,5 @@
 {{- $root := . -}}
+{{- if .Values.enabled -}}
 {{ range .Values.storageClasses }}
 ---
 kind: StorageClass
@@ -27,3 +28,4 @@ allowVolumeExpansion: {{ .allowVolumeExpansion }}
 volumeBindingMode: {{ .volumeBindingMode | quote }}
 {{- end -}}
 {{ end }}
+{{- end -}}
