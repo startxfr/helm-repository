@@ -1,7 +1,6 @@
 {{- if .Values.cluster.autoscaler.enabled }}
 {{- $root := . -}}
 {{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
-{{- $region := .Values.cluster.region | default "eu-west-3" -}}
 ---
 apiVersion: "autoscaling.openshift.io/v1"
 kind: "ClusterAutoscaler"
