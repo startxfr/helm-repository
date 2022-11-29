@@ -1,7 +1,6 @@
 {{- if .Values.machineHealthCheck.enabled }}
 {{- $root := . -}}
 {{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
-{{- $region := .Values.cluster.region | default "eu-west-3" -}}
 {{ range .Values.machineHealthCheck.list }}
 ---
 apiVersion: machine.openshift.io/v1beta1

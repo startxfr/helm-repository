@@ -1,0 +1,76 @@
+# Default values for configuration of a pragmatik cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: pragmatik
+  cluster: pragmatik-p1
+  environment: client
+  component: console
+  app: startx-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: pragmatik Console
+    logo: 
+      name: prgmk-r1-logo
+      tplFile: webtpl/prgmk-logo-r1.svg
+  links:
+    - name: nsdashboard-prgmk
+      spec: |
+        href: 'https://www.grouperousselet.com/fr/page/pragmatik'
+        location: NamespaceDashboard
+        text: Pragmatik
+    - name: applicationmenu-group
+      spec: |
+        href: 'https://www.grouperousselet.com'
+        location: ApplicationMenu
+        text: Groupe Rousselet
+        applicationMenu:
+          section: Pragmatik
+          imageURL: "https://upload.wikimedia.org/wikipedia/fr/0/05/Groupe_Rousselet_Logo.png"
+    - name: applicationmenu-prgmk
+      spec: |
+        href: 'https://www.grouperousselet.com/fr/page/pragmatik'
+        location: ApplicationMenu
+        text: Pragmatik
+        applicationMenu:
+          section: Pragmatik
+          imageURL: "https://pragmatik.fr/wp-content/uploads/2021/12/logo-pragmatik.png"
+    - name: helpmenu-group
+      spec: |
+        href: 'https://www.grouperousselet.com'
+        location: HelpMenu
+        text: Groupe Rousselet
+    - name: helpmenu-prgmk
+      spec: |
+        href: 'https://www.grouperousselet.com/fr/page/pragmatik'
+        location: HelpMenu
+        text: Pragmatik
+    - name: helpmenu-support
+      spec: |
+        href: 'https://startxfr.atlassian.net/servicedesk/customer/portal/2'
+        location: HelpMenu
+        text: Support utilisateur
+  logLinks:
+  - name: prgmk-externallog-mgmt
+    spec: |
+      hrefTemplate: >-
+        https://kibana-openshift-logging.apps.ocp-rec.pragmatik.fr/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: MonacoGov central logs
+  notifications:
+  - name: prgmk-console-notification-top
+    spec: |
+      backgroundColor: '#a3a329'
+      color: '#fff'
+      location: BannerTop 
+      text: Vous etes sur le PaaS/CaaS PRAGMATIK - Recette
+  - name: prgmk-console-notification-bottom
+    spec: |
+      backgroundColor: '#fff'
+      color: '#a3a329'
+      location: BannerBottom
+      text: En cas de probleme sur ce cluster, vous pouvez
+      link:
+        href: 'https://startxfr.atlassian.net/servicedesk/customer/portal/2'
+        text: creer un ticket d'incident
