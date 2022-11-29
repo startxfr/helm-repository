@@ -43,8 +43,10 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-gitlab](charts/cluster-gitlab.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-gitlab)       | enable Gitlab at the cluster level                                |
 | **[cluster-compliance](charts/cluster-compliance.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-compliance)   | enable Compliance at the cluster level                            |
 | **[cluster-machine](charts/cluster-machine.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-machine)      | enable Machine management at the cluster level                    |
-| **[cluster-certmanager](charts/cluster-certmanager.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-certmanager)      | enable CertManager at the cluster level                    |
-| **[cluster-oadp](charts/cluster-oadp.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-oadp)      | enable Application Data Protection (Backup) at the cluster level                    |
+| **[cluster-router](charts/cluster-router.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)       | enable Router management at the cluster level                     |
+| **[cluster-certmanager](charts/cluster-certmanager.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-certmanager)  | enable CertManager at the cluster level                           |
+| **[cluster-oadp](charts/cluster-oadp.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-oadp)         | enable Application Data Protection (Backup) at the cluster level  |
+| **[cluster-router](charts/cluster-router.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)         | configure router(s) at the cluster level  |
 
 #### Use Cluster charts
 

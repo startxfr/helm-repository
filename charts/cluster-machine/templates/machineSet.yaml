@@ -44,19 +44,53 @@ spec:
           {{- else }}
           node-role.kubernetes.io/app: ""
           {{ end }}
+          {{- if .additionnalsLabels -}}
+          {{- .additionnalsLabels | nindent 10 -}}
+          {{- end }}
+      {{- if eq .type "infra" }}
       taints: 
-        {{- if eq .type "infra" }}
         - key: "node-role.kubernetes.io/infra"
           effect: NoSchedule
-        {{- else if eq .type "storage" }}
+      {{- else if eq .type "storage" }}
+      taints: 
         - key: "node-role.kubernetes.io/storage"
           effect: NoSchedule
-        {{ end }}
+      {{ end }}
       providerSpec:
         value:
+          {{- if eq .provider "vsphere" }}
+          apiVersion: machine.openshift.io/v1beta1
+          kind: VSphereMachineProviderSpec
+          metadata:
+            creationTimestamp: null
+          numCoresPerSocket: {{ .numCoresPerSocket | default 4 }}
+          numCPUs: {{ .numCPUs | default 4 }}
+          diskGiB: {{ .diskGiB | default 120 }}
+          memoryMiB: {{ .memoryMiB | default 16384 }}
+          snapshot: ''
+          credentialsSecret:
+            name: vsphere-cloud-credentials
+          userDataSecret:
+            name: worker-user-data
+          network:
+            devices:
+              - networkName: {{ .networkName | default "default_vlan" | quote }}
+          workspace:
+            datacenter: {{ .datacenter | default "OpenShift" | quote }}
+            datastore: {{ .datastore | default "mydatastore" | quote }}
+            folder: {{ .folder | default (printf "/%s/vm/%s" .datastore $root.Values.cluster.id) | quote }}
+            resourcePool: {{ .resourcePool | default (printf "/%s/host/%s/Resources" .datastore .datastore) | quote }}
+            server: {{ .server | default "vcsa.pragmatik.local" | quote }}
+          template: {{ .template | default (printf "%s-rhcos" $root.Values.cluster.id) | quote }}
+          {{- else }}
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          kind: AWSMachineProviderConfig
+          instanceType: "{{ .instanceType }}"
+          placement:
+            availabilityZone: "{{ $root.Values.cluster.region }}{{ .az }}"
+            region: "{{ $root.Values.cluster.region }}"
           ami:
             id: {{ .ami }}
-          apiVersion: awsproviderconfig.openshift.io/v1beta1
           blockDevices:
             - ebs:
                 iops: 0
@@ -67,11 +101,6 @@ spec:
           deviceIndex: 0
           iamInstanceProfile:
             id: "{{ $root.Values.cluster.id }}-worker-profile"
-          instanceType: "{{ .instanceType }}"
-          kind: AWSMachineProviderConfig
-          placement:
-            availabilityZone: "{{ $root.Values.cluster.region }}{{ .az }}"
-            region: "{{ $root.Values.cluster.region }}"
           securityGroups:
             - filters:
                 - name: tag:Name
@@ -89,5 +118,6 @@ spec:
               value: owned
           userDataSecret:
             name: worker-user-data
+          {{ end }}
 {{ end }}
 {{ end }}
