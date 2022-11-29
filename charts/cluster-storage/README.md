@@ -208,3 +208,6 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 11.7.31 | 2022-10-29 | publish stable update for the full repository
 | 11.7.33 | 2022-10-29 | Update all startx packages to release 11.7.33
 | 11.7.41 | 2022-11-02 | publish stable update for the full repository
+| 11.7.43 | 2022-11-22 | Add prgmk
+| 11.7.44 | 2022-11-30 | Add enabled param
+| 11.7.61 | 2022-11-30 | publish stable update for the full repository

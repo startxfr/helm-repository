@@ -24,6 +24,48 @@ argocd:
   # name of the argocd cluster
   name: "openshift-gitops"
 
+# Configuration of secrets to access various private repository used in argocd applications
+# Read https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ for more 
+# informations on how to setup theses resources
+argocd_repocreds:
+  # enable deployment of repository credentials
+  enabled: false
+  # List of repository credentials to create
+  list: 
+      # Name of the export configuration
+    - name: "startx-customers-pragmatik-repo-creds"
+      # Namespace of the export configuration
+      namespace: "openshift-gitops"
+      # URL of the repository (or path if used for multiple repository)
+      url: "https://github.com/argoproj/private-repo"
+      # Credentials type for this secret (should be https, ssh or githubapp)
+      type: "ssh"
+      # Options if credentials type is https
+      httpsOptions: 
+        # Username to use for http authentication
+        username: "my-username"
+        # password coresponding to the username
+        password: "my-password"
+      # Options if credentials type is ssh
+      sshOptions: 
+        # The privateKey to use for ssh connection to the remote repository
+        sshPrivateKey: |-
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          ...
+          -----END OPENSSH PRIVATE KEY-----
+      # Options if credentials type is githubapp
+      githubappOptions: 
+        # The application ID
+        githubAppID: 1
+        # The install application ID
+        githubAppInstallationID: 2
+        # The privateKey to use for ssh connection to the remote repository
+        githubAppPrivateKey: |-
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          ...
+          -----END OPENSSH PRIVATE KEY-----
+    
+
 # Configuration of the argocd export
 argocd_export:
   # enable deployment of export
@@ -82,13 +124,13 @@ application:
           - values.yaml
         parameters:
           - name: context.scope
-            value: "${SCOPE}"
+            value: "myscope"
           - name: context.cluster
-            value: "${CLUSTER}"
+            value: "mycluster"
           - name: context.environment
-            value: "${ENV}"
+            value: "myenv"
           - name: context.version
-            value: "${VERSION}"
+            value: "0.0.1-devel"
           - name: context.app
             value: "exemple-html-helm"
           - name: html.expose.enabled

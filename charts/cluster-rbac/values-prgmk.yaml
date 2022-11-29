@@ -1,0 +1,36 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: pragmatik
+  cluster: default
+  environment: infra
+  component: config
+  app: pragmatik-rbac
+groups:
+  enabled: true
+  list: 
+  - id: dev
+    name: dev
+    role: basic-user
+    users: 
+    - dev
+  - id: admin
+    name: admin
+    role: cluster-admin
+    users: 
+    - admin
+  - id: devops
+    name: devops
+    role: self-provisionner
+    users: 
+    - devops
+  - id: ops
+    name: ops
+    role: edit
+    users: 
+    - ops
+  - id: testops
+    name: testops
+    role: self-provisionner
+    users: 
+    - ops

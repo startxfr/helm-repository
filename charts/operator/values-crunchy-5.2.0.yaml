@@ -1,0 +1,30 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: default
+  environment: dev
+  component: infra
+  app: startx-infra-pipelines
+enabled: true
+subscription:
+  enabled: true
+  hooked: false
+  name: "crunchy-postgres-operator"
+  namespace: "openshift-operators"
+  version: "v5.2.0"
+  operator: 
+    channel: v5
+    name: crunchy-postgres-operator
+    installPlanApproval: Automatic
+    csv: postgresoperator
+    source: 
+      name: certified-operators
+      namespace: openshift-marketplace
+operatorGroup:
+  enabled: false
+  hooked: false
+  target: "all-ns"
+  name: "crunchy-postgres-operator"
+  namespace: "openshift-operators"
+  providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"
