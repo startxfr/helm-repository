@@ -1,0 +1,118 @@
+{{- if .Values.monitoring.enabled -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-alertmanager-{{- include "startx.appVersion" . -}}"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+data:
+  config.yaml: |
+    prometheusOperator:
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector:
+        node-role.kubernetes.io/infra: '' 
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+    grafana:
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+    k8sPrometheusAdapter:
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+    kubeStateMetrics:
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+    telemeterClient:
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+    openshiftStateMetrics:
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+    thanosQuerier:
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+    prometheus: 
+      retention: 7d
+      resources:
+        requests:
+          cpu: 200m 
+          memory: 2Gi
+    prometheusK8s: 
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+      volumeClaimTemplate:
+       spec:
+         storageClassName: {{ default "gp2" .Values.monitoring.storageClass }}
+         volumeMode: Filesystem
+         resources:
+           requests:
+             storage: {{ default "20Gi" .Values.monitoring.storageSize }}
+      externalLabels:
+        scope: {{ include "startx.appScope" . | quote }}
+        cluster: {{ include "startx.appCluster" . | quote }}
+        environment: {{ include "startx.appEnvironment" . | quote }}
+    alertmanagerMain:
+      {{- if .Values.monitoring.infra_enabled }}
+      nodeSelector: 
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- end }}
+      volumeClaimTemplate:
+        spec:
+          storageClassName: {{ default "gp2" .Values.monitoring.storageClass }}
+          resources:
+            requests:
+             storage: {{ default "20Gi" .Values.monitoring.storageSize }}
+{{- end -}}

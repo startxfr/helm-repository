@@ -1,0 +1,112 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context:  &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: config
+  app: startx
+autoscaling:
+  enabled: false
+clusterversion:
+  enabled: false
+alertmanager:
+  enabled: false
+imageprunner:
+  enabled: false
+registryroute:
+  enabled: false
+projecttemplate:
+  enabled: false
+redhat:
+  operators: false
+tracing:
+  operators: false
+helm_reposistory:
+  enabled: false
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+
+# Configuration of the elasticSearch operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorElastic:
+  enabled: false
+
+# Configuration of the SosReport project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+projectSosReport: 
+  enabled: false
+
+# Configuration of the sosreport operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorSosReport:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "sosreport-operator"
+    namespace: "startx-sosreport"
+    version: "v0.0.2"
+    operator: 
+      channel: "alpha"
+      name: sosreport-operator
+      installPlanApproval: Automatic
+      # csv: sosreport-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "sosreport-operator"
+    namespace: "startx-sosreport"
+    providedAPIs: "Sosreport.v1alpha1.support.openshift.io"
+
+# Configuration of the MustGather project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+projectMustGather: 
+  enabled: false
+
+# Configuration of the mustgather operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorMustGather:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "must-gather-operator"
+    namespace: "startx-mustgather"
+    version: "v1.1.2"
+    operator: 
+      channel: "alpha"
+      name: must-gather-operator
+      installPlanApproval: Automatic
+      # csv: must-gather-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "must-gather-operator"
+    namespace: "startx-mustgather"
+    providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"
+
+# Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorGlobal:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+    hooked: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,GitopsService.v1alpha1.pipelines.openshift.io,Config.v1alpha1.operator.tekton.dev,ImageManifestVuln.v1alpha1.secscan.quay.redhat.com,Jaeger.v1.jaegertracing.io,Kiali.v1alpha1.kiali.io,MonitoringDashboard.v1alpha1.monitoring.kiali.io,ServiceMeshControlPlane.v2.maistra.io,ServiceMeshMember.v1.maistra.io,ServiceMeshMemberRoll.v1.maistra.io"

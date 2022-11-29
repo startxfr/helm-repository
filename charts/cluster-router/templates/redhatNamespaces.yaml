@@ -1,0 +1,17 @@
+{{- if .Values.redhat.operators -}}
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: "openshift-operators-redhat"
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "openshift-operators-redhat-project"
+    openshift.io/cluster-monitoring: "true"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+    openshift.io/description: "Red Hat operator namespace"
+    openshift.io/display-name: "RedHat"
+    helm.sh/resource-policy: keep
+    argocd.argoproj.io/sync-wave: "-10" 
+    openshift.io/node-selector: ""
+{{- end -}}

@@ -1,0 +1,23 @@
+{{- if .Values.registryroute.enabled -}}
+{{- $name := .Values.registryroute.name | default "external" -}}
+{{- $namespace := .Values.registryroute.namespace | default "openshift-image-registry" -}}
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-route-{{- include "startx.appVersion" . -}}"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+spec:
+  to:
+    kind: Service
+    name: image-registry
+    weight: 100
+  tls:
+    termination: reencrypt
+  wildcardPolicy: None
+{{- end -}}
