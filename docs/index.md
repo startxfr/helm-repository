@@ -46,6 +46,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-router](charts/cluster-router.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)       | enable Router management at the cluster level                     |
 | **[cluster-certmanager](charts/cluster-certmanager.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-certmanager)  | enable CertManager at the cluster level                           |
 | **[cluster-oadp](charts/cluster-oadp.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-oadp)         | enable Application Data Protection (Backup) at the cluster level  |
+| **[cluster-router](charts/cluster-router.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)         | configure router(s) at the cluster level  |
 
 #### Use Cluster charts
 
