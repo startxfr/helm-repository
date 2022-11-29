@@ -1,6 +1,6 @@
 apiVersion: v2
 # Name of this Helm chart
-name: clusterOverwrite
+name: cluster-router
 # Description of this Helm chart
 description: Helm chart used to configure cluster openshift router
 # Helm chart application
@@ -10,7 +10,7 @@ version: 11.7.41
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.11.7
 # Icon of this helm-chart
-icon: https://helm-repository.readthedocs.io/en/latest/img/clusterOverwrite.svg
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-router.svg
 # category associated to this package
 category: cluster
 # tags
@@ -32,54 +32,19 @@ keywords:
 home: https://helm-repository.readthedocs.io/en/latest
 # Sources and documentation for this chart
 sources:
-  - https://helm-repository.readthedocs.io/en/latest/charts/clusterOverwrite
-  - https://github.com/startxfr/helm-repository/tree/master/charts/clusterOverwrite
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-router
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router
 # Main maintainer contact for this helm chart
 maintainers: 
   - name: "STARTX"
     email: "dev@startx.fr"
     url: "https://www.startx.fr"
 
-dependencies:
-  - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
-    alias: project
-    condition: project.enabled
-  - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
-    alias: operatorElastic
-    condition: operatorElastic.enabled
-  - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
-    alias: operatorGlobal
-    condition: operatorGlobal.enabled
-  - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
-    alias: projectSosReport
-    condition: projectSosReport.enabled
-  - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
-    alias: operatorSosReport
-    condition: operatorSosReport.enabled
-  - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
-    alias: projectMustGather
-    condition: projectMustGather.enabled
-  - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
-    alias: operatorMustGather
-    condition: operatorMustGather.enabled
+dependencies: []
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update all startx packages to release 11.7.41"
+      description: "Creating the cluster-router chart"
   artifacthub.io/containsSecurityUpdates: "false"
 

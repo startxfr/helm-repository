@@ -1,4 +1,4 @@
-# Cluster config
+# Cluster router
 
 This helm chart is used to create a personnalized cluster configuration with various cluster level components configured as required.
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -25,13 +25,13 @@ helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
 ### 3. Get information about this chart
 
 ```bash
-helm show chart startx/cluster-config
+helm show chart startx/cluster-router
 ```
 
 ### 4. Install this chart
 
 ```bash
-helm install cluster-config startx/cluster-config
+helm install cluster-router startx/cluster-router
 ```
 
 ## Default values
@@ -60,15 +60,15 @@ Complete deployment of a project with the following characteristics :
 
 ```bash
 # base configuration running default configuration
-helm install cluster-config startx/cluster-config
+helm install cluster-router startx/cluster-router
 ```
 
 ## Others values availables
 
-- **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml))
+- **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-router/values-startx.yaml))
 
 ```bash
-helm install cluster-config startx/cluster-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml
+helm install cluster-router startx/cluster-router -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-router/values-startx.yaml
 ```
 
 ## History
@@ -103,7 +103,7 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 7.22.6   | 2021-08-05 | Stable version for chart dependencies                                                                  |
 | 7.22.7   | 2021-08-05 | Stable for OCP version 4.7.22                                                                          |
 | 7.22.12  | 2021-09-23 | publish stable update for the full repository                                                          |
-| 7.22.13  | 2021-09-23 | Improve cluster-config options                                                                         |
+| 7.22.13  | 2021-09-23 | Improve cluster-router options                                                                         |
 | 7.22.21  | 2021-10-05 | ServiceAccount and ImagePullSecrets managed by project chart                                           |
 | 7.22.25  | 2021-10-06 | publish stable update for the full repository                                                          |
 | 7.22.27  | 2021-10-06 | publish stable update for the full repository                                                          |
@@ -144,7 +144,7 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 9.8.51   | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                     |
 | 9.8.67   | 2021-12-18 | Align all charts to release 9.8.67                                                                     |
 | 9.8.68   | 2021-12-18 | Update elasticsearch operator to version 5.3.1-12                                                      |
-| 9.8.68   | 2021-12-18 | Improve cluster-config options                                                                         |
+| 9.8.68   | 2021-12-18 | Improve cluster-router options                                                                         |
 | 9.8.71   | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                       |
 | 9.8.75   | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                             |
 | 9.8.76   | 2021-12-19 | Change helm.sh/chart name                                                                              |
