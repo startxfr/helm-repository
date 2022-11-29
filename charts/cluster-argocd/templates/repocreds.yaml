@@ -1,0 +1,40 @@
+{{- if .Values.argocd_repocreds }}{{- if .Values.argocd_repocreds.enabled }}
+{{- $root := . -}}
+{{- $defaultns := .Values.project.project.name -}}
+{{ range .Values.argocd_repocreds.list }}
+{{- $name := .name | default "default-export" }}
+{{- $namespace := .namespace | default $defaultns }}
+---
+kind: Secret
+apiVersion: v1
+type: Opaque
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-argocd.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-export"
+    argocd.argoproj.io/secret-type: repository
+  annotations:
+    {{- include "cluster-argocd.annotations" $root | nindent 4 }}
+stringData:
+  {{-  if eq .type "https" }}
+  type: git
+  url: {{ .url | quote }}
+  username:  {{ .httpsOptions.username | quote }}
+  password:  {{ .httpsOptions.password | quote }}
+  {{- else if eq .type "ssh" }}
+  type: git
+  url: {{ .url | quote }}
+  sshPrivateKey: |-
+    {{- .sshOptions.sshPrivateKey | nindent 4 }}
+  {{- else if eq .type "githubapp" }}
+  type: git
+  url: {{ .url | quote }}
+  githubAppID: {{ .githubappOptions.githubAppID }}
+  githubAppInstallationID: {{ .githubappOptions.githubAppInstallationID }}
+  githubAppPrivateKey: |-
+    {{- .githubappOptions.githubAppPrivateKey | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}{{- end }}
