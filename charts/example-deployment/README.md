@@ -244,3 +244,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 11.7.61 | 2022-11-30 | publish stable update for the full repository
 | 11.7.62 | 2022-11-30 | Debug console links and notifications
 | 11.7.63 | 2022-11-30 | publish stable update for the full repository
+| 11.7.67 | 2022-11-30 | Debug depedencies on sub charts
