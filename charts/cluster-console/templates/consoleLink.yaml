@@ -1,4 +1,4 @@
-{{- if .Values.console.links -}}
+{{- if .Values.console.enabled -}}{{- if .Values.console.links -}}
 {{- $root := . -}}
 {{- $files := .Files }}
 {{- $namespace := .Values.console.namespace | default "openshift-config" -}}
@@ -16,4 +16,4 @@ metadata:
 spec:
   {{- .spec | nindent  2 }}
 {{- end }}
-{{- end -}}
+{{- end -}}{{- end -}}
