@@ -212,3 +212,4 @@ helm install example-php-hpa startx/example-php -f https://raw.githubusercontent
 | 11.7.41 | 2022-11-02 | publish stable update for the full repository
 | 11.7.61 | 2022-11-30 | publish stable update for the full repository
 | 11.7.62 | 2022-11-30 | Debug console links and notifications
+| 11.7.63 | 2022-11-30 | publish stable update for the full repository
