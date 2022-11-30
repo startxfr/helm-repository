@@ -152,3 +152,4 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 11.7.64 | 2022-11-30 | Increment sxapi version
 | 11.7.67 | 2022-11-30 | Debug depedencies on sub charts
 | 11.7.67 | 2022-11-30 | Debug depedencies on sub charts
+| 11.7.69 | 2022-11-30 | Finished dependencies stabilization
