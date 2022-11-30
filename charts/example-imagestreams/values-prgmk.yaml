@@ -1,0 +1,1818 @@
+
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: 
+ scope: startx
+ cluster: localhost
+ environment: dev
+ component: startx
+ app: startx-imagestreams
+ version: "0.0.1"
+enabled: true
+imagestreams:
+- name: startx-os
+  enabled: true
+  namespace: "pragmatik" 
+  displayName: STARTX Base OS (S2I)
+  labels: |
+    technology: linux
+  tags: 
+    - name: fc26
+      enabled: true
+      desc: &ist_os_desc
+        iconClass: icon-fedora
+        provider: 'STARTX'
+        displayName: STARTX S2I Startx Fedora 26
+        description: Minimal Fedora 26 OS builder for bash operations
+        tags: builder,startx,fedora,fc26
+        supports: linux
+        version: fc26
+        sampleRepo: https://github.com/startxfr/docker-images-example-bash.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:26
+    - name: fc27
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora 27
+        description: Minimal Fedora 27 OS builder for bash operations
+        tags: builder,startx,fedora,fc27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora 28
+        description: Minimal Fedora 28 OS builder for bash operations
+        tags: builder,startx,fedora,fc28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora 29
+        description: Minimal Fedora 29 OS builder for bash operations
+        tags: builder,startx,fedora,fc29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora 30
+        description: Minimal Fedora 30 OS builder for bash operations
+        tags: builder,startx,fedora,fc30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora 31
+        description: Minimal Fedora 31 OS builder for bash operations
+        tags: builder,startx,fedora,fc31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora 32
+        description: Minimal Fedora 32 OS builder for bash operations
+        tags: builder,startx,fedora,fc32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora rawhide
+        description: Minimal Fedora rawhide OS builder for bash operations
+        tags: builder,startx,fedora,rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx RedHat UBI 8
+        description: Minimal RedHat UBI 8 OS builder for bash operations
+        iconClass: icon-other-linux
+        supports: ubi
+        tags: builder,startx,ubi,ubi8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ubi:8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx CentOS 8
+        description: Minimal CentOS 8 OS builder for bash operations
+        iconClass: icon-shadowman
+        supports: centos
+        tags: builder,startx,centos,centos8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/centos:8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx CentOS 7
+        description: Minimal CentOS 7 OS builder for bash operations
+        iconClass: icon-shadowman
+        supports: centos
+        tags: builder,startx,centos,centos7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/centos:7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx CentOS 6
+        description: Minimal CentOS 6 OS builder for bash operations
+        iconClass: icon-shadowman
+        supports: centos
+        tags: builder,startx,centos,centos6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/centos:6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Alpine 3
+        description: Minimal Alpine 3 OS builder for bash operations
+        iconClass: icon-other-linux
+        supports: alpine
+        tags: builder,startx,alpine,alpine3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/alpine:3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora latest
+        description: Minimal Fedora latest OS builder for bash operations
+        tags: builder,startx,fedora,latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-apache
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX Apache (S2I)
+  labels: |
+    technology: httpd
+  tags: 
+    - name: fc26
+      enabled: true
+      desc: &ist_apache_desc
+        <<: *ist_os_desc
+        iconClass: icon-apache
+        displayName: STARTX Apache (Fedora 26)
+        description: Http server builder for simple web application running under Fedora 26
+        tags:  builder,startx,fedora,apache,httpd
+        supports: httpd
+        version: fc26
+        sampleRepo: https://github.com/startxfr/docker-images-example-apache.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:fc26
+    - name: fc27
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Fedora 27)
+        description: Http server builder for simple web application running under Fedora 27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Fedora 28)
+        description: Http server builder for simple web application running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Fedora 29)
+        description: Http server builder for simple web application running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Fedora 30)
+        description: Http server builder for simple web application running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Fedora 31)
+        description: Http server builder for simple web application running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Fedora 32)
+        description: Http server builder for simple web application running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Fedora rawhide)
+        description: Http server builder for simple web application running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (RedHat UBI 8)
+        description: Http server builder for simple web application running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:ubi8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Centos 8)
+        description:  Http server builder for simple web application running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:centos8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Centos 7)
+        description:  Http server builder for simple web application running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Centos 6)
+        description:  Http server builder for simple web application running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Alpine 3)
+        description:  Http server builder for simple web application running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (latest)
+        description:  Http server builder for simple web application running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-couchbase
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX Couchbase
+  labels: |
+    technology: couchbase
+  tags: 
+    - name: fc27
+      enabled: true
+      desc: &ist_couchbase_desc
+        <<: *ist_os_desc
+        iconClass: icon-openshift
+        displayName: STARTX Couchbase (Fedora 27)
+        description: Couchbase server builder for NoSQL database running under Fedora 27
+        tags:  builder,startx,fedora,couchbase
+        supports: db
+        version: fc27
+        sampleRepo: https://github.com/startxfr/docker-images-example-couchbase.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Fedora 28)
+        description: Couchbase server builder for NoSQL database running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Fedora 29)
+        description: Couchbase server builder for NoSQL database running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Fedora 30)
+        description: Couchbase server builder for NoSQL database running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Fedora 31)
+        description: Couchbase server builder for NoSQL database running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Fedora 32)
+        description: Couchbase server builder for NoSQL database running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Fedora rawhide)
+        description: Couchbase server builder for NoSQL database running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (RedHat UBI 8)
+        description: Couchbase server builder for NoSQL database running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:ubi8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Centos 8)
+        description:  Couchbase server builder for NoSQL database running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:centos8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Centos 7)
+        description:  Couchbase server builder for NoSQL database running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Centos 6)
+        description:  Couchbase server builder for NoSQL database running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:centos6
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (latest)
+        description:  Couchbase server builder for NoSQL database running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-mariadb
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX MariaDB
+  labels: |
+    technology: mariadb
+  tags: 
+    - name: fc26
+      enabled: true
+      desc: &ist_mariadb_desc
+        <<: *ist_os_desc
+        iconClass: icon-mariadb
+        displayName: STARTX MariaDB (Fedora 26)
+        description: MariaDB server builder for simple SQL database running under Fedora 26
+        tags:  builder,startx,fedora,mariadb,sql
+        supports: db
+        version: fc26
+        sampleRepo: https://github.com/startxfr/docker-images-example-mariadb.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:fc26
+    - name: fc27
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Fedora 27)
+        description: MariaDB server builder for simple SQL database running under Fedora 27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Fedora 28)
+        description: MariaDB server builder for simple SQL database running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Fedora 29)
+        description: MariaDB server builder for simple SQL database running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Fedora 30)
+        description: MariaDB server builder for simple SQL database running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Fedora 31)
+        description: MariaDB server builder for simple SQL database running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Fedora 32)
+        description: MariaDB server builder for simple SQL database running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Fedora rawhide)
+        description: MariaDB server builder for simple SQL database running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (RedHat UBI 8)
+        description: MariaDB server builder for simple SQL database running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:ubi8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Centos 8)
+        description:  MariaDB server builder for simple SQL database running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:centos8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Centos 7)
+        description:  MariaDB server builder for simple SQL database running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Centos 6)
+        description:  MariaDB server builder for simple SQL database running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Alpine 3)
+        description:  MariaDB server builder for simple SQL database running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (latest)
+        description:  MariaDB server builder for simple SQL database running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-memcache
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX Memcache
+  labels: |
+    technology: memcache
+  tags: 
+    - name: fc26
+      enabled: true
+      desc: &ist_memcache_desc
+        <<: *ist_os_desc
+        iconClass: icon-memcache
+        displayName: STARTX Memcache (Fedora 26)
+        description: Memcache server builder for distributed cache backend running under Fedora 26
+        tags:  builder,startx,fedora,memcache,cache
+        supports: memcache
+        version: fc26
+        sampleRepo: https://github.com/startxfr/docker-images-example-memcache.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:fc26
+    - name: fc27
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Fedora 27)
+        description: Memcache server builder for distributed cache backend running under Fedora 27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Fedora 28)
+        description: Memcache server builder for distributed cache backend running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Fedora 29)
+        description: Memcache server builder for distributed cache backend running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Fedora 30)
+        description: Memcache server builder for distributed cache backend running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Fedora 31)
+        description: Memcache server builder for distributed cache backend running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Fedora 32)
+        description: Memcache server builder for distributed cache backend running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Fedora rawhide)
+        description: Memcache server builder for distributed cache backend running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (RedHat UBI 8)
+        description: Memcache server builder for distributed cache backend running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:ubi8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Centos 8)
+        description:  Memcache server builder for distributed cache backend running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:centos8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Centos 7)
+        description:  Memcache server builder for distributed cache backend running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Centos 6)
+        description:  Memcache server builder for distributed cache backend running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Alpine 3)
+        description:  Memcache server builder for distributed cache backend running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (latest)
+        description:  Memcache server builder for distributed cache backend running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-mongodb
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX MongoDB
+  labels: |
+    technology: mongodb
+  tags: 
+    - name: fc26
+      enabled: true
+      desc: &ist_mongodb_desc
+        <<: *ist_os_desc
+        iconClass: icon-mongodb
+        displayName: STARTX MongoDB (Fedora 26)
+        description: MongoDB server builder for NoSQL database running under Fedora 26
+        tags:  builder,startx,fedora,mongodb,nosql
+        supports: mongodb
+        version: fc26
+        sampleRepo: https://github.com/startxfr/docker-images-example-mongodb.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:fc26
+    - name: fc27
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Fedora 27)
+        description: MongoDB server builder for NoSQL database running under Fedora 27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Fedora 28)
+        description: MongoDB server builder for NoSQL database running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Fedora 29)
+        description: MongoDB server builder for NoSQL database running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Fedora 30)
+        description: MongoDB server builder for NoSQL database running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Fedora 31)
+        description: MongoDB server builder for NoSQL database running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Fedora 32)
+        description: MongoDB server builder for NoSQL database running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Fedora rawhide)
+        description: MongoDB server builder for NoSQL database running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (RedHat UBI 8)
+        description: MongoDB server builder for NoSQL database running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:ubi8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Centos 8)
+        description:  MongoDB server builder for NoSQL database running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:centos8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Centos 7)
+        description:  MongoDB server builder for NoSQL database running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Centos 6)
+        description:  MongoDB server builder for NoSQL database running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Alpine 3)
+        description:  MongoDB server builder for NoSQL database running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (latest)
+        description:  MongoDB server builder for NoSQL database running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-nodejs
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX NodeJS
+  labels: |
+    technology: nodejs
+  tags: 
+    - name: fc26
+      enabled: true
+      desc: &ist_nodejs_desc
+        <<: *ist_os_desc
+        iconClass: icon-nodejs
+        displayName: STARTX NodeJS (Fedora 26)
+        description: Lightweight Http server builder for micro-web application running under Fedora 26
+        tags:  builder,startx,fedora,nodejs,httpd
+        supports: httpd
+        version: fc26
+        sampleRepo: https://github.com/startxfr/docker-images-example-nodejs.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:fc26
+    - name: fc27
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Fedora 27)
+        description: Lightweight Http server builder for micro-web application running under Fedora 27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Fedora 28)
+        description: Lightweight Http server builder for micro-web application running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Fedora 29)
+        description: Lightweight Http server builder for micro-web application running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Fedora 30)
+        description: Lightweight Http server builder for micro-web application running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Fedora 31)
+        description: Lightweight Http server builder for micro-web application running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Fedora 32)
+        description: Lightweight Http server builder for micro-web application running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Fedora rawhide)
+        description: Lightweight Http server builder for micro-web application running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (RedHat UBI 8)
+        description: Lightweight Http server builder for micro-web application running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:ubi8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Centos 8)
+        description:  Lightweight Http server builder for micro-web application running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:centos8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Centos 7)
+        description:  Lightweight Http server builder for micro-web application running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Centos 6)
+        description:  Lightweight Http server builder for micro-web application running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Alpine 3)
+        description:  Lightweight Http server builder for micro-web application running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (latest)
+        description:  Lightweight Http server builder for micro-web application running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-ooconv
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX LibreOffice converter
+  labels: |
+    technology: libreoffice
+  tags: 
+    - name: fc27
+      enabled: true
+      desc: &ist_ooconv_desc
+        <<: *ist_os_desc
+        iconClass: icon-aerogear
+        displayName: STARTX LibreOffice converter (Fedora 27)
+        description: LibreOffice converter for document convertion running under Fedora 27
+        tags:  builder,startx,fedora,ooconv,httpd
+        supports: libreoffice
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Fedora 28)
+        description: LibreOffice converter for document convertion running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Fedora 29)
+        description: LibreOffice converter for document convertion running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Fedora 30)
+        description: LibreOffice converter for document convertion running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Fedora 31)
+        description: LibreOffice converter for document convertion running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Fedora 32)
+        description: LibreOffice converter for document convertion running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Fedora rawhide)
+        description: LibreOffice converter for document convertion running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:latest
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Centos 7)
+        description:  LibreOffice converter for document convertion running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Centos 6)
+        description:  LibreOffice converter for document convertion running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Alpine 3)
+        description:  LibreOffice converter for document convertion running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (latest)
+        description:  LibreOffice converter for document convertion running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-php
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX PHP
+  labels: |
+    technology: php
+  tags: 
+    - name: fc26
+      enabled: true
+      desc: &ist_php_desc
+        <<: *ist_os_desc
+        iconClass: icon-php
+        displayName: STARTX PHP (Fedora 26)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora 26
+        tags:  builder,startx,fedora,php,httpd
+        supports: httpd
+        version: fc26
+        sampleRepo: https://github.com/startxfr/docker-images-example-php.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:fc26
+    - name: fc27
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Fedora 27)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora 27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Fedora 28)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Fedora 29)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Fedora 30)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Fedora 31)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Fedora 32)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Fedora rawhide)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (RedHat UBI 8)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:ubi8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Centos 8)
+        description:  PHP with fpm + apache engine container builder for dynamic web application running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:centos8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Centos 7)
+        description:  PHP with fpm + apache engine container builder for dynamic web application running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Centos 6)
+        description:  PHP with fpm + apache engine container builder for dynamic web application running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Alpine 3)
+        description:  PHP with fpm + apache engine container builder for dynamic web application running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (latest)
+        description:  PHP with fpm + apache engine container builder for dynamic web application running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-postgresql
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX PostgreSQL
+  labels: |
+    technology: postgresql
+  tags: 
+    - name: fc26
+      enabled: true
+      desc: &ist_postgresql_desc
+        <<: *ist_os_desc
+        iconClass: icon-postgresql
+        displayName: STARTX PostgreSQL (Fedora 26)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora 26
+        tags:  builder,startx,fedora,postgresql,httpd
+        supports: httpd
+        version: fc26
+        sampleRepo: https://github.com/startxfr/docker-images-example-postgresql.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:fc26
+    - name: fc27
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Fedora 27)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora 27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:fc27
+    - name: fc28
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Fedora 28)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora 28
+        version: fc28
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:fc28
+    - name: fc29
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Fedora 29)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora 29
+        version: fc29
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:fc29
+    - name: fc30
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Fedora 30)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora 30
+        version: fc30
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Fedora 31)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Fedora 32)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Fedora rawhide)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (RedHat UBI 8)
+        description: PostgreSQL server builder for advanced SQL database running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:ubi8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Centos 8)
+        description:  PostgreSQL server builder for advanced SQL database running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:centos8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Centos 7)
+        description:  PostgreSQL server builder for advanced SQL database running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Centos 6)
+        description:  PostgreSQL server builder for advanced SQL database running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Alpine 3)
+        description:  PostgreSQL server builder for advanced SQL database running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (latest)
+        description:  PostgreSQL server builder for advanced SQL database running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-chrome
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX Chrome Browser
+  labels: |
+    technology: chrome
+  tags: 
+    - name: fc30
+      enabled: true
+      desc: &ist_chrome_desc
+        <<: *ist_os_desc
+        iconClass: icon-aerogear
+        displayName: STARTX Chrome Browser (Fedora 30)
+        description: Container-based desktop Chrome browser for remote internet browsing  under Fedora 30
+        tags:  startx,centos,centos7,chrome,vnc
+        supports: vnc,browser,chrome
+        version: fc30
+        sampleRepo: https://github.com/startxfr/docker-images-example-chrome.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (Fedora 31)
+        description: Container-based desktop Chrome browser for remote internet browsing  under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (Fedora 32)
+        description: Container-based desktop Chrome browser for remote internet browsing  under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (Fedora rawhide)
+        description: Container-based desktop Chrome browser for remote internet browsing  under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:latest
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (Centos 7)
+        description:  Container-based desktop Chrome browser for remote internet browsing  under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:centos7
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (Alpine 3)
+        description:  Container-based desktop Chrome browser for remote internet browsing  under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (latest)
+        description:  Container-based desktop Chrome browser for remote internet browsing  under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-firefox
+  enabled: true
+  namespace: "pragmatik"
+  displayName: STARTX Firefox Browser
+  labels: |
+    technology: firefox
+  tags: 
+    - name: fc30
+      enabled: true
+      desc: &ist_firefox_desc
+        <<: *ist_os_desc
+        iconClass: icon-aerogear
+        displayName: STARTX Firefox Browser (Fedora 30)
+        description: Container-based desktop Firefox browser for remote internet browsing  under Fedora 30
+        tags:  startx,centos,centos7,firefox,vnc
+        supports: vnc,browser,firefox
+        version: fc30
+        sampleRepo: https://github.com/startxfr/docker-images-example-firefox.git
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:fc30
+    - name: fc31
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (Fedora 31)
+        description: Container-based desktop Firefox browser for remote internet browsing  under Fedora 31
+        version: fc31
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:fc31
+    - name: fc32
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (Fedora 32)
+        description: Container-based desktop Firefox browser for remote internet browsing  under Fedora 32
+        version: fc32
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:fc32
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (Fedora rawhide)
+        description: Container-based desktop Firefox browser for remote internet browsing  under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:latest
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (Centos 7)
+        description:  Container-based desktop Firefox browser for remote internet browsing  under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:centos7
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (Alpine 3)
+        description:  Container-based desktop Firefox browser for remote internet browsing  under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (latest)
+        description:  Container-based desktop Firefox browser for remote internet browsing  under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
