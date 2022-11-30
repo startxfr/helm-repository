@@ -21,6 +21,8 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
     argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - maistra.io/istio-operator
 spec:
   controlPlaneRef:
     name: "{{ .controlePlane | default "basic-install" }}"

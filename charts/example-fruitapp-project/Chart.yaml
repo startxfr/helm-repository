@@ -6,7 +6,7 @@ description: Helm chart used to deploy all project required to deploy a full CI/
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.7.62
+version: 11.7.63
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 0.0.2
 # Icon of this helm-chart
@@ -44,32 +44,32 @@ maintainers:
 dependencies: 
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
+    version: "11.7.61"
     alias: project_devel
     condition: project_devel.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
+    version: "11.7.61"
     alias: project_integration
     condition: project_integration.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
+    version: "11.7.61"
     alias: project_preprod
     condition: project_preprod.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
+    version: "11.7.61"
     alias: project_prod
     condition: project_prod.enabled
   - name: example-imagestreams
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.1"
+    version: "11.7.61"
     alias: imagestreams
     condition: imagestreams.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update all startx packages to release 11.7.62"
+      description: "Update all dependencies packages to version  11.7.61"
   artifacthub.io/containsSecurityUpdates: "false"
