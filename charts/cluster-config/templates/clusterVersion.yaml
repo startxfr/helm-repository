@@ -11,4 +11,8 @@ metadata:
     helm.sh/resource-policy: keep
 spec:
   channel: "{{- default "candidate" .Values.clusterversion.channel -}}-{{- default "4.9" .Values.clusterversion.version -}}"
+  {{- if .Values.clusterversion.desiredVersion }}
+  desiredUpdate:
+      version: {{- .Values.clusterversion.desiredVersion -}}
+  {{- end }}
 {{- end -}}
