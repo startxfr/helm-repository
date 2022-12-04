@@ -215,3 +215,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 11.7.67 | 2022-11-30 | Debug depedencies on sub charts
 | 11.7.69 | 2022-11-30 | Finished dependencies stabilization
 | 11.7.73 | 2022-12-04 | Align all packages to release 11.7.73
+| 11.7.75 | 2022-12-04 | publish stable update for the full repository
