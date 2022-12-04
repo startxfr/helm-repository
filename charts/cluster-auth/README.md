@@ -225,3 +225,4 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 11.7.63 | 2022-11-30 | publish stable update for the full repository
 | 11.7.67 | 2022-11-30 | Debug depedencies on sub charts
 | 11.7.69 | 2022-11-30 | Finished dependencies stabilization
+| 11.7.73 | 2022-12-04 | Align all packages to release 11.7.73

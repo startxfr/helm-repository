@@ -176,12 +176,24 @@
                     "maxLength": 30,
                     "title": "Version name",
                     "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
-                    "default": "0.0.1",
+                    "default": "4.12",
                     "examples": [
-                        "0.0.1",
-                        "0.1",
-                        "0.0.1-snapshot",
-                        "0.0.1-202110300900"
+                        "4.12",
+                        "4.11",
+                        "4.10"
+                    ]
+                },
+                "desiredVersion": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Desired version",
+                    "description": "Define the targeted applyed version (if cluster update are managed in a gitops way)",
+                    "default": "4.11.17",
+                    "examples": [
+                        "4.12.1",
+                        "4.11.18",
+                        "4.11.17"
                     ]
                 }
             }
@@ -332,7 +344,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 30,
-                                    "title": "Version name",
+                            "title": "Version name",
                             "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
                             "default": "0.0.1",
                             "examples": [
