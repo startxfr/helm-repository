@@ -212,3 +212,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 11.7.71 | 2022-12-04 | Add desiredVersion to clusterversion resource for enabling cluster upgrade using a gitops way
 | 11.7.73 | 2022-12-04 | Align all packages to release 11.7.73
 | 11.7.75 | 2022-12-04 | publish stable update for the full repository
+| 10.12.141 | 2022-12-05 | Update dependencies to version 10.12.105
