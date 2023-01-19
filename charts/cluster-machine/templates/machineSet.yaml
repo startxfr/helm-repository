@@ -107,12 +107,21 @@ spec:
                   values:
                     - "{{ $root.Values.cluster.id }}-worker-sg"
           subnet:
+          {{- if .subnet_name }}
             filters:
               - name: tag:Name
                 values:
                   - "{{ .subnet_name }}"
                   # - "{{ $root.Values.cluster.id }}-worker-subnet"
-                  # - "{{ $root.Values.cluster.id }}-private-{{ $root.Values.cluster.region }}{{ .az }}"
+          {{- else }}
+            filters:
+              - name: tag:Name
+                values:
+                  - "{{ $root.Values.cluster.id }}-private-{{ $root.Values.cluster.region }}{{ .az }}"
+          {{ end }}
+
+
+
           tags: 
             - name: kubernetes.io/cluster/{{ $root.Values.cluster.id }}
               value: owned

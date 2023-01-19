@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: vault
   app: startx-vault
+enabled: true
 route: 
   enabled: false
 project: 
@@ -28,6 +29,7 @@ project:
       name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
       role: admin
 vault:
+  enabled: true
   fullnameOverride: startx-vault
   global:
     enabled: false
@@ -35,7 +37,7 @@ vault:
     tlsDisable: true
     openshift: true
   injector:
-    enabled: true
+    enabled: "-"
     image:
       repository: "registry.connect.redhat.com/hashicorp/vault-k8s"
       tag: "0.14.1-ubi"
