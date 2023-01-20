@@ -98,6 +98,19 @@ oadp:
       includedResources: []
       restorePVs: true
 
+# Creating cloud-credentials for S3 access
+cloudcreds:
+  # Enable cloud-credential creation
+  enabled: false
+  # Name of the cloud credentials secret
+  name: "cloud-credentials-startx"
+  # Content of the .aws/credentials file
+  spec: |-
+    [startx]
+    aws_access_key_id=XXXXXXXXX
+    aws_secret_access_key=XXXXXXXXXXXXXXX
+
+
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
   enabled: false
