@@ -24,21 +24,21 @@ oadp:
     # Enable the dataProtectionApplication
     enabled: true
     # Name of the deployed instance of dataProtectionApplication
-    name: default
+    name: startx-dp
     # The dataProtectionApplication specifications
     spec: |
       backupImages: true
       backupLocations:
         - velero:
             config:
-              profile: default
+              profile: startx
               region: eu-west-3
             credential:
               key: cloud
               name: cloud-credentials
             default: true
             objectStorage:
-              bucket: oadp-backup
+              bucket: oadp-default
               prefix: velero
             provider: aws
       configuration:
@@ -77,13 +77,13 @@ oadp:
         includedNamespaces:
           - myapp-dev
           - myapp-test
-        storageLocation: default-backup-storage
+        storageLocation: startx-dp
         ttl: 720h0m0s
   # Configuration section of the restore resource (unique)
   restore:
     # Enable the restore
     enabled: false
-    # Name of the deployed instance of Schedule
+    # Name of the deployed instance of restore
     name: restore-app
     # The restore specifications
     spec: |
@@ -97,6 +97,19 @@ oadp:
         - resticrepositories.velero.io
       includedResources: []
       restorePVs: true
+
+# Creating cloud-credentials for S3 access
+cloudcreds:
+  # Enable cloud-credential creation
+  enabled: false
+  # Name of the cloud credentials secret
+  name: "cloud-credentials-startx"
+  # Content of the .aws/credentials file
+  spec: |-
+    [startx]
+    aws_access_key_id=XXXXXXXXX
+    aws_secret_access_key=XXXXXXXXXXXXXXX
+
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
