@@ -1,16 +1,16 @@
-{{- if .Values.oadp.enabled -}}{{- if .Values.oadp.schedule -}}{{- if .Values.oadp.schedule.enabled -}}
+{{- if .Values.oadp.enabled -}}{{- if .Values.oadp.backups -}}{{- if .Values.oadp.backups.enabled -}}
 {{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-adp" -}}
-{{ range .Values.oadp.schedule.list }}
+{{ range .Values.oadp.backups.list }}
 {{- $spec := .spec | default "{}" -}}
 apiVersion: velero.io/v1
-kind: Schedule
+kind: Backup
 metadata:
-  name: {{ .name | default "daily_app" | quote }}
+  name: {{ .name | default "default-backup" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-oadp.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- .name | default "daily_app" -}}-schedule"
+    app.kubernetes.io/name: "{{- .name | default "default-backup" -}}"
   annotations:
     {{- include "cluster-oadp.annotations" $root | nindent 4 }}
     argocd.argoproj.io/sync-wave: "20"
