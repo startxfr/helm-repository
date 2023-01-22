@@ -10,20 +10,32 @@ oadp:
   enabled: false
   dataProtectionApplication:
     enabled: true
-    name: dpa-mco-pfd
+    name: cluster-pfd
     spec: |
       backupImages: true
       backupLocations:
         - velero:
             config:
-              profile: default
+              profile: mccaas
               region: eu-west-3
             credential:
               key: cloud
-              name: cloud-credentials
+              name: cloud-credentials-pfd
             default: true
             objectStorage:
               bucket: pfd-backup2
+              prefix: velero
+            provider: aws
+        - velero:
+            config:
+              profile: mccaas
+              region: eu-west-3
+            credential:
+              key: cloud
+              name: cloud-credentials-pfd
+            default: false
+            objectStorage:
+              bucket: pfd-backup2-new
               prefix: velero
             provider: aws
       configuration:
@@ -33,53 +45,158 @@ oadp:
           defaultPlugins:
             - openshift
             - aws
+            # - csi
           podConfig:
             resourceAllocations:
               limits:
-                cpu: '2'
+                cpu: '1'
                 memory: 1024Mi
               requests:
-                cpu: '1'
+                cpu: 500m
                 memory: 512Mi
       snapshotLocations:
         - velero:
             config:
-              profile: default
+              profile: mccaas
+              region: eu-west-3
+            provider: aws
+        - velero:
+            config:
+              profile: mccaas
               region: eu-west-3
             provider: aws
   schedule:
     enabled: true
-    name: daily-global
-    spec: |
-      schedule: 0 2 * * *
-      template:
+    list:
+    - name: daily-data-platform
+      spec:
+        schedule: "0 1 * * *"
+        template:
+          defaultVolumesToRestic: true
+          includeClusterResources: false
+          hooks: {}
+          includedNamespaces:
+            - data-platform-*
+            - fiware
+            - gitlab-runner
+            - gitlab-system
+          storageLocation: cluster-pfd-1
+          ttl: 0h58m0s
+    - name: weekly-data-platform
+      spec:
+        schedule: "0 4 * * 0"
+        template:
+          defaultVolumesToRestic: true
+          includeClusterResources: false
+          hooks: {}
+          includedNamespaces:
+            - data-platform-*
+            - fiware
+            - gitlab-runner
+            - gitlab-system
+          storageLocation: cluster-pfd-1
+          ttl: 0h58m0s
+    - name: daily-cluster-infra
+      spec:
+        schedule: "0 2 * * *"
+        template:
+          defaultVolumesToRestic: true
+          includeClusterResources: true
+          hooks: {}
+          includedNamespaces:
+            - openshift-*
+            - demo-*
+            - startx-*
+            - startx
+            - default
+          excludedNamespaces:
+            - openshift-etcd
+          storageLocation: cluster-pfd-1
+          ttl: 0h58m0s
+    - name: daily-cluster-etcd
+      spec:
+        schedule: "0 3 * * *"
+        template:
+          defaultVolumesToRestic: true
+          includeClusterResources: false
+          hooks: {}
+          includedNamespaces:
+            - openshift-etcd
+          storageLocation: cluster-pfd-1
+          ttl: 0h58m0s
+    - name: weekly-cluster-etcd
+      spec:
+        schedule: "0 3 * * 0"
+        template:
+          defaultVolumesToRestic: true
+          includeClusterResources: false
+          hooks: {}
+          includedNamespaces:
+            - openshift-etcd
+          storageLocation: cluster-pfd-1
+          ttl: 0h58m0s
+  backups:
+    enabled: true
+    list:
+    - name: manual-data-platform
+      spec:
+        csiSnapshotTimeout: 5m
         defaultVolumesToRestic: true
         hooks: {}
         includedNamespaces:
-          - data-platform-airflow
-          - data-platform-api
-          - data-platform-datahub
-          - data-platform-db-preprod
-          - data-platform-db-prod
-          - data-platform-hive-metastore
-          - data-platform-jupyterhub-external
-          - data-platform-jupyterhub-internal
-          - data-platform-kafka
-          - data-platform-kafka-op
-          - data-platform-knox
-          - data-platform-kong
-          - data-platform-portal
-          - data-platform-ranger
-          - data-platform-superset
-          - data-platform-trino
-          - data-platform-usecases
-          - demo-keycloak
-          - demo-web-app
+          - data-platform-*
           - fiware
           - gitlab-runner
           - gitlab-system
-        storageLocation: dpa-mco-pfd-1
-        ttl: 720h0m0s
+        metadata: {}
+        storageLocation: cluster-pfd-1
+        ttl: 0h30m0s
+        volumeSnapshotLocations:
+          - cluster-pfd-1
+  restore:
+    enabled: true
+    list:
+    - name: manual-data-platform
+      spec:
+        csiSnapshotTimeout: 5m
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - data-platform-*
+          - fiware
+          - gitlab-runner
+          - gitlab-system
+        metadata: {}
+        storageLocation: cluster-pfd-1
+        ttl: 0h30m0s
+        volumeSnapshotLocations:
+          - cluster-pfd-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+cloudcreds:
+  enabled: false
+  name: "cloud-credentials-pfd"
+  spec: |-
+    [mccaas]
+    aws_access_key_id=XXXXXXXXX
+    aws_secret_access_key=XXXXXXXXXXXXXXX
 
 project: 
   enabled: false
