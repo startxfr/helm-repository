@@ -62,7 +62,7 @@ oadp:
               profile: default
               region: eu-west-3
             provider: aws
-  # Configuration section of the Schedule resource (unique)
+  # Configuration section of the scheduled backups
   schedule:
     # Enable the Schedule
     enabled: true
@@ -81,17 +81,37 @@ oadp:
             - myapp-test
           storageLocation: startx-dp
           ttl: 720h0m0s
-  # Configuration section of the restore resource (unique)
+  # Configuration section of the manual backups
+  backups:
+    # Enable the manual backup
+    enabled: true
+    # List of manual backup
+    list:
+      # Name of the backup resource
+    - name: manual-default
+      # The backup specifications
+      spec: |
+        csiSnapshotTimeout: 5m
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - default
+        metadata: {}
+        storageLocation: cluster-pfd-1
+        ttl: 0h5m0s
+        volumeSnapshotLocations:
+          - cluster-pfd-1
+  # Configuration section of the restored backups
   restore:
     # Enable the restore
     enabled: false
     # List of restoration order
     list:
       # Name of the deployed instance to restore
-    - name: restore-app
+    - name: manual-default-to-restored
       # The restore specifications
       spec: |
-        backupName: backup-app
+        backupName: manual-default
         excludedResources:
           - nodes
           - events
@@ -100,6 +120,8 @@ oadp:
           - restores.velero.io
           - resticrepositories.velero.io
         includedResources: []
+        namespaceMapping:
+          default: default-restored
         restorePVs: true
 
 # Creating cloud-credentials for S3 access

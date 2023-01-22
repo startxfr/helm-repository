@@ -60,6 +60,39 @@ oadp:
             - demo-oadp
           storageLocation: startx-backup-demo
           ttl: 720h0m0s
+  backups:
+    enabled: true
+    list:
+    - name: manual-default
+      spec: |
+        csiSnapshotTimeout: 5m
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - default
+        metadata: {}
+        storageLocation: cluster-pfd-1
+        ttl: 0h5m0s
+        volumeSnapshotLocations:
+          - cluster-pfd-1
+  restore:
+    enabled: true
+    list:
+    - name: manual-default-to-restored
+      spec: |
+        backupName: manual-default
+        excludedResources:
+          - nodes
+          - events
+          - events.events.k8s.io
+          - backups.velero.io
+          - restores.velero.io
+          - resticrepositories.velero.io
+        includedResources: []
+        namespaceMapping:
+          default: default-restored
+        restorePVs: true
+
 project: 
   enabled: false
   context: 

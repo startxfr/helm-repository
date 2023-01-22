@@ -60,7 +60,45 @@ oadp:
             - demo*
           storageLocation: startx-backup-daily
           ttl: 720h0m0s
-
+  backups:
+    enabled: false
+    list:
+    - name: manual-startx
+      spec:
+        csiSnapshotTimeout: 5m
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - startx
+        metadata: {}
+        storageLocation: cluster-pfd-1
+        ttl: 0h5m0s
+        volumeSnapshotLocations:
+          - cluster-pfd-1
+  restore:
+    enabled: false
+    list:
+    - name: manual-startx-to-restored
+      spec:
+        backupName: manual-startx
+        excludedResources:
+          - nodes
+          - events
+          - events.events.k8s.io
+          - backups.velero.io
+          - restores.velero.io
+          - resticrepositories.velero.io
+        includedResources: []
+        namespaceMapping:
+          startx: startx-restored
+        restorePVs: true
+cloudcreds:
+  enabled: false
+  name: "cloud-credentials-startx"
+  spec: |-
+    [startx]
+    aws_access_key_id=XXXXXXXXX
+    aws_secret_access_key=XXXXXXXXXXXXXXX
 project: 
   enabled: false
   context: 
@@ -97,11 +135,3 @@ operator:
     name: "openshift-adp"
     namespace: "openshift-adp"
     providedAPIs: "Backup.v1.velero.io,BackupStorageLocation.v1.velero.io,CloudStorage.v1alpha1.oadp.openshift.io,DataProtectionApplication.v1alpha1.oadp.openshift.io,DeleteBackupRequest.v1.velero.io,DownloadRequest.v1.velero.io,PodVolumeBackup.v1.velero.io,PodVolumeRestore.v1.velero.io,ResticRepository.v1.velero.io,Restore.v1.velero.io,Schedule.v1.velero.io,ServerStatusRequest.v1.velero.io,VolumeSnapshotBackup.v1alpha1.datamover.oadp.openshift.io,VolumeSnapshotLocation.v1.velero.io,VolumeSnapshotRestore.v1alpha1.datamover.oadp.openshift.io"
-
-cloudcreds:
-  enabled: false
-  name: "cloud-credentials-startx"
-  spec: |-
-    [startx]
-    aws_access_key_id=XXXXXXXXX
-    aws_secret_access_key=XXXXXXXXXXXXXXX
