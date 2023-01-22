@@ -135,6 +135,60 @@ oadp:
             - openshift-etcd
           storageLocation: cluster-pfd-1
           ttl: 0h58m0s
+  backups:
+    enabled: true
+    list:
+    - name: manual-data-platform
+      spec:
+        csiSnapshotTimeout: 5m
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - data-platform-*
+          - fiware
+          - gitlab-runner
+          - gitlab-system
+        metadata: {}
+        storageLocation: cluster-pfd-1
+        ttl: 0h30m0s
+        volumeSnapshotLocations:
+          - cluster-pfd-1
+  restore:
+    enabled: true
+    list:
+    - name: manual-data-platform
+      spec:
+        csiSnapshotTimeout: 5m
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - data-platform-*
+          - fiware
+          - gitlab-runner
+          - gitlab-system
+        metadata: {}
+        storageLocation: cluster-pfd-1
+        ttl: 0h30m0s
+        volumeSnapshotLocations:
+          - cluster-pfd-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 cloudcreds:
   enabled: false
