@@ -49,16 +49,17 @@ oadp:
             provider: aws
   schedule:
     enabled: true
-    name: daily-global
-    spec: |
-      schedule: 0 2 * * *
-      template:
-        defaultVolumesToRestic: true
-        hooks: {}
-        includedNamespaces:
-          - demo*
-        storageLocation: startx-backup-daily
-        ttl: 720h0m0s
+    list:
+    - name: daily-global
+      spec: |
+        schedule: 0 2 * * *
+        template:
+          defaultVolumesToRestic: true
+          hooks: {}
+          includedNamespaces:
+            - demo*
+          storageLocation: startx-backup-daily
+          ttl: 720h0m0s
 
 project: 
   enabled: false

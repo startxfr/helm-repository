@@ -66,37 +66,41 @@ oadp:
   schedule:
     # Enable the Schedule
     enabled: true
-    # Name of the deployed instance of Schedule
-    name: daily-app
-    # The Schedule specifications
-    spec: |
-      schedule: 0 2 * * *
-      template:
-        defaultVolumesToRestic: true
-        hooks: {}
-        includedNamespaces:
-          - myapp-dev
-          - myapp-test
-        storageLocation: startx-dp
-        ttl: 720h0m0s
+    # List of scheduled backups
+    list:
+      # Name of the deployed instance of Schedule
+    - name: daily-app
+      # The Schedule specifications
+      spec: |
+        schedule: 0 2 * * *
+        template:
+          defaultVolumesToRestic: true
+          hooks: {}
+          includedNamespaces:
+            - myapp-dev
+            - myapp-test
+          storageLocation: startx-dp
+          ttl: 720h0m0s
   # Configuration section of the restore resource (unique)
   restore:
     # Enable the restore
     enabled: false
-    # Name of the deployed instance of restore
-    name: restore-app
-    # The restore specifications
-    spec: |
-      backupName: backup-app
-      excludedResources:
-        - nodes
-        - events
-        - events.events.k8s.io
-        - backups.velero.io
-        - restores.velero.io
-        - resticrepositories.velero.io
-      includedResources: []
-      restorePVs: true
+    # List of restoration order
+    list:
+      # Name of the deployed instance to restore
+    - name: restore-app
+      # The restore specifications
+      spec: |
+        backupName: backup-app
+        excludedResources:
+          - nodes
+          - events
+          - events.events.k8s.io
+          - backups.velero.io
+          - restores.velero.io
+          - resticrepositories.velero.io
+        includedResources: []
+        restorePVs: true
 
 # Creating cloud-credentials for S3 access
 cloudcreds:
