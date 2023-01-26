@@ -20,8 +20,11 @@ imagestreams:
   tags: 
     - name: fc27
       enabled: true
-      desc:
-        <<: *ist_os_desc
+      desc: &ist_os_desc
+        iconClass: icon-fedora
+        provider: 'STARTX'
+        supports: linux
+        sampleRepo: https://github.com/startxfr/docker-images-example-bash.git
         displayName: STARTX S2I Startx Fedora 27
         description: Minimal Fedora 27 OS builder for bash operations
         tags: builder,startx,fedora,fc27
@@ -174,8 +177,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_apache_desc
+      desc: &ist_apache_desc
+        <<: *ist_os_desc
+        iconClass: icon-apache
+        supports: httpd
+        sampleRepo: https://github.com/startxfr/docker-images-example-apache.git
+        tags:  builder,startx,fedora,apache,httpd
         displayName: STARTX Apache (Fedora rawhide)
         description: Http server builder for simple web application running under Fedora rawhide
         version: rawhide
@@ -226,8 +233,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_couchbase_desc
+      desc: &ist_couchbase_desc
+        <<: *ist_os_desc
+        iconClass: icon-openshift
+        tags:  builder,startx,fedora,couchbase
+        supports: db
+        sampleRepo: https://github.com/startxfr/docker-images-example-couchbase.git
         displayName: STARTX Couchbase (Fedora rawhide)
         description: Couchbase server builder for NoSQL database running under Fedora rawhide
         version: rawhide
@@ -278,8 +289,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_mariadb_desc
+      desc: &ist_mariadb_desc
+        <<: *ist_os_desc
+        iconClass: icon-mariadb
+        tags:  builder,startx,fedora,mariadb,sql
+        supports: db
+        sampleRepo: https://github.com/startxfr/docker-images-example-mariadb.git
         displayName: STARTX MariaDB (Fedora rawhide)
         description: MariaDB server builder for simple SQL database running under Fedora rawhide
         version: rawhide
@@ -330,8 +345,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_memcache_desc
+      desc: &ist_memcache_desc
+        <<: *ist_os_desc
+        iconClass: icon-memcache
+        tags:  builder,startx,fedora,memcache,cache
+        supports: memcache
+        sampleRepo: https://github.com/startxfr/docker-images-example-memcache.git
         displayName: STARTX Memcache (Fedora rawhide)
         description: Memcache server builder for distributed cache backend running under Fedora rawhide
         version: rawhide
@@ -382,8 +401,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_mongodb_desc
+      desc: &ist_mongodb_desc
+        <<: *ist_os_desc
+        iconClass: icon-mongodb
+        tags:  builder,startx,fedora,mongodb,nosql
+        supports: mongodb
+        sampleRepo: https://github.com/startxfr/docker-images-example-mongodb.git
         displayName: STARTX MongoDB (Fedora rawhide)
         description: MongoDB server builder for NoSQL database running under Fedora rawhide
         version: rawhide
@@ -434,8 +457,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_nodejs_desc
+      desc: &ist_nodejs_desc
+        <<: *ist_os_desc
+        iconClass: icon-nodejs
+        tags:  builder,startx,fedora,nodejs,httpd
+        supports: httpd
+        sampleRepo: https://github.com/startxfr/docker-images-example-nodejs.git
         displayName: STARTX NodeJS (Fedora rawhide)
         description: Lightweight Http server builder for micro-web application running under Fedora rawhide
         version: rawhide
@@ -563,8 +590,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_php_desc
+      desc: &ist_php_desc
+        <<: *ist_os_desc
+        iconClass: icon-php
+        tags:  builder,startx,fedora,php,httpd
+        supports: httpd
+        sampleRepo: https://github.com/startxfr/docker-images-example-php.git
         displayName: STARTX PHP (Fedora rawhide)
         description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora rawhide
         version: rawhide
@@ -615,8 +646,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_postgresql_desc
+      desc: &ist_postgresql_desc
+        <<: *ist_os_desc
+        iconClass: icon-postgresql
+        tags:  builder,startx,fedora,postgresql,httpd
+        supports: httpd
+        sampleRepo: https://github.com/startxfr/docker-images-example-postgresql.git
         displayName: STARTX PostgreSQL (Fedora rawhide)
         description: PostgreSQL server builder for advanced SQL database running under Fedora rawhide
         version: rawhide
@@ -667,8 +702,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_chrome_desc
+      desc: &ist_chrome_desc
+        <<: *ist_os_desc
+        iconClass: icon-aerogear
+        tags:  startx,centos,centos7,chrome,vnc
+        supports: vnc,browser,chrome
+        sampleRepo: https://github.com/startxfr/docker-images-example-chrome.git
         displayName: STARTX Chrome Browser (Fedora rawhide)
         description: Container-based desktop Chrome browser for remote internet browsing  under Fedora rawhide
         version: rawhide
@@ -719,8 +758,12 @@ imagestreams:
   tags: 
     - name: rawhide
       enabled: true
-      desc:
-        <<: *ist_firefox_desc
+      desc: &ist_firefox_desc
+        <<: *ist_os_desc
+        iconClass: icon-aerogear
+        tags:  startx,centos,centos7,firefox,vnc
+        supports: vnc,browser,firefox
+        sampleRepo: https://github.com/startxfr/docker-images-example-firefox.git
         displayName: STARTX Firefox Browser (Fedora rawhide)
         description: Container-based desktop Firefox browser for remote internet browsing  under Fedora rawhide
         version: rawhide
