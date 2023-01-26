@@ -53,26 +53,27 @@ oadp:
     - name: daily-global
       spec: |
         schedule: 0 2 * * *
+        useOwnerReferencesInBackup: true
         template:
           defaultVolumesToRestic: true
           hooks: {}
           includedNamespaces:
             - demo*
           storageLocation: startx-backup-daily
-          ttl: 720h0m0s
+          ttl: 0h58m0s
   backups:
     enabled: false
     list:
     - name: manual-startx
       spec:
-        csiSnapshotTimeout: 5m
+        csiSnapshotTimeout: 10m
         defaultVolumesToRestic: true
         hooks: {}
         includedNamespaces:
           - startx
         metadata: {}
         storageLocation: cluster-pfd-1
-        ttl: 0h5m0s
+        ttl: 0h20m0s
         volumeSnapshotLocations:
           - cluster-pfd-1
   restore:
