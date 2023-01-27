@@ -8,21 +8,57 @@ context: &context
   app: startx-sso
 sso:
   enabled: false
-  hooked: false
   name: default
   spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
-    # profile:
-    # - name: "profile1"
-    #   interface: "enp134s0f0"
-    #   sso4lOpts: "-s -2"
-    #   phc2sysOpts: "-a -r"
-    # recommend:
-    # - profile: "profile1"
-    #   priority: 4
-    #   match:
-    #   - nodeLabel: "node-role.kubernetes.io/worker"
+    externalAccess:
+      enabled: true
+    instances: 1
+    keycloakDeploymentSpec:
+      imagePullPolicy: Always
+    postgresDeploymentSpec:
+      imagePullPolicy: Always
+sso_realms:
+  enabled: false
+  list: 
+    - name: myrealm
+      spec: |-
+        instanceSelector:
+          matchLabels:
+            app: sso
+        realm:
+          displayName: My Realm
+          enabled: true
+          id: my-realm
+          realm: my-realm
+sso_clients:
+  enabled: false
+  list: 
+    - name: myapp
+      spec: |-
+        client:
+          enabled: true
+          clientAuthenticatorType: client-secret
+          redirectUris:
+            - 'https://myapp.example.com/*'
+          clientId: myapp
+          defaultClientScopes:
+            - openid
+            - profile
+            - email
+          rootUrl: 'https://myapp.example.com'
+          implicitFlowEnabled: false
+          publicClient: false
+          standardFlowEnabled: true
+          protocol: openid-connect
+          webOrigins:
+            - 'https://myapp.example.com/*'
+          protocolMappers: []
+          id: bfb396f5-f14b-4759-b2fe-34a9e797223c
+          directAccessGrantsEnabled: true
+        realmSelector:
+          matchLabels:
+            realm: my-realm
+        scopeMappings: {}
 project: 
   enabled: false
   context: 
