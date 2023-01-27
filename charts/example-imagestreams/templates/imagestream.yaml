@@ -62,30 +62,30 @@ spec:
       {{- else }}
       from:
         kind: DockerImage
-        {{- if eq $insecure "true"  }}
-        importPolicy:
-          insecure: true 
-        {{- end }}
-        {{- if eq $local "true"  }}
-        # reference: true
-        referencePolicy:
-          type: Local 
-        {{- end }}
         name: {{ $ist.source.image | default "quay.io/startx/fedora:latest" | quote }}
+      {{- if eq $insecure "true"  }}
+      importPolicy:
+        insecure: true 
+      {{- end }}
+      {{- if eq $local "true"  }}
+      # reference: true
+      referencePolicy:
+        type: Local 
+      {{- end }}
       {{- end }}
       {{- else }}
       from:
         kind: DockerImage
-        {{- if eq $insecure "true"  }}
-        importPolicy:
-          insecure: true 
-        {{- end }}
-        {{- if eq $local "true"  }}
-        # reference: true
-        referencePolicy:
-          type: Local 
-        {{- end }}
         name: {{ $ist.source.image | default "quay.io/startx/fedora:latest" | quote }}
+      {{- if eq $insecure "true"  }}
+      importPolicy:
+        insecure: true 
+      {{- end }}
+      {{- if eq $local "true"  }}
+      # reference: true
+      referencePolicy:
+        type: Local 
+      {{- end }}
       {{- end }}
       {{- end }}
     {{- end }}
