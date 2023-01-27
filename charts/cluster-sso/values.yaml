@@ -15,19 +15,74 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   # version: "0.0.3"
 
-# Deploy an API manager
+# Deploy a Keycloak instance
 sso:
-  # Enable the configuration of the API manager
-  enabled: true
+  # Enable the configuration of the Keycloak instance
+  enabled: false
   # Activate the manager as a helm hook
   hooked: true
   # Name of the deployed instance of Redhat-SSOConfig
   name: default
   # The applyed Redhat-SSO config specifications
   spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
-
+    externalAccess:
+      enabled: true
+    instances: 1
+    keycloakDeploymentSpec:
+      imagePullPolicy: Always
+    postgresDeploymentSpec:
+      imagePullPolicy: Always
+# Deploy keycloak realms
+sso_realms:
+  # Enable the configuration of the keycloak realms
+  enabled: false
+  # List of realm to create
+  list:
+    # Realm name
+  - name: "myrealm"
+    # The spec of the myrealm
+    spec: |
+      externalAccess:
+        enabled: true
+      instances: 1
+      keycloakDeploymentSpec:
+        imagePullPolicy: Always
+      postgresDeploymentSpec:
+        imagePullPolicy: Always
+# Deploy keycloak clients
+sso_clients:
+  # Enable the configuration of the keycloak client
+  enabled: false
+  # List of keycloak clients to create
+  list:
+    # Keycloak client name
+  - name: "myapp"
+    # The spec of the client
+    spec: |-
+      client:
+        enabled: true
+        clientAuthenticatorType: client-secret
+        redirectUris:
+          - 'https://myapp.example.com/*'
+        clientId: myapp
+        defaultClientScopes:
+          - openid
+          - profile
+          - email
+        rootUrl: 'https://myapp.example.com'
+        implicitFlowEnabled: false
+        publicClient: false
+        standardFlowEnabled: true
+        protocol: openid-connect
+        webOrigins:
+          - 'https://myapp.example.com/*'
+        protocolMappers: []
+        id: bfb396f5-f14b-4759-b2fe-34a9e797223c
+        directAccessGrantsEnabled: true
+      realmSelector:
+        matchLabels:
+          realm: my-realm
+      scopeMappings: {}
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 

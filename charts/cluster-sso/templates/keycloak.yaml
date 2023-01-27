@@ -2,14 +2,14 @@
 {{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-sso" -}}
 {{- $spec := .Values.sso.spec | default "{}" -}}
-apiVersion: sso.openshift.io/v1
-kind: PtpConfig
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
 metadata:
   name: {{ .Values.sso.name | default "quote" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-sso.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.sso.name | default "quote" -}}-ssoconfig"
+    app.kubernetes.io/name: "{{- .Values.sso.name | default "quote" -}}-keycloak"
   annotations:
     {{- include "cluster-sso.annotations" . | nindent 4 }}
     {{- if .Values.sso.hooked }}

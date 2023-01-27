@@ -1,0 +1,19 @@
+{{- if .Values.sso_realms.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-sso" -}}
+{{ range .Values.sso_realms.list }}
+{{- $spec := .spec | default "{}" -}}
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: {{ .name | default "myapp" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-sso.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name | default "myapp" -}}-keycloak"
+  annotations:
+    {{- include "cluster-sso.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "40"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}
