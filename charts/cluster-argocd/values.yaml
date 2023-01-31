@@ -29,17 +29,21 @@ argocd:
 # informations on how to setup theses resources
 argocd_repocreds:
   # enable deployment of repository credentials
-  enabled: false
+  enabled: true
   # List of repository credentials to create
   list: 
       # Name of the export configuration
     - name: "startx-customers-pragmatik-repo-creds"
+      # Short name for ArgoCD reading
+      shortname: "pragmatik-repo"
       # Namespace of the export configuration
       namespace: "openshift-gitops"
       # URL of the repository (or path if used for multiple repository)
       url: "https://github.com/argoproj/private-repo"
       # Credentials type for this secret (should be https, ssh or githubapp)
       type: "ssh"
+      # Is the connection must be SSL checked
+      insecure: true
       # Options if credentials type is https
       httpsOptions: 
         # Username to use for http authentication
