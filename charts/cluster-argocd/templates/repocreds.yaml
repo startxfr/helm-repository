@@ -2,7 +2,7 @@
 {{- $root := . -}}
 {{- $defaultns := .Values.project.project.name -}}
 {{ range .Values.argocd_repocreds.list }}
-{{- $name := .name | default "default-export" }}
+{{- $name := .name | default "default-repo" }}
 {{- $namespace := .namespace | default $defaultns }}
 ---
 kind: Secret
@@ -18,6 +18,12 @@ metadata:
   annotations:
     {{- include "cluster-argocd.annotations" $root | nindent 4 }}
 stringData:
+  {{-  if .insecure }}
+  insecure: true
+  {{- end }}
+  {{-  if .shortname }}
+  name: {{ .shortname | quote }}
+  {{- end }}
   {{-  if eq .type "https" }}
   type: git
   url: {{ .url | quote }}
