@@ -19,7 +19,7 @@ metadata:
     {{- include "cluster-argocd.annotations" $root | nindent 4 }}
 stringData:
   {{-  if .insecure }}
-  insecure: true
+  insecure: "true"
   {{- end }}
   {{-  if .shortname }}
   name: {{ .shortname | quote }}
