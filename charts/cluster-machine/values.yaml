@@ -107,8 +107,17 @@ machineSet:
     ami: ami-046fe691f52a953f9
     # name of the subnet used for this node
     subnet_name: "mgmt-subnet-private1-eu-west-3a"
+    # # id of the subnet used for this node (if no subnetname is given)
+    # subnet_id: "subnet-xxxxxxxxxxxxxxxxx"
     # type of backend instance
     instanceType: "m6i.large"
+    # # List of storage devices (if not set, will use volumeSize with default disk)
+    # blockDevices: |-
+    #   - ebs:
+    #       encrypted: true
+    #       iops: 2000
+    #       volumeSize: 500
+    #       volumeType: io1
     # volume size in Giga
     volumeSize: 120
     # number of replicas node
