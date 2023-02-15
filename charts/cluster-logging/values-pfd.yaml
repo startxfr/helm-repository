@@ -79,15 +79,52 @@ logforwarder:
       type: "elasticsearch"
       url: https://elasticsearch-openshift-logging.apps.mgmt1.mgmt1.ocp.aws
       secret:
-          name: elasticsearch-mgmt1
+        name: elasticsearch-mgmt1
+    # - name: data-platform-es
+    #   secret:
+    #     name: data-platform-elasticsearch
+    #   syslog:
+    #     rfc: RFC5424
+    #   tls:
+    #     insecureSkipVerify: true
+    #   type: elasticsearch
+    #   url: >-
+    #     http://elasticsearch-master.data-platform-elasticsearch.svc.cluster.local:9200
+    inputs: 
+    - name: data-platform-logs
+      application:
+          namespaces:
+          - data-platform-airflow
+          - data-platform-api
+          - data-platform-datahub
+          - data-platform-db-preprod
+          - data-platform-db-prod
+          - data-platform-elasticsearch
+          - data-platform-hive-metastore
+          - data-platform-jupyterhub-external
+          - data-platform-jupyterhub-internal
+          - data-platform-kafka
+          - data-platform-kafka-op
+          - data-platform-knox
+          - data-platform-kong
+          - data-platform-portal
+          - data-platform-ranger
+          - data-platform-sso
+          - data-platform-superset
+          - data-platform-trino
+          - data-platform-trino-402
+          - data-platform-usecases
+          - data-platform-vault
     pipelines: 
     - name: all-to-default
       inputRefs:
       - infrastructure
       - application
-      - audit
+      # - audit
       outputRefs:
       - default
+      labels:
+        logsource: "local"
     - name: all-to-mgmt1
       inputRefs:
       - infrastructure
@@ -96,7 +133,16 @@ logforwarder:
       outputRefs:
       - elasticsearch-mgmt1
       labels:
+        logsource: "pfd"
+      labels:
         cluster: "pfd"
+    # - name: forward-to-data-platform-es
+    #   inputRefs:
+    #     - data-platform-logs
+    #   outputRefs:
+    #     - data-platform-es
+    #   labels:
+    #     logsource: "local"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
