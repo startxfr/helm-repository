@@ -185,3 +185,4 @@ helm install cluster-compliance startx/cluster-compliance -f https://raw.githubu
 | 11.7.75 | 2022-12-04 | publish stable update for the full repository
 | 11.7.77 | 2022-12-05 | publish stable update for the full repository
 | 11.7.87 | 2023-02-15 | publish stable update for the full repository
+| 11.7.88 | 2023-02-15 | publish stable update for the full repository
