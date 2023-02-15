@@ -213,3 +213,4 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 11.7.77 | 2022-12-05 | publish stable update for the full repository
 | 11.7.78 | 2023-01-19 | Move to dynamic subnet in machineSet for default profile
 | 11.7.79 | 2023-02-15 | Add support for subnet id and blockDevices for AWSProvider
+| 11.7.87 | 2023-02-15 | publish stable update for the full repository
