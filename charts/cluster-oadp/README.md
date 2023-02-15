@@ -192,3 +192,4 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 11.7.78 | 2023-01-20 | Adding support for cloud-credentials secret management
 | 11.7.79 | 2023-01-22 | add backup support and move schedule and restore to multiple resource creation
 | 11.7.87 | 2023-02-15 | publish stable update for the full repository
+| 11.7.88 | 2023-02-15 | publish stable update for the full repository
