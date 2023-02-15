@@ -91,11 +91,16 @@ spec:
             region: "{{ $root.Values.cluster.region }}"
           ami:
             id: {{ .ami }}
+          {{- if .blockDevices }}
+          blockDevices:
+            {{- .blockDevices | nindent 12 }}
+          {{- else }}
           blockDevices:
             - ebs:
                 iops: 0
                 volumeSize: {{ .volumeSize }}
                 volumeType: gp2
+          {{ end }}
           credentialsSecret:
             name: aws-cloud-credentials
           deviceIndex: 0
@@ -113,15 +118,14 @@ spec:
                 values:
                   - "{{ .subnet_name }}"
                   # - "{{ $root.Values.cluster.id }}-worker-subnet"
+          {{- else if .subnet_id }}
+            id: "{{ .subnet_id }}"
           {{- else }}
             filters:
               - name: tag:Name
                 values:
                   - "{{ $root.Values.cluster.id }}-private-{{ $root.Values.cluster.region }}{{ .az }}"
           {{ end }}
-
-
-
           tags: 
             - name: kubernetes.io/cluster/{{ $root.Values.cluster.id }}
               value: owned

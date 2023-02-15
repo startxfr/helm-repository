@@ -249,3 +249,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 11.7.73 | 2022-12-04 | Align all packages to release 11.7.73
 | 11.7.75 | 2022-12-04 | publish stable update for the full repository
 | 11.7.77 | 2022-12-05 | publish stable update for the full repository
+| 11.7.87 | 2023-02-15 | publish stable update for the full repository
