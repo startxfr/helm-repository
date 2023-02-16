@@ -221,3 +221,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 11.7.79 | 2023-01-31 | debug insecure type
 | 11.7.87 | 2023-02-15 | publish stable update for the full repository
 | 11.7.88 | 2023-02-15 | publish stable update for the full repository
+| 11.7.91 | 2023-02-16 | publish stable update for the full repository

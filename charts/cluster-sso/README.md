@@ -183,3 +183,4 @@ helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com
 | 11.7.78 | 2023-01-27 | Add realm, client and cluster configuration
 | 11.7.87 | 2023-02-15 | publish stable update for the full repository
 | 11.7.88 | 2023-02-15 | publish stable update for the full repository
+| 11.7.91 | 2023-02-16 | publish stable update for the full repository
