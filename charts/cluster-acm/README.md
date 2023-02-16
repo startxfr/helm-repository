@@ -203,3 +203,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 11.7.77 | 2022-12-05 | publish stable update for the full repository
 | 11.7.87 | 2023-02-15 | publish stable update for the full repository
 | 11.7.88 | 2023-02-15 | publish stable update for the full repository
+| 11.7.91 | 2023-02-16 | publish stable update for the full repository
