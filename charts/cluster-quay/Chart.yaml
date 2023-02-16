@@ -6,7 +6,7 @@ description: Helm chart used to configure Quay.io private registry at the cluste
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.7.91
+version: 11.7.93
 # Version name of the quay operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: v3.7.8
 # Icon of this helm-chart
@@ -45,22 +45,22 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.61"
+    version: "11.7.89"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.61"
+    version: "11.7.89"
     alias: operator
     condition: operator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.61"
+    version: "11.7.89"
     alias: operatorsec
     condition: operatorsec.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all packages to release 11.7.91"
+      description: "Align all packages to release 11.7.93"
   artifacthub.io/containsSecurityUpdates: "false"
