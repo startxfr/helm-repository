@@ -1,6 +1,6 @@
 {{- if .Values.enabled }}{{- if .Values.dockercfg }}{{- if .Values.dockercfg.enabled -}}
 {{- $root := . -}}
-{{- $defaultns := .Values.context.app -}}
+{{- $defaultns := .Values.project.name | default .Chart.Name -}}
 
 {{ range .Values.dockercfg.list }}
 {{- $name := .name | default "registrycreds" -}}
