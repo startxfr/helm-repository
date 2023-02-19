@@ -37,7 +37,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **openshift-adp** without constraints
 - 1 **operator:** named **redhat-oadp-operator** configured with
   - The **stable-1.1** channel
-  - The **v1.1.0** version
+  - The **v1.1.1** version
   - Deployed under the **openshift-adp** project
 - 1 **DataProtectionApplication:** named **default** configured with default values for AWS backend
 - 1 **schedule:** named **daily-app** configured with default values for demo backup
@@ -196,3 +196,4 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 11.7.91 | 2023-02-16 | publish stable update for the full repository
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
+| 11.28.3 | 2023-02-19 | Upgrade to 1.1.1 oadp operator release
