@@ -191,3 +191,4 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 11.28.3 | 2023-02-19 | Upgrade to 4.11.0-202302061916 ptp operator release
 | 11.28.3 | 2023-02-19 | Upgrade to 4.11.0-202302061916 ptp operator release
 | 11.28.5 | 2023-02-19 | Improve cluster-ptp options
+| 11.28.11 | 2023-02-19 | publish stable update for the full repository
