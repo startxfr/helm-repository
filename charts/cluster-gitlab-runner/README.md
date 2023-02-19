@@ -194,3 +194,4 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 11.28.15 | 2023-02-19 | publish stable update for the full repository
 | 11.28.16 | 2023-02-19 | publish stable update for the full repository
 | 11.28.19 | 2023-02-19 | publish stable update for the full repository
+| 11.28.21 | 2023-02-19 | Upgrade all dependencies packages to release 11.28.16
