@@ -6,7 +6,7 @@
 kind: Group
 apiVersion: user.openshift.io/v1
 metadata:
-  name: "{{ .id }}"
+  name: "{{ .name }}"
   labels:
     {{- include "cluster-rbac.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-group"

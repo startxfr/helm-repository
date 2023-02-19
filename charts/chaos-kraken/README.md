@@ -162,3 +162,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 11.7.88 | 2023-02-15 | publish stable update for the full repository
 | 11.7.91 | 2023-02-16 | publish stable update for the full repository
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89
+| 11.7.97 | 2023-02-19 | publish stable update for the full repository
