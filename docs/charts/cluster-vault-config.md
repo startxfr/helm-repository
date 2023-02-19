@@ -110,7 +110,7 @@ Configuration of default properties all disabled by default. This mean no resour
 - 1 **operatorGroup** named **vault-config** to enable vault-config operator in the project
 - 1 **subscription** named **vault-config-operator** to deploy vault-config operator in the project with the following characteristics
   - operator name is **vault-config-operator**
-  - operator version is **0.6.5**
+  - operator version is **0.8.9**
   - operator catalog is **community-operators** located in **openshift-marketplace**
 
 ```bash
@@ -126,7 +126,7 @@ Configuration of startx properties with the following characteristics :
 - 1 **operatorGroup** named **vault-config** to enable vault-config operator in the project
 - 1 **subscription** named **vault-config-operator** to deploy vault-config operator in the project with the following characteristics
   - operator name is **vault-config-operator**
-  - operator version is **0.6.5**
+  - operator version is **0.8.9**
   - operator catalog is **community-operators** located in **openshift-marketplace**
 
 ```bash
@@ -218,3 +218,4 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 11.7.91 | 2023-02-16 | publish stable update for the full repository
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
+| 11.28.3 | 2023-02-19 | Upgrade to 0.8.9 vault-config operator release
