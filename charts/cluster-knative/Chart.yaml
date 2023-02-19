@@ -6,7 +6,7 @@ description: Helm chart used to configure Knative at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.28.11
+version: 11.28.15
 # Version name of the knative operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.27.0
 # Icon of this helm-chart
@@ -44,27 +44,27 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: projectKServing
     condition: projectKServing.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: projectKEventing
     condition: projectKEventing.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade to 1.27.0 knative operator release"
+      description: "Align all basic dependencies to release 11.28.7"
   artifacthub.io/containsSecurityUpdates: "false"
