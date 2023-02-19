@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.28.11
+version: 11.28.15
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.3.1-0
 # Icon of this helm-chart
@@ -45,41 +45,37 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: project
     condition: project.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: operatorJaeger
     condition: operatorJaeger.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: operatorIstio
     condition: operatorIstio.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade to 1.39.0-3 jaeger operator release"
-    - kind: changed
-      description: "Upgrade to 1.57.5 kiali operator release"
-    - kind: changed
-      description: "Upgrade to 2.3.1 servicemesh operator release"
+      description: "Align all basic dependencies to release 11.28.7"
   artifacthub.io/containsSecurityUpdates: "false"
