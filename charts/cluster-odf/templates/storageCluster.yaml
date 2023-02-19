@@ -1,18 +1,18 @@
-{{- if .Values.ocs.enabled -}}
+{{- if .Values.odf.enabled -}}
 {{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-storage" -}}
 ---
 kind: StorageCluster
-apiVersion: ocs.openshift.io/v1
+apiVersion: odf.openshift.io/v1
 metadata:
-  name: {{ .Values.ocs.name | default "default" | quote }}
+  name: {{ .Values.odf.name | default "default" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-ocs.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{ .Values.ocs.name | default "default" }}-storagecluster"
+    {{- include "cluster-odf.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.odf.name | default "default" }}-storagecluster"
   annotations:
-    {{- include "cluster-ocs.annotations" . | nindent 4 }}
-    {{- if .Values.ocs.hooked }}
+    {{- include "cluster-odf.annotations" . | nindent 4 }}
+    {{- if .Values.odf.hooked }}
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed
@@ -20,12 +20,12 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
     argocd.argoproj.io/sync-wave: "10"
-    uninstall.ocs.openshift.io/cleanup-policy: delete
-    uninstall.ocs.openshift.io/mode: graceful
+    uninstall.odf.openshift.io/cleanup-policy: delete
+    uninstall.odf.openshift.io/mode: graceful
   finalizers:
-    - storagecluster.ocs.openshift.io
+    - storagecluster.odf.openshift.io
 spec:
-  version: {{ .Values.ocs.version | default "4.7.0" | quote }}
+  version: {{ .Values.odf.version | default "4.7.0" | quote }}
   arbiter: {}
   encryption:
     kms: {}
@@ -38,7 +38,7 @@ spec:
     cephObjectStores: {}
   nodeTopologies: {}
   storageDeviceSets:
-{{- range .Values.ocs.storage }}
+{{- range .Values.odf.storage }}
     - name: {{ .name | default "default-deviceset" | quote }}
       replica: {{ int .replicas | default 3 }}
       count: 1

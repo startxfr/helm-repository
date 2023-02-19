@@ -115,8 +115,8 @@ Configuration of default properties all disabled by default. This mean no resour
 
 - 1 **project** named **default-vault**
 - 1 **chart** named **vault** to deploy vault server in the project with the following characteristics
-  - helm chart version is **0.22.0**
-  - vault server is in version **1.11.3**
+  - helm chart version is **0.23.0**
+  - vault server is in version **1.12.1**
 
 ```bash
 # base configuration running default configuration
@@ -129,8 +129,8 @@ Configuration of startx properties with the following characteristics :
 
 - 1 **project** named **startx-vault** (disabled by default)
 - 1 **chart** named **vault** to deploy vault server in the project with the following characteristics
-  - helm chart version is **0.22.0**
-  - vault server is in version **1.11.3**
+  - helm chart version is **0.23.0**
+  - vault server is in version **1.12.1**
 
 ```bash
 # base configuration running startx configuration
@@ -288,3 +288,4 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 11.7.91 | 2023-02-16 | publish stable update for the full repository
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
+| 11.28.3 | 2023-02-19 | Upgrade to 0.23.0 vault operator release runing default vault 1.12.1 server release as default basis
