@@ -94,6 +94,12 @@ spec:
             {{- .name | nindent 12 }}
           preferredUsername:
             {{- .preferredUsername | nindent 12 }}
+          groups:
+            {{- .groups | nindent 12 }}
+        {{- end -}}
+        {{  if .oidcExtraScopes }}
+        extraScopes: 
+          {{- .oidcExtraScopes | nindent 10 }}
         {{- end -}}
         {{  if .oidcClientSecret }}
         clientSecret: 
