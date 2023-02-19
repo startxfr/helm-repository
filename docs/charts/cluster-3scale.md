@@ -225,3 +225,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository
+| 11.28.15 | 2023-02-19 | publish stable update for the full repository
