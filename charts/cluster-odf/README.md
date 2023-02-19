@@ -211,3 +211,4 @@ helm install cluster-odf startx/cluster-odf -f https://raw.githubusercontent.com
 | 11.28.3 | 2023-02-19 | Upgrade to 4.11.5 odf operator release
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository
 | 11.28.15 | 2023-02-19 | publish stable update for the full repository
+| 11.28.16 | 2023-02-19 | publish stable update for the full repository
