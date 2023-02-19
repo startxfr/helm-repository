@@ -220,3 +220,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
 | 11.23.3 | 2023-02-19 | Upgrade to 5.6.2 elastic operator release
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository
+| 11.28.15 | 2023-02-19 | publish stable update for the full repository
