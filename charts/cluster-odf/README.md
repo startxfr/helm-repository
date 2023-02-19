@@ -1,11 +1,11 @@
-# Cluster OCS
+# Cluster ODF
 
 This helm chart is used to configure Openshift Container Storage at the cluster level.
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedodf.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+Read the [startx helm-repository homepage](https://helm-repository.readthedodf.io) for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
@@ -19,19 +19,19 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedodf.io/en/latest/packages/
 ```
 
 ### 3. Get information about this chart
 
 ```bash
-helm show chart startx/cluster-ocs
+helm show chart startx/cluster-odf
 ```
 
 ### 4. Install this chart
 
 ```bash
-helm install cluster-ocs startx/cluster-ocs
+helm install cluster-odf startx/cluster-odf
 ```
 
 ## Default values
@@ -42,22 +42,22 @@ xxxx to do xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install cluster-ocs startx/cluster-ocs
+helm install cluster-odf startx/cluster-odf
 ```
 
 ## Others values availables
 
-- **startx** : Startx OCS cluster wide service configuration using OCS operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml))
+- **startx** : Startx ODF cluster wide service configuration using ODF operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-odf/values-startx.yaml))
 
 ```bash
-helm install cluster-ocs startx/cluster-ocs -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml
+helm install cluster-odf startx/cluster-odf -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-odf/values-startx.yaml
 ```
 
 ## History
 
 | Release  | Date       | Description                                                                                            |
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 0.3.18   | 2020-11-06 | Create chart cluster-ocs from cluster-quay (removed)                                                   |
+| 0.3.18   | 2020-11-06 | Create chart cluster-odf from cluster-quay (removed)                                                   |
 | 0.3.19   | 2020-11-06 | Add deployment of an OCS cluster using StorageCluster ressource                                        |
 | 0.3.21   | 2020-11-06 | Align all charts on the repository release 0.3.21                                                      |
 | 0.3.23   | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information |
@@ -91,10 +91,10 @@ helm install cluster-ocs startx/cluster-ocs -f https://raw.githubusercontent.com
 | 0.3.390  | 2021-06-12 | Prepare 0.4.0 release                                                                                  |
 | 0.3.423  | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts                                         |
 | 0.3.431  | 2021-07-05 | Move to dependencies 1.18.0                                                                            |
-| 0.3.441  | 2021-07-27 | Update the ocs operator to version 4.7.2                                                               |
+| 0.3.441  | 2021-07-27 | Update the odf operator to version 4.7.2                                                               |
 | 0.3.480  | 2021-08-03 | publish stable update for the full repository                                                          |
 | 0.3.481  | 2021-08-03 | Move to 4.7.2 storageCluster resource definition                                                       |
-| 0.3.482  | 2021-08-03 | Publish new ocs format                                                                                 |
+| 0.3.482  | 2021-08-03 | Publish new odf format                                                                                 |
 | 0.3.483  | 2021-08-03 | Move back to version 4.7.0 of OCS                                                                      |
 | 0.3.998  | 2021-08-04 | publish stable update for the full repository                                                          |
 | 0.3.999  | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13                                                   |
@@ -208,3 +208,4 @@ helm install cluster-ocs startx/cluster-ocs -f https://raw.githubusercontent.com
 | 11.7.91 | 2023-02-16 | publish stable update for the full repository
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
+| 11.28.3 | 2023-02-19 | Upgrade to 4.11.5 odf operator release

@@ -4,15 +4,15 @@ context: &context
   scope: startx
   cluster: default
   environment: infra
-  component: ocs
-  app: gov-ocs
-ocs:
+  component: odf
+  app: gov-odf
+odf:
   enabled: false
   hooked: false
-  name: gov-ocs
+  name: gov-odf
   version: "4.8.0"
   storage:
-  - name: ocs-deviceset
+  - name: odf-deviceset
     replicas: 3
     size: 512Gi
     storageClass: gov-default-retain
@@ -25,7 +25,7 @@ project:
     hooked: false
     type: namespace
     name: "openshift-storage"
-    display_name: "Monaco OCS"
+    display_name: "Monaco ODF"
     requester: startx
     description: Openshift Container Storage configured by STARTX
   rbac: 
@@ -55,7 +55,7 @@ operator:
     hooked: false
     name: "odf-operator"
     namespace: "openshift-storage"
-    version: "v4.11.1"
+    version: "v4.11.5"
     operator: 
       channel: stable-4.11
       name: odf-operator
@@ -69,4 +69,4 @@ operator:
     hooked: false
     name: "openshift-storage"
     namespace: "openshift-storage"
-    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephFilesystemMirror.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectRealm.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,CephObjectZone.v1.ceph.rook.io,CephObjectZoneGroup.v1.ceph.rook.io,CephRBDMirror.v1.ceph.rook.io,NamespaceStore.v1alpha1.noobaa.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageSystem.v1alpha1.odf.openshift.io,VolumeReplication.v1alpha1.replication.storage.openshift.io,VolumeReplicationClass.v1alpha1.replication.storage.openshift.io"
+    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephFilesystemMirror.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectRealm.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,CephObjectZone.v1.ceph.rook.io,CephObjectZoneGroup.v1.ceph.rook.io,CephRBDMirror.v1.ceph.rook.io,NamespaceStore.v1alpha1.noobaa.io,NooBaa.v1alpha1.noobaa.io,ODFInitialization.v1.odf.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.odf.openshift.io,StorageSystem.v1alpha1.odf.openshift.io,VolumeReplication.v1alpha1.replication.storage.openshift.io,VolumeReplicationClass.v1alpha1.replication.storage.openshift.io"
