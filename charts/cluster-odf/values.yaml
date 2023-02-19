@@ -1,4 +1,4 @@
-# Default values for cluster-ocs.
+# Default values for cluster-odf.
 
 # Application deployment context
 context:  &context
@@ -11,24 +11,24 @@ context:  &context
   # Component name of this application (logical tenant)
   component: mycomponent
   # Application name (functionnal tenant, default use Chart name)
-  app: default-ocs
+  app: default-odf
   # Version name of this application (default use Chart appVersion)
   # version: "0.0.3"
 
 # configuration of the Storage service
-ocs:
-  # Enable the deployment of a OCS cluster
+odf:
+  # Enable the deployment of a ODF cluster
   enabled: true
   # Activate the manager as a helm hook
   hooked: true
   # Redhat Network access user to the RH container catalog
-  name: default-ocs
-  # Version of the OCS to use for this cluster
+  name: default-odf
+  # Version of the ODF to use for this cluster
   version: "4.8.0"
   # Configure storage backend for this cluster
   storage:
     # Name of the storage pool
-  - name: ocs-deviceset
+  - name: odf-deviceset
     # Number of OSD replicas
     replicas: 3
     # Size of each OSD storage volume
@@ -36,7 +36,7 @@ ocs:
     # Storage class used to provision OSD storage
     storageClass: startx-aws-generic-retain
 
-# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+# Configuration of the project (see https://helm-repository.readthedodf.io/en/latest/charts/project)
 project: 
   enabled: false
   context: 
@@ -45,7 +45,7 @@ project:
     enabled: true
     type: project
     name: "openshift-storage"
-    display_name: Operator OCS
+    display_name: Operator ODF
     description: Openshift Container Storage operators configured by startx
   rbac: 
     enabled: false
@@ -56,7 +56,7 @@ project:
   quotas: 
     enabled: false
 
-# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+# Configuration of the operator (see https://helm-repository.readthedodf.io/en/latest/charts/operator)
 operator:
   enabled: false
   context: 
@@ -65,7 +65,7 @@ operator:
     enabled: true
     name: "odf-operator"
     namespace: "openshift-storage"
-    version: "v4.11.1"
+    version: "v4.11.5"
     operator: 
       channel: stable-4.11
       name: odf-operator
@@ -78,4 +78,5 @@ operator:
     enabled: true
     name: "openshift-storage"
     namespace: "openshift-storage"
-    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephFilesystemMirror.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectRealm.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,CephObjectZone.v1.ceph.rook.io,CephObjectZoneGroup.v1.ceph.rook.io,CephRBDMirror.v1.ceph.rook.io,NamespaceStore.v1alpha1.noobaa.io,NooBaa.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.ocs.openshift.io,StorageSystem.v1alpha1.odf.openshift.io,VolumeReplication.v1alpha1.replication.storage.openshift.io,VolumeReplicationClass.v1alpha1.replication.storage.openshift.io"
+    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephFilesystemMirror.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectRealm.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,CephObjectZone.v1.ceph.rook.io,CephObjectZoneGroup.v1.ceph.rook.io,CephRBDMirror.v1.ceph.rook.io,NamespaceStore.v1alpha1.noobaa.io,NooBaa.v1alpha1.noobaa.io,ODFInitialization.v1.odf.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.odf.openshift.io,StorageSystem.v1alpha1.odf.openshift.io,VolumeReplication.v1alpha1.replication.storage.openshift.io,VolumeReplicationClass.v1alpha1.replication.storage.openshift.io"
+
