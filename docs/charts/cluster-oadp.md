@@ -37,7 +37,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **openshift-adp** without constraints
 - 1 **operator:** named **redhat-oadp-operator** configured with
   - The **stable-1.1** channel
-  - The **v1.1.0** version
+  - The **v1.1.1** version
   - Deployed under the **openshift-adp** project
 - 1 **DataProtectionApplication:** named **default** configured with default values for AWS backend
 - 1 **schedule:** named **daily-app** configured with default values for demo backup
