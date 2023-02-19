@@ -290,3 +290,4 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
 | 11.28.3 | 2023-02-19 | Upgrade to 0.23.0 vault operator release runing default vault 1.12.1 server release as default basis
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository
+| 11.28.15 | 2023-02-19 | publish stable update for the full repository
