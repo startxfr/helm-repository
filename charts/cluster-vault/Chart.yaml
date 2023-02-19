@@ -6,9 +6,9 @@ description: Helm chart used to configure vault at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.7.97
+version: 11.28.3
 # Version name of the vault service (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 1.11.3
+appVersion: 1.12.1
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-vault.svg
 # category associated to this package
@@ -48,13 +48,13 @@ dependencies:
     condition: project.enabled
   - name: vault
     repository: https://helm.releases.hashicorp.com
-    version: "0.22.0"
+    version: "0.23.0"
     alias: vault
     condition: vault.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all packages to release 11.7.97"
+      description: "Upgrade to 0.23.0 vault operator release runing default vault 1.12.1 server release as default basis"
   artifacthub.io/containsSecurityUpdates: "false"
 
