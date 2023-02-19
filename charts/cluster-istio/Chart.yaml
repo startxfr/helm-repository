@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.28.19
+version: 11.28.21
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.3.1-0
 # Icon of this helm-chart
@@ -45,37 +45,37 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.28.7"
+    version: "11.28.16"
     alias: project
     condition: project.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.28.7"
+    version: "11.28.16"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.28.7"
+    version: "11.28.16"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.28.7"
+    version: "11.28.16"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.28.7"
+    version: "11.28.16"
     alias: operatorJaeger
     condition: operatorJaeger.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "11.28.7"
+    version: "11.28.16"
     alias: operatorIstio
     condition: operatorIstio.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all packages to release 11.28.19"
+      description: "Upgrade all dependencies packages to release 11.28.16"
   artifacthub.io/containsSecurityUpdates: "false"
