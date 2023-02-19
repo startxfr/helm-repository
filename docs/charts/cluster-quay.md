@@ -207,3 +207,4 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 | 11.28.3 | 2023-02-19 | Upgrade to 3.7.11 quay operator operator release
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository
 | 11.28.15 | 2023-02-19 | publish stable update for the full repository
+| 11.28.16 | 2023-02-19 | publish stable update for the full repository
