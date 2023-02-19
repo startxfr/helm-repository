@@ -319,3 +319,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 11.28.7 | 2023-02-19 | Align all packages to release 11.28.7
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository
 | 11.28.15 | 2023-02-19 | publish stable update for the full repository
+| 11.28.16 | 2023-02-19 | publish stable update for the full repository
