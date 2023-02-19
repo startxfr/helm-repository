@@ -333,3 +333,4 @@ helm install cluster-workspace startx/cluster-workspace -f https://raw.githubuse
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
 | 11.28.3 | 2023-02-19 | Upgrade to 3.4.0 workspace operator release
+| 11.28.11 | 2023-02-19 | publish stable update for the full repository
