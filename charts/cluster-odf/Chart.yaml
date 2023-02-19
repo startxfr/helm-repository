@@ -6,7 +6,7 @@ description: Helm chart used to configure Openshift Container Storage at the clu
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.28.3
+version: 11.28.11
 # Version name of the ODF operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.11.5
 # Icon of this helm-chart
@@ -48,17 +48,17 @@ maintainers:
 dependencies:
   - name: project 
     repository: https://helm-repository.readthedodf.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedodf.io/en/latest/packages/
-    version: "11.7.89"
+    version: "11.28.7"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade to 4.11.5 odf operator release"
+      description: "Align statx basic packages dependencies to release 11.28.7"
   artifacthub.io/containsSecurityUpdates: "false"
