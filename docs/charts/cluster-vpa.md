@@ -189,3 +189,4 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository
 | 11.28.3 | 2023-02-19 | Upgrade to 4.11.0-202302061916 verticalpodautoscaler operator release
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository
+| 11.28.15 | 2023-02-19 | publish stable update for the full repository
