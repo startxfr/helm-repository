@@ -1,9 +1,11 @@
 {{- if .Values.cerberus.enabled -}}{{- if .Values.cerberus.expose -}}
 {{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
 apiVersion: "route.openshift.io/v1"
 kind: Route
 metadata:
   name: "ui"
+  namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "ui-route"
     {{- include "chaos-cerberus.labels" . | nindent 4 }}
