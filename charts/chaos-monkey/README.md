@@ -153,3 +153,4 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 | 11.28.39 | 2023-02-21 | Improve chaos-monkey options
 | 11.28.40 | 2023-02-21 | Improve chaos-monkey options
 | 11.28.41 | 2023-02-21 | Improve chaos-monkey options
+| 11.28.49 | 2023-02-21 | publish stable update for the full repository
