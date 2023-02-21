@@ -497,13 +497,15 @@ data:
         maxSecondsBetweenRuns: 10
         minSecondsBetweenRuns: 5
     scenarios:
-      - name: "kill etcd container in etcd pod"
-        namespace: "openshift-etcd"
-        label_selector: "k8s-app=etcd"
-        container_name: "etcd"
-        action: "kill 1"
-        count: 1
-        retry_wait: 90
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-etcd$
+        label_selector: k8s-app=etcd
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-etcd$
+        label_selector: k8s-app=etcd
+        count: 3
   startx_openshift_etcd_pod.yml: |
     config:
       runStrategy:
