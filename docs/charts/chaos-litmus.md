@@ -153,3 +153,4 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 11.28.39 | 2023-02-21 | Improve chaos-litmus options
 | 11.28.39 | 2023-02-21 | Improve chaos-litmus options
 | 11.28.40 | 2023-02-21 | Improve chaos-litmus options
+| 11.28.41 | 2023-02-21 | Improve chaos-litmus options
