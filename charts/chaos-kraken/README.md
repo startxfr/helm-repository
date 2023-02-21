@@ -171,3 +171,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 11.28.23 | 2023-02-21 | publish stable update for the full repository
 | 11.28.25 | 2023-02-21 | Debug route NS scope placement
 | 11.28.27 | 2023-02-21 | All chart aligned to release 11.28.27
+| 11.28.28 | 2023-02-21 | Improve chaos-kraken options
