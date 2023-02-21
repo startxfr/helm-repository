@@ -1,0 +1,178 @@
+
+
+# # Use it to Overwrite the helm-chart name
+#nameOverride: example-fruitapp-project
+# # Use it to Overwrite the helm-chart version
+#versionOverride: 0.0.1
+context: &context
+ scope: startx
+ cluster: localhost
+ environment: global
+ component: fruitapp
+ app: fruitapp
+ version: "3.2.11"
+devel_chain:
+  enabled: false
+  pg_version: latest
+  nodejs_version: latest
+integration_chain:
+  enabled: false
+  enabled_test: false
+  enabled_r7t: false
+  pg_version: latest
+  nodejs_version: latest
+  github: 
+    enabled: true
+    token: "mygithubtoken"
+    user: "startxfr"
+    username: "Dev STARTX"
+    email: "dev@startx.fr"
+project_devel: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-devel-christophe
+    display_name: "FruitApp Dev Christophe"
+    description: FruitApp Christophe's developper environment
+  rbac: 
+    enabled: false
+    groups: []
+    users: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+    rules: ""
+  quotas: 
+    enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+project_integration: 
+  activated: true
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-ci
+    display_name: "FruitApp Integration"
+    description: FruitApp integration environment
+  rbac: 
+    enabled: false
+    groups: []
+    users: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+    rules: ""
+  quotas: 
+    enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+project_preprod: 
+  activated: true
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-preprod
+    display_name: "FruitApp Preprod"
+    description: FruitApp pre-production environment
+  rbac: 
+    enabled: true
+    users: 
+    - id: ci-pipeline-pusher-role
+      name: "system:serviceaccounts:fruitapp-ci:pipeline"
+      role: "system:image-pusher"
+    groups: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+    rules: ""
+  quotas: 
+    enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+project_prod: 
+  activated: true
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: fruitapp-prod
+    display_name: "FruitApp Prod"
+    description: FruitApp production environment
+  rbac: 
+    enabled: true
+    users: 
+    - id: ci-pipeline-pusher-role
+      name: "system:serviceaccounts:fruitapp-ci:pipeline"
+      role: "system:image-pusher"
+    groups: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+    rules: ""
+  quotas: 
+    enabled: false
+    rules: ""
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+imagestreams:
+  activated: true
+  enabled: true
+  context: 
+    <<: *context
+  imagestreams:
+  - name: frontend
+    enabled: true
+    namespace: "fruitapp-preprod"
+    displayName: "FruitApp PreProd"
+    labels: |
+      app: frontend
+      app.kubernetes.io/name: frontend
+      app.openshift.io/runtime: nodejs
+    tags: []
+  - name: frontend
+    enabled: true
+    namespace: "fruitapp-prod"
+    displayName: "FruitApp Prod"
+    labels: |
+      app: frontend
+      app.kubernetes.io/name: frontend
+      app.openshift.io/runtime: nodejs
+    tags: []
