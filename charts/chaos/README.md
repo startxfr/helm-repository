@@ -238,3 +238,4 @@ chaos-monkey startx/chaos-monkey
 | 11.28.35 | 2023-02-21 | publish stable update for the full repository
 | 11.28.39 | 2023-02-21 | Improve chaos options
 | 11.28.43 | 2023-02-21 | Improve chaos options
+| 11.28.43 | 2023-02-21 | Improve chaos options
