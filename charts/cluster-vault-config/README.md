@@ -230,3 +230,4 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 11.28.35 | 2023-02-21 | publish stable update for the full repository
 | 11.28.49 | 2023-02-21 | publish stable update for the full repository
 | 11.28.59 | 2023-02-21 | publish stable update for the full repository
+| 11.28.60 | 2023-02-21 | publish stable update for the full repository
