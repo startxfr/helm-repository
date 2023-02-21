@@ -154,3 +154,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 11.28.40 | 2023-02-21 | Improve chaos-mesh options
 | 11.28.41 | 2023-02-21 | Improve chaos-mesh options
 | 11.28.49 | 2023-02-21 | publish stable update for the full repository
+| 11.28.59 | 2023-02-21 | publish stable update for the full repository
