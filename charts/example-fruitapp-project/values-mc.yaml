@@ -5,20 +5,20 @@
 # # Use it to Overwrite the helm-chart version
 #versionOverride: 0.0.1
 context: &context
- scope: startx
- cluster: localhost
- environment: global
- component: fruitapp
- app: fruitapp
- version: "3.2.11"
+  scope: startx
+  cluster: localhost
+  environment: global
+  component: fruitapp
+  app: fruitapp
+  version: "3.2.11"
 devel_chain:
-  enabled: false
+  enabled: true
   pg_version: latest
   nodejs_version: latest
 integration_chain:
-  enabled: false
-  enabled_test: false
-  enabled_r7t: false
+  enabled: true
+  enabled_test: true
+  enabled_r7t: true
   pg_version: latest
   nodejs_version: latest
   github: 
@@ -33,6 +33,7 @@ project_devel:
     <<: *context
   project: 
     enabled: true
+    hooked: true
     type: project
     name: fruitapp-devel-christophe
     display_name: "FruitApp Dev Christophe"
@@ -63,6 +64,7 @@ project_integration:
     <<: *context
   project: 
     enabled: true
+    hooked: true
     type: project
     name: fruitapp-ci
     display_name: "FruitApp Integration"
@@ -93,6 +95,7 @@ project_preprod:
     <<: *context
   project: 
     enabled: true
+    hooked: true
     type: project
     name: fruitapp-preprod
     display_name: "FruitApp Preprod"
@@ -126,6 +129,7 @@ project_prod:
     <<: *context
   project: 
     enabled: true
+    hooked: true
     type: project
     name: fruitapp-prod
     display_name: "FruitApp Prod"
