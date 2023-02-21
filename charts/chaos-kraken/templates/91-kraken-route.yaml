@@ -1,9 +1,11 @@
 {{- if .Values.kraken.enabled -}}{{- if .Values.kraken.expose -}}
 {{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
 apiVersion: "route.openshift.io/v1"
 kind: Route
 metadata:
   name: "kraken"
+  namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-route"
     {{- include "chaos-kraken.labels" . | nindent 4 }}
