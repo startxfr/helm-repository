@@ -170,3 +170,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 11.28.29 | 2023-02-21 | publish stable update for the full repository
 | 11.28.35 | 2023-02-21 | publish stable update for the full repository
 | 11.28.49 | 2023-02-21 | publish stable update for the full repository
+| 11.28.59 | 2023-02-21 | publish stable update for the full repository
