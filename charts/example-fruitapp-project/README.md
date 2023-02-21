@@ -145,3 +145,4 @@ helm install example-fruitapp-project startx/example-fruitapp-project
 | 11.28.29 | 2023-02-21 | publish stable update for the full repository
 | 11.28.35 | 2023-02-21 | publish stable update for the full repository
 | 11.28.37 | 2023-02-21 | Improve example-fruitapp-project options
+| 11.28.49 | 2023-02-21 | publish stable update for the full repository
