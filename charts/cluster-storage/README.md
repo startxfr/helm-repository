@@ -235,3 +235,4 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 11.28.49 | 2023-02-21 | publish stable update for the full repository
 | 11.28.59 | 2023-02-21 | publish stable update for the full repository
 | 11.28.60 | 2023-02-21 | publish stable update for the full repository
+| 11.28.67 | 2023-02-23 | publish stable update for the full repository
