@@ -1,0 +1,79 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: crunchy
+  app: startx-crunchy
+
+crunchyConfig:
+  enabled: true
+  saPods: 
+    enabled: true
+    name: crunchy-pods
+  saBackup: 
+    enabled: true
+    name: crunchy-backup
+  imageCredentialsSecret: startx-registrycreds-rhn
+
+cluster:
+  enabled: false
+  list: []
+
+clusterRbac:
+  enabled: false
+  groups: []
+  users: []
+
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-crunchy"
+    display_name: "Startx COUCHBASE"
+    requester: startx
+    description: CrunchyDB configured by STARTX
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: default
+        imagePullSecrets: 
+          - name: startx-registrycreds-rhn
+  dockercfg:
+    enabled: true
+    list: 
+      - name: startx-registrycreds-rhn
+        registry: registry.connect.redhat.com
+        username: startx_cl
+        password: xxxx
+        email: "cl@startx.fr"
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "crunchy-enterprise-certified"
+    namespace: "startx-crunchy"
+    version: "v2.4.0-1"
+    operator: 
+      channel: stable
+      name: crunchy-enterprise-certified
+      installPlanApproval: Automatic
+      # csv: crunchy-operator
+      source: 
+        name: certified-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "crunchy-operator-v2"
+    namespace: "startx-crunchy"
+    providedAPIs: "CrunchyDBAutoscaler.v2.crunchy.com,CrunchyDBBackup.v2.crunchy.com,CrunchyDBBackupRestore.v2.crunchy.com,CrunchyDBBucket.v2.crunchy.com,CrunchyDBCluster.v2.crunchy.com,CrunchyDBCollection.v2.crunchy.com,CrunchyDBCollectionGroup.v2.crunchy.com,CrunchyDBEphemeralBucket.v2.crunchy.com,CrunchyDBGroup.v2.crunchy.com,CrunchyDBMemcachedBucket.v2.crunchy.com,CrunchyDBMigrationReplication.v2.crunchy.com,CrunchyDBReplication.v2.crunchy.com,CrunchyDBRoleBinding.v2.crunchy.com,CrunchyDBScope.v2.crunchy.com,CrunchyDBScopeGroup.v2.crunchy.com,CrunchyDBUser.v2.crunchy.com"

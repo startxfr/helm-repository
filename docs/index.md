@@ -47,6 +47,8 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-certmanager](charts/cluster-certmanager.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-certmanager)  | enable CertManager at the cluster level                           |
 | **[cluster-oadp](charts/cluster-oadp.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-oadp)         | enable Application Data Protection (Backup) at the cluster level  |
 | **[cluster-router](charts/cluster-router.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)         | configure router(s) at the cluster level  |
+| **[cluster-couchbase](charts/cluster-couchbase.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-couchbase)         | configure couchbase at the cluster level  |
+| **[cluster-crunchy](charts/cluster-crunchy.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-crunchy)         | configure crunchyDatabase at the cluster level  |
 
 #### Use Cluster charts
 
@@ -81,6 +83,9 @@ helm install startx/cluster-compliance
 helm install startx/cluster-machine
 helm install startx/cluster-certmanager
 helm install startx/cluster-oadp
+helm install startx/cluster-router
+helm install startx/cluster-couchbase
+helm install startx/cluster-crunchy
 ```
 
 ### Basic Helm charts

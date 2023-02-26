@@ -1,0 +1,132 @@
+{{- if .Values.crunchyConfig }}{{- if .Values.crunchyConfig.enabled }}{{- if .Values.crunchyConfig.saPods -}}{{- if .Values.crunchyConfig.saPods.enabled }}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $name := .Values.crunchyConfig.saPods.name | default "crunchy-pods" -}}
+{{- $ns := .Values.project.project.name | default .Chart.Name -}}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+{{- if $root.Values.crunchyConfig.imageCredentialsSecret }}
+imagePullSecrets:
+  - name: "{{- $root.Values.crunchyConfig.imageCredentialsSecret -}}"
+{{- end }}
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+rules:
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  - cronjobs
+  verbs:
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - crunchy.com
+  resources:
+  - crunchyclusters
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+- apiGroups:
+  - crunchy.com
+  resources:
+  - crunchybuckets
+  - crunchyephemeralbuckets
+  - crunchymemcachedbuckets
+  - crunchyreplications
+  - crunchyusers
+  - crunchygroups
+  - crunchyrolebindings
+  - crunchybackups
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - crunchy.com
+  resources:
+  - crunchybackuprestores
+  verbs:
+  - list
+  - watch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - create
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - persistentvolumeclaims
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - list
+  - create
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - get
+  - create
+  - delete
+  - list
+  - watch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "{{- $name -}}"
+subjects:
+- kind: ServiceAccount
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+{{- end -}}{{- end -}}{{- end -}}{{- end }}
