@@ -7,70 +7,42 @@ context: &context
   component: crunchy
   app: demo-crunchy
 
-crunchyConfig:
-  enabled: false
-  saPods: 
-    enabled: true
-    name: crunchy-pods
-  saBackup: 
-    enabled: true
-    name: crunchy-backup
-  imageCredentialsSecret: startx-registrycreds-rhn
-
 loader:
   enabled: false
-  list:
-  - name: venus
+  list: 
+  - name: demo
+    namespace: demo-crunchy
     command: | 
       #!/bin/bash
-      WORKLOAD_CONF=" --threads=5 -r .6 -i 120000 -s 75000 --json"
-      CREDS=" -u administrator -p administrator123"
-      CLUSTER=venus-cluster
-      BUCKET=yellow-back-bucket
-      echo "Load $CLUSTER : Bucket $BUCKET"
-      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
-      BUCKET=orange-bucket
-      echo "Load $CLUSTER : Bucket $BUCKET"
-      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
-      echo "End of the ${CLUSTER} workload test"
-      exit 0;
-  - name: jupiter
-    command: | 
-      #!/bin/bash
-      WORKLOAD_CONF=" --threads=5 -r .6 -i 4000000 -s 15000 --json"
-      CREDS=" -u administrator -p administrator123"
-      CLUSTER=jupiter-cluster
-      BUCKET=orange-back-bucket
-      echo "Load $CLUSTER : Bucket $BUCKET"
-      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
-      BUCKET=yellow-bucket
-      echo "Load $CLUSTER : Bucket $BUCKET"
-      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
-      BUCKET=black-bucket
-      echo "Load $CLUSTER : Bucket $BUCKET"
-      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
-      echo "End of the ${CLUSTER} workload test"
-      exit 0;
-  - name: mercury
-    command: | 
-      #!/bin/bash
-      WORKLOAD_CONF=" --threads=1 -r .6 -i 600000 -s 1000 --json"
-      CREDS=" -u administrator -p administrator123"
-      CLUSTER=mercury-cluster
-      BUCKET=purple-bucket
-      echo "Load $CLUSTER : Bucket $BUCKET"
-      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
-      echo "End of the ${CLUSTER} workload test"
+      echo "write your workload generator script using psql ..." 
       exit 0;
 
 cluster:
-  enabled: false
-  list: []
-
-clusterRbac:
-  enabled: false
-  groups: []
-  users: []
+  enabled: true
+  list: 
+  - name: demo-db
+    enabled: true
+    namespace: demo-crunchy
+    postgresVersion: 14
+    storageClassName: gp3-csi
+    storageInstanceSize: "2Gi"
+    storageBackupSize: "2Gi"
+    username: demo-user
+    istioSidecarEnabled: false
+    initScript: |-
+      -- Create the "demo" database and "demo" user
+      CREATE DATABASE "demo";
+      CREATE USER "demo" WITH PASSWORD 'Default123$';
+      GRANT ALL PRIVILEGES ON DATABASE "demo" TO "demo";
+      -- Create the "demo" database and "demo" user
+      CREATE DATABASE "demo";
+      \c demo
+      CREATE TABLE demo_table (
+        field       TEXT COLLATE "C" NOT NULL,
+        CONSTRAINT field PRIMARY KEY (field)
+      );
+      CREATE INDEX field_idx ON field (field);
+      GRANT ALL PRIVILEGES ON DATABASE "demo" TO "demo";
 
 project: 
   enabled: false
@@ -81,24 +53,11 @@ project:
     hooked: false
     type: project
     name: "demo-crunchy"
-    display_name: "Demo COUCHBASE"
+    display_name: "Demo CrunchyDB"
     requester: startx
     description: Demo CrunchyDB configured by STARTX
-  serviceAccounts:
-    enabled: true
-    list: 
-      - name: default
-        imagePullSecrets: 
-          - name: startx-registrycreds-rhn
-  dockercfg:
-    enabled: true
-    list: 
-      - name: startx-registrycreds-rhn
-        registry: registry.connect.redhat.com
-        username: startx_cl
-        password: xxxx
-        email: "cl@startx.fr"
 
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
   enabled: false
   context: 
@@ -106,20 +65,21 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "crunchy-enterprise-certified"
+    name: "crunchy-postgres-operator"
     namespace: "demo-crunchy"
-    version: "v2.4.0-1"
+    version: "v5.3.0"
     operator: 
-      channel: stable
-      name: crunchy-enterprise-certified
+      channel: v5
+      name: crunchy-postgres-operator
       installPlanApproval: Automatic
-      # csv: crunchy-operator
+      csv: postgresoperator
       source: 
         name: certified-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: true
     hooked: false
-    name: "crunchy-operator-v2"
+    name: "crunchy-operator"
     namespace: "demo-crunchy"
-    providedAPIs: "CrunchyDBAutoscaler.v2.crunchy.com,CrunchyDBBackup.v2.crunchy.com,CrunchyDBBackupRestore.v2.crunchy.com,CrunchyDBBucket.v2.crunchy.com,CrunchyDBCluster.v2.crunchy.com,CrunchyDBCollection.v2.crunchy.com,CrunchyDBCollectionGroup.v2.crunchy.com,CrunchyDBEphemeralBucket.v2.crunchy.com,CrunchyDBGroup.v2.crunchy.com,CrunchyDBMemcachedBucket.v2.crunchy.com,CrunchyDBMigrationReplication.v2.crunchy.com,CrunchyDBReplication.v2.crunchy.com,CrunchyDBRoleBinding.v2.crunchy.com,CrunchyDBScope.v2.crunchy.com,CrunchyDBScopeGroup.v2.crunchy.com,CrunchyDBUser.v2.crunchy.com"
+    providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"
+
