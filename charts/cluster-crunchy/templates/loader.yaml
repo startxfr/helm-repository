@@ -1,0 +1,55 @@
+{{- if .Values.loader }}{{- if .Values.loader.enabled }}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $ns := .Values.project.project.name | default .Chart.Name -}}
+{{- range .Values.loader.list }}
+{{- $name := .name | default "default" -}}
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: "{{- $name -}}-loader"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "cluster-crunchy.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-loader-pod"
+    cluster: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-crunchy.annotations" $root | nindent 4 }}
+spec:
+  restartPolicy: Never
+{{- if $root.Values.crunchyConfig }}
+{{- if $root.Values.crunchyConfig.saPods }}
+{{- if $root.Values.crunchyConfig.saPods.enabled }}
+{{- $sa := $root.Values.crunchyConfig.saPods.name | default "crunchy-pods" }}
+  serviceAccountName: "{{- $sa -}}"
+  serviceAccount: "{{- $sa -}}"
+{{- end }}
+{{- end }}
+{{- if $root.Values.crunchyConfig.imageCredentialsSecret }}
+  imagePullSecrets:
+    - name: "{{- $root.Values.crunchyConfig.imageCredentialsSecret -}}"
+{{- end }}
+{{- end }}
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+    fsGroup: 1000
+  containers:
+    - name: loader
+      image: registry.connect.redhat.com/crunchy/server
+      imagePullPolicy: IfNotPresent
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+{{- .command | nindent 10 }}
+      resources:
+        limits:
+          cpu: 800m
+          memory: 128Mi
+        requests:
+          cpu: 400m
+          memory: 64Mi
+{{ end }}
+{{- end -}}{{- end }}
