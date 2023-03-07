@@ -68,6 +68,56 @@ helm install \
 chaos-monkey-instance  startx/chaos-monkey
 ```
 
+### 5. Manage with ArgoCD
+
+ArgoCD will allow you to deploy this helm chart in a gitops way of doying. [ArgoCD deployment](../../docs/install-argocd.md) must help you deploy the ArgoCD stack.
+
+ In order to manage this cluster resource using argoCD, you should deploy your service [using startx charts(#0.requirements)] :
+- [project](../../docs/install-argocd.md#11-create-cluster-service-projects) to created required projects
+- [operator](../../docs/install-argocd.md#12-deploy-the-operator) to deploy required operators
+- [instance](../../docs/install-argocd.md#13-create-a-cluster-service-instance) to deploy this resource components 
+
+#### 5.1 Create project
+
+```yaml
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: chaos
+namespace: "chaos"
+spec:
+destination:
+    namespace: "default"
+    server: 'https://kubernetes.default.svc'
+project: default
+source:
+    path: charts/sxapi/
+    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    targetRevision: "devel"
+    helm:
+    valueFiles:
+        - values-test.yaml
+    parameters:
+    - name: sxapi.service.enabled
+    value: "true"
+    - name: sxapi.service.expose
+    value: "true"
+ignoreDifferences:
+    - kind: Secret
+    jsonPointers: [ "/" ]
+```
+
+
+
+
+```
+
+#### 5.2 Enable operator
+
+#### 5.3 Deploy cluster-service instance
+
+
+
 ## Values dictionary
 
 ### context values dictionary
@@ -243,3 +293,4 @@ chaos-monkey startx/chaos-monkey
 | 11.28.59 | 2023-02-21 | publish stable update for the full repository
 | 11.28.60 | 2023-02-21 | publish stable update for the full repository
 | 11.28.67 | 2023-02-23 | publish stable update for the full repository
+| 11.28.69 | 2023-03-07 | publish stable update for the full repository

@@ -144,3 +144,4 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 | -------- | ---------- | ------------------------------------------------------ |
 | 11.28.68 | 2023-02-26 | Create cluster-crunchy skeleton from cluster-couchbase |
 | 11.28.68 | 2023-02-26 | Create cluster-crunchy skeleton from cluster-couchbase
+| 11.28.69 | 2023-03-07 | publish stable update for the full repository
