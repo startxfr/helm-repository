@@ -54,42 +54,138 @@ Wait for all pod in your gitops namespace to be ready :
 oc get pod -n openshift-gitops -w
 ```
 
-## 1. Create an application
+## 1. Deploy cluster-services
 
-In order to deploy your helm chart instance using ArgoCD, you should create an `Application` resource.
+We will use the crunchy-database operator as an example for a cluster-service deployment.
 
-## 1. Create an application
+## 1.1. Create cluster-service project
+
+First we need to create a project for our postgresql instance.
 
 ```bash
 cat <<EOF | oc apply -f -
 kind: Application
 apiVersion: argoproj.io/v1alpha1
 metadata:
-name: startx-gitops-example
-namespace: "default"
-labels:  &basic_labels
-    app.startx.fr/component: "example"
-    app.kubernetes.io/name: "startx-sxapi-example-application"
-    app.kubernetes.io/component: "sxapi-example"
+name: crunchy-project
+namespace: "openshift-gitops"
 spec:
-destination:
-    namespace: "default"
+  destination:
+    namespace: "demo-crunchy"
     server: 'https://kubernetes.default.svc'
-project: default
-source:
-    path: charts/sxapi/
+  project: cluster-admin
+  source:
+    path: charts/cluster-crunchy/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
     targetRevision: "devel"
     helm:
-    valueFiles:
-        - values-test.yaml
-    parameters:
-    - name: sxapi.service.enabled
-      value: "true"
-    - name: sxapi.service.expose
-      value: "true"
-ignoreDifferences:
-    - kind: Secret
-    jsonPointers: [ "/" ]
+      valueFiles:
+      - values-demo.yaml
+      parameters:
+      - name: project.enabled
+        value: "true"
+  syncPolicy:
+    automated: 
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=false
+      - Validate=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
 EOF
 ```
+
+## 1.2. Deploy the operator
+
+Then we deploy the operator. Differences are the name `crunchy-operator` and the `operator.enabled` parameter.
+
+```bash
+cat <<EOF | oc apply -f -
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: crunchy-operator
+namespace: "openshift-gitops"
+spec:
+  destination:
+    namespace: "demo-crunchy"
+    server: 'https://kubernetes.default.svc'
+  project: cluster-admin
+  source:
+    path: charts/cluster-crunchy/
+    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    targetRevision: "devel"
+    helm:
+      valueFiles:
+      - values-demo.yaml
+      parameters:
+      - name: operator.enabled
+        value: "true"
+  syncPolicy:
+    automated: 
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=false
+      - Validate=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
+EOF
+```
+
+## 1.3. Create a cluster-service instance
+
+Finally we create a crunchy databas instance. Differences are the name `crunchy-instance`, the `cluster.enabled` and `loader.enabled` parameters.
+
+```bash
+cat <<EOF | oc apply -f -
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: crunchy-instance
+namespace: "openshift-gitops"
+spec:
+  destination:
+    namespace: "demo-crunchy"
+    server: 'https://kubernetes.default.svc'
+  project: cluster-admin
+  source:
+    path: charts/cluster-crunchy/
+    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    targetRevision: "devel"
+    helm:
+      valueFiles:
+      - values-demo.yaml
+      parameters:
+      - name: cluster.enabled
+        value: "true"
+      - name: loader.enabled
+        value: "true"
+  syncPolicy:
+    automated: 
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=false
+      - Validate=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 5m
+EOF
+```
+

@@ -1,0 +1,42 @@
+{{- if .Values.loader }}{{- if .Values.loader.enabled }}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $defaultns := .Values.project.project.name | default .Chart.Name -}}
+
+{{- range .Values.loader.list }}
+{{- $name := .name | default "default" -}}
+{{- $ns := .namespace | default $defaultns -}}
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: "{{- $name -}}-loader"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-crunchy.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-loader-pod"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-crunchy.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "25"
+spec:
+  restartPolicy: Never
+  containers:
+    - name: loader
+      image: quay.io/startx/postgres
+      imagePullPolicy: IfNotPresent
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |-
+{{- .command | nindent 10 }}
+      resources:
+        limits:
+          cpu: 800m
+          memory: 128Mi
+        requests:
+          cpu: 400m
+          memory: 64Mi
+{{ end }}
+{{- end -}}{{- end }}
