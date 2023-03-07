@@ -34,6 +34,91 @@ helm show chart startx/cluster-crunchy
 helm install cluster-crunchy startx/cluster-crunchy
 ```
 
+## Deploy this helm chart with ArgoCD
+
+### 1. Create the project
+
+```bash
+cat <<EOF | oc apply -f -
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: crunchy-project
+namespace: "openshift-gitops"
+spec:
+  destination:
+    namespace: "crunchy-demo"
+    server: 'https://kubernetes.default.svc'
+project: default
+source:
+    path: charts/cluster-crunchy/
+    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    targetRevision: "stable"
+    helm:
+    valueFiles:
+    - values-demo.yaml
+    parameters:
+    - name: project.enabled
+      value: "true"
+EOF
+```
+
+## 2. Deploy the operator
+
+```bash
+cat <<EOF | oc apply -f -
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: crunchy-operator
+namespace: "openshift-gitops"
+spec:
+  destination:
+    namespace: "openshift-operators"
+    server: 'https://kubernetes.default.svc'
+project: default
+source:
+    path: charts/cluster-crunchy/
+    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    targetRevision: "stable"
+    helm:
+    valueFiles:
+    - values-demo.yaml
+    parameters:
+    - name: operator.enabled
+      value: "true"
+EOF
+```
+
+## 2. Deploy a crunchy instance
+
+```bash
+cat <<EOF | oc apply -f -
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: crunchy-instance
+namespace: "openshift-gitops"
+spec:
+  destination:
+    namespace: "crunchy-demo"
+    server: 'https://kubernetes.default.svc'
+project: default
+source:
+    path: charts/cluster-crunchy/
+    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    targetRevision: "stable"
+    helm:
+    valueFiles:
+    - values-demo.yaml
+    parameters:
+    - name: cluster.enabled
+      value: "true"
+    - name: loader.enabled
+      value: "true"
+EOF
+```
+
 ## Default values
 
 Complete deployment of a project with the following characteristics :
@@ -59,3 +144,4 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 | -------- | ---------- | ------------------------------------------------------ |
 | 11.28.68 | 2023-02-26 | Create cluster-crunchy skeleton from cluster-couchbase |
 | 11.28.68 | 2023-02-26 | Create cluster-crunchy skeleton from cluster-couchbase
+| 11.28.69 | 2023-03-07 | publish stable update for the full repository
