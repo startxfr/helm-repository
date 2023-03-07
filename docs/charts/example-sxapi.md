@@ -272,3 +272,4 @@ helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubuser
 | 11.28.59 | 2023-02-21 | publish stable update for the full repository
 | 11.28.60 | 2023-02-21 | publish stable update for the full repository
 | 11.28.67 | 2023-02-23 | publish stable update for the full repository
+| 11.28.69 | 2023-03-07 | publish stable update for the full repository
