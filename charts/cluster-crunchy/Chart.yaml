@@ -1,0 +1,64 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-crunchy
+# Description of this Helm chart
+description: Helm chart used to configure PostgreSQL cluster using CrunchyDB operator
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 11.28.68
+# Version name of the crunchy operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 5.3.0
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-crunchy.svg
+# category associated to this package
+category: cluster
+# tags
+tags: infra,cluster,crunchy,database,postgresql,sql
+# Kube minimum version
+kubeVersion: ">=1.21.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - crunchy
+  - database
+  - sql
+  - postgresql
+  - postgres
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-crunchy
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-crunchy
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    version: "11.28.25"
+    alias: project
+    condition: project.enabled
+  - name: operator
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    version: "11.28.25"
+    alias: operator
+    condition: operator.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Create cluster-crunchy skeleton from cluster-couchbase"
+    - kind: changed
+      description: "Adding loader support"
+  artifacthub.io/containsSecurityUpdates: "false"
+
