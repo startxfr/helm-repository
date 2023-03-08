@@ -199,11 +199,11 @@ data:
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: "storage-ocs-config"
+  name: "storage-odf-config"
   namespace: {{ $namespace | quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "storage-ocs-config-configmap"
+    app.kubernetes.io/name: "storage-odf-config-configmap"
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 data:
@@ -240,7 +240,7 @@ data:
             <h1>OCS Filesystem storage demo</h1>
             <h2>CephFS - shared access to Ceph FS</h2>
             <div class="alert alert-success" role="alert"><p>This demo use 2 pod using the same PVC to read and write files. 
-            This PVC have a storage backend delivered using the startx-ocs-fs-delete storage class provisionned using the CephFS CSI provisoner. 
+            This PVC have a storage backend delivered using the startx-odf-fs-delete storage class provisionned using the CephFS CSI provisoner. 
             The provided PersistantVolume is dedicated to this sample application and shared accross pods.</p></div>
             <div class="alert alert-info" role="alert"><p>If you want to read or record a document to the file storage, you can 
             send it to /storage/__filename__ with a GET, POST or PUT request and the content as body</p>
@@ -321,7 +321,7 @@ data:
             <h1>OCS Filesystem storage demo</h1>
             <h2>CephFS - exclusive access to Ceph FS</h2>
             <div class="alert alert-success" role="alert"><p>This demo use one pod using a single PVC to read and write files. 
-            This PVC have a storage backend delivered using the startx-ocs-fs-delete storage class provisionned using the CephFS CSI provisoner. 
+            This PVC have a storage backend delivered using the startx-odf-fs-delete storage class provisionned using the CephFS CSI provisoner. 
             The provided PersistantVolume is dedicated to this sample application.</p></div>
             <div class="alert alert-info" role="alert"><p>If you want to read or record a document to the file storage, you can 
             send it to /storage/__filename__ with a GET, POST or PUT request and the content as body.</p>
@@ -1197,7 +1197,7 @@ spec:
             name: "storage-library"
         - name: fs-rook-cephfs-rwx-conf
           configMap:
-            name: "storage-ocs-config"
+            name: "storage-odf-config"
             items:
               - key: sxapi-fs-rook-cephfs-rwx.yml
                 path: sxapi.yml
@@ -1223,7 +1223,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: startx-ocs-fs-delete
+  storageClassName: startx-odf-fs-delete
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
@@ -1386,7 +1386,7 @@ spec:
             name: "storage-library"
         - name: fs-rook-cephfs-rwo-conf
           configMap:
-            name: "storage-ocs-config"
+            name: "storage-odf-config"
             items:
               - key: sxapi-fs-rook-cephfs-rwo.yml
                 path: sxapi.yml
@@ -1412,7 +1412,7 @@ metadata:
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: startx-ocs-fs-delete
+  storageClassName: startx-odf-fs-delete
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -1569,7 +1569,7 @@ spec:
             name: "storage-library"
         - name: obj-noobaa-dedicated-s3-conf
           configMap:
-            name: "storage-ocs-config"
+            name: "storage-odf-config"
             items:
               - key: sxapi-obj-noobaa-dedicated-s3.yml
                 path: sxapi.yml
@@ -1753,7 +1753,7 @@ spec:
             name: "storage-library"
         - name: obj-noobaa-dedicated-k8s-conf
           configMap:
-            name: "storage-ocs-config"
+            name: "storage-odf-config"
             items:
               - key: sxapi-obj-noobaa-dedicated-k8s.yml
                 path: sxapi.yml
@@ -1937,7 +1937,7 @@ spec:
             name: "storage-library"
         - name: obj-noobaa-mirrored-conf
           configMap:
-            name: "storage-ocs-config"
+            name: "storage-odf-config"
             items:
               - key: sxapi-obj-noobaa-mirrored.yml
                 path: sxapi.yml
@@ -2121,7 +2121,7 @@ spec:
             name: "storage-library"
         - name: obj-noobaa-spreaded-conf
           configMap:
-            name: "storage-ocs-config"
+            name: "storage-odf-config"
             items:
               - key: sxapi-obj-noobaa-spreaded.yml
                 path: sxapi.yml
@@ -2303,14 +2303,14 @@ spec:
       volumes:
         - name: "block-rook-rbd-rox-data"
           persistentVolumeClaim:
-            claimName: block-rox-ocs
+            claimName: block-rox-odf
             readOnly: true
         - name: ocs-storage-library
           configMap:
             name: "storage-library"
         - name: block-rook-rbd-rox-conf
           configMap:
-            name: "storage-ocs-config"
+            name: "storage-odf-config"
             items:
               - key: sxapi-block-rook-rbd-rox.yml
                 path: sxapi.yml
@@ -2327,16 +2327,16 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: block-rox-ocs
+  name: block-rox-odf
   namespace: {{ $namespace | quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
-    app: "block-rox-ocs"
-    app.kubernetes.io/name: "block-rox-ocs-pvc"
+    app: "block-rox-odf"
+    app.kubernetes.io/name: "block-rox-odf-pvc"
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
-  storageClassName: startx-ocs-generic-retain
+  storageClassName: startx-odf-generic-retain
   volumeMode: Filesystem
   accessModes:
     - ReadOnlyMany
@@ -2611,7 +2611,7 @@ spec:
       volumes:
         - name: "block-rook-rbd-rox-data"
           persistentVolumeClaim:
-            claimName: block-rox-ocs
+            claimName: block-rox-odf
         - name: ocs-storage-library
           configMap:
             name: "storage-library"

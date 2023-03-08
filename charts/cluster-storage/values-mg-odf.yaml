@@ -8,8 +8,8 @@ context:
   app: startx-infra
 enabled: true
 storageClasses:
-- id: startx-ocs-generic-delete
-  name: startx-ocs-generic-delete
+- id: gov-odf-default-delete
+  name: gov-odf-default-delete
   provisioner: "openshift-storage.rbd.csi.ceph.com"
   parameters: |
     csi.storage.k8s.io/fstype: ext4
@@ -22,12 +22,12 @@ storageClasses:
     imageFormat: '2'
     clusterID: openshift-storage
     imageFeatures: layering
-    pool: startx-ocs-cephblockpool
+    pool: gov-odf-cephblockpool
   reclaimPolicy: Delete
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: startx-ocs-generic-retain
-  name: startx-ocs-generic-retain
+- id: gov-odf-default-retain
+  name: gov-odf-default-retain
   provisioner: "openshift-storage.rbd.csi.ceph.com"
   parameters: |
     csi.storage.k8s.io/fstype: ext4
@@ -40,12 +40,12 @@ storageClasses:
     imageFormat: '2'
     clusterID: openshift-storage
     imageFeatures: layering
-    pool: startx-ocs-cephblockpool
+    pool: gov-odf-cephblockpool
   reclaimPolicy: Retain
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
-- id: startx-ocs-fs-delete
-  name: startx-ocs-fs-delete
+- id: gov-odf-fs-delete
+  name: gov-odf-fs-delete
   provisioner: "openshift-storage.cephfs.csi.ceph.com"
   parameters: |
     clusterID: openshift-storage
@@ -55,11 +55,11 @@ storageClasses:
     csi.storage.k8s.io/node-stage-secret-namespace: openshift-storage
     csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
     csi.storage.k8s.io/provisioner-secret-namespace: openshift-storage
-    fsName: startx-ocs-cephfilesystem
+    fsName: gov-odf-cephfilesystem
   reclaimPolicy: Delete
   volumeBindingMode: WaitForFirstConsumer
-- id: startx-ocs-fs-retain
-  name: startx-ocs-fs-retain
+- id: gov-odf-fs-retain
+  name: gov-odf-fs-retain
   provisioner: "openshift-storage.cephfs.csi.ceph.com"
   parameters: |
     clusterID: openshift-storage
@@ -69,6 +69,6 @@ storageClasses:
     csi.storage.k8s.io/node-stage-secret-namespace: openshift-storage
     csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
     csi.storage.k8s.io/provisioner-secret-namespace: openshift-storage
-    fsName: startx-ocs-cephfilesystem
+    fsName: gov-odf-cephfilesystem
   reclaimPolicy: Retain
   volumeBindingMode: WaitForFirstConsumer
