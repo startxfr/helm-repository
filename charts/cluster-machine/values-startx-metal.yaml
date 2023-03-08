@@ -41,15 +41,39 @@ machineHealthCheck:
     type: master
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: infra
+  - name: infra-a
     type: infra
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: app
+  - name: infra-b
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: infra-c
+    type: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-a
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: virt
+  - name: app-b
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-c
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: virt-a
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: virt-b
+    type: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: virt-c
     type: worker
     maxUnhealthy: 40%
     timeouts: 300s
