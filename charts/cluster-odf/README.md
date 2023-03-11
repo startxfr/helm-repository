@@ -1,11 +1,11 @@
 # Cluster ODF
 
 This helm chart is used to configure Openshift Container Storage at the cluster level.
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedodf.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
 
-Read the [startx helm-repository homepage](https://helm-repository.readthedodf.io) for
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
 more information on how to use theses resources.
 
 ## Deploy this helm chart on openshift
@@ -19,7 +19,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedodf.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
 ```
 
 ### 3. Get information about this chart
