@@ -112,6 +112,9 @@ data:
           key: node-role.kubernetes.io/infra
           operator: Exists
       {{- end }}
+      {{- if .Values.monitoring.enableUserWorkload }}
+      enableUserAlertmanagerConfig: true
+      {{- end }}
       volumeClaimTemplate:
         spec:
           storageClassName: {{ default "gp2" .Values.monitoring.storageClass }}
