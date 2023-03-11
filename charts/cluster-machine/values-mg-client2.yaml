@@ -110,50 +110,44 @@ machineSet:
   - name: client2-infra-a
     az: a
     type: infra
-    subnet_name: client2-subnet-private1-eu-west-3a
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
-    volumeSize: 150
+    volumeSize: 120
     replicas: 1
   - name: client2-infra-b
     az: b
     type: infra
-    subnet_name: client2-subnet-private2-eu-west-3b
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
-    volumeSize: 150
+    volumeSize: 120
     replicas: 1
   - name: client2-infra-c
     az: c
     type: infra
-    subnet_name: client2-subnet-private3-eu-west-3c
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
-    volumeSize: 150
+    volumeSize: 120
     replicas: 1
   - name: client2-app-small-a
     az: a
     type: worker
     group: app-small
-    subnet_name: client2-subnet-private1-eu-west-3a
     ami: ami-0add59eb238c299d5
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
     volumeSize: 100
     replicas: 0
-  # - name: client2-app-small-b
-  #   az: b
-  #   type: worker
-  #   group: app-small
-  #   subnet_name: client2-subnet-private2-eu-west-3b
-  #   ami: ami-0add59eb238c299d5
-  #   instanceType: "c5a.xlarge"
-  #   volumeSize: 100
-  #   replicas: 0
+  - name: client2-app-small-b
+    az: b
+    type: worker
+    group: app-small
+    ami: ami-0add59eb238c299d5
+    instanceType: "c5a.xlarge"
+    volumeSize: 100
+    replicas: 0
   - name: client2-app-small-c
     az: c
     type: worker
     group: app-small
-    subnet_name: client2-subnet-private3-eu-west-3c
     ami: ami-0add59eb238c299d5
     instanceType: "c5a.xlarge"
     volumeSize: 100
@@ -162,7 +156,6 @@ machineSet:
     az: a
     type: worker
     group: app-big
-    subnet_name: client2-subnet-private1-eu-west-3a
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
     volumeSize: 100
@@ -171,7 +164,6 @@ machineSet:
     az: b
     type: worker
     group: app-big
-    subnet_name: client2-subnet-private2-eu-west-3b
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
     volumeSize: 100
@@ -180,7 +172,6 @@ machineSet:
     az: c
     type: worker
     group: app-big
-    subnet_name: client2-subnet-private3-eu-west-3c
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
     volumeSize: 100
