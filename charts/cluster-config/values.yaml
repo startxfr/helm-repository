@@ -79,6 +79,10 @@ monitoring:
   storageClass: gp2
   # Define the storage size to use for persistance (default is 20Gi)
   storageSize: "20Gi"
+  # Enabling monitoring for user-defined projects (see https://docs.openshift.com/container-platform/4.11/monitoring/enabling-monitoring-for-user-defined-projects.html)
+  enableUserWorkload: true
+  # Define the prometheus retention period (default is 7d)
+  retentionPeriod: 7d
 
 # Configuration of the cluster image-prunner feature
 imageprunner:
