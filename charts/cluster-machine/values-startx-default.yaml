@@ -8,7 +8,7 @@ context:
   app: startx-machine
 
 cluster:
-  id: helmstablizing-v78cf
+  id: startx-xyzab
   region: eu-west-3
   autoscaler: 
     enabled: true
@@ -110,7 +110,7 @@ machineSet:
     type: infra
     group: infra
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3a"
+    subnet_name: "startx-xyzab-private-eu-west-3a"
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -119,7 +119,7 @@ machineSet:
     type: infra
     group: infra
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3b"
+    subnet_name: "startx-xyzab-private-eu-west-3b"
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -128,7 +128,7 @@ machineSet:
     type: infra
     group: infra
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3c"
+    subnet_name: "startx-xyzab-private-eu-west-3c"
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -137,34 +137,34 @@ machineSet:
     type: worker
     group: app-small
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3a"
+    subnet_name: "startx-xyzab-private-eu-west-3a"
     instanceType: "t3a.large"
     volumeSize: 150
-    replicas: 1
+    replicas: 0
   - name: app-small-b
     az: b
     type: worker
     group: app-small
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3b"
+    subnet_name: "startx-xyzab-private-eu-west-3b"
     instanceType: "t3a.large"
     volumeSize: 150
-    replicas: 1
+    replicas: 0
   - name: app-small-c
     az: c
     type: worker
     group: app-small
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3c"
+    subnet_name: "startx-xyzab-private-eu-west-3c"
     instanceType: "t3a.large"
     volumeSize: 150
-    replicas: 1
+    replicas: 0
   - name: app-a
     az: a
     type: worker
     group: app
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3a"
+    subnet_name: "startx-xyzab-private-eu-west-3a"
     instanceType: "t3a.xlarge"
     volumeSize: 150
     replicas: 1
@@ -173,7 +173,7 @@ machineSet:
     type: worker
     group: app
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3b"
+    subnet_name: "startx-xyzab-private-eu-west-3b"
     instanceType: "t3a.xlarge"
     volumeSize: 150
     replicas: 1
@@ -182,7 +182,7 @@ machineSet:
     type: worker
     group: app
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3c"
+    subnet_name: "startx-xyzab-private-eu-west-3c"
     instanceType: "t3a.xlarge"
     volumeSize: 150
     replicas: 1
@@ -191,25 +191,25 @@ machineSet:
     type: worker
     group: app-big
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3a"
+    subnet_name: "startx-xyzab-private-eu-west-3a"
     instanceType: "t3a.2xlarge"
     volumeSize: 150
-    replicas: 1
+    replicas: 0
   - name: app-big-b
     az: b
     type: worker
     group: app-big
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3b"
+    subnet_name: "startx-xyzab-private-eu-west-3b"
     instanceType: "t3a.2xlarge"
     volumeSize: 150
-    replicas: 1
+    replicas: 0
   - name: app-big-c
     az: c
     type: worker
     group: app-big
     ami: ami-0add59eb238c299d5
-    subnet_name: "helmstablizing-v78cf-private-eu-west-3c"
+    subnet_name: "startx-xyzab-private-eu-west-3c"
     instanceType: "t3a.2xlarge"
     volumeSize: 150
-    replicas: 1
+    replicas: 0
