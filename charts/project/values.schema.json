@@ -139,6 +139,20 @@
                         "my-app"
                     ]
                 },
+                "nodeSelector": {
+                    "type": "string",
+                    "title": "Node selector",
+                    "description": "A Node selector condition to set at the project level",
+                    "default": false,
+                    "examples": [
+                        "node-role.kubernetes.io/infra=",
+                        "node-role.kubernetes.io/worker=",
+                        "node-role.kubernetes.io/app=",
+                        "machine.startx.io/group=app-small",
+                        "machine.startx.io/group=app-big",
+                        "cpu-feature.node.kubevirt.io/acpi=true"
+                    ]
+                },
                 "type": {
                     "type": "string",
                     "enum": [

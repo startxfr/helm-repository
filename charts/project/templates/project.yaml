@@ -26,10 +26,14 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed 
     {{- end }}
     {{- if .Values.project.infra }}
-    #openshift.io/node-selector: 'node-role.kubernetes.io/infra='
+    openshift.io/node-selector: 'node-role.kubernetes.io/infra='
     scheduler.alpha.kubernetes.io/node-selector: 'node-role.kubernetes.io/infra='
     scheduler.alpha.kubernetes.io/defaultTolerations: >-
       [{"operator": "Exists", "effect": "NoSchedule", "key": "node-role.kubernetes.io/infra"}]
+    {{- end }}
+    {{- if .Values.project.nodeSelector }}
+    openshift.io/node-selector: "{{- .Values.project.nodeSelector -}}"
+    scheduler.alpha.kubernetes.io/node-selector: "{{- .Values.project.nodeSelector -}}"
     {{- end }}
     argocd.argoproj.io/sync-wave: "-10"
 spec: {}
