@@ -15,7 +15,7 @@ cluster:
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
-        maxNodesTotal: 24
+        maxNodesTotal: 30
         cores:
           min: 36
           max: 266
@@ -44,6 +44,11 @@ machineHealthCheck:
   - name: infra
     type: infra
     group: infra
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: storage
+    type: storage
+    group: storage
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app-small
@@ -77,6 +82,15 @@ machineAutoscaler:
     minReplicas: 1
     maxReplicas: 2
   - name: infra-c
+    minReplicas: 1
+    maxReplicas: 2
+  - name: storage-a
+    minReplicas: 1
+    maxReplicas: 2
+  - name: storage-b
+    minReplicas: 1
+    maxReplicas: 2
+  - name: storage-c
     minReplicas: 1
     maxReplicas: 2
   - name: app-small-a
@@ -139,6 +153,30 @@ machineSet:
     az: c
     type: infra
     group: infra
+    ami: ami-0add59eb238c299d5
+    instanceType: "r5a.2xlarge"
+    volumeSize: 250
+    replicas: 1
+  - name: storage-a
+    az: a
+    type: storage
+    group: storage
+    ami: ami-0add59eb238c299d5
+    instanceType: "r5a.2xlarge"
+    volumeSize: 250
+    replicas: 1
+  - name: storage-b
+    az: b
+    type: storage
+    group: storage
+    ami: ami-0add59eb238c299d5
+    instanceType: "r5a.2xlarge"
+    volumeSize: 250
+    replicas: 1
+  - name: storage-c
+    az: c
+    type: storage
+    group: storage
     ami: ami-0add59eb238c299d5
     instanceType: "r5a.2xlarge"
     volumeSize: 250
