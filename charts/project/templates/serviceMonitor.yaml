@@ -1,0 +1,23 @@
+{{- if .Values.enabled }}{{- if .Values.serviceMonitor }}{{- if .Values.serviceMonitor.enabled -}}
+{{- $root := . -}}
+{{- $defaultns := .Values.project.name | default .Chart.Name -}}
+
+{{ range .Values.serviceMonitor.list }}
+{{- $name := .name | default "my-default-service-monitor" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "project.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-serviceMonitor-{{- include "startx.appVersion" $root -}}"
+  annotations:
+    {{- include "project.annotations" $root | nindent 4 }}
+spec:
+  {{- .spec | nindent 2 }}
+
+{{ end }}
+{{- end -}}{{- end -}}{{- end }}
