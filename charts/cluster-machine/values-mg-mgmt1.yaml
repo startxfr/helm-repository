@@ -109,7 +109,6 @@ machineSet:
   - name: mgmt1-infra-a
     az: a
     type: infra
-    subnet_name: mgmt-subnet-private1-eu-west-3a
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
     volumeSize: 150
@@ -117,7 +116,6 @@ machineSet:
   - name: mgmt1-infra-b
     az: b
     type: infra
-    subnet_name: mgmt-subnet-private2-eu-west-3b
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
     volumeSize: 150
@@ -125,7 +123,6 @@ machineSet:
   - name: mgmt1-infra-c
     az: c
     type: infra
-    subnet_name: mgmt-subnet-private3-eu-west-3c
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
     volumeSize: 150
@@ -133,7 +130,6 @@ machineSet:
   - name: mgmt1-storage-a
     az: a
     type: storage
-    subnet_name: mgmt-subnet-private1-eu-west-3a
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
     volumeSize: 150
@@ -141,7 +137,6 @@ machineSet:
   - name: mgmt1-storage-b
     az: b
     type: storage
-    subnet_name: mgmt-subnet-private2-eu-west-3b
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
     volumeSize: 150
@@ -149,7 +144,6 @@ machineSet:
   - name: mgmt1-storage-c
     az: c
     type: storage
-    subnet_name: mgmt-subnet-private3-eu-west-3c
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
     volumeSize: 150
@@ -158,25 +152,22 @@ machineSet:
     az: a
     type: worker
     group: app
-    subnet_name: mgmt-subnet-private1-eu-west-3a
     ami: ami-0add59eb238c299d5
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
     volumeSize: 100
     replicas: 2
-  # - name: mgmt1-app-b
-  #   az: b
-  #   type: worker
-  #   group: app
-  #   subnet_name: mgmt-subnet-private2-eu-west-3b
-  #   ami: ami-0add59eb238c299d5
-  #   instanceType: "c5a.xlarge"
-  #   volumeSize: 100
-  #   replicas: 0
+  - name: mgmt1-app-b
+    az: b
+    type: worker
+    group: app
+    ami: ami-0add59eb238c299d5
+    instanceType: "c5a.xlarge"
+    volumeSize: 100
+    replicas: 0
   - name: mgmt1-app-c
     az: c
     type: worker
     group: app
-    subnet_name: mgmt-subnet-private3-eu-west-3c
     ami: ami-0add59eb238c299d5
     instanceType: "c5a.xlarge"
     volumeSize: 100
