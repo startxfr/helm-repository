@@ -31,11 +31,14 @@ alertmanager:
 ingresscontroller:
   enabled: false
   infra_enabled: true
+  loadBalancerMode: "internal"
+  replicas: 3
 monitoring:
   enabled: false
   infra_enabled: true
   storageClass: gov-fast-retain
   storageSize: "50Gi"
+  enableUserWorkload: true
 imageprunner:
   enabled: false
   schedule: "15 * * * *"

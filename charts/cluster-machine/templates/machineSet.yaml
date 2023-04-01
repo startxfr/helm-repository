@@ -47,6 +47,9 @@ spec:
           {{- if .additionnalsLabels -}}
           {{- .additionnalsLabels | nindent 10 -}}
           {{- end }}
+          {{- if .group }}
+          machine.startx.io/group: "{{ .group }}"
+          {{- end }}
       {{- if eq .type "infra" }}
       taints: 
         - key: "node-role.kubernetes.io/infra"

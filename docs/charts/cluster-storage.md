@@ -65,10 +65,10 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 ```
 
 - **startx-ocs** : Startx storage classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-ocs.yaml)) creating the following storage classes
-  - **startx-ocs-generic-retain** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with retain policy and expansion enabled)
-  - **startx-ocs-generic-delete** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with delete policy and expansion enabled)
-  - **startx-ocs-fs-retain** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with retain policy)
-  - **startx-ocs-fs-delete** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with delete policy)
+  - **startx-odf-generic-retain** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with retain policy and expansion enabled)
+  - **startx-odf-generic-delete** (OCS provisionned via openshift-storage.rbd.csi.ceph.com in cluster openshift-storage with delete policy and expansion enabled)
+  - **startx-odf-fs-retain** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with retain policy)
+  - **startx-odf-fs-delete** (OCS provisionned via openshift-storage.cephfs.csi.ceph.com in cluster openshift-storage with delete policy)
 
 ```bash
 helm install cluster-storage startx/cluster-storage -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx-ocs.yaml
@@ -237,3 +237,4 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 11.28.60 | 2023-02-21 | publish stable update for the full repository
 | 11.28.67 | 2023-02-23 | publish stable update for the full repository
 | 11.28.69 | 2023-03-07 | publish stable update for the full repository
+| 11.28.89 | 2023-04-01 | publish stable update for the full repository
