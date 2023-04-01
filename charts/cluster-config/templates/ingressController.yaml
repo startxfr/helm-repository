@@ -5,8 +5,8 @@ kind: IngressController
 metadata:
   name: default
   namespace: openshift-ingress-operator
-{{- if .Values.ingresscontroller.infra_enabled }}
 spec:
+{{- if .Values.ingresscontroller.infra_enabled }}
   nodePlacement:
     nodeSelector:
       matchLabels:
@@ -15,7 +15,17 @@ spec:
       - effect: NoSchedule 
         key: node-role.kubernetes.io/infra 
         operator: Exists
-{{- else }}
-spec: {}
 {{- end }}
+{{- if eq "internal" .Values.ingresscontroller.loadBalancerMode }}
+  endpointPublishingStrategy:
+    loadBalancer:
+      scope: Internal
+    type: LoadBalancerService
+{{- else if eq "external" .Values.ingresscontroller.loadBalancerMode }}
+  endpointPublishingStrategy:
+    loadBalancer:
+      scope: External
+    type: LoadBalancerService
+{{- end }}
+  replicas: {{ default 2 .Values.ingresscontroller.replicas }}
 {{- end -}}
