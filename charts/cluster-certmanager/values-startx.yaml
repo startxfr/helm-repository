@@ -75,8 +75,9 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
+    target: "all-ns"
     name: "openshift-cert-manager-operator"
     namespace: "openshift-cert-manager-operator"
     providedAPIs: "Certificate.v1.cert-manager.io,CertificateRequest.v1.cert-manager.io,Challenge.v1.acme.cert-manager.io,ClusterIssuer.v1.cert-manager.io"

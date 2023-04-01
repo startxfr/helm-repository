@@ -139,6 +139,20 @@
                         "my-app"
                     ]
                 },
+                "nodeSelector": {
+                    "type": "string",
+                    "title": "Node selector",
+                    "description": "A Node selector condition to set at the project level",
+                    "default": false,
+                    "examples": [
+                        "node-role.kubernetes.io/infra=",
+                        "node-role.kubernetes.io/worker=",
+                        "node-role.kubernetes.io/app=",
+                        "machine.startx.io/group=app-small",
+                        "machine.startx.io/group=app-big",
+                        "cpu-feature.node.kubevirt.io/acpi=true"
+                    ]
+                },
                 "type": {
                     "type": "string",
                     "enum": [
@@ -576,6 +590,94 @@
                             "name",
                             "role"
                         ]
+                    }
+                }
+            }
+        },
+        "podMonitor": {
+            "type": "object",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable the podMonitor creation",
+                    "description": "Enable creation of the podMonitor in this project. Is required to be enabled if you want to create the resources.",
+                    "default": false
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List of podMonitor's",
+                    "items": {
+                        "type": "object",
+                        "title": "podMonitor's definition",
+                        "required": [
+                            "name",
+                            "spec"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "Name of the podMonitor",
+                                "default": "my-pod-monitor"
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "title": "Namespace",
+                                "description": "Namespace of the podMonitor. Default use the project.name value"
+                            },
+                            "spec": {
+                                "type": "string",
+                                "title": "Spec",
+                                "description": "Specification of the podMonitor. See https://docs.openshift.com/container-platform/4.11/rest_api/monitoring_apis/podmonitor-monitoring-coreos-com-v1.html#spec-podmetricsendpoints-2"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "serviceMonitor": {
+            "type": "object",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable the serviceMonitor creation",
+                    "description": "Enable creation of the serviceMonitor in this project. Is required to be enabled if you want to create the resources.",
+                    "default": false
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List of serviceMonitor's",
+                    "items": {
+                        "type": "object",
+                        "title": "serviceMonitor's definition",
+                        "required": [
+                            "name",
+                            "spec"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "Name of the serviceMonitor",
+                                "default": "my-service-monitor"
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "title": "Namespace",
+                                "description": "Namespace of the serviceMonitor. Default use the project.name value"
+                            },
+                            "spec": {
+                                "type": "string",
+                                "title": "Spec",
+                                "description": "Specification of the serviceMonitor. See https://docs.openshift.com/container-platform/4.11/rest_api/monitoring_apis/servicemonitor-monitoring-coreos-com-v1.html"
+                            }
+                        }
                     }
                 }
             }

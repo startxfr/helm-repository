@@ -34,6 +34,8 @@ project:
   name: default-project
   # Project or namespace is started as an helm hook (default is false)
   hooked: false
+  # # NodeSelector filter to apply to project workloads (default is false)
+  # nodeSelector: "node-role.kubernetes.io/worker="
   # # Display name of the project (only for project)
   # display_name: Example project
   # # Description of the project (only for project)
@@ -158,3 +160,43 @@ dockercfg:
     #   password: xxxx
     #   # email associated to the user 
     #   email: xxxx
+
+# Configuration of the serviceMonitor at the project level
+serviceMonitor:
+  # Enable the project serviceMonitor
+  enabled: false
+  # List of the serviceMonitor to create
+  list: []
+    #   # Name of the serviceMonitor (default is my-default-service-monitor)
+    # - name: startx-example-service-monitor
+    #   # Namespace (default is the context.name)
+    #   namespace: default-project
+    #   # The specification of the monitor
+    #   spec: |
+    #     endpoints:
+    #     - interval: 30s
+    #       port: web
+    #       scheme: http
+    #     selector:
+    #       matchLabels:
+    #         app: prometheus-example-app
+
+# Configuration of the podMonitor at the project level
+podMonitor:
+  # Enable the project podMonitor
+  enabled: false
+  # List of the podMonitor to create
+  list: []
+    #   # Name of the podMonitor (default is my-default-pod-monitor)
+    # - name: startx-example-pod-monitor
+    #   # Namespace (default is the context.name)
+    #   namespace: default-project
+    #   # The specification of the monitor
+    #   spec: |
+    #     podMetricsEndpoints:
+    #     - interval: 30s
+    #       port: web
+    #       scheme: http
+    #     selector:
+    #       matchLabels:
+    #         app: prometheus-example-app
