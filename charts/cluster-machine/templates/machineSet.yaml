@@ -13,9 +13,11 @@ metadata:
     app.kubernetes.io/name: "{{ .name }}-machineset"
     machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
     machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
-    machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
     {{- if .group }}
     machine.startx.io/group: "{{ .group }}"
+    machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
+    {{- else }}
+    machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
     {{- end }}
   namespace: openshift-machine-api
   annotations:
