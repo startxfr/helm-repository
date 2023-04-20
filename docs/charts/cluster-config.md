@@ -235,3 +235,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 11.28.69 | 2023-03-07 | publish stable update for the full repository
 | 11.28.89 | 2023-04-01 | publish stable update for the full repository
 | 11.28.91 | 2023-04-20 | Adding support for multiple ingresscontroller with node placement and routeSelector
+| 11.28.93 | 2023-04-20 | publish stable update for the full repository
