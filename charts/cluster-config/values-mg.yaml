@@ -30,9 +30,11 @@ alertmanager:
     key: _pager_dutty_startx_key_
 ingresscontroller:
   enabled: false
-  infra_enabled: true
-  loadBalancerMode: "internal"
-  replicas: 3
+  list:
+  - name: default
+    infra_enabled: true
+    loadBalancerMode: "internal"
+    replicas: 3
 monitoring:
   enabled: false
   infra_enabled: true

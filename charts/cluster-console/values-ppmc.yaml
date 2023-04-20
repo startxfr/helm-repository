@@ -1,0 +1,63 @@
+# Default values for configuration of a monaco cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: ppmc
+  cluster: poc
+  environment: client
+  component: console
+  app: startx-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: monaco Console
+    logo: 
+      name: ppmc-logo
+      tplFile: webtpl/ppmc-logo.svg
+  links:
+    - name: nsdashboard-ppmc
+      spec: |
+        href: 'https://www.palais.mc'
+        location: NamespaceDashboard
+        text: Palais Princier
+    - name: applicationmenu-ppmc
+      spec: |
+        href: 'https://www.palais.mc'
+        location: ApplicationMenu
+        text: Palais
+        applicationMenu:
+          section: Monaco
+          imageURL: "https://upload.wikimedia.org/wikipedia/commons/1/12/Blason_pays_Monaco.svg"
+    - name: helpmenu-ppmc
+      spec: |
+        href: 'https://www.palais.mc'
+        location: HelpMenu
+        text: Palais Princier
+    - name: helpmenu-support
+      spec: |
+        href: 'https://startxfr.atlassian.net/servicedesk/customer/portal/1'
+        location: HelpMenu
+        text: Support utilisateur
+  logLinks:
+  - name: mg-externallog-mgmt
+    spec: |
+      hrefTemplate: >-
+        https://kibana-openshift-logging.apps.mgmt.ppmc.mc/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: Palais central logs
+  notifications:
+  - name: mg-console-notification-top
+    spec: |
+      backgroundColor: '#38cf97'
+      color: '#fff'
+      location: BannerTop 
+      text: Vous etes sur le cluster du Palais Princier - Sandbox
+  - name: mg-console-notification-bottom
+    spec: |
+      backgroundColor: '#fff'
+      color: '#38cf97'
+      location: BannerBottom
+      text: En cas de probleme sur ce cluster, vous pouvez
+      link:
+        href: 'https://startxfr.atlassian.net/servicedesk/customer/portal/1'
+        text: creer un ticket d'incident
