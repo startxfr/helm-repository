@@ -119,12 +119,25 @@ registryconfig:
 ingresscontroller:
   # Enable the configuration of the ingresscontroller
   enabled: false
-  # # Enable the configuration of the ingresscontroller service into infra nodes
-  # infra_enabled: true
-  # # Define the load balancer mode (internal or external)
-  # loadBalancerMode: "external"
-  # # Number of replicas to use for this ingress controller
-  # replicas: 2
+  # Define the list of ingressController to manage
+  list: []
+  #   # Name of the created ingresscontroller
+  # - name: default
+  #   # The domain suffix to manage
+  #   domain: example.com
+  #   # The label name for routeSelection
+  #   routeSelectorKey: mylabel
+  #   # The label value for routeSelection
+  #   routeSelectorValue: myvalue
+  #   # The node label value for machine.startx.io/group
+  #   nodeSelector: public
+  #   # Enable the configuration of the ingresscontroller service into infra nodes
+  #   infra_enabled: true
+  #   # Define the load balancer mode (internal or external)
+  #   loadBalancerMode: "external"
+  #   # Number of replicas to use for this ingress controller
+  #   replicas: 2
+
 
 # Configuration of the cluster project-template feature
 projecttemplate:

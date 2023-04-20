@@ -1,31 +1,59 @@
 {{- if .Values.ingresscontroller.enabled -}}
+{{- $root := . -}}
+{{ range .Values.ingresscontroller.list }}
 ---
 apiVersion: operator.openshift.io/v1
 kind: IngressController
 metadata:
-  name: default
+  name: "{{- .name -}}"
   namespace: openshift-ingress-operator
+  labels:
+    {{- include "cluster-config.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name -}}-ingresscontroller"
+  annotations:
+    {{- include "cluster-config.annotations" $root | nindent 4 }}
 spec:
-{{- if .Values.ingresscontroller.infra_enabled }}
+{{- if .infra_enabled }}
   nodePlacement:
     nodeSelector:
       matchLabels:
         node-role.kubernetes.io/infra: ""
+        {{- if .nodeSelector }}
+        machine.startx.io/group: "{{ .nodeSelector }}"
+        {{- end }}
     tolerations:
       - effect: NoSchedule 
         key: node-role.kubernetes.io/infra 
         operator: Exists
+{{- else }}
+  {{- if .nodeSelector }}
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        machine.startx.io/group: "{{ .nodeSelector }}"
+  {{- end }}
 {{- end }}
-{{- if eq "internal" .Values.ingresscontroller.loadBalancerMode }}
+{{- if .domain }}
+  domain: "{{ .domain }}"
+{{- end }}
+{{- if .routeSelectorKey }}
+  routeSelector:
+    matchLabels:
+      "{{ .routeSelectorKey }}": "{{ .routeSelectorValue }}"
+{{- end }}
+  routeAdmission:
+    namespaceOwnership: InterNamespaceAllowed
+{{- if eq "internal" .loadBalancerMode }}
   endpointPublishingStrategy:
     loadBalancer:
       scope: Internal
     type: LoadBalancerService
-{{- else if eq "external" .Values.ingresscontroller.loadBalancerMode }}
+{{- else if eq "external" .loadBalancerMode }}
   endpointPublishingStrategy:
     loadBalancer:
       scope: External
     type: LoadBalancerService
 {{- end }}
-  replicas: {{ default 2 .Values.ingresscontroller.replicas }}
+  replicas: {{ default 2 .replicas }}
+{{- end -}}
 {{- end -}}
