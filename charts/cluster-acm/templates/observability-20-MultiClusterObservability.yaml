@@ -19,15 +19,15 @@ spec:
     enableMetrics: {{ .Values.observability.mco.enableMetrics }}
     interval: {{ .Values.observability.mco.interval }}
   storageConfig:
-    alertmanagerStorageSize: 2Gi
-    compactStorageSize: 100Gi
+    alertmanagerStorageSize: {{ .Values.observability.mco.alertmanagerStorageSize | default "10Gi" }}
+    compactStorageSize: {{ .Values.observability.mco.compactStorageSize | default "100Gi" }}
     metricObjectStorage:
       key: thanos.yaml
       name: thanos-object-storage
-    receiveStorageSize: 100Gi
-    ruleStorageSize: 1Gi
-    storageClass: {{ .Values.observability.mco.statefulSetStorageClass }}
-    storeStorageSize: {{ .Values.observability.mco.statefulSetSize }}
+    receiveStorageSize: {{ .Values.observability.mco.receiveStorageSize | default "100Gi" }}
+    ruleStorageSize: {{ .Values.observability.mco.ruleStorageSize | default "10Gi" }}
+    storageClass: {{ .Values.observability.mco.statefulSetStorageClass | default "gp3" }}
+    storeStorageSize: {{ .Values.observability.mco.statefulSetSize | default "100Gi" }}
   advanced:
     retentionConfig:
       blockDuration: 2h
