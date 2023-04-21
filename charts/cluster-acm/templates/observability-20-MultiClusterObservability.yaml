@@ -19,9 +19,15 @@ spec:
     enableMetrics: {{ .Values.observability.mco.enableMetrics }}
     interval: {{ .Values.observability.mco.interval }}
   storageConfig:
+    alertmanagerStorageSize: 2Gi
+    compactStorageSize: 100Gi
     metricObjectStorage:
-      name: thanos-object-storage
       key: thanos.yaml
+      name: thanos-object-storage
+    receiveStorageSize: 100Gi
+    ruleStorageSize: 1Gi
+    storageClass: {{ .Values.observability.mco.statefulSetStorageClass }}
+    storeStorageSize: {{ .Values.observability.mco.statefulSetSize }}
   advanced:
     retentionConfig:
       blockDuration: 2h
@@ -38,8 +44,6 @@ spec:
   # availabilityConfig: {{ .Values.observability.mco.availabilityConfig }}
   imagePullPolicy: {{ .Values.observability.mco.imagePullPolicy }}
   imagePullSecret: {{ .Values.observability.mco.imagePullSecret }}
-  statefulSetSize: {{ .Values.observability.mco.statefulSetSize }}
-  statefulSetStorageClass: {{ .Values.observability.mco.statefulSetStorageClass }}
 {{- if .Values.observability.infra }}
   nodeSelector:
     node-role.kubernetes.io/infra: '' 
