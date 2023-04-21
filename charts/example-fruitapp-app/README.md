@@ -149,3 +149,4 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 | 11.28.69 | 2023-03-07 | publish stable update for the full repository
 | 11.28.89 | 2023-04-01 | publish stable update for the full repository
 | 11.28.93 | 2023-04-20 | publish stable update for the full repository
+| 11.28.95 | 2023-04-21 | publish stable update for the full repository

@@ -235,3 +235,4 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 11.28.89 | 2023-04-01 | publish stable update for the full repository
 | 11.28.91 | 2023-04-19 | Improve group management for nodes
 | 11.28.93 | 2023-04-20 | publish stable update for the full repository
+| 11.28.95 | 2023-04-21 | publish stable update for the full repository
