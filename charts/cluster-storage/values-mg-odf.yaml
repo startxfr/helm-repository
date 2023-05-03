@@ -11,6 +11,7 @@ storageClasses:
 - id: gov-odf-default-delete
   name: gov-odf-default-delete
   provisioner: "openshift-storage.rbd.csi.ceph.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     csi.storage.k8s.io/fstype: ext4
     csi.storage.k8s.io/provisioner-secret-namespace: openshift-storage
@@ -29,6 +30,7 @@ storageClasses:
 - id: gov-odf-default-retain
   name: gov-odf-default-retain
   provisioner: "openshift-storage.rbd.csi.ceph.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     csi.storage.k8s.io/fstype: ext4
     csi.storage.k8s.io/provisioner-secret-namespace: openshift-storage
@@ -47,6 +49,7 @@ storageClasses:
 - id: gov-odf-fs-delete
   name: gov-odf-fs-delete
   provisioner: "openshift-storage.cephfs.csi.ceph.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     clusterID: openshift-storage
     csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
@@ -61,6 +64,7 @@ storageClasses:
 - id: gov-odf-fs-retain
   name: gov-odf-fs-retain
   provisioner: "openshift-storage.cephfs.csi.ceph.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     clusterID: openshift-storage
     csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
