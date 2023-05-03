@@ -11,6 +11,7 @@ storageClasses:
 - id: gov-default-retain
   name: gov-default-retain
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "true"
     type: gp3
@@ -20,6 +21,7 @@ storageClasses:
 - id: gov-default-delete
   name: gov-default-delete
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "true"
     type: gp3
@@ -29,6 +31,7 @@ storageClasses:
 - id: gov-fast-retain
   name: gov-fast-retain
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "true"
     type: io1
@@ -39,6 +42,7 @@ storageClasses:
 - id: gov-fast-delete
   name: gov-fast-delete
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "true"
     type: io1
@@ -49,6 +53,7 @@ storageClasses:
 - id: gov-slow-retain
   name: gov-slow-retain
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "true"
     type: sc1
@@ -58,6 +63,7 @@ storageClasses:
 - id: gov-slow-delete
   name: gov-slow-delete
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "true"
     type: sc1
