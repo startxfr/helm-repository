@@ -11,6 +11,7 @@ storageClasses:
 - id: startx-aws-generic-retain
   name: startx-aws-generic-retain
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "false"
     type: gp3
@@ -20,6 +21,7 @@ storageClasses:
 - id: startx-aws-generic-delete
   name: startx-aws-generic-delete
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "false"
     type: gp2
@@ -29,6 +31,7 @@ storageClasses:
 - id: startx-aws-fast-retain
   name: startx-aws-fast-retain
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "false"
     type: io1
@@ -39,6 +42,7 @@ storageClasses:
 - id: startx-aws-fast-delete
   name: startx-aws-fast-delete
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "false"
     type: io1
@@ -49,6 +53,7 @@ storageClasses:
 - id: startx-aws-slow-retain
   name: startx-aws-slow-retain
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "false"
     type: sc1
@@ -58,6 +63,7 @@ storageClasses:
 - id: startx-aws-slow-delete
   name: startx-aws-slow-delete
   provisioner: "ebs.csi.aws.com"
+  hasCSIVolumeSnapshot: true
   parameters: |
     encrypted: "false"
     type: sc1

@@ -226,3 +226,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 11.28.94 | 2023-04-21 | Change for support of storageClass and size
 | 11.28.95 | 2023-04-21 | publish stable update for the full repository
 | 11.28.99 | 2023-04-21 | publish stable update for the full repository
+| 11.28.103 | 2023-05-04 | publish stable update for the full repository
