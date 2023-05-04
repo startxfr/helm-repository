@@ -226,3 +226,4 @@ helm install cluster-rbac startx/cluster-rbac -f https://raw.githubusercontent.c
 | 11.28.93 | 2023-04-20 | publish stable update for the full repository
 | 11.28.95 | 2023-04-21 | publish stable update for the full repository
 | 11.28.99 | 2023-04-21 | publish stable update for the full repository
+| 11.28.103 | 2023-05-04 | publish stable update for the full repository
