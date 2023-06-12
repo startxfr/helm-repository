@@ -99,3 +99,4 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 11.28.99 | 2023-04-21 | publish stable update for the full repository
 | 11.28.103 | 2023-05-04 | publish stable update for the full repository
 | 11.28.127 | 2023-06-12 | publish stable update for the full repository
+| 11.28.128 | 2023-06-12 | publish stable update for the full repository
