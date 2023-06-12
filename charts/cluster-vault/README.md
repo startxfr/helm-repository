@@ -308,3 +308,4 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 11.28.95 | 2023-04-21 | publish stable update for the full repository
 | 11.28.99 | 2023-04-21 | publish stable update for the full repository
 | 11.28.103 | 2023-05-04 | publish stable update for the full repository
+| 11.28.121 | 2023-06-12 | Add flexible servicce binding for route
