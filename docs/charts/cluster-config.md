@@ -242,3 +242,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 11.28.105 | 2023-05-16 | Testing workflow
 | 11.28.127 | 2023-06-12 | publish stable update for the full repository
 | 11.28.128 | 2023-06-12 | publish stable update for the full repository
+| 11.28.129 | 2023-06-13 | publish stable update for the full repository

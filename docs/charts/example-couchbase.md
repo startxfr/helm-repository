@@ -234,3 +234,4 @@ helm install example-couchbase startx/example-couchbase -f https://raw.githubuse
 | 11.28.103 | 2023-05-04 | publish stable update for the full repository
 | 11.28.127 | 2023-06-12 | publish stable update for the full repository
 | 11.28.128 | 2023-06-12 | publish stable update for the full repository
+| 11.28.129 | 2023-06-13 | publish stable update for the full repository
