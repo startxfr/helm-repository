@@ -1,0 +1,139 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: cdf
+  cluster: poc
+  environment: infra
+  component: oadp
+  app: cdf-oadp
+oadp:
+  enabled: false
+  dataProtectionApplication:
+    enabled: true
+    name: startx-dp
+    spec: |
+      backupImages: true
+      backupLocations:
+        - velero:
+            config:
+              profile: startx
+              region: eu-west-3
+            credential:
+              key: cloud
+              name: cloud-credentials-startx
+            default: true
+            objectStorage:
+              bucket: oadp-startx
+              prefix: velero
+            provider: aws
+      configuration:
+        restic:
+          enable: true
+        velero:
+          defaultPlugins:
+            - openshift
+            - aws
+          podConfig:
+            resourceAllocations:
+              limits:
+                cpu: '2'
+                memory: 1024Mi
+              requests:
+                cpu: '1'
+                memory: 512Mi
+      snapshotLocations:
+        - velero:
+            config:
+              profile: startx
+              region: eu-west-3
+            provider: aws
+  schedule:
+    enabled: true
+    list:
+    - name: daily-global
+      spec: |
+        schedule: 0 2 * * *
+        useOwnerReferencesInBackup: true
+        template:
+          defaultVolumesToRestic: true
+          hooks: {}
+          includedNamespaces:
+            - startx
+            - default
+          storageLocation: startx-backup-daily
+          ttl: 0h58m0s
+  backups:
+    enabled: false
+    list:
+    - name: manual-startx
+      spec:
+        csiSnapshotTimeout: 10m
+        defaultVolumesToRestic: true
+        hooks: {}
+        includedNamespaces:
+          - startx
+        metadata: {}
+        storageLocation: cluster-pfd-1
+        ttl: 0h20m0s
+        volumeSnapshotLocations:
+          - cluster-pfd-1
+  restore:
+    enabled: false
+    list:
+    - name: manual-startx-to-restored
+      spec:
+        backupName: manual-startx
+        excludedResources:
+          - nodes
+          - events
+          - events.events.k8s.io
+          - backups.velero.io
+          - restores.velero.io
+          - resticrepositories.velero.io
+        includedResources: []
+        namespaceMapping:
+          startx: startx-restored
+        restorePVs: true
+cloudcreds:
+  enabled: false
+  name: "cloud-credentials-startx"
+  spec: |-
+    [startx]
+    aws_access_key_id=XXXXXXXXX
+    aws_secret_access_key=XXXXXXXXXXXXXXX
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-adp"
+    display_name: "Startx OADP"
+    requester: startx
+    description: Openshift Application Data Protection configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "redhat-oadp-operator"
+    namespace: "openshift-adp"
+    version: "v1.1.1"
+    operator: 
+      channel: "stable-1.1"
+      name: redhat-oadp-operator
+      installPlanApproval: Automatic
+      # csv: oadp-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-adp"
+    namespace: "openshift-adp"
+    providedAPIs: "Backup.v1.velero.io,BackupStorageLocation.v1.velero.io,CloudStorage.v1alpha1.oadp.openshift.io,DataProtectionApplication.v1alpha1.oadp.openshift.io,DeleteBackupRequest.v1.velero.io,DownloadRequest.v1.velero.io,PodVolumeBackup.v1.velero.io,PodVolumeRestore.v1.velero.io,ResticRepository.v1.velero.io,Restore.v1.velero.io,Schedule.v1.velero.io,ServerStatusRequest.v1.velero.io,VolumeSnapshotBackup.v1alpha1.datamover.oadp.openshift.io,VolumeSnapshotLocation.v1.velero.io,VolumeSnapshotRestore.v1alpha1.datamover.oadp.openshift.io"

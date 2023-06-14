@@ -1,0 +1,53 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: cdf
+  cluster: poc
+  environment: infra
+  component: auth
+  app: cdf-auth
+auth:
+  enabled: true
+  namespace: openshift-config
+  templates:
+    login: 
+      name: cdf-login
+      tplFile: webtpl/startx-login.html
+    errors: 
+      name: cdf-errors
+      tplFile: webtpl/startx-errors.html
+    providers: 
+      name: cdf-providers
+      tplFile: webtpl/startx-providers.html
+  authBackend:
+    - name: startx-local
+      type: htpasswd
+      htpasswdComment: |
+        htpasswd -c -b _console/ocp.passwd admin secretdemerde
+      htpasswdContent: |
+        admin:$apr1$NF6RwJ2m$LZptFKgY.K.h7WKPG1X4w.
+        ops:$apr1$LHdhpqJk$3qNVW4uqTR7sSnlZBP.9d/
+    - name: cdf-local
+      type: htpasswd
+      htpasswdComment: |
+        htpasswd -c -b _console/ocp.passwd admin secretdemerde
+      htpasswdContent: |
+        dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
+        devops:$apr1$V.QRjS8L$qsecQFnwOyaZ/coTqDZ9h/
+    # - name: collegedefrance-ad
+    #   type: ldap
+    #   ldapURL: "ldap://myldap:389/DC=example,DC=local?uid?sub"
+    #   ldapInsecure: true
+    #   ldapBindDN: "svc_openshift@localhost"
+    #   ldapBindPassword: "XXXXXXXX"
+    #   ldapBindAttributes:
+    #     id: |-
+    #       - sAMAccountName
+    #     email: |-
+    #       - mail
+    #     name: |-
+    #       - cn
+    #     preferredUsername: |-
+    #       - sAMAccountName
+
+
