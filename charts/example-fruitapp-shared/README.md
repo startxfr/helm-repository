@@ -161,3 +161,4 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 11.28.128 | 2023-06-12 | publish stable update for the full repository
 | 11.28.129 | 2023-06-13 | publish stable update for the full repository
 | 11.28.201 | 2023-07-06 | publish stable update for the full repository
+| 11.28.207 | 2023-07-06 | publish stable update for the full repository
