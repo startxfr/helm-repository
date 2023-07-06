@@ -1,0 +1,805 @@
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: 
+ scope: startx
+ cluster: localhost
+ environment: dev
+ component: startx
+ app: startx-imagestreams
+ version: "0.0.1"
+enabled: true
+imagestreams:
+- name: startx-os
+  enabled: true
+  namespace: "cdf" 
+  displayName: STARTX Base OS (S2I)
+  labels: |
+    technology: linux
+  tags: 
+    - name: fc27
+      enabled: true
+      desc: &ist_os_desc
+        iconClass: icon-fedora
+        provider: 'STARTX'
+        supports: linux
+        sampleRepo: https://github.com/startxfr/docker-images-example-bash.git
+        displayName: STARTX S2I Startx Fedora 27
+        description: Minimal Fedora 27 OS builder for bash operations
+        tags: builder,startx,fedora,fc27
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:27
+    - name: fc36
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora 36
+        description: Minimal Fedora 36 OS builder for bash operations
+        tags: builder,startx,fedora,fc36
+        version: fc36
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:36
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora rawhide
+        description: Minimal Fedora rawhide OS builder for bash operations
+        tags: builder,startx,fedora,rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/fedora:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx RedHat UBI 8
+        description: Minimal RedHat UBI 8 OS builder for bash operations
+        iconClass: icon-other-linux
+        supports: ubi
+        tags: builder,startx,ubi,ubi8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ubi:8
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx CentOS 8
+        description: Minimal CentOS 8 OS builder for bash operations
+        iconClass: icon-shadowman
+        supports: centos
+        tags: builder,startx,centos,centos8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/centos:8
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx CentOS 7
+        description: Minimal CentOS 7 OS builder for bash operations
+        iconClass: icon-shadowman
+        supports: centos
+        tags: builder,startx,centos,centos7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/centos:7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx CentOS 6
+        description: Minimal CentOS 6 OS builder for bash operations
+        iconClass: icon-shadowman
+        supports: centos
+        tags: builder,startx,centos,centos6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/centos:6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Alpine 3
+        description: Minimal Alpine 3 OS builder for bash operations
+        iconClass: icon-other-linux
+        supports: alpine
+        tags: builder,startx,alpine,alpine3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/alpine:3
+    - name: rocky8
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Rocky 8
+        description: Minimal Rocky 8 OS builder for bash operations
+        iconClass: icon-other-linux
+        supports: rocky
+        tags: builder,startx,rocky,rocky8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/rocky:8
+    - name: alma8
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Alma 8
+        description: Minimal Alma 8 OS builder for bash operations
+        iconClass: icon-other-linux
+        supports: rocky
+        tags: builder,startx,alma,alma8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/alma:8
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_os_desc
+        displayName: STARTX S2I Startx Fedora latest
+        description: Minimal Fedora latest OS builder for bash operations
+        tags: builder,startx,fedora,latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-apache
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX Apache (S2I)
+  labels: |
+    technology: httpd
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_apache_desc
+        <<: *ist_os_desc
+        iconClass: icon-apache
+        supports: httpd
+        sampleRepo: https://github.com/startxfr/docker-images-example-apache.git
+        tags:  builder,startx,fedora,apache,httpd
+        displayName: STARTX Apache (Fedora rawhide)
+        description: Http server builder for simple web application running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (RedHat UBI 8)
+        description: Http server builder for simple web application running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:ubi8
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (Alpine 3)
+        description:  Http server builder for simple web application running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/apache:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_apache_desc
+        displayName: STARTX Apache (latest)
+        description:  Http server builder for simple web application running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-couchbase
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX Couchbase
+  labels: |
+    technology: couchbase
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_couchbase_desc
+        <<: *ist_os_desc
+        iconClass: icon-openshift
+        tags:  builder,startx,fedora,couchbase
+        supports: db
+        sampleRepo: https://github.com/startxfr/docker-images-example-couchbase.git
+        displayName: STARTX Couchbase (Fedora rawhide)
+        description: Couchbase server builder for NoSQL database running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:latest
+    - name: centos8
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Centos 8)
+        description:  Couchbase server builder for NoSQL database running under Centos 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:centos8
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (Centos 6)
+        description:  Couchbase server builder for NoSQL database running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/couchbase:centos6
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_couchbase_desc
+        displayName: STARTX Couchbase (latest)
+        description:  Couchbase server builder for NoSQL database running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-mariadb
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX MariaDB
+  labels: |
+    technology: mariadb
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_mariadb_desc
+        <<: *ist_os_desc
+        iconClass: icon-mariadb
+        tags:  builder,startx,fedora,mariadb,sql
+        supports: db
+        sampleRepo: https://github.com/startxfr/docker-images-example-mariadb.git
+        displayName: STARTX MariaDB (Fedora rawhide)
+        description: MariaDB server builder for simple SQL database running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (RedHat UBI 8)
+        description: MariaDB server builder for simple SQL database running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:ubi8
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (Alpine 3)
+        description:  MariaDB server builder for simple SQL database running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mariadb:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_mariadb_desc
+        displayName: STARTX MariaDB (latest)
+        description:  MariaDB server builder for simple SQL database running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-memcache
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX Memcache
+  labels: |
+    technology: memcache
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_memcache_desc
+        <<: *ist_os_desc
+        iconClass: icon-memcache
+        tags:  builder,startx,fedora,memcache,cache
+        supports: memcache
+        sampleRepo: https://github.com/startxfr/docker-images-example-memcache.git
+        displayName: STARTX Memcache (Fedora rawhide)
+        description: Memcache server builder for distributed cache backend running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (RedHat UBI 8)
+        description: Memcache server builder for distributed cache backend running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:ubi8
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (Alpine 3)
+        description:  Memcache server builder for distributed cache backend running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/memcache:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_memcache_desc
+        displayName: STARTX Memcache (latest)
+        description:  Memcache server builder for distributed cache backend running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-mongodb
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX MongoDB
+  labels: |
+    technology: mongodb
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_mongodb_desc
+        <<: *ist_os_desc
+        iconClass: icon-mongodb
+        tags:  builder,startx,fedora,mongodb,nosql
+        supports: mongodb
+        sampleRepo: https://github.com/startxfr/docker-images-example-mongodb.git
+        displayName: STARTX MongoDB (Fedora rawhide)
+        description: MongoDB server builder for NoSQL database running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (RedHat UBI 8)
+        description: MongoDB server builder for NoSQL database running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:ubi8
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (Alpine 3)
+        description:  MongoDB server builder for NoSQL database running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/mongodb:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_mongodb_desc
+        displayName: STARTX MongoDB (latest)
+        description:  MongoDB server builder for NoSQL database running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-nodejs
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX NodeJS
+  labels: |
+    technology: nodejs
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_nodejs_desc
+        <<: *ist_os_desc
+        iconClass: icon-nodejs
+        tags:  builder,startx,fedora,nodejs,httpd
+        supports: httpd
+        sampleRepo: https://github.com/startxfr/docker-images-example-nodejs.git
+        displayName: STARTX NodeJS (Fedora rawhide)
+        description: Lightweight Http server builder for micro-web application running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (RedHat UBI 8)
+        description: Lightweight Http server builder for micro-web application running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:ubi8
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (Alpine 3)
+        description:  Lightweight Http server builder for micro-web application running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/nodejs:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_nodejs_desc
+        displayName: STARTX NodeJS (latest)
+        description:  Lightweight Http server builder for micro-web application running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-ooconv
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX LibreOffice converter
+  labels: |
+    technology: libreoffice
+  tags: 
+    - name: fc27
+      enabled: true
+      desc: &ist_ooconv_desc
+        <<: *ist_os_desc
+        iconClass: icon-aerogear
+        displayName: STARTX LibreOffice converter (Fedora 27)
+        description: LibreOffice converter for document convertion running under Fedora 27
+        tags:  builder,startx,fedora,ooconv,httpd
+        supports: libreoffice
+        version: fc27
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:fc27
+    - name: rawhide
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Fedora rawhide)
+        description: LibreOffice converter for document convertion running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:latest
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Centos 7)
+        description:  LibreOffice converter for document convertion running under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:centos7
+    - name: centos6
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Centos 6)
+        description:  LibreOffice converter for document convertion running under Centos 6
+        version: "6"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:centos6
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (Alpine 3)
+        description:  LibreOffice converter for document convertion running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/ooconv:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_ooconv_desc
+        displayName: STARTX LibreOffice converter (latest)
+        description:  LibreOffice converter for document convertion running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-php
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX PHP
+  labels: |
+    technology: php
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_php_desc
+        <<: *ist_os_desc
+        iconClass: icon-php
+        tags:  builder,startx,fedora,php,httpd
+        supports: httpd
+        sampleRepo: https://github.com/startxfr/docker-images-example-php.git
+        displayName: STARTX PHP (Fedora rawhide)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (RedHat UBI 8)
+        description: PHP with fpm + apache engine container builder for dynamic web application running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:ubi8
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (Alpine 3)
+        description:  PHP with fpm + apache engine container builder for dynamic web application running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/php:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_php_desc
+        displayName: STARTX PHP (latest)
+        description:  PHP with fpm + apache engine container builder for dynamic web application running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-postgresql
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX PostgreSQL
+  labels: |
+    technology: postgresql
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_postgresql_desc
+        <<: *ist_os_desc
+        iconClass: icon-postgresql
+        tags:  builder,startx,fedora,postgresql,httpd
+        supports: httpd
+        sampleRepo: https://github.com/startxfr/docker-images-example-postgresql.git
+        displayName: STARTX PostgreSQL (Fedora rawhide)
+        description: PostgreSQL server builder for advanced SQL database running under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:latest
+    - name: ubi8
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (RedHat UBI 8)
+        description: PostgreSQL server builder for advanced SQL database running under RedHat UBI 8
+        version: "8"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:ubi8
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (Alpine 3)
+        description:  PostgreSQL server builder for advanced SQL database running under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/postgresql:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_postgresql_desc
+        displayName: STARTX PostgreSQL (latest)
+        description:  PostgreSQL server builder for advanced SQL database running under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-chrome
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX Chrome Browser
+  labels: |
+    technology: chrome
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_chrome_desc
+        <<: *ist_os_desc
+        iconClass: icon-aerogear
+        tags:  startx,centos,centos7,chrome,vnc
+        supports: vnc,browser,chrome
+        sampleRepo: https://github.com/startxfr/docker-images-example-chrome.git
+        displayName: STARTX Chrome Browser (Fedora rawhide)
+        description: Container-based desktop Chrome browser for remote internet browsing  under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:latest
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (Centos 7)
+        description:  Container-based desktop Chrome browser for remote internet browsing  under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:centos7
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (Alpine 3)
+        description:  Container-based desktop Chrome browser for remote internet browsing  under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/chrome:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_chrome_desc
+        displayName: STARTX Chrome Browser (latest)
+        description:  Container-based desktop Chrome browser for remote internet browsing  under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide
+- name: startx-firefox
+  enabled: true
+  namespace: "cdf"
+  displayName: STARTX Firefox Browser
+  labels: |
+    technology: firefox
+  tags: 
+    - name: rawhide
+      enabled: true
+      desc: &ist_firefox_desc
+        <<: *ist_os_desc
+        iconClass: icon-aerogear
+        tags:  startx,centos,centos7,firefox,vnc
+        supports: vnc,browser,firefox
+        sampleRepo: https://github.com/startxfr/docker-images-example-firefox.git
+        displayName: STARTX Firefox Browser (Fedora rawhide)
+        description: Container-based desktop Firefox browser for remote internet browsing  under Fedora rawhide
+        version: rawhide
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:latest
+    - name: centos7
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (Centos 7)
+        description:  Container-based desktop Firefox browser for remote internet browsing  under Centos 7
+        version: "7"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:centos7
+    - name: alpine3
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (Alpine 3)
+        description:  Container-based desktop Firefox browser for remote internet browsing  under Alpine 3
+        version: "3"
+      source:
+        local: "true"
+        insecure: "false"
+        image: quay.io/startx/firefox:alpine3
+    - name: latest
+      enabled: true
+      desc:
+        <<: *ist_firefox_desc
+        displayName: STARTX Firefox Browser (latest)
+        description:  Container-based desktop Firefox browser for remote internet browsing  under Fedora latest
+        version: "latest"
+      source:
+        local: "true"
+        insecure: "false"
+        kind: is
+        image: rawhide

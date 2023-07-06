@@ -1,0 +1,64 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: cdf
+  cluster: poc
+  environment: infra
+  component: config
+  app: cdf-storage
+enabled: true
+storageClasses:
+- id: cdf-default-retain
+  name: cdf-default-retain
+  provisioner: "csi.vsphere.vmware.com"
+  hasCSIVolumeSnapshot: true
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Retain
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: cdf-default-delete
+  name: cdf-default-delete
+  provisioner: "csi.vsphere.vmware.com"
+  hasCSIVolumeSnapshot: true
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Delete
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: cdf-fast-retain
+  name: cdf-fast-retain
+  provisioner: "csi.vsphere.vmware.com"
+  hasCSIVolumeSnapshot: true
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Retain
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: cdf-fast-delete
+  name: cdf-fast-delete
+  provisioner: "csi.vsphere.vmware.com"
+  hasCSIVolumeSnapshot: true
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Delete
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: cdf-slow-retain
+  name: cdf-slow-retain
+  provisioner: "csi.vsphere.vmware.com"
+  hasCSIVolumeSnapshot: true
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Retain
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+- id: cdf-slow-delete
+  name: cdf-slow-delete
+  provisioner: "csi.vsphere.vmware.com"
+  hasCSIVolumeSnapshot: true
+  # parameters: |
+  #   StoragePolicyName: openshift-storage-policy-ocp-rec-b9p2g
+  reclaimPolicy: Delete
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
