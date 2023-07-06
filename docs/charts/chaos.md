@@ -308,3 +308,4 @@ chaos-monkey startx/chaos-monkey
 | 11.28.203 | 2023-07-06 | Improve chaos options
 | 11.28.205 | 2023-07-06 | Improve chaos options
 | 11.28.206 | 2023-07-06 | Improve chaos options
+| 11.28.207 | 2023-07-06 | publish stable update for the full repository
