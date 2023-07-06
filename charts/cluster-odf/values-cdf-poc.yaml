@@ -10,12 +10,12 @@ odf:
   enabled: false
   hooked: false
   name: cdf-odf
-  version: "4.12.0"
+  version: "4.12.4"
   storage:
   - name: odf-deviceset
     replicas: 3
     size: 512Gi
-    storageClass: cdf-default-retain
+    storageClass: ocs-external-storagecluster-cephfs
 project: 
   enabled: false
   context: 
@@ -55,7 +55,7 @@ operator:
     hooked: false
     name: "odf-operator"
     namespace: "openshift-storage"
-    version: "v4.12.0"
+    version: "v4.12.4"
     operator: 
       channel: stable-4.12
       name: odf-operator
