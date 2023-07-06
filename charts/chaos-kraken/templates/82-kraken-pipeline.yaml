@@ -117,9 +117,9 @@ spec:
       description: Name of the secret key holding the aws-credentials (mandatory).
       default: kraken-aws-creds
   steps:
-    - image: quay.io/chaos-kubox/krkn
+    - image: quay.io/redhat-chaos/krkn
       args:
-        - python3 run_kraken.py -c config/config.yaml
+        - python3.9 run_kraken.py -c config/config.yaml
       command:
         - /bin/sh
         - -c
