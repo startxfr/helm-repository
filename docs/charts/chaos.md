@@ -307,3 +307,4 @@ chaos-monkey startx/chaos-monkey
 | 11.28.203 | 2023-07-06 | Upgrade dependencies
 | 11.28.203 | 2023-07-06 | Improve chaos options
 | 11.28.205 | 2023-07-06 | Improve chaos options
+| 11.28.206 | 2023-07-06 | Improve chaos options
