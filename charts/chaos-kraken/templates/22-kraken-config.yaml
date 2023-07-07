@@ -48,43 +48,21 @@ data:
       cloud_type: aws                                    # cloud type on which Kubernetes/OpenShift runs
       timeout: 120                                       # Number of seconds to wait for each node to be stopped or running
   customapp_pod.yaml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 30
-        minSecondsBetweenRuns: 1
-    scenarios:
-      - name: "delete acme-air pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "acme-air"
-                  selector: ""
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "acme-air"
-                  selector: ""
-            retries:
-              retriesTimeout:
-                timeout: 180
-
-            actions:
-              - checkPodCount:
-                  count: 8
+    - id: kill-pods
+      config:
+        namespace_pattern: ^acme-air$
+        name_pattern: .*
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^acme-air$
+        name_pattern: .*
+        count: 8
   post_action_etcd_container.py: |
     #!/usr/bin/env python3
     import subprocess
     import logging
     import time
+
 
     def run(cmd):
         try:
@@ -156,7 +134,7 @@ data:
     # Get cluster operators and return yaml
     def get_cluster_operators():
         operators_status = run("kubectl get co -o yaml")
-        status_yaml = yaml.load(operators_status, Loader=yaml.FullLoader)
+        status_yaml = yaml.safe_load(operators_status, Loader=yaml.FullLoader)
         return status_yaml
 
 
@@ -440,57 +418,30 @@ data:
         maxSecondsBetweenRuns: 30
         minSecondsBetweenRuns: 1
     scenarios:
-      - name: "delete openshift-apiserver pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-apiserver"
-                  selector: "app=openshift-apiserver-a"
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-apiserver"
-                  selector: "app=openshift-apiserver-a"
-            retries:
-              retriesTimeout:
-                timeout: 180
-            actions:
-              - checkPodCount:
-                  count: 3
-      - name: "delete openshift-kube-apiserver pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-kube-apiserver"
-                  selector: "app=openshift-kube-apiserver"
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-kube-apiserver"
-                  selector: "app=openshift-kube-apiserver"
-            retries:
-              retriesTimeout:
-                timeout: 180
-            actions:
-              - checkPodCount:
-                  count: 3
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-apiserver$
+        label_selector: app=openshift-apiserver-a
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-apiserver$
+        label_selector: app=openshift-apiserver-a
+        count: 3
   startx_openshift_etcd_container.yml: |
+    config:
+      runStrategy:
+        runs: 1
+        maxSecondsBetweenRuns: 10
+        minSecondsBetweenRuns: 5
+    scenarios:
+    - name: "kill etcd container"
+      namespace: "openshift-etcd"
+      label_selector: "k8s-app=etcd"
+      container_name: "etcd"
+      action: "kill 1"
+      count: 1
+      expected_recovery_time: 60
+  startx_openshift_etcd_pod.yml: |
     config:
       runStrategy:
         runs: 1
@@ -506,63 +457,6 @@ data:
         namespace_pattern: ^openshift-etcd$
         label_selector: k8s-app=etcd
         count: 3
-  startx_openshift_etcd_pod.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 10
-        minSecondsBetweenRuns: 5
-    scenarios:
-      - name: "delete etcd pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-etcd"
-                  selector: "k8s-app=etcd"
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-etcd"
-                  selector: "k8s-app=etcd"
-            retries:
-              retriesTimeout:
-                timeout: 180
-            actions:
-              - checkPodCount:
-                  count: 3
-      - name: "delete etcd-quorum-guard pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-etcd"
-                  selector: "k8s-app=etcd-quorum-guard"
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-etcd"
-                  selector: "k8s-app=etcd-quorum-guard"
-            retries:
-              retriesTimeout:
-                timeout: 180
-            actions:
-              - checkPodCount:
-                  count: 3
   startx_openshift_logging.yml: |
     config:
       runStrategy:
@@ -570,56 +464,22 @@ data:
         maxSecondsBetweenRuns: 10
         minSecondsBetweenRuns: 5
     scenarios:
-      - name: kill 2 collector pod in openshift-logging namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-logging"
-              - labels:
-                  namespace: "openshift-logging"
-                  selector: "component=collector"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 2
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 1 elasticsearch pod in openshift-logging namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-logging"
-              - labels:
-                  namespace: "openshift-logging"
-                  selector: "component=elasticsearch"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 running pods in openshift-logging namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-logging"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 4
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: component=collector
+        kill: 2
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: component=elasticsearch
+        kill: 1
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        kill: 5
   startx_openshift_machines.yml: |
     config:
       runStrategy:
@@ -697,92 +557,59 @@ data:
         maxSecondsBetweenRuns: 10
         minSecondsBetweenRuns: 5
     scenarios:
-      - name: kill 1 Prometeus pod in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=prometheus"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 2 node-exporter pod in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=node-exporter"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 2
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 1 alertmanager pod in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=alertmanager"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 1 thanos-querier pod in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=thanos-query"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 pods in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 5
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: app=prometheus
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: app=prometheus
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=node-exporter"
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=node-exporter"
+        count: 8
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=alertmanager"
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=alertmanager"
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=thanos-query"
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=thanos-query"
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        timeout: 180
   startx_openshift_acm.yml: |
     config:
       runStrategy:
@@ -790,88 +617,55 @@ data:
         maxSecondsBetweenRuns: 10
         minSecondsBetweenRuns: 5
     scenarios:
-      - name: kill 1 cluster-manager pod in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "open-cluster-management"
-                  selector: "app=cluster-manager"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 2 application-chart pod in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "open-cluster-management"
-                  selector: "app=application-chart"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 2
-            actions:
-              - kill:
-                  probability: .8
-                  force: true
-      - name: kill 1 klusterlet-addon-controller pod in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "open-cluster-management"
-                  selector: "app=klusterlet-addon-controller-v2"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 1 ocm-controller pod in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "open-cluster-management"
-                  selector: "app=ocm-controller"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 pods in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "open-cluster-management"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 5
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=cluster-manager
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=cluster-manager
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=application-chart
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=application-chart
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=klusterlet-addon-controller-v2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=klusterlet-addon-controller-v2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=ocm-controller
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=ocm-controller
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        timeout: 180
   startx_openshift_acs.yml: |
     config:
       runStrategy:
@@ -879,71 +673,46 @@ data:
         maxSecondsBetweenRuns: 10
         minSecondsBetweenRuns: 5
     scenarios:
-      - name: kill up to 5 collector pod in stackrox namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "stackrox"
-                  selector: "app=collector"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 4
-            actions:
-              - kill:
-                  probability: .75
-                  force: true
-      - name: kill up to 2 admission-control pod in stackrox namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "stackrox"
-                  selector: "app=admission-control"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 2
-            actions:
-              - kill:
-                  probability: .66
-                  force: true
-      - name: kill 1 scanner pod in stackrox namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "stackrox"
-                  selector: "app=scanner"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 pods in stackrox namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "stackrox"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 5
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=collector
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=collector
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=admission-control
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=admission-control
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=scanner
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=scanner
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        timeout: 180
   startx_openshift_podmonkey.yml: |
     config:
       runStrategy:
@@ -951,20 +720,14 @@ data:
         maxSecondsBetweenRuns: 40
         minSecondsBetweenRuns: 20
     scenarios:
-      - name: kill up to 5 pods in any openshift namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-.*"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 5
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-.*$
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-.*$
+        timeout: 180
   startx_time_node.yml: |
     time_scenarios:
       - action: skew_date
@@ -1087,7 +850,7 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
+        - plugin_scenarios:
           - - scenarios/startx_openshift_logging.yml
     cerberus:
         cerberus_enabled: True
@@ -1096,7 +859,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1134,7 +897,7 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
+        - plugin_scenarios:
           - - scenarios/startx_openshift_monitoring.yml
     cerberus:
         cerberus_enabled: True
@@ -1143,7 +906,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1181,7 +944,7 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
+        - plugin_scenarios:
           - - scenarios/startx_openshift_machines.yml
     cerberus:
         cerberus_enabled: True
@@ -1190,7 +953,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1228,7 +991,7 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
+        - plugin_scenarios:
           - - scenarios/startx_openshift-apiserver.yml
     cerberus:
         cerberus_enabled: True
@@ -1237,7 +1000,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1276,7 +1039,7 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
+        - plugin_scenarios:
           - - scenarios/startx_openshift_etcd_pod.yml
         - container_scenarios: 
           - - scenarios/startx_openshift_etcd_container.yml
@@ -1287,7 +1050,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1325,7 +1088,7 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
+        - plugin_scenarios:
           - - scenarios/startx_openshift_podmonkey.yml
     cerberus:
         cerberus_enabled: True
@@ -1334,7 +1097,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-1.7.2-Linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1382,7 +1145,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-1.7.2-Linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1431,7 +1194,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-1.7.2-Linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1480,7 +1243,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-1.7.2-Linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1527,7 +1290,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-1.7.2-Linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1575,7 +1338,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-1.7.2-Linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1623,7 +1386,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-1.7.2-Linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1661,7 +1424,7 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-      - pod_scenarios:
+      - plugin_scenarios:
         - - scenarios/startx_openshift_logging.yml
         - - scenarios/startx_openshift_monitoring.yml
         - - scenarios/startx_openshift_machines.yml
@@ -1697,7 +1460,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
