@@ -20,6 +20,22 @@ stringData:
   AWS_ACCESS_KEY_ID: {{ .credentials.key_id | default "AWS_ACCESS_KEY_ID" | quote }}
   AWS_DEFAULT_REGION: {{ .credentials.region | default "AWS_DEFAULT_REGION" | quote }}
   AWS_SECRET_ACCESS_KEY: {{ .credentials.secret | default "AWS_SECRET_ACCESS_KEY" | quote }}
+---
+kind: Secret
+apiVersion: v1
+type: Opaque
+metadata:
+  name: kraken-vcloud-creds
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-vcloud-creds"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+stringData:
+  TENANT_URL: ''
+  VAPP_NAME: ''
+  REFRESH_TOKEN: ''
 {{ end }}
 {{- end -}}{{- end -}}
 ---
@@ -41,50 +57,96 @@ data:
       namespace: <namespace-with-application>            # Namespace to target - all application routes will go inaccessible if pod selector is empty
       pod_selector: {app: foo}                            # Pods to target
       block: [Ingress, Egress]                           # It can be Ingress or Egress or Ingress, Egress
-  cluster_shut_down_scenario.yml: |
-    cluster_shut_down_scenario:                          # Scenario to stop all the nodes for specified duration and restart the nodes
-      runs: 1                                            # Number of times to execute the cluster_shut_down scenario
-      shut_down_duration: 120                            # duration in seconds to shut down the cluster
-      cloud_type: aws                                    # cloud type on which Kubernetes/OpenShift runs
-      timeout: 120                                       # Number of seconds to wait for each node to be stopped or running
-  customapp_pod.yaml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 30
-        minSecondsBetweenRuns: 1
-    scenarios:
-      - name: "delete acme-air pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "acme-air"
-                  selector: ""
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "acme-air"
-                  selector: ""
-            retries:
-              retriesTimeout:
-                timeout: 180
+  cluster_shut_down_scenario.yaml: |
+    - id: run_python
+      config:
+        filename: scenarios/cluster_shut_down_scenario.py
+  cluster_shut_down_scenario.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import http.client
+    import json
+    import xml.etree.ElementTree as ET
+    import os
 
-            actions:
-              - checkPodCount:
-                  count: 8
+    tenant_url = os.environ.get('TENANT_URL')
+    vapp_name = os.environ.get('VAPP_NAME')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+
+    def auth_vcloud(refreshToken):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = 'grant_type=refresh_token&refresh_token='+refreshToken
+        headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        conn.request("POST", "/oauth/tenant/C0000001-004/token", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        jsondata = json.loads(data.decode("utf-8"))
+        return jsondata["access_token"]
+
+    def vapp_name_to_vappId(access_token, vapp_name):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("GET", "/api/vApps/query?pageSize=128", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        root = ET.fromstring(data)
+        # for child in root:
+        #   print(child.tag, child.attrib)
+        for vapprecord in root.findall('{http://www.vmware.com/vcloud/v1.5}VAppRecord'):
+            href = vapprecord.get('href')
+            name = vapprecord.get('name')
+            if name == vapp_name:
+                vapp_id = href.removeprefix('https://console.monacocloud.app/api/vApp/')
+                return vapp_id
+
+    def cluster_reboot(access_token, vapp_id): # cluster_name : data or mgmt
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("POST", "/api/vApp/"+vapp_id+"/power/action/reboot", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+
+    def run(cmd):
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.error("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+    cluster_reboot(auth_vcloud(refresh_token), vapp_name_to_vappId(auth_vcloud(refresh_token), vapp_name))
+  customapp_pod.yaml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^acme-air$
+        name_pattern: .*
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^acme-air$
+        name_pattern: .*
+        count: 8
   post_action_etcd_container.py: |
     #!/usr/bin/env python3
     import subprocess
     import logging
     import time
+
 
     def run(cmd):
         try:
@@ -156,7 +218,7 @@ data:
     # Get cluster operators and return yaml
     def get_cluster_operators():
         operators_status = run("kubectl get co -o yaml")
-        status_yaml = yaml.load(operators_status, Loader=yaml.FullLoader)
+        status_yaml = yaml.safe_load(operators_status, Loader=yaml.FullLoader)
         return status_yaml
 
 
@@ -246,18 +308,18 @@ data:
                 - name: NODES_AFFECTED_PERC
                   value: '75'
                 - name: NODE_LABEL
-                  value: 'node-role.kubernetes.io/app'
+                  value: 'node-role.kubernetes.io/worker=""'
   startx_node_app_network_chaos.yaml: |
     network_chaos:
       duration: 30
       node_name: 
-      label_selector: 'node-role.kubernetes.io/app'
+      label_selector: 'node-role.kubernetes.io/worker'
       instance_count: 1
       interfaces:
-      - "tun0"
-      - "br0"
+      - "br-ex"
+      - "br-int"
       - "lo"
-      - "ens5"
+      - "ens192"
       execution: serial
       egress:
         latency: 50ms  
@@ -270,10 +332,10 @@ data:
       label_selector: 'node-role.kubernetes.io/master'
       instance_count: 1
       interfaces:
-      - "tun0"
-      - "br0"
+      - "br-ex"
+      - "br-int"
       - "lo"
-      - "ens5"
+      - "ens192"
       execution: serial
       egress:
         latency: 50ms  
@@ -286,108 +348,244 @@ data:
       label_selector: 'node-role.kubernetes.io/infra'
       instance_count: 1
       interfaces:
-      - "tun0"
-      - "br0"
+      - "br-ex"
+      - "br-int"
       - "lo"
-      - "ens5"
+      - "ens192"
       execution: serial
       egress:
         latency: 50ms  
         loss: 0.05
         bandwidth: 100mbit
-  startx_node_master.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 60
-        minSecondsBetweenRuns: 30
-    node_scenarios:
-      - actions:
-          - stop_kubelet_scenario
-          - start_kubelet_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/master
-        instance_count: 1
-        runs: 1
-        timeout: 300 
-        cloud_type: generic 
-      - actions:
-          - node_crash_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/master
-        instance_count: 1
-        runs: 1
-        timeout: 300 
-        cloud_type: generic 
-      - actions: 
-          - node_start_scenario
-          - node_stop_start_scenario
-          - node_termination_scenario
-          - node_reboot_scenario
-          - stop_kubelet_scenario
-          - stop_start_kubelet_scenario
-          - node_crash_scenario
-          - stop_start_helper_node_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/master
-        instance_count: 1
-        runs: 1
-        timeout: 300 
-        cloud_type: aws 
-      - actions:
-        - node_reboot_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/master
-        instance_count: 1
-        timeout: 300
-        cloud_type: aws
-  startx_node_infra.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 60
-        minSecondsBetweenRuns: 30
-    node_scenarios:
-      - actions:
-          - stop_kubelet_scenario
-          - start_kubelet_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/infra
-        instance_count: 1
-        runs: 1
-        timeout: 300 
-        cloud_type: generic 
-      - actions:
-          - node_crash_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/infra
-        instance_count: 1
-        runs: 1
-        timeout: 300 
-        cloud_type: generic 
-      - actions: 
-          - node_start_scenario
-          - node_stop_start_scenario
-          - node_termination_scenario
-          - node_reboot_scenario
-          - stop_kubelet_scenario
-          - stop_start_kubelet_scenario
-          - node_crash_scenario
-          - stop_start_helper_node_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/infra
-        instance_count: 1
-        runs: 1
-        timeout: 300 
-        cloud_type: aws 
-      - actions:
-        - node_reboot_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/infra
-        instance_count: 1
-        timeout: 300
-        cloud_type: aws
-  startx_node_app.yml: |
+  startx_node_master.yaml: |
+    - id: run_python
+      config:
+        filename: scenarios/startx_node_master.py
+  startx_node_master.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import http.client
+    import json
+    import xml.etree.ElementTree as ET
+    import os
+    import random
+
+    tenant_url = os.environ.get('TENANT_URL')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+
+    def auth_vcloud(refreshToken):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = 'grant_type=refresh_token&refresh_token='+refreshToken
+        headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        conn.request("POST", "/oauth/tenant/C0000001-004/token", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        jsondata = json.loads(data.decode("utf-8"))
+        return jsondata["access_token"]
+
+    def node_name_to_vmId(access_token, node_name):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("GET", "/api/vms/query?pageSize=128", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        root = ET.fromstring(data)
+        for vmrecord in root.findall('{http://www.vmware.com/vcloud/v1.5}VMRecord'):
+            href = vmrecord.get('href')
+            name = vmrecord.get('name')
+            if name == node_name:
+                vm_id = href.removeprefix('https://'+tenant_url+'/api/vApp/')
+                return vm_id
+
+    def node_reboot(access_token, vm_id):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("POST", "/api/vApp/"+vm_id+"/power/action/reboot", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+
+    def run(cmd):
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.error("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+    master_nodes = run("oc get nodes -l node-role.kubernetes.io/master='' -o custom-columns=NODE:.metadata.name --no-headers ").rstrip()
+    masters = master_nodes.split('\n')
+    random_master_index = random.randint(0,2)
+    stop_kublet = run("oc debug node/" + masters[random_master_index] + " -- chroot /host systemctl stop kubelet").rstrip()
+    node_reboot(auth_vcloud(refresh_token), node_name_to_vmId(auth_vcloud(refresh_token), masters[random_master_index]))
+  startx_node_infra.yaml: |
+    - id: run_python
+      config:
+        filename: scenarios/startx_node_infra.py
+  startx_node_infra.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import http.client
+    import json
+    import xml.etree.ElementTree as ET
+    import os
+    import random
+
+    tenant_url = os.environ.get('TENANT_URL')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+
+    def auth_vcloud(refreshToken):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = 'grant_type=refresh_token&refresh_token='+refreshToken
+        headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        conn.request("POST", "/oauth/tenant/C0000001-004/token", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        jsondata = json.loads(data.decode("utf-8"))
+        return jsondata["access_token"]
+
+    def node_name_to_vmId(access_token, node_name):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("GET", "/api/vms/query?pageSize=128", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        root = ET.fromstring(data)
+        for vmrecord in root.findall('{http://www.vmware.com/vcloud/v1.5}VMRecord'):
+            href = vmrecord.get('href')
+            name = vmrecord.get('name')
+            if name == node_name:
+                vm_id = href.removeprefix('https://'+tenant_url+'/api/vApp/')
+                return vm_id
+
+    def node_reboot(access_token, vm_id):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("POST", "/api/vApp/"+vm_id+"/power/action/reboot", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+    
+    def run(cmd):
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.error("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+    worker_nodes = run("oc get nodes -l node-role.kubernetes.io/infra='' -o custom-columns=NODE:.metadata.name --no-headers ").rstrip()
+    workers = worker_nodes.split('\n')
+    random_worker_index = random.randint(0,2)
+    stop_kublet = run("oc debug node/" + workers[random_worker_index] + " -- chroot /host systemctl stop kubelet").rstrip()
+    node_reboot(auth_vcloud(refresh_token), node_name_to_vmId(auth_vcloud(refresh_token), workers[random_worker_index]))
+  startx_node_worker.yaml: |
+      - id: run_python
+        config:
+          filename: scenarios/startx_node_worker.py
+  startx_node_worker.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import http.client
+    import json
+    import xml.etree.ElementTree as ET
+    import os
+    import random
+
+    tenant_url = os.environ.get('TENANT_URL')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+
+    def auth_vcloud(refreshToken):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = 'grant_type=refresh_token&refresh_token='+refreshToken
+        headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        conn.request("POST", "/oauth/tenant/C0000001-004/token", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        jsondata = json.loads(data.decode("utf-8"))
+        return jsondata["access_token"]
+
+    def node_name_to_vmId(access_token, node_name):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("GET", "/api/vms/query?pageSize=128", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        root = ET.fromstring(data)
+        for vmrecord in root.findall('{http://www.vmware.com/vcloud/v1.5}VMRecord'):
+            href = vmrecord.get('href')
+            name = vmrecord.get('name')
+            if name == node_name:
+                vm_id = href.removeprefix('https://'+tenant_url+'/api/vApp/')
+                return vm_id
+
+    def node_reboot(access_token, vm_id):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("POST", "/api/vApp/"+vm_id+"/power/action/reboot", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+
+    def run(cmd):
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.error("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+    worker_nodes = run("oc get nodes -l node-role.kubernetes.io/worker='' -o custom-columns=NODE:.metadata.name --no-headers").rstrip()
+    workers = worker_nodes.split('\n')
+    random_worker_index = random.randint(0,2)
+    stop_kublet = run("oc debug node/" + workers[random_worker_index] + " -- chroot /host systemctl stop kubelet").rstrip()
+    node_reboot(auth_vcloud(refresh_token), node_name_to_vmId(auth_vcloud(refresh_token), workers[random_worker_index]))
+  startx_node_app.yaml: |
     config:
       runStrategy:
         runs: 1
@@ -398,105 +596,61 @@ data:
           - stop_kubelet_scenario
           - start_kubelet_scenario
         node_name:
-        label_selector: node-role.kubernetes.io/app
+        label_selector: node-role.kubernetes.io/worker
         instance_count: 1
         runs: 1
         timeout: 300 
-        cloud_type: generic 
-      - actions:
-          - node_crash_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/app
-        instance_count: 1
-        runs: 1
-        timeout: 300 
-        cloud_type: generic 
-      - actions: 
-          - node_start_scenario
-          - node_stop_start_scenario
-          - node_termination_scenario
-          - node_reboot_scenario
-          - stop_kubelet_scenario
-          - stop_start_kubelet_scenario
-          - node_crash_scenario
-          - stop_start_helper_node_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/app
-        instance_count: 1
-        runs: 1
-        timeout: 300 
-        cloud_type: aws 
-      - actions:
-        - node_reboot_scenario
-        node_name:
-        label_selector: node-role.kubernetes.io/app
-        instance_count: 1
-        timeout: 300
-        cloud_type: aws
+        cloud_type: bm 
+      # - actions:
+      #     - node_crash_scenario
+      #   node_name:
+      #   label_selector: node-role.kubernetes.io/worker
+      #   instance_count: 1
+      #   runs: 1
+      #   timeout: 300 
+      #   cloud_type: generic 
+      # - actions: 
+      #     - node_start_scenario
+      #     - node_stop_start_scenario
+      #     - node_termination_scenario
+      #     - node_reboot_scenario
+      #     - stop_kubelet_scenario
+      #     - stop_start_kubelet_scenario
+      #     - node_crash_scenario
+      #     - stop_start_helper_node_scenario
+      #   node_name:
+      #   label_selector: node-role.kubernetes.io/worker
+      #   instance_count: 1
+      #   runs: 1
+      #   timeout: 300 
+      #   cloud_type: aws 
+      # - actions:
+      #   - node_reboot_scenario
+      #   node_name:
+      #   label_selector: node-role.kubernetes.io/worker
+      #   instance_count: 1
+      #   timeout: 300
+      #   cloud_type: aws
   startx_openshift-apiserver.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 30
-        minSecondsBetweenRuns: 1
-    scenarios:
-      - name: "delete openshift-apiserver pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-apiserver"
-                  selector: "app=openshift-apiserver-a"
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-apiserver"
-                  selector: "app=openshift-apiserver-a"
-            retries:
-              retriesTimeout:
-                timeout: 180
-            actions:
-              - checkPodCount:
-                  count: 3
-      - name: "delete openshift-kube-apiserver pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-kube-apiserver"
-                  selector: "app=openshift-kube-apiserver"
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-kube-apiserver"
-                  selector: "app=openshift-kube-apiserver"
-            retries:
-              retriesTimeout:
-                timeout: 180
-            actions:
-              - checkPodCount:
-                  count: 3
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-apiserver$
+        label_selector: app=openshift-apiserver-a
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-apiserver$
+        label_selector: app=openshift-apiserver-a
+        count: 3
   startx_openshift_etcd_container.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 10
-        minSecondsBetweenRuns: 5
     scenarios:
+    - name: "kill etcd container"
+      namespace: "openshift-etcd"
+      label_selector: "k8s-app=etcd"
+      container_name: "etcd"
+      action: "kill 1"
+      count: 1
+      expected_recovery_time: 60
+  startx_openshift_etcd_pod.yml: |
     - id: kill-pods
       config:
         namespace_pattern: ^openshift-etcd$
@@ -506,120 +660,24 @@ data:
         namespace_pattern: ^openshift-etcd$
         label_selector: k8s-app=etcd
         count: 3
-  startx_openshift_etcd_pod.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 10
-        minSecondsBetweenRuns: 5
-    scenarios:
-      - name: "delete etcd pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-etcd"
-                  selector: "k8s-app=etcd"
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-etcd"
-                  selector: "k8s-app=etcd"
-            retries:
-              retriesTimeout:
-                timeout: 180
-            actions:
-              - checkPodCount:
-                  count: 3
-      - name: "delete etcd-quorum-guard pods"
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-etcd"
-                  selector: "k8s-app=etcd-quorum-guard"
-            filters:
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "openshift-etcd"
-                  selector: "k8s-app=etcd-quorum-guard"
-            retries:
-              retriesTimeout:
-                timeout: 180
-            actions:
-              - checkPodCount:
-                  count: 3
   startx_openshift_logging.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 10
-        minSecondsBetweenRuns: 5
-    scenarios:
-      - name: kill 2 collector pod in openshift-logging namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-logging"
-              - labels:
-                  namespace: "openshift-logging"
-                  selector: "component=collector"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 2
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 1 elasticsearch pod in openshift-logging namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-logging"
-              - labels:
-                  namespace: "openshift-logging"
-                  selector: "component=elasticsearch"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 running pods in openshift-logging namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-logging"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 4
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: component=collector
+        kill: 2
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: component=elasticsearch
+        kill: 1
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        name_pattern: .*
+        kill: 5
   startx_openshift_machines.yml: |
     config:
       runStrategy:
@@ -691,280 +749,155 @@ data:
               - kill:
                   probability: .7
   startx_openshift_monitoring.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 10
-        minSecondsBetweenRuns: 5
-    scenarios:
-      - name: kill 1 Prometeus pod in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=prometheus"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 2 node-exporter pod in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=node-exporter"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 2
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 1 alertmanager pod in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=alertmanager"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 1 thanos-querier pod in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-              - labels:
-                  namespace: "openshift-monitoring"
-                  selector: "app.kubernetes.io/name=thanos-query"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 pods in openshift-monitoring namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-monitoring"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 5
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: app=prometheus
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: app=prometheus
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=node-exporter"
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=node-exporter"
+        count: 8
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=alertmanager"
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=alertmanager"
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=thanos-query"
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=thanos-query"
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        name_pattern: .*
+        kill: 5
   startx_openshift_acm.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 10
-        minSecondsBetweenRuns: 5
-    scenarios:
-      - name: kill 1 cluster-manager pod in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "open-cluster-management"
-                  selector: "app=cluster-manager"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 2 application-chart pod in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "open-cluster-management"
-                  selector: "app=application-chart"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 2
-            actions:
-              - kill:
-                  probability: .8
-                  force: true
-      - name: kill 1 klusterlet-addon-controller pod in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "open-cluster-management"
-                  selector: "app=klusterlet-addon-controller-v2"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill 1 ocm-controller pod in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "open-cluster-management"
-                  selector: "app=ocm-controller"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 pods in open-cluster-management namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "open-cluster-management"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 5
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=cluster-manager
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=cluster-manager
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=application-chart
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=application-chart
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=klusterlet-addon-controller-v2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=klusterlet-addon-controller-v2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=ocm-controller
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=ocm-controller
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        name_pattern: .*
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        timeout: 180
   startx_openshift_acs.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 10
-        minSecondsBetweenRuns: 5
-    scenarios:
-      - name: kill up to 5 collector pod in stackrox namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "stackrox"
-                  selector: "app=collector"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 4
-            actions:
-              - kill:
-                  probability: .75
-                  force: true
-      - name: kill up to 2 admission-control pod in stackrox namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "stackrox"
-                  selector: "app=admission-control"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 2
-            actions:
-              - kill:
-                  probability: .66
-                  force: true
-      - name: kill 1 scanner pod in stackrox namespace
-        steps:
-        - podAction:
-            matches:
-              - labels:
-                  namespace: "stackrox"
-                  selector: "app=scanner"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 5 pods in stackrox namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "stackrox"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 5
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=collector
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=collector
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=admission-control
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=admission-control
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=scanner
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=scanner
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        name_pattern: .*
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        timeout: 180
   startx_openshift_podmonkey.yml: |
-    config:
-      runStrategy:
-        runs: 3
-        maxSecondsBetweenRuns: 40
-        minSecondsBetweenRuns: 20
-    scenarios:
-      - name: kill up to 5 pods in any openshift namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-.*"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 5
-            actions:
-              - kill:
-                  probability: .75
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-.*$
+        name_pattern: .*
+        kill: 5
   startx_time_node.yml: |
     time_scenarios:
       - action: skew_date
@@ -975,7 +908,7 @@ data:
         label_selector: node-role.kubernetes.io/infra
       - action: skew_date
         object_type: node
-        label_selector: node-role.kubernetes.io/app
+        label_selector: node-role.kubernetes.io/worker
       - action: skew_time
         object_type: node
         label_selector: node-role.kubernetes.io/master
@@ -984,7 +917,7 @@ data:
         label_selector: node-role.kubernetes.io/infra
       - action: skew_time
         object_type: node
-        label_selector: node-role.kubernetes.io/app
+        label_selector: node-role.kubernetes.io/worker
   startx_time_pod.yml: |
     time_scenarios:
       - action: skew_date
@@ -1087,8 +1020,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
-          - - scenarios/startx_openshift_logging.yml
+        - plugin_scenarios:
+          - scenarios/startx_openshift_logging.yml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1096,7 +1029,101 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 180
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-acm
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-acm"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: False
+      signal_address: 0.0.0.0
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - plugin_scenarios:
+          - scenarios/startx_openshift_acm.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 180
+        iterations: 1
+        daemon_mode: False
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-config-chaos-acs
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-acm"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /root/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: False
+      signal_address: 0.0.0.0
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - plugin_scenarios:
+          - scenarios/startx_openshift_acs.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1134,8 +1161,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
-          - - scenarios/startx_openshift_monitoring.yml
+        - plugin_scenarios:
+          - scenarios/startx_openshift_monitoring.yml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1143,7 +1170,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1181,8 +1208,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
-          - - scenarios/startx_openshift_machines.yml
+        - plugin_scenarios:
+          - scenarios/startx_openshift_machines.yml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1190,7 +1217,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1228,8 +1255,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
-          - - scenarios/startx_openshift-apiserver.yml
+        - plugin_scenarios:
+          - scenarios/startx_openshift-apiserver.yml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1237,7 +1264,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1276,8 +1303,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
-          - - scenarios/startx_openshift_etcd_pod.yml
+        - plugin_scenarios:
+          - scenarios/startx_openshift_etcd_pod.yml
         - container_scenarios: 
           - - scenarios/startx_openshift_etcd_container.yml
     cerberus:
@@ -1287,7 +1314,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1325,8 +1352,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - pod_scenarios:
-          - - scenarios/startx_openshift_podmonkey.yml
+        - plugin_scenarios:
+          - scenarios/startx_openshift_podmonkey.yml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1334,7 +1361,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1382,7 +1409,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1420,10 +1447,10 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - node_scenarios: 
-          - scenarios/startx_node_master.yml
-          - scenarios/startx_node_infra.yml
-          - scenarios/startx_node_app.yml
+        - plugin_scenarios:
+          - scenarios/startx_node_master.yaml
+          - scenarios/startx_node_infra.yaml
+          - scenarios/startx_node_worker.yaml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1431,7 +1458,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1441,7 +1468,7 @@ data:
         enable_alerts: False
         alert_profile: config/alerts
     tunings:
-        wait_duration: 600
+        wait_duration: 300
         iterations: 1
         daemon_mode: False
 ---
@@ -1470,9 +1497,9 @@ data:
       litmus_uninstall_before_run: False
       chaos_scenarios:
         - network_chaos:
-          - scenarios/startx_node_app_network_chaos.yaml
+          # - scenarios/startx_node_app_network_chaos.yaml
           - scenarios/startx_node_infra_network_chaos.yaml
-          - scenarios/startx_node_master_network_chaos.yaml
+          # - scenarios/startx_node_master_network_chaos.yaml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1480,7 +1507,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1527,7 +1554,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1575,7 +1602,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1613,9 +1640,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - cluster_shut_down_scenarios:
-          - - scenarios/cluster_shut_down_scenario.yml
-          # - scenarios/post_action_shut_down.py
+        - plugin_scenarios:
+          - scenarios/cluster_shut_down_scenario.yaml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1623,7 +1649,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
@@ -1661,35 +1687,35 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-      - pod_scenarios:
-        - - scenarios/startx_openshift_logging.yml
-        - - scenarios/startx_openshift_monitoring.yml
-        - - scenarios/startx_openshift_machines.yml
-        - - scenarios/startx_openshift-apiserver.yml
-        - - scenarios/startx_openshift_etcd_pod.yml
-        - - scenarios/startx_openshift_podmonkey.yml
-      - container_scenarios: 
-        - - scenarios/startx_openshift_etcd_container.yml
-      - time_scenarios: 
-        - scenarios/startx_time_pod.yml
-        - scenarios/startx_time_node.yml
-      - node_scenarios: 
-        - scenarios/startx_node_master.yml
-        - scenarios/startx_node_infra.yml
-        - scenarios/startx_node_app.yml
-      - network_chaos:
-        - scenarios/startx_node_app_network_chaos.yaml
-        - scenarios/startx_node_infra_network_chaos.yaml
-        - scenarios/startx_node_master_network_chaos.yaml
-      - zone_outages:
-        - scenarios/startx_zone_outage.yaml
-      - cluster_shut_down_scenarios:
-        - - scenarios/cluster_shut_down_scenario.yml
-        # - scenarios/post_action_shut_down.py
-      - application_outages:
-        - scenarios/app_outage.yaml
-      - pvc_scenarios:
-        - scenarios/pvc_scenario.yaml
+        - plugin_scenarios:
+          - scenarios/startx_openshift_logging.yml
+          - scenarios/startx_openshift_monitoring.yml
+          - scenarios/startx_openshift_machines.yml
+          - scenarios/startx_openshift-apiserver.yml
+          - scenarios/startx_openshift_etcd_pod.yml
+          - scenarios/startx_openshift_podmonkey.yml
+        - container_scenarios: 
+          - - scenarios/startx_openshift_etcd_container.yml
+        - time_scenarios: 
+          - scenarios/startx_time_pod.yml
+          - scenarios/startx_time_node.yml
+        - node_scenarios: 
+          - scenarios/startx_node_master.yml
+          - scenarios/startx_node_infra.yml
+          - scenarios/startx_node_app.yml
+        - network_chaos:
+          - scenarios/startx_node_app_network_chaos.yaml
+          - scenarios/startx_node_infra_network_chaos.yaml
+          - scenarios/startx_node_master_network_chaos.yaml
+        - zone_outages:
+          - scenarios/startx_zone_outage.yaml
+        - cluster_shut_down_scenarios:
+          - - scenarios/cluster_shut_down_scenario.yml
+          # - scenarios/post_action_shut_down.py
+        - application_outages:
+          - scenarios/app_outage.yaml
+        - pvc_scenarios:
+          - scenarios/pvc_scenario.yaml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
@@ -1697,7 +1723,7 @@ data:
     performance_monitoring:
         deploy_dashboards: False
         repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v0.9.1/kube-burner-0.9.1-Linux-x86_64.tar.gz"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
         capture_metrics: True
         config_path: config/kube_burner.yaml
         metrics_profile_path: config/metrics-aggregated.yaml
