@@ -22,7 +22,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
          name : {{ .metering.name | default "default" | quote }}
     {{- if .metering.hive }}{{- if .metering.hive.enabled }}
         {{- with .metering.hive }}
-storage class : {{ .storageClass | default "gp2" | quote }}
+storage class : {{ .storageClass | default "gp3-csi" | quote }}
  storage size : {{ .size | default "5Gi" | quote }}
             {{- if .enabled }}
          hive : enabled

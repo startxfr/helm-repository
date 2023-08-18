@@ -24,7 +24,7 @@ hyperconvergedCluster:
   # name of the hyperconverged cluster
   name: "kubevirt-hyperconverged"
   # name of the local storage class used as default storage
-  storageClass: "gp2-csi" 
+  storageClass: "gp3-csi" 
 
 # Configuration of VM to deploy
 vms:
@@ -52,13 +52,13 @@ vms:
         boot_type: "dataVolume"
         # Size of the root disk (default is 10G)
         boot_size: 15G
-        # Storageclass to use for the root disk (default is gp2)
+        # Storageclass to use for the root disk (default is gp3-csi)
         boot_storageclass: startx-aws-generic-delete
-        # Storageclass to use for the root disk (default is gp2)
+        # Storageclass to use for the root disk (default is gp3-csi)
         disks: 
           # Unique name of the additionnal disk (default is disk0)
         - name: disk0
-          # Storageclass to use for this disk (default is gp2)
+          # Storageclass to use for this disk (default is gp3-csi)
           storageclass: startx-aws-generic-delete
           # Size of the additionnal disk (default is 2G)
           size: 10G

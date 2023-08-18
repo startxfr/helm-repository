@@ -38,7 +38,7 @@ helm install cluster-storage startx/cluster-storage
 
 Deployment of storage classes :
 
-- 1 **storageClass** named **example-gp2** with the following characteristics
+- 1 **storageClass** named **example-gp3-csi** with the following characteristics
   - **provisioner** set to **kubernetes.io/aws-ebs**
   - provisioner **encryption** specific parameters set to **true**
   - storage class **reclaim policy** set to **Delete**
@@ -53,8 +53,8 @@ helm install cluster-storage startx/cluster-storage
 ## Others values availables
 
 - **startx** : Startx storage classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx.yaml)) creating the following storage classes
-  - **startx-aws-generic-retain** (AWS EBS gp2 level with encryption and expansion enabled with retain policy)
-  - **startx-aws-generic-delete** (AWS EBS gp2 level with encryption and expansion enabled with delete policy)
+  - **startx-aws-generic-retain** (AWS EBS gp3-csi level with encryption and expansion enabled with retain policy)
+  - **startx-aws-generic-delete** (AWS EBS gp3-csi level with encryption and expansion enabled with delete policy)
   - **startx-aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
   - **startx-aws-fast-delete** (AWS EBS io1 level without encryption and expansion enabled with delete policy)
   - **startx-aws-slow-retain** (AWS EBS sc1 level with encryption and expansion enabled with retain policy)

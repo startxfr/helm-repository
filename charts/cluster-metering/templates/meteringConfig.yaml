@@ -28,7 +28,7 @@ spec:
       sharedPVC:
         createPVC: true
 {{- with .Values.metering.hive }}
-        storageClass: {{ .storageClass | default "gp2" | quote }}
+        storageClass: {{ .storageClass | default "gp3-csi" | quote }}
         size: {{ .size | default "5Gi" | quote }}
 {{- end }}
 {{- end }}{{- end }}
@@ -76,7 +76,7 @@ spec:
         storage:
           create: true
           {{- with .Values.metering.hive }}
-          class: {{ .storageClass | default "gp2" | quote }}
+          class: {{ .storageClass | default "gp3-csi" | quote }}
           size: {{ .size | default "5Gi" | quote }}
           {{- end }}
       {{- if .Values.metering.hive.server }}
