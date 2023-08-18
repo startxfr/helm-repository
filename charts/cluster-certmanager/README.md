@@ -107,3 +107,4 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 11.30.0 | 2023-08-18 | Align all helm chart to release 11.30.0 stable for OCP 4.11.30
 | 11.40.0 | 2023-08-18 | Align all helm chart to release 11.40.0 stable for OCP 4.11.40
 | 11.47.0 | 2023-08-18 | Align all helm chart to release 11.47.0 stable for OCP 4.11.47
+| 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml
