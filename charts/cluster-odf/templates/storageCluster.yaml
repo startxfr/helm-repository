@@ -55,7 +55,7 @@ spec:
           resources:
             requests:
               storage: {{ .size | default "512Gi" | quote }}
-          storageClassName: {{ .storageClass | default "gp2" | quote }}
+          storageClassName: {{ .storageClass | default "gp3-csi" | quote }}
           volumeMode: Block
 {{- end }}
 {{- end -}}

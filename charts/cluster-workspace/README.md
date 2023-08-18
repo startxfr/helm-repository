@@ -55,7 +55,7 @@ helm install cluster-workspace startx/cluster-workspace
 | cheCluster.enabled      | true                 | Enable the creation of the cheCluster               |
 | cheCluster.hooked       | true                 | Activate the manager as a helm hook                 |
 | cheCluster.name         | codeready-workspaces | name of the che cluster                             |
-| cheCluster.storageClass | gp2                  | Storage class to use for persistance                |
+| cheCluster.storageClass | gp3-csi                  | Storage class to use for persistance                |
 | cheCluster.storageSize  | 1Gi                  | Size of the PVC used for storage persistance        |
 
 #### cheCluster values example
@@ -65,7 +65,7 @@ cheCluster:
   enabled: true
   hooked: true
   name: "codeready-workspaces"
-  storageClass: "gp2"
+  storageClass: "gp3-csi"
   storageSize: "1Gi"
 ```
 
@@ -145,7 +145,7 @@ Configuration of default properties all disabled by default. This mean no resour
   - operator version is **3.4.0+0.1675914643.p**
   - operator catalog is **redhat-operators** located in **openshift-marketplace**
 - 1 **cheCluster** named **codeready-workspaces** to deploy cheCluster in the project with the following characteristics
-  - storage class **gp2**
+  - storage class **gp3-csi**
   - storage size defined to **1Gi**
 
 ```bash
@@ -364,3 +364,4 @@ helm install cluster-workspace startx/cluster-workspace -f https://raw.githubuse
 | 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml
 | 12.0.0 | 2023-08-18 | Align all helm chart to release 12.0.0 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable)
+| 12.0.5 | 2023-08-18 | publish stable update for the full repository
