@@ -242,3 +242,4 @@ xxxx to do xxxxxx
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.7 | 2023-08-18 | Upgrade to 5.7.4 Logging operator release
 | 12.0.8 | 2023-08-18 | Upgrade to 5.7.4 Elasticsearch operator release
+| 12.0.11 | 2023-08-18 | publish stable update for the full repository
