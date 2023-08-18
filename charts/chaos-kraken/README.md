@@ -194,3 +194,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 11.28.199 | 2023-07-06 | publish stable update for the full repository
 | 11.28.201 | 2023-07-06 | publish stable update for the full repository
 | 11.28.207 | 2023-07-06 | publish stable update for the full repository
+| 11.28.230 | 2023-08-18 | Align all helm chart to release 11.28.230 stable release
