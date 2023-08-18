@@ -59,7 +59,7 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | database.user               | fruitapp-preprod          | Database username                                                                                  |
 | database.password           | fruitapp-preprod-password | Database password associated to the user                                                           |
 | database.storage_capacitity | 1Gi                       | Database storage quantity                                                                          |
-| database.storage_class      | gp2                       | Database storage quality                                                                           |
+| database.storage_class      | gp3-csi                       | Database storage quality                                                                           |
 | database.memory_limit       | 256Mi                     | Database memory limit                                                                              |
 | database.version            | latest                    | The postgressql version (should be one of latest, 10-el7, 10-el8, 9.6-el8, 13-el8, 12-el8, 12-el7) |
 
@@ -70,7 +70,7 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 Deploy all shared services for a given namespace with the following characteristics :
 
 - 1 **pvc** named **postgresql-preprod** with
-  - **gp2** storage class
+  - **gp3-csi** storage class
   - **1Gi** allocation
 - 1 **secret** named **db** with all databse credentials
 - 1 **service** named **db** routing internal calls to pods
@@ -169,3 +169,4 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml
 | 12.0.0 | 2023-08-18 | Align all helm chart to release 12.0.0 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable)
+| 12.0.5 | 2023-08-18 | publish stable update for the full repository
