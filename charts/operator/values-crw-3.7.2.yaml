@@ -1,0 +1,30 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: default
+  environment: dev
+  component: infra
+  app: startx-infra-workspaces
+enabled: true
+subscription:
+  enabled: true
+  hooked: false
+  name: "codeready-workspaces"
+  namespace: "openshift-operators"
+  version: "v3.7.2"
+  operator: 
+    channel: stable
+    name: devspaces
+    installPlanApproval: Automatic
+    # csv: devspacesoperator
+    source: 
+      name: redhat-operators
+      namespace: openshift-marketplace
+operatorGroup:
+  enabled: true
+  hooked: false
+  target: "all-ns"
+  name: "codeready-workspaces"
+  namespace: "openshift-workspaces"
+  providedAPIs: "CheBackupServerConfiguration.v1.org.eclipse.che,CheCluster.v1.org.eclipse.che,CheClusterBackup.v1.org.eclipse.che,CheClusterRestore.v1.org.eclipse.che,DevWorkspace.v1alpha1.workspace.devfile.io,DevWorkspace.v1alpha2.workspace.devfile.io,DevWorkspaceOperatorConfig.v1alpha1.controller.devfile.io,DevWorkspaceRouting.v1alpha1.controller.devfile.io,DevWorkspaceTemplate.v1alpha1.workspace.devfile.io,DevWorkspaceTemplate.v1alpha2.workspace.devfile.io"
