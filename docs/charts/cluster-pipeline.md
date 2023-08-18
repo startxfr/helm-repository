@@ -238,3 +238,4 @@ helm install cluster-pipeline startx/cluster-pipeline -f https://raw.githubuserc
 | 11.28.230 | 2023-08-18 | Align all helm chart to release 11.28.230 stable release
 | 11.30.0 | 2023-08-18 | Align all helm chart to release 11.30.0 stable for OCP 4.11.30
 | 11.40.0 | 2023-08-18 | Align all helm chart to release 11.40.0 stable for OCP 4.11.40
+| 11.47.0 | 2023-08-18 | Align all helm chart to release 11.47.0 stable for OCP 4.11.47
