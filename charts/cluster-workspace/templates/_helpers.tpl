@@ -18,7 +18,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 -- Che Cluster ---------------------
 {{- if . }}{{- if .enabled }}
          name : {{ .name | default "codeready-workspaces" }}
-      storage : {{ .storageClass | default "gp2" }}
+      storage : {{ .storageClass | default "gp3-csi" }}
          size : {{ .storageSize | default "1Gi" }}
 {{- end }}{{- end }}
 {{- end -}}

@@ -49,7 +49,7 @@ spec:
       {{- end }}
       redundancyPolicy: "SingleRedundancy"
       storage:
-        storageClassName: {{ .storage.class | default "gp2" | quote }}
+        storageClassName: {{ .storage.class | default "gp3-csi" | quote }}
         size: {{ .storage.size | default "200G" | quote }}
     {{- end }}
     {{- if .Values.logging.infra_enabled }}

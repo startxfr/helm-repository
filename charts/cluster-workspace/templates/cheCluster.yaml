@@ -54,9 +54,9 @@ spec:
     gitSelfSignedCert: false
     allowUserDefinedWorkspaceNamespaces: false
   storage:
-    postgresPVCStorageClassName: {{ .Values.cheCluster.storageClass | default "gp2" | quote }}
+    postgresPVCStorageClassName: {{ .Values.cheCluster.storageClass | default "gp3-csi" | quote }}
     preCreateSubPaths: true
     pvcClaimSize: {{ .Values.cheCluster.storageSize | default "1Gi" | quote }}
     pvcStrategy: common
-    workspacePVCStorageClassName: {{ .Values.cheCluster.storageClass | default "gp2" | quote }}
+    workspacePVCStorageClassName: {{ .Values.cheCluster.storageClass | default "gp3-csi" | quote }}
 {{- end }}{{- end }}

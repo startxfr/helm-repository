@@ -94,7 +94,7 @@ data:
       {{- end }}
       volumeClaimTemplate:
        spec:
-         storageClassName: {{ default "gp2" .Values.monitoring.storageClass }}
+         storageClassName: {{ default "gp3-csi" .Values.monitoring.storageClass }}
          volumeMode: Filesystem
          resources:
            requests:
@@ -117,7 +117,7 @@ data:
       {{- end }}
       volumeClaimTemplate:
         spec:
-          storageClassName: {{ default "gp2" .Values.monitoring.storageClass }}
+          storageClassName: {{ default "gp3-csi" .Values.monitoring.storageClass }}
           resources:
             requests:
              storage: {{ default "20Gi" .Values.monitoring.storageSize }}

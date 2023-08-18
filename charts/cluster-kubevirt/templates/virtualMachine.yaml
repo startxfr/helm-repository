@@ -11,7 +11,7 @@
 {{- $disk_boot_type := .storage.boot_type | default "dataVolume" -}}
 {{- $disk_boot_image := .storage.boot_image | default "https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1907.qcow2" -}}
 {{- $disk_boot_size := .storage.boot_size | default "10G" -}}
-{{- $disk_boot_storageclass := .storage.boot_storageclass | default "gp2" -}}
+{{- $disk_boot_storageclass := .storage.boot_storageclass | default "gp3-csi" -}}
 ---
 kind: VirtualMachine
 apiVersion: kubevirt.io/v1alpha3
@@ -59,7 +59,7 @@ spec:
     {{- end }}
     {{ range .storage.disks }}
     {{- $disk_name := .name | default "disk0" -}}
-    {{- $disk_storageclass := .storageclass | default "gp2" -}}
+    {{- $disk_storageclass := .storageclass | default "gp3-csi" -}}
     {{- $disk_size := .size | default "2G" -}}
     - apiVersion: cdi.kubevirt.io/v1alpha1
       kind: DataVolume

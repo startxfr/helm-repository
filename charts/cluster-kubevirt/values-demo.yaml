@@ -84,9 +84,15 @@ project:
         requests.memory: "20Gi"
         requests.storage: "500Gi"
         persistentvolumeclaims: "50"
-        ephemeral-storage: "50Gi" 
-        gp2.storageclass.storage.k8s.io/requests.storage: "500Gi"
-        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "25"
+        ephemeral-storage: "50Gi"
+        gp2.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp3.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp2-csi.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3-csi.storageclass.storage.k8s.io/requests.storage: "500Gi"
+        gp3-csi.storageclass.storage.k8s.io/persistentvolumeclaims: 25"
         startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "500Gi"
         startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "25"
         startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "500Gi"
@@ -152,7 +158,7 @@ hyperconvergedCluster:
   enabled: false
   hooked: false
   name: "kubevirt-hyperconverged" 
-  storageClass: "gp2-csi" 
+  storageClass: "gp3-csi" 
 vms:
   enabled: true
   list: 
