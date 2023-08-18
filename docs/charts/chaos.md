@@ -314,3 +314,4 @@ chaos-monkey startx/chaos-monkey
 | 11.40.0 | 2023-08-18 | Align all helm chart to release 11.40.0 stable for OCP 4.11.40
 | 11.47.0 | 2023-08-18 | Align all helm chart to release 11.47.0 stable for OCP 4.11.47
 | 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml
+| 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml
