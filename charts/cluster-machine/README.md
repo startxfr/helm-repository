@@ -38,7 +38,7 @@ helm install cluster-machine startx/cluster-machine
 
 Deployment of machine classes :
 
-<!-- - 1 **machineSet** named **example-gp2** with the following characteristics
+<!-- - 1 **machineSet** named **example-gp3-csi** with the following characteristics
   - **provisioner** set to **kubernetes.io/aws-ebs**
   - provisioner **encryption** specific parameters set to **true**
   - machine class **reclaim policy** set to **Delete**
@@ -53,8 +53,8 @@ helm install cluster-machine startx/cluster-machine
 ## Others values availables
 
 <!-- - **startx** : Startx machine classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml)) creating the following machine classes
-  - **startx-aws-generic-retain** (AWS EBS gp2 level with encryption and expansion enabled with retain policy)
-  - **startx-aws-generic-delete** (AWS EBS gp2 level with encryption and expansion enabled with delete policy)
+  - **startx-aws-generic-retain** (AWS EBS gp3-csi level with encryption and expansion enabled with retain policy)
+  - **startx-aws-generic-delete** (AWS EBS gp3-csi level with encryption and expansion enabled with delete policy)
   - **startx-aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
   - **startx-aws-fast-delete** (AWS EBS io1 level without encryption and expansion enabled with delete policy)
   - **startx-aws-slow-retain** (AWS EBS sc1 level with encryption and expansion enabled with retain policy)

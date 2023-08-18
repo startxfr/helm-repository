@@ -6,7 +6,7 @@
 {{- $namespace := .namespace | default $defaultns -}}
 {{- $argocd := .argocd | default $root.Values.argocd.name -}}
 {{- $schedule := .schedule | default "0 * * * *" -}}
-{{- $storageclass := .storageclass | default "gp2" -}}
+{{- $storageclass := .storageclass | default "gp3-csi" -}}
 
 ---
 apiVersion: argoproj.io/v1alpha1
