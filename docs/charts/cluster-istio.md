@@ -256,3 +256,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 12.0.7 | 2023-08-18 | Upgrade to 5.7.4 Elasticsearch operator release
 | 12.0.8 | 2023-08-18 | Upgrade to 1.42.0-5 Jaeger, 1.65.7 Kiali and 2.4.2 Istio operator release
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
+| 12.0.12 | 2023-09-28 | Upgrade to 1.47.0-2 Jaeger operator release
