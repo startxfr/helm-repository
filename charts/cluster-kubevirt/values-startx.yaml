@@ -54,7 +54,12 @@ project:
           max:
             cpu: 2
             memory: "2Gi"
-        - type: "VirtualMachine"
+        - type: "PersistentVolumeClaim"
+          min:
+            storage: "1Gi"
+          max:
+            storage: "50Gi"
+        - type: "kubevirt.io/VirtualMachine"
           default:
             cpu: "500m"
             memory: "512Mi"
