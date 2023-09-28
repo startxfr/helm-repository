@@ -223,3 +223,4 @@ xxxx to do xxxxxxxx
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
 | 12.0.12 | 2023-09-28 | Update quotas and limits parameters for all values
+| 12.0.13 | 2023-09-28 | Update limits parameters for virtualMachine and PVC
