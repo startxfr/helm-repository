@@ -242,3 +242,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
+| 12.0.12 | 2023-09-28 | Change default config for MCH
