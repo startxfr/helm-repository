@@ -1,0 +1,27 @@
+{{- if .Values.kServing }}{{- if .Values.kServing.enabled }}
+{{- $root := . -}}
+{{- $namespace := .Values.projectKServing.project.name | default "default-knative" -}}
+kind: KnativeServing
+apiVersion: operator.knative.dev/v1beta1
+metadata:
+  name: {{ .Values.kServing.name | default "knative-serving" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-knative.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.kServing.name | default "knative-serving" }}-knativeserving"
+  annotations:
+    {{- include "cluster-knative.annotations" . | nindent 4 }}
+    {{- if .Values.kServing.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  # operator.knative.dev/v1beta1: {}
+  # knative-ingress-gateway: {}
+  high-availability:
+    replicas: {{ .Values.kServing.replicas | default 2 }}
+{{- end }}{{- end }}
