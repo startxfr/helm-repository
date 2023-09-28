@@ -52,22 +52,22 @@ machineHealthCheck:
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app-small
-    type: worker
+    type: app
     group: app-small
     maxUnhealthy: 0%
     timeouts: 300s
   - name: app
-    type: worker
+    type: app
     group: app
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app-big
-    type: worker
+    type: app
     group: app-big
     maxUnhealthy: 0%
     timeouts: 300s
   - name: app-virt
-    type: worker
+    type: app
     group: app-virt
     maxUnhealthy: 40%
     timeouts: 300s
@@ -183,7 +183,7 @@ machineSet:
     replicas: 1
   - name: app-small-a
     az: a
-    type: worker
+    type: app
     group: app-small
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.large"
@@ -191,7 +191,7 @@ machineSet:
     replicas: 1
   - name: app-small-b
     az: b
-    type: worker
+    type: app
     group: app-small
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.large"
@@ -199,7 +199,7 @@ machineSet:
     replicas: 0
   - name: app-small-c
     az: c
-    type: worker
+    type: app
     group: app-small
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.large"
@@ -207,7 +207,7 @@ machineSet:
     replicas: 0
   - name: app-a
     az: a
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.xlarge"
@@ -215,7 +215,7 @@ machineSet:
     replicas: 1
   - name: app-b
     az: b
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.xlarge"
@@ -223,7 +223,7 @@ machineSet:
     replicas: 1
   - name: app-c
     az: c
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.xlarge"
@@ -231,7 +231,7 @@ machineSet:
     replicas: 1
   - name: app-big-a
     az: a
-    type: worker
+    type: app
     group: app-big
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.2xlarge"
@@ -239,7 +239,7 @@ machineSet:
     replicas: 0
   - name: app-big-b
     az: b
-    type: worker
+    type: app
     group: app-big
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.2xlarge"
@@ -247,7 +247,7 @@ machineSet:
     replicas: 1
   - name: app-big-c
     az: c
-    type: worker
+    type: app
     group: app-big
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.2xlarge"
@@ -255,7 +255,7 @@ machineSet:
     replicas: 0
   - name: app-virt-a
     az: a
-    type: worker
+    type: virt
     group: app-virt
     ami: ami-0add59eb238c299d5
     instanceType: "c5.metal"
@@ -263,7 +263,7 @@ machineSet:
     replicas: 1
   - name: app-virt-b
     az: b
-    type: worker
+    type: virt
     group: app-virt
     ami: ami-0add59eb238c299d5
     instanceType: "c5.metal"
@@ -271,7 +271,7 @@ machineSet:
     replicas: 0
   - name: app-virt-c
     az: c
-    type: worker
+    type: virt
     group: app-virt
     ami: ami-0add59eb238c299d5
     instanceType: "c5.metal"

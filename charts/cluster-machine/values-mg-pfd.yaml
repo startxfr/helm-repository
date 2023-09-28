@@ -54,12 +54,12 @@ machineHealthCheck:
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app-big
-    type: worker
+    type: app
     group: app-big
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app-small
-    type: worker
+    type: app
     group: app-small
     maxUnhealthy: 40%
     timeouts: 300s
@@ -80,7 +80,7 @@ machineAutoscaler:
     minReplicas: 1
     maxReplicas: 2
   - name: pfd-app-small-a
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
   # - name: pfd-app-small-b
@@ -88,19 +88,19 @@ machineAutoscaler:
   #   minReplicas: 0
   #   maxReplicas: 3
   - name: pfd-app-small-c
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
   - name: pfd-app-big-a
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
   - name: pfd-app-big-b
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
   - name: pfd-app-big-c
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
 
@@ -133,7 +133,7 @@ machineSet:
     replicas: 1
   - name: pfd-app-small-a
     az: a
-    type: worker
+    type: app
     group: app-small
     subnet_name: plateformedonnees-subnet-private1-eu-west-3a
     ami: ami-0add59eb238c299d5
@@ -151,7 +151,7 @@ machineSet:
   #   replicas: 0
   - name: pfd-app-small-c
     az: c
-    type: worker
+    type: app
     group: app-small
     subnet_name: plateformedonnees-subnet-private3-eu-west-3c
     ami: ami-0add59eb238c299d5
@@ -160,7 +160,7 @@ machineSet:
     replicas: 1
   - name: pfd-app-big-a
     az: a
-    type: worker
+    type: app
     group: app-big
     subnet_name: plateformedonnees-subnet-private1-eu-west-3a
     ami: ami-0add59eb238c299d5
@@ -169,7 +169,7 @@ machineSet:
     replicas: 1
   - name: pfd-app-big-b
     az: b
-    type: worker
+    type: app
     group: app-big
     subnet_name: plateformedonnees-subnet-private2-eu-west-3b
     ami: ami-0add59eb238c299d5
@@ -178,7 +178,7 @@ machineSet:
     replicas: 1
   - name: pfd-app-big-c
     az: c
-    type: worker
+    type: app
     group: app-big
     subnet_name: plateformedonnees-subnet-private3-eu-west-3c
     ami: ami-0add59eb238c299d5

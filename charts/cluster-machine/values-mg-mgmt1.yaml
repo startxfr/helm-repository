@@ -58,7 +58,7 @@ machineHealthCheck:
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app
-    type: worker
+    type: app
     group: app
     maxUnhealthy: 0%
     timeouts: 300s
@@ -91,7 +91,7 @@ machineAutoscaler:
     minReplicas: 1
     maxReplicas: 2
   - name: mgmt1-app-a
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
   # - name: mgmt1-app-b
@@ -99,7 +99,7 @@ machineAutoscaler:
   #   minReplicas: 0
   #   maxReplicas: 3
   - name: mgmt1-app-c
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
 
@@ -150,7 +150,7 @@ machineSet:
     replicas: 0
   - name: mgmt1-app-a
     az: a
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
@@ -158,7 +158,7 @@ machineSet:
     replicas: 2
   - name: mgmt1-app-b
     az: b
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "c5a.xlarge"
@@ -166,7 +166,7 @@ machineSet:
     replicas: 0
   - name: mgmt1-app-c
     az: c
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "c5a.xlarge"

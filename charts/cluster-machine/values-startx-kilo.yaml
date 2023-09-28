@@ -52,7 +52,7 @@ machineHealthCheck:
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app
-    type: worker
+    type: app
     group: app
     maxUnhealthy: 40%
     timeouts: 300s
@@ -138,7 +138,7 @@ machineSet:
     replicas: 0
   - name: app-a
     az: a
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.2xlarge"
@@ -146,7 +146,7 @@ machineSet:
     replicas: 1
   - name: app-b
     az: b
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.2xlarge"
@@ -154,7 +154,7 @@ machineSet:
     replicas: 1
   - name: app-c
     az: c
-    type: worker
+    type: app
     group: app
     ami: ami-0add59eb238c299d5
     instanceType: "t3a.2xlarge"
