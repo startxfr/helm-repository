@@ -237,3 +237,4 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.7 | 2023-08-18 | Upgrade to 1.29.1 KNative operator release
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
+| 12.0.12 | 2023-09-28 | upgrade to v1beta1 api
