@@ -257,3 +257,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
+| 12.0.12 | 2023-09-28 | Update on default request and limit for ephemeral storage
