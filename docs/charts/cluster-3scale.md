@@ -258,3 +258,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
+| 12.0.12 | 2023-09-28 | upgrade to version 0.10.5 of the 3scale operator
