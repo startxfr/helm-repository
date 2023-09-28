@@ -38,15 +38,15 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | default "myap
 {{- else }}
         storage obj : disabled
 {{- end }}{{- end }}
-{{- if .storage_ocs_context -}}{{- if .storage_ocs_context.enabled }}
-storage OCS context : enabled
+{{- if .storage_odf_context -}}{{- if .storage_odf_context.enabled }}
+storage ODF context : enabled
 {{- else }}
-storage OCS context : disabled
+storage ODF context : disabled
 {{- end }}{{- end }}
-{{- if .storage_ocs_apps -}}{{- if .storage_ocs_apps.enabled }}
-   storage OCS apps : enabled
+{{- if .storage_odf_apps -}}{{- if .storage_odf_apps.enabled }}
+   storage ODF apps : enabled
 {{- else }}
-   storage OCS apps : disabled
+   storage ODF apps : disabled
 {{- end }}{{- end }}
 {{- if .taintoleration -}}{{- if .taintoleration.enabled }}
      taintoleration : enabled

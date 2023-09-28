@@ -1,6 +1,6 @@
-{{- if .Values.demo }}{{- if .Values.demo.storage_ocs_context }}{{- if .Values.demo.storage_ocs_context.enabled -}}
+{{- if .Values.demo }}{{- if .Values.demo.storage_odf_context }}{{- if .Values.demo.storage_odf_context.enabled -}}
 {{- $root := . -}}
-{{- with .Values.demo.storage_ocs_context -}}
+{{- with .Values.demo.storage_odf_context -}}
 {{- $namespace := .namespace | default "demo-storage" -}}
 {{- $scope := .scope | default "startx" -}}
 {{- $cluster := .cluster | default "default" -}}
@@ -39,11 +39,11 @@ data:
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: "ocs-loader-config"
+  name: "odf-loader-config"
   namespace: {{ $namespace | quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "ocs-loader-config-cm"
+    app.kubernetes.io/name: "odf-loader-config-cm"
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 data:
@@ -51,7 +51,7 @@ data:
   SX_TYPE: app
   SX_COMPONENT: "{{- $component -}}"
   SX_NAME: Loader application
-  SX_SUMMARY: Storage ocs-loader application
+  SX_SUMMARY: Storage odf-loader application
   SX_VERSION: "{{- $env -}}"
   SX_VERBOSE: "true"
   SX_DEBUG: "true"
@@ -950,7 +950,7 @@ data:
             <h1>OCS Block storage demo</h1>
             <h2>RBD - Concurrent read access</h2>
             <div class="alert alert-success" role="alert"><p>This demo use 2 pod using the same PVC to read shared files. 
-            This PVC have a storage backend delivered using the ocs-block-delete storage class provisionned using the RBD CSI provisoner. 
+            This PVC have a storage backend delivered using the odf-block-delete storage class provisionned using the RBD CSI provisoner. 
             The provided PersistantVolume is dedicated to this sample application and shared accross pods.</p></div>
             <div class="alert alert-info" role="alert"><p>If you want to read or record a document to the object store, you can 
             send it to /storage/__objectid__ with a GET, POST or PUT request and the content as body</p>
@@ -1182,7 +1182,7 @@ spec:
             - name: fs-rook-cephfs-rwx-conf
               mountPath: "/conf"
               readOnly: true
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
             - name: img-schema
@@ -1192,7 +1192,7 @@ spec:
         - name: "fs-rook-cephfs-rwx-data"
           persistentVolumeClaim:
             claimName: fs-rook-cephfs-rwx
-        - name: ocs-storage-library
+        - name: odf-storage-library
           configMap:
             name: "storage-library"
         - name: fs-rook-cephfs-rwx-conf
@@ -1371,7 +1371,7 @@ spec:
             - name: fs-rook-cephfs-rwo-conf
               mountPath: "/conf"
               readOnly: true
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
             - name: img-schema
@@ -1381,7 +1381,7 @@ spec:
         - name: "fs-rook-cephfs-rwo-data"
           persistentVolumeClaim:
             claimName: fs-rook-cephfs-rwo
-        - name: ocs-storage-library
+        - name: odf-storage-library
           configMap:
             name: "storage-library"
         - name: fs-rook-cephfs-rwo-conf
@@ -1557,14 +1557,14 @@ spec:
             - name: obj-noobaa-dedicated-s3-conf
               mountPath: "/conf"
               readOnly: true
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
             - name: img-schema
               mountPath: "/app/static"
               readOnly: true
       volumes:
-        - name: ocs-storage-library
+        - name: odf-storage-library
           configMap:
             name: "storage-library"
         - name: obj-noobaa-dedicated-s3-conf
@@ -1741,14 +1741,14 @@ spec:
             - name: obj-noobaa-dedicated-k8s-conf
               mountPath: "/conf"
               readOnly: true
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
             - name: img-schema
               mountPath: "/app/static"
               readOnly: true
       volumes:
-        - name: ocs-storage-library
+        - name: odf-storage-library
           configMap:
             name: "storage-library"
         - name: obj-noobaa-dedicated-k8s-conf
@@ -1925,14 +1925,14 @@ spec:
             - name: obj-noobaa-mirrored-conf
               mountPath: "/conf"
               readOnly: true
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
             - name: img-schema
               mountPath: "/app/static"
               readOnly: true
       volumes:
-        - name: ocs-storage-library
+        - name: odf-storage-library
           configMap:
             name: "storage-library"
         - name: obj-noobaa-mirrored-conf
@@ -2109,14 +2109,14 @@ spec:
             - name: obj-noobaa-spreaded-conf
               mountPath: "/conf"
               readOnly: true
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
             - name: img-schema
               mountPath: "/app/static"
               readOnly: true
       volumes:
-        - name: ocs-storage-library
+        - name: odf-storage-library
           configMap:
             name: "storage-library"
         - name: obj-noobaa-spreaded-conf
@@ -2294,7 +2294,7 @@ spec:
             - name: block-rook-rbd-rox-conf
               mountPath: "/conf"
               readOnly: true
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
             - name: img-schema
@@ -2305,7 +2305,7 @@ spec:
           persistentVolumeClaim:
             claimName: block-rox-odf
             readOnly: true
-        - name: ocs-storage-library
+        - name: odf-storage-library
           configMap:
             name: "storage-library"
         - name: block-rook-rbd-rox-conf
@@ -2396,12 +2396,12 @@ spec:
 kind: Job
 apiVersion: batch/v1
 metadata:
-  name: "ocs-load-{{- $randrun -}}"
+  name: "odf-load-{{- $randrun -}}"
   namespace: {{ $namespace | quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
-    app: "ocs-load"
-    app.kubernetes.io/name: "ocs-load-job"
+    app: "odf-load"
+    app.kubernetes.io/name: "odf-load-job"
   annotations:
     {{- include "example-catalog.annotations" $root | nindent 4 }}
 spec:
@@ -2412,16 +2412,16 @@ spec:
         sidecar.istio.io/inject: "false"
       labels:
         {{- include "example-catalog.labels" $root | nindent 8 }}
-        app: "ocs-load"
-        app.kubernetes.io/name: "ocs-load-deployment"
-        deployment: "oocsbj-load"
+        app: "odf-load"
+        app.kubernetes.io/name: "odf-load-deployment"
+        deployment: "odf-load"
     spec:
       containers:
         - name: "loader-fs-rook-cephfs-rwx"
           image: "quay.io/startx/runner-ansible:latest"
           envFrom:
             - configMapRef:
-                name: ocs-loader-config
+                name: odf-loader-config
           command:
             - "/bin/bash"
             - "-c"
@@ -2441,14 +2441,14 @@ spec:
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
         - name: "loader-fs-rook-cephfs-rwo"
           image: "quay.io/startx/runner-ansible:latest"
           envFrom:
             - configMapRef:
-                name: ocs-loader-config
+                name: odf-loader-config
           command:
             - "/bin/bash"
             - "-c"
@@ -2468,14 +2468,14 @@ spec:
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
         - name: "loader-obj-noobaa-dedicated-s3"
           image: "quay.io/startx/runner-ansible:latest"
           envFrom:
             - configMapRef:
-                name: ocs-loader-config
+                name: odf-loader-config
           command:
             - "/bin/bash"
             - "-c"
@@ -2495,14 +2495,14 @@ spec:
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
         - name: "loader-obj-noobaa-dedicated-k8s"
           image: "quay.io/startx/runner-ansible:latest"
           envFrom:
             - configMapRef:
-                name: ocs-loader-config
+                name: odf-loader-config
           command:
             - "/bin/bash"
             - "-c"
@@ -2522,14 +2522,14 @@ spec:
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
         - name: "loader-obj-noobaa-mirrored"
           image: "quay.io/startx/runner-ansible:latest"
           envFrom:
             - configMapRef:
-                name: ocs-loader-config
+                name: odf-loader-config
           command:
             - "/bin/bash"
             - "-c"
@@ -2549,14 +2549,14 @@ spec:
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
         - name: "loader-obj-noobaa-spreaded"
           image: "quay.io/startx/runner-ansible:latest"
           envFrom:
             - configMapRef:
-                name: ocs-loader-config
+                name: odf-loader-config
           command:
             - "/bin/bash"
             - "-c"
@@ -2576,14 +2576,14 @@ spec:
           terminationMessagePath: "/dev/termination-log"
           imagePullPolicy: Always
           volumeMounts:
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
         - name: "loader-block-rook-rbd-rox"
           image: "quay.io/startx/runner-ansible:latest"
           envFrom:
             - configMapRef:
-                name: ocs-loader-config
+                name: odf-loader-config
           command:
             - "/bin/bash"
             - "-c"
@@ -2605,14 +2605,14 @@ spec:
           volumeMounts:
             - name: block-rook-rbd-rox-data
               mountPath: "/my-data"
-            - name: ocs-storage-library
+            - name: odf-storage-library
               mountPath: "/usr/local/lib/sxstorage"
               readOnly: true
       volumes:
         - name: "block-rook-rbd-rox-data"
           persistentVolumeClaim:
             claimName: block-rox-odf
-        - name: ocs-storage-library
+        - name: odf-storage-library
           configMap:
             name: "storage-library"
       restartPolicy: Never

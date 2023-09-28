@@ -1,6 +1,6 @@
-{{- if .Values.demo }}{{- if .Values.demo.storage_ocs_context }}{{- if .Values.demo.storage_ocs_context.enabled -}}
+{{- if .Values.demo }}{{- if .Values.demo.storage_odf_context }}{{- if .Values.demo.storage_odf_context.enabled -}}
 {{- $root := . -}}
-{{- with .Values.demo.storage_ocs_context -}}
+{{- with .Values.demo.storage_odf_context -}}
 {{- $namespace := .namespace | default "demo-storage" -}}
 {{- $scope := .scope | default $root.Values.context.scope -}}
 {{- $cluster := .cluster | default $root.Values.context.cluster -}}
