@@ -49,12 +49,12 @@ machineHealthCheck:
     maxUnhealthy: 100%
     timeouts: 300s
   - name: ocp-sandbox-public
-    type: worker
+    type: app
     group: public
     maxUnhealthy: 40%
     timeouts: 300s
   - name: ocp-sandbox-private
-    type: worker
+    type: app
     group: private
     maxUnhealthy: 40%
     timeouts: 300s
@@ -63,11 +63,11 @@ machineAutoscaler:
   enabled: false
   list: 
   - name: ocp-sandbox-public
-    type: worker
+    type: app
     minReplicas: 2
     maxReplicas: 4
   - name: ocp-sandbox-private
-    type: worker
+    type: app
     minReplicas: 2
     maxReplicas: 4
 

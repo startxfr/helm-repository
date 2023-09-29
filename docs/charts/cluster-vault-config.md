@@ -252,3 +252,4 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
+| 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30

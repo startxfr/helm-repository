@@ -1,6 +1,6 @@
-{{- if .Values.demo }}{{- if .Values.demo.storage_ocs_context }}{{- if .Values.demo.storage_ocs_context.enabled -}}
+{{- if .Values.demo }}{{- if .Values.demo.storage_odf_context }}{{- if .Values.demo.storage_odf_context.enabled -}}
 {{- $root := . -}}
-{{- with .Values.demo.storage_ocs_context -}}
+{{- with .Values.demo.storage_odf_context -}}
 {{- $namespace := .namespace | default "demo-storage" -}}
 {{- $scope := .scope | default $root.Values.context.scope -}}
 {{- $cluster := .cluster | default $root.Values.context.cluster -}}
@@ -9,7 +9,7 @@
 {{- $version := .version | default $root.Values.context.version -}}
 {{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
 # OCS specific vars
-{{- $namespace_ocs := .namespace_ocs | default "openshift-storage" -}}
+{{- $namespace_odf:= .namespace_odf| default "openshift-storage" -}}
 # AWS specific vars
 {{- $aws_access_id := .aws_access_id | default "xxx_access_id_xxx" -}}
 {{- $aws_access_key := .aws_access_key | default "xxx_access_key_xxx" -}}
@@ -21,7 +21,7 @@ kind: Secret
 apiVersion: v1
 metadata:
   name: noobaa-aws-creds
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "noobaa-aws-creds-secret"
@@ -36,7 +36,7 @@ kind: BackingStore
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "dedicated-k8s-store"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -57,7 +57,7 @@ kind: BackingStore
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "mirrored-k8s-store"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -78,7 +78,7 @@ kind: BackingStore
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "spreaded-k8s-store"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -99,7 +99,7 @@ kind: BackingStore
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "dedicated-awss3-store"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -112,7 +112,7 @@ spec:
     region: "{{- $aws_region -}}"
     secret:
       name: noobaa-aws-creds
-      namespace: {{ $namespace_ocs | quote }}
+      namespace: {{ $namespace_odf| quote }}
     targetBucket: ocp-demo-storage-noobaa-dedicated
   # ssl: false
 ---
@@ -120,7 +120,7 @@ kind: BackingStore
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "mirrored-awss3-store"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -132,7 +132,7 @@ spec:
     region: "{{- $aws_region -}}"
     secret:
       name: noobaa-aws-creds
-      namespace: {{ $namespace_ocs | quote }}
+      namespace: {{ $namespace_odf| quote }}
     targetBucket: ocp-demo-storage-noobaa-mirrored
   # ssl: false
   type: aws-s3
@@ -141,7 +141,7 @@ kind: BackingStore
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "spreaded-awss3-store"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -153,7 +153,7 @@ spec:
     region: "{{- $aws_region -}}"
     secret:
       name: noobaa-aws-creds
-      namespace: {{ $namespace_ocs | quote }}
+      namespace: {{ $namespace_odf| quote }}
     targetBucket: ocp-demo-storage-noobaa-spreaded
   # ssl: false
   type: aws-s3
@@ -162,7 +162,7 @@ kind: BucketClass
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "dedicated-k8s-bucketclass"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -179,7 +179,7 @@ kind: BucketClass
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "dedicated-awss3-bucketclass"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -196,7 +196,7 @@ kind: BucketClass
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "noobaa-mirrored-bucketclass"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"
@@ -225,7 +225,7 @@ kind: BucketClass
 apiVersion: noobaa.io/v1alpha1
 metadata:
   name: "noobaa-spreaded-bucketclass"
-  namespace: {{ $namespace_ocs | quote }}
+  namespace: {{ $namespace_odf| quote }}
   labels:
     {{- include "example-catalog.labels" $root | nindent 4 }}
     app: "noobaa-demo"

@@ -222,3 +222,7 @@ xxxx to do xxxxxxxx
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
+| 12.0.12 | 2023-09-28 | Update quotas and limits parameters for all values
+| 12.0.13 | 2023-09-28 | Update limits parameters for virtualMachine and PVC
+| 12.0.14 | 2023-09-28 | Debug featureGate for kubevirt
+| 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30

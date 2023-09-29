@@ -63,7 +63,7 @@ projectOperator:
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     type: project
     name: "3scale-operators"
     display_name: Operator 3SCALE
@@ -85,10 +85,10 @@ operator:
   subscription:
     enabled: true
     name: "3scale-operator"
-    namespace: "3scale-operators"
-    version: "v0.8.4"
+    namespace: "openshift-operators"
+    version: "v0.10.5"
     operator: 
-      channel: threescale-2.11
+      channel: threescale-2.13
       name: 3scale-operator
       installPlanApproval: Automatic
       # csv: 3scale-operator
@@ -96,7 +96,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     name: "3scale-operator"
     namespace: "3scale-operators"
-    providedAPIs: "API.v1alpha1.capabilities.3scale.net,APIManager.v1alpha1.apps.3scale.net,Binding.v1alpha1.capabilities.3scale.net,Limit.v1alpha1.capabilities.3scale.net,MappingRule.v1alpha1.capabilities.3scale.net,Metric.v1alpha1.capabilities.3scale.net,Plan.v1alpha1.capabilities.3scale.net,Tenant.v1alpha1.capabilities.3scale.net"
+    providedAPIs: "APIManager.v1alpha1.apps.3scale.net,APIManagerBackup.v1alpha1.apps.3scale.net,APIManagerRestore.v1alpha1.apps.3scale.net,ActiveDoc.v1beta1.capabilities.3scale.net,Backend.v1beta1.capabilities.3scale.net,CustomPolicyDefinition.v1beta1.capabilities.3scale.net,DeveloperAccount.v1beta1.capabilities.3scale.net,DeveloperUser.v1beta1.capabilities.3scale.net,OpenAPI.v1beta1.capabilities.3scale.net,Product.v1beta1.capabilities.3scale.net,ProxyConfigPromote.v1beta1.capabilities.3scale.net"

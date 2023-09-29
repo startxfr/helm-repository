@@ -9,7 +9,7 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-odf.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{ .Values.odf.name | default "default" }}-storagecluster"
+    app.kubernetes.io/name: "{{ .Values.odf.name | default "odf" }}-storagecluster"
   annotations:
     {{- include "cluster-odf.annotations" . | nindent 4 }}
     {{- if .Values.odf.hooked }}

@@ -54,12 +54,12 @@ machineHealthCheck:
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app-big
-    type: worker
+    type: app
     group: app-big
     maxUnhealthy: 40%
     timeouts: 300s
   - name: app-small
-    type: worker
+    type: app
     group: app-small
     maxUnhealthy: 40%
     timeouts: 300s
@@ -80,7 +80,7 @@ machineAutoscaler:
     minReplicas: 1
     maxReplicas: 2
   - name: client1-app-small-a
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
   # - name: client1-app-small-b
@@ -88,19 +88,19 @@ machineAutoscaler:
   #   minReplicas: 0
   #   maxReplicas: 3
   - name: client1-app-small-c
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 3
   - name: client1-app-big-a
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 2
   - name: client1-app-big-b
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 2
   - name: client1-app-big-c
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 2
 
@@ -130,7 +130,7 @@ machineSet:
     replicas: 1
   - name: client1-app-small-a
     az: a
-    type: worker
+    type: app
     group: app-small
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
@@ -138,7 +138,7 @@ machineSet:
     replicas: 0
   - name: client1-app-small-b
     az: b
-    type: worker
+    type: app
     group: app-small
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge"
@@ -146,7 +146,7 @@ machineSet:
     replicas: 0
   - name: client1-app-small-c
     az: c
-    type: worker
+    type: app
     group: app-small
     ami: ami-07b7248cf3c2b3190
     instanceType: "c5a.xlarge"
@@ -154,7 +154,7 @@ machineSet:
     replicas: 0
   - name: client1-app-big-a
     az: a
-    type: worker
+    type: app
     group: app-big
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"
@@ -162,7 +162,7 @@ machineSet:
     replicas: 0
   - name: client1-app-big-b
     az: b
-    type: worker
+    type: app
     group: app-big
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"
@@ -170,7 +170,7 @@ machineSet:
     replicas: 0
   - name: client1-app-big-c
     az: c
-    type: worker
+    type: app
     group: app-big
     ami: ami-07b7248cf3c2b3190
     instanceType: "m5a.2xlarge"

@@ -2,7 +2,7 @@
 {{- $root := . -}}
 {{- $namespace := .Values.projectKServing.project.name | default "default-knative" -}}
 kind: KnativeServing
-apiVersion: operator.knative.dev/v1alpha1
+apiVersion: operator.knative.dev/v1beta1
 metadata:
   name: {{ .Values.kServing.name | default "knative-serving" | quote }}
   namespace: "{{- $namespace -}}"
@@ -20,8 +20,8 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "5"
 spec:
-  cluster-local-gateway: {}
+  # cluster-local-gateway: {}
+  # knative-ingress-gateway: {}
   high-availability:
     replicas: {{ .Values.kServing.replicas | default 2 }}
-  knative-ingress-gateway: {}
 {{- end }}{{- end }}

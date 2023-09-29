@@ -53,12 +53,12 @@ machineHealthCheck:
     maxUnhealthy: 40%
     timeouts: 300s
   - name: cdf-dev
-    type: worker
+    type: app
     group: ocp-cdf-dev-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: cdf-prod
-    type: worker
+    type: app
     group: ocp-cdf-prod-worker
     maxUnhealthy: 40%
     timeouts: 300s
@@ -71,11 +71,11 @@ machineAutoscaler:
     minReplicas: 2
     maxReplicas: 4
   - name: ocp-cdf-dev-worker
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 4
   - name: ocp-cdf-prod-worker
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 4
 
