@@ -1,6 +1,8 @@
 {{- if .Values.mtv.enabled -}}{{- if .Values.mtv.forklift -}}{{- if .Values.mtv.forklift.enabled -}}
 {{- $root := . -}}
-{{- $namespace := .Values.mtv.forklift.namespace | default (.Values.mtv.namespace | default (.Values.project.project.name | default "openshift-mtv")) -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-mtv" -}}
+{{- $ns2 := .Values.mtv.namespace | default ($ns1) -}}
+{{- $namespace := .Values.mtv.forklift.namespace | default ($ns2) -}}
 {{- $spec := .Values.mtv.spec | default "{}" -}}
 apiVersion: forklift.konveyor.io/v1beta1
 kind: ForkliftController
