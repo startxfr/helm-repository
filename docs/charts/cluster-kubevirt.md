@@ -226,3 +226,4 @@ xxxx to do xxxxxxxx
 | 12.0.13 | 2023-09-28 | Update limits parameters for virtualMachine and PVC
 | 12.0.14 | 2023-09-28 | Debug featureGate for kubevirt
 | 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
+| 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
