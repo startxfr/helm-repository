@@ -3,15 +3,15 @@
 {{- $ns1 := .Values.project.project.name | default "openshift-mtv" -}}
 {{- $ns2 := .Values.mtv.namespace | default ($ns1) -}}
 {{- $namespace := .Values.mtv.forklift.namespace | default ($ns2) -}}
-{{- $spec := .Values.mtv.spec | default "{}" -}}
+{{- $spec := .Values.mtv.forklift.spec | default "{}" -}}
 apiVersion: forklift.konveyor.io/v1beta1
 kind: ForkliftController
 metadata:
-  name: {{ .Values.mtv.name | default "quote" | quote }}
+  name: {{ .Values.mtv.forklift.name | default "quote" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-mtv.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.mtv.name | default "quote" -}}-forklift"
+    app.kubernetes.io/name: "{{- .Values.mtv.forklift.name | default "quote" -}}-forklift"
   annotations:
     {{- include "cluster-mtv.annotations" . | nindent 4 }}
     {{- if .Values.mtv.hooked }}
