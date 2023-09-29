@@ -58,3 +58,4 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 12.36.1 | 2023-09-29 | Initialize the MTV cluster-service chart
+| 12.36.2 | 2023-09-29 | Implement version 2.5.0 of the MTV operator with ForkliftController support
