@@ -1,8 +1,8 @@
 {{- if .Values.kKafka }}{{- if .Values.kKafka.enabled }}
 {{- $root := . -}}
 {{- $namespace := .Values.projectKEventing.project.name | default "default-knative" -}}
+apiVersion: operator.serverless.openshift.io/v1alpha1
 kind: KnativeKafka
-apiVersion: operator.knative.dev/v1beta1
 metadata:
   name: {{ .Values.kKafka.name | default "knative-kafka" | quote }}
   namespace: "{{- $namespace -}}"
