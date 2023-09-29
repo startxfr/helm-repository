@@ -231,3 +231,4 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.7 | 2023-08-18 | Upgrade to 1.1.5 OADP operator release
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
+| 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
