@@ -192,7 +192,7 @@ operatorJaeger:
       channel: "stable"
       name: jaeger-product
       installPlanApproval: Automatic
-      # csv: jaeger-operator
+      csv: jaeger-operator
       source:
         name: redhat-operators
         namespace: openshift-marketplace
@@ -201,7 +201,7 @@ operatorJaeger:
     hooked: false
     target: "all-ns"
     name: "jaeger-operator"
-    namespace: "openshift-operators"
+    namespace: "openshift-distributed-tracing"
     providedAPIs: "Jaeger.v1.jaegertracing.io"
 
 # Configuration of the istio operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
