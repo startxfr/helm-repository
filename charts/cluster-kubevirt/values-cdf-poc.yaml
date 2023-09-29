@@ -32,8 +32,101 @@ project:
     rules: []
   limits: 
     enabled: false
+    rules: |
+      limits:
+        - type: "Pod"
+          min:
+            cpu: "20m"
+            memory: "32Mi"
+          max:
+            cpu: 2
+            memory: "2Gi"
+        - type: "Container"
+          default:
+            cpu: "500m"
+            memory: "512Mi"
+          defaultRequest:
+            cpu: "20m"
+            memory: "32Mi"
+          min:
+            cpu: "20m"
+            memory: "32Mi"
+          max:
+            cpu: 2
+            memory: "2Gi"
+        - type: "PersistentVolumeClaim"
+          min:
+            storage: "1Gi"
+          max:
+            storage: "50Gi"
+        - type: "kubevirt.io/VirtualMachine"
+          default:
+            cpu: "500m"
+            memory: "512Mi"
+          defaultRequest:
+            cpu: "200m"
+            memory: "256Mi"
+          min:
+            cpu: "200m"
+            memory: "256Mi"
+          max:
+            cpu: 4
+            memory: "32Gi"
   quotas: 
     enabled: false
+    rules: |
+      hard:
+        limits.cpu: "30"
+        limits.memory: "100Gi"
+        requests.cpu: "15"
+        requests.memory: "60Gi"
+        requests.storage: "1Ti"
+        persistentvolumeclaims: "50"
+        ephemeral-storage: "250Gi"
+        gp2.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp3.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp2-csi.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3-csi.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        gp3-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-odf-generic-delete.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-odf-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-odf-generic-retain.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-odf-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-odf-fs-delete.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-odf-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        startx-odf-fs-retain.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        startx-odf-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "1Ti"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "50"
+        pods: "100"
+        services: "25"
+        services.loadbalancers: "0"
+        services.nodeports: "0"
+        secrets: "50"
+        configmaps: "50"
+        replicationcontrollers: "5"
+        openshift.io/imagestreams: "0"
+        count/daemonsets.apps: "0"
+        count/replicasets.apps: "5"
+        count/deployments.apps: "5"
+        kubevirt.io/virtualmachine: "10"
 operator:
   enabled: false
   context: 

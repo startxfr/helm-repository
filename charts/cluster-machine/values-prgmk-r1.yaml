@@ -53,22 +53,22 @@ machineHealthCheck:
     maxUnhealthy: 40%
     timeouts: 300s
   - name: ada-dev
-    type: worker
+    type: app
     group: ocp-ada-dev-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: ada-rec
-    type: worker
+    type: app
     group: ocp-ada-rec-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: homebox-dev
-    type: worker
+    type: app
     group: ocp-homebox-dev-worker
     maxUnhealthy: 40%
     timeouts: 300s
   - name: homebox-rec
-    type: worker
+    type: app
     group: ocp-homebox-rec-worker
     maxUnhealthy: 40%
     timeouts: 300s
@@ -81,19 +81,19 @@ machineAutoscaler:
     minReplicas: 0
     maxReplicas: 4
   - name: ocp-ada-dev-worker
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 4
   - name: ocp-ada-rec-worker
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 4
   - name: ocp-homebox-dev-worker
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 4
   - name: ocp-homebox-rec-worker
-    type: worker
+    type: app
     minReplicas: 0
     maxReplicas: 4
 

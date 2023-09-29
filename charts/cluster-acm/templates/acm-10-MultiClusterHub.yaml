@@ -21,6 +21,7 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "0"
 spec:
+  enableClusterBackup: false
   availabilityConfig: {{ .Values.acm.mch.availabilityConfig | default "High" | quote }}
 {{- if .Values.acm.mch.hive }}{{- if .Values.acm.mch.hive.enabled }}
   hive:
@@ -37,7 +38,9 @@ spec:
   overrides:
     components:
       - enabled: true
-        name: search
+        name: multiclusterhub-repo
+      - enabled: true
+        name: management-ingress
       - enabled: true
         name: console
       - enabled: true
@@ -51,9 +54,9 @@ spec:
       - enabled: true
         name: multicluster-engine
       - enabled: true
+        name: search
+      - enabled: false
         name: cluster-backup
-      - enabled: true
-        name: app-lifecycle
   separateCertificateManagement: false
 {{- if .Values.acm.mch.infra }}
   nodeSelector:

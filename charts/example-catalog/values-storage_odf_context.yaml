@@ -1,22 +1,22 @@
 
 # Default values for configuration of a dev demo
 # see values.yaml for explanation on each params
-nameOverride: example-catalog-storage_ocs_context
+nameOverride: example-catalog-storage_odf_context
 versionOverride: "0.0.2"
 context: &context
   scope: startx
   cluster: default
   environment: dev
   component: storage
-  app: example-catalog-storage_ocs_context
+  app: example-catalog-storage_odf_context
   version: "0.0.2"
 
 demo:
-  storage_ocs_context: 
+  storage_odf_context: 
     <<: *context
     enabled: true 
     namespace: demo-storage
-    namespace_ocs: openshift-storage
+    namespace_odf: openshift-storage
     aws_access_id: myAWSAccessID
     aws_access_key: myAWSAccessKey
     aws_region: eu-west-3
