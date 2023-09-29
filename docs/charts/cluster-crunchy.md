@@ -166,3 +166,4 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 | 12.0.7 | 2023-08-18 | Upgrade to 5.4.1 crunchy operator release
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
 | 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
+| 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
