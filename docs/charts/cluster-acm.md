@@ -243,3 +243,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
 | 12.0.12 | 2023-09-28 | Change default config for MCH
+| 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
