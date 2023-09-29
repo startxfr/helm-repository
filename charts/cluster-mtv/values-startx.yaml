@@ -1,0 +1,61 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: mtv
+  app: startx-mtv
+mtv:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   mtv4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-mtv"
+    display_name: "Startx MTV"
+    requester: startx
+    description: Migration Toolkit for Virtualisation configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "mtv-operator"
+    namespace: "openshift-mtv"
+    version: "4.12.0-202302061916"
+    operator: 
+      channel: "stable"
+      name: mtv-operator
+      installPlanApproval: Automatic
+      # csv: mtv-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-mtv"
+    namespace: "openshift-mtv"
+    providedAPIs: "NodePtpDevice.v1.mtv.openshift.io,PtpConfig.v1.mtv.openshift.io,PtpOperatorConfig.v1.mtv.openshift.io"
