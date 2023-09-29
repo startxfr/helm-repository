@@ -1,0 +1,45 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: mtv
+  app: demo-mtv
+mtv:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   mtv4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "demo-mtv"
+    display_name: "Demo MTV"
+    requester: startx
+    description: Demo of Migration Toolkit for Virtualisation configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
