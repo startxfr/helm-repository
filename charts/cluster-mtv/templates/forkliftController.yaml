@@ -1,15 +1,15 @@
-{{- if .Values.mtv.enabled -}}
+{{- if .Values.mtv.enabled -}}{{- if .Values.mtv.forklift -}}{{- if .Values.mtv.forklift.enabled -}}
 {{- $root := . -}}
-{{- $namespace := .Values.project.project.name | default "openshift-mtv" -}}
+{{- $namespace := .Values.mtv.forklift.namespace | default (.Values.mtv.namespace | default (.Values.project.project.name | default "openshift-mtv")) -}}
 {{- $spec := .Values.mtv.spec | default "{}" -}}
-apiVersion: mtv.openshift.io/v1
-kind: PtpConfig
+apiVersion: forklift.konveyor.io/v1beta1
+kind: ForkliftController
 metadata:
   name: {{ .Values.mtv.name | default "quote" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-mtv.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.mtv.name | default "quote" -}}-mtvconfig"
+    app.kubernetes.io/name: "{{- .Values.mtv.name | default "quote" -}}-forklift"
   annotations:
     {{- include "cluster-mtv.annotations" . | nindent 4 }}
     {{- if .Values.mtv.hooked }}
@@ -22,4 +22,4 @@ metadata:
     argocd.argoproj.io/sync-wave: "10"
 spec:
   {{- $spec | nindent 2 }}
-{{- end -}}
+{{- end -}}{{- end -}}{{- end -}}

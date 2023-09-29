@@ -9,20 +9,15 @@ context: &context
 mtv:
   enabled: false
   hooked: false
-  name: default
-  spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
-    # profile:
-    # - name: "profile1"
-    #   interface: "enp134s0f0"
-    #   mtv4lOpts: "-s -2"
-    #   phc2sysOpts: "-a -r"
-    # recommend:
-    # - profile: "profile1"
-    #   priority: 4
-    #   match:
-    #   - nodeLabel: "node-role.kubernetes.io/worker"
+  namespace: openshift-mtv
+  forklift:
+    enabled: true
+    name: forklift-controller
+    spec: |
+      feature_must_gather_api: 'true'
+      feature_ui_plugin: 'true'
+      feature_validation: 'true'
+      feature_volume_populator: 'true'
 project: 
   enabled: false
   context: 
@@ -44,9 +39,9 @@ operator:
     hooked: false
     name: "mtv-operator"
     namespace: "openshift-mtv"
-    version: "4.12.0-202302061916"
+    version: "v2.5.0"
     operator: 
-      channel: "stable"
+      channel: "release-v2.5"
       name: mtv-operator
       installPlanApproval: Automatic
       # csv: mtv-operator
@@ -54,8 +49,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     name: "openshift-mtv"
     namespace: "openshift-mtv"
-    providedAPIs: "NodePtpDevice.v1.mtv.openshift.io,PtpConfig.v1.mtv.openshift.io,PtpOperatorConfig.v1.mtv.openshift.io"
+    providedAPIs: "ForkliftController.v1beta1.forklift.konveyor.io,Hook.v1beta1.forklift.konveyor.io,Host.v1beta1.forklift.konveyor.io,Migration.v1beta1.forklift.konveyor.io,NetworkMap.v1beta1.forklift.konveyor.io,OpenstackVolumePopulator.v1beta1.forklift.konveyor.io,OvirtVolumePopulator.v1beta1.forklift.konveyor.io,Plan.v1beta1.forklift.konveyor.io,Provider.v1beta1.forklift.konveyor.io,StorageMap.v1beta1.forklift.konveyor.io"

@@ -17,16 +17,26 @@ context:  &context
 
 # Deploy an API manager
 mtv:
-  # Enable the configuration of the API manager
+  # Enable the configuration of the MTV
   enabled: true
   # Activate the manager as a helm hook
   hooked: true
-  # Name of the deployed instance of MTVConfig
-  name: default
-  # The applyed MTV config specifications
-  spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
+  # Default namespace for all ressources (if not set, use project)
+  namespace: openshift-mtv
+  # The Forklift configuration
+  forklift:
+    # Enable the configuration of the Forklift
+    enabled: true
+    # Name of the deployed instance of ForkliftController
+    name: forklift-controller
+    # Namespace of the deployed instance of ForkliftController (if not set, use default ns for MTV)
+    namespace: openshift-mtv
+    # The applyed Forklift specifications
+    spec: |
+      feature_must_gather_api: 'true'
+      feature_ui_plugin: 'true'
+      feature_validation: 'true'
+      feature_volume_populator: 'true'
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
@@ -38,7 +48,7 @@ project:
     enabled: false
     hooked: false
     type: namespace
-    name: "mtv-operator"
+    name: "openshift-mtv"
     display_name: Operator MTV
     description: Migration Toolkit for Virtualisation configured by STARTX
 
@@ -52,9 +62,9 @@ operator:
     hooked: false
     name: "mtv-operator"
     namespace: "openshift-mtv"
-    version: "4.12.0-202302061916"
+    version: "v2.5.0"
     operator: 
-      channel: "stable"
+      channel: "release-v2.5"
       name: mtv-operator
       installPlanApproval: Automatic
       # csv: mtv-operator
@@ -66,4 +76,4 @@ operator:
     hooked: false
     name: "openshift-mtv"
     namespace: "openshift-mtv"
-    providedAPIs: "NodePtpDevice.v1.mtv.openshift.io,PtpConfig.v1.mtv.openshift.io,PtpOperatorConfig.v1.mtv.openshift.io"
+    providedAPIs: "ForkliftController.v1beta1.forklift.konveyor.io,Hook.v1beta1.forklift.konveyor.io,Host.v1beta1.forklift.konveyor.io,Migration.v1beta1.forklift.konveyor.io,NetworkMap.v1beta1.forklift.konveyor.io,OpenstackVolumePopulator.v1beta1.forklift.konveyor.io,OvirtVolumePopulator.v1beta1.forklift.konveyor.io,Plan.v1beta1.forklift.konveyor.io,Provider.v1beta1.forklift.konveyor.io,StorageMap.v1beta1.forklift.konveyor.io"
