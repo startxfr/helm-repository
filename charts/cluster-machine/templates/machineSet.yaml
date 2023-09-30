@@ -45,6 +45,8 @@ spec:
           node-role.kubernetes.io/storage: ""
           {{- else }}
           node-role.kubernetes.io/app: ""
+          {{- end }}
+          "node-role.startx.io/{{ .group | default "app" }}": ""
           {{ end }}
           {{- if .additionnalsLabels -}}
           {{- .additionnalsLabels | nindent 10 -}}
