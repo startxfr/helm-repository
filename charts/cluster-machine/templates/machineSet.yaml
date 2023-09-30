@@ -51,7 +51,7 @@ spec:
           {{- else }}
           node-role.kubernetes.io/app: ""
           {{- end }}
-          "node-role.startx.io/{{ .group | default 'app' }}": ""
+          "node-role.startx.io/{{ .group | default "app" }}": ""
           {{ end }}
           {{- if .additionnalsLabels -}}
           {{- .additionnalsLabels | nindent 10 -}}
