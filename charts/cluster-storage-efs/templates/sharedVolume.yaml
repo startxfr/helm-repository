@@ -1,0 +1,28 @@
+{{- if .Values.sharedVolumes -}}{{- if .Values.sharedVolumes.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "default" -}}
+{{ range .Values.sharedVolumes.list }} 
+---
+apiVersion: aws-efs.managed.openshift.io/v1alpha1
+kind: SharedVolume
+metadata:
+  name: {{ .name | default "default-efs" | quote }}
+  namespace: "{{- .namespace | default $namespace -}}"
+  labels:
+    {{- include "cluster-storage-efs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "default-efs" }}-sharedvolume"
+  annotations:
+    {{- include "cluster-storage-efs.annotations" . | nindent 4 }}
+    {{- if $root.Values.sharedVolumes.hooked }}
+    helm.sh/hook: pre-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec: 
+  accessPointID: {{ .accessPointID | default "fsap-xxxxxxxxxxxxxxxxx" | quote }}
+  fileSystemID: {{ .fileSystemID | default "fs-xxxxxxxxxxxxxxxxx" | quote }}
+{{ end }}
+{{- end }}{{- end }}
