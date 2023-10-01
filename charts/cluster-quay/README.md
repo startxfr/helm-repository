@@ -242,3 +242,4 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 | 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
 | 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
 | 12.36.2 | 2023-09-29 | Move Quay operator to openshift-startx-quay namespace
+| 12.36.9 | 2023-10-01 | publish stable update for the full repository
