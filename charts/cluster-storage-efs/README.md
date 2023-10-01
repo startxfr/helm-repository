@@ -1,4 +1,4 @@
-# Cluster ODF
+# Cluster AWS EFS
 
 This helm chart is used to configure Openshift Container Storage at the cluster level.
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -47,7 +47,7 @@ helm install cluster-storage-efs startx/cluster-storage-efs
 
 ## Others values availables
 
-- **startx** : Startx ODF cluster wide service configuration using ODF operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage-efs/values-startx.yaml))
+- **startx** : Startx AWS EFS cluster wide service configuration using EFS operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage-efs/values-startx.yaml))
 
 ```bash
 helm install cluster-storage-efs startx/cluster-storage-efs -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage-efs/values-startx.yaml
