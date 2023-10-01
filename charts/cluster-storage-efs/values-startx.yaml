@@ -1,0 +1,72 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: storage-efs
+  app: startx-efs
+odf:
+  enabled: false
+  hooked: false
+  name: startx-efs
+  version: "4.8.0"
+  storage:
+  - name: odf-deviceset
+    replicas: 3
+    size: 512Gi
+    storageClass: startx-aws-generic-retain
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-storage"
+    display_name: "Startx ODF"
+    requester: startx
+    description: Openshift Container Storage configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev-view
+      name: dev
+      role: view
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "odf-operator"
+    namespace: "openshift-storage"
+    version: "v4.12.5"
+    operator: 
+      channel: stable-4.12
+      name: odf-operator
+      installPlanApproval: Automatic
+      # csv: odf-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-storage"
+    namespace: "openshift-storage"
+    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephFilesystemMirror.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectRealm.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,CephObjectZone.v1.ceph.rook.io,CephObjectZoneGroup.v1.ceph.rook.io,CephRBDMirror.v1.ceph.rook.io,NamespaceStore.v1alpha1.noobaa.io,NooBaa.v1alpha1.noobaa.io,ODFInitialization.v1.odf.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.odf.openshift.io,StorageSystem.v1alpha1.odf.openshift.io,VolumeReplication.v1alpha1.replication.storage.openshift.io,VolumeReplicationClass.v1alpha1.replication.storage.openshift.io"
