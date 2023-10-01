@@ -14,7 +14,7 @@
 {{- $disk_boot_storageclass := .storage.boot_storageclass | default "gp3-csi" -}}
 ---
 kind: VirtualMachine
-apiVersion: kubevirt.io/v1alpha3
+apiVersion: kubevirt.io/v1
 metadata:
   name: {{ $name | quote }}
   namespace: {{ $namespace | quote }}
