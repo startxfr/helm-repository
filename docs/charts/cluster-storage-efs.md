@@ -59,3 +59,4 @@ helm install cluster-storage-efs startx/cluster-storage-efs -f https://raw.githu
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 12.36.2 | 2023-09-30 | Create chart cluster-storage-efs from cluster-storage 
 | 12.36.2 | 2023-10-01 | Create chart cluster-storage-efs from cluster-storage
+| 12.36.9 | 2023-10-01 | publish stable update for the full repository
