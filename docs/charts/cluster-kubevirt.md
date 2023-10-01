@@ -227,3 +227,5 @@ xxxx to do xxxxxxxx
 | 12.0.14 | 2023-09-28 | Debug featureGate for kubevirt
 | 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
 | 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
+| 12.36.2 | 2023-09-29 | Move to version 4.12.6 version of the kubevirt-hyperconverged operator
+| 12.36.9 | 2023-10-01 | publish stable update for the full repository

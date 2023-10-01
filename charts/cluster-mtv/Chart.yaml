@@ -1,0 +1,59 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-mtv
+# Description of this Helm chart
+description: Helm chart used to configure Migration Toolkit for Virtualisation at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 12.36.9
+# Version name of the mtv operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 4.12.0
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-mtv.svg
+# category associated to this package
+category: cluster
+# tags
+tags: infra,cluster,mtv,migration,virtualization,kubevirt
+# Kube minimum version
+kubeVersion: ">=1.21.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - Migration
+  - Virtualization
+  - KubeVirt
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-mtv
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtv
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    version: "12.0.0"
+    alias: project
+    condition: project.enabled
+  - name: operator
+    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    version: "12.0.0"
+    alias: operator
+    condition: operator.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Debug naming for the forklift resource"
+  artifacthub.io/containsSecurityUpdates: "false"

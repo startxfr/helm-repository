@@ -260,3 +260,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 12.0.12 | 2023-09-28 | Update on default request and limit for ephemeral storage
 | 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
 | 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
+| 12.36.9 | 2023-10-01 | publish stable update for the full repository

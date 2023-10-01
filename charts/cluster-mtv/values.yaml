@@ -1,0 +1,79 @@
+# Default values for cluster-mtv.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-mtv
+  # Version name of this application (default use Chart appVersion)
+  # version: "0.0.3"
+
+# Deploy an API manager
+mtv:
+  # Enable the configuration of the MTV
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: true
+  # Default namespace for all ressources (if not set, use project)
+  namespace: openshift-mtv
+  # The Forklift configuration
+  forklift:
+    # Enable the configuration of the Forklift
+    enabled: true
+    # Name of the deployed instance of ForkliftController
+    name: forklift-controller
+    # Namespace of the deployed instance of ForkliftController (if not set, use default ns for MTV)
+    namespace: openshift-mtv
+    # The applyed Forklift specifications
+    spec: |
+      feature_must_gather_api: 'true'
+      feature_ui_plugin: 'true'
+      feature_validation: 'true'
+      feature_volume_populator: 'true'
+
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-mtv"
+    display_name: Operator MTV
+    description: Migration Toolkit for Virtualisation configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "mtv-operator"
+    namespace: "openshift-mtv"
+    version: "v2.5.0"
+    operator: 
+      channel: "release-v2.5"
+      name: mtv-operator
+      installPlanApproval: Automatic
+      csv: mtv-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-mtv"
+    namespace: "openshift-mtv"
+    providedAPIs: "ForkliftController.v1beta1.forklift.konveyor.io,Hook.v1beta1.forklift.konveyor.io,Host.v1beta1.forklift.konveyor.io,Migration.v1beta1.forklift.konveyor.io,NetworkMap.v1beta1.forklift.konveyor.io,OpenstackVolumePopulator.v1beta1.forklift.konveyor.io,OvirtVolumePopulator.v1beta1.forklift.konveyor.io,Plan.v1beta1.forklift.konveyor.io,Provider.v1beta1.forklift.konveyor.io,StorageMap.v1beta1.forklift.konveyor.io"

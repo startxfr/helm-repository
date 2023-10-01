@@ -1,0 +1,27 @@
+{{- if .Values.mtv.enabled -}}{{- if .Values.mtv.forklift -}}{{- if .Values.mtv.forklift.enabled -}}
+{{- $root := . -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-mtv" -}}
+{{- $ns2 := .Values.mtv.namespace | default ($ns1) -}}
+{{- $namespace := .Values.mtv.forklift.namespace | default ($ns2) -}}
+{{- $spec := .Values.mtv.forklift.spec | default "{}" -}}
+apiVersion: forklift.konveyor.io/v1beta1
+kind: ForkliftController
+metadata:
+  name: {{ .Values.mtv.forklift.name | default "quote" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-mtv.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.mtv.forklift.name | default "quote" -}}-forklift"
+  annotations:
+    {{- include "cluster-mtv.annotations" . | nindent 4 }}
+    {{- if .Values.mtv.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}{{- end -}}

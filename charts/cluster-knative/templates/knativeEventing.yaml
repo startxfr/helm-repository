@@ -4,11 +4,11 @@
 kind: KnativeEventing
 apiVersion: operator.knative.dev/v1beta1
 metadata:
-  name: {{ .Values.kEventing.name | default "knative-serving" | quote }}
+  name: {{ .Values.kEventing.name | default "knative-eventing" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-knative.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{ .Values.kEventing.name | default "knative-serving" }}-knativeeventing"
+    app.kubernetes.io/name: "{{ .Values.kEventing.name | default "knative-eventing" }}-knativeeventing"
   annotations:
     {{- include "cluster-knative.annotations" . | nindent 4 }}
     {{- if .Values.kEventing.hooked }}

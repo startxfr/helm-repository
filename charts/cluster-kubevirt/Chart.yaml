@@ -6,7 +6,7 @@ description: Helm chart used to configure Code Ready Workspace at the cluster le
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 12.36.1
+version: 12.36.9
 # Version name of the CRW operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.7.0
 # Icon of this helm-chart
@@ -56,5 +56,9 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "release 12.36.1 aligned with OCP 4.12.36"
+      description: "Move to version 4.12.6 version of the kubevirt-hyperconverged operator"
+    - kind: changed
+      description: "Update demo to deploy operator into openshift-cnv namespace"
+    - kind: changed
+      description: "Update operatorGroup API declarations"
   artifacthub.io/containsSecurityUpdates: "false"

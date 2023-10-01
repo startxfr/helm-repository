@@ -1,0 +1,503 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Deployment context",
+            "description": "Properties of the deployment context.",
+            "required": [
+                "scope",
+                "cluster",
+                "environment",
+                "component",
+                "app"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "default": "myscope",
+                    "examples": [
+                        "myscope",
+                        "mycustomer"
+                    ]
+                },
+                "cluster": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "localhost",
+                    "examples": [
+                        "mycluster",
+                        "localhost"
+                    ]
+                },
+                "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Environement name",
+                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "sxapi",
+                    "examples": [
+                        "mycomp",
+                        "myservice"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "default": "default-sxapi",
+                    "examples": [
+                        "myapp",
+                        "mymicroservice"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Version name",
+                    "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                    "default": "0.0.1",
+                    "examples": [
+                        "0.0.1",
+                        "0.1",
+                        "0.0.1-snapshot",
+                        "0.0.1-202110300900"
+                    ]
+                }
+            },
+            "sharedVolumes": {
+                "type": "object",
+                "properties": {
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "hooked": {
+                        "type": "boolean"
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 40,
+                                    "title": "Shared volume name",
+                                    "description": "Name of this shared volume (PVC will be named pvc-<myname>)",
+                                    "default": "default-efs",
+                                    "examples": [
+                                        "default-efs",
+                                        "my-shared-volume"
+                                    ]
+                                },
+                                "namespace": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 40,
+                                    "title": "Shared volume namespace",
+                                    "description": "Namespace where to place the SharedVolume (and PVC). Default is the default project",
+                                    "default": "default",
+                                    "examples": [
+                                        "default",
+                                        "my-app-namespace"
+                                    ]
+                                },
+                                "accessPointID": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 30,
+                                    "title": "EFS Access point ID",
+                                    "description": "Configure the EFS access point ID (default is fsap-xxxxxxxxxxxxxxxxx)",
+                                    "default": "fsap-xxxxxxxxxxxxxxxxx",
+                                    "examples": [
+                                        "fsap-xxxxxxxxxxxxxxxxx",
+                                        "fsap-yyyyyyyyyyyyyyyyy"
+                                    ]
+                                },
+                                "fileSystemID": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 30,
+                                    "title": "EFS Filesystem ID",
+                                    "description": "Define the EFS Filesystem ID (default is fs-xxxxxxxxxxxxxxxxx)",
+                                    "default": "fs-xxxxxxxxxxxxxxxxx",
+                                    "examples": [
+                                        "fs-xxxxxxxxxxxxxxxxx",
+                                        "fs-yyyyyyyyyyyyyyyyy"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "operator": {
+                "type": "object",
+                "required": [
+                    "context",
+                    "enabled",
+                    "subscription",
+                    "operatorGroup"
+                ],
+                "properties": {
+                    "enabled": {
+                        "type": "boolean",
+                        "title": "Enable the operator creation",
+                        "description": "Enable creation of the operator into an Openshift environment. Is required to be enabled if you want to create resources.",
+                        "default": true
+                    },
+                    "context": {
+                        "type": "object",
+                        "title": "Operator context",
+                        "description": "Properties of the operator context.",
+                        "required": [
+                            "scope",
+                            "cluster",
+                            "environment",
+                            "component",
+                            "app"
+                        ],
+                        "properties": {
+                            "scope": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 25,
+                                "title": "Scope name",
+                                "description": "Name of the global scope for this application. Define an organisational tenant.",
+                                "default": "myscope",
+                                "examples": [
+                                    "myscope",
+                                    "mycustomer"
+                                ]
+                            },
+                            "cluster": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 25,
+                                "title": "Cluster name",
+                                "description": "Name of the cluster running this application. Define a platform tenant.",
+                                "default": "localhost",
+                                "examples": [
+                                    "mycluster",
+                                    "localhost"
+                                ]
+                            },
+                            "environment": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 25,
+                                "title": "Environement name",
+                                "description": "Name of the environement for this application. Define a stage tenant.",
+                                "default": "dev",
+                                "examples": [
+                                    "dev",
+                                    "factory",
+                                    "preprod",
+                                    "prod"
+                                ]
+                            },
+                            "component": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 25,
+                                "title": "Component name",
+                                "description": "Name of the component consisting of this application. Define a logical tenant.",
+                                "default": "mycomp",
+                                "examples": [
+                                    "mycomp",
+                                    "myservice"
+                                ]
+                            },
+                            "app": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40,
+                                "title": "Application name",
+                                "description": "Name of the application name. Define a functionnal tenant.",
+                                "default": "default-project",
+                                "examples": [
+                                    "myapp",
+                                    "mymicroservice"
+                                ]
+                            },
+                            "version": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 30,
+                                "pattern": "^([a-zA-Z1-9]*)(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+                                "title": "Version name",
+                                "description": "Name of the subscription version. Should be incremented each time the operator version is changed to keep track of changes and allow ease rolling of the operator (and rollout in case of problem). Default use Chart appVersion.",
+                                "default": "0.0.1",
+                                "examples": [
+                                    "0.0.1",
+                                    "0.1",
+                                    "0.0.1-snapshot",
+                                    "0.0.1-202110300900"
+                                ]
+                            }
+                        }
+                    },
+                    "subscription": {
+                        "type": "object",
+                        "title": "Subscription management",
+                        "description": "Information about the subscription to the operator.",
+                        "required": [
+                            "enabled",
+                            "name",
+                            "namespace"
+                        ],
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean",
+                                "title": "Enable subscription creation",
+                                "description": "Enable the creation of the subscription.",
+                                "default": true
+                            },
+                            "hooked": {
+                                "type": "boolean",
+                                "title": "Helm hook",
+                                "description": "Subscription creation is done as an helm hook. Should be set to true when included as chart dependencies to create subscription prior to other resources (helm doesn't recognize subscription resources as it does for CRD)",
+                                "default": true
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "Name of the subscription.",
+                                "default": "redis-operator",
+                                "examples": [
+                                    "redis-operator",
+                                    "startx-operator",
+                                    "my-operator"
+                                ]
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "title": "Namespace",
+                                "description": "Namespace hosting the subscription.",
+                                "default": "openshift-operators",
+                                "examples": [
+                                    "default",
+                                    "openshift-operators",
+                                    "startx-operators",
+                                    "mycorp-operators"
+                                ]
+                            },
+                            "version": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 30,
+                                "title": "Operator version",
+                                "description": "Version of the operator to deploy. Must be available in the operator catalog. If not set use the context version.",
+                                "default": "v0.8.0",
+                                "examples": [
+                                    "0.0.1",
+                                    "v0.1.1",
+                                    "v0.0.1-snapshot",
+                                    "0.0.1-202110300900"
+                                ]
+                            },
+                            "operator": {
+                                "type": "object",
+                                "title": "Operator definition",
+                                "description": "Define the operator to deploy.",
+                                "properties": {
+                                    "channel": {
+                                        "type": "string",
+                                        "title": "Channel",
+                                        "description": "The operator channel to use.",
+                                        "default": "stable",
+                                        "examples": [
+                                            "stable",
+                                            "preview"
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "title": "Name",
+                                        "description": "The operator name. If not set, use the subscription name.",
+                                        "default": "redis-operator",
+                                        "examples": [
+                                            "redis-operator",
+                                            "my-operator"
+                                        ]
+                                    },
+                                    "csv": {
+                                        "type": "string",
+                                        "title": "ClusterServiceVersion ",
+                                        "description": "The ClusterServiceVersion name to use.",
+                                        "default": "redis-operator",
+                                        "examples": [
+                                            "redis-operator",
+                                            "my-operator"
+                                        ]
+                                    },
+                                    "installPlanApproval": {
+                                        "type": "string",
+                                        "title": "installPlanApproval ",
+                                        "description": "The installPlanApproval mode to use.",
+                                        "default": "Automatic",
+                                        "enum": [
+                                            "Automatic",
+                                            "Manual"
+                                        ],
+                                        "examples": [
+                                            "Automatic",
+                                            "Manual"
+                                        ]
+                                    },
+                                    "source": {
+                                        "type": "object",
+                                        "title": "Operator source",
+                                        "description": "Define the operator source.",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "redhat-operators",
+                                                    "community-operators",
+                                                    "certified-operators"
+                                                ],
+                                                "title": "Source name",
+                                                "description": "Name of the operator source (default is 'redhat-operators').",
+                                                "default": "community-operators",
+                                                "examples": [
+                                                    "redhat-operators",
+                                                    "community-operators",
+                                                    "certified-operators"
+                                                ]
+                                            },
+                                            "namespace": {
+                                                "type": "string",
+                                                "title": "Namespace",
+                                                "description": "Namespace hosting the markeplace operator delivering this subscription.",
+                                                "default": "openshift-marketplace",
+                                                "examples": [
+                                                    "openshift-marketplace",
+                                                    "startx-marketplace",
+                                                    "my-marketplace"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "config": {
+                                        "type": "object",
+                                        "title": "Operator configuration",
+                                        "description": "Optional configuration for Operator",
+                                        "default": {},
+                                        "examples": [{
+                                                "infra": true
+                                            },
+                                            {
+                                                "env": [{
+                                                    "name": "FOO",
+                                                    "value": "bar"
+                                                }]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "operatorGroup": {
+                        "type": "object",
+                        "title": "Operator group management",
+                        "description": "Information about the operatorGroup related to the subscription.",
+                        "required": [
+                            "enabled",
+                            "name"
+                        ],
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean",
+                                "title": "Enable operatorGroup creation",
+                                "description": "Enable the creation of the operatorGroup.",
+                                "default": true
+                            },
+                            "hooked": {
+                                "type": "boolean",
+                                "title": "Helm hook",
+                                "description": "operatorGroup creation is done as an helm hook. Should be set to true when included as chart dependencies to create operatorGroup prior to other resources (helm doesn't recognize operatorGroup resources as it does for CRD)",
+                                "default": true
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "Name of the operatorGroup.",
+                                "default": "redis-operator",
+                                "examples": [
+                                    "redis-operator",
+                                    "startx-operator",
+                                    "my-operator"
+                                ]
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "title": "Namespace",
+                                "description": "Namespace hosting the subscription.",
+                                "default": "openshift-operators",
+                                "examples": [
+                                    "default",
+                                    "openshift-operators",
+                                    "startx-operators",
+                                    "mycorp-operators"
+                                ]
+                            },
+                            "target": {
+                                "type": "string",
+                                "enum": [
+                                    "",
+                                    "all-ns",
+                                    "ns"
+                                ],
+                                "title": "Namespace target",
+                                "description": "If set to all-ns the operatorGroup will be set for all namespaces. Otherwise, will be restricted only to the given namespace.",
+                                "default": "",
+                                "examples": [
+                                    "all-ns",
+                                    "ns"
+                                ]
+                            },
+                            "providedAPIs": {
+                                "type": "string",
+                                "title": "Provided API",
+                                "description": "Comaa-separated list of the provided API.",
+                                "default": "Redis.v1beta1.redis.redis.opstreelabs.in,RedisCluster.v1beta1.redis.redis.opstreelabs.in",
+                                "examples": [
+                                    "Redis.v1beta1.redis.redis.opstreelabs.in,RedisCluster.v1beta1.redis.redis.opstreelabs.in"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -2,6 +2,7 @@
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "required": [
+        "context",
         "enabled",
         "subscription",
         "operatorGroup"
@@ -251,12 +252,15 @@
                             "title": "Operator configuration",
                             "description": "Optional configuration for Operator",
                             "default": {},
-                            "examples": [
-                                {"infra": true},
-                                {"env": [{
-                                    "name": "FOO",
-                                    "value": "bar"
-                                }]}
+                            "examples": [{
+                                    "infra": true
+                                },
+                                {
+                                    "env": [{
+                                        "name": "FOO",
+                                        "value": "bar"
+                                    }]
+                                }
                             ]
                         }
                     }
