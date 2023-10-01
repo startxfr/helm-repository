@@ -243,3 +243,4 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 | 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
 | 12.36.2 | 2023-09-30 | Adding knative Kafka basic support
 | 12.36.3 | 2023-09-30 | Change api version operator.serverless.openshift.io/v1alpha1 for Knative Kafka
+| 12.36.9 | 2023-10-01 | publish stable update for the full repository
