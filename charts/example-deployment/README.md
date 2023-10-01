@@ -289,3 +289,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
 | 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
 | 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
+| 12.36.9 | 2023-10-01 | publish stable update for the full repository
