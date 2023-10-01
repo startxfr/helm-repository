@@ -1,0 +1,40 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: storage-efs
+  app: gov-efs
+sharedVolumes:
+  enabled: false
+  hooked: false
+  list:
+  - name: default-efs
+    namespace: "default"
+    accessPointID: "fsap-xxxxxxxxxxxxxxxxx"
+    fileSystemID: "fs-xxxxxxxxxxxxxxxxx"
+operator:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "aws-efs-operator"
+    namespace: "openshift-storage"
+    version: "v0.0.8"
+    operator: 
+      channel: stable
+      name: aws-efs-operator
+      installPlanApproval: Automatic
+      # csv: aws-efs-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "aws-efs-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "SharedVolume.v1alpha1.aws-efs.managed.openshift.io"

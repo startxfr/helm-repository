@@ -41,14 +41,17 @@ spec:
           node-role.kubernetes.io/infra: ""
           {{- else if eq .type "storage" }}
           node-role.kubernetes.io/storage: ""
+          cluster.ocs.openshift.io/openshift-storage: ""
           {{- else if eq .type "virt" }}
           node-role.kubernetes.io/virt: ""
           {{- else }}
           node-role.kubernetes.io/worker: ""
           {{- if .group }}
           "node-role.kubernetes.io/{{ .group }}": ""
-          {{- end }}
+          {{- else }}
           node-role.kubernetes.io/app: ""
+          {{- end }}
+          "node-role.startx.io/{{ .group | default "app" }}": ""
           {{ end }}
           {{- if .additionnalsLabels -}}
           {{- .additionnalsLabels | nindent 10 -}}
