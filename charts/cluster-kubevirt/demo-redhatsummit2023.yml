@@ -1,0 +1,1501 @@
+
+## Create production legacy workload (v0)
+---
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: myapp
+  labels:
+    kubernetes.io/metadata.name: myapp
+  annotations:
+    openshift.io/description: 'Demo of my application migration to containers'
+    openshift.io/display-name: 'My Application'
+    openshift.io/requester: startx
+spec: {}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: pipeline
+  namespace: myapp
+---
+kind: VirtualMachine
+apiVersion: kubevirt.io/v1
+metadata:
+  name: frontend-v0
+  namespace: myapp
+  labels:
+    app: frontend
+    version: v0
+    app.kubernetes.io/part-of: myapp
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/instance: frontend-v0
+    app.kubernetes.io/name: frontend-v0
+    app.openshift.io/runtime: php
+    vm.kubevirt.io/template: fedora-server-small
+    vm.kubevirt.io/template.namespace: openshift
+    vm.kubevirt.io/template.revision: '1'
+    vm.kubevirt.io/template.version: v0.24.2
+spec:
+  dataVolumeTemplates:
+    - apiVersion: cdi.kubevirt.io/v1beta1
+      kind: DataVolume
+      metadata:
+        creationTimestamp: null
+        name: frontend-v0
+      spec:
+        sourceRef:
+          kind: DataSource
+          name: fedora
+          namespace: openshift-virtualization-os-images
+        storage:
+          resources:
+            requests:
+              storage: 30Gi
+  running: true
+  template:
+    metadata:
+      annotations:
+        vm.kubevirt.io/flavor: small
+        vm.kubevirt.io/os: fedora
+        vm.kubevirt.io/workload: server
+      creationTimestamp: null
+      labels:
+        kubevirt.io/domain: frontend-v0
+        app: frontend
+        version: v0
+        app.kubernetes.io/part-of: myapp
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/instance: frontend-v0
+        app.kubernetes.io/name: frontend-v0
+        app.openshift.io/runtime: php
+        kubevirt.io/size: small
+    spec:
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - disk:
+                bus: virtio
+              name: rootdisk
+            - disk:
+                bus: virtio
+              name: cloudinitdisk
+          interfaces:
+            - name: default
+              masquerade: {}
+              model: virtio
+          networkInterfaceMultiqueue: true
+          rng: {}
+        features:
+          acpi: {}
+          smm:
+            enabled: true
+        firmware:
+          bootloader:
+            efi: {}
+        machine:
+          type: pc-q35-rhel8.6.0
+        resources:
+          requests:
+            memory: 2Gi
+      evictionStrategy: None
+      networks:
+        - name: default
+          pod: {}
+      terminationGracePeriodSeconds: 180
+      volumes:
+        - name: rootdisk
+          dataVolume:
+            name: frontend-v0
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            userData: |-
+              #cloud-config
+              user: admin
+              password: motdepasse
+              chpasswd: { expire: False }
+              hostname: frontend-v0
+              package_update: true
+              package_upgrade: true
+              users:
+                - name: admin
+                  password: motdepasse
+                  chpasswd: { expire: False }
+                  groups: [ wheel , sudo ]
+                  shell: /bin/bash
+                  sudo: ['ALL=(ALL) NOPASSWD:ALL']
+                - name: dev
+                  plain_text_passwd: dev123
+                  chpasswd: { expire: False }
+              packages:
+              - httpd
+              - httpd-tools 
+              - php-fpm
+              - php-cli
+              - php
+              - git
+              runcmd:
+              # On active le serveur httpd
+              - systemctl enable httpd
+              - systemctl start httpd
+              # On install la v0 du site myapp frontend
+              - git clone https://github.com/startxfr/docker-images-example-php /var/www/html/
+              - cd /var/www/html/
+              - git checkout v0
+              - rm -rf /var/www/html/.git
+              # On coupe l'accès au compte root pour la connexion SSH
+              - sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
+              - systemctl restart sshd.service
+              final_message: "Le système est configuré et l'application my-app v0 exposee"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-v0
+  namespace: myapp
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 80
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app: frontend
+    version: v0
+    app.kubernetes.io/part-of: myapp
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: frontend-v0
+  namespace: myapp
+spec:
+  to:
+    kind: Service
+    name: frontend-v0
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  wildcardPolicy: None
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: frontend
+  namespace: myapp
+  annotations:
+    haproxy.router.openshift.io/balance: roundrobin
+    haproxy.router.openshift.io/disable_cookies: 'true'
+spec:
+  to:
+    kind: Service
+    name: frontend-v0
+    weight: 10
+  alternateBackends:
+    - kind: Service
+      name: frontend-v1
+      weight: 10
+    # - kind: Service
+    #   name: frontend-v2
+    #   weight: 10
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  wildcardPolicy: None
+
+## Create the devel environement
+---
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: myapp-devel
+  labels:
+    kubernetes.io/metadata.name: myapp-devel
+  annotations:
+    openshift.io/description: 'Demo of my application development'
+    openshift.io/display-name: 'MyApp (devel)'
+    openshift.io/requester: startx
+spec: {}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: pipeline
+  namespace: myapp-devel
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: frontend
+  namespace: myapp-devel
+  labels:
+    app.kubernetes.io/instance: frontend
+    app.kubernetes.io/name: frontend-devel
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 8.0-ubi9
+spec:
+  params:
+    - default: frontend
+      name: APP_NAME
+      type: string
+    - default: 'https://github.com/startxfr/docker-images-example-php.git'
+      name: GIT_REPO
+      type: string
+    - default: devel
+      name: GIT_REVISION
+      type: string
+    - default: 'image-registry.openshift-image-registry.svc:5000/myapp-devel/frontend'
+      name: IMAGE_NAME
+      type: string
+    - default: .
+      name: PATH_CONTEXT
+      type: string
+    - default: 8.0-ubi9
+      name: VERSION
+      type: string
+  tasks:
+    - name: fetch-repository
+      params:
+        - name: url
+          value: $(params.GIT_REPO)
+        - name: revision
+          value: $(params.GIT_REVISION)
+        - name: subdirectory
+          value: ''
+        - name: deleteExisting
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: build
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE_NAME)
+        - name: TLSVERIFY
+          value: 'false'
+        - name: PATH_CONTEXT
+          value: $(params.PATH_CONTEXT)
+        - name: VERSION
+          value: $(params.VERSION)
+      runAfter:
+        - fetch-repository
+      taskRef:
+        kind: ClusterTask
+        name: s2i-php
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: deploy
+      params:
+        - name: SCRIPT
+          value: oc rollout status deploy/$(params.APP_NAME)
+      runAfter:
+        - build
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client
+  workspaces:
+    - name: workspace
+      optional: false
+  resources: []
+  finally: []
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    chains.tekton.dev/signed: 'true'
+    pipeline.openshift.io/started-by: startx
+  name: frontend-run
+  namespace: myapp-devel
+  labels:
+    app.kubernetes.io/instance: frontend
+    app.kubernetes.io/name: frontend-devel
+    operator.tekton.dev/operand-name: openshift-pipelines-addons
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 8.0-ubi9
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: frontend
+spec:
+  params:
+    - name: APP_NAME
+      value: frontend
+    - name: GIT_REPO
+      value: 'https://github.com/startxfr/docker-images-example-php.git'
+    - name: GIT_REVISION
+      value: devel
+    - name: IMAGE_NAME
+      value: 'image-registry.openshift-image-registry.svc:5000/myapp-devel/frontend'
+    - name: PATH_CONTEXT
+      value: .
+    - name: VERSION
+      value: 8.0-ubi9
+  pipelineRef:
+    name: frontend
+  timeout: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: frontend
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+        status: {}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: 'false'
+    app.openshift.io/vcs-ref: devel
+    app.openshift.io/vcs-uri: 'https://github.com/startxfr/docker-images-example-php.git'
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"frontend:latest","namespace":"myapp-devel"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image","pause":"false"}]
+  name: frontend
+  namespace: myapp-devel
+  labels:
+    app: frontend
+    version: devel
+    app.kubernetes.io/part-of: myapp
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/instance: frontend-devel
+    app.kubernetes.io/name: frontend-devel
+    app.openshift.io/runtime: php
+    app.openshift.io/runtime-version: 8.0-ubi9
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+      version: devel
+      app.kubernetes.io/part-of: myapp
+      deployment: frontend
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: frontend
+        version: devel
+        app.kubernetes.io/part-of: myapp
+        deployment: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/myapp-devel/frontend:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+              ephemeral-storage: "200Mi"
+            limits:
+              memory: "512Mi"
+              cpu: "300m"
+              ephemeral-storage: "500Mi"
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 15
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 6
+  progressDeadlineSeconds: 600
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend
+  namespace: myapp-devel
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app: frontend
+    version: devel
+    app.kubernetes.io/part-of: myapp
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: frontend
+  namespace: myapp-devel
+spec:
+  to:
+    kind: Service
+    name: frontend
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  wildcardPolicy: None
+
+## Create the recette environement
+---
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: myapp-recette
+  labels:
+    kubernetes.io/metadata.name: myapp-recette
+  annotations:
+    openshift.io/description: 'Demo of my application in testing conditions'
+    openshift.io/display-name: 'MyApp (recette)'
+    openshift.io/requester: startx
+spec: {}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: pipeline
+  namespace: myapp-recette
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: frontend
+  namespace: myapp-recette
+  labels:
+    app.kubernetes.io/instance: frontend
+    app.kubernetes.io/name: frontend-recette
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 8.0-ubi9
+spec:
+  params:
+    - default: frontend
+      name: APP_NAME
+      type: string
+    - default: 'https://github.com/startxfr/docker-images-example-php.git'
+      name: GIT_REPO
+      type: string
+    - default: stable
+      name: GIT_REVISION
+      type: string
+    - default: 'image-registry.openshift-image-registry.svc:5000/myapp-recette/frontend'
+      name: IMAGE_NAME
+      type: string
+    - default: .
+      name: PATH_CONTEXT
+      type: string
+    - default: 8.0-ubi9
+      name: VERSION
+      type: string
+  tasks:
+    - name: fetch-repository
+      params:
+        - name: url
+          value: $(params.GIT_REPO)
+        - name: revision
+          value: $(params.GIT_REVISION)
+        - name: subdirectory
+          value: ''
+        - name: deleteExisting
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: build
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE_NAME)
+        - name: TLSVERIFY
+          value: 'false'
+        - name: PATH_CONTEXT
+          value: $(params.PATH_CONTEXT)
+        - name: VERSION
+          value: $(params.VERSION)
+      runAfter:
+        - fetch-repository
+      taskRef:
+        kind: ClusterTask
+        name: s2i-php
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: deploy
+      params:
+        - name: SCRIPT
+          value: oc rollout status deploy/$(params.APP_NAME)
+      runAfter:
+        - build
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client
+  workspaces:
+    - name: workspace
+      optional: false
+  resources: []
+  finally: []
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    chains.tekton.dev/signed: 'true'
+    pipeline.openshift.io/started-by: startx
+  name: frontend-run
+  namespace: myapp-recette
+  labels:
+    app.kubernetes.io/instance: frontend
+    app.kubernetes.io/name: frontend-recette
+    operator.tekton.dev/operand-name: openshift-pipelines-addons
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 8.0-ubi9
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: frontend
+spec:
+  params:
+    - name: APP_NAME
+      value: frontend
+    - name: GIT_REPO
+      value: 'https://github.com/startxfr/docker-images-example-php.git'
+    - name: GIT_REVISION
+      value: stable
+    - name: IMAGE_NAME
+      value: 'image-registry.openshift-image-registry.svc:5000/myapp-recette/frontend'
+    - name: PATH_CONTEXT
+      value: .
+    - name: VERSION
+      value: 8.0-ubi9
+  pipelineRef:
+    name: frontend
+  timeout: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: frontend
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+        status: {}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: 'false'
+    app.openshift.io/vcs-ref: stable
+    app.openshift.io/vcs-uri: 'https://github.com/startxfr/docker-images-example-php.git'
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"frontend:latest","namespace":"myapp-recette"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image","pause":"false"}]
+  name: frontend
+  namespace: myapp-recette
+  labels:
+    app: frontend
+    version: stable
+    app.kubernetes.io/part-of: myapp
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/instance: frontend-recette
+    app.kubernetes.io/name: frontend-recette
+    app.openshift.io/runtime: php
+    app.openshift.io/runtime-version: 8.0-ubi9
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+      version: stable
+      app.kubernetes.io/part-of: myapp
+      deployment: frontend
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: frontend
+        version: stable
+        app.kubernetes.io/part-of: myapp
+        deployment: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/myapp-recette/frontend:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+              ephemeral-storage: "200Mi"
+            limits:
+              memory: "512Mi"
+              cpu: "300m"
+              ephemeral-storage: "500Mi"
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 15
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 6
+  progressDeadlineSeconds: 600
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend
+  namespace: myapp-recette
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app: frontend
+    version: stable
+    app.kubernetes.io/part-of: myapp
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: frontend
+  namespace: myapp-recette
+spec:
+  to:
+    kind: Service
+    name: frontend
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  wildcardPolicy: None
+
+
+
+
+
+
+## Add v1 deployment into production route
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: frontend-v1
+  namespace: myapp
+  labels:
+    app.kubernetes.io/instance: frontend-v1
+    app.kubernetes.io/name: frontend-v1
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 7.4-ubi8
+spec:
+  params:
+    - default: frontend-v1
+      name: APP_NAME
+      type: string
+    - default: 'https://github.com/startxfr/docker-images-example-php.git'
+      name: GIT_REPO
+      type: string
+    - default: v1
+      name: GIT_REVISION
+      type: string
+    - default: 'image-registry.openshift-image-registry.svc:5000/myapp/frontend-v1'
+      name: IMAGE_NAME
+      type: string
+    - default: .
+      name: PATH_CONTEXT
+      type: string
+    - default: 7.4-ubi8
+      name: VERSION
+      type: string
+  tasks:
+    - name: fetch-repository
+      params:
+        - name: url
+          value: $(params.GIT_REPO)
+        - name: revision
+          value: $(params.GIT_REVISION)
+        - name: subdirectory
+          value: ''
+        - name: deleteExisting
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: build
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE_NAME)
+        - name: TLSVERIFY
+          value: 'false'
+        - name: PATH_CONTEXT
+          value: $(params.PATH_CONTEXT)
+        - name: VERSION
+          value: $(params.VERSION)
+      runAfter:
+        - fetch-repository
+      taskRef:
+        kind: ClusterTask
+        name: s2i-php
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: deploy
+      params:
+        - name: SCRIPT
+          value: oc rollout status deploy/$(params.APP_NAME)
+      runAfter:
+        - build
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client
+  workspaces:
+    - name: workspace
+      optional: false
+  resources: []
+  finally: []
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    chains.tekton.dev/signed: 'true'
+    pipeline.openshift.io/started-by: startx
+  name: frontend-v1-run
+  namespace: myapp
+  labels:
+    app.kubernetes.io/instance: frontend-v1
+    app.kubernetes.io/name: frontend-v1
+    operator.tekton.dev/operand-name: openshift-pipelines-addons
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 7.4-ubi8
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: frontend-v1
+spec:
+  params:
+    - name: APP_NAME
+      value: frontend-v1
+    - name: GIT_REPO
+      value: 'https://github.com/startxfr/docker-images-example-php.git'
+    - name: GIT_REVISION
+      value: v1
+    - name: IMAGE_NAME
+      value: 'image-registry.openshift-image-registry.svc:5000/myapp/frontend-v1'
+    - name: PATH_CONTEXT
+      value: .
+    - name: VERSION
+      value: 7.4-ubi8
+  pipelineRef:
+    name: frontend-v1
+  timeout: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: frontend-v1
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+        status: {}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: 'false'
+    app.openshift.io/vcs-ref: v1
+    app.openshift.io/vcs-uri: 'https://github.com/startxfr/docker-images-example-php.git'
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"frontend-v1:latest","namespace":"myapp"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend-v1\")].image","pause":"false"}]
+  name: frontend-v1
+  namespace: myapp
+  labels:
+    app: frontend
+    version: v1
+    app.kubernetes.io/part-of: myapp
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/instance: frontend-v1
+    app.kubernetes.io/name: frontend-v1
+    app.openshift.io/runtime: php
+    app.openshift.io/runtime-version: 7.4-ubi8
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+      version: v1
+      app.kubernetes.io/part-of: myapp
+      deployment: frontend-v1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: frontend
+        version: v1
+        app.kubernetes.io/part-of: myapp
+        deployment: frontend-v1
+    spec:
+      containers:
+        - name: frontend
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/myapp/frontend-v1:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+              ephemeral-storage: "200Mi"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+              ephemeral-storage: "1Gi"
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 6
+  progressDeadlineSeconds: 600
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-v1
+  namespace: myapp
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app: frontend
+    version: v1
+    app.kubernetes.io/part-of: myapp
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: frontend-v1
+  namespace: myapp
+spec:
+  to:
+    kind: Service
+    name: frontend-v1
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  wildcardPolicy: None
+
+## Change routing to route only to v1
+# echo '[{"op": "replace","path": "/spec/to/name","value": "frontend-v1"},{"op": "replace","path": "/spec/alternateBackends/0/name","value": "frontend-v0"},{"op": "replace","path": "/spec/alternateBackends/0/weight","value": 0}]' > /tmp/patch-file.json
+# kubectl patch route frontend -n myapp  --type json --patch-file /tmp/patch-file.json
+
+## Remove old v0 VM server
+# kubectl patch virtualmachine frontend-v0 -n myapp  --type json --patch '[{"op": "replace","path": "/spec/running","value": false}]'
+
+## Add v2 deployment into production route
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: frontend-v2
+  namespace: myapp
+  labels:
+    app.kubernetes.io/instance: frontend-v2
+    app.kubernetes.io/name: frontend-v2
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 7.4-ubi8
+spec:
+  params:
+    - default: frontend-v2
+      name: APP_NAME
+      type: string
+    - default: 'https://github.com/startxfr/docker-images-example-php.git'
+      name: GIT_REPO
+      type: string
+    - default: v2
+      name: GIT_REVISION
+      type: string
+    - default: 'image-registry.openshift-image-registry.svc:5000/myapp/frontend-v2'
+      name: IMAGE_NAME
+      type: string
+    - default: .
+      name: PATH_CONTEXT
+      type: string
+    - default: 7.4-ubi8
+      name: VERSION
+      type: string
+  tasks:
+    - name: fetch-repository
+      params:
+        - name: url
+          value: $(params.GIT_REPO)
+        - name: revision
+          value: $(params.GIT_REVISION)
+        - name: subdirectory
+          value: ''
+        - name: deleteExisting
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: build
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE_NAME)
+        - name: TLSVERIFY
+          value: 'false'
+        - name: PATH_CONTEXT
+          value: $(params.PATH_CONTEXT)
+        - name: VERSION
+          value: $(params.VERSION)
+      runAfter:
+        - fetch-repository
+      taskRef:
+        kind: ClusterTask
+        name: s2i-php
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: deploy
+      params:
+        - name: SCRIPT
+          value: oc rollout status deploy/$(params.APP_NAME)
+      runAfter:
+        - build
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client
+  workspaces:
+    - name: workspace
+      optional: false
+  resources: []
+  finally: []
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    chains.tekton.dev/signed: 'true'
+    pipeline.openshift.io/started-by: startx
+  name: frontend-v2-run
+  namespace: myapp
+  labels:
+    app.kubernetes.io/instance: frontend-v2
+    app.kubernetes.io/name: frontend-v2
+    operator.tekton.dev/operand-name: openshift-pipelines-addons
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 7.4-ubi8
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: frontend-v2
+spec:
+  params:
+    - name: APP_NAME
+      value: frontend-v2
+    - name: GIT_REPO
+      value: 'https://github.com/startxfr/docker-images-example-php.git'
+    - name: GIT_REVISION
+      value: v2
+    - name: IMAGE_NAME
+      value: 'image-registry.openshift-image-registry.svc:5000/myapp/frontend-v2'
+    - name: PATH_CONTEXT
+      value: .
+    - name: VERSION
+      value: 7.4-ubi8
+  pipelineRef:
+    name: frontend-v2
+  timeout: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: frontend-v2
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+        status: {}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: 'false'
+    app.openshift.io/vcs-ref: v2
+    app.openshift.io/vcs-uri: 'https://github.com/startxfr/docker-images-example-php.git'
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"frontend-v2:latest","namespace":"myapp"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend-v2\")].image","pause":"false"}]
+  name: frontend-v2
+  namespace: myapp
+  labels:
+    app: frontend
+    version: v2
+    app.kubernetes.io/part-of: myapp
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/instance: frontend-v2
+    app.kubernetes.io/name: frontend-v2
+    app.openshift.io/runtime: php
+    app.openshift.io/runtime-version: 7.4-ubi8
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+      version: v2
+      app.kubernetes.io/part-of: myapp
+      deployment: frontend-v2
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: frontend
+        version: v2
+        app.kubernetes.io/part-of: myapp
+        deployment: frontend-v2
+    spec:
+      containers:
+        - name: frontend
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/myapp/frontend-v2:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+              ephemeral-storage: "200Mi"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+              ephemeral-storage: "1Gi"
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 6
+  progressDeadlineSeconds: 600
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-v2
+  namespace: myapp
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app: frontend
+    version: v2
+    app.kubernetes.io/part-of: myapp
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: frontend-v2
+  namespace: myapp
+spec:
+  to:
+    kind: Service
+    name: frontend-v2
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+  wildcardPolicy: None
+
+## Change routing to route Load balance v1 and v2 in production
+# echo '[{"op": "replace","path": "/spec/to/name","value": "frontend-v1"},{"op": "replace","path": "/spec/alternateBackends/0/name","value": "frontend-v2"},{"op": "replace","path": "/spec/alternateBackends/0/weight","value": 10}]' > /tmp/patch-file.json
+# kubectl patch route frontend -n myapp  --type json --patch-file /tmp/patch-file.json
+
+## Add ng project
+---
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: myapp-ng
+  labels:
+    kubernetes.io/metadata.name: myapp-ng
+  annotations:
+    openshift.io/description: 'Demo of my application migration to serverless'
+    openshift.io/display-name: 'My Application (serverless)'
+    openshift.io/requester: startx
+spec: {}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: pipeline
+  namespace: myapp-ng
+## Add v2 deployment into ng project
+---
+kind: Pipeline
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: frontend
+  namespace: myapp-ng
+  labels:
+    app.kubernetes.io/instance: frontend
+    app.kubernetes.io/name: frontend
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 8.0-ubi9
+    pipeline.openshift.io/type: knative
+spec:
+  params:
+    - default: frontend
+      name: APP_NAME
+      type: string
+    - default: 'https://github.com/startxfr/docker-images-example-php.git'
+      name: GIT_REPO
+      type: string
+    - default: v2
+      name: GIT_REVISION
+      type: string
+    - default: 'image-registry.openshift-image-registry.svc:5000/myapp-ng/frontend'
+      name: IMAGE_NAME
+      type: string
+    - default: .
+      name: PATH_CONTEXT
+      type: string
+    - default: 8.0-ubi9
+      name: VERSION
+      type: string
+  tasks:
+    - name: fetch-repository
+      params:
+        - name: url
+          value: $(params.GIT_REPO)
+        - name: revision
+          value: $(params.GIT_REVISION)
+        - name: subdirectory
+          value: ''
+        - name: deleteExisting
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: build
+      params:
+        - name: IMAGE
+          value: "$(params.IMAGE_NAME):$(params.GIT_REVISION)"
+        - name: TLSVERIFY
+          value: 'false'
+        - name: PATH_CONTEXT
+          value: $(params.PATH_CONTEXT)
+        - name: VERSION
+          value: $(params.VERSION)
+      runAfter:
+        - fetch-repository
+      taskRef:
+        kind: ClusterTask
+        name: s2i-php
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: build-latest
+      params:
+        - name: IMAGE
+          value: "$(params.IMAGE_NAME):latest"
+        - name: TLSVERIFY
+          value: 'false'
+        - name: PATH_CONTEXT
+          value: $(params.PATH_CONTEXT)
+        - name: VERSION
+          value: $(params.VERSION)
+      runAfter:
+        - fetch-repository
+      taskRef:
+        kind: ClusterTask
+        name: s2i-php
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: kn-service-apply
+      params:
+        - name: ARGS
+          value:
+            - service
+            - apply
+            - $(params.APP_NAME)
+            - '--image=$(params.IMAGE_NAME)'
+      runAfter:
+        - build
+        - build-latest
+      taskRef:
+        kind: ClusterTask
+        name: kn
+  workspaces:
+    - name: workspace
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    chains.tekton.dev/signed: 'true'
+    pipeline.openshift.io/started-by: startx
+  name: frontend-run-v2
+  namespace: myapp-ng
+  labels:
+    app.kubernetes.io/instance: frontend
+    app.kubernetes.io/name: frontend
+    operator.tekton.dev/operand-name: openshift-pipelines-addons
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 8.0-ubi9
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: frontend
+spec:
+  params:
+    - name: APP_NAME
+      value: frontend
+    - name: GIT_REPO
+      value: 'https://github.com/startxfr/docker-images-example-php.git'
+    - name: GIT_REVISION
+      value: v2
+    - name: IMAGE_NAME
+      value: 'image-registry.openshift-image-registry.svc:5000/myapp-ng/frontend'
+    - name: PATH_CONTEXT
+      value: .
+    - name: VERSION
+      value: 8.0-ubi9
+  pipelineRef:
+    name: frontend
+  timeout: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: frontend
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+        status: {}
+---
+kind: Service
+apiVersion: serving.knative.dev/v1
+metadata:
+  name: frontend
+  namespace: myapp-ng
+  annotations:
+    # serving.knative.openshift.io/disableRoute: "true"
+    app.openshift.io/route-disabled: 'false'
+    app.openshift.io/vcs-ref: v2
+    app.openshift.io/vcs-uri: 'https://github.com/startxfr/docker-images-example-php.git'
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"frontend:latest","namespace":"myapp-ng"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image","pause":"false"}]
+    serving.knative.dev/creator: startx
+  labels:
+    app: frontend
+    version: v2
+    app.kubernetes.io/part-of: myapp
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/instance: frontend
+    app.kubernetes.io/name: frontend-v2
+    app.openshift.io/runtime: php
+    app.openshift.io/runtime-version: 8.0-ubi9
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target: '100'
+        autoscaling.knative.dev/targetUtilizationPercentage: '70'
+        autoscaling.knative.dev/window: 30s
+        client.knative.dev/user-image: 'image-registry.openshift-image-registry.svc:5000/myapp-ng/frontend'
+      creationTimestamp: null
+      labels:
+        app: frontend
+        version: v2
+        app.kubernetes.io/part-of: myapp
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/instance: frontend
+        app.kubernetes.io/name: frontend-v2
+        app.openshift.io/runtime: php
+        app.openshift.io/runtime-version: 8.0-ubi9
+    spec:
+      containerConcurrency: 0
+      containers:
+        - image: 'image-registry.openshift-image-registry.svc:5000/myapp-ng/frontend'
+          name: user-container
+          readinessProbe:
+            successThreshold: 1
+            tcpSocket:
+              port: 0
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+              ephemeral-storage: "200Mi"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+              ephemeral-storage: "1Gi"
+      enableServiceLinks: false
+      timeoutSeconds: 300
+  traffic:
+    - latestRevision: true
+      percent: 100
+
+## Add v3 deployment into ng project
+---
+kind: PipelineRun
+apiVersion: tekton.dev/v1beta1
+metadata:
+  annotations:
+    chains.tekton.dev/signed: 'true'
+    pipeline.openshift.io/started-by: startx
+  name: frontend-run-v3
+  namespace: myapp-ng
+  labels:
+    app.kubernetes.io/instance: frontend
+    app.kubernetes.io/name: frontend
+    operator.tekton.dev/operand-name: openshift-pipelines-addons
+    pipeline.openshift.io/runtime: php
+    pipeline.openshift.io/runtime-version: 8.0-ubi9
+    pipeline.openshift.io/type: kubernetes
+    tekton.dev/pipeline: frontend
+spec:
+  params:
+    - name: APP_NAME
+      value: frontend
+    - name: GIT_REPO
+      value: 'https://github.com/startxfr/docker-images-example-php.git'
+    - name: GIT_REVISION
+      value: v3
+    - name: IMAGE_NAME
+      value: 'image-registry.openshift-image-registry.svc:5000/myapp-ng/frontend'
+    - name: PATH_CONTEXT
+      value: .
+    - name: VERSION
+      value: 8.0-ubi9
+  pipelineRef:
+    name: frontend
+  timeout: 1h0m0s
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+          labels:
+            tekton.dev/pipeline: frontend
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+        status: {}
+
+## Move ng to v3
+# echo '[{"op": "replace","path": "/metadata/annotations/''app.openshift.io/vcs-ref''": "v3"},{"op": "replace","path": "/metadata/labels/version": "v3"},{"op": "replace","path": "/spec/template/metadata/labels/version": "v3"},{"op": "replace","path": "/metadata/labels/''app.kubernetes.io/name''": "frontend-v3"},{"op": "replace","path": "/spec/template/metadata/''app.kubernetes.io/name''": "frontend-v3"},{"op": "replace","path": "spec/traffic/0/latestRevision": false},{"op": "replace","path": "spec/traffic/0/percent": 50},{"op": "replace","path": "spec/traffic/1/latestRevision": true},{"op": "replace","path": "spec/traffic/1/percent": 50},{"op": "replace","path": "/metadata/labels/version": "v3"},{"op": "replace","path": "spec/template/metadata/annotations/''client.knative.dev/user-image'': 'image-registry.openshift-image-registry.svc:5000/myapp-ng/fronte3d:v3'},{"op": "replace","path": "spec/spec/metadata/annotations/''client.knative.dev/user-image'': 'image-registry.openshift-image-registry.svc:5000/myapp-ng/fronte3d:v3'},{"op": "replace","path": "spec/template/containers/0/image: 'image-registry.openshift-image-registry.svc:5000/myapp-ng/frontend:v3'}]' > /tmp/patch-file.json
+# kubectl patch kservice frontend -n myapp-ng  --type json --patch-file /tmp/patch-file.json
