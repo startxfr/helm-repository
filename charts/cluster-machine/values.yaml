@@ -122,3 +122,12 @@ machineSet:
     volumeSize: 150
     # number of replicas node
     replicas: 1
+    # List of additionnals labels to add to the machineSet and the node template
+    additionnalsLabels: |-
+      client: cdf
+      env: poc
+    # List of additionnals Taints to add to the machineSet and the node template
+    additionnalsTaints: |-
+      - effect: NoSchedule
+        key: hub.jupyter.org/dedicated
+        value: user
