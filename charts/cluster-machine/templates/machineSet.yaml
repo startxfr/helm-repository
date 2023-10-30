@@ -36,6 +36,9 @@ spec:
         {{- if .group }}
         machine.startx.io/group: "{{ .group }}"
         {{- end }}
+        {{- if .additionnalsLabels -}}
+        {{- .additionnalsLabels | nindent 8 -}}
+        {{- end }}
     spec:
       metadata:
         labels:
@@ -45,6 +48,8 @@ spec:
           node-role.kubernetes.io/storage: ""
           {{- else }}
           node-role.kubernetes.io/app: ""
+          {{- end }}
+          "node-role.startx.io/{{ .group | default "app" }}": ""
           {{ end }}
           {{- if .additionnalsLabels -}}
           {{- .additionnalsLabels | nindent 10 -}}
@@ -52,6 +57,20 @@ spec:
           {{- if .group }}
           machine.startx.io/group: "{{ .group }}"
           {{- end }}
+      {{- if .additionnalsTaints }}
+      taints: 
+        {{- .additionnalsTaints | nindent 8 -}}
+        {{- if eq .type "infra" -}}
+        - key: "node-role.kubernetes.io/infra"
+          effect: NoSchedule
+        {{- else if eq .type "virt" -}}
+        - key: "node-role.kubernetes.io/virt"
+          effect: NoSchedule
+        {{- else if eq .type "storage" -}}
+        - key: "node-role.kubernetes.io/storage"
+          effect: NoSchedule
+        {{ end }}
+      {{- else }}
       {{- if eq .type "infra" }}
       taints: 
         - key: "node-role.kubernetes.io/infra"
@@ -60,6 +79,7 @@ spec:
       taints: 
         - key: "node-role.kubernetes.io/storage"
           effect: NoSchedule
+      {{ end }}
       {{ end }}
       providerSpec:
         value:
@@ -104,7 +124,7 @@ spec:
             - ebs:
                 iops: 0
                 volumeSize: {{ .volumeSize }}
-                volumeType: gp2
+                volumeType: gp3
           {{ end }}
           credentialsSecret:
             name: aws-cloud-credentials
