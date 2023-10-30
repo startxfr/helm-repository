@@ -105,83 +105,163 @@ machineAutoscaler:
     maxReplicas: 3
 
 machineSet: 
-  enabled: false
+  enabled: true
   list:
-  - name: pfd-infra-a
+  - name: data-infra-a
     az: a
     type: infra
-    subnet_name: plateformedonnees-subnet-private1-eu-west-3a
+    subnet_name: prod-ew3-a-sub-reseau-2-priv
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
-    volumeSize: 150
+    volumeSize: 120
     replicas: 1
-  - name: pfd-infra-b
+  # rootVolume:
+  #   iops: 2000
+  #   size: 500
+  #   type: io1 
+  #   kmsKeyARN: arn:aws:kms:eu-west-3:000000000000:key/00000000-0000-0000-0000-000000000000 
+  - name: data-infra-b
     az: b
     type: infra
-    subnet_name: plateformedonnees-subnet-private2-eu-west-3b
+    subnet_name: prod-ew3-b-sub-reseau-2-priv
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
-    volumeSize: 150
+    volumeSize: 120
     replicas: 1
-  - name: pfd-infra-c
+  - name: data-infra-c
     az: c
     type: infra
-    subnet_name: plateformedonnees-subnet-private3-eu-west-3c
+    subnet_name: prod-ew3-c-sub-reseau-2-priv
     ami: ami-0add59eb238c299d5
     instanceType: "m5a.2xlarge"
-    volumeSize: 150
+    volumeSize: 120
     replicas: 1
-  - name: pfd-app-small-a
+  - name: data-pfd-infra-a
     az: a
-    type: app
-    group: app-small
-    subnet_name: plateformedonnees-subnet-private1-eu-west-3a
+    type: worker
+    group: pfd-infra
+    subnet_name: prod-ew3-a-sub-reseau-2-priv
     ami: ami-0add59eb238c299d5
-    instanceType: "c5a.xlarge" # 4cpu, 8Gi
+    instanceType: "m5a.xlarge" # 4cpu, 16Gi
     volumeSize: 100
     replicas: 1
-  # - name: pfd-app-small-b
-  #   az: b
-  #   type: worker
-  #   group: app-small
-  #   subnet_name: plateformedonnees-subnet-private2-eu-west-3b
-  #   ami: ami-0add59eb238c299d5
-  #   instanceType: "c5a.xlarge"
-  #   volumeSize: 100
-  #   replicas: 0
-  - name: pfd-app-small-c
-    az: c
-    type: app
-    group: app-small
-    subnet_name: plateformedonnees-subnet-private3-eu-west-3c
-    ami: ami-0add59eb238c299d5
-    instanceType: "c5a.xlarge"
-    volumeSize: 100
-    replicas: 1
-  - name: pfd-app-big-a
-    az: a
-    type: app
-    group: app-big
-    subnet_name: plateformedonnees-subnet-private1-eu-west-3a
-    ami: ami-0add59eb238c299d5
-    instanceType: "m5a.2xlarge"
-    volumeSize: 100
-    replicas: 1
-  - name: pfd-app-big-b
+  - name: data-pfd-infra-b
     az: b
-    type: app
-    group: app-big
-    subnet_name: plateformedonnees-subnet-private2-eu-west-3b
+    type: worker
+    group: pfd-infra
+    subnet_name: prod-ew3-b-sub-reseau-2-priv
     ami: ami-0add59eb238c299d5
-    instanceType: "m5a.2xlarge"
+    instanceType: "m5a.xlarge"
     volumeSize: 100
     replicas: 1
-  - name: pfd-app-big-c
+  - name: data-pfd-infra-c
     az: c
-    type: app
-    group: app-big
-    subnet_name: plateformedonnees-subnet-private3-eu-west-3c
+    type: worker
+    group: pfd-infra
+    subnet_name: prod-ew3-c-sub-reseau-2-priv
     ami: ami-0add59eb238c299d5
-    instanceType: "m5a.2xlarge"
+    instanceType: "m5a.xlarge"
     volumeSize: 100
     replicas: 1
+  - name: data-pfd-default-a
+    az: a
+    type: worker
+    group: pfd-default
+    subnet_name: prod-ew3-a-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.xlarge" # 4cpu, 16Gi
+    volumeSize: 100
+    replicas: 1
+  - name: data-pfd-default-b
+    az: b
+    type: worker
+    group: pfd-default
+    subnet_name: prod-ew3-b-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.xlarge"
+    volumeSize: 100
+    replicas: 1
+  - name: data-pfd-default-c
+    az: c
+    type: worker
+    group: pfd-default
+    subnet_name: prod-ew3-c-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.xlarge"
+    volumeSize: 100
+    replicas: 1
+  - name: data-pfd-big-a
+    az: a
+    type: worker
+    group: pfd-big
+    subnet_name: prod-ew3-a-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.2xlarge" # 8cpu, 32Gi
+    volumeSize: 120
+    replicas: 1
+  - name: data-pfd-big-b
+    az: b
+    type: worker
+    group: pfd-big
+    subnet_name: prod-ew3-b-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: data-pfd-big-c
+    az: c
+    type: worker
+    group: pfd-big
+    subnet_name: prod-ew3-c-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.2xlarge"
+    volumeSize: 120
+    replicas: 1
+  - name: data-pfd-jupyter-a
+    az: a
+    type: worker
+    group: pfd-jupyter
+    subnet_name: prod-ew3-a-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.4xlarge" # 168cpu, 64Gi
+    volumeSize: 120
+    replicas: 1
+    additionnalsLabels: |
+      hub.jupyter.org/node-purpose: user
+      jupyter: node
+    additionnalsTaints: |
+      - effect: NoSchedule
+        key: hub.jupyter.org/dedicated
+        value: user
+  - name: data-pfd-jupyter-b
+    az: b
+    type: worker
+    group: pfd-jupyter
+    subnet_name: prod-ew3-b-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.4xlarge"
+    volumeSize: 120
+    replicas: 0
+    additionnalsLabels: |
+      hub.jupyter.org/node-purpose: user
+      jupyter: node
+    additionnalsTaints: |
+      - effect: NoSchedule
+        key: hub.jupyter.org/dedicated
+        value: user
+  - name: data-pfd-jupyter-c
+    az: c
+    type: worker
+    group: pfd-jupyter
+    subnet_name: prod-ew3-c-sub-reseau-2-priv
+    ami: ami-0add59eb238c299d5
+    instanceType: "m5a.4xlarge"
+    volumeSize: 120
+    replicas: 0
+    additionnalsLabels: |
+      hub.jupyter.org/node-purpose: user
+      jupyter: node
+    additionnalsTaints: |
+      - effect: NoSchedule
+        key: hub.jupyter.org/dedicated
+        value: user
