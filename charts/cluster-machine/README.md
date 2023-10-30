@@ -258,3 +258,4 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 12.36.2 | 2023-09-30 | Change management of the node labels
 | 12.36.9 | 2023-10-01 | publish stable update for the full repository
 | 12.36.36 | 2023-10-11 | publish stable update for the full repository
+| 12.36.37 | 2023-10-30 | Add support for additionals taints and labels in machineset
