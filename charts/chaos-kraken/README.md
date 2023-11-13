@@ -215,3 +215,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 12.36.55 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.58 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.59-noschema | 2023-11-13 | publish stable update for the full no-schema version
+| 12.36.61 | 2023-11-13 | publish stable update for the full repository
