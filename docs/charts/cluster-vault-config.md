@@ -259,3 +259,4 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 12.36.49-noschema | 2023-11-13 | Publish stable update for the full repository with the no-schema packages
 | 12.36.51-noschema | 2023-11-13 | publish stable update for the full repository
 | 12.36.58 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
+| 12.36.59-noschema | 2023-11-13 | publish stable update for the full no-schema version
