@@ -258,3 +258,4 @@ helm install cluster-pipeline startx/cluster-pipeline -f https://raw.githubuserc
 | 12.36.63-noschema | 2023-11-13 | publish stable update for the full repository
 | 12.36.64-noschema | 2023-11-13 | publish stable update for the full repository
 | 12.36.65-noschema | 2023-11-13 | publish stable update for the full repository
+| 12.36.66-noschema | 2023-11-14 | publish stable update for the full repository
