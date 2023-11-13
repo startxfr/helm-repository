@@ -336,3 +336,6 @@ chaos-monkey startx/chaos-monkey
 | 12.36.64-noschema | 2023-11-13 | publish stable update for the full repository
 | 12.36.65-noschema | 2023-11-13 | publish stable update for the full repository
 | 12.36.66-noschema | 2023-11-14 | publish stable update for the full repository
+| 12.36.66 | 2023-11-14 | Update trunc to 255 for helper
+| 12.36.67 | 2023-11-14 | move dependencies to version 12.36.65
+| 12.36.69 | 2023-11-14 | move dependencies to version 12.36.65
