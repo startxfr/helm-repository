@@ -1,0 +1,120 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context:  &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: example
+  app: startx
+  # version: "0.0.1"
+enabled: true
+project: 
+  enabled: false
+  type: project
+  name: startx
+  hooked: true
+  display_name: Startx default project
+  requester: startx
+  description: Startx default project read-only access to all authenticated users
+rbac: 
+  enabled: false
+  groups: 
+  - id: students
+    name: students
+    role: view
+  - id: dev
+    name: dev
+    role: basic-user
+  - id: devops
+    name: devops
+    role: basic-user
+  - id: ops
+    name: ops
+    role: admin
+  - id: authenticated
+    name: "system:authenticated"
+    role: read-only
+  users: 
+  - id: dev
+    name: dev
+    role: basic-user
+serviceAccounts:
+  enabled: false
+  list: 
+    - name: default
+      imagePullSecrets: 
+        - name: startx-registrycreds-quay
+        - name: startx-registrycreds-docker
+        - name: startx-registrycreds-rhn
+dockercfg:
+  enabled: false
+  list: 
+    - name: startx-registrycreds-quay
+      registry: quay.io
+      username: startx
+      password: xxxx
+      email: "dev@startx.fr"
+    - name: startx-registrycreds-docker
+      registry: docker.io
+      username: startxfr
+      password: xxxx
+      email: "dev@startx.fr"
+    - name: startx-registrycreds-rhn
+      registry: registry.connect.redhat.com
+      username: startx_cl
+      password: xxxx
+      email: "dev@startx.fr"
+networkpolicy: 
+  enabled: false
+  rules: []
+limits: 
+  enabled: false
+  rules:  |
+    limits:
+      - type: "Pod"
+        min:
+          cpu: "0"
+          memory: "0"
+        max:
+          cpu: "0"
+          memory: "0"
+      - type: "Container"
+        default:
+          cpu: "0"
+          memory: "0"
+        defaultRequest:
+          cpu: "0"
+          memory: "0"
+        min:
+          cpu: "0"
+          memory: "0"
+        max:
+          cpu: "0"
+          memory: "0"
+quotas: 
+  enabled: false
+  rules:  |
+    hard:
+      limits.cpu: "0"
+      limits.memory: "0"
+      requests.cpu: "0"
+      requests.memory: "0"
+      requests.storage: "0Gi"
+      persistentvolumeclaims: "0"
+      ephemeral-storage: "0" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      gp2-csi.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift.io/imagestreams: "40"
+      secrets: "20"
+      configmaps: "10"
+      count/daemonsets.apps: "0"
+      count/deployments.apps: "0"
+      count/replicasets.apps: "0"
+      replicationcontrollers: "0"
+      pods: "0"
+      services: "3"
+      services.loadbalancers: "0"
+      services.nodeports: "0"

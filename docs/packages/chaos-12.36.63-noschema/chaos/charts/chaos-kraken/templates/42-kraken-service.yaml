@@ -1,0 +1,26 @@
+{{- if .Values.kraken.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kraken
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-service"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    app: kraken
+  sessionAffinity: None
+  type: ClusterIP
+{{- end -}}

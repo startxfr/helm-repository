@@ -1,0 +1,127 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: quay
+  app: startx-quay
+  # version: "0.0.1"  
+enabled: true
+project: 
+  enabled: true
+  hooked: false
+  type: project
+  name: "startx-quay"
+  display_name: "STARTX Infra - QUAY"
+  description: "STARTX Private Quay enterprise registry & control plane"
+rbac: 
+  enabled: true
+  groups: 
+  - id: students
+    name: students
+    role: view
+  - id: dev
+    name: dev
+    role: view
+  - id: devops
+    name: devops
+    role: edit
+  - id: ops
+    name: ops
+    role: admin
+networkpolicy: 
+  enabled: true
+  rules: 
+  - id: allow-from-openshift-ingress
+    spec: |
+      podSelector:
+        matchLabels:
+          app: quay-operator
+          quay-enterprise-component: app
+          quay-enterprise-cr: startx
+      ingress:
+        - from:
+            - namespaceSelector: {}
+  - id: manpage-allow-external
+    spec: |
+      podSelector:
+        matchLabels:
+          app: manpage
+      ingress:
+        - {}
+limits: 
+  enabled: true
+  rules:  |
+    limits:
+      - type: "Pod"
+        min:
+          cpu: "50m"
+          memory: "64Mi"
+        max:
+          cpu: 1
+          memory: "4096Mi"
+      - type: "Container"
+        defaultRequest:
+          cpu: "200m"
+          memory: "256Mi"
+        default:
+          cpu: "400m"
+          memory: "512Mi"
+        min:
+          cpu: "50m"
+          memory: "64Mi"
+        max:
+          cpu: 1
+          memory: "4096Mi"
+quotas: 
+  enabled: true
+  rules:  |
+    hard:
+      limits.cpu: "5"
+      limits.memory: "10Gi"
+      requests.cpu: "1600m"
+      requests.memory: "5000Mi"
+      requests.storage: "18Gi"
+      persistentvolumeclaims: "5"
+      ephemeral-storage: "0"
+      gp2.storageclass.storage.k8s.io/requests.storage: "8Gi"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
+      gp2-csi.storageclass.storage.k8s.io/requests.storage: "8Gi"
+      gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "10Gi"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "1"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      pods: "10"
+      services: "10"
+      services.loadbalancers: "0"
+      services.nodeports: "0"
+      secrets: "35"
+      configmaps: "5"
+      replicationcontrollers: "0"
+      openshift.io/imagestreams: "0"
+      count/replicasets.apps: "10"
+      count/daemonsets.apps: "0"
+      count/deployments.apps: "10"

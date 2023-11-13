@@ -1,0 +1,246 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "chaos context",
+            "description": "Properties of the chaos context.",
+            "required": [
+                "scope",
+                "cluster",
+                "environment",
+                "component",
+                "app"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "default": "companyname",
+                    "examples": [
+                        "myscope",
+                        "mycorp",
+                        "startx"
+                    ]
+                },
+                "cluster": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "clustername",
+                    "examples": [
+                        "clustername",
+                        "mycluster",
+                        "localhost"
+                    ]
+                },
+                "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Environement name",
+                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "build",
+                        "ci",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "chaos",
+                    "examples": [
+                        "startx-chaos",
+                        "chaos",
+                        "mycomp"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "default": "cerberus",
+                    "examples": [
+                        "cerberus",
+                        "watchdog"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Version name",
+                    "description": "Name of the application version. Define this chaos version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                    "default": "0.0.1",
+                    "examples": [
+                        "0.0.1",
+                        "0.1",
+                        "0.0.1-snapshot",
+                        "0.0.1-202110300900"
+                    ]
+                }
+            }
+        },
+        "cerberus": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable cerberus",
+                    "description": "Enable deploying the cerberus watchdog",
+                    "default": true
+                },
+                "expose": {
+                    "type": "boolean",
+                    "title": "Expose signal",
+                    "description": "Enable exposition for this application (route based)",
+                    "default": true
+                },
+                "kraken_allowed": {
+                    "type": "boolean",
+                    "title": "Allow kraken communication",
+                    "description": "Is kraken is allowed (networkPolicy) to talk to cerberus server",
+                    "default": true
+                },
+                "sleep_time": {
+                    "type": "integer",
+                    "title": "Sleep time",
+                    "description": "Sleep time beetween 2 checks of the targeted cluster",
+                    "default": 15
+                },
+                "watch_nodes": {
+                    "type": "boolean",
+                    "title": "Watch nodes",
+                    "description": "Enable watching nodes health as part of the global health signal",
+                    "default": true
+                },
+                "watch_cluster_operators": {
+                    "type": "boolean",
+                    "title": "Watch cluster operators",
+                    "description": "Enable watching cluster operator health as part of the global health signal",
+                    "default": true
+                },
+                "isDaemon": {
+                    "type": "boolean",
+                    "title": "Cerberus is daemon",
+                    "description": "Enable kraken in a daemon mode (infinity instead of 25 runs)",
+                    "default": true
+                },
+                "kraken_ns": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Kraken namespace",
+                    "description": "Namespace of the kraken pod that would be allowed",
+                    "default": "chaos-kraken",
+                    "examples": [
+                        "chaos-kraken",
+                        "chaos"
+                    ]
+                },
+                "kubeconfig": {
+                    "type": "object",
+                    "properties": {
+                        "mode": {
+                            "enum": [
+                                "token",
+                                "file"
+                            ],
+                            "title": "Kubeconfig mode",
+                            "description": "Connection mode to use for the cluster (could be token or file)",
+                            "default": "token"
+                        },
+                        "file": {
+                            "type": "string",
+                            "minLength": 50,
+                            "maxLength": 500,
+                            "title": "Kubeconfig file",
+                            "description": "If mode is file, this property must be set with a full kubeconfig content",
+                            "default": "kind: Config\napiVersion: v1",
+                            "examples": [
+                                "kind: Config\napiVersion: v1",
+                                "kind: Config\napiVersion: v1\ncurrent-context: default"
+                            ]
+                        },
+                        "token": {
+                            "type": "object",
+                            "properties": {
+                                "server": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 200,
+                                    "title": "API endpoint",
+                                    "description": "The server URL to the target cluster API",
+                                    "default": "https://localhost:6443",
+                                    "examples": [
+                                        "https://localhost:6443",
+                                        "https://api.mycluster.local:6443"
+                                    ]
+                                },
+                                "token": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 200,
+                                    "title": "API token",
+                                    "description": "The token to use to get access. This token must have full cluster admin access to perform some chaos scenarios",
+                                    "default": "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                                    "examples": [
+                                        "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                                        "mytoken"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "anyOf": [
+                        {
+                            "properties": {
+                                "mode": {
+                                    "const": "token"
+                                }
+                            },
+                            "required": [
+                                "token"
+                            ]
+                        },
+                        {
+                            "properties": {
+                                "mode": {
+                                    "const": "file"
+                                }
+                            },
+                            "required": [
+                                "file"
+                            ]
+                        }
+                    ]
+                },
+                "watch_url_routes": {
+                    "type": "array",
+                    "title": "Watch routes",
+                    "description": "Url list of endpoint to watch as part of the global healthcheck (double array)",
+                    "default": []
+                }
+            }
+        },
+        "project": {
+            "$ref": "https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values.schema.json"
+        }
+    }
+}
