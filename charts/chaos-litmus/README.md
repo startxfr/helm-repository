@@ -193,3 +193,4 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 12.36.59-noschema | 2023-11-13 | publish stable update for the full no-schema version
 | 12.36.63 | 2023-11-13 | publish stable update for the full repository
 | 12.36.63-noschema | 2023-11-13 | publish stable update for the full repository
+| 12.36.64-noschema | 2023-11-13 | publish stable update for the full repository
