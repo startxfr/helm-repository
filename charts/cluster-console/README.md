@@ -254,3 +254,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 12.36.66 | 2023-11-14 | Update trunc to 255 for helper
 | 12.36.69 | 2023-11-14 | move dependencies to version 12.36.65
 | 12.36.67-noschema | 2023-11-14 | publish stable update for the full repository
+| 12.36.69-noschema | 2023-11-14 | publish stable update for the full repository
