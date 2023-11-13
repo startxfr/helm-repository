@@ -8,17 +8,17 @@ STARTX common helpers
 {{- define "startx.chartNameVersion" -}}
 {{- $name := include "startx.chartName" . -}}
 {{- $version := include "startx.chartVersion" . -}}
-{{- printf "%s-%s" $name $version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" $name $version | replace "+" "_" | trunc 255 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/* Expand the name of the chart.*/}}
 {{- define "startx.chartName" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 255 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/* Expand the version of the chart.*/}}
 {{- define "startx.chartVersion" -}}
-{{- default .Chart.Version .Values.versionOverride | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Version .Values.versionOverride | trunc 255 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/* Create application name and version as used by the application label. */}}
@@ -27,13 +27,13 @@ STARTX common helpers
 {{- $environment := include "startx.appEnvironment" . -}}
 {{- $name := include "startx.appName" . -}}
 {{- $version := include "startx.appVersion" . -}}
-{{- printf "%s-%s-%s-%s" $scope $environment $name $version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s-%s" $scope $environment $name $version | replace "+" "_" | trunc 255 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/* Expand the scope of the application.*/}}
 {{- define "startx.appScope" -}}
 {{- if .Values.context }}
-{{- default "scope" .Values.context.scope | trunc 63 | trimSuffix "-" -}}
+{{- default "scope" .Values.context.scope | trunc 255 | trimSuffix "-" -}}
 {{- else }}scope
 {{- end }}
 {{- end -}}
@@ -41,7 +41,7 @@ STARTX common helpers
 {{/* Expand the cluster of the application.*/}}
 {{- define "startx.appCluster" -}}
 {{- if .Values.context }}
-{{- default "cluster" .Values.context.cluster | trunc 63 | trimSuffix "-" -}}
+{{- default "cluster" .Values.context.cluster | trunc 255 | trimSuffix "-" -}}
 {{- else }}cluster
 {{- end }}
 {{- end -}}
@@ -49,7 +49,7 @@ STARTX common helpers
 {{/* Expand the environment of the application.*/}}
 {{- define "startx.appEnvironment" -}}
 {{- if .Values.context }}
-{{- default "environment" .Values.context.environment | trunc 63 | trimSuffix "-" -}}
+{{- default "environment" .Values.context.environment | trunc 255 | trimSuffix "-" -}}
 {{- else }}environment
 {{- end }}
 {{- end -}}
@@ -57,7 +57,7 @@ STARTX common helpers
 {{/* Expand the component of the application.*/}}
 {{- define "startx.appComponent" -}}
 {{- if .Values.context }}
-{{- default "component" .Values.context.component | trunc 63 | trimSuffix "-" -}}
+{{- default "component" .Values.context.component | trunc 255 | trimSuffix "-" -}}
 {{- else }}component
 {{- end }}
 {{- end -}}
@@ -65,18 +65,18 @@ STARTX common helpers
 {{/* Expand the name of the application.*/}}
 {{- define "startx.appName" -}}
 {{- if .Values.context }}
-{{- default .Chart.Name .Values.context.app | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.context.app | trunc 255 | trimSuffix "-" -}}
 {{- else }}
-{{- default "myapp" .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- default "myapp" .Chart.Name | trunc 255 | trimSuffix "-" -}}
 {{- end }}
 {{- end -}}
 
 {{/* Expand the version of the application.*/}}
 {{- define "startx.appVersion" -}}
 {{- if .Values.context }}
-{{- default .Chart.Version .Values.context.version | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Version .Values.context.version | trunc 255 | trimSuffix "-" -}}
 {{- else }}
-{{- default "0.0.1" .Chart.Version | trunc 63 | trimSuffix "-" -}}
+{{- default "0.0.1" .Chart.Version | trunc 255 | trimSuffix "-" -}}
 {{- end }}
 {{- end -}}
 
