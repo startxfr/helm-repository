@@ -6,8 +6,8 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 12.36.51-noschema
-# Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+version: 12.36.59-noschema
+# Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.12.0
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-config.svg
@@ -42,44 +42,42 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: operatorGlobal
     condition: operatorGlobal.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: projectSosReport
     condition: projectSosReport.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: operatorSosReport
     condition: operatorSosReport.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: projectMustGather
     condition: projectMustGather.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: operatorMustGather
     condition: operatorMustGather.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Move SOSReport operator to openshift-startx-sosreport namespace"
-    - kind: changed
-      description: "Move MustGather operator to openshift-startx-mustgather namespace"
-  artifacthub.io/containsSecurityUpdates: "false"
+      description: "Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36"
+  artifacthub.io/containsSecurityUpdates: "true"
