@@ -227,3 +227,4 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
 | 12.36.9 | 2023-10-01 | publish stable update for the full repository
 | 12.36.36 | 2023-10-11 | publish stable update for the full repository
+| 12.36.49-noschema | 2023-11-13 | Publish stable update for the full repository with the no-schema packages
