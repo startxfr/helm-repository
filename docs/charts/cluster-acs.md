@@ -203,3 +203,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 12.36.51 | 2023-11-13 | publish stable update for the full repository
 | 12.36.58 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.59 | 2023-11-13 | publish stable update for the full repository
+| 12.36.63 | 2023-11-13 | publish stable update for the full repository
