@@ -6,13 +6,13 @@ description: Helm chart used to configure Knative at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 12.36.51-noschema
-# Version name of the knative operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 1.29.1
+version: 12.36.59-noschema
+# Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 4.12.0
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-knative.svg
 # category associated to this package
-category: cluster
+category: security
 # tags
 tags: infra,cluster,knative
 # Kube minimum version
@@ -44,27 +44,27 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: projectKServing
     condition: projectKServing.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: projectKEventing
     condition: projectKEventing.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Change api version operator.serverless.openshift.io/v1alpha1 for Knative Kafka"
-  artifacthub.io/containsSecurityUpdates: "false"
+      description: "Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36"
+  artifacthub.io/containsSecurityUpdates: "true"
