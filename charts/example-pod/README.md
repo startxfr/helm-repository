@@ -268,3 +268,4 @@ helm install example-pod startx/example-pod -f https://raw.githubusercontent.com
 | 12.36.63 | 2023-11-13 | publish stable update for the full repository
 | 12.36.64 | 2023-11-13 | publish stable update for the full repository
 | 12.36.65 | 2023-11-14 | publish stable update for the full repository
+| 12.36.66 | 2023-11-14 | Update trunc to 255 for helper
