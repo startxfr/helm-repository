@@ -6,11 +6,7 @@ description: Helm chart used to configure vault-config at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 12.36.51-noschema
-# Version name of the vault-config service (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 0.8.9
-# Icon of this helm-chart
-icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-vault.svg
+version: 12.36.58-noschema/helm-repository.readthedocs.io/en/latest/img/cluster-vault.svg
 # category associated to this package
 category: cluster
 # tags
@@ -44,18 +40,17 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "release 12.36.51-noschema aligned with OCP 4.12.36"
-  artifacthub.io/containsSecurityUpdates: "false"
-
+      description: "Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36"
+  artifacthub.io/containsSecurityUpdates: "true"
