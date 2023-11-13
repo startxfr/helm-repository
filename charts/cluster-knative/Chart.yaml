@@ -6,7 +6,7 @@ description: Helm chart used to configure Knative at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 12.36.63-noschema
+version: 12.36.64-noschema
 # Version name of the knative operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.29.1
 # Icon of this helm-chart
@@ -44,22 +44,22 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: projectKServing
     condition: projectKServing.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: projectKEventing
     condition: projectKEventing.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: operator
     condition: operator.enabled
 
