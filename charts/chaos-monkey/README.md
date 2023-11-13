@@ -183,3 +183,4 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 | 12.36.9 | 2023-10-01 | publish stable update for the full repository
 | 12.36.36 | 2023-10-11 | publish stable update for the full repository
 | 12.36.49-noschema | 2023-11-13 | Publish stable update for the full repository with the no-schema packages
+| 12.36.51-noschema | 2023-11-13 | publish stable update for the full repository
