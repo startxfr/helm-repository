@@ -270,3 +270,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 12.36.63 | 2023-11-13 | publish stable update for the full repository
 | 12.36.63-noschema | 2023-11-13 | publish stable update for the full repository
 | 12.36.64-noschema | 2023-11-13 | publish stable update for the full repository
+| 12.36.65-noschema | 2023-11-13 | publish stable update for the full repository
