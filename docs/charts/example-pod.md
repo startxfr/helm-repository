@@ -262,3 +262,4 @@ helm install example-pod startx/example-pod -f https://raw.githubusercontent.com
 | 12.36.9 | 2023-10-01 | publish stable update for the full repository
 | 12.36.36 | 2023-10-11 | publish stable update for the full repository
 | 12.36.49 | 2023-11-13 | publish stable update for the full repository
+| 12.36.51 | 2023-11-13 | publish stable update for the full repository
