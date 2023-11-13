@@ -187,3 +187,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 12.36.53 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.55 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.58 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
+| 12.36.59 | 2023-11-13 | publish stable update for the full repository
