@@ -227,3 +227,4 @@ helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent
 | 12.36.58 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.59 | 2023-11-13 | publish stable update for the full repository
 | 12.36.63 | 2023-11-13 | publish stable update for the full repository
+| 12.36.64 | 2023-11-13 | publish stable update for the full repository
