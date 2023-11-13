@@ -6,7 +6,7 @@ description: Helm chart used to deploy all project required to deploy a full CI/
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 12.36.63-noschema
+version: 12.36.64-noschema
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.12.0
 # Icon of this helm-chart
@@ -44,27 +44,27 @@ maintainers:
 dependencies: 
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: project_devel
     condition: project_devel.activated
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: project_integration
     condition: project_integration.activated
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: project_preprod
     condition: project_preprod.activated
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: project_prod
     condition: project_prod.activated
   - name: example-imagestreams
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.49"
+    version: "12.36.49-noschema"
     alias: imagestreams
     condition: imagestreams.activated
 
