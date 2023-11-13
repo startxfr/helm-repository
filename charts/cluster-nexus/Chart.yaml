@@ -43,18 +43,17 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "release 12.36.51 aligned with OCP 4.12.36"
-  artifacthub.io/containsSecurityUpdates: "false"
-
+      description: "Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36"
+  artifacthub.io/containsSecurityUpdates: "true"

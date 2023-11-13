@@ -44,27 +44,27 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: projectKServing
     condition: projectKServing.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: projectKEventing
     condition: projectKEventing.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.0.0"
+    version: "12.36.49"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Change api version operator.serverless.openshift.io/v1alpha1 for Knative Kafka"
-  artifacthub.io/containsSecurityUpdates: "false"
+      description: "Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36"
+  artifacthub.io/containsSecurityUpdates: "true"
