@@ -1,0 +1,117 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: vault
+  app: startx-vault
+  # version: "0.0.1"
+enabled: true
+project: 
+  enabled: true
+  hooked: false
+  type: project
+  name: startx-vault
+  display_name: Startx VAULT
+  description: STARTX Private Vault storage & control plane
+rbac: 
+  enabled: false
+  groups: 
+  - id: students
+    name: students
+    role: view
+  - id: dev
+    name: dev
+    role: view
+  - id: devops
+    name: devops
+    role: admin
+  - id: ops
+    name: ops
+    role: admin
+  user: 
+  - id: vault-sa
+    name: system:serviceaccount:startx-vault:{{ .Release.name }}
+    role: edit
+  - id: vault-agent-injector-sa
+    name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
+    role: admin
+networkpolicy: 
+  enabled: false
+limits: 
+  enabled: false
+  rules:  |
+    limits:
+      - type: "Pod"
+        min:
+          cpu: "10m"
+          memory: "32Mi"
+        max:
+          cpu: "500m"
+          memory: "512Mi"
+      - type: "Container"
+        default:
+          cpu: "100m"
+          memory: "64Mi"
+        defaultRequest:
+          cpu: "100m"
+          memory: "64Mi"
+        min:
+          cpu: "10m"
+          memory: "32Mi"
+        max:
+          cpu: "500m"
+          memory: "512Mi"
+quotas: 
+  enabled: false
+  rules:  |
+    hard:
+      limits.cpu: "2"
+      limits.memory: "1500Mi"
+      requests.cpu: "1"
+      requests.memory: "512Mi"
+      requests.storage: "0"
+      persistentvolumeclaims: "0"
+      ephemeral-storage: "0" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      gp2-csi.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      pods: "6"
+      services: "5"
+      services.loadbalancers: "0"
+      services.nodeports: "0"
+      secrets: "35"
+      configmaps: "0"
+      replicationcontrollers: "0"
+      openshift.io/imagestreams: "0"
+      count/replicasets.apps: "4"
+      count/daemonsets.apps: "2"
+      count/deployments.apps: "2"
+

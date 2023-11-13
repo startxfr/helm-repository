@@ -1,0 +1,351 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "chaos context",
+            "description": "Properties of the chaos context.",
+            "required": [
+                "scope",
+                "cluster",
+                "environment",
+                "component",
+                "app"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "default": "companyname",
+                    "examples": [
+                        "myscope",
+                        "mycorp",
+                        "startx"
+                    ]
+                },
+                "cluster": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "clustername",
+                    "examples": [
+                        "clustername",
+                        "mycluster",
+                        "localhost"
+                    ]
+                },
+                "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Environement name",
+                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "build",
+                        "ci",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "chaos",
+                    "examples": [
+                        "startx-chaos",
+                        "chaos",
+                        "mycomp"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "default": "kraken",
+                    "examples": [
+                        "kraken",
+                        "monkey"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Version name",
+                    "description": "Name of the application version. Define this chaos version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                    "default": "0.0.1",
+                    "examples": [
+                        "0.0.1",
+                        "0.1",
+                        "0.0.1-snapshot",
+                        "0.0.1-202110300900"
+                    ]
+                }
+            }
+        },
+        "kraken": {
+            "type": "object",
+            "title": "Configure kraken",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable kraken",
+                    "description": "Unleash the kraken ;)",
+                    "default": true
+                },
+                "expose": {
+                    "type": "boolean",
+                    "title": "Expose result",
+                    "description": "Enable exposition for this application (route based)",
+                    "default": true
+                },
+                "cerberusUrl": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 100,
+                    "title": "Cerberus URL",
+                    "description": "Fill the cerberus server url. (internal is better)",
+                    "default": "http://cerberus.startx-chaos-kraken.svc.cluster.local:8080",
+                    "examples": [
+                        "http://cerberus.startx-chaos-kraken.svc.cluster.local:8080",
+                        "http://cerberus.svc.cluster.local:8080",
+                        "http://cerberus:8080",
+                        "http://external.cerberus.local"
+                    ]
+                },
+                "aws": {
+                    "type": "object",
+                    "title": "AWS section (optional)",
+                    "description": "AWS configuration section",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable AWS credentials",
+                            "description": "Enable the aws integration",
+                            "default": false
+                        },
+                        "credentials": {
+                            "type": "object",
+                            "title": "AWS Credentials",
+                            "description": "credentials (mandatory if enabled)",
+                            "properties": {
+                                "key_id": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 45,
+                                    "title": "Access key ID",
+                                    "description": "AWS access key ID used to attack the AWS infrastructure behin the cluster",
+                                    "default": "AKIAXXXXXXXXXXXXXXXX",
+                                    "examples": [
+                                        "AKIAXXXXXXXXXXXXXXXX"
+                                    ]
+                                },
+                                "region": {
+                                    "type": "string",
+                                    "minLength": 8,
+                                    "maxLength": 16,
+                                    "title": "AWS region",
+                                    "description": "AWS used region",
+                                    "default": "eu-west-3",
+                                    "examples": [
+                                        "eu-west-3",
+                                        "eu-west-2",
+                                        "eu-west-1",
+                                        "us-east-1",
+                                        "us-east-2"
+                                    ]
+                                },
+                                "secret": {
+                                    "type": "string",
+                                    "minLength": 10,
+                                    "maxLength": 50,
+                                    "title": "Secret access key",
+                                    "description": "AWS secret access key",
+                                    "default": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                                    "examples": [
+                                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "mode": {
+                    "type": "string",
+                    "enum": [
+                        "job",
+                        "pipeline"
+                    ],
+                    "title": "Chaos mode",
+                    "description": "Kraken mode (could be job or pipeline)",
+                    "default": "job"
+                },
+                "job": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "minLength": 0,
+                            "maxLength": 25,
+                            "title": "Job prefix",
+                            "description": "If mode is job, this property set the job name prefix",
+                            "default": "kraken-test",
+                            "examples": [
+                                "kraken-test",
+                                "kraken",
+                                "chaos"
+                            ]
+                        }
+                    }
+                },
+                "pipeline": {
+                    "type": "object",
+                    "properties": {
+                        "prefix": {
+                            "type": "string",
+                            "minLength": 0,
+                            "maxLength": 25,
+                            "title": "Pipeline prefix",
+                            "description": "If mode is pipeline, this property set the pipelinerun name prefix",
+                            "default": "kraken-test",
+                            "examples": [
+                                "kraken-test",
+                                "kraken",
+                                "chaos"
+                            ]
+                        }
+                    }
+                },
+                "kubeconfig": {
+                    "type": "object",
+                    "properties": {
+                        "mode": {
+                            "enum": [
+                                "token",
+                                "file"
+                            ],
+                            "title": "Kubeconfig mode",
+                            "description": "Connection mode to use for the cluster (could be token or file)",
+                            "default": "token"
+                        },
+                        "file": {
+                            "type": "string",
+                            "minLength": 50,
+                            "maxLength": 500,
+                            "title": "Kubeconfig file",
+                            "description": "If mode is file, this property must be set with a full kubeconfig content",
+                            "default": "kind: Config\napiVersion: v1",
+                            "examples": [
+                                "kind: Config\napiVersion: v1",
+                                "kind: Config\napiVersion: v1\ncurrent-context: default"
+                            ]
+                        },
+                        "token": {
+                            "type": "object",
+                            "properties": {
+                                "server": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 200,
+                                    "title": "API endpoint",
+                                    "description": "The server URL to the target cluster API",
+                                    "default": "https://localhost:6443",
+                                    "examples": [
+                                        "https://localhost:6443",
+                                        "https://api.mycluster.local:6443"
+                                    ]
+                                },
+                                "token": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 200,
+                                    "title": "API token",
+                                    "description": "The token to use to get access. This token must have full cluster admin access to perform some chaos scenarios",
+                                    "default": "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                                    "examples": [
+                                        "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                                        "mytoken"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "anyOf": [
+                        {
+                            "properties": {
+                                "mode": {
+                                    "const": "token"
+                                }
+                            },
+                            "required": [
+                                "token"
+                            ]
+                        },
+                        {
+                            "properties": {
+                                "mode": {
+                                    "const": "file"
+                                }
+                            },
+                            "required": [
+                                "file"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "anyOf": [
+                {
+                    "properties": {
+                        "enabled": {
+                            "const": true
+                        }
+                    },
+                    "required": [
+                        "mode"
+                    ]
+                },
+                {
+                    "properties": {
+                        "mode": {
+                            "const": "job"
+                        }
+                    },
+                    "required": [
+                        "job"
+                    ]
+                },
+                {
+                    "properties": {
+                        "mode": {
+                            "const": "pipeline"
+                        }
+                    },
+                    "required": [
+                        "pipeline"
+                    ]
+                }
+            ]
+        },
+        "project": {
+            "$ref": "https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values.schema.json"
+        }
+    }
+}

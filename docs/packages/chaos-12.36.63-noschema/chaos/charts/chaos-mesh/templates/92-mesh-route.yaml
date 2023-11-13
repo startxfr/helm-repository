@@ -1,0 +1,28 @@
+{{- if .Values.mesh.enabled -}}{{- if .Values.mesh.expose -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+apiVersion: "route.openshift.io/v1"
+kind: Route
+metadata:
+  name: "server"
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "server-route"
+    {{- include "chaos-mesh.labels" . | nindent 4 }}
+    app: "server-mesh"
+  annotations:
+    {{- include "chaos-mesh.annotations" . | nindent 4 }}
+    haproxy.router.openshift.io/balance: roundrobin
+    haproxy.router.openshift.io/disable_cookies: "true"
+    template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  tls:
+    insecureEdgeTerminationPolicy: Allow
+    termination: edge
+  wildcardPolicy: None
+  to:
+    kind: Service
+    name: ui
+    weight: 100
+{{- end -}}{{- end -}}

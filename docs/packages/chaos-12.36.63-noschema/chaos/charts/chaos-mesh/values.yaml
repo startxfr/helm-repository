@@ -1,0 +1,182 @@
+
+
+# # Use it to Overwrite the helm-chart name
+#nameOverride: chaos-mesh
+# # Use it to Overwrite the helm-chart version
+#versionOverride: 0.0.1
+
+# Application chaos context
+context:  &context
+# Name of the global scope for this application (organisational tenant)
+ scope: companyname
+# Name of the cluster running this application (plateform tenant)
+ cluster: clustername
+# Name of the environement for this application (ex: dev, factory, preprod or prod)
+ environment: dev
+# Component name of this application (logical tenant)
+ component: chaos
+# Application name (functionnal tenant, default use Chart name)
+ app: chaos-mesh
+# Version name of this application (default use Chart appVersion)
+ version: "0.0.1"
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: chaos-mesh
+    display_name: Chaos - Mesh
+    description: chaos-mesh orchestrator in STARTX Chaos test suite
+
+# Configuration of the chaos-mesh deployment (see https://charts.chaos-mesh.org)
+mesh: 
+  enabled: false
+  expose: true
+  chaosDaemon:
+    runtime: crio
+    socketPath: /var/run/crio/crio.sock
+  nameOverride: ""
+  fullnameOverride: ""
+  customLabels: {}
+  clusterScoped: true
+  rbac:
+    create: true
+  timezone: "Europe/Paris"
+  enableProfiling: true
+  enableCtrlServer: true
+  imagePullSecrets: []
+  controllerManager: 
+    hostNetwork: false
+    serviceAccount: chaos-controller-manager
+    replicaCount: 3
+    env:
+      WEBHOOK_PORT: 9443
+      METRICS_PORT: 10080
+    enableFilterNamespace: false
+    service:
+      type: ClusterIP
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    podAnnotations: {}
+    chaosdSecurityMode: true
+  chaosDaemon:
+    grpcPort: 31767
+    httpPort: 31766
+    env: {}
+    hostNetwork: false
+    mtls:
+      enabled: false
+    privileged: true
+    podAnnotations: {}
+    serviceAccount: chaos-daemon
+    podSecurityPolicy: false
+    runtime: crio
+    socketPath: /var/run/crio/crio.sock
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+  dashboard:
+    create: true
+    rootUrl: https://server-chaos-mesh.apps.mycluster.com
+    hostNetwork: false
+    replicaCount: 1
+    serviceAccount: chaos-dashboard
+    imagePullPolicy: IfNotPresent
+    securityMode: true
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    podAnnotations: {}
+    service:
+      annotations: {}
+      type: ClusterIP
+    resources:
+      limits: {}
+      requests:
+        cpu: 25m
+        memory: 256Mi
+    persistentVolume:
+      enabled: false
+    env:
+      LISTEN_HOST: 0.0.0.0
+      LISTEN_PORT: 2333
+      METRIC_HOST: 0.0.0.0
+      METRIC_PORT: 2334
+      DATABASE_DRIVER: sqlite3
+      DATABASE_DATASOURCE: /data/core.sqlite
+      CLEAN_SYNC_PERIOD: 12h
+      TTL_EVENT: 168h
+      TTL_EXPERIMENT: 336h
+      TTL_SCHEDULE: 336h
+      TTL_WORKFLOW: 336h
+    ingress:
+      enabled: false
+  dnsServer:
+    create: true
+    serviceAccount: chaos-dns-server
+    nodeSelector: {}
+    tolerations: []
+    podAnnotations: {}
+    name: chaos-mesh-dns-server
+    grpcPort: 9288
+    resources:
+      limits: {}
+      requests:
+        cpu: 100m
+        memory: 70Mi
+    env:
+      LISTEN_HOST: "0.0.0.0"
+      LISTEN_PORT: 53
+  prometheus:
+    create: true
+    serviceAccount: prometheus
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    podAnnotations: {}
+    resources:
+      limits: {}
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    service:
+      type: ClusterIP
+    volume:
+      storage: 2Gi
+      storageClassName: gp3-csi
+  webhook:
+    certManager:
+      enabled: false
+    timeoutSeconds: 5
+    FailurePolicy: Fail
+    CRDS:
+      - podchaos
+      - iochaos
+      - timechaos
+      - networkchaos
+      - kernelchaos
+      - stresschaos
+      - awschaos
+      - azurechaos
+      - gcpchaos
+      - dnschaos
+      - jvmchaos
+      - schedule
+      - workflow
+      - httpchaos
+      - physicalmachinechaos
+      - physicalmachine
+      - statuscheck
+  bpfki:
+    create: true
+    grpcPort: 50051
+    resources: {}
+  chaosDlv:
+    enable: True

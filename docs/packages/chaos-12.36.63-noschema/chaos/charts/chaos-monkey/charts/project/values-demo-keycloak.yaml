@@ -1,0 +1,110 @@
+
+# Default values for configuration of a dev demo
+# see values.keycloak for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: demo-keycloak
+  app: demo-keycloak-project
+  # version: "0.0.1"  
+enabled: true
+project: 
+  enabled: true
+  hooked: false
+  type: project
+  name: "demo-keycloak"
+  display_name: "Demo KEYCLOAK"
+  description: "Demo on Keycloak SSO"
+rbac: 
+  enabled: true
+  groups: 
+  - id: students
+    name: students
+    role: view
+  - id: dev
+    name: dev
+    role: view
+  - id: devops
+    name: devops
+    role: edit
+  - id: ops
+    name: ops
+    role: admin
+networkpolicy: 
+  enabled: false
+  rules: []
+limits: 
+  enabled: true
+  rules:  |
+    limits:
+      - type: "Pod"
+        min:
+          cpu: "10m"
+          memory: "32Mi"
+        max:
+          cpu: "400m"
+          memory: "600Mi"
+      - type: "Container"
+        default:
+          cpu: "100m"
+          memory: "64Mi"
+        defaultRequest:
+          cpu: "50m"
+          memory: "32Mi"
+        min:
+          cpu: "10m"
+          memory: "32Mi"
+        max:
+          cpu: "400m"
+          memory: "600Mi"
+quotas: 
+  enabled: true
+  rules:  |
+    hard:
+      limits.cpu: "1000m"
+      limits.memory: "2Gi"
+      requests.cpu: "450m"
+      requests.memory: "1200Mi"
+      requests.storage: "0"
+      persistentvolumeclaims: "0"
+      ephemeral-storage: "0" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      gp2-csi.storageclass.storage.k8s.io/requests.storage: "0"
+      gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      pods: "8"
+      services: "3"
+      services.loadbalancers: "0"
+      services.nodeports: "0"
+      secrets: "15"
+      configmaps: "25"
+      replicationcontrollers: "0"
+      openshift.io/imagestreams: "3"
+      count/daemonsets.apps: "0"
+      count/replicasets.apps: "8"
+      count/deployments.apps: "3"

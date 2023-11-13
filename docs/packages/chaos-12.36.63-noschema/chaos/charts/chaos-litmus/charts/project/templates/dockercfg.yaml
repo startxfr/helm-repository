@@ -1,0 +1,29 @@
+{{- if .Values.enabled }}{{- if .Values.dockercfg }}{{- if .Values.dockercfg.enabled -}}
+{{- $root := . -}}
+{{- $defaultns := .Values.project.name | default .Chart.Name -}}
+
+{{ range .Values.dockercfg.list }}
+{{- $name := .name | default "registrycreds" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+---
+kind: Secret
+apiVersion: v1
+type: "kubernetes.io/dockerconfigjson"
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "project.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-dockercfg-{{- include "startx.appVersion" $root -}}"
+  annotations:
+    {{- include "project.annotations" $root | nindent 4 }}
+    template.openshift.io/expose-registry: "{{- .registry | default "docker.io" -}}"
+    template.openshift.io/expose-username: "{{- .username | default "username" -}}"
+    template.openshift.io/expose-email: "{{- .email | default "mail@example.com" -}}"
+    template.openshift.io/expose-password: "{{- .password | default "password" -}}"
+    template.openshift.io/base64-expose-dockerconfig: "{.data['\\.dockerconfigjson']}"
+stringData:
+  .dockerconfigjson: "{{ include "imagePullSecret" . | replace "\"" "\\\"" }}"
+
+{{ end }}
+{{- end -}}{{- end -}}{{- end }}

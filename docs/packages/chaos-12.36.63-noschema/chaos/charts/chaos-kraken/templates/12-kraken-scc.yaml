@@ -1,0 +1,96 @@
+{{- if .Values.kraken.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kraken
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-kraken-scc"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+---
+kind: SecurityContextConstraints 
+apiVersion: security.openshift.io/v1
+metadata:
+  name: privileged-kraken
+  labels:
+    app.kubernetes.io/name: "privileged-kraken-scc"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    kubernetes.io/description: >-
+      copy of the OCP 4.9.10 privileged SCC dedicated to the kraken SA. 
+      Should be updated if any change occur in the default privileged SCC
+      in further OCP releases.
+users:
+- system:serviceaccount:{{- $namespace -}}:kraken
+- system:serviceaccount:{{- $namespace -}}:pipeline
+allowHostPorts: true
+priority: null
+requiredDropCapabilities: null
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+allowHostDirVolumePlugin: true
+seccompProfiles:
+  - '*'
+allowHostIPC: true
+seLinuxContext:
+  type: RunAsAny
+readOnlyRootFilesystem: false
+fsGroup:
+  type: RunAsAny
+defaultAddCapabilities: null
+allowedUnsafeSysctls:
+  - '*'
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - '*'
+allowHostPID: true
+allowHostNetwork: true
+allowPrivilegeEscalation: true
+allowedCapabilities:
+  - '*'
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: privileged-kraken-scc-role
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-kraken-scc-role"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+rules:
+  - apiGroups: ["security.openshift.io"]
+    resources: ["securitycontextconstraints"]
+    resourceNames: ["privileged-kraken"]
+    verbs: ["use"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: privileged-kraken-scc-rb
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-kraken-scc-rb"
+    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: kraken
+  - kind: ServiceAccount
+    name: pipeline
+roleRef:
+  kind: Role
+  name: privileged-kraken-scc-role
+  apiGroup: rbac.authorization.k8s.io
+{{- end -}}
