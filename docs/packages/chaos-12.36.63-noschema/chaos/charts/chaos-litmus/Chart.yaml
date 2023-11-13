@@ -1,0 +1,44 @@
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "release 12.36.49 aligned with OCP 4.12.36"
+  artifacthub.io/containsSecurityUpdates: "false"
+apiVersion: v2
+appVersion: 2.14.0
+dependencies:
+- alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/packages/
+  version: 12.0.0
+- alias: litmus
+  condition: litmus.enabled
+  name: litmus
+  repository: https://litmuschaos.github.io/litmus-helm
+  version: 2.9.0
+description: Helm chart used to deploy litmus on Openshift or Kubernetes cluster.  Litmus
+  is as a chaos engine with chaos git or gui configuration backend.  This chart is
+  part of the startx chaos helm chart suite.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-litmus.svg
+keywords:
+- kubernetes
+- openshift
+- helm
+- startx
+- chaos testing
+- test
+- litmus
+- monkey
+kubeVersion: '>=1.21.0-0'
+maintainers:
+- email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: chaos-litmus
+sources:
+- https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus
+- https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus
+tags: infra,litmus,chaos,testing,cluster,application
+type: application
+version: 12.36.49

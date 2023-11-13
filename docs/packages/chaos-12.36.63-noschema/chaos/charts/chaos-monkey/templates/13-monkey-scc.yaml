@@ -1,0 +1,96 @@
+{{- if .Values.monkey.enabled -}}
+{{- $root := . -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints 
+metadata:
+  name: privileged-monkey
+  labels:
+    app.kubernetes.io/name: "privileged-monkey-scc"
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
+    kubernetes.io/description: 'allows privileged access to host'
+    release.openshift.io/create-only: "true"
+users:
+- system:serviceaccount:{{- $namespace -}}:startx-monkey
+allowHostPorts: true
+priority: null
+requiredDropCapabilities: null
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+allowHostDirVolumePlugin: true
+seccompProfiles:
+  - '*'
+allowHostIPC: true
+seLinuxContext:
+  type: RunAsAny
+readOnlyRootFilesystem: false
+fsGroup:
+  type: RunAsAny
+defaultAddCapabilities: null
+allowedUnsafeSysctls:
+  - '*'
+supplementalGroups:
+  type: RunAsAny
+volumes:
+  - '*'
+allowHostPID: true
+allowHostNetwork: true
+allowPrivilegeEscalation: true
+allowedCapabilities:
+  - '*'
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: privileged-monkey-scc-role
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-monkey-scc-role"
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
+rules:
+  - apiGroups: ["security.openshift.io"]
+    resources: ["securitycontextconstraints"]
+    resourceNames: ["privileged-monkey"]
+    verbs: ["use"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kube-monkey-edit-rb
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: {{ $namespace | default "default" | quote }}
+  - kind: ServiceAccount
+    name: startx-monkey
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: privileged-monkey-scc-rb
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "privileged-monkey-scc-rb"
+    {{- include "chaos-monkey.labels" $root | nindent 4 }}
+  annotations:
+    {{- include "chaos-monkey.annotations" $root | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: startx-monkey
+roleRef:
+  kind: Role
+  name: privileged-monkey-scc-role
+  apiGroup: rbac.authorization.k8s.io
+{{- end -}}

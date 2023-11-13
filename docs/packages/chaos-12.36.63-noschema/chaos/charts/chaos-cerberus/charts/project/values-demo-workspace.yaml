@@ -1,0 +1,120 @@
+
+# Default values for configuration of a dev demo
+# see values.workspace for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: demo-workspace
+  app: demo-workspace-project
+  # version: "0.0.1"  
+enabled: true
+project: 
+  enabled: true
+  hooked: false
+  type: project
+  name: "demo-workspace"
+  display_name: "Demo CHE"
+  description: "Demo on Eclipse CHE remote IDE"
+rbac: 
+  enabled: true
+  groups: 
+  - id: students
+    name: students
+    role: view
+  - id: dev
+    name: dev
+    role: view
+  - id: devops
+    name: devops
+    role: edit
+  - id: ops
+    name: ops
+    role: admin
+networkpolicy: 
+  enabled: true
+  rules: 
+  - id: deny-all-pods
+    spec: |
+      podSelector: {}
+  - id: manpage-allow-external
+    spec: |
+      podSelector:
+        matchLabels:
+          app: manpage
+      ingress:
+        - {}
+limits: 
+  enabled: true
+  rules:  |
+    limits:
+      - type: "Pod"
+        min:
+          cpu: "20m"
+          memory: "16Mi"
+        max:
+          cpu: 2
+          memory: "4Gi"
+      - type: "Container"
+        default:
+          cpu: "500m"
+          memory: "600Mi"
+        defaultRequest:
+          cpu: "300m"
+          memory: "400Mi"
+        min:
+          cpu: "20m"
+          memory: "16Mi"
+        max:
+          cpu: 2
+          memory: "4Gi"
+quotas: 
+  enabled: true
+  rules:  |
+    hard:
+      limits.cpu: "20"
+      limits.memory: "20Gi"
+      requests.cpu: "10"
+      requests.memory: "10Gi"
+      requests.storage: "100Gi"
+      persistentvolumeclaims: "5"
+      ephemeral-storage: "20Gi" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "20Gi"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
+      gp2-csi.storageclass.storage.k8s.io/requests.storage: "20Gi"
+      gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "4"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      pods: "20"
+      services: "20"
+      services.loadbalancers: "10"
+      services.nodeports: "10"
+      secrets: "100"
+      configmaps: "50"
+      replicationcontrollers: "10"
+      openshift.io/imagestreams: "10"
+      count/daemonsets.apps: "10"
+      count/replicasets.apps: "20"
+      count/deployments.apps: "20"
