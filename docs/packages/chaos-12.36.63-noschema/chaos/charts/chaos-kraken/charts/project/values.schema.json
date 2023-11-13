@@ -1,0 +1,686 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "required": [
+        "project",
+        "enabled"
+    ],
+    "properties": {
+        "enabled": {
+            "type": "boolean",
+            "title": "Enable the namespace/project creation",
+            "description": "Enable creation of the namespace or project. Is required to be enabled if you want to create the resource.",
+            "default": true
+        },
+        "context": {
+            "type": "object",
+            "title": "Project / namespace context",
+            "description": "Properties of the project context.",
+            "required": [
+                "scope",
+                "cluster",
+                "environment",
+                "component",
+                "app"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "default": "myscope",
+                    "examples": [
+                        "myscope",
+                        "mycustomer"
+                    ]
+                },
+                "cluster": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "localhost",
+                    "examples": [
+                        "mycluster",
+                        "localhost"
+                    ]
+                },
+                "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Environement name",
+                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "mycomp",
+                    "examples": [
+                        "mycomp",
+                        "myservice"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "default": "default-project",
+                    "examples": [
+                        "myapp",
+                        "mymicroservice"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Version name",
+                    "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                    "default": "0.0.1",
+                    "examples": [
+                        "0.0.1",
+                        "0.1",
+                        "0.0.1-snapshot",
+                        "0.0.1-202110300900"
+                    ]
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project / namespace definition",
+            "description": "Information about the project or namespace definition.",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable namespace / project creation",
+                    "description": "Enable the creation of the project or namespace.",
+                    "default": true
+                },
+                "infra": {
+                    "type": "boolean",
+                    "title": "Enable infra nodes",
+                    "description": "Enable workload located into infra nodes",
+                    "default": false
+                },
+                "hooked": {
+                    "type": "boolean",
+                    "title": "Helm hook",
+                    "description": "Project or namespace creation is done as an helm hook. Should be set to true if type is project (helm doesn't recognize project resource as it does for namespace)",
+                    "default": false
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Name of the project or namespace.",
+                    "default": "my-project",
+                    "examples": [
+                        "default-project",
+                        "my-project",
+                        "my-app"
+                    ]
+                },
+                "nodeSelector": {
+                    "type": "string",
+                    "title": "Node selector",
+                    "description": "A Node selector condition to set at the project level",
+                    "default": false,
+                    "examples": [
+                        "node-role.kubernetes.io/infra=",
+                        "node-role.kubernetes.io/worker=",
+                        "node-role.kubernetes.io/app=",
+                        "machine.startx.io/group=app-small",
+                        "machine.startx.io/group=app-big",
+                        "cpu-feature.node.kubevirt.io/acpi=true"
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "project",
+                        "namespace"
+                    ],
+                    "title": "Kind of resource",
+                    "description": "Kind of resource to use for namespace isolation. Project kind should be used against Openshift clusters.",
+                    "default": "namespace",
+                    "examples": [
+                        "project",
+                        "namespace"
+                    ]
+                },
+                "display_name": {
+                    "type": "string",
+                    "title": "Display name",
+                    "description": "Display name of the project. Only apply to project (Openshift) type.",
+                    "default": "MY project",
+                    "examples": [
+                        "Default project",
+                        "MY project"
+                    ]
+                },
+                "description": {
+                    "type": "string",
+                    "title": "Description",
+                    "description": "Description of the project. Only apply to project (Openshift) type.",
+                    "default": "MY project description",
+                    "examples": [
+                        "Default project description",
+                        "MY project description"
+                    ]
+                }
+            }
+        },
+        "dockercfg": {
+            "type": "object",
+            "title": "Container registry credentials",
+            "description": "Creation of secret holding registry access credentials at the namespace level. Could be used with imagePull option available in the serviceAccount section.",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable namespace scoped Dockercfg secret",
+                    "description": "Enable the creation of various dockercfg at the namespace / project level. This file hold credentials for container images repository access. Could be linked with service accounts (see serviceAccounts section).",
+                    "default": false
+                },
+                "list": {
+                    "title": "Dockercfg list",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Credential name",
+                                "description": "Name of the credential to create.",
+                                "default": "corp-registrycreds-repositoryname",
+                                "examples": [
+                                    "corp-registrycreds-repositoryname",
+                                    "my-repository-name",
+                                    "corp-repository-name"
+                                ]
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "title": "Credential namespace",
+                                "description": "Namespace where the credential must reside.",
+                                "default": "default-project",
+                                "examples": [
+                                    "default-project",
+                                    "default"
+                                ]
+                            },
+                            "registry": {
+                                "type": "string",
+                                "title": "Registry",
+                                "description": "Domain name of the registry to use.",
+                                "default": "docker.io",
+                                "examples": [
+                                    "docker.io",
+                                    "quay.io"
+                                ]
+                            },
+                            "username": {
+                                "type": "string",
+                                "title": "User name",
+                                "description": "Name of the user used to connect to the registry.",
+                                "default": "myusername",
+                                "examples": [
+                                    "myusername",
+                                    "username"
+                                ]
+                            },
+                            "password": {
+                                "type": "string",
+                                "title": "Password",
+                                "description": "Password coresponding to the user declared for the registry access.",
+                                "default": "xxxxxx"
+                            },
+                            "email": {
+                                "type": "string",
+                                "title": "E-mail",
+                                "description": "Email associated to the registry user.",
+                                "default": "my@example.com",
+                                "examples": [
+                                    "my@example.com",
+                                    "my@corp.com"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "registry",
+                            "username",
+                            "password",
+                            "email"
+                        ]
+                    }
+                }
+            }
+        },
+        "serviceAccounts": {
+            "type": "object",
+            "title": "Service Account management",
+            "description": "Creation of ServiceAccount. Could link secret holding registry creds using the imagePullSecrets option.",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable namespace scoped serviceAccounts",
+                    "description": "Enable the creation of various serviceAccounts at the namespace / project level. This list hold all serviceAccounts managed by this chart.",
+                    "default": false
+                },
+                "list": {
+                    "title": "ServiceAccounts list",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "serviceAccount name",
+                                "description": "Name of the serviceAccount to create.",
+                                "default": "default-project",
+                                "examples": [
+                                    "default",
+                                    "builder"
+                                ]
+                            },
+                            "imagePullSecrets": {
+                                "type": "array",
+                                "title": "imagePullSecrets list",
+                                "description": "List of secrets used for imagePull requests.",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "name"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "title": "Secret name",
+                                            "description": "Name of the secret to link to this serviceAccount for imagePull.",
+                                            "default": "corp-registrycreds-repositoryname",
+                                            "examples": [
+                                                "corp-registrycreds-repositoryname",
+                                                "my-repository-name",
+                                                "corp-repository-name"
+                                            ]
+                                        },
+                                        "namespace": {
+                                            "type": "string",
+                                            "title": "Secret namespace",
+                                            "description": "Namespace of the secret to link to this serviceAccount for imagePull.",
+                                            "default": "default-project",
+                                            "examples": [
+                                                "default-project",
+                                                "default"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "name"
+                        ]
+                    }
+                }
+            }
+        },
+        "quotas": {
+            "type": "object",
+            "title": "Quota management",
+            "description": "Creation of ResourceQuota in the namespace to restrict resource consumption. see https://kubernetes.io/docs/concepts/policy/resource-quotas",
+            "required": [
+                "enabled",
+                "rules"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable quotas into the namespace",
+                    "description": "Enable the creation of ResourceQuotas in this project / namespace.",
+                    "default": false
+                },
+                "rules": {
+                    "type": "string",
+                    "title": "Rules",
+                    "description": "List quotas rules to apply to this project / namespace. You can set whatever is supported in the spec of the ResourceQuota kubernetes resource. See https://kubernetes.io/docs/concepts/policy/resource-quotas for more information.",
+                    "default": "hard:\n  limits.cpu: '400m'",
+                    "examples": [
+                        "hard:\n  limits.cpu: '400m'"
+                    ]
+                }
+            }
+        },
+        "limits": {
+            "type": "object",
+            "title": "LimitRanges management",
+            "description": "Creation of LimitRanges in the namespace to restrict resource consumption. see https://kubernetes.io/docs/concepts/policy/limit-range",
+            "required": [
+                "enabled",
+                "rules"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable limit ranges into the namespace",
+                    "description": "Enable the creation of LimitRanges in this project / namespace.",
+                    "default": false
+                },
+                "rules": {
+                    "type": "string",
+                    "title": "Rules",
+                    "description": "List limit ranges rules to apply to this project / namespace. You can set whatever is supported in the spec of the LimitRanges kubernetes resource. See https://kubernetes.io/docs/concepts/policy/limit-range for more information.",
+                    "default": "limits:\n  - type: Pod\n    max:\n      cpu: 200m",
+                    "examples": [
+                        "limits:\n  - type: Pod\n    max:\n      cpu: 200m"
+                    ]
+                }
+            }
+        },
+        "networkpolicy": {
+            "type": "object",
+            "title": "NetworkPolicy management",
+            "description": "Creation of various NetworkPolicy in the namespace to restrict network exposition. see https://kubernetes.io/docs/concepts/services-networking/network-policies",
+            "required": [
+                "enabled",
+                "rules"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable NetworkPolicy into the namespace",
+                    "description": "Enable the creation of NetworkPolicies in this project / namespace.",
+                    "default": false
+                },
+                "rules": {
+                    "title": "NetworkPolicy rules list",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "title": "NetworkPolicy name",
+                                "description": "Name of the NetworkPolicy to create.",
+                                "default": "allow-from-openshift-ingress",
+                                "examples": [
+                                    "allow-from-openshift-ingress",
+                                    "allow-app1-to-app2",
+                                    "deny-front-to-back"
+                                ]
+                            },
+                            "spec": {
+                                "type": "string",
+                                "title": "Rules",
+                                "description": "Specification of the network policy to apply. You can set whatever is supported in the spec of the NetworkPolicy kubernetes resource. See https://kubernetes.io/docs/concepts/services-networking/network-policies for more information.",
+                                "default": "hard:\n  limits.cpu: '400m'",
+                                "examples": [
+                                    "hard:\n  limits.cpu: '400m'"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "spec"
+                        ]
+                    }
+                }
+            }
+        },
+        "rbac": {
+            "type": "object",
+            "title": "RBAC management",
+            "description": "Creation of various RBAC resources to restrict access to the namespace resources. see https://kubernetes.io/docs/reference/access-authn-authz/rbac",
+            "required": [
+                "enabled",
+                "groups",
+                "users"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable RBAC into the namespace",
+                    "description": "Enable the creation of RBAC resources in this project / namespace.",
+                    "default": false
+                },
+                "groups": {
+                    "title": "RoleBinding rules for groups",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "title": "RoleBinding ID",
+                                "description": "ID of the RoleBinding to create.",
+                                "default": "mygroup",
+                                "examples": [
+                                    "mygroup",
+                                    "mygroup-basic-user",
+                                    "mygroupcluster"
+                                ]
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "Group name",
+                                "description": "Name of the group to onboard in the project.",
+                                "default": "mygroup",
+                                "examples": [
+                                    "mygroup",
+                                    "mygroup-example",
+                                    "group1",
+                                    "dev-team"
+                                ]
+                            },
+                            "role": {
+                                "type": "string",
+                                "title": "Role name",
+                                "description": "Name of the role to give to this group.",
+                                "default": "basic-user",
+                                "examples": [
+                                    "basic-user",
+                                    "edit",
+                                    "admin"
+                                ]
+                            },
+                            "type": {
+                                "type": "string",
+                                "title": "Role type",
+                                "description": "The kind of role to use. Could be cluster or local. Default is local.",
+                                "enum": [
+                                    "local",
+                                    "cluster"
+                                ],
+                                "default": "local",
+                                "examples": [
+                                    "local",
+                                    "cluster"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "role"
+                        ]
+                    }
+                },
+                "users": {
+                    "title": "RoleBinding rules for users",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "title": "RoleBinding ID",
+                                "description": "ID of the RoleBinding to create.",
+                                "default": "myuser",
+                                "examples": [
+                                    "myuser",
+                                    "myuser-basic-user",
+                                    "myusercluster"
+                                ]
+                            },
+                            "name": {
+                                "type": "string",
+                                "title": "User name",
+                                "description": "Name of the user to onboard in the project.",
+                                "default": "myuser",
+                                "examples": [
+                                    "myuser",
+                                    "myuser-example",
+                                    "user1",
+                                    "dev1"
+                                ]
+                            },
+                            "role": {
+                                "type": "string",
+                                "title": "Role name",
+                                "description": "Name of the role to give to this user.",
+                                "default": "basic-user",
+                                "examples": [
+                                    "basic-user",
+                                    "edit",
+                                    "admin"
+                                ]
+                            },
+                            "type": {
+                                "type": "string",
+                                "title": "Role type",
+                                "description": "The kind of role to use. Could be cluster or local. Default is local.",
+                                "enum": [
+                                    "local",
+                                    "cluster"
+                                ],
+                                "default": "local",
+                                "examples": [
+                                    "local",
+                                    "cluster"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "role"
+                        ]
+                    }
+                }
+            }
+        },
+        "podMonitor": {
+            "type": "object",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable the podMonitor creation",
+                    "description": "Enable creation of the podMonitor in this project. Is required to be enabled if you want to create the resources.",
+                    "default": false
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List of podMonitor's",
+                    "items": {
+                        "type": "object",
+                        "title": "podMonitor's definition",
+                        "required": [
+                            "name",
+                            "spec"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "Name of the podMonitor",
+                                "default": "my-pod-monitor"
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "title": "Namespace",
+                                "description": "Namespace of the podMonitor. Default use the project.name value"
+                            },
+                            "spec": {
+                                "type": "string",
+                                "title": "Spec",
+                                "description": "Specification of the podMonitor. See https://docs.openshift.com/container-platform/4.12/rest_api/monitoring_apis/podmonitor-monitoring-coreos-com-v1.html#spec-podmetricsendpoints-2"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "serviceMonitor": {
+            "type": "object",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable the serviceMonitor creation",
+                    "description": "Enable creation of the serviceMonitor in this project. Is required to be enabled if you want to create the resources.",
+                    "default": false
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List of serviceMonitor's",
+                    "items": {
+                        "type": "object",
+                        "title": "serviceMonitor's definition",
+                        "required": [
+                            "name",
+                            "spec"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name",
+                                "description": "Name of the serviceMonitor",
+                                "default": "my-service-monitor"
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "title": "Namespace",
+                                "description": "Namespace of the serviceMonitor. Default use the project.name value"
+                            },
+                            "spec": {
+                                "type": "string",
+                                "title": "Spec",
+                                "description": "Specification of the serviceMonitor. See https://docs.openshift.com/container-platform/4.12/rest_api/monitoring_apis/servicemonitor-monitoring-coreos-com-v1.html"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

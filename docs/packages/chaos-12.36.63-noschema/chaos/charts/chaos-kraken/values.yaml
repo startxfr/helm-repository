@@ -1,0 +1,97 @@
+
+
+# # Use it to Overwrite the helm-chart name
+#nameOverride: chaos-kraken
+# # Use it to Overwrite the helm-chart version
+#versionOverride: 0.0.1
+
+# Application chaos context
+context:  &context
+# Name of the global scope for this application (organisational tenant)
+ scope: companyname
+# Name of the cluster running this application (plateform tenant)
+ cluster: clustername
+# Name of the environement for this application (ex: dev, factory, preprod or prod)
+ environment: dev
+# Component name of this application (logical tenant)
+ component: chaos
+# Application name (functionnal tenant, default use Chart name)
+ app: kraken
+# Version name of this application (default use Chart appVersion)
+ version: "0.0.1"
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: chaos-kraken
+    display_name: Chaos - Kraken
+    description: Kraken chaos orchestrator in STARTX Chaos test suite
+
+# Configuration of the kraken deployment
+kraken: 
+  # Unleash the kraken ;)
+  enabled: false
+  # Enable exposition for this application (route based)
+  expose: true
+  # Fill the cerberus server url. (internal is better)
+  cerberusUrl: "http://cerberus.startx-chaos-kraken.svc.cluster.local:8080"
+  # Kraken mode (could be job or pipeline)
+  mode: job
+  # configuration of the job mode
+  job: 
+    # Job name prefix
+    prefix: kraken-test
+  # configuration of the pipeline mode
+  pipeline: 
+    # pipelinerun name prefix
+    prefix: kraken-test
+  # AWS configuration section
+  aws: 
+    # enable the aws integration
+    enabled: false
+    # credentials (mandatory if enabled)
+    credentials: 
+      # used region
+      region: eu-west-3
+      # AWS access key ID
+      key_id: AKIAXXXXXXXXXXXXXXXX
+      # AWS secret access key
+      secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  # Kubeconfig of the chaos tested cluster (mandatory)
+  kubeconfig:
+    # Connection mode to use for the cluster (could be token or file)
+    mode: token
+    # If mode is token, this section must be filled
+    token: 
+      # The server URL to the target cluster API
+      server: https://localhost:6443
+      # The token to use to get access. This token must have full 
+      # cluster admin access to perform some chaos scenarios
+      token: sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
+    # # If mode is file, this property must be set with a full kubeconfig content
+    # file: |
+    #   kind: Config
+    #   apiVersion: v1
+    #   current-context: default
+    #   clusters:
+    #   - name: default
+    #     cluster:
+    #       certificate-authority-data: XXXXXXX
+    #       server: https://localhost:6443
+    #   users:
+    #   - name: default
+    #     user:
+    #       client-certificate-data: XXXXXXX
+    #       client-key-data: XXXXXXX
+    #   contexts:
+    #   - name: default
+    #     context:
+    #       cluster: default
+    #       namespace: default
+    #       user: default
+    #   preferences: {}

@@ -1,0 +1,107 @@
+
+# Default values for configuration of a dev demo
+# see values.tekton for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: demo-tekton
+  app: demo-tekton-project
+  # version: "0.0.1"  
+enabled: true
+project: 
+  enabled: true
+  hooked: false
+  type: project
+  name: "demo-tekton"
+  display_name: "Demo TEKTON"
+  description: "Demo on Tekton Pipeline"
+rbac: 
+  enabled: true
+  groups: 
+  - id: students
+    name: students
+    role: view
+  - id: dev
+    name: dev
+    role: view
+  - id: devops
+    name: devops
+    role: edit
+  - id: ops
+    name: ops
+    role: admin
+networkpolicy: 
+  enabled: true
+  rules: 
+  - id: deny-all-pods
+    spec: |
+      podSelector: {}
+  - id: manpage-allow-external
+    spec: |
+      podSelector:
+        matchLabels:
+          app: manpage
+      ingress:
+        - {}
+limits: 
+  enabled: true
+  rules:  |
+    limits:
+      - type: "Pod"
+        max:
+          cpu: 2
+          memory: "2Gi"
+      - type: "Container"
+        default:
+          cpu: "200m"
+          memory: "256Mi"
+        defaultRequest:
+          cpu: "50m"
+          memory: "32Mi"
+        max:
+          cpu: "750m"
+          memory: "1024Mi"
+quotas: 
+  enabled: true
+  rules:  |
+    hard:
+      limits.cpu: "20"
+      limits.memory: "40Gi"
+      requests.cpu: "12"
+      requests.memory: "18Gi"
+      requests.storage: "25Gi"
+      persistentvolumeclaims: "5"
+      ephemeral-storage: "0" 
+      gp2.storageclass.storage.k8s.io/requests.storage: "4Gi"
+      gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "5Gi"
+      startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "2Gi"
+      startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "2"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+      startx-odf-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+      ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+      openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+      pods: "20"
+      services: "10"
+      secrets: "50"
+      configmaps: "50"
+      replicationcontrollers: "25"
+      openshift.io/imagestreams: "10"
