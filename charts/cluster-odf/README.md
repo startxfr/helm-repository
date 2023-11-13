@@ -254,3 +254,4 @@ helm install cluster-odf startx/cluster-odf -f https://raw.githubusercontent.com
 | 12.36.64 | 2023-11-13 | publish stable update for the full repository
 | 12.36.65 | 2023-11-14 | publish stable update for the full repository
 | 12.36.66 | 2023-11-14 | Update trunc to 255 for helper
+| 12.36.69 | 2023-11-14 | move dependencies to version 12.36.65
