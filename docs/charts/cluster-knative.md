@@ -245,11 +245,6 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 | 12.36.3 | 2023-09-30 | Change api version operator.serverless.openshift.io/v1alpha1 for Knative Kafka
 | 12.36.9 | 2023-10-01 | publish stable update for the full repository
 | 12.36.36 | 2023-10-11 | publish stable update for the full repository
-<<<<<<< HEAD
 | 12.36.49-noschema | 2023-11-13 | Publish stable update for the full repository with the no-schema packages
 | 12.36.51-noschema | 2023-11-13 | publish stable update for the full repository
-=======
-| 12.36.49 | 2023-11-13 | publish stable update for the full repository
-| 12.36.51 | 2023-11-13 | publish stable update for the full repository
 | 12.36.58 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
->>>>>>> devel
