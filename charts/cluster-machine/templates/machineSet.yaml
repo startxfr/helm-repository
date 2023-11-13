@@ -132,8 +132,8 @@ spec:
           blockDevices:
             - ebs:
                 iops: 0
-                volumeSize: {{ .volumeSize }}
-                volumeType: gp3
+                volumeSize: {{ .volumeSize | default 1 }}
+                volumeType: {{ .volumeType | default "gp3" | quote }}
           {{ end }}
           credentialsSecret:
             name: aws-cloud-credentials
