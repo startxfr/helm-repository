@@ -170,3 +170,4 @@ helm install cluster-localstorage startx/cluster-localstorage -f https://raw.git
 | 12.36.66 | 2023-11-14 | Update trunc to 255 for helper
 | 12.36.69 | 2023-11-14 | move dependencies to version 12.36.65
 | 12.45.0 | 2023-12-08 | Stable version aligned to Openshift version 4.12.45
+| 13.26.0 | 2023-12-08 | Unstable version aligned to Openshift version 4.13.26 to prepare the 13.26.x stable release (short lived)
