@@ -18,7 +18,7 @@ sso:
     postgresDeploymentSpec:
       imagePullPolicy: Always
 sso_realms:
-  enabled: true
+  enabled: false
   list: 
     - name: myrealm
       spec: |-
@@ -31,7 +31,7 @@ sso_realms:
           id: my-realm
           realm: my-realm
 sso_clients:
-  enabled: true
+  enabled: false
   list: 
     - name: myapp
       spec: |-
@@ -80,7 +80,7 @@ operator:
     hooked: false
     name: "rhsso-operator"
     namespace: "startx-sso"
-    version: "7.6.1-opr-005"
+    version: "7.6.6-opr-001"
     operator: 
       channel: stable
       name: rhsso-operator

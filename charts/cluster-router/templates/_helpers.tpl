@@ -34,28 +34,4 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{ else }}
  - Cluster alert-manager disabled
 {{ end }}
-{{ if .imageprunner.enabled }}
- - Cluster image prunner enabled (scheduled every {{ default "30 * * * *" .imageprunner.schedule }})
-  # oc describe ImagePruner cluster 
-{{ else }}
- - Cluster image prunner disabled
-{{ end }}
-{{ if .projecttemplate.enabled }}
- - Cluster project template enabled (with{{ if .projecttemplate.rbac.enabled }}{{ else }}out{{ end }} RBAC, with{{ if .projecttemplate.networkpolicy.enabled }}{{ else }}out{{ end }} NetworkPolicy)
-  # oc describe template project-request -n openshift-config
-{{ else }}
- - Cluster project template disabled
-{{ end }}
-{{ if .redhat.enabled }}
- - Cluster redhat projects enabled (with{{ if .redhat.operators }}{{ else }}out{{ end }} RH operators)
-  # oc describe ns openshift-operators-redhat
-{{ else }}
- - Cluster Redhat namespace disabled
-{{ end }}
-{{ if .tracing.enabled }}
- - Cluster opentracing projects enabled (with{{ if .tracing.operators }}{{ else }}out{{ end }} OpenTracing operators)
-  # oc describe ns openshift-distributed-tracing
-{{ else }}
- - Cluster OpenTracing namespace disabled
-{{ end }}
 {{- end -}}
