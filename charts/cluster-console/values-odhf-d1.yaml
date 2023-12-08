@@ -1,0 +1,66 @@
+# Default values for configuration of a odhf cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: odhf
+  cluster: odhf-dev
+  environment: dev
+  component: console
+  app: startx-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: ODDO-BHF Console
+    logo: 
+      name: odhf-logo
+      tplFile: webtpl/odhf-logo-d1.svg
+  links:
+    - name: nsdashboard-odhf
+      spec: |
+        href: 'https://www.oddo-bhf.com'
+        location: NamespaceDashboard
+        text: ODDO-BHF Website
+    - name: applicationmenu-odhf
+      spec: |
+        href: 'https://www.oddo-bhf.com'
+        location: ApplicationMenu
+        text: Website
+        applicationMenu:
+          section: ODDO-BHF
+          imageURL: "https://d1uuj3mi6rzwpm.cloudfront.net/logos/providers/de/oddo_bhf_de.svg"
+    - name: applicationmenu-dsi
+      spec: |
+        href: 'http://dsi-internal.oddo.example'
+        location: ApplicationMenu
+        text: DSI ODDO
+        applicationMenu:
+          section: ODDO-BHF DSI
+          imageURL: "https://d1uuj3mi6rzwpm.cloudfront.net/logos/providers/de/oddo_bhf_de.svg"
+    - name: helpmenu-support
+      spec: |
+        href: 'https://startxfr.atlassian.net/servicedesk/customer/portal/2'
+        location: HelpMenu
+        text: ODDO-BHF User-support
+  logLinks:
+  - name: odhf-externallog
+    spec: |
+      hrefTemplate: >-
+        https://kibana-openshift-logging.apps.caas.oddo.example/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: Show in ODDO-BHF central logs
+  notifications:
+  - name: odhf-d1-console-notification-top
+    spec: |
+      backgroundColor: '#a3a329'
+      color: '#fff'
+      location: BannerTop 
+      text: You are connected to the ODDO-BHF - Devel Cluster
+  - name: odhf-d1-console-notification-bottom
+    spec: |
+      backgroundColor: '#fff'
+      color: '#a3a329'
+      location: BannerBottom
+      text: In case of problem, you can 
+      link:
+        href: 'https://startxfr.atlassian.net/servicedesk/customer/portal/2'
+        text: open a ticket on the ODDO-BHF HelpDesk
