@@ -1,0 +1,66 @@
+# Default values for configuration of a chd cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: chd
+  cluster: chd-dev
+  environment: dev
+  component: console
+  app: startx-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: CHD-LU Console
+    logo: 
+      name: chd-logo
+      tplFile: webtpl/chx-logo-d1.svg
+  links:
+    - name: nsdashboard-chd
+      spec: |
+        href: 'https://www.chd.lu'
+        location: NamespaceDashboard
+        text: Site public
+    - name: applicationmenu-chd
+      spec: |
+        href: 'https://www.chd.lu'
+        location: ApplicationMenu
+        text: Site public
+        applicationMenu:
+          section: CHD-LU
+          imageURL: "hhttps://www.chd.lu/themes/custom/chd/assets/apart/media/logos/logo-symbol-nav-mobile.svg"
+    - name: applicationmenu-dsi
+      spec: |
+        href: 'http://dsi-internal.chd.example'
+        location: ApplicationMenu
+        text: DSI CHD
+        applicationMenu:
+          section: CHD-LU DSI
+          imageURL: "https://www.chd.lu/themes/custom/chd/assets/apart/media/logos/logo-symbol-nav-mobile.svg"
+    - name: helpmenu-support
+      spec: |
+        href: 'https://startxfr.atlassian.net/servicedesk/customer/portal/2'
+        location: HelpMenu
+        text: CHD-LU User-support
+  logLinks:
+  - name: chd-externallog
+    spec: |
+      hrefTemplate: >-
+        https://kibana-openshift-logging.apps.caas.chd.example/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: Show in CHD-LU central logs
+  notifications:
+  - name: chd-d1-console-notification-top
+    spec: |
+      backgroundColor: '#a3a329'
+      color: '#fff'
+      location: BannerTop 
+      text: Vous êtes sur le cluster de la Chambre des Députés du Grand-Duché de Luxembourg - Devel
+  - name: chd-d1-console-notification-bottom
+    spec: |
+      backgroundColor: '#fff'
+      color: '#a3a329'
+      location: BannerBottom
+      text: En cas de problème sur ce cluster, vous pouvez
+      link:
+        href: 'https://startxfr.atlassian.net/servicedesk/customer/portal/2'
+        text: créer un ticket d'incident
