@@ -10,7 +10,9 @@ metadata:
   name: "{{- .name | default "default-logo" -}}"
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-console.labels" $root | nindent 4 }}
+    {{- include "startx.labelsCommonStartx" $root | nindent 4 }}
+    {{- include "startx.labelsCommonK8S" $root | nindent 4 }}
+    app.kubernetes.io/instance: {{ include "startx.appNameVersion" $root | quote }}
     app.kubernetes.io/name: "{{- .name | default "default-logo" -}}-configmap"
   annotations:
     {{- include "cluster-console.annotations" $root | nindent 4 }}
