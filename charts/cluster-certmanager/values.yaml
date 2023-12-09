@@ -87,7 +87,7 @@ project:
     enabled: false
     hooked: false
     type: namespace
-    name: "startx-certmanager"
+    name: "openshift-cert-manager-operator"
     display_name: Operator CertManager
     description: CertManager configured by STARTX
 
@@ -101,9 +101,9 @@ operator:
     hooked: false
     name: "openshift-cert-manager-operator"
     namespace: "openshift-cert-manager-operator"
-    version: "v1.11.4"
+    version: "v1.12.1"
     operator: 
-      channel: "stable-v1.11"
+      channel: "stable-v1"
       name: openshift-cert-manager-operator
       installPlanApproval: Automatic
       # csv: openshift-cert-manager
@@ -113,7 +113,7 @@ operator:
   operatorGroup:
     enabled: false
     hooked: false
-    name: "startx-certmanager-operators"
-    namespace: "startx-certmanager"
+    name: "openshift-cert-manager-operator"
+    namespace: "openshift-cert-manager-operator"
     providedAPIs: "Certificate.v1.cert-manager.io,CertificateRequest.v1.cert-manager.io,Challenge.v1.acme.cert-manager.io,ClusterIssuer.v1.cert-manager.io"
 
