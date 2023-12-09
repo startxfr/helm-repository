@@ -45,39 +45,37 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: project
     condition: project.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operatorJaeger
     condition: operatorJaeger.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operatorIstio
     condition: operatorIstio.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Minimum requirements for kubernetes is 1.26.0 version, use previous releases (12.x, 11.x, ...) for older k8s clusters"
-    - kind: changed
-      description: "Upgrade to 1.51.0-1 Jaeger, 1.65.11 Kiali and 2.4.5 Istio operator release"
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: "upgrade all dependencies charts to version 13.26.0"
+  artifacthub.io/containsSecurityUpdates: "false"

@@ -44,29 +44,27 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: projectKServing
     condition: projectKServing.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: projectKEventing
     condition: projectKEventing.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Minimum requirements for kubernetes is 1.26.0 version, use previous releases (12.x, 11.x, ...) for older k8s clusters"
-    - kind: changed
-      description: "Upgrade to 1.30.2 of the KNative operators release"
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: "upgrade all dependencies charts to version 13.26.0"
+  artifacthub.io/containsSecurityUpdates: "false"
