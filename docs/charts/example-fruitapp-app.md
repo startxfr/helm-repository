@@ -184,3 +184,4 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 | 13.26.1 | 2023-12-09 | Minimum requirements for kubernetes is 1.26.0 version and upgrade all cluster-xxx charts to latest release for OCP 4.13
 | 13.26.2 | 2023-12-09 | upgrade all dependencies charts to version 13.26.0
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository
+| 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release
