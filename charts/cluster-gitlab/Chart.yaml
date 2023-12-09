@@ -8,7 +8,7 @@ type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
 version: 13.26.0
 # Version name of the gitlab operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 6.4.1
+appVersion: 16.6.1
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-gitlab.svg
 # category associated to this package
@@ -16,7 +16,7 @@ category: cluster
 # tags
 tags: infra,cluster,gitlab,build,repository
 # Kube minimum version
-kubeVersion: ">=1.26.0-0"
+kubeVersion: ">=1.18.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -50,12 +50,14 @@ dependencies:
     condition: project.enabled
   - name: gitlab
     repository: https://charts.gitlab.io/
-    version: "6.4.1"
+    version: "16.6.1"
     alias: gitlab
     condition: gitlab.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Unstable version aligned to Openshift version 4.13.26 to prepare the 13.26.x stable release (short lived)"
+      description: "Minimum requirements for kubernetes is 1.26.0 version, use previous releases (12.x, 11.x, ...) for older k8s clusters"
+    - kind: changed
+      description: "Upgrade to 16.6.1 of the Gitlab Helm release"
   artifacthub.io/containsSecurityUpdates: "true"

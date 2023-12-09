@@ -16,7 +16,7 @@ category: cluster
 # tags
 tags: infra,cluster,certmanager,ssl,tls,certificate,security
 # Kube minimum version
-kubeVersion: ">=1.26.111-0"
+kubeVersion: ">=1.26.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -57,5 +57,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Unstable version aligned to Openshift version 4.13.26 to prepare the 13.26.x stable release (short lived)"
+      description: "Minimum requirements for kubernetes is 1.26.0 version, use previous releases (12.x, 11.x, ...) for older k8s clusters"
+    - kind: changed
+      description: "Upgrade to 4.13.0-202311211131 of the CertManager Helm release"
   artifacthub.io/containsSecurityUpdates: "true"
