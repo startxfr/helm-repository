@@ -6,9 +6,9 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 12.45.0
+version: 13.26.2
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 4.12.0
+appVersion: 4.13.26
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-config.svg
 # category associated to this package
@@ -16,7 +16,7 @@ category: cluster
 # tags
 tags: infra,cluster,config
 # Kube minimum version
-kubeVersion: ">=1.21.0-0"
+kubeVersion: ">=1.26.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -42,42 +42,42 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operatorGlobal
     condition: operatorGlobal.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: projectSosReport
     condition: projectSosReport.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operatorSosReport
     condition: operatorSosReport.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: projectMustGather
     condition: projectMustGather.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65"
+    version: "13.26.0"
     alias: operatorMustGather
     condition: operatorMustGather.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Stable version aligned to Openshift version 4.12.45"
+      description: "upgrade all dependencies charts to version 13.26.0"
   artifacthub.io/containsSecurityUpdates: "false"

@@ -220,3 +220,6 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 12.36.67 | 2023-11-14 | move dependencies to version 12.36.65
 | 12.36.69 | 2023-11-14 | move dependencies to version 12.36.65
 | 12.45.0 | 2023-12-08 | Stable version aligned to Openshift version 4.12.45
+| 13.26.0 | 2023-12-08 | Unstable version aligned to Openshift version 4.13.26 to prepare the 13.26.x stable release (short lived)
+| 13.26.1 | 2023-12-09 | Minimum requirements for kubernetes is 1.26.0 version and upgrade all cluster-xxx charts to latest release for OCP 4.13
+| 13.26.2 | 2023-12-09 | upgrade all dependencies charts to version 13.26.0
