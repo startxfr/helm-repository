@@ -452,3 +452,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2
 | 14.6.9 | 2023-12-10 | publish stable update for the full repository
 | 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5
+| 14.6.15 | 2023-12-11 | update packages for OCP 4.14.6
