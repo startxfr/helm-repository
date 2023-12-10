@@ -241,3 +241,4 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository
 | 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2
+| 14.6.9 | 2023-12-10 | publish stable update for the full repository
