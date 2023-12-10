@@ -48,27 +48,27 @@ maintainers:
 dependencies:
   - name: "chaos-cerberus"
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "13.26.2"
+    version: "14.6.5"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "13.26.2"
+    version: "14.6.5"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "13.26.2"
+    version: "14.6.5"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "13.26.2"
+    version: "14.6.5"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "13.26.2"
+    version: "14.6.5"
     alias: monkey
     condition: monkey.enabled
 
@@ -76,4 +76,6 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: "upgrade minimum kubeVersion to 1.27.x minimum"
+    - kind: changed
+      description: "upgrade dependencies to version 14.6.5 for startx packages"
   artifacthub.io/containsSecurityUpdates: "false"

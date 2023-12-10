@@ -45,17 +45,17 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "13.26.2"
+    version: "14.6.5"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "13.26.2"
+    version: "14.6.5"
     alias: operator
     condition: operator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "13.26.2"
+    version: "14.6.5"
     alias: operatorsec
     condition: operatorsec.enabled
 
@@ -63,4 +63,6 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: "upgrade minimum kubeVersion to 1.27.x minimum"
+    - kind: changed
+      description: "upgrade dependencies to version 14.6.5 for startx packages"
   artifacthub.io/containsSecurityUpdates: "false"
