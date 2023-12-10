@@ -14,4 +14,14 @@ metadata:
     helm.sh/resource-policy: keep
     argocd.argoproj.io/sync-wave: "-10" 
     openshift.io/node-selector: ""
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  annotations:
+    olm.providedAPIs: Jaeger.v1.jaegertracing.io
+  name: openshift-distributed-tracing
+  namespace: openshift-distributed-tracing
+spec:
+  upgradeStrategy: Default
 {{- end -}}
