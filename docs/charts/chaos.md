@@ -351,3 +351,4 @@ chaos-monkey startx/chaos-monkey
 | 14.6.2 | 2023-12-09 | debug app version
 | 14.6.3 | 2023-12-10 | Unstable version of the full repository
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2
+| 14.6.5-noschema | 2023-12-10 | Prepare upgrading to 14.6.5-noschema dependencies
