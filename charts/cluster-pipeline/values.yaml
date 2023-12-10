@@ -17,7 +17,7 @@ context: &context
 
 # Configuration of the projectOperator (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 projectOperator: 
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   project: 
@@ -37,14 +37,14 @@ projectOperator:
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   subscription:
-    enabled: false
+    enabled: true
     name: "openshift-pipelines-operator-rh"
     namespace: "openshift-operators"
-    version: "v1.11.1"
+    version: "v1.13.0"
     operator: 
       channel: latest
       name: openshift-pipelines-operator-rh
@@ -54,8 +54,8 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: true
+    enabled: false
     target: "all-ns"
     name: "pipeline-operators"
-    namespace: "pipeline-operatore"
+    namespace: "pipeline-operator"
     providedAPIs: "Config.v1alpha1.operator.tekton.dev"
