@@ -192,3 +192,9 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 12.36.69 | 2023-11-14 | move dependencies to version 12.36.65
 | 12.36.67-noschema | 2023-11-14 | publish stable update for the full repository
 | 12.36.69-noschema | 2023-11-14 | publish stable update for the full repository
+| 12.45.0 | 2023-12-08 | Stable version aligned to Openshift version 4.12.45
+| 13.26.0 | 2023-12-08 | Unstable version aligned to Openshift version 4.13.26 to prepare the 13.26.x stable release (short lived)
+| 13.26.1 | 2023-12-09 | Minimum requirements for kubernetes is 1.26.0 version and upgrade all cluster-xxx charts to latest release for OCP 4.13
+| 13.26.2 | 2023-12-09 | upgrade all dependencies charts to version 13.26.0
+| 13.26.3 | 2023-12-09 | publish stable update for the full repository
+| 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release

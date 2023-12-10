@@ -6,9 +6,9 @@ description: Helm chart used to configure 3scale at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 12.36.69-noschema
+version: 14.6.1-noschema
 # Version of 3scale operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 0.8.4
+appVersion: "0.10.7"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-3scale.svg
 # category associated to this package
@@ -16,7 +16,7 @@ category: cluster
 # tags
 tags: infra,cluster,3scale
 # Kube minimum version
-kubeVersion: ">=1.21.0-0"
+kubeVersion: ">=1.26.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -45,11 +45,6 @@ dependencies:
     version: "12.36.65-noschema"
     alias: project
     condition: project.enabled
-  - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "12.36.65-noschema"
-    alias: projectOperator
-    condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
     version: "12.36.65-noschema"
@@ -59,5 +54,5 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "move dependencies to version 12.36.65"
+      description: "upgrade all dependencies charts to version 13.26.0"
   artifacthub.io/containsSecurityUpdates: "false"

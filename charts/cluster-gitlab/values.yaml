@@ -39,7 +39,47 @@ gitlab:
       smartcard: {}
       kas: {}
       pages: {}
-
+    enterpriseImages:
+      migrations:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ee
+      sidekiq:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-sidekiq-ee
+      toolbox:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ee
+      webservice:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-webservice-ee
+      workhorse:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-workhorse-ee
+      geo-logcursor:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-geo-logcursor
+    communityImages:
+      migrations:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce
+      sidekiq:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-sidekiq-ce
+      toolbox:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-toolbox-ce
+      webservice:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-webservice-ce
+      workhorse:
+        repository: registry.gitlab.com/gitlab-org/build/cng/gitlab-workhorse-ce
+    # This exists to support template handling
+    psql:
+      knownDecompositions:
+        - main
+        - ci
+        - embedding
+    clickhouse:
+      enabled: false
+      # main:
+      #   username: gitlab
+      #   password:
+      #     secret:
+      #     key:
+      #   database: gitlab_clickhouse_main_production
+      #   url:
+  gitlab-runner:
+    enabled: false
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
