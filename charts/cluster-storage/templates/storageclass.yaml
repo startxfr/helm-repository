@@ -11,10 +11,11 @@ metadata:
     {{- include "cluster-storage.labels" $root | nindent 4 }}
     {{- if .hasCSIVolumeSnapshot }}
     velero.io/csi-volumesnapshot-class: "true"
-    {{- end -}}
+    {{- end }}
     app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .name }}-storageclass"
   annotations:
     {{- include "cluster-storage.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
 provisioner: {{ .provisioner | default "kubernetes.io/aws-ebs" | quote }}
 {{- if .parameters }}
 parameters:
@@ -24,12 +25,12 @@ parameters: {}
 {{- end -}}
 {{- if .reclaimPolicy }}
 reclaimPolicy: {{ .reclaimPolicy | quote }}
-{{- end -}}
+{{- end }}
 {{- if .allowVolumeExpansion }}
 allowVolumeExpansion: {{ .allowVolumeExpansion }}
-{{- end -}}
+{{- end }}
 {{- if .volumeBindingMode }}
 volumeBindingMode: {{ .volumeBindingMode | quote }}
-{{- end -}}
+{{- end }}
 {{ end }}
 {{- end -}}

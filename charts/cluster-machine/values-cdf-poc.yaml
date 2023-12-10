@@ -84,9 +84,14 @@ machineSet:
   list:
   - name: ocp-infra
     provider: "vsphere"
-    additionnalsLabels: |
-      client: cdf
-      env: poc
+    type: infra
+    # additionnalsLabels: |
+    #   client: cdf
+    #   env: poc
+    # additionnalsTaints: |
+    #   - effect: NoSchedule
+    #     key: hub.jupyter.org/dedicated
+    #     value: user
     numCoresPerSocket: 4
     numCPUs: 4
     diskGiB: 120

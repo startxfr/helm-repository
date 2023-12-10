@@ -15,10 +15,8 @@ metadata:
     machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
     {{- if .group }}
     machine.startx.io/group: "{{ .group }}"
-    machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
-    {{- else }}
-    machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
     {{- end }}
+    machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
   namespace: openshift-machine-api
   annotations:
     {{- include "cluster-machine.annotations" $root | nindent 4 }}
@@ -36,6 +34,9 @@ spec:
         {{- if .group }}
         machine.startx.io/group: "{{ .group }}"
         {{- end }}
+        {{- if .additionnalsLabels -}}
+        {{- .additionnalsLabels | nindent 8 -}}
+        {{- end }}
     spec:
       metadata:
         labels:
@@ -43,8 +44,17 @@ spec:
           node-role.kubernetes.io/infra: ""
           {{- else if eq .type "storage" }}
           node-role.kubernetes.io/storage: ""
+          cluster.ocs.openshift.io/openshift-storage: ""
+          {{- else if eq .type "virt" }}
+          node-role.kubernetes.io/virt: ""
+          {{- else }}
+          node-role.kubernetes.io/worker: ""
+          {{- if .group }}
+          "node-role.kubernetes.io/{{ .group }}": ""
           {{- else }}
           node-role.kubernetes.io/app: ""
+          {{- end }}
+          "node-role.startx.io/{{ .group | default "app" }}": ""
           {{ end }}
           {{- if .additionnalsLabels -}}
           {{- .additionnalsLabels | nindent 10 -}}
@@ -52,14 +62,33 @@ spec:
           {{- if .group }}
           machine.startx.io/group: "{{ .group }}"
           {{- end }}
+      {{- if .additionnalsTaints }}
+      taints: 
+        {{- .additionnalsTaints | nindent 8 -}}
+        {{- if eq .type "infra" -}}
+        - key: "node-role.kubernetes.io/infra"
+          effect: NoSchedule
+        {{- else if eq .type "virt" -}}
+        - key: "node-role.kubernetes.io/virt"
+          effect: NoSchedule
+        {{- else if eq .type "storage" -}}
+        - key: "node-role.kubernetes.io/storage"
+          effect: NoSchedule
+        {{ end }}
+      {{- else }}
       {{- if eq .type "infra" }}
       taints: 
         - key: "node-role.kubernetes.io/infra"
+          effect: NoSchedule
+      {{- else if eq .type "virt" }}
+      taints: 
+        - key: "node-role.kubernetes.io/virt"
           effect: NoSchedule
       {{- else if eq .type "storage" }}
       taints: 
         - key: "node-role.kubernetes.io/storage"
           effect: NoSchedule
+      {{ end }}
       {{ end }}
       providerSpec:
         value:
@@ -103,8 +132,8 @@ spec:
           blockDevices:
             - ebs:
                 iops: 0
-                volumeSize: {{ .volumeSize }}
-                volumeType: gp2
+                volumeSize: {{ .volumeSize | default 1 }}
+                volumeType: {{ .volumeType | default "gp3" | quote }}
           {{ end }}
           credentialsSecret:
             name: aws-cloud-credentials
