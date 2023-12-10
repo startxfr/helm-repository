@@ -195,3 +195,4 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2
 | 14.6.5-noschema | 2023-12-10 | Prepare upgrading to 14.6.5-noschema dependencies
+| 14.6.7-noschema | 2023-12-10 | intermediate noschema release stable but same as 14.6.5-noschema release
