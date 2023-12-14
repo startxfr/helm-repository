@@ -15,6 +15,9 @@ metadata:
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-dockercfg-{{- include "startx.appVersion" $root -}}"
+    {{- if $.Values.dockercfg.additionalLabels }}
+    {{- $.Values.dockercfg.additionalLabels | trim | nindent 4 }}
+    {{- end}}
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
     template.openshift.io/expose-registry: "{{- .registry | default "docker.io" -}}"
@@ -22,6 +25,9 @@ metadata:
     template.openshift.io/expose-email: "{{- .email | default "mail@example.com" -}}"
     template.openshift.io/expose-password: "{{- .password | default "password" -}}"
     template.openshift.io/base64-expose-dockerconfig: "{.data['\\.dockerconfigjson']}"
+    {{- if $.Values.dockercfg.additionalAnnotations }}
+    {{- $.Values.dockercfg.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
 stringData:
   .dockerconfigjson: "{{ include "imagePullSecret" . | replace "\"" "\\\"" }}"
 

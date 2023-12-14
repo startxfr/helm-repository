@@ -9,6 +9,9 @@ metadata:
     openshift.io/cluster-monitoring: "true"
     # openshift.io/cluster-logging: "true"
     # argocd.argoproj.io/managed-by=startx-gitops
+    {{- if .Values.project.additionalLabels }}
+    {{- .Values.project.additionalLabels | trim | nindent 4 }}
+    {{- end}}
   annotations:
     {{- include "project.annotations" . | nindent 4 }}
     {{- if .Values.project.description }}
@@ -36,5 +39,8 @@ metadata:
     scheduler.alpha.kubernetes.io/node-selector: "{{- .Values.project.nodeSelector -}}"
     {{- end }}
     argocd.argoproj.io/sync-wave: "-10"
+    {{- if .Values.project.additionalAnnotations }}
+    {{- .Values.project.additionalAnnotation | trim | nindent 4 }}
+    {{- end}}
 spec: {}
 {{- end -}}{{- end -}}{{- end }}
