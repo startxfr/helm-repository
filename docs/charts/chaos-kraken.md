@@ -235,3 +235,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 14.6.7-noschema | 2023-12-10 | intermediate noschema release stable but same as 14.6.5-noschema release
 | 14.6.9-noschema | 2023-12-10 | upgrade all dependencies charts to version 14.6.5-noschema
 | 14.6.15 | 2023-12-18 | publish stable update for the full repository
+| 14.6.17-noschema | 2023-12-18 | publish stable update for the full repository
