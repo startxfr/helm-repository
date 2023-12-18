@@ -73,6 +73,12 @@ eventrouter:
       memory: 128Mi
 logforwarder:
   enabled: false
+  secret:
+    enabled: false
+    name: elasticsearch-mgmt1
+    url: https://myelk.local
+    login: mylogin
+    pwd: mypwd
   spec: |
     outputs:
     - name: elasticsearch-mgmt1
