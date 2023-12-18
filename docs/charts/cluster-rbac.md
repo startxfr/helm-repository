@@ -266,3 +266,4 @@ helm install cluster-rbac startx/cluster-rbac -f https://raw.githubusercontent.c
 | 14.6.15 | 2023-12-11 | update packages for OCP 4.14.6
 | 14.6.17 | 2023-12-18 | Add optional creation of group and/or CRB to allow only performing binding when group creation is done via sync or external group creation process
 | 14.6.21 | 2023-12-18 | publish stable update for the full repository
+| 14.6.22 | 2023-12-18 | stable si good
