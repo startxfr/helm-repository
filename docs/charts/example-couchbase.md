@@ -274,3 +274,4 @@ helm install example-couchbase startx/example-couchbase -f https://raw.githubuse
 | 14.6.9-noschema | 2023-12-10 | upgrade all dependencies charts to version 14.6.5-noschema
 | 14.6.15-noschema | 2023-12-18 | publish stable update for the full repository
 | 14.6.17-noschema | 2023-12-18 | publish stable update for the full repository
+| 14.6.19-noschema | 2023-12-18 | stable publication of the noschema release
