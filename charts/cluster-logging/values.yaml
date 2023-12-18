@@ -120,6 +120,18 @@ logforwarder:
       - audit
       outputRefs:
       - default
+  # Configuration of the secret for external logging stack
+  secret:
+    # Enable the creation of the external secret configuration
+    enabled: false
+    # Name of the secret (default is elk-secret)
+    name: elasticsearch-external
+    # URL of the external Elastic endpoint
+    url: https://myelk.local
+    # Login to the external Elastic endpoint
+    login: mylogin
+    # Password to the external Elastic endpoint
+    pwd: mypwd
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
