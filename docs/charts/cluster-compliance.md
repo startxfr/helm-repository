@@ -252,3 +252,4 @@ helm install cluster-compliance startx/cluster-compliance -f https://raw.githubu
 | 14.6.17-noschema | 2023-12-18 | publish stable update for the full repository
 | 14.6.19-noschema | 2023-12-18 | stable publication of the noschema release
 | 14.6.21-noschema | 2023-12-18 | publish stable update for the full repository
+| 14.6.00000000022 | 2023-12-18 | stabel version 14.6.25 for the noschema release
