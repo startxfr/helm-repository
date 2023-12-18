@@ -1,7 +1,8 @@
-{{- if .Values.groups.enabled -}}
+{{- if .Values.groups -}}{{- if .Values.groups.enabled -}}
 {{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{ range .Values.groups.list }}
+{{- if or .enableGroup (not (hasKey . "enableGroup")) -}}
 ---
 kind: Group
 apiVersion: user.openshift.io/v1
@@ -15,6 +16,8 @@ metadata:
 users: 
 {{- range .users }}
   - "{{ . }}"
+{{ end }}
+{{ end }}
 {{ end }}
 {{ end }}
 {{ end }}

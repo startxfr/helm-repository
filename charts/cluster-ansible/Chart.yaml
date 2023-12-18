@@ -6,13 +6,13 @@ description: Helm chart used to configure Ansible Automation Platform (AAP) at t
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.15
+version: 14.6.19-noschema
 # Version name of the ansible operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "2.4.0"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-ansible.svg
 # category associated to this package
-category: cluster
+category: security
 # tags
 tags: infra,cluster,ansible
 # Kube minimum version
@@ -44,12 +44,12 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "14.6.5"
+    version: "14.6.5-noschema"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/packages/
-    version: "14.6.5"
+    version: "14.6.5-noschema"
     alias: operator
     condition: operator.enabled
 

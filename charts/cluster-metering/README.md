@@ -241,15 +241,18 @@ helm install cluster-metering startx/cluster-metering -f https://raw.githubuserc
 | 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
 | 12.36.9 | 2023-10-01 | publish stable update for the full repository
 | 12.36.36 | 2023-10-11 | publish stable update for the full repository
-| 12.36.49 | 2023-11-13 | publish stable update for the full repository
-| 12.36.51 | 2023-11-13 | publish stable update for the full repository
+| 12.36.49-noschema | 2023-11-13 | Publish stable update for the full repository with the no-schema packages
+| 12.36.51-noschema | 2023-11-13 | publish stable update for the full repository
 | 12.36.58 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.59 | 2023-11-13 | publish stable update for the full repository
+| 12.36.59-noschema | 2023-11-13 | publish stable update for the full no-schema version
 | 12.36.63 | 2023-11-13 | publish stable update for the full repository
 | 12.36.64 | 2023-11-13 | publish stable update for the full repository
 | 12.36.65 | 2023-11-14 | publish stable update for the full repository
 | 12.36.66 | 2023-11-14 | Update trunc to 255 for helper
 | 12.36.69 | 2023-11-14 | move dependencies to version 12.36.65
+| 12.36.67-noschema | 2023-11-14 | publish stable update for the full repository
+| 12.36.69-noschema | 2023-11-14 | publish stable update for the full repository
 | 12.45.0 | 2023-12-08 | Stable version aligned to Openshift version 4.12.45
 | 13.26.0 | 2023-12-08 | Unstable version aligned to Openshift version 4.13.26 to prepare the 13.26.x stable release (short lived)
 | 13.26.1 | 2023-12-09 | Minimum requirements for kubernetes is 1.26.0 version and upgrade all cluster-xxx charts to latest release for OCP 4.13
@@ -257,6 +260,9 @@ helm install cluster-metering startx/cluster-metering -f https://raw.githubuserc
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository
 | 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2
-| 14.6.9 | 2023-12-10 | publish stable update for the full repository
-| 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5
-| 14.6.15 | 2023-12-11 | update packages for OCP 4.14.6
+| 14.6.5-noschema | 2023-12-10 | Prepare upgrading to 14.6.5-noschema dependencies
+| 14.6.7-noschema | 2023-12-10 | intermediate noschema release stable but same as 14.6.5-noschema release
+| 14.6.9-noschema | 2023-12-10 | upgrade all dependencies charts to version 14.6.5-noschema
+| 14.6.15-noschema | 2023-12-18 | publish stable update for the full repository
+| 14.6.17-noschema | 2023-12-18 | publish stable update for the full repository
+| 14.6.19-noschema | 2023-12-18 | stable publication of the noschema release
