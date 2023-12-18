@@ -373,3 +373,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 14.6.9 | 2023-12-10 | publish stable update for the full repository
 | 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5
 | 14.6.15 | 2023-12-11 | update packages for OCP 4.14.6
+| 14.6.21 | 2023-12-18 | publish stable update for the full repository
