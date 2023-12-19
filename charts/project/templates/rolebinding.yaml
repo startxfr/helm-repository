@@ -16,8 +16,14 @@ metadata:
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
+    {{- if $.Values.rbac.additionalLabels }}
+    {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
+    {{- end}}
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
+    {{- if $.Values.rbac.additionalAnnotations }}
+    {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -41,8 +47,14 @@ metadata:
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
+    {{- if $.Values.rbac.additionalLabels }}
+    {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
+    {{- end}}
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
+    {{- if $.Values.rbac.additionalAnnotations }}
+    {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -66,8 +78,14 @@ metadata:
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
+    {{- if $.Values.rbac.additionalLabels }}
+    {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
+    {{- end}}
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
+    {{- if $.Values.rbac.additionalAnnotations }}
+    {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
