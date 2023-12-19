@@ -280,3 +280,4 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 14.6.15 | 2023-12-11 | update packages for OCP 4.14.6
 | 14.6.21 | 2023-12-18 | publish stable update for the full repository
 | 14.6.22 | 2023-12-18 | stable si good
+| 14.6.27 | 2023-12-19 | publish stable update for the full repository
