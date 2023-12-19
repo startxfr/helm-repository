@@ -251,3 +251,4 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 14.6.27 | 2023-12-19 | publish stable update for the full repository
 | 14.6.29 | 2023-12-19 | publish stable update for the full repository
 | 14.6.31 | 2023-12-19 | move to kubeversion min 1.25.0
+| 14.6.33 | 2023-12-19 | Move dependencies to github-pages
