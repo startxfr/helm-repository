@@ -40,8 +40,7 @@ project:
   # display_name: Example project
   # # Description of the project (only for project)
   # description: This is an default project created via Helm
-
-  # Custom configuration
+  # # Custom configuration for labels and annotations
   # additionalLabels: |
   #   label: "project"
   # additionalAnnotations: |
@@ -67,7 +66,7 @@ rbac:
   #   type: cluster
   #   # Example group role in this project
   #   role: edit
-  # # List users to authorize on this project
+  # List users to authorize on this project
   users: []
   # # Example user ID
   # - id: myuser
@@ -75,8 +74,7 @@ rbac:
   #   name: myuser_example
   #   # Example user role in this project
   #   role: basic-user
-
-  # Custom configuration
+  # # Custom configuration
   # additionalLabels: |
   #   label: "rbac"
   # additionalAnnotations: |
@@ -108,7 +106,6 @@ networkpolicy:
   #     ingress:
   #     - from:
   #       - podSelector: {}
-
   # Custom configuration
   # additionalLabels: |
   #   label: "netpol"
@@ -130,7 +127,6 @@ limits:
         max:
           cpu: 100m
           memory: 128Mi
-
   # Custom configuration
   # additionalLabels: |
   #   label: "limit"
@@ -151,7 +147,6 @@ quotas:
       persistentvolumeclaims: "0"
       pods: "4"
       services: "2"
-
   # additionalLabels: |
   #   label: "quota"
   # additionalAnnotations: |
@@ -171,7 +166,6 @@ serviceAccounts:
     #     - name: startx-registrycreds-quay
     #     # Name of the namespace where the secret reside (default is same project)
     #       namespace: default-project
-
   # Custom configuration
   # additionalLabels: |
   #   label: "sa"
@@ -196,7 +190,6 @@ dockercfg:
     #   password: xxxx
     #   # email associated to the user 
     #   email: xxxx
-
   # Custom configuration
   # additionalLabels: |
   #   label: "secret"
@@ -222,7 +215,6 @@ serviceMonitor:
     #     selector:
     #       matchLabels:
     #         app: prometheus-example-app
-
   # Custom configuration
   # additionalLabels: |
   #   label: "svcmon"
@@ -248,7 +240,6 @@ podMonitor:
     #     selector:
     #       matchLabels:
     #         app: prometheus-example-app
-
   # Custom configuration
   # additionalLabels: |
   #   label: "podmon"
