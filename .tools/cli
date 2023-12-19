@@ -103,8 +103,8 @@ function routerRelease {
     next_release=$(cat $PROJECT_PATH/.tools/repo-release  | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
     if [[ "auto" == "$auto_feature" ]]; then
         echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m auto-version to $next_release"
-    elif [[ "" != "$next_description" || "-a" == "$auto_feature" ]]; then
-        echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m global version to $next_release"
+    # elif [[ "" != "$next_description" || "-a" == "$auto_feature" ]]; then
+    #     echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m global version to $next_release"
     else
         echo -en "\e[36mRelease\e[0m \e[1mrepository\e[0m Set repository next version [$next_release] : "
         read nextRel
