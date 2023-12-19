@@ -85,3 +85,4 @@ helm install cluster-storage-efs startx/cluster-storage-efs -f https://raw.githu
 | 14.6.22 | 2023-12-18 | stable si good
 | 14.6.27 | 2023-12-19 | publish stable update for the full repository
 | 14.6.29 | 2023-12-19 | publish stable update for the full repository
+| 14.6.31 | 2023-12-19 | move to kubeversion min 1.25.0
