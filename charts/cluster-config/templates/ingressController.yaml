@@ -1,15 +1,16 @@
 {{- if .Values.ingresscontroller.enabled -}}
 {{- $root := . -}}
 {{ range .Values.ingresscontroller.list }}
+{{- $name := .name | default "myingress" -}}
 ---
 apiVersion: operator.openshift.io/v1
 kind: IngressController
 metadata:
-  name: "{{- .name -}}"
+  name: "{{- $name -}}"
   namespace: openshift-ingress-operator
   labels:
     {{- include "cluster-config.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- .name -}}-ingresscontroller"
+    app.kubernetes.io/name: "{{- $name -}}-ingresscontroller"
   annotations:
     {{- include "cluster-config.annotations" $root | nindent 4 }}
 spec:
@@ -55,5 +56,28 @@ spec:
     type: LoadBalancerService
 {{- end }}
   replicas: {{ default 2 .replicas }}
+{{- if .certificate }}{{- if .certificate.enabled }}
+  defaultCertificate:
+    name: "{{ $name }}-ingress-cert"
+{{- end }}{{- end }}
+{{- if .certificate }}{{- if .certificate.enabled }}
+---
+kind: Secret
+apiVersion: v1
+type: kubernetes.io/tls
+metadata:
+  name: "{{ $name }}-ingress-cert"
+  namespace: openshift-ingress
+  labels:
+    {{- include "cluster-config.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-ingress-cert-secret"
+  annotations:
+    {{- include "cluster-config.annotations" $root | nindent 4 }}
+data:
+  tls.crt: >-
+    {{ .certificate.CABundle | b64enc }}
+  tls.key: >-
+    {{ .certificate.privateKey | b64enc }}
+{{- end }}{{- end }}
 {{- end -}}
 {{- end -}}
