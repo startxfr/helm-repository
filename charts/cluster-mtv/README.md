@@ -91,3 +91,4 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 14.6.21-noschema | 2023-12-18 | publish stable update for the full repository
 | 14.6.25-noschema | 2023-12-18 | stabel version 14.6.25 for the noschema release
 | 14.6.27-noschema | 2023-12-19 | publish stable update for the full repository
+| 14.6.35-noschema | 2023-12-20 | publish stable update for the full repository
