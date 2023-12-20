@@ -76,9 +76,28 @@ logforwarder:
   secret:
     enabled: false
     name: elasticsearch-mgmt1
-    url: https://myelk.local
-    login: mylogin
-    pwd: mypwd
+    CABundle: |-
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+    tlsCrt: |-
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+    tlsKey: |-
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIJKAyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+      yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+      -----END RSA PRIVATE KEY-----
+    username: mylogin
+    password: mypwd
   spec: |
     outputs:
     - name: elasticsearch-mgmt1

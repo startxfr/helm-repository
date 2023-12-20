@@ -14,8 +14,14 @@ metadata:
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-podMonitor-{{- include "startx.appVersion" $root -}}"
+    {{- if $.Values.podMonitor.additionalLabels }}
+    {{- $.Values.podMonitor.additionalLabels | trim | nindent 4 }}
+    {{- end}}
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
+    {{- if $.Values.podMonitor.additionalAnnotations }}
+    {{- $.Values.podMonitor.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
 spec:
   {{- .spec | nindent 2 }}
 
