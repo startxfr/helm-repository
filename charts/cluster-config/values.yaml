@@ -114,6 +114,18 @@ monitoring:
   # Define the prometheus retention period (default is 7d)
   retentionPeriod: 7d
 
+# Configuration of the cluster proxy feature
+proxy:
+  # Enable the cluster proxy
+  enabled: false
+  # CA bundle used by proxy
+  CABundle:  |-
+    ----BEGIN CERTIFICATE-----
+    MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    -----END CERTIFICATE-----
+
 # Configuration of the cluster image-prunner feature
 imageprunner:
   # Enable the cluster image-prunner
@@ -167,6 +179,23 @@ ingresscontroller:
   #   loadBalancerMode: "external"
   #   # Number of replicas to use for this ingress controller
   #   replicas: 2
+  #   # Managing the certificate used by the ingresscontroller
+  #   certificate: 
+  #     # Enable creation of the secret with certificate
+  #     enabled: true
+  #     # CA bundle used by ingresscontroller
+  #     CABundle:  |-
+  #       ----BEGIN CERTIFICATE-----
+  #       MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  #       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  #       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  #       -----END CERTIFICATE-----
+  #     # Private key used by ingresscontroller
+  #     privateKey: |-
+  #       -----BEGIN RSA PRIVATE KEY-----
+  #       MIIJKAyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  #       yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  #       -----END RSA PRIVATE KEY-----
 
 
 # Configuration of the cluster project-template feature
