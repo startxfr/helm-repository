@@ -12,8 +12,14 @@ metadata:
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-networkpolicy"
+    {{- if $.Values.networkpolicy.additionalLabels }}
+    {{- $.Values.networkpolicy.additionalLabels | trim | nindent 4 }}
+    {{- end}}
   annotations:
     {{- include "project.annotations" $root | nindent 4 }}
+    {{- if $.Values.networkpolicy.additionalAnnotations }}
+    {{- $.Values.networkpolicy.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
 spec: 
   {{- .spec | nindent 2 }}
 {{ end }}

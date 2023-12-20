@@ -6,7 +6,7 @@ description: Helm chart used to configure Knative at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.27-noschema
+version: 14.6.35-noschema
 # Version name of the knative operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.30.2
 # Icon of this helm-chart
@@ -16,7 +16,7 @@ category: security
 # tags
 tags: infra,cluster,knative
 # Kube minimum version
-kubeVersion: ">=1.27.0-0"
+kubeVersion: ">=1.25.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -43,22 +43,22 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    repository: https://startxfr.github.io/helm-repository/packages/
     version: "14.6.5-noschema"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    repository: https://startxfr.github.io/helm-repository/packages/
     version: "14.6.5-noschema"
     alias: projectKServing
     condition: projectKServing.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    repository: https://startxfr.github.io/helm-repository/packages/
     version: "14.6.5-noschema"
     alias: projectKEventing
     condition: projectKEventing.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    repository: https://startxfr.github.io/helm-repository/packages/
     version: "14.6.5-noschema"
     alias: operator
     condition: operator.enabled
