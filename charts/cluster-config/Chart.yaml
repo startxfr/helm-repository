@@ -6,7 +6,7 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.33
+version: 14.6.35
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.14.6"
 # Icon of this helm-chart
@@ -79,5 +79,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "upgrade ServiceMesh operator to version 5.8.0"
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: "adding apiserver configuration with private certificate"
+    - kind: changed
+      description: "Adding management of certificate for the Openshift global proxy"
+  artifacthub.io/containsSecurityUpdates: "false"
