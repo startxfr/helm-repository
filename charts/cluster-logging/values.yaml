@@ -123,15 +123,36 @@ logforwarder:
   # Configuration of the secret for external logging stack
   secret:
     # Enable the creation of the external secret configuration
-    enabled: false
+    enabled: true
     # Name of the secret (default is elk-secret)
     name: elasticsearch-external
-    # URL of the external Elastic endpoint
-    url: https://myelk.local
+    # CA Bundle that sign the certificate
+    CABundle: |-
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+    # TLS certificate
+    tlsCrt: |-
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+    # Private key of the TLS certificate
+    tlsKey: |-
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIJKAyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+      yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+      -----END RSA PRIVATE KEY-----
     # Login to the external Elastic endpoint
-    login: mylogin
+    username: mypwd
     # Password to the external Elastic endpoint
-    pwd: mypwd
+    password: mypwd
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
