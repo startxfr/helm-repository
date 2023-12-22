@@ -251,3 +251,4 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 14.6.31 | 2023-12-19 | move to kubeversion min 1.25.0
 | 14.6.33 | 2023-12-19 | Move dependencies to github-pages
 | 14.6.35 | 2023-12-20 | publish stable update for the full repository
+| 14.6.45 | 2023-12-22 | publish stable update for the full repository
