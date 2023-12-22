@@ -1,0 +1,57 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: redis
+  app: startx-redis
+
+redisConfig:
+  enabled: true
+  saPods: 
+    enabled: true
+    name: redis-pods
+  saBackup: 
+    enabled: true
+    name: redis-backup
+  imageCredentialsSecret: startx-registrycreds-rhn
+
+cluster:
+  enabled: false
+  list: []
+
+clusterRbac:
+  enabled: false
+  groups: []
+  users: []
+
+project: 
+  enabled: false
+  context: 
+    <<: *context
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "redis-operator"
+    namespace: "openshift-operators"
+    version: "v0.15.1"
+    operator: 
+      channel: "stable"
+      name: redis-operator
+      installPlanApproval: Automatic
+      # csv: redis-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "redis-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"

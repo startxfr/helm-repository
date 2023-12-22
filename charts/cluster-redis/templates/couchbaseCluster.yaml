@@ -1,0 +1,106 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $ns := .Values.project.project.name | default .Chart.Name -}}
+
+
+{{/* Loop over the cluster list */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- if .enabled -}}
+
+{{/* Create the admin secret if credentials are set */}}
+{{- if .admin -}}{{- if .admin.username }}{{- if .admin.password }}
+{{- $username := .admin.username | default "admin" }}
+{{- $password := .admin.password | default "password123" }}
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: "{{- $name -}}-admin-auth"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-admin-auth-secret"
+  annotations:
+    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    template.openshift.io/expose-username: "{.data['username']}"
+    template.openshift.io/expose-password: "{.data['password']}"
+stringData:
+  admin: "{{- $username -}}:{{- $password -}}"
+  username: "{{- $username -}}"
+  password: "{{- $password -}}"
+  users: "{{- $username -}}:{{- $password -}}"
+{{- end -}}{{- end -}}{{- end -}}
+
+{{/* Create the route ressource if admin is to be exposed */}}
+{{- if .expose -}}{{- if .expose.enabled }}
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: "{{- $name -}}-admin"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $ns -}}-admin-route"
+    redis_cluster: "{{- $name -}}"
+    cluster: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+spec:
+  to:
+    kind: Service
+    name: "{{- $name -}}-ui"
+    weight: 100
+  port:
+    targetPort: redis-ui
+  wildcardPolicy: None
+{{- end -}}{{- end -}}
+
+{{/* Create the RedisCluster resource */}}
+{{- if .spec }}
+---
+kind: RedisCluster
+apiVersion: redis.com/v2
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-rediscluster"
+  annotations:
+    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+spec: 
+  {{- .spec | nindent 2 }}
+{{- end -}}
+
+
+{{/* Create the RedisBucket resource */}}
+{{- if .buckets }}
+{{- range .buckets }}
+---
+{{- if eq .kind "ephemeral" }}
+kind: "RedisEphemeralBucket"
+{{- else if eq .kind "memcached" }}
+kind: "RedisMemcachedBucket"
+{{- else }}
+kind: "RedisBucket"
+{{- end }}
+apiVersion: redis.com/v2
+metadata:
+  name: "{{- .name | default "default-bucket" -}}"
+  namespace: "{{- $ns -}}"
+  labels:
+    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-redisbucket"
+    cluster: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+spec: 
+  {{- .spec | nindent 2 }}
+{{- end -}}
+{{- end -}}
+
+{{- end -}}{{- end -}}
+{{- end -}}{{- end }}

@@ -1,0 +1,300 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: redis
+  app: demo-redis
+
+redisConfig:
+  enabled: false
+
+loader:
+  enabled: false
+
+cluster:
+  enabled: true
+  list: 
+  - name: jupiter-cluster
+    enabled: true
+    admin:
+      username: "administrator"
+      password: "administrator123"
+    expose:
+      enabled: true
+    spec: |
+      image: registry.connect.redhat.com/redis/server:7.0.3-1
+      paused: false
+      antiAffinity: false
+      softwareUpdateNotifications: true
+      serverGroups:
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+      security:
+        adminSecret: jupiter-cluster-admin-auth
+        rbac:
+          managed: true
+          selector:
+            matchLabels:
+              cluster: jupiter-cluster
+      networking:
+        exposeAdminConsole: true
+        adminConsoleServices:
+        - data
+        - index
+        - query
+        - search
+        - eventing
+      buckets:
+        managed: true
+        selector:
+          matchLabels:
+            cluster: jupiter-cluster
+      logging:
+        logRetentionTime: 604800s
+        logRetentionCount: 20
+      backup:
+        managed: true
+        image: registry.connect.redhat.com/redis/operator-backup:1.1.1-1
+        serviceAccountName: redis-backup
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        selector:
+          matchLabels:
+            cluster: jupiter-cluster
+      volumeClaimTemplates:
+      - metadata:
+          name: redis
+        spec:
+          storageClassName: "startx-odf-ceph-rbd"
+          resources:
+            requests:
+              storage: 2Gi
+      cluster:
+        clusterName: jupiter-cluster
+        dataServiceMemoryQuota: 750Mi
+        indexServiceMemoryQuota: 256Mi
+        searchServiceMemoryQuota: 256Mi
+        eventingServiceMemoryQuota: 256Mi
+        analyticsServiceMemoryQuota: 1Gi
+        indexStorageSetting: memory_optimized
+        autoFailoverTimeout: 120s
+        autoFailoverMaxCount: 3
+        autoFailoverOnDataDiskIssues: true
+        autoFailoverOnDataDiskIssuesTimePeriod: 120s
+        autoFailoverServerGroup: false
+        autoCompaction:
+          databaseFragmentationThreshold:
+            percent: 30
+            size: 1Gi
+          viewFragmentationThreshold:
+            percent: 30
+            size: 1Gi
+          parallelCompaction: false
+          timeWindow:
+            start: 02:00
+            end: 06:00
+            abortCompactionOutsideWindow: true
+          tombstonePurgeInterval: 72h
+      servers:
+      - name: data
+        size: 3
+        services:
+        - data
+        serverGroups:
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
+        resources:
+          limits:
+            cpu: "3"
+            memory: 3Gi
+          requests:
+            cpu: "500m"
+            memory: 2Gi
+        volumeMounts:
+          default: redis
+          data:  redis
+        pod:
+          metadata:
+            labels:
+              redis_services: data
+            annotations:
+              redis.startx.fr: jupiter
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: redis-pods
+            imagePullSecrets:
+              - name: "startx-redis-rhn"
+      - name: n1ql
+        size: 2
+        services:
+        - index
+        - query
+        serverGroups:
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
+        resources:
+          limits:
+            cpu: "1600m"
+            memory: 3Gi
+          requests:
+            cpu: "800m"
+            memory: 2Gi
+        volumeMounts:
+          default: redis
+          index: redis
+        pod:
+          metadata:
+            labels:
+              redis_services: index.query
+            annotations:
+              redis.startx.fr: jupiter
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: redis-pods
+            imagePullSecrets:
+              - name: "startx-redis-rhn"
+      - name: ftsevent
+        size: 2
+        services:
+        - search
+        - eventing
+        serverGroups:
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
+        resources:
+          limits:
+            cpu: "1600m"
+            memory: 3Gi
+          requests:
+            cpu: "800m"
+            memory: 2Gi
+        volumeMounts:
+          default: redis
+          index: redis
+          analytics:
+          - redis
+          - redis
+        pod:
+          metadata:
+            labels:
+              redis_services: search.eventing
+            annotations:
+              redis.startx.fr: jupiter
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: redis-pods
+            imagePullSecrets:
+              - name: "startx-redis-rhn"
+      - name: analytics
+        size: 2
+        services:
+        - analytics
+        serverGroups:
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
+        resources:
+          limits:
+            cpu: "1200m"
+            memory: 4Gi
+          requests:
+            cpu: "600m"
+            memory: 2Gi
+        volumeMounts:
+          default: redis
+          analytics:
+          - redis
+          - redis
+        pod:
+          metadata:
+            labels:
+              redis_services: analytics
+            annotations:
+              redis.startx.fr: jupiter
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: redis-pods
+            imagePullSecrets:
+              - name: "startx-redis-rhn"
+    buckets: 
+    - name: "yellow-bucket"
+      kind: redis
+      spec: |
+        memoryQuota: 128Mi
+        replicas: 2
+        ioPriority: low
+        evictionPolicy: valueOnly
+        conflictResolution: lww
+        enableFlush: true
+        enableIndexReplica: true
+        compressionMode: passive
+    - name: "orange-back-bucket"
+      kind: ephemeral
+      spec: |
+        memoryQuota: 100Mi
+        replicas: 2
+        ioPriority: low
+        evictionPolicy: noEviction
+        conflictResolution: lww
+        enableFlush: false
+        compressionMode: passive
+    - name: "black-bucket"
+      kind: memcached
+      spec: |
+        memoryQuota: 100Mi
+        enableFlush: false
+
+clusterRbac:
+  enabled: true
+  groups: 
+    - name: "jupiter-admin"
+      cluster: "jupiter-cluster"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: orange-back-bucket
+        - name: bucket_admin
+          bucket: yellow-bucket
+        - name: bucket_admin
+          bucket: black-bucket
+    - name: "yellow-app"
+      cluster: "jupiter-cluster"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: yellow-bucket
+  users: 
+    - name: "jupiter-admin"
+      password: jupiter-admin123
+      cluster: "jupiter-cluster"
+      fullName: "Venus ADMIN"
+      backend: local
+      group: "jupiter-admin"
+    - name: "yellow-app"
+      password: yellow-app123
+      cluster: "jupiter-cluster"
+      fullName: "Yellow APPLICATION"
+      backend: local
+      group: "yellow-app"
+
+project: 
+  enabled: false
+  context: 
+    <<: *context
+
+operator:
+  enabled: false
+  context: 
+    <<: *context

@@ -1,0 +1,175 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: redis
+  app: demo-redis
+
+redisConfig:
+  enabled: false
+
+loader:
+  enabled: false
+
+cluster:
+  enabled: true
+  list: 
+  - name: mercury-cluster
+    enabled: true
+    admin:
+      username: "administrator"
+      password: "administrator123"
+    expose:
+      enabled: true
+    spec: |
+      image: registry.connect.redhat.com/redis/server:6.5.1
+      paused: false
+      antiAffinity: true
+      softwareUpdateNotifications: true
+      serverGroups:
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+      security:
+        adminSecret: mercury-cluster-admin-auth
+        rbac:
+          managed: true
+          selector:
+            matchLabels:
+              cluster: mercury-cluster
+      networking:
+        exposeAdminConsole: true
+        adminConsoleServices:
+        - data
+      buckets:
+        managed: true
+        selector:
+          matchLabels:
+            cluster: mercury-cluster
+      logging:
+        logRetentionTime: 604800s
+        logRetentionCount: 10
+      backup:
+        managed: false
+        image: registry.connect.redhat.com/redis/operator-backup:1.1.1-1
+      volumeClaimTemplates:
+      - metadata:
+          name: redis
+        spec:
+          storageClassName: "gp3-csi"
+          resources:
+            requests:
+              storage: 2Gi
+      cluster:
+        clusterName: mercury-cluster
+        dataServiceMemoryQuota: 512Mi
+        indexServiceMemoryQuota: 256Mi
+        searchServiceMemoryQuota: 256Mi
+        eventingServiceMemoryQuota: 256Mi
+        analyticsServiceMemoryQuota: 1Gi
+        indexStorageSetting: memory_optimized
+        autoFailoverTimeout: 120s
+        autoFailoverMaxCount: 3
+        autoFailoverOnDataDiskIssues: true
+        autoFailoverOnDataDiskIssuesTimePeriod: 120s
+        autoFailoverServerGroup: false
+        autoCompaction:
+          databaseFragmentationThreshold:
+            percent: 30
+            size: 1Gi
+          viewFragmentationThreshold:
+            percent: 30
+            size: 1Gi
+          parallelCompaction: false
+          timeWindow:
+            start: 02:00
+            end: 06:00
+            abortCompactionOutsideWindow: true
+          tombstonePurgeInterval: 72h
+      servers:
+      - name: data
+        size: 3
+        services:
+        - data
+        serverGroups:
+        - eu-west-3a
+        - eu-west-3b
+        - eu-west-3c
+        resources:
+          limits:
+            cpu: "3000m"
+            memory: 1Gi
+          requests:
+            cpu: "300m"
+            memory: 512Mi
+        volumeMounts:
+          default: redis
+          data:  redis
+        pod:
+          metadata:
+            labels:
+              redis_services: data
+            annotations:
+              redis.startx.fr: mercury
+          spec:
+            automountServiceAccountToken: false
+            serviceAccountName: redis-pods
+            imagePullSecrets:
+              - name: "startx-redis-rhn"
+    buckets: 
+    - name: "purple-bucket"
+      kind: redis
+      spec: |
+        memoryQuota: 250Mi
+        replicas: 1
+        ioPriority: low
+        evictionPolicy: valueOnly
+        conflictResolution: lww
+        enableFlush: true
+        enableIndexReplica: true
+        compressionMode: passive
+
+clusterRbac:
+  enabled: true
+  groups: 
+    - name: "mercury-admin"
+      cluster: "mercury-cluster"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: purple-bucket
+    - name: "purple-app"
+      cluster: "mercury-cluster"
+      spec: |
+        roles:
+        - name: bucket_admin
+          bucket: purple-bucket
+  users: 
+    - name: "mercury-admin"
+      password: mercury-admin123
+      cluster: "mercury-cluster"
+      fullName: "Mercury ADMIN"
+      backend: local
+      group: "mercury-admin"
+    - name: "purple-app"
+      password: purple-app123
+      cluster: "mercury-cluster"
+      fullName: "Purple APPLICATION"
+      backend: local
+      group: "purple-app"
+
+project: 
+  enabled: false
+  context: 
+    <<: *context
+
+operator:
+  enabled: false
+  context: 
+    <<: *context
