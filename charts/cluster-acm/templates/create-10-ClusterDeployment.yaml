@@ -1,0 +1,171 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: 'minidemo'
+  namespace: 'minidemo'
+  labels:
+    cloud: 'AWS'
+    region: 'eu-west-3'
+    vendor: OpenShift
+    cluster.open-cluster-management.io/clusterset: 'default'
+spec:
+  baseDomain: startx.fr
+  clusterName: 'minidemo'
+  controlPlaneConfig:
+    servingCertificates: {}
+  installAttemptsLimit: 1
+  installed: false
+  platform:
+    aws:
+      credentialsSecretRef:
+        name: minidemo-aws-creds
+      region: eu-west-3
+  provisioning:
+    installConfigSecretRef:
+      name: minidemo-install-config
+    sshPrivateKeySecretRef:
+      name: minidemo-ssh-private-key
+    imageSetRef:
+       #quay.io/openshift-release-dev/ocp-release:4.14.6-multi
+      name: img4.14.6-multi-appsub
+  pullSecretRef:
+    name: minidemo-pull-secret
+---
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  labels:
+    cloud: Amazon
+    region: eu-west-3
+    name: 'minidemo'
+    vendor: OpenShift
+    cluster.open-cluster-management.io/clusterset: 'default'
+    cluster-profile: 'devel'
+  name: 'minidemo'
+spec:
+  hubAcceptsClient: true
+---
+apiVersion: hive.openshift.io/v1
+kind: MachinePool
+metadata:
+  name: minidemo-worker
+  namespace: 'minidemo'
+spec:
+  clusterDeploymentRef:
+    name: 'minidemo'
+  name: worker
+  platform:
+    aws:
+      rootVolume:
+        iops: 2000
+        size: 100
+        type: io1
+      type: m5.xlarge
+  replicas: 3
+---
+apiVersion: hive.openshift.io/v1
+kind: MachinePool
+metadata:
+  name: minidemo-infra
+  namespace: 'minidemo'
+spec:
+  clusterDeploymentRef:
+    name: 'minidemo'
+  name: infra
+  platform:
+    aws:
+      rootVolume:
+        iops: 2000
+        size: 250
+        type: io1
+      type: m5.xlarge
+      zones:
+      - eu-west-3a
+      - eu-west-3b
+      - eu-west-3c
+  replicas: 3
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minidemo-pull-secret
+  namespace: 'minidemo'
+stringData:
+  .dockerconfigjson: # injected on create
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minidemo-install-config
+  namespace: 'minidemo'
+type: Opaque
+data:
+  # Base64 encoding of install-config yaml
+  install-config.yaml: YXBpVmVyc2lvbjogdjEKbWV0YWRhdGE6CiAgbmFtZTogJ21pbmlkZW1vJwpiYXNlRG9tYWluOiBzdGFydHguZnIKY29udHJvbFBsYW5lOgogIGFyY2hpdGVjdHVyZTogYW1kNjQKICBoeXBlcnRocmVhZGluZzogRW5hYmxlZAogIG5hbWU6IG1hc3RlcgogIHJlcGxpY2FzOiAzCiAgcGxhdGZvcm06CiAgICBhd3M6CiAgICAgIHpvbmVzOgogICAgICAtIGV1LXdlc3QtM2EKICAgICAgLSBldS13ZXN0LTNiCiAgICAgIC0gZXUtd2VzdC0zYwogICAgICByb290Vm9sdW1lOgogICAgICAgIGlvcHM6IDQwMDAKICAgICAgICBzaXplOiAxMDAKICAgICAgICB0eXBlOiBpbzEKICAgICAgdHlwZTogbTUueGxhcmdlCmNvbXB1dGU6Ci0gaHlwZXJ0aHJlYWRpbmc6IEVuYWJsZWQKICBhcmNoaXRlY3R1cmU6IGFtZDY0CiAgbmFtZTogJ3dvcmtlcicKICByZXBsaWNhczogMwogIHBsYXRmb3JtOgogICAgYXdzOgogICAgICByb290Vm9sdW1lOgogICAgICAgIGlvcHM6IDIwMDAKICAgICAgICBzaXplOiAxMDAKICAgICAgICB0eXBlOiBpbzEKICAgICAgdHlwZTogbTUueGxhcmdlCm5ldHdvcmtpbmc6CiAgbmV0d29ya1R5cGU6IE9WTkt1YmVybmV0ZXMKICBjbHVzdGVyTmV0d29yazoKICAtIGNpZHI6IDEwLjEyOC4wLjAvMTQKICAgIGhvc3RQcmVmaXg6IDIzCiAgbWFjaGluZU5ldHdvcms6CiAgLSBjaWRyOiAxMC4wLjAuMC8xNgogIHNlcnZpY2VOZXR3b3JrOgogIC0gMTcyLjMwLjAuMC8xNgpwbGF0Zm9ybToKICBhd3M6CiAgICByZWdpb246IGV1LXdlc3QtMwpmaXBzOiB0cnVlCnB1bGxTZWNyZXQ6ICIiICMgc2tpcCwgaGl2ZSB3aWxsIGluamVjdCBiYXNlZCBvbiBpdCdzIHNlY3JldHMKc3NoS2V5OiB8LQogICAgc3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFCQVFERXh3bG5zQzJtTWFaTWZBa2ZJM0d2d2M5eFhTK1RNNDlaUmsvV1VTcUNkN3pJdTIzTFBXQlppN0MwT2VPbVBaNjZ6Ni9RaDgweG16TXByeU1xdDlhK21hSmtaZEVBVG5GUUUvMkpzZUtkdk5pU3BTaU5lTkhKNXI4YjFMTGxkeE5nQ2NtUVF6c2cxQWhMa1NqKy9iczhkM0kyQWJ0NmljMnlnRGtndmF1Y0wwY0pTV2Y5SFdTekNCRFZ4T1lnOXVlaThTYm1iQzg0bnRPT3I4SWNBZU9TSVZIdzBzRmtwVmdIR1BYWU1PQ3J6NWw1K2JRNC80NmF5bWNiam5mQXE2NGVyd3dYejM3VVAwSys1a2Z3M0E2cVYzUnczSitxUzIrdExFcDRjYmxDYlp3N1k5MWlGUTdRK0VxOWFsbUpSVWRoSzNKZ25wTnhlUTdSZ0cvQ0U2bEIgZGV2K3ByYWdtYXRpa0BzdGFydHguZnIK
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minidemo-ssh-private-key
+  namespace: 'minidemo'
+stringData:
+  ssh-privatekey: # injected on create
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: minidemo-aws-creds
+  namespace: 'minidemo'
+stringData:
+  aws_access_key_id: AKIA3QVVK7346F72D6ZK
+  aws_secret_access_key: # injected on create
+---
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: 'minidemo'
+  namespace: 'minidemo'
+spec:
+  clusterName: 'minidemo'
+  clusterNamespace: 'minidemo'
+  clusterLabels:
+    cloud: Amazon
+    vendor: OpenShift
+  applicationManager:
+    enabled: true
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+  certPolicyController:
+    enabled: true
+  iamPolicyController:
+    enabled: true
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: startx-cl
+  namespace: startx
+  labels:
+    cluster.open-cluster-management.io/credentials: ""
+    cluster.open-cluster-management.io/type: aws
+  annotations:
+    credential-hash: H691QmrDgNly67nagQuaU1ra1/47Clvi0Mt6eOKgYDE=
+stringData:
+  aws_access_key_id: AKIA3QVVK7346F72D6ZK
+  aws_secret_access_key: "********************"
+  baseDomain: startx.fr
+  pullSecret: "********************"
+  ssh-privatekey: "********************"
+  ssh-publickey: "********************"
+  httpProxy: ""
+  httpsProxy: ""
+  noProxy: ""
+  additionalTrustBundle: ""
+
+

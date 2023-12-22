@@ -1,5 +1,4 @@
 {{- if .Values.devel_chain }}{{- if .Values.devel_chain.enabled }}
-{{- $root := . -}}
 ---
 kind: Secret
 apiVersion: v1
@@ -8,7 +7,7 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'db'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     app: db
   annotations:
@@ -28,13 +27,13 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'db-deployment'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
     app: db
   annotations:
-    {{- include "example-fruitapp-project.annotations" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.annotations" $ | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"postgresql:{{- .Values.devel_chain.pg_version }}","namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
     argocd.argoproj.io/sync-wave: "10"
     alpha.image.policy.openshift.io/resolve-names: '*'
@@ -126,13 +125,13 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend-deployment'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
     app: frontend
   annotations:
-    {{- include "example-fruitapp-project.annotations" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.annotations" $ | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:latest","namespace":"{{- .Values.project_devel.project.name }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
     argocd.argoproj.io/sync-wave: "15"
     alpha.image.policy.openshift.io/resolve-names: '*'
@@ -235,7 +234,7 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'db-service'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     app: db
   annotations:
@@ -260,7 +259,7 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend-service'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     app: frontend
   annotations:
@@ -286,7 +285,7 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend-imagestream'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     app.openshift.io/runtime: nodejs
     app.openshift.io/runtime-version: "{{- .Values.devel_chain.nodejs_version }}"
@@ -306,7 +305,7 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend-pipeline'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     pipeline.openshift.io/runtime: nodejs
     pipeline.openshift.io/runtime-version: "{{- .Values.devel_chain.nodejs_version }}"
     pipeline.openshift.io/type: kubernetes
@@ -384,7 +383,7 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend-pipelinerun'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     pipeline.openshift.io/runtime: nodejs
     pipeline.openshift.io/runtime-version: "{{- .Values.devel_chain.nodejs_version }}"
     pipeline.openshift.io/type: kubernetes
@@ -425,7 +424,7 @@ metadata:
   namespace: "{{- .Values.project_devel.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
 spec:
   port:
     targetPort: 8080-tcp

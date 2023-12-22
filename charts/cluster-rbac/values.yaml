@@ -30,7 +30,42 @@ context:
 #     # Enable creation of the clusterroleBinding (default true)
 #     enableCRB: true
 #     # Developper cluster role
-#     role: basic-user
+#     role: myclusterrole
 #     # user enrolled in this group
 #     users: 
 #     - myuser-example
+
+# # Create role or clusterrole if enabled
+# roles:
+#   # Enable the cluster groups creation
+#   enabled: false
+#   # List group to create
+#   list:
+#   # role ID
+#   - id: myrole
+#     # role name
+#     name: myrole-example
+#     # Scope of the role. should be cluster,global or namespace,ns,local (default is local)
+#     scope: ns
+#     # If scope is local, you must give the namespace location (default is default)
+#     namespace: default
+#     # The role rule definition
+#     rules: |-
+#       - apiGroups:
+#         - ""
+#         resources:
+#         - pod
+#         verbs:
+#         - list
+#   # clusterrole example
+#   - id: myclusterrole
+#     name: myclusterrole
+#     scope: global
+#     # The role rule definition
+#     rules: |-
+#       - apiGroups:
+#         - ""
+#         resources:
+#         - pod
+#         verbs:
+#         - list

@@ -1,5 +1,4 @@
 {{- if .Values.logging.enabled }}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
 apiVersion: "logging.openshift.io/v1"
 kind: "ClusterLogging"
@@ -35,7 +34,7 @@ spec:
     {{- with .Values.logging.elasticsearch }}
     elasticsearch:
       nodeCount: {{ .replicas | default 3 }}
-      {{- if $root.Values.logging.infra_enabled }}
+      {{- if $.Values.logging.infra_enabled }}
       tolerations:
         - effect: NoSchedule 
           key: node-role.kubernetes.io/infra 
@@ -69,7 +68,7 @@ spec:
     {{- with .Values.logging.kibana }}
     kibana:
       replicas: {{ .replicas | default 1 }}
-      {{- if $root.Values.logging.infra_enabled }}
+      {{- if $.Values.logging.infra_enabled }}
       tolerations:
         - effect: NoSchedule 
           key: node-role.kubernetes.io/infra 

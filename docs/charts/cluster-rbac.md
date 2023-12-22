@@ -267,3 +267,14 @@ helm install cluster-rbac startx/cluster-rbac -f https://raw.githubusercontent.c
 | 14.6.17 | 2023-12-18 | Add optional creation of group and/or CRB to allow only performing binding when group creation is done via sync or external group creation process
 | 14.6.21 | 2023-12-18 | publish stable update for the full repository
 | 14.6.22 | 2023-12-18 | stable si good
+| 14.6.27 | 2023-12-19 | publish stable update for the full repository
+| 14.6.29 | 2023-12-19 | publish stable update for the full repository
+| 14.6.31 | 2023-12-19 | move to kubeversion min 1.25.0
+| 14.6.33 | 2023-12-19 | Move dependencies to github-pages
+| 14.6.35 | 2023-12-20 | publish stable update for the full repository
+| 14.6.39 | 2023-12-22 | Add creation of Role and Cluster role along with group and binding creation
+| 14.6.41 | 2023-12-22 | Improve cluster-rbac options
+| 14.6.45 | 2023-12-22 | publish stable update for the full repository
+| 14.6.46 | 2023-12-22 | publish stable update for the full repository
+| 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
+| 14.6.59 | 2023-12-22 | move back dependencies to version 14.6.35

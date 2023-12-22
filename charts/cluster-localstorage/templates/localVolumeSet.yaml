@@ -1,5 +1,4 @@
 {{- if .Values.localstorageset.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-local-storage" -}}
 {{- range .Values.localstorageset.list }}
 ---
@@ -9,10 +8,10 @@ metadata:
   name: {{ .name | default "default" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-localstorage.labels" $root | nindent 4 }}
+    {{- include "cluster-localstorage.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .name | default "default" }}-localvolumeset"
   annotations:
-    {{- include "cluster-localstorage.annotations" $root | nindent 4 }}
+    {{- include "cluster-localstorage.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - storage.openshift.com/local-volume-protection

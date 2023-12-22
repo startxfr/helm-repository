@@ -1,5 +1,4 @@
 {{- if .Values.cerberus.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 ---
@@ -10,9 +9,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "cerberus-config"
-    {{- include "chaos-cerberus.labels" $root | nindent 4 }}
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-cerberus.annotations" $root | nindent 4 }}
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
 data:
   config.yaml: |
     # read https://github.com/chaos-kubox/cerberus/blob/main/config/config.yaml for full detail of each properties
@@ -77,9 +76,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "cerberus-kubeconfig"
-    {{- include "chaos-cerberus.labels" $root | nindent 4 }}
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-cerberus.annotations" $root | nindent 4 }}
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
 data:
 {{- if eq .Values.cerberus.kubeconfig.mode "file" }}
   config: |

@@ -15,6 +15,36 @@ context: &context
   # Version name of this application (default use Chart appVersion)
   # version: "0.0.3"
 
+# TODO Comment this section
+api: 
+  enabled: false
+  name: api-tls
+  url: api.mycluster.local
+  certificateChain: |
+    -----BEGIN CERTIFICATE-----
+    XXXXXXX
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    XXXXXXX
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    XXXXXXX
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    XXXXXXX
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    XXXXXXX
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    XXXXXXX
+    -----END CERTIFICATE-----  
+  privateKey: |
+    -----BEGIN RSA PRIVATE KEY-----
+    XXXXXXX
+    -----END RSA PRIVATE KEY-----    
+
+
 # Configuration of the cluster auto-scaling feature
 autoscaling:
   # Enable the cluster auto-scaling
@@ -84,6 +114,18 @@ monitoring:
   # Define the prometheus retention period (default is 7d)
   retentionPeriod: 7d
 
+# Configuration of the cluster proxy feature
+proxy:
+  # Enable the cluster proxy
+  enabled: false
+  # CA bundle used by proxy
+  CABundle:  |-
+    ----BEGIN CERTIFICATE-----
+    MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    -----END CERTIFICATE-----
+
 # Configuration of the cluster image-prunner feature
 imageprunner:
   # Enable the cluster image-prunner
@@ -137,6 +179,23 @@ ingresscontroller:
   #   loadBalancerMode: "external"
   #   # Number of replicas to use for this ingress controller
   #   replicas: 2
+  #   # Managing the certificate used by the ingresscontroller
+  #   certificate: 
+  #     # Enable creation of the secret with certificate
+  #     enabled: true
+  #     # CA bundle used by ingresscontroller
+  #     CABundle:  |-
+  #       ----BEGIN CERTIFICATE-----
+  #       MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  #       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  #       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  #       -----END CERTIFICATE-----
+  #     # Private key used by ingresscontroller
+  #     privateKey: |-
+  #       -----BEGIN RSA PRIVATE KEY-----
+  #       MIIJKAyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  #       yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+  #       -----END RSA PRIVATE KEY-----
 
 
 # Configuration of the cluster project-template feature
@@ -258,50 +317,6 @@ operatorSosReport:
     name: "sosreport-operator"
     namespace: "openshift-operators"
     providedAPIs: "Sosreport.v1alpha1.support.openshift.io"
-
-
-# Configuration of the MustGather project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
-projectMustGather: 
-  enabled: true
-  context: 
-    <<: *context
-  project: 
-    enabled: true
-    hooked: false
-    type: project
-    name: "openshift-startx-mustgather"
-    display_name: "Startx MustGather"
-    requester: startx
-    description: Startx Must Gather area
-
-
-# Configuration of the mustgather operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
-operatorMustGather:
-  enabled: true
-  context: 
-    <<: *context
-  subscription:
-    enabled: true
-    hooked: false
-    name: "must-gather-operator"
-    namespace: "openshift-startx-mustgather"
-    version: "v1.1.2"
-    operator: 
-      channel: "alpha"
-      name: must-gather-operator
-      installPlanApproval: Automatic
-      # csv: must-gather-operator
-      source: 
-        name: community-operators
-        namespace: openshift-marketplace
-  operatorGroup:
-    enabled: true
-    hooked: false
-    target: "all-ns"
-    name: "must-gather-operator"
-    namespace: "openshift-startx-mustgather"
-    providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"
-
 
 # Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorGlobal:
