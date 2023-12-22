@@ -13,7 +13,7 @@ metadata:
     {{- include "cluster-acs.annotations" . | nindent 4 }}
     {{- if .Values.acs.central.hooked }}
     helm.sh/hook: post-install,post-upgrade
-    helm.sh/hook-weight: "10"
+    helm.sh/hook-weight: "0"
     helm.sh/hook-delete-policy: hook-failed
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed

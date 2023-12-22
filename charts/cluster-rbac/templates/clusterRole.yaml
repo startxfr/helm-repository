@@ -1,0 +1,34 @@
+{{- if .Values.roles -}}{{- if .Values.roles.enabled -}}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $kind := "" -}}
+{{- $kindshort := "" -}}
+{{ range .Values.roles.list }}
+---
+{{- if has .scope (list "cluster" "global") }}
+kind: "ClusterRole"
+{{- else }}
+kind: "Role"
+{{- end }}
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ .name }}"
+  {{- if has .scope (list "cluster" "global") }}
+  {{- else }}
+  namespace: {{ .namespace | default "default" | quote }}
+  {{- end }}
+  labels:
+    {{- include "cluster-rbac.labels" $root | nindent 4 }}
+    {{- if has .scope (list "cluster" "global") }}
+    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-crol"
+    {{- else }}
+    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-rol"
+    {{- end }}
+  annotations:
+    {{- include "cluster-rbac.annotations" $root | nindent 4 }}
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+rules:
+  {{- .rules | nindent 2 }}
+{{ end }}
+{{ end }}
+{{ end }}
