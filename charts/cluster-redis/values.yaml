@@ -204,13 +204,99 @@ project:
     enabled: false
     hooked: false
     type: project
-    name: "openshift-startx-redis"
+    name: "openshift-operators"
     display_name: "Startx REDIS"
     description: Redis configured by STARTX
   serviceAccounts:
     enabled: true
     list: 
       - name: redis-operator
+  rbac: 
+    enabled: true
+    sa:
+    - id: redis-operator
+      name: redis-operator
+      type: cluster
+      role: redis-opscr
+
+# Configuration of the cluster-rbac (see https://helm-repository.readthedocs.io/en/latest/charts/cluster-rbac)
+rbac:
+  enabled: false
+  context: 
+    <<: *context
+  roles:
+    enabled: true
+    list:
+    - id: redis-opscr
+      name: redis-opscr
+      scope: global
+      rules: |-
+        - apiGroups:
+          - redis.redis.opstreelabs.in
+          resources:
+          - rediscluster
+          - redisrreplication
+          - redissentinel
+          - redis
+          verbs:
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - persistentvolumeclaims
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - pods/exec
+          verbs:
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - list
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - policy
+          resources:
+          - poddisruptionbudgets
+          verbs:
+          - get
+          - create
+          - delete
+          - list
+          - watch
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
