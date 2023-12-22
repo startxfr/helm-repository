@@ -1,0 +1,103 @@
+{{- if .Values.redisConfig }}{{- if .Values.redisConfig.enabled }}{{- if .Values.redisConfig.saPods -}}{{- if .Values.redisConfig.saPods.enabled }}
+{{- $root := . -}}
+{{- $scope := .Values.context.scope -}}
+{{- $name := .Values.redisConfig.saPods.name | default "redis-pods" -}}
+{{- $ns := .Values.project.project.name | default .Chart.Name -}}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+{{- if $root.Values.redisConfig.imageCredentialsSecret }}
+imagePullSecrets:
+  - name: "{{- $root.Values.redisConfig.imageCredentialsSecret -}}"
+{{- end }}
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+rules:
+- apiGroups:
+  - redis.redis.opstreelabs.in
+  resources:
+  - rediscluster
+  - redisrreplication
+  - redissentinel
+  - redis
+  verbs:
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - create
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - persistentvolumeclaims
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - list
+  - create
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - get
+  - create
+  - delete
+  - list
+  - watch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "{{- $name -}}"
+subjects:
+- kind: ServiceAccount
+  name: "{{- $name -}}"
+  namespace: "{{- $ns -}}"
+{{- end -}}{{- end -}}{{- end -}}{{- end }}

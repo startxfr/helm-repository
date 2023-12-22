@@ -1,0 +1,83 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: redis
+  app: demo-redis
+
+redisConfig:
+  enabled: false
+  saPods: 
+    enabled: true
+    name: redis-pods
+  saBackup: 
+    enabled: true
+    name: redis-backup
+  imageCredentialsSecret: startx-registrycreds-rhn
+
+loader:
+  enabled: false
+  list:
+  - name: venus
+    command: | 
+      #!/bin/bash
+      WORKLOAD_CONF=" --threads=5 -r .6 -i 120000 -s 75000 --json"
+      CREDS=" -u administrator -p administrator123"
+      CLUSTER=venus-cluster
+      BUCKET=yellow-back-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      BUCKET=orange-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      echo "End of the ${CLUSTER} workload test"
+      exit 0;
+  - name: jupiter
+    command: | 
+      #!/bin/bash
+      WORKLOAD_CONF=" --threads=5 -r .6 -i 4000000 -s 15000 --json"
+      CREDS=" -u administrator -p administrator123"
+      CLUSTER=jupiter-cluster
+      BUCKET=orange-back-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      BUCKET=yellow-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      BUCKET=black-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      echo "End of the ${CLUSTER} workload test"
+      exit 0;
+  - name: mercury
+    command: | 
+      #!/bin/bash
+      WORKLOAD_CONF=" --threads=1 -r .6 -i 600000 -s 1000 --json"
+      CREDS=" -u administrator -p administrator123"
+      CLUSTER=mercury-cluster
+      BUCKET=purple-bucket
+      echo "Load $CLUSTER : Bucket $BUCKET"
+      cbworkloadgen -n ${CLUSTER}:8091 ${CREDS} -b ${BUCKET} ${WORKLOAD_CONF} 
+      echo "End of the ${CLUSTER} workload test"
+      exit 0;
+
+cluster:
+  enabled: false
+  list: []
+
+clusterRbac:
+  enabled: false
+  groups: []
+  users: []
+
+project: 
+  enabled: false
+  context: 
+    <<: *context
+
+operator:
+  enabled: false
+  context: 
+    <<: *context
