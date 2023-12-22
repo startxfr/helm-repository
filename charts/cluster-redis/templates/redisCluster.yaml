@@ -1,3 +1,73 @@
+apiVersion: redis.redis.opstreelabs.in/v1beta1
+kind: RedisCluster
+metadata:
+  finalizers:
+    - redisClusterFinalizer
+  name: redis-cluster
+  namespace: demo-redis
+spec:
+  clusterSize: 3
+  clusterVersion: v7
+  kubernetesConfig:
+    image: 'quay.io/opstree/redis:v7.0.5'
+    imagePullPolicy: IfNotPresent
+    updateStrategy: {}
+  persistenceEnabled: true
+  redisExporter:
+    enabled: true
+    image: 'quay.io/opstree/redis-exporter:v1.44.0'
+    imagePullPolicy: IfNotPresent
+  redisFollower:
+    livenessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    readinessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+  redisLeader:
+    livenessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    readinessProbe:
+      failureThreshold: 3
+      initialDelaySeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+  storage:
+    volumeClaimTemplate:
+      metadata: {}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+      status: {}
+    volumeMount: {}
+status: {}
+
+
+
+
+
+
+
+
+
+
+
+
+
 {{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.project.name | default .Chart.Name -}}
