@@ -319,3 +319,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 14.6.35 | 2023-12-20 | publish stable update for the full repository
 | 14.6.45 | 2023-12-22 | publish stable update for the full repository
 | 14.6.46 | 2023-12-22 | publish stable update for the full repository
+| 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
