@@ -1,5 +1,4 @@
 {{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $defaultns := .Values.project.project.name | default .Chart.Name -}}
 
@@ -16,12 +15,12 @@ metadata:
   name: "{{ $name }}-pgbouncer-config"
   namespace: {{ $ns | quote }}
   labels:
-    {{- include "cluster-crunchy.labels" $root | nindent 4 }}
+    {{- include "cluster-crunchy.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ $name }}-pgbouncer-cm"
     postgresql_cluster: "{{- $name -}}"
     postgresql: "{{- $name -}}"
   annotations:
-    {{- include "cluster-crunchy.annotations" $root | nindent 4 }}
+    {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "5"
 data:
   ada_hba.conf: |-
@@ -41,12 +40,12 @@ metadata:
   name: "{{ $name }}-pgbouncer-config"
   namespace: {{ $ns | quote }}
   labels:
-    {{- include "cluster-crunchy.labels" $root | nindent 4 }}
+    {{- include "cluster-crunchy.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ $name }}-pgbouncer-cm"
     postgresql_cluster: "{{- $name -}}"
     postgresql: "{{- $name -}}"
   annotations:
-    {{- include "cluster-crunchy.annotations" $root | nindent 4 }}
+    {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "15"
 spec:
   {{- if .istioSidecarEnabled }}
@@ -173,12 +172,12 @@ metadata:
   name: "{{ $name }}-initdb"
   namespace: {{ $ns | quote }}
   labels:
-    {{- include "cluster-crunchy.labels" $root | nindent 4 }}
+    {{- include "cluster-crunchy.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ $name }}-initdb-cm"
     postgresql_cluster: "{{- $name -}}"
     postgresql: "{{- $name -}}"
   annotations:
-    {{- include "cluster-crunchy.annotations" $root | nindent 4 }}
+    {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "5"
 data:
   init.sql: |-

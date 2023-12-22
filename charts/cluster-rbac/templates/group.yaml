@@ -1,5 +1,4 @@
 {{- if .Values.groups -}}{{- if .Values.groups.enabled -}}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{ range .Values.groups.list }}
 {{- if or .enableGroup (not (hasKey . "enableGroup")) -}}
@@ -9,10 +8,10 @@ apiVersion: user.openshift.io/v1
 metadata:
   name: "{{ .name }}"
   labels:
-    {{- include "cluster-rbac.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-group"
+    {{- include "cluster-rbac.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ include "startx.appScope" $ }}-{{ .id }}-group"
   annotations:
-    {{- include "cluster-rbac.annotations" $root | nindent 4 }}
+    {{- include "cluster-rbac.annotations" $ | nindent 4 }}
 users: 
 {{- range .users }}
   - "{{ . }}"

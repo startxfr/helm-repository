@@ -1,5 +1,4 @@
 {{- if .Values.application }}{{- if .Values.application.enabled }}
-{{- $root := . -}}
 {{- $defaultns := .Values.project.project.name -}}
 {{ range .Values.application.list }}
 {{- $name := .name | default "default-application" -}}
@@ -13,10 +12,10 @@ metadata:
   name: {{ $name | quote }}
   namespace: {{ $namespace | quote }}
   labels:
-    {{- include "cluster-argocd.labels" $root | nindent 4 }}
+    {{- include "cluster-argocd.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-application"
   annotations:
-    {{- include "cluster-argocd.annotations" $root | nindent 4 }}
+    {{- include "cluster-argocd.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "40"
   {{- if .finalizer }}
   finalizers:

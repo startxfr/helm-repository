@@ -1,16 +1,15 @@
 {{- if .Values.database }}{{- if .Values.database.enabled }}
-{{- $root := . -}}
 ---
 kind: Service
 apiVersion: v1
 metadata:
   labels:
-    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}"
-    {{- include "example-fruitapp-shared.labels" $root | nindent 4 }}
-    app: {{ include "startx.appName" $root }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $ -}}"
+    {{- include "example-fruitapp-shared.labels" $ | nindent 4 }}
+    app: {{ include "startx.appName" $ }}
   annotations:
     template.openshift.io/expose-uri: postgres://{.spec.clusterIP}:{.spec.ports[?(.name=="postgresql")].port}
-    {{- include "example-fruitapp-shared.annotations" $root | nindent 4 }}
+    {{- include "example-fruitapp-shared.annotations" $ | nindent 4 }}
   namespace: "{{- .Values.namespace }}"
   name: db
 spec:

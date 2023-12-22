@@ -1,12 +1,11 @@
 {{- if .Values.demo }}{{- if .Values.demo.hugo }}{{- if .Values.demo.hugo.enabled -}}
-{{- $root := . -}}
 {{- with .Values.demo.hugo -}}
 {{- $namespace := .namespace | default "demo-hugo" -}}
-{{- $scope := .scope | default $root.Values.context.scope -}}
-{{- $cluster := .cluster | default $root.Values.context.cluster -}}
-{{- $env := .environment | default $root.Values.context.environment -}}
-{{- $component := .component | default $root.Values.context.component -}}
-{{- $version := .version | default $root.Values.context.version -}}
+{{- $scope := .scope | default $.Values.context.scope -}}
+{{- $cluster := .cluster | default $.Values.context.cluster -}}
+{{- $env := .environment | default $.Values.context.environment -}}
+{{- $component := .component | default $.Values.context.component -}}
+{{- $version := .version | default $.Values.context.version -}}
 {{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
 
 ---
@@ -16,9 +15,9 @@ metadata:
   name: "{{- $scope -}}-hugo-workspace"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $scope -}}-hugo-workspace-pvc"
 spec:
   resources:
@@ -35,9 +34,9 @@ metadata:
   name: "containers-cache-hugo"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "containers-cache-hugo-pvc"
 spec:
   resources:
@@ -54,9 +53,9 @@ metadata:
   name: "hugo"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-imagestream"
 spec:
   tags:
@@ -76,9 +75,9 @@ metadata:
   name: "hugo-socle"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-socle-imagestream"
 spec:
   tags:
@@ -101,7 +100,7 @@ metadata:
   name: "hugo-config"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     template.openshift.io/expose-id: "{.data['SX_ID']}"
     template.openshift.io/expose-type: "{.data['SX_TYPE']}"
     template.openshift.io/expose-service: "{.data['SX_COMPONENT']}"
@@ -109,7 +108,7 @@ metadata:
     template.openshift.io/expose-summary: "{.data['SX_SUMMARY']}"
     template.openshift.io/expose-version: "{.data['SX_VERSION']}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-config-configmap"
 data:
   SX_ID: "{{- $scope -}}-{{- $component -}}-{{- $env -}}/app"
@@ -125,9 +124,9 @@ metadata:
   name: "hugo"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-config"
 spec:
   triggers:
@@ -169,13 +168,13 @@ metadata:
   name: "hugo"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-deploymentconfig"
     app.openshift.io/runtime: nodejs
         kube-monkey/enabled: enabled
-        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
+        kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }}
 spec:
   replicas: 2
   strategy:
@@ -214,13 +213,13 @@ spec:
   template:
     metadata:
       annotations:
-        {{- include "example-catalog.annotations" $root | nindent 8 }}
+        {{- include "example-catalog.annotations" $ | nindent 8 }}
         sidecar.istio.io/inject: "false"
       labels:
-        {{- include "example-catalog.labels" $root | nindent 8 }}
+        {{- include "example-catalog.labels" $ | nindent 8 }}
         app.kubernetes.io/name: "hugo-deploymentconfig"
         kube-monkey/enabled: enabled
-        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
+        kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }}
         app: "hugo"
         deploymentconfig: "hugo"
     spec:
@@ -287,12 +286,12 @@ metadata:
   name: "hugo"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     template.openshift.io/expose-service_ip: "{.spec.clusterIP}"
     template.openshift.io/expose-service_port: "{.spec.ports[0].port}"
     template.openshift.io/expose-service_ip_port: "{.spec.clusterIP}:{.spec.ports[0].port}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-service"
 spec:
   ports:
@@ -311,12 +310,12 @@ metadata:
   name: "hugo"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
     haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-route"
 spec:
   tls:
@@ -334,9 +333,9 @@ metadata:
   name: "pipeline-lib"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "pipeline-lib-configmap"
 data:
   common.sh: |-
@@ -946,9 +945,9 @@ metadata:
   name: prepare-workspace
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "prepare-workspace-task"
 spec:
   workspaces:
@@ -1060,9 +1059,9 @@ metadata:
   name: build-s2i
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "build-s2i-task"
 spec:
   workspaces:
@@ -1171,9 +1170,9 @@ metadata:
   name: publish-image-single
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "publish-image-single-task"
 spec:
   workspaces:
@@ -1294,9 +1293,9 @@ metadata:
   name: application-deploy
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "application-deploy-task"
 spec:
   workspaces:
@@ -1386,9 +1385,9 @@ metadata:
   name: test-code
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "test-code-task"
 spec:
   workspaces:
@@ -1487,9 +1486,9 @@ metadata:
   name: test-vulnerability-run
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "test-vulnerability-run-task"
 spec:
   workspaces:
@@ -1580,9 +1579,9 @@ metadata:
   name: report-notify
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "report-notify-task"
 spec:
   workspaces:
@@ -1678,9 +1677,9 @@ metadata:
   name: "hugo-generate-content"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "hugo-generate-content-task"
 spec:
   workspaces:
@@ -1745,9 +1744,9 @@ metadata:
   name: "{{- $component -}}"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
 spec:
   params:
     - name: ENFORCE_SEC 
@@ -1942,9 +1941,9 @@ metadata:
   name: image-hugo-latest-internal
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "image-hugo-latest-internal-pipelineresource"
 spec:
   type: image
@@ -1958,11 +1957,11 @@ metadata:
   name: git-hugo-demo-master
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     app.openshift.io/vcs-ref: master
     app.openshift.io/vcs-uri: 'https://github.com/startxfr/okd-demo-hugo.git'
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "git-hugo-demo-master-pipelineresource"
 spec:
   type: git
@@ -1978,9 +1977,9 @@ metadata:
   name: github-hugo-demo-addissue
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "github-hugo-demo-addissue-pipelineresource"
 spec:
   type: cloudEvent
@@ -1994,9 +1993,9 @@ metadata:
   name: "{{- $scope -}}-hugo-{{- $randrun -}}"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $scope -}}-hugo-{{- $randrun -}}-pipelinerun"
 spec:
   serviceAccountName: "{{- $env -}}-pipeline-runner"

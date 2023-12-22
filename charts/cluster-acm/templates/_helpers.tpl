@@ -17,7 +17,6 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 -- Advanced Cluster Management -----
 {{- if .acm.enabled }}{{- if .acm.mch }}{{- if .acm.mch.enabled }}
-{{- $root := . -}}
 {{- $namespace := .project.project.name | default "open-cluster-management" -}}
           ACM : enabled in {{ $namespace }}
          name : {{ .acm.mch.name | default "multiclusterhub" }}
