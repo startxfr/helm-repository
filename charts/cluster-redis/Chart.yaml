@@ -1,0 +1,67 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-redis
+# Description of this Helm chart
+description: Helm chart used to configure Redis cluster using Opstree operator (and optionally redislabs operator)
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 14.6.35
+# Version name of the redis operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: "0.15.1"
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-redis.svg
+# category associated to this package
+category: cluster
+# tags
+tags: infra,cluster,redis,keystore,cache
+# Kube minimum version
+kubeVersion: ">=1.25.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - redis
+  - big data
+  - nosql
+  - kv store
+  - cache
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-redis
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-redis
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "14.6.5"
+    alias: project
+    condition: project.enabled
+  - name: operator
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "14.6.5"
+    alias: operator
+    condition: operator.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Add values-startx-nsscoped.yaml for example of a namespace-scoped deployment of the operator"
+    - kind: changed
+      description: "Add values-redis-ee.yaml deploying the 7.2.4 version of the redislab operator"
+    - kind: changed
+      description: "Add the default and startx values configured with the 0.15.1 version of the opstree operator"
+    - kind: changed
+      description: "Create new redis chart derivated from couchbase and adjusted to redis deployment"
+  artifacthub.io/containsSecurityUpdates: "false"
