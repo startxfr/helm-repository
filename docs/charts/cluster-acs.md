@@ -228,3 +228,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 14.6.39 | 2023-12-22 | Adjust the helm.sh/hook-weight to 5
 | 14.6.45 | 2023-12-22 | publish stable update for the full repository
 | 14.6.46 | 2023-12-22 | publish stable update for the full repository
+| 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
