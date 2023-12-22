@@ -287,3 +287,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.33 | 2023-12-19 | Move dependencies to github-pages
 | 14.6.35 | 2023-12-20 | publish stable update for the full repository
 | 14.6.39 | 2023-12-22 | adding sample of a mustgather instance
+| 14.6.45 | 2023-12-22 | publish stable update for the full repository
