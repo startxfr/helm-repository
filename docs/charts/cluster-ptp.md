@@ -258,3 +258,4 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 14.6.46 | 2023-12-22 | publish stable update for the full repository
 | 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
 | 14.6.59 | 2023-12-22 | move back dependencies to version 14.6.35
+| 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
