@@ -1,5 +1,4 @@
 {{- if .Values.ingresscontroller.enabled -}}
-{{- $root := . -}}
 {{ range .Values.ingresscontroller.list }}
 {{- $name := .name | default "myingress" -}}
 ---
@@ -9,10 +8,10 @@ metadata:
   name: "{{- $name -}}"
   namespace: openshift-ingress-operator
   labels:
-    {{- include "cluster-config.labels" $root | nindent 4 }}
+    {{- include "cluster-config.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-ingresscontroller"
   annotations:
-    {{- include "cluster-config.annotations" $root | nindent 4 }}
+    {{- include "cluster-config.annotations" $ | nindent 4 }}
 spec:
 {{- if .infra_enabled }}
   nodePlacement:
@@ -69,10 +68,10 @@ metadata:
   name: "{{ $name }}-ingress-cert"
   namespace: openshift-ingress
   labels:
-    {{- include "cluster-config.labels" $root | nindent 4 }}
+    {{- include "cluster-config.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ $name }}-ingress-cert-secret"
   annotations:
-    {{- include "cluster-config.annotations" $root | nindent 4 }}
+    {{- include "cluster-config.annotations" $ | nindent 4 }}
 data:
   tls.crt: >-
     {{ .certificate.CABundle | b64enc }}

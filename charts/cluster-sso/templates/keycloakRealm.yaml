@@ -1,5 +1,4 @@
 {{- if .Values.sso_realms.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-sso" -}}
 {{ range .Values.sso_realms.list }}
 {{- $spec := .spec | default "{}" -}}
@@ -9,10 +8,10 @@ metadata:
   name: {{ .name | default "myrealm" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-sso.labels" $root | nindent 4 }}
+    {{- include "cluster-sso.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- .name | default "myrealm" -}}-keycloak"
   annotations:
-    {{- include "cluster-sso.annotations" $root | nindent 4 }}
+    {{- include "cluster-sso.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "30"
 spec:
   {{- $spec | nindent 2 }}

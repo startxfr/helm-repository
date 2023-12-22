@@ -1,5 +1,4 @@
 {{- if .Values.clusterRbac }}{{- if .Values.clusterRbac.enabled }}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.project.name | default .Chart.Name -}}
 
@@ -13,11 +12,11 @@ metadata:
   name: "{{- .name | default "default-group" -}}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- .name | default "default-group" -}}-redisgroup"
     cluster: "{{- .cluster | default "default-cluster" -}}"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
 spec:
   {{- .spec | nindent 2 }}
 {{- end -}}{{- end -}}
@@ -36,11 +35,11 @@ metadata:
   name: "{{- $name -}}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-redisuser"
     cluster: "{{- .cluster | default "default-cluster" -}}"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
 spec:
   fullName: "{{- $fullName -}}"
   authDomain: "{{- $backend -}}"
@@ -52,11 +51,11 @@ metadata:
   name: "{{- $name -}}-password"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-password-secret"
     cluster: "{{- .cluster | default "default-cluster" -}}"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
     template.openshift.io/expose-password: "{.data['password']}"
 stringData:
   password: "{{- $password -}}"
@@ -69,11 +68,11 @@ metadata:
   name: "{{- $name -}}-{{- .group -}}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-{{- .group -}}-redisrolebinding"
     cluster: "{{- .cluster | default "default-cluster" -}}"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
 spec:
   subjects:
   - kind: RedisUser

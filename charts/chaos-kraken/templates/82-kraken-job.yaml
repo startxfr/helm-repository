@@ -1,5 +1,4 @@
 {{- if .Values.kraken.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 {{- if eq .Values.kraken.mode "job" -}}{{- if .Values.kraken.job -}}
@@ -12,10 +11,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "{{- .prefix -}}-job"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 spec:
   backoffLimit: 0
   completions: 1
@@ -38,7 +37,7 @@ spec:
           - -c
         env:
           - name: KUBECONFIG
-        {{- if $root.Values.kraken.aws }}{{- if $root.Values.kraken.aws.enabled }}
+        {{- if $.Values.kraken.aws }}{{- if $.Values.kraken.aws.enabled }}
         envFrom:
           - secretRef:
               name: kraken-aws-creds
