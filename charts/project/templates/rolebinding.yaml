@@ -12,7 +12,9 @@ kind: {{ $cscope | quote }}
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: "{{ .id }}"
-  namespace: "{{- $ns -}}"
+  {{- if ne .type "cluster" }}
+  namespace: "{{- .namespace | default $ns -}}"
+  {{- end }}
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
@@ -43,7 +45,9 @@ kind: {{ $cscope | quote }}
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: "{{ .id }}"
-  namespace: "{{- $ns -}}"
+  {{- if ne .type "cluster" }}
+  namespace: "{{- .namespace | default $ns -}}"
+  {{- end }}
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
@@ -74,7 +78,9 @@ kind: {{ $cscope | quote }}
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: "{{ .id }}"
-  namespace: "{{- $ns -}}"
+  {{- if ne .type "cluster" }}
+  namespace: "{{- .namespace | default $ns -}}"
+  {{- end }}
   labels:
     {{- include "project.labels" $root | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
@@ -93,6 +99,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ .name | quote }}
-    namespace: "{{- $ns -}}"
+    namespace: "{{- .namespace | default $ns -}}"
 {{ end }}
 {{- end -}}{{- end -}}{{- end }}
