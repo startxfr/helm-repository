@@ -16,24 +16,20 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{/* Common operator note */}}
 {{- define "cluster-mustgather.notes" -}}
 -- MustGather ------------------------
-{{- if .mustgather }}{{- if .mustgather.enabled }}
+{{- if .report }}{{- if .report.enabled }}
 {{- $namespace := .project.project.name | default "default-mustgather" }}
-     mustgather : enabled in {{ $namespace }}
-         name : {{ .mustgather.name | default "default" | quote }}
-    {{- if .mustgather.hive }}{{- if .mustgather.hive.enabled }}
-        {{- with .mustgather.hive }}
-storage class : {{ .storageClass | default "gp3-csi" | quote }}
- storage size : {{ .size | default "5Gi" | quote }}
-            {{- if .enabled }}
-         hive : enabled
-            {{- end }}
-        {{- end }}
+    {{- if .project }}{{- if .project.enabled }}
+      project : enabled
     {{- end }}{{- end }}
-    {{- if .mustgather.reportingOperator }}{{- if .mustgather.reportingOperator.enabled }}
-    reporting : enabled
+    {{- if .operator }}{{- if .operator.enabled }}
+     operator : enabled
     {{- end }}{{- end }}
-    {{- if .mustgather.presto }}{{- if .mustgather.presto.enabled }}
-       presto : enabled
+    {{- if .redhatCreds }}{{- if .redhatCreds.enabled }}
+ redhat creds : {{ .redhatCreds.name }}
+    {{- end }}{{- end }}
+    {{- if .report }}{{- if .report.enabled }}
+       report : enabled in {{ $namespace }}
+  report name : {{ .report.name | default "default" | quote }}
     {{- end }}{{- end }}
 {{- end }}{{- end }}
 {{- end -}}
