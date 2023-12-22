@@ -275,3 +275,4 @@ helm install cluster-rbac startx/cluster-rbac -f https://raw.githubusercontent.c
 | 14.6.39 | 2023-12-22 | Add creation of Role and Cluster role along with group and binding creation
 | 14.6.41 | 2023-12-22 | Improve cluster-rbac options
 | 14.6.45 | 2023-12-22 | publish stable update for the full repository
+| 14.6.46 | 2023-12-22 | publish stable update for the full repository
