@@ -1,0 +1,60 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-ods
+# Description of this Helm chart
+description: Helm chart used to configure OpenDataScience at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 14.6.63
+# Version name of the redhat ODS operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 1.1.2
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-ods.svg
+# category associated to this package
+category: cluster
+# tags
+tags: infra,cluster,ods,data,datascience,ai,aiml
+# Kube minimum version
+kubeVersion: ">=1.25.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - data
+  - data science
+  - AI
+  - AIML
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-ods
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ods
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "14.6.35"
+    alias: project
+    condition: project.enabled
+  - name: operator
+    repository: https://startxfr.github.io/helm-repository/packages/
+    version: "14.6.35"
+    alias: operator
+    condition: operator.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Create cluster-ods chart for OpenDataScience operator"
+  artifacthub.io/containsSecurityUpdates: "false"
