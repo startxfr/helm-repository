@@ -454,3 +454,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 14.6.31 | 2023-12-19 | move to kubeversion min 1.25.0
 | 14.6.33 | 2023-12-19 | Move dependencies to github-pages
 | 14.6.35 | 2023-12-20 | publish stable update for the full repository
+| 14.6.39 | 2023-12-22 | Debug service account rolebinding
