@@ -1,5 +1,4 @@
 {{- if .Values.auth.enabled }}
-{{- $root := . -}}
 {{- $namespace := .Values.auth.namespace | default "openshift-config" -}}
 kind: OAuth
 apiVersion: config.openshift.io/v1
@@ -7,10 +6,10 @@ metadata:
   name: cluster
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-auth.labels" $root | nindent 4 }}
+    {{- include "cluster-auth.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "cluster-oauth"
   annotations:
-    {{- include "cluster-auth.annotations" $root | nindent 4 }}
+    {{- include "cluster-auth.annotations" $ | nindent 4 }}
     helm.sh/resource-policy: keep
 spec:
   {{- if .Values.auth.tokenMaxAge }}

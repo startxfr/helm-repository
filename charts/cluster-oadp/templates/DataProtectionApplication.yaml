@@ -1,5 +1,4 @@
 {{- if .Values.oadp.enabled -}}{{- if .Values.oadp.dataProtectionApplication -}}{{- if .Values.oadp.dataProtectionApplication.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-adp" -}}
 {{- $spec := .Values.oadp.dataProtectionApplication.spec | default "{}" -}}
 apiVersion: oadp.openshift.io/v1alpha1

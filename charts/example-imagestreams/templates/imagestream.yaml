@@ -1,5 +1,4 @@
 {{- if .Values.enabled }}{{- if .Values.imagestreams }}
-{{- $root := . -}}
 {{ range .Values.imagestreams }} 
 {{- $is := . -}}
 {{- if $is.enabled }}
@@ -10,12 +9,12 @@ metadata:
   name: {{ $is.name | default "default" | quote }}
   namespace: {{ $is.namespace | default "openshift" | quote }}
   annotations:
-    {{- include "example-imagestreams.annotations" $root | nindent 4 }}
+    {{- include "example-imagestreams.annotations" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ $is.name | default "default" }}-imagestreams"
     openshift.io/display-name: {{ $is.displayName | default "openshift" | quote }}
     argocd.argoproj.io/compare-options: IgnoreExtraneous
   labels:
-    {{- include "example-imagestreams.labels" $root | nindent 4 }}
+    {{- include "example-imagestreams.labels" $ | nindent 4 }}
     {{- if $is.labels }}
     {{- $is.labels | nindent 4 -}}
     {{- end }}
@@ -27,7 +26,7 @@ spec:
     {{- if $ist.enabled }}
     - name: {{ $ist.name | default "latest" | quote }}
       annotations:
-        {{- include "example-imagestreams.annotations" $root | nindent 8 }}
+        {{- include "example-imagestreams.annotations" $ | nindent 8 }}
         {{- with $ist.desc }}
         {{- if .displayName }}
         openshift.io/display-name: {{ .displayName | default "default image" | quote }}

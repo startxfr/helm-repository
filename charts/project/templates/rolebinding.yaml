@@ -1,5 +1,4 @@
 {{- if .Values.enabled }}{{- if .Values.rbac }}{{- if .Values.rbac.enabled -}}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.name | default .Chart.Name -}} 
 {{ range .Values.rbac.groups }}
@@ -16,13 +15,13 @@ metadata:
   namespace: "{{- .namespace | default $ns -}}"
   {{- end }}
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
     {{- if $.Values.rbac.additionalLabels }}
     {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
     {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
     {{- if $.Values.rbac.additionalAnnotations }}
     {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
     {{- end}}
@@ -49,13 +48,13 @@ metadata:
   namespace: "{{- .namespace | default $ns -}}"
   {{- end }}
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
     {{- if $.Values.rbac.additionalLabels }}
     {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
     {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
     {{- if $.Values.rbac.additionalAnnotations }}
     {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
     {{- end}}
@@ -82,13 +81,13 @@ metadata:
   namespace: "{{- .namespace | default $ns -}}"
   {{- end }}
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
     {{- if $.Values.rbac.additionalLabels }}
     {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
     {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
     {{- if $.Values.rbac.additionalAnnotations }}
     {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
     {{- end}}

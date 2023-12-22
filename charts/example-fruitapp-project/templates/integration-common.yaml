@@ -1,5 +1,4 @@
 {{- if .Values.integration_chain }}{{- if .Values.integration_chain.enabled }}
-{{- $root := . -}}
 ---
 apiVersion: v1
 kind: Secret
@@ -8,7 +7,7 @@ metadata:
   namespace: "{{- .Values.project_integration.project.name }}"
   labels:
     app.kubernetes.io/name: 'github-credentials'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'ci'
     app: ci
 stringData:
@@ -46,7 +45,7 @@ metadata:
     openshift.io/generated-by: startx
   labels:
     app.kubernetes.io/name: 'frontend'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'frontend'
     app: frontend
   namespace: "{{- .Values.project_integration.project.name }}"
@@ -312,7 +311,7 @@ metadata:
     app.kubernetes.io/part-of: "{{- .Values.project_integration.project.name }}"
     app.kubernetes.io/version: '0.1'
   namespace: "{{- .Values.project_integration.project.name }}"
-  name: "{{ include "startx.appName" $root }}"
+  name: "{{ include "startx.appName" $ }}"
 spec:
   params:
     - name: APP_NAME
@@ -325,7 +324,7 @@ spec:
       default: main
       type: string
     - name: IMAGE_NAME
-      default: image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-ci/frontend
+      default: image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $ }}-ci/frontend
       type: string
     - name: PATH_CONTEXT
       default: .
@@ -568,9 +567,9 @@ spec:
   - name: push-preprod
     params:
       - name: srcImageURL
-        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-ci/frontend:stable"
+        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $ }}-ci/frontend:stable"
       - name: destImageURL
-        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-preprod/frontend:$(params.GIT_RELEASE)"
+        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $ }}-preprod/frontend:$(params.GIT_RELEASE)"
       - name: srcTLSverify
         value: 'false'
       - name: destTLSverify
@@ -587,9 +586,9 @@ spec:
   - name: push-prod
     params:
       - name: srcImageURL
-        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-ci/frontend:stable"
+        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $ }}-ci/frontend:stable"
       - name: destImageURL
-        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-prod/frontend:$(params.GIT_RELEASE)"
+        value: "docker://image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $ }}-prod/frontend:$(params.GIT_RELEASE)"
       - name: srcTLSverify
         value: 'false'
       - name: destTLSverify
@@ -655,7 +654,7 @@ metadata:
     app.kubernetes.io/part-of: "{{- .Values.project_integration.project.name }}"
     app.kubernetes.io/version: '0.1'
   namespace: "{{- .Values.project_integration.project.name }}"
-  name: "{{ include "startx.appName" $root }}-firstrun"
+  name: "{{ include "startx.appName" $ }}-firstrun"
 spec:
   params:
   - name: APP_NAME
@@ -665,13 +664,13 @@ spec:
   - name: GIT_RELEASE
     value: "{{- .Values.context.version }}"
   - name: IMAGE_NAME
-    value: image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $root }}-ci/frontend
+    value: image-registry.openshift-image-registry.svc:5000/{{ include "startx.appName" $ }}-ci/frontend
   - name: PATH_CONTEXT
     value: .
   - name: VERSION
     value: latest
   pipelineRef:
-    name: "{{ include "startx.appName" $root }}"
+    name: "{{ include "startx.appName" $ }}"
   workspaces:
   - name: img-url
     emptyDir: {}
@@ -684,13 +683,13 @@ spec:
     volumeClaimTemplate:
       metadata:
         labels:
-          app: {{ include "startx.appName" $root }}-workspace-mainsrc
+          app: {{ include "startx.appName" $ }}-workspace-mainsrc
           app.kubernetes.io/component: ci
-          app.kubernetes.io/instance: {{ include "startx.appName" $root }}
+          app.kubernetes.io/instance: {{ include "startx.appName" $ }}
           app.kubernetes.io/name: workspace-mainsrc
-          app.kubernetes.io/part-of: {{ include "startx.appName" $root }}-ci
-          startx.fr/app: {{ include "startx.appName" $root }}
-          tekton.dev/pipeline: {{ include "startx.appName" $root }}-ci
+          app.kubernetes.io/part-of: {{ include "startx.appName" $ }}-ci
+          startx.fr/app: {{ include "startx.appName" $ }}
+          tekton.dev/pipeline: {{ include "startx.appName" $ }}-ci
       spec:
         accessModes:
         - ReadWriteOnce
@@ -701,13 +700,13 @@ spec:
     volumeClaimTemplate:
       metadata:
         labels:
-          app: {{ include "startx.appName" $root }}-workspace-devel
+          app: {{ include "startx.appName" $ }}-workspace-devel
           app.kubernetes.io/component: ci
-          app.kubernetes.io/instance: {{ include "startx.appName" $root }}
+          app.kubernetes.io/instance: {{ include "startx.appName" $ }}
           app.kubernetes.io/name: workspace-devel
-          app.kubernetes.io/part-of: {{ include "startx.appName" $root }}-ci
-          startx.fr/app: {{ include "startx.appName" $root }}
-          tekton.dev/pipeline: {{ include "startx.appName" $root }}-ci
+          app.kubernetes.io/part-of: {{ include "startx.appName" $ }}-ci
+          startx.fr/app: {{ include "startx.appName" $ }}
+          tekton.dev/pipeline: {{ include "startx.appName" $ }}-ci
       spec:
         accessModes:
         - ReadWriteOnce
@@ -718,13 +717,13 @@ spec:
     volumeClaimTemplate:
       metadata:
         labels:
-          app: {{ include "startx.appName" $root }}-workspace-main
+          app: {{ include "startx.appName" $ }}-workspace-main
           app.kubernetes.io/component: ci
-          app.kubernetes.io/instance: {{ include "startx.appName" $root }}
+          app.kubernetes.io/instance: {{ include "startx.appName" $ }}
           app.kubernetes.io/name: workspace-main
-          app.kubernetes.io/part-of: {{ include "startx.appName" $root }}-ci
-          startx.fr/app: {{ include "startx.appName" $root }}
-          tekton.dev/pipeline: {{ include "startx.appName" $root }}-ci
+          app.kubernetes.io/part-of: {{ include "startx.appName" $ }}-ci
+          startx.fr/app: {{ include "startx.appName" $ }}
+          tekton.dev/pipeline: {{ include "startx.appName" $ }}-ci
       spec:
         accessModes:
         - ReadWriteOnce
@@ -735,13 +734,13 @@ spec:
     volumeClaimTemplate:
       metadata:
         labels:
-          app: {{ include "startx.appName" $root }}-workspace-stable
+          app: {{ include "startx.appName" $ }}-workspace-stable
           app.kubernetes.io/component: ci
-          app.kubernetes.io/instance: {{ include "startx.appName" $root }}
+          app.kubernetes.io/instance: {{ include "startx.appName" $ }}
           app.kubernetes.io/name: workspace-stable
-          app.kubernetes.io/part-of: {{ include "startx.appName" $root }}-ci
-          startx.fr/app: {{ include "startx.appName" $root }}
-          tekton.dev/pipeline: {{ include "startx.appName" $root }}-ci
+          app.kubernetes.io/part-of: {{ include "startx.appName" $ }}-ci
+          startx.fr/app: {{ include "startx.appName" $ }}
+          tekton.dev/pipeline: {{ include "startx.appName" $ }}-ci
       spec:
         accessModes:
         - ReadWriteOnce
