@@ -217,34 +217,7 @@ project:
     - id: redis-operator
       name: redis-operator
       type: cluster
-      role: redis-operator
-
-# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
-operator:
-  enabled: false
-  context: 
-    <<: *context
-  subscription:
-    enabled: true
-    hooked: false
-    name: "redis-operator"
-    namespace: "openshift-operators"
-    version: "v0.15.1"
-    operator: 
-      channel: "stable"
-      name: redis-operator
-      installPlanApproval: Automatic
-      # csv: redis-operator
-      source: 
-        name: community-operators
-        namespace: openshift-marketplace
-  operatorGroup:
-    enabled: false
-    hooked: false
-    target: "all-ns"
-    name: "redis-operator"
-    namespace: "openshift-operators"
-    providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"
+      role: redis-opscr
 
 # Configuration of the cluster-rbac (see https://helm-repository.readthedocs.io/en/latest/charts/cluster-rbac)
 rbac:
@@ -254,8 +227,8 @@ rbac:
   roles:
     enabled: true
     list:
-    - id: redis-operator
-      name: redis-operator
+    - id: redis-opscr
+      name: redis-opscr
       scope: global
       rules: |-
         - apiGroups:
@@ -324,3 +297,30 @@ rbac:
           - delete
           - list
           - watch
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "redis-operator"
+    namespace: "openshift-operators"
+    version: "v0.15.1"
+    operator: 
+      channel: "stable"
+      name: redis-operator
+      installPlanApproval: Automatic
+      # csv: redis-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "redis-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"
