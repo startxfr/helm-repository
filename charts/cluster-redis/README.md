@@ -60,3 +60,4 @@ helm install cluster-redis startx/cluster-redis -f https://raw.githubusercontent
 | 14.6.43  | 2023-12-22 | Create cluster-redis skeleton from cluster-couchbase                                           |
 | 14.6.45 | 2023-12-22 | publish stable update for the full repository
 | 14.6.46 | 2023-12-22 | publish stable update for the full repository
+| 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45

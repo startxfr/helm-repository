@@ -6,7 +6,7 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.46
+version: 14.6.55
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.14.6"
 # Icon of this helm-chart
@@ -42,46 +42,42 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: operatorGlobal
     condition: operatorGlobal.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: projectSosReport
     condition: projectSosReport.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: operatorSosReport
     condition: operatorSosReport.enabled
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: projectMustGather
     condition: projectMustGather.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: operatorMustGather
     condition: operatorMustGather.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "adding sample of a mustgather instance"
-    - kind: changed
-      description: "adding apiserver configuration with private certificate"
-    - kind: changed
-      description: "Adding management of certificate for the Openshift global proxy"
+      description: "align all dependencies chart to 14.6.45"
   artifacthub.io/containsSecurityUpdates: "false"

@@ -6,7 +6,7 @@ description: Helm chart used to configure Redis cluster using Opstree operator (
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.46
+version: 14.6.55
 # Version name of the redis operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "0.15.1"
 # Icon of this helm-chart
@@ -45,28 +45,22 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: operator
     condition: operator.enabled
   - name: cluster-rbac
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.39"
+    version: "14.6.45"
     alias: rbac
     condition: rbac.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Add values-startx-nsscoped.yaml for example of a namespace-scoped deployment of the operator"
-    - kind: changed
-      description: "Add values-redis-ee.yaml deploying the 7.2.4 version of the redislab operator"
-    - kind: changed
-      description: "Add the default and startx values configured with the 0.15.1 version of the opstree operator"
-    - kind: changed
-      description: "Create new redis chart derivated from couchbase and adjusted to redis deployment"
+      description: "align all dependencies chart to 14.6.45"
   artifacthub.io/containsSecurityUpdates: "false"

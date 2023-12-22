@@ -6,7 +6,7 @@ description: Helm chart used to configure local storage at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.46
+version: 14.6.55
 # Version name of the localstorage operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 4.14.0
 # Icon of this helm-chart
@@ -44,17 +44,17 @@ maintainers:
 dependencies:
   - name: project 
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/packages/
-    version: "14.6.5"
+    version: "14.6.45"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "upgrade LocalStorage operator to version 4.14.0-202311211133"
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: "align all dependencies chart to 14.6.45"
+  artifacthub.io/containsSecurityUpdates: "false"
