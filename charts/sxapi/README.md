@@ -464,3 +464,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 14.6.40 | 2023-12-22 | align basic operators
 | 14.6.45 | 2023-12-22 | publish stable update for the full repository
 | 14.6.46 | 2023-12-22 | publish stable update for the full repository
+| 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
