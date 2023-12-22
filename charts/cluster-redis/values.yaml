@@ -16,39 +16,6 @@ context:  &context
   # version: "0.0.3"
 
 # Configure the redis envionment
-redisConfig:
-  # Enable the configuration of the redis environement
-  enabled: true
-  # Configuration of the serviceAccount for pod deployment
-  saPods: 
-    # Enable existence of the serviceAccount for pod deployment
-    enabled: false
-    # name of the serviceAccount for pod deployment
-    name: redis-pods
-  # Configuration of the serviceAccount for backup jobs
-  saBackup: 
-    # Enable existence of the serviceAccount for backup deployment
-    enabled: false
-    # name of the serviceAccount for backup deployment
-    name: redis-backup
-  # Configuration of the imagePull credentials
-  # imageCredentialsSecret: registrycreds-rhn
-
-# Configure the loaders pod
-loader:
-  # Enable the configuration of the redis workloader
-  enabled: false
-  # List of loader to deploy
-  list: []
-  #   # name of the loader
-  # - name: default
-  #   # Command to execute for the test
-  #   command: | 
-  #     #!/bin/bash
-  #     echo "write your workload generator script using cbworkloadgen ..." 
-  #     exit 0;
-
-# Configure the redis envionment
 cluster:
   # Enable the configuration of the redis environement
   enabled: false
@@ -163,37 +130,6 @@ cluster:
   #       enableFlush: true
   #       enableIndexReplica: true
   #       compressionMode: passive
-
-
-# Configure the redis RBAC
-clusterRbac:
-  # Enable the configuration of the redis RBAC
-  enabled: false
-  # List of group and associated role
-  groups: []
-  #   # name of the group
-  # - name: default-group
-  #   # name of the cluster related to this group
-  # - cluster: default-cluster
-  #   # Specification of the group (roles)
-  #   spec: |
-  #     roles:
-  #     - name: bucket_admin
-  #       bucket: default
-  # List of group and associated role
-  users: []
-  #   # name of the user
-  # - name: user
-  #   # password of the user
-  #   password: secret123
-  #   # name of the cluster related to this user
-  # - cluster: default-cluster
-  #   # Full name of the user
-  #   fullName: "Default USER"
-  #   # name of the authDomain (default to local)
-  #   backend: local
-  #   # Group associated to this user
-  #   group: default-group
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 

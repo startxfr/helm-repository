@@ -7,29 +7,25 @@ context: &context
   component: redis
   app: startx-redis
 
-redisConfig:
-  enabled: true
-  saPods: 
-    enabled: true
-    name: redis-pods
-  saBackup: 
-    enabled: true
-    name: redis-backup
-  imageCredentialsSecret: startx-registrycreds-rhn
-
 cluster:
   enabled: false
   list: []
-
-clusterRbac:
-  enabled: false
-  groups: []
-  users: []
 
 project: 
   enabled: false
   context: 
     <<: *context
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: redis-operator
+  rbac: 
+    enabled: true
+    sa:
+    - id: redis-operator
+      name: redis-operator
+      type: cluster
+      role: redis-opscr
 operator:
   enabled: false
   context: 
@@ -55,3 +51,80 @@ operator:
     name: "redis-operator"
     namespace: "openshift-operators"
     providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"
+rbac:
+  enabled: false
+  context: 
+    <<: *context
+  roles:
+    enabled: true
+    list:
+    - id: redis-opscr
+      name: redis-opscr
+      scope: global
+      rules: |-
+        - apiGroups:
+          - redis.redis.opstreelabs.in
+          resources:
+          - rediscluster
+          - redisrreplication
+          - redissentinel
+          - redis
+          verbs:
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - persistentvolumeclaims
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - pods/exec
+          verbs:
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - list
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - policy
+          resources:
+          - poddisruptionbudgets
+          verbs:
+          - get
+          - create
+          - delete
+          - list
+          - watch
