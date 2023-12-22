@@ -289,3 +289,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.39 | 2023-12-22 | adding sample of a mustgather instance
 | 14.6.45 | 2023-12-22 | publish stable update for the full repository
 | 14.6.46 | 2023-12-22 | publish stable update for the full repository
+| 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
