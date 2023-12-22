@@ -1,5 +1,4 @@
 {{- if .Values.loader }}{{- if .Values.loader.enabled }}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.project.name | default .Chart.Name -}}
 {{- range .Values.loader.list }}
@@ -11,24 +10,24 @@ metadata:
   name: "{{- $name -}}-loader"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-loader-pod"
     cluster: "{{- $name -}}"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
 spec:
   restartPolicy: Never
-{{- if $root.Values.redisConfig }}
-{{- if $root.Values.redisConfig.saPods }}
-{{- if $root.Values.redisConfig.saPods.enabled }}
-{{- $sa := $root.Values.redisConfig.saPods.name | default "redis-pods" }}
+{{- if $.Values.redisConfig }}
+{{- if $.Values.redisConfig.saPods }}
+{{- if $.Values.redisConfig.saPods.enabled }}
+{{- $sa := $.Values.redisConfig.saPods.name | default "redis-pods" }}
   serviceAccountName: "{{- $sa -}}"
   serviceAccount: "{{- $sa -}}"
 {{- end }}
 {{- end }}
-{{- if $root.Values.redisConfig.imageCredentialsSecret }}
+{{- if $.Values.redisConfig.imageCredentialsSecret }}
   imagePullSecrets:
-    - name: "{{- $root.Values.redisConfig.imageCredentialsSecret -}}"
+    - name: "{{- $.Values.redisConfig.imageCredentialsSecret -}}"
 {{- end }}
 {{- end }}
   securityContext:

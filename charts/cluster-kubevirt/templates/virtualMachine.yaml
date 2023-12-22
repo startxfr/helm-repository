@@ -1,5 +1,4 @@
 {{- if .Values.vms }}{{- if .Values.vms.enabled }}
-{{- $root := . -}}
 {{- $defaultns := .Values.project.project.name -}}
 {{ range .Values.vms.list }}
 {{- $name := .name | default "default-vm" -}}
@@ -19,14 +18,14 @@ metadata:
   name: {{ $name | quote }}
   namespace: {{ $namespace | quote }}
   labels:
-    {{- include "cluster-kubevirt.labels" $root | nindent 4 }}
+    {{- include "cluster-kubevirt.labels" $ | nindent 4 }}
     app: "{{- $name -}}"
     app.kubernetes.io/name: "{{- $name -}}-virtualmachine"
     flavor.template.kubevirt.io/medium: 'true'
     os.template.kubevirt.io/{{ $os_signature }}: 'true'
     workload.template.kubevirt.io/server: 'true'
   annotations:
-    {{- include "cluster-kubevirt.annotations" $root | nindent 4 }}
+    {{- include "cluster-kubevirt.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "50"
     kubevirt.io/latest-observed-api-version: v1
     kubevirt.io/storage-observed-api-version: v1alpha3
@@ -82,7 +81,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "cluster-kubevirt.labels" $root | nindent 8 }}
+        {{- include "cluster-kubevirt.labels" $ | nindent 8 }}
         app.kubernetes.io/name: "{{- $name -}}-vminstance"
         app.kubernetes.io/part-of: "{{- $name -}}"
         kubevirt.io/domain: "{{- $name -}}"
@@ -92,7 +91,7 @@ spec:
         os.template.kubevirt.io/{{ $os_signature }}: 'true'
         workload.template.kubevirt.io/server: 'true'
       annotations:
-        {{- include "cluster-kubevirt.annotations" $root | nindent 8 }}
+        {{- include "cluster-kubevirt.annotations" $ | nindent 8 }}
     spec:
       hostname: {{ $name | quote }}
       evictionStrategy: LiveMigrate

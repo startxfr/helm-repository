@@ -1,5 +1,4 @@
 {{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.project.name | default .Chart.Name -}}
 
@@ -20,10 +19,10 @@ metadata:
   name: "{{- $name -}}-admin-auth"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-admin-auth-secret"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
     template.openshift.io/expose-username: "{.data['username']}"
     template.openshift.io/expose-password: "{.data['password']}"
 stringData:
@@ -42,12 +41,12 @@ metadata:
   name: "{{- $name -}}-admin"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $ns -}}-admin-route"
     redis_cluster: "{{- $name -}}"
     cluster: "{{- $name -}}"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
 spec:
   to:
     kind: Service
@@ -67,10 +66,10 @@ metadata:
   name: "{{- $name -}}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-rediscluster"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
 spec: 
   {{- .spec | nindent 2 }}
 {{- end -}}
@@ -92,11 +91,11 @@ metadata:
   name: "{{- .name | default "default-bucket" -}}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-redis.labels" $root | nindent 4 }}
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-redisbucket"
     cluster: "{{- $name -}}"
   annotations:
-    {{- include "cluster-redis.annotations" $root | nindent 4 }}
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
 spec: 
   {{- .spec | nindent 2 }}
 {{- end -}}

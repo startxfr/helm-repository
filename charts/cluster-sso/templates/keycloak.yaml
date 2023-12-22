@@ -1,5 +1,4 @@
 {{- if .Values.sso.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-sso" -}}
 {{- $spec := .Values.sso.spec | default "{}" -}}
 apiVersion: keycloak.org/v1alpha1

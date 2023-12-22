@@ -1,5 +1,4 @@
 {{- if .Values.roles -}}{{- if .Values.roles.enabled -}}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $kind := "" -}}
 {{- $kindshort := "" -}}
@@ -18,14 +17,14 @@ metadata:
   namespace: {{ .namespace | default "default" | quote }}
   {{- end }}
   labels:
-    {{- include "cluster-rbac.labels" $root | nindent 4 }}
+    {{- include "cluster-rbac.labels" $ | nindent 4 }}
     {{- if has .scope (list "cluster" "global") }}
-    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-crol"
+    app.kubernetes.io/name: "{{ include "startx.appScope" $ }}-{{ .id }}-crol"
     {{- else }}
-    app.kubernetes.io/name: "{{ include "startx.appScope" $root }}-{{ .id }}-rol"
+    app.kubernetes.io/name: "{{ include "startx.appScope" $ }}-{{ .id }}-rol"
     {{- end }}
   annotations:
-    {{- include "cluster-rbac.annotations" $root | nindent 4 }}
+    {{- include "cluster-rbac.annotations" $ | nindent 4 }}
     rbac.authorization.kubernetes.io/autoupdate: "true"
 rules:
   {{- .rules | nindent 2 }}
