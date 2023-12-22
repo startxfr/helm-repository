@@ -460,3 +460,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 14.6.31 | 2023-12-19 | move to kubeversion min 1.25.0
 | 14.6.33 | 2023-12-19 | Move dependencies to github-pages
 | 14.6.35 | 2023-12-20 | publish stable update for the full repository
+| 14.6.39 | 2023-12-22 | align basic chart on 14.6.39 release
