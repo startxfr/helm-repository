@@ -20,116 +20,68 @@ cluster:
   # Enable the configuration of the redis environement
   enabled: false
   # List of cluster to deploy
-  list: []
-  #   # name of the cluster
-  # - name: default-cluster
-  #   # Enable the creation and deployment of this cluster
-  #   enabled: true
-  #   # administration credentials
-  #   admin:
-  #     # administrator username
-  #     username: "administrator"
-  #     # administrator username
-  #     password: "administrator123"
-  #   # configure how to expose the web-console 
-  #   expose:
-  #     # Enable the exposure of the web-console using the router
-  #     enabled: true
-  #   # spec of the cluster configuration
-  #   spec: |
-  #     image: registry.connect.redhat.com/redis/server:7.0.3-1
-  #     paused: false
-  #     antiAffinity: true
-  #     softwareUpdateNotifications: true
-  #     securityContext:
-  #       runAsUser: 1000
-  #       runAsNonRoot: true
-  #       fsGroup: 1000
-  #     security:
-  #       adminSecret: default-cluster-admin-auth
-  #       rbac:
-  #         managed: true
-  #         selector:
-  #           matchLabels:
-  #             cluster: default-cluster
-  #     networking:
-  #       exposeAdminConsole: true
-  #       adminConsoleServices:
-  #       - data
-  #     buckets:
-  #       managed: true
-  #       selector:
-  #         matchLabels:
-  #           cluster: default-cluster
-  #     logging:
-  #       logRetentionTime: 604800s
-  #       logRetentionCount: 20
-  #     backup:
-  #       managed: false
-  #     volumeClaimTemplates:
-  #     - metadata:
-  #         name: redis
-  #       spec:
-  #         storageClassName: "gp3-csi"
-  #         resources:
-  #           requests:
-  #             storage: 2Gi
-  #     cluster:
-  #       clusterName: default-cluster
-  #       dataServiceMemoryQuota: 750Mi
-  #       indexServiceMemoryQuota: 256Mi
-  #       searchServiceMemoryQuota: 256Mi
-  #       eventingServiceMemoryQuota: 256Mi
-  #       analyticsServiceMemoryQuota: 1Gi
-  #       indexStorageSetting: memory_optimized
-  #       autoFailoverTimeout: 120s
-  #       autoFailoverMaxCount: 3
-  #       autoFailoverOnDataDiskIssues: true
-  #       autoFailoverOnDataDiskIssuesTimePeriod: 120s
-  #       autoFailoverServerGroup: false
-  #     servers:
-  #     - name: all_services
-  #       size: 3
-  #       services:
-  #       - data
-  #       - index
-  #       - query
-  #       - search
-  #       - eventing
-  #       - analytics
-  #       volumeMounts:
-  #         default: redis
-  #         data:  redis
-  #         index: redis
-  #         analytics:
-  #         - redis
-  #         - redis
-  #       pod:
-  #         metadata:
-  #           labels:
-  #             redis_services: all
-  #           annotations:
-  #             redis.startx.fr: default
-  #         spec:
-  #           automountServiceAccountToken: false
-  #           serviceAccountName: redis-pods
-  #           imagePullSecrets:
-  #             - name: "startx-redis-rhn"
-  #   buckets: 
-  #     # name of the bucket
-  #   - name: "default-bucket"
-  #     # kind of bucket (could be redis, ephemeral or memcached)
-  #     kind: redis
-  #     # spec of the cluster configuration
-  #     spec: |
-  #       memoryQuota: 128Mi
-  #       replicas: 2
-  #       ioPriority: low
-  #       evictionPolicy: valueOnly
-  #       conflictResolution: lww
-  #       enableFlush: true
-  #       enableIndexReplica: true
-  #       compressionMode: passive
+  list: 
+    # name of the cluster
+  - name: default-redis
+    # the namespace used to deploy this cluster (default is the project name)
+    namespace: demo-redis
+    # Enable the creation and deployment of this cluster
+    enabled: true
+    # spec of the cluster configuration
+    spec: |
+      clusterSize: 3
+      clusterVersion: v7
+      kubernetesConfig:
+        image: quay.io/opstree/redis:v7.0.5
+        imagePullPolicy: IfNotPresent
+        updateStrategy: {}
+        resources:
+          requests:
+            cpu: 101m
+            memory: 128Mi
+          limits:
+            cpu: 101m
+            memory: 128Mi
+      redisExporter:
+        enabled: true
+        image: 'quay.io/opstree/redis-exporter:v1.44.0'
+        imagePullPolicy: IfNotPresent
+      redisFollower:
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      redisLeader:
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      persistenceEnabled: true
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: gp3-csi
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
