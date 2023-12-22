@@ -46,7 +46,6 @@ project:
   # additionalAnnotations: |
   #   annotations: "project"
 
-
 # Configure RBAC for project
 rbac: 
   # Enable RBAC default for this project
@@ -54,31 +53,40 @@ rbac:
   # # List groups to authorize on this project
   groups: []
   # # Example group ID
-  # - id: mygroup
+  # - id: mygroup_default
   #   # Example group name
-  #   name: mygroup_example
+  #   name: mygroup_default
+  #   # Example binding namespace
+  #   namespace: default
   #   # Example group role in this project
   #   role: basic-user
-  # - id: mygroupcluster
+  # - id: mygroup_admin
   #   # Example group name
-  #   name: mygroupcluster_example
+  #   name: mygroup_admin
   #   # Example of a clusterRoleBinding
   #   type: cluster
   #   # Example group role in this project
   #   role: edit
-  # List users to authorize on this project
+  # # List users to authorize on this project
   users: []
   # # Example user ID
   # - id: myuser
   #   # Example user name
-  #   name: myuser_example
+  #   name: myusername
+  #   # Example of the user rolebinding namespace (default is project name)
+  #   namespace: default
   #   # Example user role in this project
   #   role: basic-user
-  # # Custom configuration
-  # additionalLabels: |
-  #   label: "rbac"
-  # additionalAnnotations: |
-  #   annotations: "rbac"
+  # # List serviceAccount to authorize on this project
+  sa: []
+  # # Example user ID
+  # - id: mysa
+  #   # Example user name
+  #   name: mysa
+  #   # Example of the serviceaccount namespace (default is project name)
+  #   namespace: default
+  #   # Example user role in this project
+  #   role: basic-user
 
 # Configure NetworkPolicy for project
 networkpolicy: 
