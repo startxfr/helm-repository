@@ -9,8 +9,64 @@ context: &context
 
 cluster:
   enabled: false
-  list: []
-
+  list: 
+  - name: default-redis
+    namespace: default
+    enabled: true
+    spec: |
+      clusterSize: 3
+      clusterVersion: v7
+      kubernetesConfig:
+        image: quay.io/opstree/redis:v7.0.5
+        imagePullPolicy: IfNotPresent
+        updateStrategy: {}
+        resources:
+          requests:
+            cpu: 101m
+            memory: 128Mi
+          limits:
+            cpu: 101m
+            memory: 128Mi
+      redisExporter:
+        enabled: true
+        image: 'quay.io/opstree/redis-exporter:v1.44.0'
+        imagePullPolicy: IfNotPresent
+      redisFollower:
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      redisLeader:
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      persistenceEnabled: true
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: gp3-csi
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
 project: 
   enabled: false
   context: 
