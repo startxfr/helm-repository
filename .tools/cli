@@ -10,6 +10,9 @@ REPO_PACKAGE_DIR=docs/packages
 WORK_BRANCH=devel
 MASTER_BRANCH=master
 STABLE_BRANCH=stable
+STABLE_MAINRELEASE="14"
+STABLE_SUBRELEASE="6"
+STABLE_RELEASE="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}"
 GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
 GITHUB_REPONAME="origin"
@@ -18,7 +21,7 @@ GITLAB_REPONAME="gitlab"
 GITLAB_REPOURL="https://gitlab.com/startx1/helm"
 RTD_URL="https://$GITHUB_REPOSITORY.readthedocs.io/en/latest"
 HELM_REPOURL="https://startxfr.github.io/$GITHUB_REPOSITORY"
-
+ENABLE_AWS=1
 
 #####################
 ## GENERICS FUNCTIONS
@@ -152,7 +155,47 @@ function routerArchive {
 }
 
 # router for archive command
+function doHelmrepositoryGenerate {
+    local pkg=${2:-packages}
+    local path="$PROJECT_PATH/docs/${pkg}"
+    local helmrepourl="${3:-$HELM_REPOURL}"
+    local mainrel="${STABLE_MAINRELEASE}"
+    echo -e "\e[36mGenerate\e[0m Generate helm index for ${helmrepourl}/${pkg} from ${path} content"
+    helm repo index --url ${helmrepourl}/${pkg} "${path}"
+    if [[ "${ENABLE_AWS}" == 1 ]]; then
+        if [[ "${pkg}" == "packages" || "${pkg}" == "packages/" ]]; then
+            awsS3CopyLocalLegacyPkgToBucket "stable" "*-${mainrel}.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "noschema" "*-*.*-noschema.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "${mainrel}" "*-${mainrel}.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3GenerateHelmRepoIndex "stable"
+            awsS3GenerateHelmRepoIndex "noschema"
+            awsS3GenerateHelmRepoIndex "${mainrel}"
+        else
+            awsS3CopyLocalLegacyPkgToBucket "13" "*-13.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "12" "*-12.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "11" "*-11.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "10" "*-10.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "9" "*-9.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "8" "*-8.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "7" "*-7.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "6x" "*-6.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "6x" "*-0.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3GenerateHelmRepoIndex "13"
+            awsS3GenerateHelmRepoIndex "12"
+            awsS3GenerateHelmRepoIndex "11"
+            awsS3GenerateHelmRepoIndex "10"
+            awsS3GenerateHelmRepoIndex "9"
+            awsS3GenerateHelmRepoIndex "8"
+            awsS3GenerateHelmRepoIndex "7"
+            awsS3GenerateHelmRepoIndex "6x"
+        fi
+        awsS3SyncUploadDelete "${SXH_AWS_LOCALSYNC}" ""
+    fi
+}
+
+# router for archive command
 function doHelmrepositoryRefresh {
+    doHelmrepositoryGenerate "${1}" "${2:-packages}" "${3}" "${4}" "${5}"
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:-$HELM_REPOURL}"
     helm repo index --url ${3:-$HELM_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
     git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
@@ -433,7 +476,7 @@ Usage:
   - list                           list all helm-chart managed
   - publish                        Publish all change into repository
   - release                        Upgrade all charts, publish all change into repository and tag this release
-  - archive                        Generate and ublish all charts into the archive directory 
+  - archive                        Generate and publish all charts into the archive directory 
   - version                        Get version of this tools
   - <chart-name>                   Use chart-named sub-command (see ./sx-helm chart-name help)
 
