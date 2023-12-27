@@ -7,6 +7,7 @@ SHARED_NAME=_sample_
 SHARED_SAMPLE=.tools/$SHARED_NAME
 export SHARED_SAMPLE_RESOURCE=.tools/sample/templates/example.yaml
 REPO_PACKAGE_DIR=docs/packages
+REPO_PACKAGEARCH_DIR=docs/packages-archives
 WORK_BRANCH=devel
 MASTER_BRANCH=master
 STABLE_BRANCH=stable
@@ -171,15 +172,15 @@ function doHelmrepositoryGenerate {
             awsS3GenerateHelmRepoIndex "noschema"
             awsS3GenerateHelmRepoIndex "${mainrel}"
         else
-            awsS3CopyLocalLegacyPkgToBucket "13" "*-13.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
-            awsS3CopyLocalLegacyPkgToBucket "12" "*-12.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
-            awsS3CopyLocalLegacyPkgToBucket "11" "*-11.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
-            awsS3CopyLocalLegacyPkgToBucket "10" "*-10.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
-            awsS3CopyLocalLegacyPkgToBucket "9" "*-9.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
-            awsS3CopyLocalLegacyPkgToBucket "8" "*-8.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
-            awsS3CopyLocalLegacyPkgToBucket "7" "*-7.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
-            awsS3CopyLocalLegacyPkgToBucket "6x" "*-6.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
-            awsS3CopyLocalLegacyPkgToBucket "6x" "*-0.*.*.tgz" "${SXH_AWS_LOCALSYNC}"
+            awsS3CopyLocalLegacyPkgToBucket "13" "*-13.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
+            awsS3CopyLocalLegacyPkgToBucket "12" "*-12.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
+            awsS3CopyLocalLegacyPkgToBucket "11" "*-11.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
+            awsS3CopyLocalLegacyPkgToBucket "10" "*-10.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
+            awsS3CopyLocalLegacyPkgToBucket "9" "*-9.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
+            awsS3CopyLocalLegacyPkgToBucket "8" "*-8.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
+            awsS3CopyLocalLegacyPkgToBucket "7" "*-7.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
+            awsS3CopyLocalLegacyPkgToBucket "6x" "*-6.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
+            awsS3CopyLocalLegacyPkgToBucket "6x" "*-0.*.*.tgz" "${SXH_AWS_LOCALSYNC}" "archive"
             awsS3GenerateHelmRepoIndex "13"
             awsS3GenerateHelmRepoIndex "12"
             awsS3GenerateHelmRepoIndex "11"
@@ -196,7 +197,6 @@ function doHelmrepositoryGenerate {
 # router for archive command
 function doHelmrepositoryRefresh {
     doHelmrepositoryGenerate "${1}" "${2:-packages}" "${3}" "${4}" "${5}"
-    exit;
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:-$HELM_REPOURL}"
     helm repo index --url ${3:-$HELM_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
     git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
