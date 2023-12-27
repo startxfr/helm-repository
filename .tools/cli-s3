@@ -172,11 +172,15 @@ function awsS3GenerateHelmRepoIndex {
 function awsS3CopyLocalLegacyPkgToBucket {
     local subrepo=${1:-"stable"}
     local pkgPattern=${2:-"example-*.tgz"}
-    local sourcepath="${PROJECT_PATH}/${REPO_PACKAGE_DIR}"
     local localRepoBase=${3:-$SXH_AWS_LOCALSYNC}
+    local sourcedir=${4:-""}
+    local sourcepath="${PROJECT_PATH}/${REPO_PACKAGE_DIR}"
+    if [[ "archive" == "$sourcedir" ]]; then
+        sourcepath="${PROJECT_PATH}/${REPO_PACKAGEARCH_DIR}"
+    fi
     local localRepoPath="${localRepoBase}/${subrepo}"
     echo -e "\e[35mCopy\e[0m Start copy ${sourcepath}/${pkgPattern} into ${localRepoPath}"
-    cp ${sourcepath}/${pkgPattern} "${localRepoPath}"
+    cp -a "${sourcepath}"/${pkgPattern} "${localRepoPath}"
     echo -e "\e[35mCopy\e[0m End copy ${sourcepath}/${pkgPattern}"
 }
 
