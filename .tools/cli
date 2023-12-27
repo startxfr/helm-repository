@@ -196,10 +196,12 @@ function doHelmrepositoryGenerate {
 # router for archive command
 function doHelmrepositoryRefresh {
     doHelmrepositoryGenerate "${1}" "${2:-packages}" "${3}" "${4}" "${5}"
+    exit;
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m Generate ${1:-default} index for ${3:-$HELM_REPOURL}"
     helm repo index --url ${3:-$HELM_REPOURL}/${2:-packages}/ $PROJECT_PATH/docs/${2:-packages}/
     git add $PROJECT_PATH/docs/${2:-packages} &>/dev/null
-    git commit -m "[docs] update repository ${1:-default} index" $PROJECT_PATH/docs/${2:-packages} &>/dev/null
+    git add $PROJECT_PATH/docs/repos &>/dev/null
+    git commit -m "[docs] update repository ${1:-default} index" $PROJECT_PATH/docs &>/dev/null
     echo -e "\e[${5:-36}m${4:-Refresh}\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
     git checkout $MASTER_BRANCH &>/dev/null
     git merge --commit --no-edit $WORK_BRANCH
