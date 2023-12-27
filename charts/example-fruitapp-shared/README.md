@@ -206,3 +206,4 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
 | 14.6.59 | 2023-12-22 | move back dependencies to version 14.6.35
 | 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
+| 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket

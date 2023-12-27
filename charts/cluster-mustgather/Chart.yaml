@@ -6,7 +6,7 @@ description: Helm chart used to configure MustGather at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.63
+version: 14.6.65
 # Version name of the mustgather operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.1.2
 # Icon of this helm-chart
@@ -26,7 +26,9 @@ keywords:
   - cluster
   - infrastructure
   - mustgather
-  - billing
+  - support
+  - log collection
+  - helpdesk
   - reporting
 # STARTX helm chart repository homepage
 home: https://helm-repository.readthedocs.io/en/latest
@@ -55,5 +57,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all startx helm-chart to version 14.6.63"
+      description: "Improve NOTES.txt to support report display"
+    - kind: changed
+      description: "Improve Chart.yaml with new tags"
   artifacthub.io/containsSecurityUpdates: "false"

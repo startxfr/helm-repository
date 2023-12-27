@@ -1,0 +1,191 @@
+#!/bin/bash
+
+# shellcheck disable=SC2034
+SXH_AWS_CONF_PATH=~/.aws
+SXH_AWS_CMD=aws
+SXH_AWS_BUCKET="sx-helm-repository-prod"
+SXH_AWS_DC="eu-west-3"
+SXH_AWS_PUBLIC="http://${SXH_AWS_BUCKET}.s3-website.${SXH_AWS_DC}.amazonaws.com"
+SXH_AWS_LOCALSYNC="${PROJECT_PATH}/.reposync"
+SXH_LOCALIDX_DIR="${PROJECT_PATH}/docs/repos"
+
+
+#####################
+## GENERICS S3 FUNCTIONS
+
+# list all buckets
+function awsS3LsBuckets {
+    ${SXH_AWS_CMD} s3 ls
+}
+
+# list content of a bucket
+function awsS3LsBucket {
+    local bucket=${1:-$SXH_AWS_BUCKET}
+    ${SXH_AWS_CMD} s3 ls s3://${bucket} --recursive
+}
+
+# Upload the content of a file into the target path
+function awsS3UploadFile {
+    local file=${1:-"/tmp/default.txt"}
+    local path=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    local filename="$(basename -- $file)"
+    ${SXH_AWS_CMD} s3 cp ${file} s3://${bucket}/${path}/${filename}
+}
+
+# Upload the content of a directory into the S3 target path
+function awsS3UploadDir {
+    local localpath=${1:-".reposync"}
+    local remotepath=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    local options=${4:-""}
+    ${SXH_AWS_CMD} s3 sync ${localpath} s3://${bucket}/${remotepath} ${options}
+}
+
+# Download the content of a file into from target path
+function awsS3DownloadFile {
+    local file=${1:-"/tmp/default.txt"}
+    local path=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    local filename="$(basename -- $file)"
+    ${SXH_AWS_CMD} s3 cp s3://${bucket}/${path}/${filename} ${file}
+}
+
+# Download the content of a  S3 source path into the directory
+function awsS3DownloadDir {
+    local localpath=${1:-".reposync"}
+    local remotepath=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    ${SXH_AWS_CMD} s3 sync s3://${bucket}/${remotepath} ${localpath}
+}
+
+# Test if aws config is defined
+function awsTestAPIAccess {
+    ${SXH_AWS_CMD} s3 ls &>/dev/null
+    echo $?
+}
+
+#####################
+## DISPLAY S3 FUNCTIONS
+
+# Block if aws API access is not provided
+function awsAccessMandatory {
+    if [[ $(awsTestAPIAccess) != "0" ]]; then
+        echo -e "\e[31mError\e[0m aws cli must be configured using 'aws configure' command"
+        exit;
+    fi
+}
+
+# Display all buckets
+function awsS3BucketsList {
+    awsAccessMandatory
+    echo -e "\e[36mList\e[0m bucket for default AWS config"
+    awsS3LsBuckets
+}
+
+# Display content of a bucket
+# shellcheck disable=SC2120
+function awsS3BucketList {
+    awsAccessMandatory
+    local bucket=${1:-$SXH_AWS_BUCKET}
+    echo -e "\e[36mList\e[0m content of the $bucket bucket"
+    awsS3LsBucket "$bucket"
+}
+
+# Upload one file to the S3 bucket
+function awsS3FileUpload {
+    awsAccessMandatory
+    local file=${1:-"default.txt"}
+    local path=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    echo -e "\e[34mUpload\e[0m Upload $file file in the $bucket bucket, path $path"
+    awsS3UploadFile "$file" "$path" "$bucket"
+}
+
+# Upload one local directory into the s3 storage
+function awsS3SyncUpload {
+    awsAccessMandatory
+    local localpath=${1:-".reposync"}
+    local remotepath=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    echo -e "\e[34mUpload\e[0m Upload local path $localpath into S3 $remotepath path in $bucket bucket"
+    awsS3UploadDir "$localpath" "$remotepath" "$bucket"
+}
+
+# Upload one local directory into the s3 storage with remote delete
+function awsS3SyncUploadDelete {
+    awsAccessMandatory
+    local localpath=${1:-".reposync"}
+    local remotepath=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    echo -e "\e[34mUpload\e[0m Start uploading local path $localpath into S3 $remotepath path in $bucket bucket"
+    awsS3UploadDir "$localpath" "$remotepath" "$bucket" "--delete"
+    echo -e "\e[34mUpload\e[0m End uploading local path $localpath"
+}
+
+# Download one file from the S3 bucket
+function awsS3FileDownload {
+    awsAccessMandatory
+    local file=${1:-"default.txt"}
+    local path=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    echo -e "\e[35mDownload\e[0m Download $file file in the $bucket bucket to path $path"
+    awsS3DownloadFile "$file" "$path" "$bucket"
+}
+
+# Download one s3 directory into the local storage
+function awsS3SyncDownload {
+    awsAccessMandatory
+    local localpath=${1:-".reposync"}
+    local remotepath=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    echo -e "\e[35mDownload\e[0m Download S3 $remotepath path in $bucket bucket into the local path $localpath"
+    awsS3DownloadDir "$localpath" "$remotepath" "$bucket"
+}
+
+# Download one S3 directory into the local storage with local delete
+function awsS3SynDownloadDelete {
+    awsAccessMandatory
+    local localpath=${1:-".reposync"}
+    local remotepath=${2:-""}
+    local bucket=${3:-$SXH_AWS_BUCKET}
+    echo -e "\e[35mUpload\e[0m Start uploading local path $localpath into S3 $remotepath path in $bucket bucket"
+    awsS3UploadDir "$localpath" "$remotepath" "$bucket" "--delete"
+    echo -e "\e[35mUpload\e[0m End uploading local path $localpath"
+}
+
+# Generate the helm repository index
+# shellcheck disable=SC2120
+function awsS3GenerateHelmRepoIndex {
+    local subrepo=${1:-"stable"}
+    local localRepoPath=${2:-$SXH_AWS_LOCALSYNC}
+    local localIndexPath=${3:-$SXH_LOCALIDX_DIR}
+    local remoteRepoUrl=${4:-$SXH_AWS_PUBLIC}
+    echo -e "\e[35mGenerate\e[0m Start generating subrepo $subrepo index.yaml from ${localRepoPath}/${subrepo} into S3 ${localIndexPath}/${subrepo}"
+    helm repo index --url "${remoteRepoUrl}/${subrepo}" "${localRepoPath}/${subrepo}"
+    cp "${localRepoPath}/${subrepo}/index.yaml" "${localIndexPath}/${subrepo}/index.yaml"
+    echo -e "\e[35mGenerate\e[0m End generating subrepo ${subrepo} index.yaml"
+}
+
+# Copy all or part of the packages stored into the legacy repository (git stored)
+# shellcheck disable=SC2120
+function awsS3CopyLocalLegacyPkgToBucket {
+    local subrepo=${1:-"stable"}
+    local pkgPattern=${2:-"example-*.tgz"}
+    local sourcepath="${PROJECT_PATH}/${REPO_PACKAGE_DIR}"
+    local localRepoBase=${3:-$SXH_AWS_LOCALSYNC}
+    local localRepoPath="${localRepoBase}/${subrepo}"
+    echo -e "\e[35mCopy\e[0m Start copy ${sourcepath}/${pkgPattern} into ${localRepoPath}"
+    cp ${sourcepath}/${pkgPattern} "${localRepoPath}"
+    echo -e "\e[35mCopy\e[0m End copy ${sourcepath}/${pkgPattern}"
+}
+
+# awsS3BucketsList
+# awsS3BucketList $SXH_AWS_BUCKET
+# awsS3FileUpload "${PROJECT_PATH}/docs/packages/chaos-11.47.0.tgz" "test"
+# awsS3SyncDownload "${SXH_AWS_LOCALSYNC}" ""
+
+# awsS3GenerateHelmRepoIndex "stable"
+# awsS3SyncUploadDelete "${SXH_AWS_LOCALSYNC}" ""
+
+# exit
