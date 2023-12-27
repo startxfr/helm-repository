@@ -176,7 +176,7 @@ function awsS3CopyLocalLegacyPkgToBucket {
     local localRepoBase=${3:-$SXH_AWS_LOCALSYNC}
     local localRepoPath="${localRepoBase}/${subrepo}"
     echo -e "\e[35mCopy\e[0m Start copy ${sourcepath}/${pkgPattern} into ${localRepoPath}"
-    cp ${sourcepath}/${pkgPattern} "${localRepoPath}"
+    cp -a "${sourcepath}"/"${pkgPattern}" "${localRepoPath}"
     echo -e "\e[35mCopy\e[0m End copy ${sourcepath}/${pkgPattern}"
 }
 
