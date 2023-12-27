@@ -60,3 +60,4 @@ helm install cluster-mustgather startx/cluster-mustgather -f https://raw.githubu
 | 14.6.61 | 2023-12-22 | create
 | 14.6.61 | 2023-12-22 | Create cluster-mustgather chart
 | 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
+| 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket
