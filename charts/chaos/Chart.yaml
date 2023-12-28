@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.65
+version: 14.6.71
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.14.6"
 # Icon of this helm-chart
@@ -47,27 +47,27 @@ maintainers:
 
 dependencies:
   - name: "chaos-cerberus"
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://startxfr.github.io/helm-repository/repos/stable/
     version: "14.6.35"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://startxfr.github.io/helm-repository/repos/stable/
     version: "14.6.35"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://startxfr.github.io/helm-repository/repos/stable/
     version: "14.6.35"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://startxfr.github.io/helm-repository/repos/stable/
     version: "14.6.35"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://startxfr.github.io/helm-repository/repos/stable/
     version: "14.6.35"
     alias: monkey
     condition: monkey.enabled
@@ -75,5 +75,5 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all startx helm-chart to version 14.6.65"
+      description: "Align all startx helm-chart to version 14.6.71"
   artifacthub.io/containsSecurityUpdates: "false"
