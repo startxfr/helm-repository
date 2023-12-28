@@ -362,3 +362,4 @@ chaos-monkey startx/chaos-monkey
 | 14.6.27-noschema | 2023-12-19 | publish stable update for the full repository
 | 14.6.35-noschema | 2023-12-20 | publish stable update for the full repository
 | 14.6.71-noschema | 2023-12-28 | full build from s3 helm repo
+| 14.6.71-noschema | 2023-12-28 | full build from s3 helm repo
