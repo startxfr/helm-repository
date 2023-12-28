@@ -1,12 +1,11 @@
 {{- if .Values.demo }}{{- if .Values.demo.kubevirt }}{{- if .Values.demo.kubevirt.enabled -}}
-{{- $root := . -}}
 {{- with .Values.demo.kubevirt -}}
 {{- $namespace := .namespace | default "demo-kubevirt" -}}
-{{- $scope := .scope | default $root.Values.context.scope -}}
-{{- $cluster := .cluster | default $root.Values.context.cluster -}}
-{{- $env := .environment | default $root.Values.context.environment -}}
-{{- $component := .component | default $root.Values.context.component -}}
-{{- $version := .version | default $root.Values.context.version -}}
+{{- $scope := .scope | default $.Values.context.scope -}}
+{{- $cluster := .cluster | default $.Values.context.cluster -}}
+{{- $env := .environment | default $.Values.context.environment -}}
+{{- $component := .component | default $.Values.context.component -}}
+{{- $version := .version | default $.Values.context.version -}}
 {{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
 
 ---
@@ -16,7 +15,7 @@ metadata:
   name: medium-centos7-server
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     openshift.io/description: "KubeVirt Demo"
     openshift.io/display-name: "STARTX Demo KUBEVIRT (CentOS 7)"
     openshift.io/documentation-url: 'https://helm-repository.readthedocs.io/en/latest/charts/cluster-kubevirt'
@@ -48,7 +47,7 @@ metadata:
     openshift.io/support-url: 'https://helm-repository.readthedocs.io/en/latest/charts/cluster-kubevirt'
     iconClass: icon-rhel
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: "{{- $namespace -}}"
     version: "{{- $version -}}"
     app.startx.fr/scope: "{{- $scope -}}"
@@ -81,7 +80,7 @@ objects:
     metadata:
       name: '${NAME}'
       labels:
-        {{- include "example-catalog.labels" $root | nindent 8 }}
+        {{- include "example-catalog.labels" $ | nindent 8 }}
         app: '${NAME}'
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-${NAME}-virtualmachine"
         app.kubernetes.io/part-of: vm-${NAME}
@@ -93,7 +92,7 @@ objects:
       template:
         metadata:
           labels:
-            {{- include "example-catalog.labels" $root | nindent 12 }}
+            {{- include "example-catalog.labels" $ | nindent 12 }}
             app: '${NAME}'
             app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-${NAME}-virtualmachineexec"
             app.kubernetes.io/part-of: vm-${NAME}
@@ -203,12 +202,12 @@ metadata:
   name: centos7-fromtemplate-vm
   namespace: {{ $namespace | quote }} 
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     kubevirt.io/latest-observed-api-version: "v1"
     kubevirt.io/storage-observed-api-version: "v1alpha3"
     name.os.template.kubevirt.io/centos7.0: CentOS 7
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: centos7-fromtemplate-vm
     app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-centos7-fromtemplate-vm-virtualmachine"
     app.kubernetes.io/part-of: centos7-fromtemplate-vm
@@ -259,9 +258,9 @@ spec:
   template:
     metadata:
       annotations:
-        {{- include "example-catalog.annotations" $root | nindent 8 }}
+        {{- include "example-catalog.annotations" $ | nindent 8 }}
       labels:
-        {{- include "example-catalog.labels" $root | nindent 8 }}
+        {{- include "example-catalog.labels" $ | nindent 8 }}
         app: centos7-fromtemplate-vm
         app.kubernetes.io/name: "{{- $scope -}}-{{- $env -}}-kubevirt-centos7-fromtemplate-vm-virtualmachineexec"
         app.kubernetes.io/part-of: centos7-fromtemplate-vm

@@ -1,5 +1,4 @@
 {{- if .Values.istio.members -}}{{- if .Values.istio.members.enabled -}}
-{{- $root := . -}}
 {{- range .Values.istio.members.list }}
 {{- $namespace := .namespace | default "default" }}
 ---
@@ -9,11 +8,11 @@ metadata:
   name: default
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-istio.labels" $root | nindent 4 }}
+    {{- include "cluster-istio.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "default-{{ $namespace }}-servicemeshmember"
   annotations:
-    {{- include "cluster-istio.annotations" $root | nindent 4 }}
-    {{- if $root.Values.istio.hooked }}
+    {{- include "cluster-istio.annotations" $ | nindent 4 }}
+    {{- if $.Values.istio.hooked }}
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed

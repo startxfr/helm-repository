@@ -16,7 +16,6 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- define "cluster-acs.notes" -}}
 -- Advanced Security Management -----
 {{- if .acs.enabled }}{{- if .acs.central }}{{- if .acs.central.enabled }}
-{{- $root := . -}}
 {{- $namespace := .project.project.name | default "open-security-management" -}}
      logging : enabled in {{ $namespace }}
          name : {{ .acs.central.name | default "default" }}

@@ -34,3 +34,27 @@ groups:
     role: self-provisionner
     users: 
     - ops
+
+roles:
+  enabled: false
+  list: 
+  - id: customrole
+    name: customrole
+    namespace: default
+    rules: |-
+      - apiGroups:
+        - ""
+        resources:
+        - pod
+        verbs:
+        - list
+  - id: customclusterrole
+    name: customclusterrole
+    scope: global
+    rules: |-
+      - apiGroups:
+        - ""
+        resources:
+        - pod
+        verbs:
+        - list

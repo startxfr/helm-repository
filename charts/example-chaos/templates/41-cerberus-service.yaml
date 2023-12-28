@@ -1,5 +1,4 @@
 {{- if .Values.cerberus.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.cerberus_project.project.name -}}
 ---
@@ -10,9 +9,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "cerberus-service"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "example-chaos.labels" $ | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "example-chaos.annotations" $ | nindent 4 }}
 spec:
   ports:
   - port: 8080

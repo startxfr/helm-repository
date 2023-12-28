@@ -1,5 +1,4 @@
 {{- if .Values.localstoragediscovery.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-local-storage" -}}
 {{- range .Values.localstoragediscovery.list }}
 ---
@@ -9,10 +8,10 @@ metadata:
   name: {{ .name | default "default" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-localstorage.labels" $root | nindent 4 }}
+    {{- include "cluster-localstorage.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .name | default "default" }}-localvolumediscovery"
   annotations:
-    {{- include "cluster-localstorage.annotations" $root | nindent 4 }}
+    {{- include "cluster-localstorage.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "10"
 spec:
   nodeSelector:

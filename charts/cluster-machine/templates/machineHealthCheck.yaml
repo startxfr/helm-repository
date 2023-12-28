@@ -1,5 +1,4 @@
 {{- if .Values.machineHealthCheck.enabled }}
-{{- $root := . -}}
 {{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
 {{ range .Values.machineHealthCheck.list }}
 ---
@@ -9,14 +8,14 @@ metadata:
   name: "{{ .name | default "app" }}"
   namespace: openshift-machine-api
   labels:
-    {{- include "cluster-machine.labels" $root | nindent 4 }}
+    {{- include "cluster-machine.labels" $ | nindent 4 }}
     {{- if eq .type "master" }}
     app.kubernetes.io/name: "{{ .name | default "master" }}-machinehealthcheck"
     {{- else }}
     app.kubernetes.io/name: "{{ .name | default "a" }}-machinehealthcheck"
     {{- end }}
   annotations:
-    {{- include "cluster-machine.annotations" $root | nindent 4 }}
+    {{- include "cluster-machine.annotations" $ | nindent 4 }}
 spec:
   selector:
     matchLabels:
