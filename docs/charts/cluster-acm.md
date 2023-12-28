@@ -275,6 +275,11 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 
 | Release  | Date       | Description                                                    |
 | -------- | ---------- | -------------------------------------------------------------- |
+| 12.36.49-noschema | 2023-11-13 | Publish stable update for the full repository with the no-schema packages
+| 12.36.51-noschema | 2023-11-13 | publish stable update for the full repository
+| 12.36.59-noschema | 2023-11-13 | publish stable update for the full no-schema version
+| 12.36.67-noschema | 2023-11-14 | publish stable update for the full repository
+| 12.36.69-noschema | 2023-11-14 | publish stable update for the full repository
 | 14.6.5-noschema | 2023-12-10 | Prepare upgrading to 14.6.5-noschema dependencies
 | 14.6.7-noschema | 2023-12-10 | intermediate noschema release stable but same as 14.6.5-noschema release
 | 14.6.9-noschema | 2023-12-10 | upgrade all dependencies charts to version 14.6.5-noschema
@@ -285,3 +290,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 14.6.25-noschema | 2023-12-18 | stabel version 14.6.25 for the noschema release
 | 14.6.27-noschema | 2023-12-19 | publish stable update for the full repository
 | 14.6.35-noschema | 2023-12-20 | publish stable update for the full repository
+| 14.6.71-noschema | 2023-12-28 | full build from s3 helm repo
