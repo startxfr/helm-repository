@@ -1,5 +1,4 @@
 {{- if .Values.litmus.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 ---
@@ -10,9 +9,9 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "startx-workflow"
-    {{- include "chaos-litmus.labels" $root | nindent 4 }}
+    {{- include "chaos-litmus.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-litmus.annotations" $root | nindent 4 }}
+    {{- include "chaos-litmus.annotations" $ | nindent 4 }}
 spec:
   templates:
     - name: argowf-chaos

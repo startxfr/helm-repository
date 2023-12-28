@@ -1,5 +1,4 @@
 {{- if .Values.kraken.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 ---
@@ -10,9 +9,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-service"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 spec:
   ports:
   - name: http

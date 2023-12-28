@@ -1,5 +1,4 @@
 {{- if .Values.argocd_project }}{{- if .Values.argocd_project.enabled }}
-{{- $root := . -}}
 {{- $defaultns := .Values.project.project.name -}}
 {{ range .Values.argocd_project.list }}
 {{- $name := .name | default "default" -}}
@@ -12,10 +11,10 @@ metadata:
   name: {{ $name | quote }}
   namespace: {{ $namespace | quote }}
   labels:
-    {{- include "cluster-argocd.labels" $root | nindent 4 }}
+    {{- include "cluster-argocd.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-argocd_project"
   annotations:
-    {{- include "cluster-argocd.annotations" $root | nindent 4 }}
+    {{- include "cluster-argocd.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "30"
   finalizers:
     - resources-finalizer.argocd.argoproj.io

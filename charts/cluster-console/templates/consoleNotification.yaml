@@ -1,5 +1,4 @@
 {{- if .Values.console.enabled -}}{{- if .Values.console.notifications -}}
-{{- $root := . -}}
 {{- $files := .Files }}
 {{- $namespace := .Values.console.namespace | default "openshift-config" -}}
 {{- range .Values.console.notifications }}
@@ -9,10 +8,10 @@ apiVersion: console.openshift.io/v1
 metadata:
   name: "{{- .name | default "default-console-notification" -}}"
   labels:
-    {{- include "cluster-console.labels" $root | nindent 4 }}
+    {{- include "cluster-console.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- .name | default "default-console-notification" -}}-consolenotification"
   annotations:
-    {{- include "cluster-console.annotations" $root | nindent 4 }}
+    {{- include "cluster-console.annotations" $ | nindent 4 }}
 spec:
   {{- .spec | nindent  2 }}
 {{- end }}

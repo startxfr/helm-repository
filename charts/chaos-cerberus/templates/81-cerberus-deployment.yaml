@@ -1,5 +1,4 @@
 {{- if .Values.cerberus.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 ---
@@ -10,10 +9,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "cerberus-deployment"
-    {{- include "chaos-cerberus.labels" $root | nindent 4 }}
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
     tool: cerberus
   annotations:
-    {{- include "chaos-cerberus.annotations" $root | nindent 4 }}
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
 spec:
   progressDeadlineSeconds: 600
   replicas: 1

@@ -1,5 +1,4 @@
 {{- if .Values.sharedVolumes -}}{{- if .Values.sharedVolumes.enabled -}}
-{{- $root := . -}}
 {{ range .Values.sharedVolumes.list }} 
 ---
 apiVersion: aws-efs.managed.openshift.io/v1alpha1
@@ -8,11 +7,11 @@ metadata:
   name: {{ .name | default "default-efs" | quote }}
   namespace: "{{- .namespace | default "default" -}}"
   labels:
-    {{- include "cluster-storage-efs.labels" $root | nindent 4 }}
+    {{- include "cluster-storage-efs.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .name | default "default-efs" }}-sharedvolume"
   annotations:
-    {{- include "cluster-storage-efs.annotations" $root | nindent 4 }}
-    {{- if $root.Values.sharedVolumes.hooked }}
+    {{- include "cluster-storage-efs.annotations" $ | nindent 4 }}
+    {{- if $.Values.sharedVolumes.hooked }}
     helm.sh/hook: pre-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed

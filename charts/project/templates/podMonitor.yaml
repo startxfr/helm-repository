@@ -1,5 +1,4 @@
 {{- if .Values.enabled }}{{- if .Values.podMonitor }}{{- if .Values.podMonitor.enabled -}}
-{{- $root := . -}}
 {{- $defaultns := .Values.project.name | default .Chart.Name -}}
 
 {{ range .Values.podMonitor.list }}
@@ -12,13 +11,13 @@ metadata:
   name: "{{- $name -}}"
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-podMonitor-{{- include "startx.appVersion" $root -}}"
+    {{- include "project.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $ -}}-podMonitor-{{- include "startx.appVersion" $ -}}"
     {{- if $.Values.podMonitor.additionalLabels }}
     {{- $.Values.podMonitor.additionalLabels | trim | nindent 4 }}
     {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
     {{- if $.Values.podMonitor.additionalAnnotations }}
     {{- $.Values.podMonitor.additionalAnnotations | trim | nindent 4 }}
     {{- end}}

@@ -1,0 +1,132 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: redis
+  app: startx-redis
+
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: project
+    name: "openshift-startx-redis"
+    display_name: "Startx REDIS"
+    requester: startx
+    description: Redis configured by STARTX
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: redis-operator
+  rbac: 
+    enabled: true
+    sa:
+    - id: redis-operator
+      name: redis-operator
+      role: redis-opscr
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "redis-operator"
+    namespace: "openshift-startx-redis"
+    version: "v0.15.1"
+    operator: 
+      channel: "stable"
+      name: redis-operator
+      installPlanApproval: Automatic
+      # csv: redis-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "redis-operator"
+    namespace: "openshift-startx-redis"
+    providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"
+rbac:
+  enabled: false
+  context: 
+    <<: *context
+  roles:
+    enabled: true
+    list:
+    - id: redis-opscr
+      name: redis-opscr
+      namespace: openshift-startx-redis
+      rules: |-
+        - apiGroups:
+          - redis.redis.opstreelabs.in
+          resources:
+          - rediscluster
+          - redisrreplication
+          - redissentinel
+          - redis
+          verbs:
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - persistentvolumeclaims
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - pods/exec
+          verbs:
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - list
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - policy
+          resources:
+          - poddisruptionbudgets
+          verbs:
+          - get
+          - create
+          - delete
+          - list
+          - watch

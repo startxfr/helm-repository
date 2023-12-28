@@ -1,5 +1,4 @@
 {{- if .Values.helm_reposistory.enabled -}}
-{{- $root := . -}}
 {{ range .Values.helm_reposistory.list }}
 ---
 apiVersion: helm.openshift.io/v1beta1
@@ -7,11 +6,11 @@ kind: HelmChartRepository
 metadata:
   name: "{{ .name }}"
   labels:
-    {{- include "cluster-config.labels" $root | nindent 4 }}
+    {{- include "cluster-config.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .name }}-project"
     openshift.io/cluster-monitoring: "true"
   annotations:
-    {{- include "cluster-config.annotations" $root | nindent 4 }}
+    {{- include "cluster-config.annotations" $ | nindent 4 }}
     helm.sh/resource-policy: keep
     argocd.argoproj.io/sync-wave: "-10" 
 spec:

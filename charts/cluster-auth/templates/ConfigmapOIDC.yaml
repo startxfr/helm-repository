@@ -1,6 +1,5 @@
 {{- if .Values.auth.enabled -}}
 {{- if .Values.auth.authBackend -}}
-{{- $root := . -}}
 {{- $namespace := .Values.auth.namespace | default "openshift-config" -}}
 {{ range .Values.auth.authBackend }} 
 {{-  if eq .type "oidc" -}}
@@ -11,10 +10,10 @@ metadata:
   name: "{{- .name | default "default-oidc" -}}-oidc-ca"
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-auth.labels" $root | nindent 4 }}
+    {{- include "cluster-auth.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- .name | default "default-oidc" -}}-oidc-ca-cm"
   annotations:
-    {{- include "cluster-auth.annotations" $root | nindent 4 }}
+    {{- include "cluster-auth.annotations" $ | nindent 4 }}
 data:
   ca.crt:  |-
     {{- .oidcCA | nindent 4 }}
