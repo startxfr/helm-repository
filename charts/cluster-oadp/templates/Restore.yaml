@@ -1,5 +1,4 @@
 {{- if .Values.oadp.enabled -}}{{- if .Values.oadp.restore -}}{{- if .Values.oadp.restore.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-adp" -}}
 {{ range .Values.oadp.restore.list }}
 {{- $spec := .spec | default "{}" -}}
@@ -9,10 +8,10 @@ metadata:
   name: {{ .name | default "default-restore" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-oadp.labels" $root | nindent 4 }}
+    {{- include "cluster-oadp.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- .name | default "default-restore" -}}"
   annotations:
-    {{- include "cluster-oadp.annotations" $root | nindent 4 }}
+    {{- include "cluster-oadp.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "50"
 spec:
   {{- $spec | nindent 2 }}

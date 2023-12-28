@@ -1,5 +1,4 @@
 {{- if .Values.loader }}{{- if .Values.loader.enabled }}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.project.name | default .Chart.Name -}}
 {{- range .Values.loader.list }}
@@ -11,24 +10,24 @@ metadata:
   name: "{{- $name -}}-loader"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "cluster-couchbase.labels" $root | nindent 4 }}
+    {{- include "cluster-couchbase.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-loader-pod"
     cluster: "{{- $name -}}"
   annotations:
-    {{- include "cluster-couchbase.annotations" $root | nindent 4 }}
+    {{- include "cluster-couchbase.annotations" $ | nindent 4 }}
 spec:
   restartPolicy: Never
-{{- if $root.Values.couchbaseConfig }}
-{{- if $root.Values.couchbaseConfig.saPods }}
-{{- if $root.Values.couchbaseConfig.saPods.enabled }}
-{{- $sa := $root.Values.couchbaseConfig.saPods.name | default "couchbase-pods" }}
+{{- if $.Values.couchbaseConfig }}
+{{- if $.Values.couchbaseConfig.saPods }}
+{{- if $.Values.couchbaseConfig.saPods.enabled }}
+{{- $sa := $.Values.couchbaseConfig.saPods.name | default "couchbase-pods" }}
   serviceAccountName: "{{- $sa -}}"
   serviceAccount: "{{- $sa -}}"
 {{- end }}
 {{- end }}
-{{- if $root.Values.couchbaseConfig.imageCredentialsSecret }}
+{{- if $.Values.couchbaseConfig.imageCredentialsSecret }}
   imagePullSecrets:
-    - name: "{{- $root.Values.couchbaseConfig.imageCredentialsSecret -}}"
+    - name: "{{- $.Values.couchbaseConfig.imageCredentialsSecret -}}"
 {{- end }}
 {{- end }}
   securityContext:

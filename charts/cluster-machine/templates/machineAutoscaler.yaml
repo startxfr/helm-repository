@@ -1,5 +1,4 @@
 {{- if .Values.machineAutoscaler.enabled }}
-{{- $root := . -}}
 {{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
 {{ range .Values.machineAutoscaler.list }}
 ---
@@ -9,10 +8,10 @@ metadata:
   name: "{{ .name | default "app-a" }}"
   namespace: openshift-machine-api
   labels:
-    {{- include "cluster-machine.labels" $root | nindent 4 }}
+    {{- include "cluster-machine.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .name | default "app-a" }}-machineautoscaler"
   annotations:
-    {{- include "cluster-machine.annotations" $root | nindent 4 }}
+    {{- include "cluster-machine.annotations" $ | nindent 4 }}
 spec:
   minReplicas: {{ .minReplicas | default 1 }}
   maxReplicas: {{ .maxReplicas | default 12 }}

@@ -1,10 +1,9 @@
 {{- if .Values.argocd_export }}{{- if .Values.argocd_export.enabled }}
-{{- $root := . -}}
 {{- $defaultns := .Values.project.project.name -}}
 {{ range .Values.argocd_export.list }}
 {{- $name := .name | default "default-export" -}}
 {{- $namespace := .namespace | default $defaultns -}}
-{{- $argocd := .argocd | default $root.Values.argocd.name -}}
+{{- $argocd := .argocd | default $.Values.argocd.name -}}
 {{- $schedule := .schedule | default "0 * * * *" -}}
 {{- $storageclass := .storageclass | default "gp3-csi" -}}
 
@@ -15,10 +14,10 @@ metadata:
   name: {{ $name | quote }}
   namespace: {{ $namespace | quote }}
   labels:
-    {{- include "cluster-argocd.labels" $root | nindent 4 }}
+    {{- include "cluster-argocd.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-export"
   annotations:
-    {{- include "cluster-argocd.annotations" $root | nindent 4 }}
+    {{- include "cluster-argocd.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "50"
 spec:
   argocd: {{ $argocd | quote }}

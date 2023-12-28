@@ -1,5 +1,4 @@
 {{- if .Values.knativeServing }}{{- if .Values.knativeServing.enabled }}
-{{- $root := . -}}
 {{ range .Values.knativeServing.services }} 
 {{- $kservice := . -}}
 {{- if $kservice.enabled }}
@@ -10,19 +9,19 @@ metadata:
   name: {{ $kservice.name | default "default" | quote }}
   namespace: {{ $kservice.namespace | default "default" | quote }}
   annotations:
-    {{- include "example-knative.annotations" $root | nindent 4 }}
+    {{- include "example-knative.annotations" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ $kservice.name | default "default" }}-knative-service"
     openshift.io/display-name: {{ $kservice.displayName | default "default knative service" | quote }}
   labels:
-    {{- include "example-knative.labels" $root | nindent 4 }}
+    {{- include "example-knative.labels" $ | nindent 4 }}
 spec:
   template:
     metadata:
       labels:
-        {{- include "example-knative.labels" $root | nindent 8 }}
+        {{- include "example-knative.labels" $ | nindent 8 }}
         app.kubernetes.io/name: "{{ $kservice.name | default "default-service" }}-knative-pod"
       annotations:
-        {{- include "example-knative.annotations" $root | nindent 8 }}
+        {{- include "example-knative.annotations" $ | nindent 8 }}
     spec:
       {{- $kservice.spec | nindent 6 }}
   # traffic:

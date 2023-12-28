@@ -1,16 +1,15 @@
 {{- if .Values.frontend }}{{- if .Values.frontend.enabled }}
-{{- $root := . -}}
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   labels:
-    app.kubernetes.io/name: '{{- include "startx.appName" $root -}}-{{- include "startx.appVersion" $root -}}-deployment'
-    {{- include "example-fruitapp-app.labels" $root | nindent 4 }}
-    app: {{ include "startx.appName" $root }}
+    app.kubernetes.io/name: '{{- include "startx.appName" $ -}}-{{- include "startx.appVersion" $ -}}-deployment'
+    {{- include "example-fruitapp-app.labels" $ | nindent 4 }}
+    app: {{ include "startx.appName" $ }}
     app.kubernetes.io/part-of: '{{- .Values.frontend.name }}-{{- .Values.frontend.version | replace "." "-" }}'
   annotations:
-    {{- include "example-fruitapp-app.annotations" $root | nindent 4 }}
+    {{- include "example-fruitapp-app.annotations" $ | nindent 4 }}
     app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
     openshift.io/host.generated: "true"
     openshift.io/generated-by: startx
@@ -21,7 +20,7 @@ spec:
     targetPort: 8080-tcp
   to:
     kind: Service
-    name: '{{ include "startx.appName" $root }}-{{- .Values.frontend.version | replace "." "-"  }}'
+    name: '{{ include "startx.appName" $ }}-{{- .Values.frontend.version | replace "." "-"  }}'
     weight: 100
   wildcardPolicy: None
 {{- end }}{{- end }}

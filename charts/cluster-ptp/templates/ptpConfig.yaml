@@ -1,5 +1,4 @@
 {{- if .Values.ptp.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-ptp" -}}
 {{- $spec := .Values.ptp.spec | default "{}" -}}
 apiVersion: ptp.openshift.io/v1

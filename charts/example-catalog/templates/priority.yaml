@@ -1,12 +1,11 @@
 {{- if .Values.demo }}{{- if .Values.demo.priority }}{{- if .Values.demo.priority.enabled -}}
-{{- $root := . -}}
 {{- with .Values.demo.priority -}}
 {{- $namespace := .namespace | default "demo-priority" -}}
-{{- $scope := .scope | default $root.Values.context.scope -}}
-{{- $cluster := .cluster | default $root.Values.context.cluster -}}
-{{- $env := .environment | default $root.Values.context.environment -}}
-{{- $component := .component | default $root.Values.context.component -}}
-{{- $version := .version | default $root.Values.context.version -}}
+{{- $scope := .scope | default $.Values.context.scope -}}
+{{- $cluster := .cluster | default $.Values.context.cluster -}}
+{{- $env := .environment | default $.Values.context.environment -}}
+{{- $component := .component | default $.Values.context.component -}}
+{{- $version := .version | default $.Values.context.version -}}
 {{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
 
 ---
@@ -15,9 +14,9 @@ apiVersion: scheduling.k8s.io/v1
 metadata:
   name: veryhigh-priority
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "high-priority-priorityclass"
 value: 1000000000
 description: >-
@@ -31,9 +30,9 @@ apiVersion: scheduling.k8s.io/v1
 metadata:
   name: high-priority
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "high-priority-priorityclass"
 value: 500000000
 description: >-
@@ -45,9 +44,9 @@ apiVersion: scheduling.k8s.io/v1
 metadata:
   name: low-priority
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "low-priority-priorityclass"
 value: 10000
 description: >-
@@ -59,9 +58,9 @@ apiVersion: scheduling.k8s.io/v1
 metadata:
   name: verylow-priority
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "verylow-priority-priorityclass"
 value: -10000
 description: >-
@@ -79,9 +78,9 @@ metadata:
   name: "veryhigh-priority-config"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: "veryhigh-priority"
     app.kubernetes.io/name: "veryhigh-priority-configmap"
 data:
@@ -100,9 +99,9 @@ metadata:
   name: "high-priority-config"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: "high-priority"
     app.kubernetes.io/name: "high-priority-configmap"
 data:
@@ -121,9 +120,9 @@ metadata:
   name: "low-priority-config"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: "low-priority"
     app.kubernetes.io/name: "low-priority-configmap"
 data:
@@ -142,9 +141,9 @@ metadata:
   name: "verylow-priority-config"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: "verylow-priority"
     app.kubernetes.io/name: "verylow-priority-configmap"
 data:
@@ -163,9 +162,9 @@ metadata:
   name: "apps-config"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: "high-priority"
     app.kubernetes.io/name: "apps-config-configmap"
 data:
@@ -316,13 +315,13 @@ metadata:
   name: "high-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: high-priority
     app.kubernetes.io/name: "high-priority-deploymentconfig"
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
     app.openshift.io/runtime: nodejs
 spec:
   replicas: 2
@@ -340,14 +339,14 @@ spec:
   template:
     metadata:
       annotations:
-        {{- include "example-catalog.annotations" $root | nindent 8 }}
+        {{- include "example-catalog.annotations" $ | nindent 8 }}
         sidecar.istio.io/inject: "false"
       labels:
-        {{- include "example-catalog.labels" $root | nindent 8 }}
+        {{- include "example-catalog.labels" $ | nindent 8 }}
         app: "high-priority"
         app.kubernetes.io/name: "high-priority-deploymentconfig"
         kube-monkey/enabled: enabled
-        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+        kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
         deploymentconfig: "high-priority"
     spec:
       priorityClassName: high-priority
@@ -423,12 +422,12 @@ metadata:
   name: "high-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     template.openshift.io/expose-service_ip: "{.spec.clusterIP}"
     template.openshift.io/expose-service_port: "{.spec.ports[0].port}"
     template.openshift.io/expose-service_ip_port: "{.spec.clusterIP}:{.spec.ports[0].port}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: high-priority
     app.kubernetes.io/name: "high-priority-service"
 spec:
@@ -448,12 +447,12 @@ metadata:
   name: "high-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
     haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: high-priority
     app.kubernetes.io/name: "high-priority-route"
 spec:
@@ -472,12 +471,12 @@ metadata:
   name: "veryhigh-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: veryhigh-priority
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
     app.kubernetes.io/name: "veryhigh-priority-deploymentconfig"
     app.openshift.io/runtime: nodejs
 spec:
@@ -496,10 +495,10 @@ spec:
   template:
     metadata:
       annotations:
-        {{- include "example-catalog.annotations" $root | nindent 8 }}
+        {{- include "example-catalog.annotations" $ | nindent 8 }}
         sidecar.istio.io/inject: "false"
       labels:
-        {{- include "example-catalog.labels" $root | nindent 8 }}
+        {{- include "example-catalog.labels" $ | nindent 8 }}
         app: "veryhigh-priority"
         app.kubernetes.io/name: "veryhigh-priority-deploymentconfig"
         deploymentconfig: "veryhigh-priority"
@@ -577,12 +576,12 @@ metadata:
   name: "veryhigh-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     template.openshift.io/expose-service_ip: "{.spec.clusterIP}"
     template.openshift.io/expose-service_port: "{.spec.ports[0].port}"
     template.openshift.io/expose-service_ip_port: "{.spec.clusterIP}:{.spec.ports[0].port}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: veryhigh-priority
     app.kubernetes.io/name: "veryhigh-priority-service"
 spec:
@@ -602,12 +601,12 @@ metadata:
   name: "veryhigh-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
     haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: veryhigh-priority
     app.kubernetes.io/name: "veryhigh-priority-route"
 spec:
@@ -626,12 +625,12 @@ metadata:
   name: "verylow-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: verylow-priority
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
     app.kubernetes.io/name: "verylow-priority-deploymentconfig"
     app.openshift.io/runtime: nodejs
 spec:
@@ -650,10 +649,10 @@ spec:
   template:
     metadata:
       annotations:
-        {{- include "example-catalog.annotations" $root | nindent 8 }}
+        {{- include "example-catalog.annotations" $ | nindent 8 }}
         sidecar.istio.io/inject: "false"
       labels:
-        {{- include "example-catalog.labels" $root | nindent 8 }}
+        {{- include "example-catalog.labels" $ | nindent 8 }}
         app: "verylow-priority"
         app.kubernetes.io/name: "verylow-priority-deploymentconfig"
         deploymentconfig: "verylow-priority"
@@ -731,12 +730,12 @@ metadata:
   name: "verylow-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     template.openshift.io/expose-service_ip: "{.spec.clusterIP}"
     template.openshift.io/expose-service_port: "{.spec.ports[0].port}"
     template.openshift.io/expose-service_ip_port: "{.spec.clusterIP}:{.spec.ports[0].port}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: verylow-priority
     app.kubernetes.io/name: "verylow-priority-service"
 spec:
@@ -756,12 +755,12 @@ metadata:
   name: "verylow-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
     haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: verylow-priority
     app.kubernetes.io/name: "verylow-priority-route"
 spec:
@@ -780,12 +779,12 @@ metadata:
   name: "low-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: low-priority
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
     app.kubernetes.io/name: "low-priority-deploymentconfig"
     app.openshift.io/runtime: nodejs
 spec:
@@ -804,10 +803,10 @@ spec:
   template:
     metadata:
       annotations:
-        {{- include "example-catalog.annotations" $root | nindent 8 }}
+        {{- include "example-catalog.annotations" $ | nindent 8 }}
         sidecar.istio.io/inject: "false"
       labels:
-        {{- include "example-catalog.labels" $root | nindent 8 }}
+        {{- include "example-catalog.labels" $ | nindent 8 }}
         app: "low-priority"
         app.kubernetes.io/name: "low-priority-deploymentconfig"
         deploymentconfig: "low-priority"
@@ -885,12 +884,12 @@ metadata:
   name: "low-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     template.openshift.io/expose-service_ip: "{.spec.clusterIP}"
     template.openshift.io/expose-service_port: "{.spec.ports[0].port}"
     template.openshift.io/expose-service_ip_port: "{.spec.clusterIP}:{.spec.ports[0].port}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: low-priority
     app.kubernetes.io/name: "low-priority-service"
 spec:
@@ -910,12 +909,12 @@ metadata:
   name: "low-priority"
   namespace: {{ $namespace | quote }}
   annotations:
-    {{- include "example-catalog.annotations" $root | nindent 4 }}
+    {{- include "example-catalog.annotations" $ | nindent 4 }}
     haproxy.router.openshift.io/balance: roundrobin
     haproxy.router.openshift.io/disable_cookies: "true"
     template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
   labels:
-    {{- include "example-catalog.labels" $root | nindent 4 }}
+    {{- include "example-catalog.labels" $ | nindent 4 }}
     app: low-priority
     app.kubernetes.io/name: "low-priority-route"
 spec:

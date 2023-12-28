@@ -1,5 +1,4 @@
 {{- if .Values.nexus.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-nexus" -}}
 {{- $spec := .Values.nexus.spec | default "{}" -}}
 apiVersion: nexus.openshift.io/v1

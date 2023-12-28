@@ -1,5 +1,4 @@
 {{- if .Values.kraken.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 {{- if .Values.kraken.aws -}}{{- if .Values.kraken.aws.enabled -}}
@@ -13,9 +12,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-aws-creds"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 stringData:
   AWS_ACCESS_KEY_ID: {{ .credentials.key_id | default "AWS_ACCESS_KEY_ID" | quote }}
   AWS_DEFAULT_REGION: {{ .credentials.region | default "AWS_DEFAULT_REGION" | quote }}
@@ -29,9 +28,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-vcloud-creds"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 stringData:
   TENANT_URL: ''
   VAPP_NAME: ''
@@ -47,9 +46,9 @@ metadata:
   labels:
     test: essai
     app.kubernetes.io/name: "kraken-scenarios-config"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   app_outage.yaml: |
     application_outage:                                  # Scenario to create an outage of an application by blocking traffic
@@ -965,9 +964,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-kubeconfig"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
 {{- if eq .Values.kraken.kubeconfig.mode "file" }}
   config: |
@@ -1003,9 +1002,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-logging"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1024,7 +1023,7 @@ data:
           - scenarios/startx_openshift_logging.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1050,9 +1049,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-acm"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1071,7 +1070,7 @@ data:
           - scenarios/startx_openshift_acm.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1097,9 +1096,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-acm"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1118,7 +1117,7 @@ data:
           - scenarios/startx_openshift_acs.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1144,9 +1143,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-monitoring"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1165,7 +1164,7 @@ data:
           - scenarios/startx_openshift_monitoring.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1191,9 +1190,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-machines"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1212,7 +1211,7 @@ data:
           - scenarios/startx_openshift_machines.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1238,9 +1237,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-apiserver"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1259,7 +1258,7 @@ data:
           - scenarios/startx_openshift-apiserver.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1285,9 +1284,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-etcd"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1309,7 +1308,7 @@ data:
           - - scenarios/startx_openshift_etcd_container.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1335,9 +1334,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-releasemonkey"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1356,7 +1355,7 @@ data:
           - scenarios/startx_openshift_podmonkey.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1382,9 +1381,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-time"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1404,7 +1403,7 @@ data:
           - scenarios/startx_time_node.yml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1430,9 +1429,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-nodes"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1453,7 +1452,7 @@ data:
           - scenarios/startx_node_worker.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1479,9 +1478,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-network"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1502,7 +1501,7 @@ data:
           # - scenarios/startx_node_master_network_chaos.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1528,9 +1527,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-zone"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1549,7 +1548,7 @@ data:
           - scenarios/startx_zone_outage.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1575,9 +1574,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-storage"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1597,7 +1596,7 @@ data:
           - scenarios/startx_pvc_fruitapp2-prod-postgresql.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1623,9 +1622,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-chaos-cluster"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1644,7 +1643,7 @@ data:
           - scenarios/cluster_shut_down_scenario.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1670,9 +1669,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-all"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   config.yaml: |-
     kraken:
@@ -1718,7 +1717,7 @@ data:
           - scenarios/pvc_scenario.yaml
     cerberus:
         cerberus_enabled: True
-        cerberus_url: {{ $root.Values.kraken.cerberusUrl | quote }}
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
         check_applicaton_routes: True
     performance_monitoring:
         deploy_dashboards: False
@@ -1744,9 +1743,9 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-config-common"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 data:
   startx_alerts.yaml: |-
     - expr: avg_over_time(histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[2m]))[5m:]) > 0.01

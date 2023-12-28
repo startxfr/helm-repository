@@ -1,5 +1,4 @@
 {{- if .Values.cluster.autoscaler.enabled }}
-{{- $root := . -}}
 {{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
 ---
 apiVersion: "autoscaling.openshift.io/v1"
@@ -7,10 +6,10 @@ kind: "ClusterAutoscaler"
 metadata:
   name: "default"
   labels:
-    {{- include "cluster-machine.labels" $root | nindent 4 }}
+    {{- include "cluster-machine.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "default-clusterautoscaler"
   annotations:
-    {{- include "cluster-machine.annotations" $root | nindent 4 }}
+    {{- include "cluster-machine.annotations" $ | nindent 4 }}
 spec:
   {{- .Values.cluster.autoscaler.spec | nindent 2 -}}
 {{ end }}

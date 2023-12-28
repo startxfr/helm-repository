@@ -1,5 +1,4 @@
 {{- if .Values.compliance.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-compliance" -}}
 {{- $spec := .Values.compliance.spec | default "{}" -}}
 apiVersion: compliance.openshift.io/v1
