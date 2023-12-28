@@ -365,3 +365,5 @@ chaos-monkey startx/chaos-monkey
 | 14.6.59 | 2023-12-22 | publish stable update for the full repository
 | 14.6.59 | 2023-12-22 | publish stable update for the full repository
 | 14.6.59 | 2023-12-22 | move back dependencies to version 14.6.35
+| 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
+| 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket

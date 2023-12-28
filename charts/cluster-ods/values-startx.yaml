@@ -1,0 +1,87 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: rh-ods
+  app: openshift-rh-ods
+
+redhatCreds:
+  enabled: true
+  name: "startx-rhsupport-creds"
+  namespace: "openshift-startx-rh-ods"
+  username: startx_info_mco
+  password: mypassword
+
+report:
+  enabled: false
+  name: "startx-gather"
+  spec: |
+    caseID: '02527285'
+    caseManagementAccountSecretRef:
+      name: startx-rhsupport-creds
+    serviceAccountRef:
+      name: rh-ods-admin
+    audit: true
+    # proxyConfig:
+    #   http_proxy: http://myproxy
+    #   https_proxy: https://my_http_proxy
+    #   no_proxy: master-api
+    # mustGatherImages:
+    # - quay.io/kubevirt/must-gather:latest
+    # - quay.io/ocs-dev/ocs-must-gather
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "openshift-startx-rh-ods"
+    display_name: "Startx OpenDataScience"
+    requester: startx
+    description: Startx Must Gather area
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+    sa: 
+    - id: rh-ods
+      name: rh-ods
+      role: cluster-admin
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "must-gather-operator"
+    namespace: "openshift-startx-rh-ods"
+    version: "v1.1.2"
+    operator: 
+      channel: "alpha"
+      name: must-gather-operator
+      installPlanApproval: Automatic
+      # csv: must-gather-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "must-gather-operator"
+    namespace: "openshift-startx-rh-ods"
+    providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"

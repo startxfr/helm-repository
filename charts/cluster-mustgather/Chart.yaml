@@ -6,7 +6,7 @@ description: Helm chart used to configure MustGather at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.61
+version: 14.6.65
 # Version name of the mustgather operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.1.2
 # Icon of this helm-chart
@@ -26,7 +26,9 @@ keywords:
   - cluster
   - infrastructure
   - mustgather
-  - billing
+  - support
+  - log collection
+  - helpdesk
   - reporting
 # STARTX helm chart repository homepage
 home: https://helm-repository.readthedocs.io/en/latest
@@ -42,12 +44,12 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://startxfr.github.io/helm-repository/repos/stable/
     version: "14.6.35"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://startxfr.github.io/helm-repository/packages/
+    repository: https://startxfr.github.io/helm-repository/repos/stable/
     version: "14.6.35"
     alias: operator
     condition: operator.enabled
@@ -55,9 +57,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Add support for creation of the secret for redhat case relation"
+      description: "Improve NOTES.txt to support report display"
     - kind: changed
-      description: "Add support for creation of a mustgather report with case to redhat"
-    - kind: changed
-      description: "Create cluster-mustgather chart from an extract of this section in the cluster-config chart"
+      description: "Improve Chart.yaml with new tags"
   artifacthub.io/containsSecurityUpdates: "false"
