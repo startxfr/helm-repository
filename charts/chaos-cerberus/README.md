@@ -246,3 +246,4 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
 | 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket
 | 14.6.71 | 2023-12-28 | Move to S3 helm repository
+| 14.6.71 | 2023-12-28 | Move to S3 helm repository
