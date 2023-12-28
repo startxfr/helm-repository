@@ -245,3 +245,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 14.6.59 | 2023-12-22 | move back dependencies to version 14.6.35
 | 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
 | 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket
+| 14.6.71 | 2023-12-28 | Move to S3 helm repository
