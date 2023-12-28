@@ -1,5 +1,4 @@
 {{- if .Values.litmus.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 ---
@@ -9,9 +8,9 @@ metadata:
   name: privileged-litmus
   labels:
     app.kubernetes.io/name: "privileged-litmus-scc"
-    {{- include "chaos-litmus.labels" $root | nindent 4 }}
+    {{- include "chaos-litmus.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-litmus.annotations" $root | nindent 4 }}
+    {{- include "chaos-litmus.annotations" $ | nindent 4 }}
     kubernetes.io/description: 'allows privileged access to host'
     release.openshift.io/create-only: "true"
 users:
@@ -59,9 +58,9 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "privileged-litmus-scc-role"
-    {{- include "chaos-litmus.labels" $root | nindent 4 }}
+    {{- include "chaos-litmus.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-litmus.annotations" $root | nindent 4 }}
+    {{- include "chaos-litmus.annotations" $ | nindent 4 }}
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
@@ -75,9 +74,9 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "privileged-litmus-scc-rb"
-    {{- include "chaos-litmus.labels" $root | nindent 4 }}
+    {{- include "chaos-litmus.labels" $ | nindent 4 }}
   annotations:
-    {{- include "chaos-litmus.annotations" $root | nindent 4 }}
+    {{- include "chaos-litmus.annotations" $ | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: argo

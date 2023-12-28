@@ -1,0 +1,34 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- $scope := .Values.context.scope -}}
+{{- $ns := .Values.project.project.name | default .Chart.Name -}}
+
+{{/* Loop over the cluster list */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- $namespace := $ns -}}
+{{- if .namespace -}}
+{{- $namespace := .namespace -}}
+{{- end -}}
+{{- if .enabled -}}
+
+{{/* Create the RedisCluster resource */}}
+{{- if .spec }}
+---
+kind: RedisCluster
+apiVersion: redis.redis.opstreelabs.in/v1beta1
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-redis.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-rediscluster"
+  annotations:
+    {{- include "cluster-redis.annotations" $ | nindent 4 }}
+  finalizers:
+    - redisClusterFinalizer
+spec: 
+  {{- .spec | nindent 2 }}
+{{- end -}}
+
+{{- end -}}{{- end -}}
+{{- end -}}{{- end }}

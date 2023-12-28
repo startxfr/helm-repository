@@ -1,0 +1,20 @@
+{{- if .Values.report -}}{{- if .Values.report.enabled -}}
+{{- $ns := .Values.project.project.name | default "default-ods" -}}
+{{- with .Values.report }}
+{{- $namespace := .namespace | default $ns -}}
+{{- $name := .name | default "default-report" -}}
+---
+kind: OpenDataScience
+apiVersion: redhatcop.redhat.io/v1alpha1
+metadata:
+  name: "{{ $name }}-{{ lower (randAlphaNum 5 | nospace) }}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-ods.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-report"
+  annotations:
+    {{- include "cluster-ods.annotations" $ | nindent 4 }}
+spec:
+  {{- .spec | nindent 2 }}
+{{- end }}
+{{- end -}}{{- end -}}

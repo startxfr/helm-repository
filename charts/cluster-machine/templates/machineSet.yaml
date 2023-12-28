@@ -1,5 +1,4 @@
 {{- if .Values.machineSet.enabled }}
-{{- $root := . -}}
 {{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
 {{- $region := .Values.cluster.region | default "eu-west-3" -}}
 {{ range .Values.machineSet.list }}
@@ -9,9 +8,9 @@ kind: MachineSet
 metadata:
   name: "{{ .name }}"
   labels:
-    {{- include "cluster-machine.labels" $root | nindent 4 }}
+    {{- include "cluster-machine.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .name }}-machineset"
-    machine.openshift.io/cluster-api-cluster: "{{ $root.Values.cluster.id }}"
+    machine.openshift.io/cluster-api-cluster: "{{ $.Values.cluster.id }}"
     machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
     {{- if .group }}
     machine.startx.io/group: "{{ .group }}"
@@ -19,7 +18,7 @@ metadata:
     machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
   namespace: openshift-machine-api
   annotations:
-    {{- include "cluster-machine.annotations" $root | nindent 4 }}
+    {{- include "cluster-machine.annotations" $ | nindent 4 }}
 spec:
   replicas: {{ .replicas }}
   selector:
@@ -112,17 +111,17 @@ spec:
           workspace:
             datacenter: {{ .datacenter | default "OpenShift" | quote }}
             datastore: {{ .datastore | default "mydatastore" | quote }}
-            folder: {{ .folder | default (printf "/%s/vm/%s" .datastore $root.Values.cluster.id) | quote }}
+            folder: {{ .folder | default (printf "/%s/vm/%s" .datastore $.Values.cluster.id) | quote }}
             resourcePool: {{ .resourcePool | default (printf "/%s/host/%s/Resources" .datastore .datastore) | quote }}
             server: {{ .server | default "vcsa.pragmatik.local" | quote }}
-          template: {{ .template | default (printf "%s-rhcos" $root.Values.cluster.id) | quote }}
+          template: {{ .template | default (printf "%s-rhcos" $.Values.cluster.id) | quote }}
           {{- else }}
           apiVersion: awsproviderconfig.openshift.io/v1beta1
           kind: AWSMachineProviderConfig
           instanceType: "{{ .instanceType }}"
           placement:
-            availabilityZone: "{{ $root.Values.cluster.region }}{{ .az }}"
-            region: "{{ $root.Values.cluster.region }}"
+            availabilityZone: "{{ $.Values.cluster.region }}{{ .az }}"
+            region: "{{ $.Values.cluster.region }}"
           ami:
             id: {{ .ami }}
           {{- if .blockDevices }}
@@ -139,29 +138,29 @@ spec:
             name: aws-cloud-credentials
           deviceIndex: 0
           iamInstanceProfile:
-            id: "{{ $root.Values.cluster.id }}-worker-profile"
+            id: "{{ $.Values.cluster.id }}-worker-profile"
           securityGroups:
             - filters:
                 - name: tag:Name
                   values:
-                    - "{{ $root.Values.cluster.id }}-worker-sg"
+                    - "{{ $.Values.cluster.id }}-worker-sg"
           subnet:
           {{- if .subnet_name }}
             filters:
               - name: tag:Name
                 values:
                   - "{{ .subnet_name }}"
-                  # - "{{ $root.Values.cluster.id }}-worker-subnet"
+                  # - "{{ $.Values.cluster.id }}-worker-subnet"
           {{- else if .subnet_id }}
             id: "{{ .subnet_id }}"
           {{- else }}
             filters:
               - name: tag:Name
                 values:
-                  - "{{ $root.Values.cluster.id }}-private-{{ $root.Values.cluster.region }}{{ .az }}"
+                  - "{{ $.Values.cluster.id }}-private-{{ $.Values.cluster.region }}{{ .az }}"
           {{ end }}
           tags: 
-            - name: kubernetes.io/cluster/{{ $root.Values.cluster.id }}
+            - name: kubernetes.io/cluster/{{ $.Values.cluster.id }}
               value: owned
           userDataSecret:
             name: worker-user-data

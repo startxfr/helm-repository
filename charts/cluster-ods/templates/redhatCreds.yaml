@@ -1,0 +1,24 @@
+{{- if .Values.redhatCreds -}}{{- if .Values.redhatCreds.enabled -}}
+{{- $ns := .Values.project.project.name | default "default-ods" -}}
+{{- with .Values.redhatCreds -}}
+{{- $namespace := .namespace | default $ns -}}
+{{- $name := .name | default "redhat-creds"  -}}
+---
+kind: Secret
+apiVersion: v1
+type: generic
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-ods.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-secret"
+  annotations: 
+    {{- include "cluster-ods.annotations" $ | nindent 4 }}
+    openshift.io/display-name: "{{- include "startx.appScope" $ -}} - Redhat credentials"
+    template.openshift.io/expose-user: "{.data['username']}"
+    template.openshift.io/expose-password: "{.data['password']}"
+stringData:
+  username: "{{- .username -}}"
+  password: "{{- .password -}}"
+{{- end -}}{{- end -}}{{- end -}}

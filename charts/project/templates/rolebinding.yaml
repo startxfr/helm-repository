@@ -1,5 +1,4 @@
 {{- if .Values.enabled }}{{- if .Values.rbac }}{{- if .Values.rbac.enabled -}}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.name | default .Chart.Name -}} 
 {{ range .Values.rbac.groups }}
@@ -12,15 +11,17 @@ kind: {{ $cscope | quote }}
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: "{{ .id }}"
-  namespace: "{{- $ns -}}"
+  {{- if ne .type "cluster" }}
+  namespace: "{{- .namespace | default $ns -}}"
+  {{- end }}
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
     {{- if $.Values.rbac.additionalLabels }}
     {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
     {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
     {{- if $.Values.rbac.additionalAnnotations }}
     {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
     {{- end}}
@@ -43,15 +44,17 @@ kind: {{ $cscope | quote }}
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: "{{ .id }}"
-  namespace: "{{- $ns -}}"
+  {{- if ne .type "cluster" }}
+  namespace: "{{- .namespace | default $ns -}}"
+  {{- end }}
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
     {{- if $.Values.rbac.additionalLabels }}
     {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
     {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
     {{- if $.Values.rbac.additionalAnnotations }}
     {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
     {{- end}}
@@ -74,15 +77,17 @@ kind: {{ $cscope | quote }}
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: "{{ .id }}"
-  namespace: "{{- $ns -}}"
+  {{- if ne .type "cluster" }}
+  namespace: "{{- .namespace | default $ns -}}"
+  {{- end }}
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-rolebinding"
     {{- if $.Values.rbac.additionalLabels }}
     {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
     {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
     {{- if $.Values.rbac.additionalAnnotations }}
     {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
     {{- end}}
@@ -92,8 +97,7 @@ roleRef:
   name: {{ .role | default "view" | quote }}
 subjects:
   - kind: ServiceAccount
-    apiGroup: rbac.authorization.k8s.io
     name: {{ .name | quote }}
-    namespace: "{{- $ns -}}"
+    namespace: "{{- .namespace | default $ns -}}"
 {{ end }}
 {{- end -}}{{- end -}}{{- end }}

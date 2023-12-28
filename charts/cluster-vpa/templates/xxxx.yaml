@@ -1,5 +1,4 @@
 {{- if .Values.vpa.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-vpa" -}}
 {{- $spec := .Values.vpa.spec | default "{}" -}}
 apiVersion: vpa.openshift.io/v1

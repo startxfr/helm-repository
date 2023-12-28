@@ -1,5 +1,4 @@
 {{- if .Values.gitlab.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-gitlab" -}}
 {{- $spec := .Values.gitlab.spec | default "{}" -}}
 apiVersion: gitlab.openshift.io/v1

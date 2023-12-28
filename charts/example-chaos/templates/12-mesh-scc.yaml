@@ -1,5 +1,4 @@
 {{- if .Values.mesh.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.mesh_project.project.name -}}
 ---
@@ -9,9 +8,9 @@ metadata:
   name: anyuid-mesh
   labels:
     app.kubernetes.io/name: "anyuid-mesh-scc"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "example-chaos.labels" $ | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "example-chaos.annotations" $ | nindent 4 }}
     kubernetes.io/description: 'allows anyuid access to host'
 users:
 - system:serviceaccount:{{- $namespace -}}:chaos-daemon
@@ -56,9 +55,9 @@ metadata:
   name: privileged-mesh
   labels:
     app.kubernetes.io/name: "privileged-mesh-scc"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "example-chaos.labels" $ | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "example-chaos.annotations" $ | nindent 4 }}
     kubernetes.io/description: 'allows privileged access to host'
     release.openshift.io/create-only: "true"
 users:
@@ -103,9 +102,9 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "privileged-mesh-scc-role"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "example-chaos.labels" $ | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "example-chaos.annotations" $ | nindent 4 }}
 rules:
   - apiGroups: ["security.openshift.io"]
     resources: ["securitycontextconstraints"]
@@ -119,9 +118,9 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "privileged-mesh-scc-rb"
-    {{- include "example-chaos.labels" $root | nindent 4 }}
+    {{- include "example-chaos.labels" $ | nindent 4 }}
   annotations:
-    {{- include "example-chaos.annotations" $root | nindent 4 }}
+    {{- include "example-chaos.annotations" $ | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: default

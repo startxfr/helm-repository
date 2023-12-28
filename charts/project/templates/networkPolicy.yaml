@@ -1,5 +1,4 @@
 {{- if .Values.enabled }}{{- if .Values.networkpolicy }}{{- if .Values.networkpolicy.enabled -}}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $ns := .Values.project.name | default .Chart.Name -}}
 {{ range .Values.networkpolicy.rules }} 
@@ -10,13 +9,13 @@ metadata:
   name: "{{ .id }}"
   namespace: "{{- $ns -}}"
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
+    {{- include "project.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .id }}-networkpolicy"
     {{- if $.Values.networkpolicy.additionalLabels }}
     {{- $.Values.networkpolicy.additionalLabels | trim | nindent 4 }}
     {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
     {{- if $.Values.networkpolicy.additionalAnnotations }}
     {{- $.Values.networkpolicy.additionalAnnotations | trim | nindent 4 }}
     {{- end}}
