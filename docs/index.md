@@ -46,15 +46,15 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-router](charts/cluster-router.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)       | enable Router management at the cluster level                     |
 | **[cluster-certmanager](charts/cluster-certmanager.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-certmanager)  | enable CertManager at the cluster level                           |
 | **[cluster-oadp](charts/cluster-oadp.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-oadp)         | enable Application Data Protection (Backup) at the cluster level  |
-| **[cluster-router](charts/cluster-router.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)         | configure router(s) at the cluster level  |
-| **[cluster-couchbase](charts/cluster-couchbase.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-couchbase)         | configure couchbase at the cluster level  |
-| **[cluster-crunchy](charts/cluster-crunchy.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-crunchy)         | configure crunchyDatabase at the cluster level  |
+| **[cluster-router](charts/cluster-router.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)       | configure router(s) at the cluster level                          |
+| **[cluster-couchbase](charts/cluster-couchbase.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-couchbase)    | configure couchbase at the cluster level                          |
+| **[cluster-crunchy](charts/cluster-crunchy.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-crunchy)      | configure crunchyDatabase at the cluster level                    |
 
 #### Use Cluster charts
 
 ```bash
 # Add the STARTX helm repository
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 # Add individual charts
 helm install startx/cluster-config
 helm install startx/cluster-rbac
@@ -102,7 +102,7 @@ Helm chart without prefix are basic chart. Basic charts configure basic element 
 
 ```bash
 # Add the STARTX helm repository
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 # Add individual charts
 helm install startx/project
 helm install startx/operator
@@ -127,7 +127,7 @@ You can deploy various tools used for chaos-testing openshift and kubernetes clu
 
 ```bash
 # Add the STARTX helm repository
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 # Add individual charts
 helm install startx/chaos
 helm install startx/chaos-cerberus
@@ -160,7 +160,7 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 
 ```bash
 # Add the STARTX helm repository
-helm repo add startx https://startxfr.github.io/helm-repository/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 # Add individual charts
 helm install startx/example-deployment
 helm install startx/example-html
@@ -174,6 +174,23 @@ helm install startx/example-fruitapp-project
 helm install startx/example-fruitapp-shared
 helm install startx/example-fruitapp-app
 ```
+
+### Helm repositories
+
+| Repository                                                                  | Command                                                                                         | Description                                                                                 |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **[stable](https://helm-repository.readthedocs.io/en/latest/repos/stable)** | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable`            | The default repository  with latest stable release for 14,13,12,11,10,9,8 and 7 releases    |
+| [noschema](https://helm-repository.readthedocs.io/en/latest/repos/noschema) | `helm repo add startx-noschema https://helm-repository.readthedocs.io/en/latest/repos/noschema` | Archive repository without schema definition                                                |
+| [14](https://helm-repository.readthedocs.io/en/latest/repos/14)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/14`                | Archive repository for the 14.x packages (Compatible with OCP 4.14.x)                       |
+| [13](https://helm-repository.readthedocs.io/en/latest/repos/13)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/13`                | Archive repository for the 13.x packages (Compatible with OCP 4.13.x)                       |
+| [12](https://helm-repository.readthedocs.io/en/latest/repos/12)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/12`                | Archive repository for the 12.x packages (Compatible with OCP 4.12.x)                       |
+| [11](https://helm-repository.readthedocs.io/en/latest/repos/11)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/11`                | Archive repository for the 11.x packages (Compatible with OCP 4.11.x)                       |
+| [10](https://helm-repository.readthedocs.io/en/latest/repos/10)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/10`                | Archive repository for the 10.x packages (Compatible with OCP 4.10.x)                       |
+| [9](https://helm-repository.readthedocs.io/en/latest/repos/9)               | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/9`                 | Archive repository for the 9.x packages (Compatible with OCP 4.9.x)                         |
+| [8](https://helm-repository.readthedocs.io/en/latest/repos/8)               | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/8`                 | Archive repository for the 8.x packages (Compatible with OCP 4.8.x)                         |
+| [7](https://helm-repository.readthedocs.io/en/latest/repos/7)               | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/7`                 | Archive repository for the 7.x packages (Compatible with OCP 4.7.x)                         |
+| [6x](https://helm-repository.readthedocs.io/en/latest/repos/6x)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/6x`                | Archive repository for the 6.x and previous packages (Compatible with OCP 4.6.x and before) |
+
 
 ## Install STARTX repository
 
@@ -194,6 +211,12 @@ oc login -t <my-token> <my-openshift-api>
 If you don't have access to an openshift cluster, consider using codeready-container to
 run locally a simulated cluster.
 
+#### 1.3. Add the startx helm repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable
+```
+
 ### 2. Using Openshift
 
 #### 2.1. Deploy via HelmChartRepository
@@ -209,27 +232,29 @@ metadata:
 spec:
   name: "startx"
   connectionConfig:
-    url: "https://startxfr.github.io/helm-repository/packages"
+    url: "https://helm-repository.readthedocs.io/en/latest/repos/stable"
 EOF
 ```
 
 #### 2.2. Deploy via HelmChartRepository (archive)
 
 If you need to run your in an older version of Openshift, or access to archived version of helm chart, 
-you can load the archive repository
+you can load one of the archive repository. 
+
+This example show how to load charts from the v13 archive repository.
 
 ```bash
 cat <<EOF | oc apply -f -
 apiVersion: helm.openshift.io/v1beta1
 kind: HelmChartRepository
 metadata:
-  name: "startx-archives"
+  name: "startx-v13"
   labels:
-    app.kubernetes.io/name: "startx-archives-chart"
+    app.kubernetes.io/name: "startx-v13-charts"
 spec:
-  name: "startx-archives"
+  name: "startx-v13"
   connectionConfig:
-    url: "https://startxfr.github.io/helm-repository/packages-archives"
+    url: "https://helm-repository.readthedocs.io/en/latest/repos/13"
 EOF
 ```
 
