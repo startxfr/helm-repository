@@ -136,7 +136,6 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository
 | 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2
-<<<<<<< HEAD
 | 14.6.5-noschema | 2023-12-10 | Prepare upgrading to 14.6.5-noschema dependencies
 | 14.6.7-noschema | 2023-12-10 | intermediate noschema release stable but same as 14.6.5-noschema release
 | 14.6.9-noschema | 2023-12-10 | upgrade all dependencies charts to version 14.6.5-noschema
@@ -147,21 +146,3 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 14.6.25-noschema | 2023-12-18 | stabel version 14.6.25 for the noschema release
 | 14.6.27-noschema | 2023-12-19 | publish stable update for the full repository
 | 14.6.35-noschema | 2023-12-20 | publish stable update for the full repository
-=======
-| 14.6.9 | 2023-12-10 | publish stable update for the full repository
-| 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5
-| 14.6.15 | 2023-12-11 | update packages for OCP 4.14.6
-| 14.6.21 | 2023-12-18 | publish stable update for the full repository
-| 14.6.22 | 2023-12-18 | stable si good
-| 14.6.27 | 2023-12-19 | publish stable update for the full repository
-| 14.6.29 | 2023-12-19 | publish stable update for the full repository
-| 14.6.31 | 2023-12-19 | move to kubeversion min 1.25.0
-| 14.6.33 | 2023-12-19 | Move dependencies to github-pages
-| 14.6.35 | 2023-12-20 | publish stable update for the full repository
-| 14.6.45 | 2023-12-22 | publish stable update for the full repository
-| 14.6.46 | 2023-12-22 | publish stable update for the full repository
-| 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
-| 14.6.59 | 2023-12-22 | move back dependencies to version 14.6.35
-| 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
-| 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket
->>>>>>> devel
