@@ -31,6 +31,16 @@ cluster:
 
 machineConfigPool: 
   enabled: false
+  infra: true
+  list: 
+  - name: app
+    machineConfigSelector: |-
+      matchExpressions:
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,app]}
+    nodeSelector: |-
+      matchLabels:
+        node-role.kubernetes.io/app: ""
+    paused: false
 machineConfig: 
   enabled: false
 
