@@ -32,25 +32,25 @@ redhatCreds:
 report:
   # Enable the creation of a mustgather report
   enabled: false
-  # Prefix of the mustgather report
-  name: "my-gather"
+  # The case ID (used as part of the name)
+  caseID: "00000009"
   # Namespace used for the mustgather (default is the project)
   namespace: "openshift-startx-mustgather"
-  # Spec of the mustgather
-  spec: |
-    caseID: '02527285'
-    caseManagementAccountSecretRef:
-      name: my-rhsupport-creds
-    serviceAccountRef:
-      name: mustgather-admin
-    audit: true
-    # proxyConfig:
-    #   http_proxy: http://myproxy
-    #   https_proxy: https://my_http_proxy
-    #   no_proxy: master-api
-    # mustGatherImages:
-    # - quay.io/kubevirt/must-gather:latest
-    # - quay.io/ocs-dev/ocs-must-gather
+  # The redhat credentials for case association
+  rhnCreds: "startx-rhsupport-creds"
+  # The Service account used to run the mustgather pod
+  serviceAccount: "mustgather-admin"
+  # # Enable audit log in the mustgather (default is false)
+  # audit: true
+  # # Enable the proxy config (default is disabled)
+  # proxyConfig: |-
+  #   http_proxy: http://myproxy
+  #   https_proxy: https://my_http_proxy
+  #   no_proxy: master-api
+  # # Enable additionnals muustGatherImages (default is none)
+  # mustGatherImages: |-
+  #   - quay.io/kubevirt/must-gather:latest
+  #   - quay.io/ocs-dev/ocs-must-gather
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
