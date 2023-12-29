@@ -8,7 +8,7 @@ context: &context
   app: openshift-logging
 logging:
   enabled: false
-  infra_enabled: false
+  infra_enabled: true
   hooked: false
   managementState: "Managed"
   expose:
@@ -71,6 +71,8 @@ eventrouter:
       memory: 128Mi
 logforwarder:
   enabled: false
+  secret:
+    enabled: false
   spec: |
     pipelines: 
     - name: all-to-default
