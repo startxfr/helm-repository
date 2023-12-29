@@ -264,3 +264,4 @@ xxxx to do xxxxxxxx
 | 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket
 | 14.6.71 | 2023-12-28 | Move to S3 helm repository
 | 14.6.73 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.65
+| 14.6.75 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71
