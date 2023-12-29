@@ -47,9 +47,13 @@ project:
         name: ops
         role: admin
     sa:
-      - id: mustgather
-        name: mustgather
+      - id: mustgather-admin
+        name: mustgather-admin
         role: cluster-admin
+  serviceAccounts: 
+    enabled: true
+    list: 
+      - name: mustgather-admin
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
