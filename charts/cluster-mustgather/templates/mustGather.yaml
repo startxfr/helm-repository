@@ -2,12 +2,12 @@
 {{- $ns := .Values.project.project.name | default "default-mustgather" -}}
 {{- with .Values.report }}
 {{- $namespace := .namespace | default $ns -}}
-{{- $name := .name | default "default-report" -}}
+{{- $name := .caseID | default "00000001" -}}
 ---
 kind: MustGather
 apiVersion: redhatcop.redhat.io/v1alpha1
 metadata:
-  name: "{{ $name }}-{{ lower (randAlphaNum 5 | nospace) }}"
+  name: "startx-mustgather-{{ $name }}-{{ lower (randAlphaNum 5 | nospace) }}"
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-mustgather.labels" $ | nindent 4 }}
@@ -15,6 +15,19 @@ metadata:
   annotations:
     {{- include "cluster-mustgather.annotations" $ | nindent 4 }}
 spec:
-  {{- .spec | nindent 2 }}
-{{- end }}
+  caseID: "{{ $name }}"
+  caseManagementAccountSecretRef:
+    name: "{{ .rhnCreds | default "rhsupport-creds" }}"
+  serviceAccountRef:
+    name: "{{ .serviceAccount | default "mustgather-admin" }}"
+  audit: {{ .audit | default false }}
+  {{- if hasKey . "proxyConfig" }}
+  proxyConfig:
+    {{- .proxyConfig | nindent 4 }}
+  {{- end }}
+  {{- if hasKey . "mustGatherImages" }}
+  mustGatherImages:
+    {{- .mustGatherImages | nindent 4 }}
+  {{- end }}
+{{- end -}}
 {{- end -}}{{- end -}}
