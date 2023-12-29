@@ -47,4 +47,32 @@ spec:
       node-role.kubernetes.io/virt: ""
   paused: false
 {{ end }}
+
+
+
+
+{{ range .Values.machineConfigPool.list }}
+---
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfigPool
+metadata:
+  name: "{{ .name | default "app-a" }}"
+  labels:
+    {{- include "cluster-machine.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "app-a" }}-Machineconfigpool"
+  annotations:
+    {{- include "cluster-machine.annotations" $ | nindent 4 }}
+spec:
+  machineConfigSelector:
+    {{- if .machineConfigSelector -}}
+    {{- .machineConfigSelector | nindent 4 -}}
+    {{- end }}
+  maxUnavailable: {{ .maxUnavailable | default 1 }}
+  nodeSelector:
+    {{- if .nodeSelector -}}
+    {{- .nodeSelector | nindent 4 -}}
+    {{- end }}
+  paused: {{ .paused | default false }}
+{{- end -}}
 {{ end }}
