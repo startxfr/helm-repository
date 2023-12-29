@@ -1,8 +1,32 @@
 # Release history
 
+## version 15.0.x (champagnac)
+
+_The objectif of this release is to stabilize the full repository content and offer a stable release of the helm charts for the Openshift Container platform version 4.15.x version._
+
+## version 14.0.x (chamberet)
+
+This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.14 release](https://docs.openshift.com/container-platform/4.14)**.
+
+The objectif of this version is :
+
+- Stable support for cluster service running under an Openshift 4.14.x cluster
+
+## version 13.0.x (chanac)
+
+This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.13 release](https://docs.openshift.com/container-platform/4.13)**.
+
+The objectif of this version is :
+
+- Stable support for cluster service running under an Openshift 4.13.x cluster
+
 ## version 12.0.x (chastang)
 
-_The objectif of this release is to stabilize the full repository content and offer a dev (regular ehancements) to stable (regular secfix) content for a global coverage of environements requirements._
+This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.12 release](https://docs.openshift.com/container-platform/4.12)**.
+
+The objectif of this version is :
+
+- Stable support for cluster service running under an Openshift 4.12.x cluster
 
 ## version 11.0.x (chazal)
 
