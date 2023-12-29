@@ -6,7 +6,7 @@ description: Helm chart used to configure Ansible Automation Platform (AAP) at t
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.71
+version: 14.6.73
 # Version name of the ansible operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "2.4.0"
 # Icon of this helm-chart
@@ -44,17 +44,17 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.35"
+    version: "14.6.65"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.35"
+    version: "14.6.65"
     alias: operator
     condition: operator.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all startx helm-chart to version 14.6.71"
+      description: "Upgrade all startx chart dependencies to version 14.6.65"
   artifacthub.io/containsSecurityUpdates: "false"
