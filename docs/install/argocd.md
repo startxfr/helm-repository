@@ -1,4 +1,4 @@
-# ArgoCD deployment
+# install via ArgoCD
 
 To leverage the gitops feature of ArgoCD to deploy your targeted  chart, you should follow the following procedure.
 
@@ -8,7 +8,7 @@ To leverage the gitops feature of ArgoCD to deploy your targeted  chart, you sho
 - Install openshift client with `sudo yum install openshift-client`
 - Been connected to your cluster with `oc login <mycluster_api_url>`
 
-## 0.1. Deploy ArgoCD project
+## 1. Deploy ArgoCD project
 
 If gitops is not enabled in your cluster, you could perform it with :
 
@@ -34,7 +34,7 @@ sleep 60
 echo "end deploying argocd project"
 ```
 
-## 0.2. Deploy ArgoCD control-plane
+## 2. Deploy ArgoCD control-plane
 
 If gitops is not enabled in your cluster, you must perform the following procedure ater the previous deployment (project) :
 
@@ -46,7 +46,7 @@ sleep 90
 echo "end deploying argocd control-plane"
 ```
 
-## 0.3. Check ArgoCD deployments
+## 3. Check ArgoCD deployments
 
 Wait for all pod in your gitops namespace to be ready :
 
@@ -54,11 +54,11 @@ Wait for all pod in your gitops namespace to be ready :
 oc get pod -n openshift-gitops -w
 ```
 
-## 1. Deploy cluster-services
+## 4. Deploy cluster-services
 
 We will use the crunchy-database operator as an example for a cluster-service deployment.
 
-## 1.1. Create cluster-service project
+## 4.1. Create cluster-service project
 
 First we need to create a project for our postgresql instance.
 
@@ -101,7 +101,7 @@ spec:
 EOF
 ```
 
-## 1.2. Deploy the operator
+## 4.2. Deploy the operator
 
 Then we deploy the operator. Differences are the name `crunchy-operator` and the `operator.enabled` parameter.
 
@@ -144,7 +144,7 @@ spec:
 EOF
 ```
 
-## 1.3. Create a cluster-service instance
+## 4.3. Create a cluster-service instance
 
 Finally we create a crunchy databas instance. Differences are the name `crunchy-instance`, the `cluster.enabled` and `loader.enabled` parameters.
 

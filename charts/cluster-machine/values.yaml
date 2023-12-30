@@ -35,6 +35,29 @@ cluster:
 machineConfigPool: 
   # Enable the management of machineconfigurationpool
   enabled: false
+  # Create the infra node machineconfigurationpool
+  infra: true
+  # Create the storage node machineconfigurationpool
+  storage: false
+  # Create the virt node machineconfigurationpool
+  virt: false
+  # List of machineconfigurationpool to control
+  list: []
+  #   # the name of this machineconfigurationpool
+  # - name: app
+  #   # the machineConfigSelector used to identify machineConfig to apply
+  #   machineConfigSelector: |-
+  #     matchExpressions:
+  #       - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,app]}
+  #   # Maximum of unvailable node at the same time (default is 1)
+  #   maxUnavailable: 1
+  #   # the nodeSelector used to identify node to apply
+  #   nodeSelector: |-
+  #     matchLabels:
+  #       node-role.kubernetes.io/app: ""
+  #   # Is the machienconfigpool must be paused (default is false)
+  #   paused: false
+
 
 # Enable the configuration of machines
 machineConfig: 
