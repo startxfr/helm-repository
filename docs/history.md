@@ -8,9 +8,20 @@ _The objectif of this release is to stabilize the full repository content and of
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.14 release](https://docs.openshift.com/container-platform/4.14)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.14.x cluster
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.14.x version, you can add the ([v14 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/14/index.yaml)) dedicated for v14.x releases.
+
+```bash
+helm repo add startx-14 https://helm-repository.readthedocs.io/en/latest/repos/14
+helm search repo startx
+```
+
+### History
 
 | Release                                                                     | Date       | Description                                                                             |
 | --------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------- |
@@ -25,9 +36,20 @@ The objectif of this version is :
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.13 release](https://docs.openshift.com/container-platform/4.13)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.13.x cluster
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.13.x version, you can add the ([v13 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/13/index.yaml)) dedicated for v13.x releases.
+
+```bash
+helm repo add startx-13 https://helm-repository.readthedocs.io/en/latest/repos/13
+helm search repo startx
+```
+
+### History
 
 | Release                                                                     | Date       | Description                                         |
 | --------------------------------------------------------------------------- | ---------- | --------------------------------------------------- |
@@ -37,9 +59,20 @@ The objectif of this version is :
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.12 release](https://docs.openshift.com/container-platform/4.12)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.12.x cluster
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.12.x version, you can add the ([v12 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/12/index.yaml)) dedicated for v12.x releases.
+
+```bash
+helm repo add startx-12 https://helm-repository.readthedocs.io/en/latest/repos/12
+helm search repo startx
+```
+
+### History
 
 | Release                                                                       | Date       | Description                                         |
 | ----------------------------------------------------------------------------- | ---------- | --------------------------------------------------- |
@@ -53,10 +86,21 @@ The objectif of this version is :
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.11 release](https://docs.openshift.com/container-platform/4.11)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.11.x cluster
 - Move to as stable interface with sxcm nad ansible-managed deployments
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.11.x version, you can add the ([v11 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/11/index.yaml)) dedicated for v11.x releases.
+
+```bash
+helm repo add startx-11 https://helm-repository.readthedocs.io/en/latest/repos/11
+helm search repo startx
+```
+
+### History
 
 | Release                                                                         | Date       | Description                                                    |
 | ------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------- |
@@ -78,10 +122,21 @@ The objectif of this version is :
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.10 release](https://docs.openshift.com/container-platform/4.10)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.10.x cluster
 - Introduce the chaos chart suite with various components
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.10.x version, you can add the ([v10 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/10/index.yaml)) dedicated for v10.x releases.
+
+```bash
+helm repo add startx-10 https://helm-repository.readthedocs.io/en/latest/repos/10
+helm search repo startx
+```
+
+### History
 
 | Release                                                                         | Date       | Description                                                 |
 | ------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------- |
@@ -92,15 +147,26 @@ The objectif of this version is :
 | [10.12.28](https://github.com/startxfr/helm-repository/releases/tag/10.12.28)   | 2022-06-15 | Stable release for all chaos charts                         |
 | [10.12.5](https://github.com/startxfr/helm-repository/releases/tag/10.12.5)     | 2022-03-30 | Upgrade charts to be aligned with Openshift version 4.10.12 |  |
 
-## version 9.x.x (claux)
+## version 9.x.x (chaux)
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.9 release](https://docs.openshift.com/container-platform/4.9)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.9.x cluster
 - Stabilize versionning of chart aligned with the openshift minor-patch lifecycle
 - Stabilize and check helm-repository catalog lifecycle management
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.9.x version, you can add the ([v9 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/9/index.yaml)) dedicated for v9.x releases.
+
+```bash
+helm repo add startx-9 https://helm-repository.readthedocs.io/en/latest/repos/9
+helm search repo startx
+```
+
+### History
 
 | Release                                                                     | Date       | Description                                               |
 | --------------------------------------------------------------------------- | ---------- | --------------------------------------------------------- |
@@ -114,12 +180,23 @@ The objectif of this version is :
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.8 release](https://docs.openshift.com/container-platform/4.8)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.8.x cluster
 - Revamp versionning of chart to stick the openshift minor-patch lifecycle
 - Add support for [artifacthub](https://artifacthub.io/packages/search?repo=startx) exposure
 - Stable helm-repository catalog
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.8.x version, you can add the ([v8 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/8/index.yaml)) dedicated for v8.x releases.
+
+```bash
+helm repo add startx-8 https://helm-repository.readthedocs.io/en/latest/repos/8
+helm search repo startx
+```
+
+### History
 
 | Release                                                                     | Date       | Description                                                                       |
 | --------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------- |
@@ -139,10 +216,21 @@ The objectif of this version is :
 
 This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.7 release](https://docs.openshift.com/container-platform/4.7)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.7.x cluster
 - Stable helm-repository catalog
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.7.x version, you can add the ([v7 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/7/index.yaml)) dedicated for v7.x releases.
+
+```bash
+helm repo add startx-7 https://helm-repository.readthedocs.io/en/latest/repos/7
+helm search repo startx
+```
+
+### History
 
 | Release                                                                     | Date       | Description                                                         |
 | --------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------- |
@@ -154,12 +242,23 @@ The objectif of this version is :
 
 This version covert both [Openshift](https://docs.openshift.com) **[4.5](https://docs.openshift.com/container-platform/4.5)**, **[4.6](https://docs.openshift.com/container-platform/4.6)** and **[4.7](https://docs.openshift.com/container-platform/4.7)** release.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Offer a stable support for cluster service running under an Openshift 4.5.x, 4.6.x or 4.7.x cluster
 - Add more content to the helm repository catalog
 - Finish to add demo in the example-catalog
 - Move documentation to readthedocs infrastructure
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.6.x version and previous, you can add the ([v6x helm repository](https://helm-repository.readthedocs.io/en/latest/repos/6x/index.yaml)) dedicated for v6.x and previous releases.
+
+```bash
+helm repo add startx-6x https://helm-repository.readthedocs.io/en/latest/repos/6x
+helm search repo startx
+```
+
+### History
 
 | Release                                                                     | Date       | Description                                                                                        |
 | --------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------- |
@@ -180,12 +279,23 @@ The objectif of this version is :
 
 This version is designed to use with the [Openshift](https://docs.openshift.com) **[4.5 release](https://docs.openshift.com/container-platform/4.5)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.5.x cluster
 - Dissociate cluster, example and basic chart
 - Convert all sxv4 cluster-resources to sxcm cluster resources
 - Start documenting chart usage
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.6.x version and previous, you can add the ([v6x helm repository](https://helm-repository.readthedocs.io/en/latest/repos/6x/index.yaml)) dedicated for v6.x and previous releases.
+
+```bash
+helm repo add startx-6x https://helm-repository.readthedocs.io/en/latest/repos/6x
+helm search repo startx
+```
+
+### History
 
 | Release                                                                   | Date       | Description                                       |
 | ------------------------------------------------------------------------- | ---------- | ------------------------------------------------- |
@@ -196,13 +306,24 @@ The objectif of this version is :
 
 This version was constructed using the [Openshift](https://docs.openshift.com) **[4.4 release](https://docs.openshift.com/container-platform/4.4)**.
 
-The objectif of this version is :
+### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.4.x cluster
 - Organize the directory structure
 - Define gitflow
 - Construc core component used to manage this repository
 - Publish it to the world (or interested world ;)
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.6.x version and previous, you can add the ([v6x helm repository](https://helm-repository.readthedocs.io/en/latest/repos/6x/index.yaml)) dedicated for v6.x and previous releases.
+
+```bash
+helm repo add startx-6x https://helm-repository.readthedocs.io/en/latest/repos/6x
+helm search repo startx
+```
+
+### History
 
 | Release                                                                   | Date     | Description                                            |
 | ------------------------------------------------------------------------- | -------- | ------------------------------------------------------ |
@@ -214,6 +335,17 @@ The objectif of this version is :
 This version was constructed using the [Openshift](https://docs.openshift.com) **[4.3 release](https://docs.openshift.com/container-platform/4.3)**.
 
 The objectif of this release is to create the repository structure.
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.6.x version and previous, you can add the ([v6x helm repository](https://helm-repository.readthedocs.io/en/latest/repos/6x/index.yaml)) dedicated for v6.x and previous releases.
+
+```bash
+helm repo add startx-6x https://helm-repository.readthedocs.io/en/latest/repos/6x
+helm search repo startx
+```
+
+### History
 
 | Release                                                                 | Date     | Description                                |
 | ----------------------------------------------------------------------- | -------- | ------------------------------------------ |
