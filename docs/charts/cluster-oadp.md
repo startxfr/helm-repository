@@ -267,3 +267,4 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 14.6.71-noschema | 2023-12-28 | full build from s3 helm repo
 | 14.6.73-noschema | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71-noschema
 | 14.6.75-noschema | 2023-12-29 | publish stable update for the full repository
+| 14.6.99-noschema | 2024-01-02 | Stable noschema version for 14.6 release
