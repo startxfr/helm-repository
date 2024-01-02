@@ -1,4 +1,4 @@
-# Example Fruitapp -shared
+# Example Chart : Fruitapp -shared
 
 This helm chart is used to deploy all shared components required for a particular environment.
 
@@ -20,7 +20,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 ```
 
 ### 3. Get information about this chart

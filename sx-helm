@@ -15,6 +15,8 @@ if [[ "$1" != "" ]]; then
         publish)                routerPublish;;
         release)                routerRelease "$@" ;;
         archive)                routerArchive "$@" ;;
+        syncfroms3)             routerSyncFromS3 "$@" ;;
+        synctos3)               routerSyncToS3 "$@" ;;
         version)                routerVersion;;
         *)
             case $2 in
