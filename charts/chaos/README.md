@@ -1,4 +1,4 @@
-# Chaos
+# Chaos Chart : Main
 
 This helm chart is used to deploy a chaos test suite composed of cerberus, kraken, litmus, chaos mesh and kube-monkey.
 
@@ -20,7 +20,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 ```
 
 ### 3. Get information about this chart
@@ -368,3 +368,4 @@ chaos-monkey startx/chaos-monkey
 | 14.6.75-noschema | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71-noschema
 | 14.6.73-noschema | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71-noschema
 | 14.6.75-noschema | 2023-12-29 | publish stable update for the full repository
+| 14.6.99-noschema | 2024-01-02 | Stable noschema version for 14.6 release
