@@ -146,21 +146,21 @@ function routerRelease {
     sed -i "s/latest-v$current_release/latest-v$next_release/" "$PROJECT_PATH/README.md"
     sed -i "s/latest-v$current_release/latest-v$next_release/" "$PROJECT_PATH/docs/index.md"
     git add "$PROJECT_PATH" &>/dev/null
-    echo -e "\e[36mRelease\e[0m Commit all change to $GITHUB_REPOSITORY $WORK_BRANCH branch"
+    echo -e "\e[37mRelease\e[0m Commit all change to $GITHUB_REPOSITORY $WORK_BRANCH branch"
     git commit -m "[docs] update repository content to $next_release" "$PROJECT_PATH" &>/dev/null
-    echo -e "\e[36mRelease\e[0m Merge change to $MASTER_BRANCH branch"
+    echo -e "\e[37mRelease\e[0m Merge change to $MASTER_BRANCH branch"
     git checkout $MASTER_BRANCH &>/dev/null
     git merge $WORK_BRANCH --commit --no-edit
-    echo -e "\e[36mRelease\e[0m Merge change to $STABLE_BRANCH branch"
+    echo -e "\e[37mRelease\e[0m Merge change to $STABLE_BRANCH branch"
     git checkout $STABLE_BRANCH &>/dev/null
     git merge $MASTER_BRANCH --commit --no-edit
-    echo -e "\e[36mRelease\e[0m Jump into \e[1m$current_release\e[0m"
+    echo -e "\e[37mRelease\e[0m Jump into \e[1m$current_release\e[0m"
     git checkout "$current_release" &>/dev/null
-    echo -e "\e[36mRelease\e[0m Merge \e[1m$STABLE_BRANCH\e[0m update to \e[1m$current_release\e[0m"
+    echo -e "\e[37mRelease\e[0m Merge \e[1m$STABLE_BRANCH\e[0m update to \e[1m$current_release\e[0m"
     git merge --commit --no-edit $STABLE_BRANCH &>/dev/null
-    echo -e "\e[36mRelease\e[0m Create \e[1m$next_release\e[0m tag"
+    echo -e "\e[37mRelease\e[0m Create \e[1m$next_release\e[0m tag"
     git tag "$next_release" -m "[release/$next_release] $next_description"
-    echo -e "\e[36mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
+    echo -e "\e[37mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
     git push $GITHUB_REPONAME "$next_release" $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
     git push $GITLAB_REPONAME "$next_release" $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
     git checkout $WORK_BRANCH
@@ -186,6 +186,7 @@ function doHelmrepositoryRefresh {
     local action="${4:-Publish}"
     local color="${5:-36}"
     doHelmrepositoryGenerate "${reponame}" "${subrepo}" "${helmrepourl}" "${action}" "${color}"
+    echo -e "\e[${color}m${action}\e[0m Uupdate repository \e[1m${reponame}\e[0m into \e[1m$HELM_REPO_LOCALIDX\e[0m"
     git add "$HELM_REPO_LOCALIDX" &>/dev/null
     git commit -m "[docs] update repository ${reponame} index" "$HELM_REPO_LOCALIDX" &>/dev/null
     echo -e "\e[${color}m${action}\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
