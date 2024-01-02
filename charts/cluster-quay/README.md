@@ -1,4 +1,4 @@
-# Cluster Quay
+# Cluster Chart : Quay
 
 This helm chart is used to create an operator based deployment of Quay Enterprise registry.
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -19,7 +19,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 ```
 
 ### 3. Get information about this chart
@@ -276,3 +276,4 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 | 14.6.71-noschema | 2023-12-28 | full build from s3 helm repo
 | 14.6.73-noschema | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71-noschema
 | 14.6.75-noschema | 2023-12-29 | publish stable update for the full repository
+| 14.6.99-noschema | 2024-01-02 | Stable noschema version for 14.6 release
