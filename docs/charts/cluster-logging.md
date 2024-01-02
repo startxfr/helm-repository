@@ -1,4 +1,4 @@
-# Cluster logging
+# Cluster Chart : Logging
 
 This helm chart is used to configure Metering at the cluster level.
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
@@ -19,7 +19,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 ```
 
 ### 3. Get information about this chart
@@ -282,3 +282,4 @@ xxxx to do xxxxxx
 | 14.6.71 | 2023-12-28 | Move to S3 helm repository
 | 14.6.73 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.65
 | 14.6.75 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71
+| 14.6.91 | 2024-01-02 | publish stable update for the full repository

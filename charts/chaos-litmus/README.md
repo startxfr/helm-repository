@@ -222,3 +222,4 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 14.6.71 | 2023-12-28 | Move to S3 helm repository
 | 14.6.73 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.65
 | 14.6.75 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71
+| 14.6.91 | 2024-01-02 | publish stable update for the full repository

@@ -374,3 +374,7 @@ chaos-monkey startx/chaos-monkey
 | 14.6.77 | 2024-01-02 | Improve chaos options
 | 14.6.79 | 2024-01-02 | Improve chaos options
 | 14.6.81 | 2024-01-02 | Improve chaos options
+| 14.6.83 | 2024-01-02 | publish stable update for the full repository
+| 14.6.85 | 2024-01-02 | publish stable update for the full repository
+| 14.6.87 | 2024-01-02 | publish stable update for the full repository
+| 14.6.91 | 2024-01-02 | publish stable update for the full repository
