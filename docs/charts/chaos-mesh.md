@@ -220,3 +220,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 14.6.73 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.65
 | 14.6.75 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71
 | 14.6.91 | 2024-01-02 | publish stable update for the full repository
+| 14.6.99 | 2024-01-02 | Full stable release of the chart repository
