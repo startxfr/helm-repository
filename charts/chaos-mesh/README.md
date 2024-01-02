@@ -1,4 +1,4 @@
-# Chaos - Mesh
+# Chaos Chart : Mesh
 
 This helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster. 
 Chaos-mesh is as a chaos engine with a gui to define and execute chaos scenarios for Kubernetes clusters. 
@@ -21,7 +21,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 ```
 
 ### 3. Get information about this chart
