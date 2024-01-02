@@ -74,7 +74,7 @@ function awsAccessMandatory {
 # Display all buckets
 function awsS3BucketsList {
     awsAccessMandatory
-    echo -e "\e[36mList\e[0m bucket for default AWS config"
+    echo -e "\e[33mList\e[0m bucket for default AWS config"
     awsS3LsBuckets
 }
 
@@ -83,7 +83,7 @@ function awsS3BucketsList {
 function awsS3BucketList {
     awsAccessMandatory
     local bucket=${1:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[36mList\e[0m content of the $bucket bucket"
+    echo -e "\e[33mList\e[0m content of the $bucket bucket"
     awsS3LsBucket "$bucket"
 }
 
@@ -93,7 +93,7 @@ function awsS3FileUpload {
     local file=${1:-"default.txt"}
     local path=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[34mUpload\e[0m Upload $file file in the $bucket bucket, path $path"
+    echo -e "\e[33mUpload\e[0m Upload $file file in the $bucket bucket, path $path"
     awsS3UploadFile "$file" "$path" "$bucket"
 }
 
@@ -103,7 +103,7 @@ function awsS3SyncUpload {
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[34mUpload\e[0m Upload local path $localpath into S3 $remotepath path in $bucket bucket"
+    echo -e "\e[33mUpload\e[0m Upload local path $localpath into S3 $remotepath path in $bucket bucket"
     awsS3UploadDir "$localpath" "$remotepath" "$bucket"
 }
 
@@ -113,9 +113,9 @@ function awsS3SyncUploadDelete {
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[34mUpload\e[0m Start uploading local path $localpath into S3 $remotepath path in $bucket bucket"
+    echo -e "\e[33mUpload\e[0m Start uploading local path $localpath into S3 $remotepath path in $bucket bucket"
     awsS3UploadDir "$localpath" "$remotepath" "$bucket" "--delete"
-    echo -e "\e[34mUpload\e[0m End uploading local path $localpath"
+    echo -e "\e[33mUpload\e[0m End uploading local path $localpath"
 }
 
 # Download one file from the S3 bucket
@@ -124,7 +124,7 @@ function awsS3FileDownload {
     local file=${1:-"default.txt"}
     local path=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[35mDownload\e[0m Download $file file in the $bucket bucket to path $path"
+    echo -e "\e[93mDownload\e[0m Download $file file in the $bucket bucket to path $path"
     awsS3DownloadFile "$file" "$path" "$bucket"
 }
 
@@ -134,7 +134,7 @@ function awsS3SyncDownload {
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[35mDownload\e[0m Download S3 $remotepath path in $bucket bucket into the local path $localpath"
+    echo -e "\e[93mDownload\e[0m Download S3 $remotepath path in $bucket bucket into the local path $localpath"
     awsS3DownloadDir "$localpath" "$remotepath" "$bucket"
 }
 
@@ -144,9 +144,9 @@ function awsS3SynDownloadDelete {
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[35mUpload\e[0m Start uploading local path $localpath into S3 $remotepath path in $bucket bucket"
+    echo -e "\e[93mUpload\e[0m Start uploading local path $localpath into S3 $remotepath path in $bucket bucket"
     awsS3UploadDir "$localpath" "$remotepath" "$bucket" "--delete"
-    echo -e "\e[35mUpload\e[0m End uploading local path $localpath"
+    echo -e "\e[93mUpload\e[0m End uploading local path $localpath"
 }
 
 # router for synchronize s3 to local
