@@ -1,4 +1,4 @@
-# Example sxapi
+# Example Chart : SXAPI
 
 This helm chart is used to create a deployment of a small an simple micro-service based on [sxapi helm chart](https://helm-repository.readthedocs.io/en/latest/charts/sxapi).
 
@@ -20,7 +20,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 ```
 
 ### 3. Get information about this chart

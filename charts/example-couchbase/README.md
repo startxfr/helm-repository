@@ -1,4 +1,4 @@
-# Example couchbase
+# Example Chart : Couchbase
 
 This helm chart is used to create a deployment of a small PHP webserver based on [startx apache PHP image](https://quay.io/startx/couchbase).
 
@@ -20,7 +20,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 ```
 
 ### 3. Get information about this chart
