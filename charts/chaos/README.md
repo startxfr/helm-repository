@@ -372,3 +372,4 @@ chaos-monkey startx/chaos-monkey
 | 14.6.73 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.65
 | 14.6.75 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71
 | 14.6.77 | 2024-01-02 | Improve chaos options
+| 14.6.79 | 2024-01-02 | Improve chaos options
