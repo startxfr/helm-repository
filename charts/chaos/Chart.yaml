@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.99
+version: 14.6.103
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.14.6"
 # Icon of this helm-chart
@@ -48,32 +48,32 @@ maintainers:
 dependencies:
   - name: "chaos-cerberus"
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.71"
+    version: "14.6.75"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.71"
+    version: "14.6.75"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.71"
+    version: "14.6.75"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.71"
+    version: "14.6.75"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.71"
+    version: "14.6.75"
     alias: monkey
     condition: monkey.enabled
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 14.6.71"
+      description: "Upgrade all startx chart dependencies to version 14.6.75"
   artifacthub.io/containsSecurityUpdates: "false"
