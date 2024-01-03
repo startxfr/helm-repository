@@ -1,14 +1,13 @@
 {{- if .Values.database }}{{- if .Values.database.enabled }}
-{{- $root := . -}}
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: "postgresql-{{- .Values.context.environment }}"
   labels:
-    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-{{- include "startx.appVersion" $root -}}"
-    {{- include "example-fruitapp-shared.labels" $root | nindent 4 }}
-    app: {{ include "startx.appName" $root }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $ -}}-{{- include "startx.appVersion" $ -}}"
+    {{- include "example-fruitapp-shared.labels" $ | nindent 4 }}
+    app: {{ include "startx.appName" $ }}
   namespace: "{{- .Values.namespace }}"
 spec:
   accessModes:

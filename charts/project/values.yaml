@@ -40,6 +40,11 @@ project:
   # display_name: Example project
   # # Description of the project (only for project)
   # description: This is an default project created via Helm
+  # # Custom configuration for labels and annotations
+  # additionalLabels: |
+  #   label: "project"
+  # additionalAnnotations: |
+  #   annotations: "project"
 
 # Configure RBAC for project
 rbac: 
@@ -48,14 +53,16 @@ rbac:
   # # List groups to authorize on this project
   groups: []
   # # Example group ID
-  # - id: mygroup
+  # - id: mygroup_default
   #   # Example group name
-  #   name: mygroup_example
+  #   name: mygroup_default
+  #   # Example binding namespace
+  #   namespace: default
   #   # Example group role in this project
   #   role: basic-user
-  # - id: mygroupcluster
+  # - id: mygroup_admin
   #   # Example group name
-  #   name: mygroupcluster_example
+  #   name: mygroup_admin
   #   # Example of a clusterRoleBinding
   #   type: cluster
   #   # Example group role in this project
@@ -65,7 +72,19 @@ rbac:
   # # Example user ID
   # - id: myuser
   #   # Example user name
-  #   name: myuser_example
+  #   name: myusername
+  #   # Example of the user rolebinding namespace (default is project name)
+  #   namespace: default
+  #   # Example user role in this project
+  #   role: basic-user
+  # # List serviceAccount to authorize on this project
+  sa: []
+  # # Example user ID
+  # - id: mysa
+  #   # Example user name
+  #   name: mysa
+  #   # Example of the serviceaccount namespace (default is project name)
+  #   namespace: default
   #   # Example user role in this project
   #   role: basic-user
 
@@ -95,6 +114,11 @@ networkpolicy:
   #     ingress:
   #     - from:
   #       - podSelector: {}
+  # # Custom configuration
+  # additionalLabels: |
+  #   label: "netpol"
+  # additionalAnnotations: |
+  #   annotations: "netpol"
 
 # Configure limitRange for project
 limits: 
@@ -111,6 +135,11 @@ limits:
         max:
           cpu: 100m
           memory: 128Mi
+  # Custom configuration
+  # additionalLabels: |
+  #   label: "limit"
+  # additionalAnnotations: |
+  #   annotations: "limit"
 
 # Configure quotas for project
 quotas: 
@@ -126,6 +155,10 @@ quotas:
       persistentvolumeclaims: "0"
       pods: "4"
       services: "2"
+  # additionalLabels: |
+  #   label: "quota"
+  # additionalAnnotations: |
+  #   annotations: "quota"
 
 # Configure serviceAccounts for project
 serviceAccounts:
@@ -141,6 +174,11 @@ serviceAccounts:
     #     - name: startx-registrycreds-quay
     #     # Name of the namespace where the secret reside (default is same project)
     #       namespace: default-project
+  # Custom configuration
+  # additionalLabels: |
+  #   label: "sa"
+  # additionalAnnotations: |
+  #   annotations: "sa"
 
 # Configuration of the registry credentials at the project level
 dockercfg:
@@ -160,6 +198,11 @@ dockercfg:
     #   password: xxxx
     #   # email associated to the user 
     #   email: xxxx
+  # Custom configuration
+  # additionalLabels: |
+  #   label: "secret"
+  # additionalAnnotations: |
+  #   annotations: "secret"
 
 # Configuration of the serviceMonitor at the project level
 serviceMonitor:
@@ -180,6 +223,11 @@ serviceMonitor:
     #     selector:
     #       matchLabels:
     #         app: prometheus-example-app
+  # Custom configuration
+  # additionalLabels: |
+  #   label: "svcmon"
+  # additionalAnnotations: |
+  #   annotations: "svcmon"
 
 # Configuration of the podMonitor at the project level
 podMonitor:
@@ -200,3 +248,8 @@ podMonitor:
     #     selector:
     #       matchLabels:
     #         app: prometheus-example-app
+  # Custom configuration
+  # additionalLabels: |
+  #   label: "podmon"
+  # additionalAnnotations: |
+  #   annotations: "podmon"

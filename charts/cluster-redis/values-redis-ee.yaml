@@ -1,0 +1,59 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: redis
+  app: startx-redis
+
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "openshift-startx-redis"
+    display_name: "Startx REDIS"
+    requester: startx
+    description: Redis configured by STARTX
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: default
+        imagePullSecrets: 
+          - name: startx-registrycreds-rhn
+  dockercfg:
+    enabled: true
+    list: 
+      - name: startx-registrycreds-rhn
+        registry: registry.connect.redhat.com
+        username: startx_cl
+        password: xxxx
+        email: "cl@startx.fr"
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "redis-enterprise-operator-cert"
+    namespace: "openshift-startx-redis"
+    version: "v7.2.4-12.0"
+    operator: 
+      channel: "7.2.4"
+      name: redis-enterprise-operator-cert
+      installPlanApproval: Automatic
+      # csv: redis-operator
+      source: 
+        name: certified-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "redis-operator"
+    namespace: "openshift-startx-redis"
+    providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"

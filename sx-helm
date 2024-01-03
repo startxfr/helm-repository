@@ -5,6 +5,7 @@ PROJECT_LIBPATH=$PROJECT_PATH/.tools
 
 # shellcheck source=/dev/null
 source "$PROJECT_LIBPATH/cli"
+source "$PROJECT_LIBPATH/cli-s3"
 
 ## Start prog switch
 
@@ -14,6 +15,8 @@ if [[ "$1" != "" ]]; then
         publish)                routerPublish;;
         release)                routerRelease "$@" ;;
         archive)                routerArchive "$@" ;;
+        syncfroms3)             routerSyncFromS3 "$@" ;;
+        synctos3)               routerSyncToS3 "$@" ;;
         version)                routerVersion;;
         *)
             case $2 in

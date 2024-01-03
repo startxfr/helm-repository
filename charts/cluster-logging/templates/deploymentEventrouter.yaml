@@ -1,5 +1,4 @@
 {{- if .Values.eventrouter.enabled }}
-{{- $root := . -}}
 {{- $name := .Values.eventrouter.name | default "eventrouter" -}}
 {{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
 ---
@@ -82,7 +81,7 @@ metadata:
     component: {{ $name | quote }}
     logging-infra: {{ $name | quote }}
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }}
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
     argocd.argoproj.io/sync-wave: "2"
@@ -98,11 +97,11 @@ spec:
         component: {{ $name | quote }}
         logging-infra: {{ $name | quote }}
         kube-monkey/enabled: enabled
-        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
+        kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }}
       name: {{ $name | quote }}
     spec:
       serviceAccount: {{ $name | quote }}
-      {{- if $root.Values.logging.infra_enabled }}
+      {{- if $.Values.logging.infra_enabled }}
       tolerations:
         - effect: NoSchedule 
           key: node-role.kubernetes.io/infra 

@@ -1,0 +1,40 @@
+{{- if .Values.api.enabled }}
+---
+apiVersion: config.openshift.io/v1
+kind: APIServer
+metadata:
+  name: cluster
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "cluster-api"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  servingCerts:
+    namedCertificates:
+    - names:
+      - {{ .Values.api.url }}
+      servingCertificate:
+        name: {{ .Values.api.name | default "api-tls" | quote }}
+  audit:
+    profile: Default
+---
+kind: Secret
+apiVersion: v1
+type: kubernetes.io/tls
+metadata:
+  name: {{ .Values.api.name | default "api-tls" | quote }}
+  namespace: openshift-config
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "cluster-secret"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "0"
+data:
+  tls.crt: >-
+    {{ .Values.api.certificateChain | b64enc }}
+  tls.key: >-
+    {{ .Values.api.privateKey | b64enc }}
+{{- end }}

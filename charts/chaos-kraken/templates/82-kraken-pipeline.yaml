@@ -1,5 +1,4 @@
 {{- if .Values.kraken.enabled -}}
-{{- $root := . -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 {{- if eq .Values.kraken.mode "pipeline" -}}{{- if .Values.kraken.pipeline -}}
@@ -12,10 +11,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "cerberus-check-task"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: cerberus
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/categories: Test
     tekton.dev/displayName: Start a cerberus check
@@ -93,10 +92,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-scenario-task"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/categories: Test
     tekton.dev/displayName: Start a kraken chaos test
@@ -168,10 +167,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-infra-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos infrastructure pipeline
 spec:
@@ -418,11 +417,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-infra-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-infra
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos infrastructure pipeline
 spec:
@@ -508,13 +507,13 @@ spec:
         metadata:
           labels:
             app.kubernetes.io/name: "kraken-pipeline-persistent-cache-pvc"
-            {{- include "chaos-kraken.labels" $root | nindent 12 }}
+            {{- include "chaos-kraken.labels" $ | nindent 12 }}
             tekton.dev/pipeline: kraken-chaos-infra
             app.kubernetes.io/part-of: kraken-chaos-infra
             tekton.dev/pipeline: kraken-chaos-infra
             tool: kraken
           annotations:
-            {{- include "chaos-kraken.annotations" $root | nindent 12 }}
+            {{- include "chaos-kraken.annotations" $ | nindent 12 }}
             openshift.io/installed-from: startx
             tekton.dev/displayName: Shared cache accros pipeline executions
         spec:
@@ -531,10 +530,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-monitoring-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift monitoring cluster service
 spec:
@@ -582,11 +581,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-monitoring-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-monitoring
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on monitoring cluster service
 spec:
@@ -629,10 +628,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-acm-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift acm cluster service
 spec:
@@ -680,11 +679,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-acm-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-acm
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on acm cluster service
 spec:
@@ -727,10 +726,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-acs-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift acs cluster service
 spec:
@@ -778,11 +777,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-acs-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-acs
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on acs cluster service
 spec:
@@ -825,10 +824,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-logging-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift logging cluster service
 spec:
@@ -876,11 +875,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-logging-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-logging
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on logging cluster service
 spec:
@@ -923,10 +922,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-apiserver-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift apiserver cluster service
 spec:
@@ -974,11 +973,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-apiserver-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-apiserver
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on apiserver cluster service
 spec:
@@ -1021,10 +1020,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-etcd-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift etcd cluster service
 spec:
@@ -1072,11 +1071,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-etcd-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-etcd
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on etcd cluster service
 spec:
@@ -1119,10 +1118,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-time-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift time cluster service
 spec:
@@ -1170,11 +1169,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-time-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-time
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on time cluster service
 spec:
@@ -1217,10 +1216,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-releasemonkey-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift releasemonkey cluster service
 spec:
@@ -1268,11 +1267,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-releasemonkey-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-releasemonkey
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on releasemonkey cluster service
 spec:
@@ -1315,10 +1314,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-nodes-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift nodes cluster service
 spec:
@@ -1366,11 +1365,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-nodes-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-nodes
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on nodes cluster service
 spec:
@@ -1413,10 +1412,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-network-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift network cluster service
 spec:
@@ -1464,11 +1463,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-network-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-network
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on network cluster service
 spec:
@@ -1511,10 +1510,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-storage-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift storage cluster service
 spec:
@@ -1562,11 +1561,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-storage-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-storage
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on storage cluster service
 spec:
@@ -1609,10 +1608,10 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-cluster-pipeline"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Define a kraken chaos pipeline for Openshift cluster cluster service
 spec:
@@ -1660,11 +1659,11 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "kraken-chaos-standalone-cluster-pipelinerun"
-    {{- include "chaos-kraken.labels" $root | nindent 4 }}
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
     tekton.dev/pipeline: kraken-chaos-standalone-cluster
     tool: kraken
   annotations:
-    {{- include "chaos-kraken.annotations" $root | nindent 4 }}
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
     openshift.io/installed-from: startx
     tekton.dev/displayName: Run a kraken chaos on cluster cluster service
 spec:

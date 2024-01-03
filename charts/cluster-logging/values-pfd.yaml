@@ -7,7 +7,7 @@ context: &context
   component: logging
   app: openshift-logging
 
-# see https://access.redhat.com/documentation/en-us/openshift_container_platform/4.13/html/logging/configuring-your-logging-deployment
+# see https://access.redhat.com/documentation/en-us/openshift_container_platform/4.14/html/logging/configuring-your-logging-deployment
 logging:
   enabled: false
   infra_enabled: true
@@ -73,6 +73,31 @@ eventrouter:
       memory: 128Mi
 logforwarder:
   enabled: false
+  secret:
+    enabled: false
+    name: elasticsearch-mgmt1
+    CABundle: |-
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+    tlsCrt: |-
+      ----BEGIN CERTIFICATE-----
+      MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      -----END CERTIFICATE-----
+    tlsKey: |-
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIJKAyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+      yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+      -----END RSA PRIVATE KEY-----
+    username: mylogin
+    password: mypwd
   spec: |
     outputs:
     - name: elasticsearch-mgmt1

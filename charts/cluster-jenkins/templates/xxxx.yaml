@@ -1,5 +1,4 @@
 {{- if .Values.jenkins.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "openshift-jenkins" -}}
 {{- $spec := .Values.jenkins.spec | default "{}" -}}
 apiVersion: jenkins.openshift.io/v1

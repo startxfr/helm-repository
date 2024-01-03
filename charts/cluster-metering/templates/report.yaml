@@ -1,5 +1,4 @@
 {{- if .Values.metering.reports -}}{{- if .Values.metering.reports.enabled -}}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "default-metering" -}}
 {{- range .Values.metering.reports.list }}
 ---
@@ -9,10 +8,10 @@ metadata:
   name: {{ .name | default "default-report" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "cluster-metering.labels" $root | nindent 4 }}
+    {{- include "cluster-metering.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .name | default "default-report" }}-report"
   annotations:
-    {{- include "cluster-metering.annotations" $root | nindent 4 }}
+    {{- include "cluster-metering.annotations" $ | nindent 4 }}
 spec:
   {{- .spec | nindent 2 }}
 {{- end }}

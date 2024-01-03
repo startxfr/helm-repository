@@ -1,0 +1,31 @@
+{{- if .Values.proxy.enabled -}}
+---
+apiVersion: config.openshift.io/v1
+kind: Proxy
+metadata:
+  name: cluster
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-proxy-{{- include "startx.appVersion" . -}}"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+spec:
+  trustedCA:
+    name: "cluster-proxy-ca"
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "cluster-proxy-ca"
+  namespace: openshift-config
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "cluster-proxy-ca-config"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+data:
+  ca-bundle.crt: |-
+    {{- .Values.proxy.CABundle | nindent 4 }}
+
+{{- end -}}
+

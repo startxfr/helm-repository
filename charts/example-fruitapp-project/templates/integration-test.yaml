@@ -1,5 +1,4 @@
 {{- if .Values.integration_chain }}{{- if .Values.integration_chain.enabled }}{{- if .Values.integration_chain.enabled_test }}
-{{- $root := . -}}
 ---
 kind: Secret
 apiVersion: v1
@@ -8,7 +7,7 @@ metadata:
   namespace: "{{- .Values.project_integration.project.name }}"
   labels:
     app.kubernetes.io/name: 'db-test'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     app: db-test
   annotations:
@@ -28,13 +27,13 @@ metadata:
   namespace: "{{- .Values.project_integration.project.name }}"
   labels:
     app.kubernetes.io/name: 'db-test-deployment'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
     app: db-test
   annotations:
-    {{- include "example-fruitapp-project.annotations" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.annotations" $ | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"postgresql:{{- .Values.integration_chain.pg_version }}","namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
     argocd.argoproj.io/sync-wave: "10"
     alpha.image.policy.openshift.io/resolve-names: '*'
@@ -126,13 +125,13 @@ metadata:
   namespace: "{{- .Values.project_integration.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend-test-deployment'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }} 
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }} 
     app: frontend-test
   annotations:
-    {{- include "example-fruitapp-project.annotations" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.annotations" $ | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:test","namespace":"{{- .Values.project_integration.project.name }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
     argocd.argoproj.io/sync-wave: "15"
     alpha.image.policy.openshift.io/resolve-names: '*'
@@ -235,7 +234,7 @@ metadata:
   namespace: "{{- .Values.project_integration.project.name }}"
   labels:
     app.kubernetes.io/name: 'db-test-service'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     app: db-test
   annotations:
@@ -260,7 +259,7 @@ metadata:
   namespace: "{{- .Values.project_integration.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend-test-service'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
     app.kubernetes.io/part-of: 'devel'
     app: frontend-test
   annotations:
@@ -286,7 +285,7 @@ metadata:
   namespace: "{{- .Values.project_integration.project.name }}"
   labels:
     app.kubernetes.io/name: 'frontend-test'
-    {{- include "example-fruitapp-project.labels" $root | nindent 4 }}
+    {{- include "example-fruitapp-project.labels" $ | nindent 4 }}
 spec:
   port:
     targetPort: 8080-tcp

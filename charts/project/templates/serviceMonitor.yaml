@@ -1,5 +1,4 @@
 {{- if .Values.enabled }}{{- if .Values.serviceMonitor }}{{- if .Values.serviceMonitor.enabled -}}
-{{- $root := . -}}
 {{- $defaultns := .Values.project.name | default .Chart.Name -}}
 
 {{ range .Values.serviceMonitor.list }}
@@ -12,10 +11,16 @@ metadata:
   name: "{{- $name -}}"
   namespace: "{{- $namespace -}}"
   labels:
-    {{- include "project.labels" $root | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" $root -}}-serviceMonitor-{{- include "startx.appVersion" $root -}}"
+    {{- include "project.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $ -}}-serviceMonitor-{{- include "startx.appVersion" $ -}}"
+    {{- if $.Values.serviceMonitor.additionalLabels }}
+    {{- $.Values.serviceMonitor.additionalLabels | trim | nindent 4 }}
+    {{- end}}
   annotations:
-    {{- include "project.annotations" $root | nindent 4 }}
+    {{- include "project.annotations" $ | nindent 4 }}
+    {{- if $.Values.serviceMonitor.additionalAnnotations }}
+    {{- $.Values.serviceMonitor.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
 spec:
   {{- .spec | nindent 2 }}
 

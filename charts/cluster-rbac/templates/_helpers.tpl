@@ -16,7 +16,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{/* Common operator note */}}
 {{- define "cluster-rbac.notes" -}}
 -- Cluster RBAC --------------------
-{{- if .groups.enabled }}
+{{- if and .groups .groups.enabled }}
         group : enabled
         {{- range .groups.list }}
               - group {{ .id }}

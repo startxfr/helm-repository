@@ -1,5 +1,4 @@
 {{- if .Values.frontend }}{{- if .Values.frontend.enabled }}
-{{- $root := . -}}
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -7,16 +6,16 @@ metadata:
   name: '{{- .Values.frontend.name }}-{{- .Values.frontend.version | replace "." "-"  }}'
   namespace: "{{- .Values.namespace }}"
   labels:
-    app.kubernetes.io/name: '{{- .Values.frontend.name }}-{{- include "startx.appVersion" $root -}}-deployment'
-    {{- include "example-fruitapp-app.labels" $root | nindent 4 }}
-    app.kubernetes.io/part-of: '{{ include "startx.appName" $root }}'
+    app.kubernetes.io/name: '{{- .Values.frontend.name }}-{{- include "startx.appVersion" $ -}}-deployment'
+    {{- include "example-fruitapp-app.labels" $ | nindent 4 }}
+    app.kubernetes.io/part-of: '{{ include "startx.appName" $ }}'
     app.openshift.io/runtime: nodejs
     app.openshift.io/runtime-version: "{{- .Values.frontend.version }}"
     app: {{ .Values.frontend.name }}
     kube-monkey/enabled: enabled
-    kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
+    kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }}
   annotations:
-    {{- include "example-fruitapp-app.annotations" $root | nindent 4 }}
+    {{- include "example-fruitapp-app.annotations" $ | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:{{- .Values.frontend.version }}","namespace":"{{- .Values.namespace }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image","pause":"false"}]'
     argocd.argoproj.io/sync-wave: "30"
     alpha.image.policy.openshift.io/resolve-names: '*'
@@ -42,7 +41,7 @@ spec:
         app: frontend
         version: "{{- .Values.frontend.version }}"
         kube-monkey/enabled: enabled
-        kube-monkey/identifier: {{ include "startx.appName" $root | default "cluster" | quote }}
+        kube-monkey/identifier: {{ include "startx.appName" $ | default "cluster" | quote }}
     spec:
       containers:
       - env:

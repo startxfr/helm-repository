@@ -22,8 +22,8 @@ clusterversion:
   enabled: false
   channel: fast
   clusterID: "xxxxx-xxxx-xxxxxx"
-  version: "4.13"
-  desiredVersion: 4.13.26
+  version: "4.14"
+  desiredVersion: 4.14.6
 alertmanager:
   enabled: false
   receiverName: PagerDutyStartx
@@ -67,7 +67,7 @@ helm_reposistory:
   enabled: false
   list: 
   - name: startx
-    url: https://helm-repository.readthedocs.io/en/latest/packages
+    url: https://helm-repository.readthedocs.io/en/latest/repos/stable
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -152,24 +152,6 @@ projectSosReport:
 
 # Configuration of the sosreport operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorSosReport:
-  enabled: false
-
-# Configuration of the MustGather project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
-projectMustGather: 
-  enabled: true
-  context: 
-    <<: *context
-  project: 
-    enabled: false
-    hooked: false
-    type: project
-    name: "openshift-startx-mustgather"
-    display_name: "Startx MustGather"
-    requester: startx
-    description: Startx Must Gather area
-
-# Configuration of the mustgather operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
-operatorMustGather:
   enabled: false
 
 # Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)

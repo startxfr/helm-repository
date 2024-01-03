@@ -1,5 +1,4 @@
 {{- if .Values.loader }}{{- if .Values.loader.enabled }}
-{{- $root := . -}}
 {{- $scope := .Values.context.scope -}}
 {{- $defaultns := .Values.project.project.name | default .Chart.Name -}}
 
@@ -13,12 +12,12 @@ metadata:
   name: "{{- $name -}}-loader"
   namespace: {{ $ns | quote }}
   labels:
-    {{- include "cluster-crunchy.labels" $root | nindent 4 }}
+    {{- include "cluster-crunchy.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-loader-pod"
     postgresql_cluster: "{{- $name -}}"
     postgresql: "{{- $name -}}"
   annotations:
-    {{- include "cluster-crunchy.annotations" $root | nindent 4 }}
+    {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "25"
 spec:
   restartPolicy: Never

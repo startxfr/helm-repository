@@ -1,5 +1,4 @@
 {{- if .Values.console.enabled -}}{{- if .Values.console.customize -}}
-{{- $root := . -}}
 {{- $files := .Files }}
 {{- $namespace := .Values.console.namespace | default "openshift-config" -}}
 {{- with .Values.console.customize -}}
@@ -9,14 +8,14 @@ apiVersion: operator.openshift.io/v1
 metadata:
   name: cluster
   labels:
-    {{- include "cluster-console.labels" $root | nindent 4 }}
+    {{- include "cluster-console.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "cluster-console"
   annotations:
-    {{- include "cluster-console.annotations" $root | nindent 4 }}
+    {{- include "cluster-console.annotations" $ | nindent 4 }}
     release.openshift.io/create-only: "true"
     helm.sh/resource-policy: keep
 spec:
-  managementState: {{ $root.Values.console.state | default "Managed" | quote }}
+  managementState: {{ $.Values.console.state | default "Managed" | quote }}
   customization:
     customLogoFile:
       key: "{{- .logo.name | default "default-logo" -}}.svg"

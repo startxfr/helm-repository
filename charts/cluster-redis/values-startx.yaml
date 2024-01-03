@@ -1,0 +1,186 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: redis
+  app: startx-redis
+
+cluster:
+  enabled: false
+  list: 
+  - name: default-redis
+    namespace: default
+    enabled: true
+    spec: |
+      clusterSize: 3
+      clusterVersion: v7
+      kubernetesConfig:
+        image: quay.io/opstree/redis:v7.0.5
+        imagePullPolicy: IfNotPresent
+        updateStrategy: {}
+        resources:
+          requests:
+            cpu: 101m
+            memory: 128Mi
+          limits:
+            cpu: 101m
+            memory: 128Mi
+      redisExporter:
+        enabled: true
+        image: 'quay.io/opstree/redis-exporter:v1.44.0'
+        imagePullPolicy: IfNotPresent
+      redisFollower:
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      redisLeader:
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+      persistenceEnabled: true
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: gp3-csi
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: redis-operator
+  rbac: 
+    enabled: true
+    sa:
+    - id: redis-operator
+      name: redis-operator
+      type: cluster
+      role: redis-opscr
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "redis-operator"
+    namespace: "openshift-operators"
+    version: "v0.15.1"
+    operator: 
+      channel: "stable"
+      name: redis-operator
+      installPlanApproval: Automatic
+      # csv: redis-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "redis-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"
+rbac:
+  enabled: false
+  context: 
+    <<: *context
+  roles:
+    enabled: true
+    list:
+    - id: redis-opscr
+      name: redis-opscr
+      scope: global
+      rules: |-
+        - apiGroups:
+          - redis.redis.opstreelabs.in
+          resources:
+          - rediscluster
+          - redisrreplication
+          - redissentinel
+          - redis
+          verbs:
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - persistentvolumeclaims
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - pods/exec
+          verbs:
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - list
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - policy
+          resources:
+          - poddisruptionbudgets
+          verbs:
+          - get
+          - create
+          - delete
+          - list
+          - watch

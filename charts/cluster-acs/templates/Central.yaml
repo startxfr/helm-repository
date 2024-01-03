@@ -1,5 +1,4 @@
 {{- if .Values.acs.enabled }}{{- if .Values.acs.central }}{{- if .Values.acs.central.enabled }}
-{{- $root := . -}}
 {{- $namespace := .Values.project.project.name | default "open-security-management" -}}
 apiVersion: platform.stackrox.io/v1alpha1
 kind: Central
@@ -13,7 +12,7 @@ metadata:
     {{- include "cluster-acs.annotations" . | nindent 4 }}
     {{- if .Values.acs.central.hooked }}
     helm.sh/hook: post-install,post-upgrade
-    helm.sh/hook-weight: "10"
+    helm.sh/hook-weight: "0"
     helm.sh/hook-delete-policy: hook-failed
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
