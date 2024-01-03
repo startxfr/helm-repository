@@ -1,6 +1,8 @@
 #!/bin/bash
 
-SXV4_CONSOLE_VERSION=14.6.1
+STABLE_MAINRELEASE="14"
+STABLE_SUBRELEASE="6"
+SXV4_CONSOLE_VERSION="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}.1"
 SHARED_TEMPLATE_NAME=_startx.tpl
 SHARED_TEMPLATE=.tools/$SHARED_TEMPLATE_NAME
 SHARED_NAME=_sample_
@@ -9,8 +11,6 @@ export SHARED_SAMPLE_RESOURCE=.tools/sample/templates/example.yaml
 WORK_BRANCH=devel-noschema
 MASTER_BRANCH=master-noschema
 STABLE_BRANCH=stable-noschema
-STABLE_MAINRELEASE="14"
-STABLE_SUBRELEASE="6"
 STABLE_RELEASE="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}"
 # GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
@@ -96,11 +96,12 @@ function routerList {
 function routerPublish {
     doHelmrepositoryRefresh $HELM_REPO_SUBDEFAULT $HELM_REPO_SUBDEFAULT $HELM_REPO_BASEURL Publish 36
     doHelmrepositoryRefresh noschema noschema $HELM_REPO_BASEURL Publish 36
-    doHelmrepositoryRefresh release-14 "14" $HELM_REPO_BASEURL Publish 36
+    doHelmrepositoryRefresh "release-$STABLE_MAINRELEASE" "$STABLE_MAINRELEASE" $HELM_REPO_BASEURL Publish 36
 }
 
 # router for archive command
 function routerArchive {
+    # doHelmrepositoryRefresh release-14 "14" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-13 "13" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-12 "12" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-11 "11" $HELM_REPO_BASEURL Archive 37
