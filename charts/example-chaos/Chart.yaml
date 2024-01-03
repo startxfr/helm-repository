@@ -11,10 +11,6 @@ version: 14.6.103
 appVersion: "4.14.6"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/example-chaos.svg
-# category associated to this package
-category: example
-# tags
-tags: infra,example,chaos
 # Kube minimum version
 kubeVersion: ">=1.25.0-0"
 # Keyword list for this chart
@@ -89,7 +85,23 @@ dependencies:
     condition: litmus.enabled
 
 annotations:
+  # category associated to this package
+  category: example
+  # Artifacthub category associated to this package
+  artifacthub.io/category: integration-delivery
+  # Artifacthub license
+  artifacthub.io/license: "GPL-3.0-or-later"
+  # Artifacthub is this release a pre-release
+  artifacthub.io/prerelease: "true"
+  # Artifacthub is an operator chart
+  artifacthub.io/operator: "false"
+  # Artifacthub chart recommandations
+  artifacthub.io/recommendations: |
+    - name: Startx Chaos chart : Common
+      url: https://helm-repository.readthedocs.io/en/latest/charts/chaos
+  # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 14.6.75"
+      description: "Update all chart.yaml definition for artifacthub annotations"
+  # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
