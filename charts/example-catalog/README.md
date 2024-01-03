@@ -294,3 +294,4 @@ helm install example-catalog startx/example-catalog -f https://raw.githubusercon
 | 14.6.73-noschema | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71-noschema
 | 14.6.75-noschema | 2023-12-29 | publish stable update for the full repository
 | 14.6.99-noschema | 2024-01-02 | Stable noschema version for 14.6 release
+| 14.6.103-noschema | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75-noschema
