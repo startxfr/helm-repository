@@ -67,3 +67,4 @@ helm install cluster-mustgather startx/cluster-mustgather -f https://raw.githubu
 | 14.6.75-noschema | 2023-12-29 | publish stable update for the full repository
 | 14.6.99-noschema | 2024-01-02 | Stable noschema version for 14.6 release
 | 14.6.103-noschema | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75-noschema
+| 14.6.105-noschema | 2024-01-04 | Revove all schema for noschema branch
