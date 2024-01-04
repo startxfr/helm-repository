@@ -260,3 +260,4 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 14.6.99-noschema | 2024-01-02 | Stable noschema version for 14.6 release
 | 14.6.103-noschema | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75-noschema
 | 14.6.105-noschema | 2024-01-04 | Revove all schema for noschema branch
+| 14.6.109-noschema | 2024-01-04 | Upgrade all startx chart dependencies to version 14.6.105-noschema

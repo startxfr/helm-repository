@@ -87,29 +87,39 @@ name: chaos
 namespace: "chaos"
 spec:
 destination:
-    namespace: "default"
-    server: 'https://kubernetes.default.svc'
+  namespace: "default"
+  server: 'https://kubernetes.default.svc'
 project: default
 source:
-    path: charts/sxapi/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "devel"
-    helm:
-    valueFiles:
-        - values-test.yaml
+  repoURL: 'https://helm-repository.readthedocs.io/en/latest/repos/stable'
+  targetRevision: "14.6.103"
+  chart: chaos
+  helm:
+    values: |
+      ingress:
+        enabled: true
+        path: /
+        hosts:
+          - mydomain.example.com
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          kubernetes.io/tls-acme: "true"
+        labels: {}
     parameters:
-    - name: sxapi.service.enabled
-    value: "true"
-    - name: sxapi.service.expose
-    value: "true"
-ignoreDifferences:
-    - kind: Secret
-    jsonPointers: [ "/" ]
-```
-
-
-
-
+      - name: sxapi.service.enabled
+      value: "true"
+      - name: sxapi.service.expose
+      value: "true"
+destination:
+  server: 'https://kubernetes.default.svc'
+  namespace: demo-chaos
+syncPolicy:
+  automated:
+    prune: true
+  syncOptions:
+    - CreateNamespace=true
+  retry:
+    limit: 3
 ```
 
 #### 5.2 Enable operator
@@ -368,3 +378,5 @@ chaos-monkey startx/chaos-monkey
 | 14.6.99-noschema | 2024-01-02 | Stable noschema version for 14.6 release
 | 14.6.103-noschema | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75-noschema
 | 14.6.105-noschema | 2024-01-04 | Revove all schema for noschema branch
+| 14.6.109-noschema | 2024-01-04 | Upgrade all startx chart dependencies to version 14.6.105-noschema
+| 14.6.109-noschema | 2024-01-04 | Upgrade all startx chart dependencies to version 14.6.105-noschema
