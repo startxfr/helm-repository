@@ -102,3 +102,4 @@ helm install cluster-storage-efs startx/cluster-storage-efs -f https://raw.githu
 | 14.6.103 | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75
 | 14.6.105 | 2024-01-03 | publish stable update for the full repository
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
+| 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
