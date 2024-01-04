@@ -11,10 +11,6 @@ version: 14.6.105-noschema
 appVersion: "1.12.0"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-gitlab.svg
-# category associated to this package
-category: cluster
-# tags
-tags: infra,cluster,gitlab,build,repository
 # Kube minimum version
 kubeVersion: ">=1.25.0-0"
 # Keyword list for this chart
@@ -55,6 +51,25 @@ dependencies:
     condition: operator.enabled
 
 annotations:
+  # category associated to this package
+  category: cluster
+  # Artifacthub category associated to this package
+  artifacthub.io/category: integration-delivery
+  # Artifacthub license
+  artifacthub.io/license: "GPL-3.0-or-later"
+  # Artifacthub is this release a pre-release
+  artifacthub.io/prerelease: "true"
+  # Artifacthub is an operator chart
+  artifacthub.io/operator: "true"
+  # Artifacthub operator capabilities
+  artifacthub.io/operatorCapabilities: "Seamless Upgrades"
+  # Artifacthub chart recommandations
+  artifacthub.io/recommendations: |
+    - name: Startx basic chart : Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart : Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+  # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
       description: "Upgrade all startx chart dependencies to version 14.6.75-noschema"
