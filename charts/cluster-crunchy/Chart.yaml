@@ -6,15 +6,11 @@ description: Helm chart used to configure PostgreSQL cluster using CrunchyDB ope
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.103
+version: 14.6.109
 # Version name of the crunchy operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "5.5.0"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-crunchy.svg
-# category associated to this package
-category: cluster
-# tags
-tags: infra,cluster,crunchy,database,postgresql,sql
 # Kube minimum version
 kubeVersion: ">=1.25.0-0"
 # Keyword list for this chart
@@ -45,17 +41,35 @@ maintainers:
 dependencies:
   - name: project
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.75"
+    version: "14.6.105"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.75"
+    version: "14.6.105"
     alias: operator
     condition: operator.enabled
 
 annotations:
+  # category associated to this package
+  category: cluster
+  # Artifacthub category associated to this package
+  artifacthub.io/category: integration-delivery
+  # Artifacthub license
+  artifacthub.io/license: "GPL-3.0-or-later"
+  # Artifacthub is this release a pre-release
+  artifacthub.io/prerelease: "true"
+  # Artifacthub is an operator chart
+  artifacthub.io/operator: "false"
+  # Artifacthub chart recommandations
+  artifacthub.io/recommendations: |
+    - name: Startx basic chart : Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart : Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+  # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 14.6.75"
+      description: "Update all chart dependencies to version 14.6.105"
+  # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

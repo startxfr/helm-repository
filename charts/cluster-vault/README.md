@@ -365,3 +365,6 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 14.6.91 | 2024-01-02 | publish stable update for the full repository
 | 14.6.99 | 2024-01-02 | Full stable release of the chart repository
 | 14.6.103 | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75
+| 14.6.105 | 2024-01-03 | publish stable update for the full repository
+| 14.6.107 | 2024-01-04 | publish stable update for the full repository
+| 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
