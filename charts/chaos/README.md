@@ -87,29 +87,39 @@ name: chaos
 namespace: "chaos"
 spec:
 destination:
-    namespace: "default"
-    server: 'https://kubernetes.default.svc'
+  namespace: "default"
+  server: 'https://kubernetes.default.svc'
 project: default
 source:
-    path: charts/sxapi/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "devel"
-    helm:
-    valueFiles:
-        - values-test.yaml
+  repoURL: 'https://helm-repository.readthedocs.io/en/latest/repos/stable'
+  targetRevision: "14.6.103"
+  chart: chaos
+  helm:
+    values: |
+      ingress:
+        enabled: true
+        path: /
+        hosts:
+          - mydomain.example.com
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          kubernetes.io/tls-acme: "true"
+        labels: {}
     parameters:
-    - name: sxapi.service.enabled
-    value: "true"
-    - name: sxapi.service.expose
-    value: "true"
-ignoreDifferences:
-    - kind: Secret
-    jsonPointers: [ "/" ]
-```
-
-
-
-
+      - name: sxapi.service.enabled
+      value: "true"
+      - name: sxapi.service.expose
+      value: "true"
+destination:
+  server: 'https://kubernetes.default.svc'
+  namespace: demo-chaos
+syncPolicy:
+  automated:
+    prune: true
+  syncOptions:
+    - CreateNamespace=true
+  retry:
+    limit: 3
 ```
 
 #### 5.2 Enable operator
