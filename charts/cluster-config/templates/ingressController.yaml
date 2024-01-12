@@ -1,6 +1,6 @@
 {{- if .Values.ingresscontroller.enabled -}}
 {{ range .Values.ingresscontroller.list }}
-{{- $name := .name | default "myingress" -}}
+{{- $name := .name | default "myingress" }}
 ---
 apiVersion: operator.openshift.io/v1
 kind: IngressController
@@ -74,9 +74,17 @@ metadata:
     {{- include "cluster-config.annotations" $ | nindent 4 }}
 data:
   tls.crt: >-
+{{- if .certificate.CABundleRaw }}
+    {{ .certificate.CABundleRaw }}
+{{- else }}
     {{ .certificate.CABundle | b64enc }}
+{{- end }}
   tls.key: >-
+{{- if .certificate.privateKeyRaw }}
+    {{ .certificate.privateKeyRaw }}
+{{- else }}
     {{ .certificate.privateKey | b64enc }}
+{{- end }}
 {{- end }}{{- end }}
-{{- end -}}
-{{- end -}}
+{{- end }}
+{{- end }}

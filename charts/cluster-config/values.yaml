@@ -20,7 +20,7 @@ api:
   enabled: false
   name: api-tls
   url: api.mycluster.local
-  certificateChain: |
+  certificateChain: |-
     -----BEGIN CERTIFICATE-----
     XXXXXXX
     -----END CERTIFICATE-----
@@ -38,11 +38,21 @@ api:
     -----END CERTIFICATE-----
     -----BEGIN CERTIFICATE-----
     XXXXXXX
-    -----END CERTIFICATE-----  
-  privateKey: |
+    -----END CERTIFICATE-----
+  # certificateChainRaw: >-
+  #   LS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRVdqeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+  #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eAp4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+  #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4Cnh4eHh4eHh4eHh4eHh4
+  #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tL
+  privateKey: |-
     -----BEGIN RSA PRIVATE KEY-----
     XXXXXXX
-    -----END RSA PRIVATE KEY-----    
+    -----END RSA PRIVATE KEY-----
+  # privateKeyRaw: >-
+  #   LS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRVdqeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+  #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eAp4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+  #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4Cnh4eHh4eHh4eHh4eHh4
+  #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tL
 
 
 # Configuration of the cluster auto-scaling feature
@@ -183,14 +193,26 @@ ingresscontroller:
   #   certificate: 
   #     # Enable creation of the secret with certificate
   #     enabled: true
-  #     # CA bundle used by ingresscontroller
+  #     # CA bundle used by ingresscontroller (Raw, must be base64 encoded)
+  #     CABundleRaw:  |-
+  #       LS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRVdqeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+  #       eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eAp4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+  #       eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4Cnh4eHh4eHh4eHh4eHh4
+  #       eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tL
+  #     # CA bundle used by ingresscontroller (will be base64 encoded by the template)
   #     CABundle:  |-
   #       ----BEGIN CERTIFICATE-----
   #       MIIEWjxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   #       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   #       xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   #       -----END CERTIFICATE-----
-  #     # Private key used by ingresscontroller
+  #     # Private key used by ingresscontroller (Raw, must be base64 encoded)
+  #     privateKeyRaw: |-
+  #       LS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRVdqeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+  #       eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eAp4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
+  #       eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4Cnh4eHh4eHh4eHh4eHh4
+  #       eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tL
+  #     # Private key used by ingresscontroller (will be base64 encoded by the template)
   #     privateKey: |-
   #       -----BEGIN RSA PRIVATE KEY-----
   #       MIIJKAyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
