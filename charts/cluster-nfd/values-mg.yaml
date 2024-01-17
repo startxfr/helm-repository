@@ -9,115 +9,132 @@ context: &context
 nfd:
   enabled: false
   list:
-    - name: airflow
-      namespace: data-platform-airflow
-      kind: ingress
-      ingress: 
-        host: airflow.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: airflow-webserver
-        servicePort: 8080
-    - name: datahub
-      namespace: data-platform-datahub
-      kind: ingress
-      ingress: 
-        host: datahub.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: datahub-datahub-frontend
-        servicePort: 9002
-    - name: gitlab
-      namespace: gitlab-system
-      kind: ingress
-      ingress: 
-        host: gitlab.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: gitlab-webservice-default
-        servicePort: 8181
-    - name: jupyterhub-external
-      namespace: data-platform-jupyterhub-external
-      kind: ingress
-      ingress: 
-        host: jupyterhub-external.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: proxy-public
-        servicePort: 80
-    - name: jupyterhub-internal
-      namespace: data-platform-jupyterhub-internal
-      kind: ingress
-      ingress: 
-        host: jupyterhub-internal.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: proxy-public
-        servicePort: 80
-    - name: superset
-      namespace: data-platform-superset
-      kind: ingress
-      ingress: 
-        host: superset.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: superset
-        servicePort: 8088
-    - name: usecases-electromagnetic
-      namespace: data-platform-usecases
-      kind: ingress
-      ingress: 
-        host: usecases-electromagnetic.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: usecases-electromagnetic
-        servicePort: 8050
-    - name: usecases-monabike
-      namespace: data-platform-usecases
-      kind: ingress
-      ingress: 
-        host: usecases-monabike.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: usecases-monabike
-        servicePort: 8050
-    - name: usecases-twitter
-      namespace: data-platform-usecases
-      kind: ingress
-      ingress: 
-        host: usecases-twitter.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: usecases-twitter
-        servicePort: 8050
-    - name: usecases-xmobility
-      namespace: data-platform-usecases
-      kind: ingress
-      ingress: 
-        host: usecases-xmobility.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: usecases-xmobility
-        servicePort: 8050
-clusterIssuer: 
+    - name: nfd-instance
+      spec: |-
+        customConfig:
+          configData: |
+            #    - name: "more.kernel.features"
+            #      matchOn:
+            #      - loadedKMod: ["example_kmod3"]
+            #    - name: "more.features.by.nodename"
+            #      value: customValue
+            #      matchOn:
+            #      - nodename: ["special-.*-node-.*"]
+        operand:
+          image: >-
+            registry.redhat.io/openshift4/ose-node-feature-discovery
+          servicePort: 12000
+        workerConfig:
+          configData: |
+            core:
+            #  labelWhiteList:
+            #  noPublish: false
+              sleepInterval: 60s
+            #  sources: [all]
+            #  klog:
+            #    addDirHeader: false
+            #    alsologtostderr: false
+            #    logBacktraceAt:
+            #    logtostderr: true
+            #    skipHeaders: false
+            #    stderrthreshold: 2
+            #    v: 0
+            #    vmodule:
+            ##   NOTE: the following options are not dynamically run-time 
+            ##          configurable and require a nfd-worker restart to take effect
+            ##          after being changed
+            #    logDir:
+            #    logFile:
+            #    logFileMaxSize: 1800
+            #    skipLogHeaders: false
+            sources:
+            #  cpu:
+            #    cpuid:
+            ##     NOTE: whitelist has priority over blacklist
+            #      attributeBlacklist:
+            #        - "BMI1"
+            #        - "BMI2"
+            #        - "CLMUL"
+            #        - "CMOV"
+            #        - "CX16"
+            #        - "ERMS"
+            #        - "F16C"
+            #        - "HTT"
+            #        - "LZCNT"
+            #        - "MMX"
+            #        - "MMXEXT"
+            #        - "NX"
+            #        - "POPCNT"
+            #        - "RDRAND"
+            #        - "RDSEED"
+            #        - "RDTSCP"
+            #        - "SGX"
+            #        - "SSE"
+            #        - "SSE2"
+            #        - "SSE3"
+            #        - "SSE4.1"
+            #        - "SSE4.2"
+            #        - "SSSE3"
+            #      attributeWhitelist:
+            #  kernel:
+            #    kconfigFile: "/path/to/kconfig"
+            #    configOpts:
+            #      - "NO_HZ"
+            #      - "X86"
+            #      - "DMI"
+              pci:
+                deviceClassWhitelist:
+                  - "0200"
+                  - "03"
+                  - "12"
+                deviceLabelFields:
+            #      - "class"
+                  - "vendor"
+            #      - "device"
+            #      - "subsystem_vendor"
+            #      - "subsystem_device"
+            #  usb:
+            #    deviceClassWhitelist:
+            #      - "0e"
+            #      - "ef"
+            #      - "fe"
+            #      - "ff"
+            #    deviceLabelFields:
+            #      - "class"
+            #      - "vendor"
+            #      - "device"
+            #  custom:
+            #    - name: "my.kernel.feature"
+            #      matchOn:
+            #        - loadedKMod: ["example_kmod1", "example_kmod2"]
+            #    - name: "my.pci.feature"
+            #      matchOn:
+            #        - pciId:
+            #            class: ["0200"]
+            #            vendor: ["15b3"]
+            #            device: ["1014", "1017"]
+            #        - pciId :
+            #            vendor: ["8086"]
+            #            device: ["1000", "1100"]
+            #    - name: "my.usb.feature"
+            #      matchOn:
+            #        - usbId:
+            #          class: ["ff"]
+            #          vendor: ["03e7"]
+            #          device: ["2485"]
+            #        - usbId:
+            #          class: ["fe"]
+            #          vendor: ["1a6e"]
+            #          device: ["089a"]
+            #    - name: "my.combined.feature"
+            #      matchOn:
+            #        - pciId:
+            #            vendor: ["15b3"]
+            #            device: ["1014", "1017"]
+            #          loadedKMod : ["vendor_kmod1", "vendor_kmod2"]
+nfr:
   enabled: false
-  list:
-    - name: letsencrypt-prod
-      namespace: openshift-nfd
-      spec: |-
-        acme:
-          email: asouabni.ext@gouv.mc
-          preferredChain: ""
-          privateKeySecretRef:
-            name: prod-issuer-account-key
-          server: https://acme-v02.api.letsencrypt.org/directory
-          solvers:
-          - http01:
-              ingress:
-                class: openshift-default
-    - name: letsencrypt-staging
-      namespace: openshift-nfd
-      spec: |-
-        acme:
-          email: asouabni.ext@gouv.mc
-          preferredChain: ""
-          privateKeySecretRef:
-            name: example-issuer-account-key
-          server: https://acme-staging-v02.api.letsencrypt.org/directory
-          solvers:
-          - http01:
-              ingress:
-                class: openshift-default
+  list: []
 project: 
   enabled: false
   context: 

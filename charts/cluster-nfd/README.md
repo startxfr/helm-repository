@@ -35,11 +35,13 @@ helm show chart startx/cluster-nfd
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **namespace:** named **startx-nfd** without constraints
+- 1 **project:** named **openshift-nfd** without constraints
 - 1 **operator:** named **nfd** configured with
   - The **stable** channel for community release
-  - The **v1.7.2** version
-  - Deployed under the **openshift-operators** project
+  - The **4.11.0** version
+  - Deployed under the **openshift-nfd** project
+- 1 **NodeFeatureDiscovery:** named **nfd-instance** configured with default example config
+- 1 **NodeFeatureRule:** named **my-sample-rule** configured with default example config
 
 ```bash
 # Create the project
@@ -47,7 +49,7 @@ helm install cluster-nfd-project startx/cluster-nfd --set project.enabled=true,o
 # Deploy the OADP operator
 helm install cluster-nfd-operator startx/cluster-nfd --set project.enabled=false,operator.enabled=true,nfd.enabled=false && sleep 10
 # Configure default OADP ressources
-helm install cluster-nfd-instance startx/cluster-nfd --set project.enabled=false,operator.enabled=false,nfd.enabled=true
+helm install cluster-nfd-instance startx/cluster-nfd --set project.enabled=false,operator.enabled=false,nfd.enabled=true,nfr.enabled=true
 ```
 
 #### Others values availables
