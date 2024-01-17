@@ -8,125 +8,97 @@ context: &context
   app: startx-gpu
 gpu:
   enabled: false
-  list:
-    - name: airflow
-      namespace: data-platform-airflow
-      kind: ingress
-      ingress: 
-        host: airflow.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: airflow-webserver
-        servicePort: 8080
-    - name: datahub
-      namespace: data-platform-datahub
-      kind: ingress
-      ingress: 
-        host: datahub.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: datahub-datahub-frontend
-        servicePort: 9002
-    - name: gitlab
-      namespace: gitlab-system
-      kind: ingress
-      ingress: 
-        host: gitlab.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: gitlab-webservice-default
-        servicePort: 8181
-    - name: jupyterhub-external
-      namespace: data-platform-jupyterhub-external
-      kind: ingress
-      ingress: 
-        host: jupyterhub-external.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: proxy-public
-        servicePort: 80
-    - name: jupyterhub-internal
-      namespace: data-platform-jupyterhub-internal
-      kind: ingress
-      ingress: 
-        host: jupyterhub-internal.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: proxy-public
-        servicePort: 80
-    - name: superset
-      namespace: data-platform-superset
-      kind: ingress
-      ingress: 
-        host: superset.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: superset
-        servicePort: 8088
-    - name: usecases-electromagnetic
-      namespace: data-platform-usecases
-      kind: ingress
-      ingress: 
-        host: usecases-electromagnetic.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: usecases-electromagnetic
-        servicePort: 8050
-    - name: usecases-monabike
-      namespace: data-platform-usecases
-      kind: ingress
-      ingress: 
-        host: usecases-monabike.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: usecases-monabike
-        servicePort: 8050
-    - name: usecases-twitter
-      namespace: data-platform-usecases
-      kind: ingress
-      ingress: 
-        host: usecases-twitter.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: usecases-twitter
-        servicePort: 8050
-    - name: usecases-xmobility
-      namespace: data-platform-usecases
-      kind: ingress
-      ingress: 
-        host: usecases-xmobility.apps.monaco-lab.com
-        issuer: letsencrypt-prod
-        serviceName: usecases-xmobility
-        servicePort: 8050
-clusterIssuer: 
-  enabled: false
-  list:
-    - name: letsencrypt-prod
-      namespace: openshift-gpu
-      spec: |-
-        acme:
-          email: asouabni.ext@gouv.mc
-          preferredChain: ""
-          privateKeySecretRef:
-            name: prod-issuer-account-key
-          server: https://acme-v02.api.letsencrypt.org/directory
-          solvers:
-          - http01:
-              ingress:
-                class: openshift-default
-    - name: letsencrypt-staging
-      namespace: openshift-gpu
-      spec: |-
-        acme:
-          email: asouabni.ext@gouv.mc
-          preferredChain: ""
-          privateKeySecretRef:
-            name: example-issuer-account-key
-          server: https://acme-staging-v02.api.letsencrypt.org/directory
-          solvers:
-          - http01:
-              ingress:
-                class: openshift-default
+  spec: |-
+    vgpuDeviceManager:
+      enabled: true
+    migManager:
+      enabled: true
+    operator:
+      defaultRuntime: crio
+      initContainer: {}
+      runtimeClass: nvidia
+      use_ocp_driver_toolkit: true
+    dcgm:
+      enabled: true
+    gfd:
+      enabled: true
+    dcgmExporter:
+      config:
+        name: ''
+      enabled: true
+      serviceMonitor:
+        enabled: true
+    driver:
+      licensingConfig:
+        configMapName: ''
+        nlsEnabled: true
+      enabled: true
+      certConfig:
+        name: ''
+      useNvidiaDriverCRD: false
+      kernelModuleConfig:
+        name: ''
+      upgradePolicy:
+        autoUpgrade: true
+        drain:
+          deleteEmptyDir: false
+          enable: false
+          force: false
+          timeoutSeconds: 300
+        maxParallelUpgrades: 1
+        maxUnavailable: 25%
+        podDeletion:
+          deleteEmptyDir: false
+          force: false
+          timeoutSeconds: 300
+        waitForCompletion:
+          timeoutSeconds: 0
+      repoConfig:
+        configMapName: ''
+      useOpenKernelModules: false
+      virtualTopology:
+        config: ''
+    devicePlugin:
+      config:
+        default: ''
+        name: ''
+      enabled: true
+    mig:
+      strategy: single
+    sandboxDevicePlugin:
+      enabled: true
+    validator:
+      plugin:
+        env:
+          - name: WITH_WORKLOAD
+            value: 'false'
+    nodeStatusExporter:
+      enabled: true
+    daemonsets:
+      rollingUpdate:
+        maxUnavailable: '1'
+      updateStrategy: RollingUpdate
+    sandboxWorkloads:
+      defaultWorkload: container
+      enabled: false
+    gds:
+      enabled: false
+    vgpuManager:
+      enabled: false
+    vfioManager:
+      enabled: true
+    toolkit:
+      enabled: true
+      installDir: /usr/local/nvidia
 project: 
   enabled: false
   context: 
     <<: *context
   project: 
-    enabled: true
+    enabled: false
     hooked: false
     type: namespace
-    name: "openshift-gpu-nvidia-operator"
+    name: "nvidia-gpu-operator"
     display_name: Operator GPU-NVidia
     description: GPU-NVidia configured by STARTX
 operator:
@@ -136,20 +108,20 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "openshift-gpu-nvidia-operator"
-    namespace: "openshift-gpu-nvidia-operator"
-    version: "v1.12.1"
+    name: "gpu-operator-certified"
+    namespace: "nvidia-gpu-operator"
+    version: "v23.9.1"
     operator: 
-      channel: "stable-v1"
-      name: openshift-gpu-nvidia-operator
+      channel: "stable"
+      name: gpu-operator-certified
       installPlanApproval: Automatic
-      # csv: openshift-gpu-nvidia
+      # csv: gpu-operator-certified
       source: 
-        name: redhat-operators
+        name: certified-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "openshift-gpu-nvidia-operator"
-    namespace: "openshift-gpu-nvidia-operator"
-    providedAPIs: "Certificate.v1.gpu-nvidia.io,CertificateRequest.v1.gpu-nvidia.io,Challenge.v1.acme.gpu-nvidia.io,ClusterIssuer.v1.gpu-nvidia.io"
+    name: "nvidia-gpu-operator"
+    namespace: "nvidia-gpu-operator"
+    providedAPIs: "ClusterPolicy.v1.nvidia.com,NVIDIADriver.v1alpha1.nvidia.com"

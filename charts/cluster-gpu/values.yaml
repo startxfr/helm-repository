@@ -15,68 +15,95 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   # version: "0.0.3"
 
-# Deploy a certificate
+# Deploy the ClusterPolicy
 gpu:
-  # Enable creation of certificates
+  # Enable creation of the ClusterPolicy
   enabled: false
-  # List of certificate resource to deploy
-  list:
-      # name of the certificate
-    - name: example-manual-demo-gpu
-      # namespace of the certificate (default is project namespace)
-      namespace: demo-gpu
-      # kind of certificate (manual or ingress)
-      kind: manual
-      # Properties for a manual kind
-      manual: 
-        # spec of the certificate
-        spec: |-
-          commonName: example-manual-demo-gpu.example.com
-          dnsNames:
-          - example-manual-demo-gpu.example.com
-          issuerRef:
-            kind: ClusterIssuer
-            name: letsencrypt-demo
-          secretName: example-manual-demo-gpu-tls
-      # name of the certificate
-    - name: example-ingress-demo-gpu
-      # namespace of the certificate (default is project namespace)
-      namespace: demo-gpu
-      # kind of certificate (manual or ingress)
-      kind: ingress
-      # Properties for a ingress kind
-      ingress: 
-        # Hostname for the certificate
-        host: example-demo-gpu.example.com
-        # Issuer of the certificate
-        issuer: letsencrypt-demo
-        # The service name used to expose application
-        serviceName: example
-        # Service port number where ingress should route traffic to
-        servicePort: 8080
-# Create a gpu Issuer
-clusterIssuer: 
-  # Enable creation of clusterIssuers
-  enabled: false
-  # List of clusterIssuer resource to deploy
-  list:
-      # name of the clusterIssuer
-    - name: letsencrypt-demo
-      # namespace of the clusterIssuer (default is project namespace)
-      namespace: openshift-gpu
-      # spec of the clusterIssuer
-      spec: |-
-        acme:
-        email: myemail@corp.com
-        preferredChain: ""
-        privateKeySecretRef:
-          name: letsencrypt-demo-cert
-        server: https://demo-letsencrypt-demo.api.letsencrypt.org/directory
-        solvers:
-        - http01:
-            ingress:
-              class: openshift-default
-
+  # name of the ClusterPolicy (default is gpu-cluster-policy)
+  name: gpu-cluster-policy
+  # spec of the ClusterPolicy
+  spec: |-
+    vgpuDeviceManager:
+      enabled: true
+    migManager:
+      enabled: true
+    operator:
+      defaultRuntime: crio
+      initContainer: {}
+      runtimeClass: nvidia
+      use_ocp_driver_toolkit: true
+    dcgm:
+      enabled: true
+    gfd:
+      enabled: true
+    dcgmExporter:
+      config:
+        name: ''
+      enabled: true
+      serviceMonitor:
+        enabled: true
+    driver:
+      licensingConfig:
+        configMapName: ''
+        nlsEnabled: true
+      enabled: true
+      certConfig:
+        name: ''
+      useNvidiaDriverCRD: false
+      kernelModuleConfig:
+        name: ''
+      upgradePolicy:
+        autoUpgrade: true
+        drain:
+          deleteEmptyDir: false
+          enable: false
+          force: false
+          timeoutSeconds: 300
+        maxParallelUpgrades: 1
+        maxUnavailable: 25%
+        podDeletion:
+          deleteEmptyDir: false
+          force: false
+          timeoutSeconds: 300
+        waitForCompletion:
+          timeoutSeconds: 0
+      repoConfig:
+        configMapName: ''
+      useOpenKernelModules: false
+      virtualTopology:
+        config: ''
+    devicePlugin:
+      config:
+        default: ''
+        name: ''
+      enabled: true
+    mig:
+      strategy: single
+    sandboxDevicePlugin:
+      enabled: true
+    validator:
+      plugin:
+        env:
+          - name: WITH_WORKLOAD
+            value: 'false'
+    nodeStatusExporter:
+      enabled: true
+    daemonsets:
+      rollingUpdate:
+        maxUnavailable: '1'
+      updateStrategy: RollingUpdate
+    sandboxWorkloads:
+      defaultWorkload: container
+      enabled: false
+    gds:
+      enabled: false
+    vgpuManager:
+      enabled: false
+    vfioManager:
+      enabled: true
+    toolkit:
+      enabled: true
+      installDir: /usr/local/nvidia
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -87,7 +114,7 @@ project:
     enabled: false
     hooked: false
     type: namespace
-    name: "openshift-gpu-nvidia-operator"
+    name: "nvidia-gpu-operator"
     display_name: Operator GPU-NVidia
     description: GPU-NVidia configured by STARTX
 
@@ -99,21 +126,20 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "openshift-gpu-nvidia-operator"
-    namespace: "openshift-gpu-nvidia-operator"
-    version: "v1.12.1"
+    name: "gpu-operator-certified"
+    namespace: "nvidia-gpu-operator"
+    version: "v23.9.1"
     operator: 
-      channel: "stable-v1"
-      name: openshift-gpu-nvidia-operator
+      channel: "stable"
+      name: gpu-operator-certified
       installPlanApproval: Automatic
-      # csv: openshift-gpu-nvidia
+      # csv: gpu-operator-certified
       source: 
-        name: redhat-operators
+        name: certified-operators
         namespace: openshift-marketplace
   operatorGroup:
     enabled: false
     hooked: false
-    name: "openshift-gpu-nvidia-operator"
-    namespace: "openshift-gpu-nvidia-operator"
-    providedAPIs: "Certificate.v1.gpu-nvidia.io,CertificateRequest.v1.gpu-nvidia.io,Challenge.v1.acme.gpu-nvidia.io,ClusterIssuer.v1.gpu-nvidia.io"
-
+    name: "nvidia-gpu-operator"
+    namespace: "nvidia-gpu-operator"
+    providedAPIs: "ClusterPolicy.v1.nvidia.com,NVIDIADriver.v1alpha1.nvidia.com"
