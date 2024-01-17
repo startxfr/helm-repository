@@ -1,0 +1,17 @@
+{{- if .Values.gpu -}}{{- if .Values.gpu.enabled -}}
+{{- $name := .Values.gpu.name | default "gpu-cluster-policy" -}}
+{{- $spec := .Values.gpu.spec | default "{}" -}}
+---
+apiVersion: nvidia.com/v1
+kind: ClusterPolicy
+metadata:
+  name: {{ $name | quote }}
+  labels:
+    {{- include "cluster-gpu.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-gpu"
+  annotations:
+    {{- include "cluster-gpu.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}
