@@ -50,6 +50,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-couchbase](charts/cluster-couchbase.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-couchbase)    | configure couchbase at the cluster level                          |
 | **[cluster-crunchy](charts/cluster-crunchy.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-crunchy)      | configure crunchyDatabase at the cluster level                    |
 | **[cluster-mustgather](charts/cluster-mustgather.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mustgather)      | configure mustgather at the cluster level                    |
+| **[cluster-nfd](charts/cluster-nfd.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nfd)      | configure Node Feature Discovery at the cluster level                    |
 | **[cluster-gpu](charts/cluster-gpu.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-gpu)      | configure GPU Drivers (NVidia) at the cluster level                    |
 
 #### Use Cluster charts
