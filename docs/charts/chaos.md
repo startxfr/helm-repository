@@ -1,4 +1,4 @@
-# Chaos Chart : Main
+# Chaos Chart : Main [![Artifacthub](https://img.shields.io/badge/ArtifactHub-cluster-chaos-blue.svg)](https://artifacthub.io/packages/search?repo=cluster-chaos)
 
 This helm chart is used to deploy a chaos test suite composed of cerberus, kraken, litmus, chaos mesh and kube-monkey.
 
