@@ -265,3 +265,4 @@ helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com
 | 14.6.105 | 2024-01-03 | publish stable update for the full repository
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
+| 14.6.131 | 2024-01-18 | publish stable update for the full repository
