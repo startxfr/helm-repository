@@ -1,4 +1,4 @@
-# Cluster Chart : NFD
+# Cluster Chart : NFD [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--nfd-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+nfd+startx)
 
 This helm chart is used to deploy Node Feature Discovery handled by an operator for discovery of hardware profile and feature and Label nodes with a representation of theses features.
 
@@ -163,3 +163,4 @@ helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.111 | 2024-01-18 | New version of the NFD chart tested in OCP 4.12
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge

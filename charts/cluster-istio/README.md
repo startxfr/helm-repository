@@ -1,6 +1,7 @@
-# Cluster Chart : Istio
+# Cluster Chart : Istio [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--istio-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+istio+startx)
 
 This helm chart is used to configure Istio at the cluster level.
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -304,3 +305,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge

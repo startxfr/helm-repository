@@ -1,4 +1,4 @@
-# Example Chart : ImageStreams
+# Example Chart : ImageStreams [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--imagestreams-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+imagestreams+startx)
 
 This helm chart is used to used to load imagestreams into a given namespace.
 
@@ -382,3 +382,4 @@ helm install example-imagestreams-sxv4 startx/example-imagestreams -f https://ra
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge

@@ -1,4 +1,4 @@
-# Cluster Chart : ACS
+# Cluster Chart : ACS [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--acs-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+acs+startx)
 
 This helm chart must have a description
 
@@ -242,3 +242,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
