@@ -1,6 +1,7 @@
 # Cluster Chart : Config
 
 This helm chart is used to create a personnalized cluster configuration with various cluster level components configured as required.
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines

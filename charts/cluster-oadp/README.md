@@ -1,6 +1,7 @@
 # Cluster Chart : OADP
 
 This helm chart is used to deploy Openshift Application Data Protection handled by an operator to configure application and cluster backup strategies.
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines

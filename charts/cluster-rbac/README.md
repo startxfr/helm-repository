@@ -1,6 +1,7 @@
 # Cluster Chart : RBAC
 
 This helm chart is used to create a RBAC cluster configuration with group and user required as a default config fo the targeted cluster.
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
