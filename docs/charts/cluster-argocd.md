@@ -306,3 +306,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
 | 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
+| 14.6.135 | 2024-01-18 | debug artifacthub recommandations

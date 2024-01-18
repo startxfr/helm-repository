@@ -164,3 +164,4 @@ helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com
 | 14.6.111 | 2024-01-18 | New version of the NFD chart tested in OCP 4.12
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
 | 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
+| 14.6.135 | 2024-01-18 | debug artifacthub recommandations
