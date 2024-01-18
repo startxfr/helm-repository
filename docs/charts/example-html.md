@@ -1,4 +1,4 @@
-# Example Chart : HTML
+# Example Chart : HTML [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--html-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+html+startx)
 
 This helm chart is used to create a deployment of a small webserver based on [startx apache image](https://quay.io/startx/apache).
 
@@ -311,3 +311,4 @@ helm install example-html startx/example-html -f https://raw.githubusercontent.c
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
