@@ -1,4 +1,4 @@
-# Chaos Chart : Mesh
+# Chaos Chart : Mesh [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--mesh-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+mesh+startx)
 
 This helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster. 
 Chaos-mesh is as a chaos engine with a gui to define and execute chaos scenarios for Kubernetes clusters. 
@@ -226,3 +226,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge

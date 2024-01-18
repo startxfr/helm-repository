@@ -1,4 +1,4 @@
-# Example Chart : Deployment
+# Example Chart : Deployment [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--deployment-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+deployment+startx)
 
 This helm chart is used to create a deployment of various application images according to the values file.
 
@@ -333,3 +333,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
