@@ -397,3 +397,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 14.6.105 | 2024-01-03 | publish stable update for the full repository
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
+| 14.6.111 | 2024-01-18 | Updating handeling of the target value for the operatorGroup
