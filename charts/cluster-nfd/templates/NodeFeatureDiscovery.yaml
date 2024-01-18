@@ -1,0 +1,22 @@
+{{- if .Values.nfd -}}{{- if .Values.nfd.enabled -}}
+{{- $defaultns := .Values.project.project.name | default "openshift-nfd" -}}
+{{ range .Values.nfd.list }}
+{{- $name := .name | default "nfd-default-instance" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $spec := .spec | default "{}" -}}
+---
+apiVersion: nfd.openshift.io/v1
+kind: NodeFeatureDiscovery
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-nfd.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-nfd"
+  annotations:
+    {{- include "cluster-nfd.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{ end }}
+{{- end -}}{{- end -}}
