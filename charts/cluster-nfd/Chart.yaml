@@ -1,16 +1,16 @@
 apiVersion: v2
 # Name of this Helm chart
-name: cluster-mustgather
+name: cluster-nfd
 # Description of this Helm chart
-description: Helm chart used to configure MustGather at the cluster level
+description: Helm chart used to configure Node Feature Discovery at the cluster level.
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
 version: 14.6.111
-# Version name of the mustgather operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "1.1.2"
+# Version name of the nfd operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: "4.11.0"
 # Icon of this helm-chart
-icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-mustgather.svg
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-nfd.svg
 # Kube minimum version
 kubeVersion: ">=1.25.0-0"
 # Keyword list for this chart
@@ -21,17 +21,15 @@ keywords:
   - cluster-chart
   - cluster
   - infrastructure
-  - mustgather
-  - support
-  - log collection
-  - helpdesk
-  - reporting
+  - Node Feature Discovery
+  - Node
+  - Labels
 # STARTX helm chart repository homepage
 home: https://helm-repository.readthedocs.io/en/latest
 # Sources and documentation for this chart
 sources:
-  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-mustgather
-  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mustgather
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-nfd
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nfd
 # Main maintainer contact for this helm chart
 maintainers: 
   - name: "STARTX"
@@ -71,7 +69,7 @@ annotations:
       url: https://helm-repository.readthedocs.io/en/latest/charts/operator
   # Artifacthub changes logs
   artifacthub.io/changes: |
-    - kind: changed
-      description: "Update of the chart schema"
+    - kind: added
+      description: "Creation of the NFD chart based on the 4.11.0 version of the NFD operator"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

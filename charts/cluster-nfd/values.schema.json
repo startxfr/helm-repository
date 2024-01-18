@@ -222,22 +222,6 @@
                 "enabled": {
                     "type": "boolean"
                 },
-                "limits": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "networkpolicy": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        }
-                    }
-                },
                 "project": {
                     "type": "object",
                     "properties": {
@@ -260,88 +244,56 @@
                             "type": "string"
                         }
                     }
+                }
+            }
+        },
+        "nfd": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
                 },
-                "quotas": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "rbac": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "groups": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {
-                                        "type": "string"
-                                    },
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "role": {
-                                        "type": "string"
-                                    }
-                                }
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "spec": {
+                                "type": "string"
                             }
                         }
                     }
                 }
             }
         },
-        "redhatCreds": {
+        "nfr": {
             "type": "object",
             "properties": {
                 "enabled": {
                     "type": "boolean"
                 },
-                "name": {
-                    "type": "string"
-                },
-                "namespace": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "report": {
-            "type": "object",
-            "properties": {
-                "audit": {
-                    "type": "boolean"
-                },
-                "caseID": {
-                    "type": "string"
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "mustGatherImages": {
-                    "type": "string"
-                },
-                "namespace": {
-                    "type": "string"
-                },
-                "proxyConfig": {
-                    "type": "string"
-                },
-                "rhnCreds": {
-                    "type": "string"
-                },
-                "serviceAccount": {
-                    "type": "string"
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "spec": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         }
