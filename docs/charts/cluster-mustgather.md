@@ -1,6 +1,7 @@
 # Cluster Chart : MustGather
 
-This helm chart is used to configure MustGather at the cluster level.
+This helm chart is used to configure MustGather at the cluster level and help you manage attaching this MustGather to an existing case from the redhat support.
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -57,7 +58,6 @@ helm install cluster-mustgather startx/cluster-mustgather -f https://raw.githubu
 
 | Release  | Date       | Description                                                                                            |
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 14.6.61 | 2023-12-22 | create
 | 14.6.61 | 2023-12-22 | Create cluster-mustgather chart
 | 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
 | 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket
@@ -69,3 +69,5 @@ helm install cluster-mustgather startx/cluster-mustgather -f https://raw.githubu
 | 14.6.103-noschema | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75-noschema
 | 14.6.105-noschema | 2024-01-04 | Revove all schema for noschema branch
 | 14.6.109-noschema | 2024-01-04 | Upgrade all startx chart dependencies to version 14.6.105-noschema
+| 14.6.111-noschema | 2024-01-18 | Release of the noschema version
+| 14.6.131-noschema | 2024-01-18 | upgrade dependencies to basic charts for noschema branch

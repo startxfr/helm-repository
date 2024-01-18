@@ -331,3 +331,4 @@ helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubuser
 | 14.6.103-noschema | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75-noschema
 | 14.6.105-noschema | 2024-01-04 | Revove all schema for noschema branch
 | 14.6.109-noschema | 2024-01-04 | Upgrade all startx chart dependencies to version 14.6.105-noschema
+| 14.6.131-noschema | 2024-01-18 | upgrade dependencies to basic charts for noschema branch
