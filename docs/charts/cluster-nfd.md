@@ -163,3 +163,4 @@ helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.111 | 2024-01-18 | New version of the NFD chart tested in OCP 4.12
 | 14.6.111-noschema | 2024-01-18 | Release of the noschema version
+| 14.6.131-noschema | 2024-01-18 | upgrade dependencies to basic charts for noschema branch
