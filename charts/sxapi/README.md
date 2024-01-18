@@ -478,3 +478,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.111 | 2024-01-18 | align basic chart to 14.6.111 version because of the operator chart update
+| 14.6.131 | 2024-01-18 | publish stable update for the full repository
