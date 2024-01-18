@@ -1,4 +1,4 @@
-# Chaos Chart : Cerberus
+# Chaos Chart : Cerberus [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--cerberus-blue.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+cerberus+startx)
 
 This helm chart used to deploy cerberus on Openshift or Kubernetes cluster. 
 Cerberus is as a watchdog who act as a global cluster healthcheck. 

@@ -1,4 +1,4 @@
-# Cluster Chart : Couchbase
+# Cluster Chart : Couchbase [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--couchbase-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+couchbase+startx)
 
 This helm chart is used to deploy Couchbase instances managed by a dedicated operator.
 
