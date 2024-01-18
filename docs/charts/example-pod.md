@@ -305,3 +305,4 @@ helm install example-pod startx/example-pod -f https://raw.githubusercontent.com
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
 | 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
 | 14.6.135 | 2024-01-18 | debug artifacthub recommandations
+| 14.6.137 | 2024-01-18 | publish stable update for the full repository
