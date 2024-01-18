@@ -1,4 +1,4 @@
-# Example Chart : Couchbase
+# Example Chart : Couchbase [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--couchbase-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+couchbase+startx)
 
 This helm chart is used to create a deployment of a small PHP webserver based on [startx apache PHP image](https://quay.io/startx/couchbase).
 

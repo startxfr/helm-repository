@@ -1,4 +1,4 @@
-# Cluster Chart : Pipeline
+# Cluster Chart : Pipeline [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--pipeline-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+pipeline+startx)
 
 This helm chart is used to configure tekton via it's operator.
 

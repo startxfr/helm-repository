@@ -1,4 +1,4 @@
-# Example Chart : Pod
+# Example Chart : Pod [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--pod-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+pod+startx)
 
 This helm chart is used to create a simple pod with various application images according to the values file.
 

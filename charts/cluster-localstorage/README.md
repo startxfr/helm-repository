@@ -1,4 +1,4 @@
-# Cluster Chart : Storage local
+# Cluster Chart : Storage local [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--localstorage-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+localstorage+startx)
 
 This helm chart is used to configure local storage at the cluster level.
 

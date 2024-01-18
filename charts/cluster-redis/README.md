@@ -1,4 +1,4 @@
-# Cluster Chart : Redis
+# Cluster Chart : Redis [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--redis-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+redis+startx)
 
 This helm chart is used to deploy Redis instances managed by a dedicated operator.
 
