@@ -1,4 +1,4 @@
-# Cluster Chart : NVidia GPU
+# Cluster Chart : NVidia GPU [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--gpu-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+gpu+startx)
 
 This helm chart is used to deploy NVidia GPU Driver handled by an operator to configure GPU Drivers at the cluster level.
 

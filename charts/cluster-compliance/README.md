@@ -1,4 +1,4 @@
-# Cluster Chart : Compliance
+# Cluster Chart : Compliance [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--compliance-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+compliance+startx)
 
 This helm chart is used to deploy Compliance instances managed by a dedicated operator.
 

@@ -1,4 +1,4 @@
-# Chaos Chart : Litmus
+# Chaos Chart : Litmus [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--litmus-blue.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+litmus+startx)
 
 This helm chart used to deploy litmus on Openshift or Kubernetes cluster. 
 Litmus is as a watchdog who act as a global cluster healthcheck. 
