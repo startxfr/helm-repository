@@ -63,3 +63,4 @@ helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com
 | ------- | ---------- | ------------------------------------------------- |
 | 14.6.111 | 2024-01-17 | Create chart cluster-gpu from cluster-certmanager |
 | 14.6.111 | 2024-01-18 | New version of the NVidia Operator packaged into the cluster-gu chart
+| 14.6.111-noschema | 2024-01-18 | Release of the noschema version
