@@ -1,4 +1,4 @@
-# Example Chart : catalog
+# Example Chart : catalog [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--catalog-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+catalog+startx)
 
 This helm chart is chart used to deploy various example of application used in Startx demo and mostly based on [sxapi helm chart](https://helm-repository.readthedocs.io/en/latest/charts/sxapi) microservice framework.
 
@@ -303,3 +303,4 @@ helm install example-catalog startx/example-catalog -f https://raw.githubusercon
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
