@@ -1,4 +1,4 @@
-# Example Chart : Fruitapp -app
+# Example Chart : Fruitapp -app [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--fruitapp--app-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+fruitapp+startx)
 
 This helm chart is used to deploy the fruitapp application into a namespace created using the
 `example-fruitapp-project` helm chart. Furthemore, your project should have a runing database and

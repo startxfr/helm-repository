@@ -1,4 +1,4 @@
-# Cluster Chart : KubeVirt
+# Cluster Chart : KubeVirt [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--kubevirt-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+kubevirt+startx)
 
 This helm chart is used to configure code ready kubevirt via it's operator and deploy a VM into Openshift.
 

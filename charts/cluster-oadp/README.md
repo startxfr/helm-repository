@@ -1,4 +1,4 @@
-# Cluster Chart : OADP
+# Cluster Chart : OADP [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--oadp-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+oadp+startx)
 
 This helm chart is used to deploy Openshift Application Data Protection handled by an operator to configure application and cluster backup strategies.
 

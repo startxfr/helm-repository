@@ -1,4 +1,4 @@
-# Cluster Chart : nexus
+# Cluster Chart : nexus [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--nexus-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+nexus+startx)
 
 This helm chart is used to deploy Nexus instances managed by a dedicated operator.
 

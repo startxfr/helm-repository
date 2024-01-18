@@ -1,4 +1,4 @@
-# Example Chart : Deployment
+# Example Chart : Deployment [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--deployment-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+deployment+startx)
 
 This helm chart is used to create a deployment of various application images according to the values file.
 

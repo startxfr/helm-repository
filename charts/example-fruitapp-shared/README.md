@@ -1,4 +1,4 @@
-# Example Chart : Fruitapp -shared
+# Example Chart : Fruitapp -shared [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--fruitapp--shared-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+fruitapp+startx)
 
 This helm chart is used to deploy all shared components required for a particular environment.
 
