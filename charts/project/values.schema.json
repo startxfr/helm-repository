@@ -591,6 +591,121 @@
                             "role"
                         ]
                     }
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "rules": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "apiGroups": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "resourceNames": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "resources": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "verbs": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "rolesbinding": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "role": {
+                                "type": "string"
+                            },
+                            "subjects": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "kind": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "namespace": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "string"
+                            },
+                            "typeRole": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "sa": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "role": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
