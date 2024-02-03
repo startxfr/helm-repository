@@ -308,3 +308,4 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
 | 14.6.135 | 2024-01-18 | debug artifacthub recommandations
 | 14.6.137 | 2024-01-18 | publish stable update for the full repository
+| 14.6.141 | 2024-02-03 | upgrade of the full startx repository
