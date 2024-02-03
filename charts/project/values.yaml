@@ -34,91 +34,140 @@ project:
   name: default-project
   # Project or namespace is started as an helm hook (default is false)
   hooked: false
-  # # NodeSelector filter to apply to project workloads (default is false)
-  # nodeSelector: "node-role.kubernetes.io/worker="
-  # # Display name of the project (only for project)
-  # display_name: Example project
-  # # Description of the project (only for project)
-  # description: This is an default project created via Helm
-  # # Custom configuration for labels and annotations
-  # additionalLabels: |
-  #   label: "project"
-  # additionalAnnotations: |
-  #   annotations: "project"
+  # NodeSelector filter to apply to project workloads (default is false)
+  nodeSelector: "node-role.kubernetes.io/worker="
+  # Display name of the project (only for project)
+  display_name: Example project
+  # Description of the project (only for project)
+  description: This is an default project created via Helm
+  # Custom configuration for labels and annotations
+  additionalLabels: |
+    label: "project"
+  additionalAnnotations: |
+    annotations: "project"
 
 # Configure RBAC for project
 rbac: 
   # Enable RBAC default for this project
   enabled: false
   # # List groups to authorize on this project
-  groups: []
-  # # Example group ID
-  # - id: mygroup_default
-  #   # Example group name
-  #   name: mygroup_default
-  #   # Example binding namespace
-  #   namespace: default
-  #   # Example group role in this project
-  #   role: basic-user
-  # - id: mygroup_admin
-  #   # Example group name
-  #   name: mygroup_admin
-  #   # Example of a clusterRoleBinding
-  #   type: cluster
-  #   # Example group role in this project
-  #   role: edit
-  # # List users to authorize on this project
-  users: []
-  # # Example user ID
-  # - id: myuser
-  #   # Example user name
-  #   name: myusername
-  #   # Example of the user rolebinding namespace (default is project name)
-  #   namespace: default
-  #   # Example user role in this project
-  #   role: basic-user
-  # # List serviceAccount to authorize on this project
-  sa: []
-  # # Example user ID
-  # - id: mysa
-  #   # Example user name
-  #   name: mysa
-  #   # Example of the serviceaccount namespace (default is project name)
-  #   namespace: default
-  #   # Example user role in this project
-  #   role: basic-user
+  groups:
+  # Example group ID
+  - id: mygroup_default
+    # Example group name
+    name: mygroup_default
+    # Example binding namespace
+    namespace: default
+    # Example group role in this project
+    role: basic-user
+  - id: mygroup_admin
+    # Example group name
+    name: mygroup_admin
+    # Example of a clusterRoleBinding
+    type: cluster
+    # Example group role in this project
+    role: edit
+  # List users to authorize on this project
+  users: 
+  # Example user ID
+  - id: myuser
+    # Example user name
+    name: myusername
+    # Example of the user rolebinding namespace (default is project name)
+    namespace: default
+    # Example user role in this project
+    role: basic-user
+  # List serviceAccount to authorize on this project
+  sa:
+  # Example user ID
+  - id: mysa
+    # Example user name
+    name: mysa
+    # Example of the serviceaccount namespace (default is project name)
+    namespace: default
+    # Example user role in this project
+    role: myrole
+  rolesbinding:
+  # Example binding ID
+  - id: myrolebinding
+    # Example binding name
+    name: myrolebinding
+    # Example of the rolebinding namespace (default is project name)
+    namespace: default
+    # Type of rolebinding. Could be cluster or local (default is local). If cluster, namespace is ignored
+    type: local
+    # Name of role for this rolebinding
+    role: myrole
+    # Type of role. Could be cluster or local (default is rolebinding type). If cluster, namespace is ignored
+    typeRole: local
+    # Define the list of user/group/SA associated to this binding
+    subjects:
+    - kind: ServiceAccount
+      name: default
+      namespace: "default"
+  - id: myclusterrolebinding
+    name: myrolebinding
+    type: cluster
+    role: myclusterrole
+    subjects:
+    - kind: ServiceAccount
+      name: default
+      namespace: "default"
+  roles: 
+  # Example role ID
+  - id: myrole
+    # Example role name
+    name: myrole
+    # Example of the role namespace (default is project name)
+    namespace: default
+    # Type of role. Could be cluster or local (default is local). If cluster, namespace is ignored
+    type: local
+    # Rules for the role definition
+    rules:
+    - apiGroups: ["security.openshift.io"]
+      resources: ["securitycontextconstraints"]
+      verbs: ["use"]
+      resourceNames: ["anyuid"]
+  - id: myclusterrole
+    name: myrole
+    type: cluster
+    rules:
+    - apiGroups: ["security.openshift.io"]
+      resources: ["securitycontextconstraints"]
+      verbs: ["use"]
+      resourceNames: ["anyuid"]
 
 # Configure NetworkPolicy for project
 networkpolicy: 
   # Enable NetworkPolicy default for this project
   enabled: false
   # List group to create
-  rules: []
-  # # allow from external
-  # - id: allow-from-openshift-ingress
-  #   # Specifications of this policy rule
-  #   spec: |
-  #     ingress:
-  #     - from:
-  #         - namespaceSelector:
-  #             matchLabels:
-  #               network.openshift.io/policy-group: ingress
-  #     podSelector: {}
-  #     policyTypes:
-  #     - Ingress
-  # # allow from internal
-  # - id: allow-from-same-namespace
-  #   # Specifications of this policy rule
-  #   spec: |
-  #     podSelector: {}
-  #     ingress:
-  #     - from:
-  #       - podSelector: {}
-  # # Custom configuration
-  # additionalLabels: |
-  #   label: "netpol"
-  # additionalAnnotations: |
-  #   annotations: "netpol"
+  rules: 
+  # allow from external
+  - id: allow-from-openshift-ingress
+    # Specifications of this policy rule
+    spec: |
+      ingress:
+      - from:
+          - namespaceSelector:
+              matchLabels:
+                network.openshift.io/policy-group: ingress
+      podSelector: {}
+      policyTypes:
+      - Ingress
+  # allow from internal
+  - id: allow-from-same-namespace
+    # Specifications of this policy rule
+    spec: |
+      podSelector: {}
+      ingress:
+      - from:
+        - podSelector: {}
+  # Custom configuration
+  additionalLabels: |
+    label: "netpol"
+  additionalAnnotations: |
+    annotations: "netpol"
 
 # Configure limitRange for project
 limits: 
@@ -136,10 +185,10 @@ limits:
           cpu: 100m
           memory: 128Mi
   # Custom configuration
-  # additionalLabels: |
-  #   label: "limit"
-  # additionalAnnotations: |
-  #   annotations: "limit"
+  additionalLabels: |
+    label: "limit"
+  additionalAnnotations: |
+    annotations: "limit"
 
 # Configure quotas for project
 quotas: 
@@ -155,101 +204,101 @@ quotas:
       persistentvolumeclaims: "0"
       pods: "4"
       services: "2"
-  # additionalLabels: |
-  #   label: "quota"
-  # additionalAnnotations: |
-  #   annotations: "quota"
+  additionalLabels: |
+    label: "quota"
+  additionalAnnotations: |
+    annotations: "quota"
 
 # Configure serviceAccounts for project
 serviceAccounts:
   # Enable serviceAccounts for this project
   enabled: false
   # List of the credentials to record
-  list: []
-    #   # Name of the service account (default is default)
-    # - name: default
-    #   # List of the imagePullSecrets to link to this SA
-    #   imagePullSecrets: []
-    #     # Name of the secret with registry credentials
-    #     - name: startx-registrycreds-quay
-    #     # Name of the namespace where the secret reside (default is same project)
-    #       namespace: default-project
+  list:
+      # Name of the service account (default is default)
+    - name: default
+      # List of the imagePullSecrets to link to this SA
+      imagePullSecrets: 
+        # Name of the secret with registry credentials
+        - name: startx-registrycreds-quay
+        # Name of the namespace where the secret reside (default is same project)
+          namespace: default-project
   # Custom configuration
-  # additionalLabels: |
-  #   label: "sa"
-  # additionalAnnotations: |
-  #   annotations: "sa"
+  additionalLabels: |
+    label: "sa"
+  additionalAnnotations: |
+    annotations: "sa"
 
 # Configuration of the registry credentials at the project level
 dockercfg:
   # Enable the project docker credentials
   enabled: false
   # List of the credentials to record
-  list: []
-    #   # Name of the credential secret (default is registrycreds)
-    # - name: startx-registrycreds-quay
-    #   # Namespace (default is the context.name)
-    #   namespace: default-project
-    #   # Name of the registry
-    #   registry: quay.io
-    #   # Username to use for authentification
-    #   username: startx
-    #   # Password associated to the user (could be a token)
-    #   password: xxxx
-    #   # email associated to the user 
-    #   email: xxxx
+  list: 
+      # Name of the credential secret (default is registrycreds)
+    - name: startx-registrycreds-quay
+      # Namespace (default is the context.name)
+      namespace: default-project
+      # Name of the registry
+      registry: quay.io
+      # Username to use for authentification
+      username: startx
+      # Password associated to the user (could be a token)
+      password: xxxx
+      # email associated to the user 
+      email: xxxx
   # Custom configuration
-  # additionalLabels: |
-  #   label: "secret"
-  # additionalAnnotations: |
-  #   annotations: "secret"
+  additionalLabels: |
+    label: "secret"
+  additionalAnnotations: |
+    annotations: "secret"
 
 # Configuration of the serviceMonitor at the project level
 serviceMonitor:
   # Enable the project serviceMonitor
   enabled: false
   # List of the serviceMonitor to create
-  list: []
-    #   # Name of the serviceMonitor (default is my-default-service-monitor)
-    # - name: startx-example-service-monitor
-    #   # Namespace (default is the context.name)
-    #   namespace: default-project
-    #   # The specification of the monitor
-    #   spec: |
-    #     endpoints:
-    #     - interval: 30s
-    #       port: web
-    #       scheme: http
-    #     selector:
-    #       matchLabels:
-    #         app: prometheus-example-app
+  list:
+      # Name of the serviceMonitor (default is my-default-service-monitor)
+    - name: startx-example-service-monitor
+      # Namespace (default is the context.name)
+      namespace: default-project
+      # The specification of the monitor
+      spec: |
+        endpoints:
+        - interval: 30s
+          port: web
+          scheme: http
+        selector:
+          matchLabels:
+            app: prometheus-example-app
   # Custom configuration
-  # additionalLabels: |
-  #   label: "svcmon"
-  # additionalAnnotations: |
-  #   annotations: "svcmon"
+  additionalLabels: |
+    label: "svcmon"
+  additionalAnnotations: |
+    annotations: "svcmon"
 
 # Configuration of the podMonitor at the project level
 podMonitor:
   # Enable the project podMonitor
   enabled: false
   # List of the podMonitor to create
-  list: []
-    #   # Name of the podMonitor (default is my-default-pod-monitor)
-    # - name: startx-example-pod-monitor
-    #   # Namespace (default is the context.name)
-    #   namespace: default-project
-    #   # The specification of the monitor
-    #   spec: |
-    #     podMetricsEndpoints:
-    #     - interval: 30s
-    #       port: web
-    #       scheme: http
-    #     selector:
-    #       matchLabels:
-    #         app: prometheus-example-app
+  list:
+      # Name of the podMonitor (default is my-default-pod-monitor)
+    - name: startx-example-pod-monitor
+      # Namespace (default is the context.name)
+      namespace: default-project
+      # The specification of the monitor
+      spec: |
+        podMetricsEndpoints:
+        - interval: 30s
+          port: web
+          scheme: http
+        selector:
+          matchLabels:
+            app: prometheus-example-app
   # Custom configuration
-  # additionalLabels: |
-  #   label: "podmon"
-  # additionalAnnotations: |
-  #   annotations: "podmon"
+  additionalLabels: |
+    label: "podmon"
+  additionalAnnotations: |
+    annotations: "podmon"
