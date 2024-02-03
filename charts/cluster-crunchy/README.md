@@ -217,3 +217,4 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 | 14.6.137 | 2024-01-18 | publish stable update for the full repository
 | 14.6.141 | 2024-02-03 | upgrade of the full startx repository
 | 14.6.143 | 2024-02-03 | Align to 14.6.143 chart release
+| 14.6.145 | 2024-02-03 | Update all startx dependencies chart to 14.6.141 chart release
