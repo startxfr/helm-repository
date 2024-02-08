@@ -311,3 +311,4 @@ helm install example-php-hpa startx/example-php -f https://raw.githubusercontent
 | 14.6.161 | 2024-02-08 | publish stable update for the full repository
 | 14.6.171 | 2024-02-08 | publish stable update for the full repository
 | 14.6.189 | 2024-02-08 | publish stable update for the full repository
+| 14.6.195 | 2024-02-08 | publish stable update for the full repository
