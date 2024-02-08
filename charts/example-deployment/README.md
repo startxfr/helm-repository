@@ -340,3 +340,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 14.6.143 | 2024-02-03 | Align to 14.6.143 chart release
 | 14.6.149 | 2024-02-03 | Update all startx dependencies chart to 14.6.141 chart release
 | 14.6.150 | 2024-02-03 | Stable 14.6.150 release
+| 14.6.161 | 2024-02-08 | publish stable update for the full repository
