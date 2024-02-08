@@ -317,3 +317,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 14.6.153 | 2024-02-08 | Adding support for placement into infra node
 | 14.6.161 | 2024-02-08 | publish stable update for the full repository
 | 14.6.163 | 2024-02-08 | Adding support for manual config of the alertManager
+| 14.6.171 | 2024-02-08 | publish stable update for the full repository
