@@ -543,3 +543,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 14.6.191 | 2024-02-08 | Improve sxapi options
 | 14.6.195 | 2024-02-08 | publish stable update for the full repository
 | 14.6.197 | 2024-02-08 | publish stable update for the full repository
+| 14.6.201 | 2024-02-08 | publish stable update for the full repository
