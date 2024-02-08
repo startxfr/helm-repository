@@ -411,3 +411,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 14.6.171 | 2024-02-08 | publish stable update for the full repository
 | 14.6.179 | 2024-02-08 | Align all basic chart to release 14.6.179
 | 14.6.187 | 2024-02-08 | Disable default example additional labels and annotations
+| 14.6.189 | 2024-02-08 | publish stable update for the full repository
