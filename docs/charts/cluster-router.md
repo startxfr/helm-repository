@@ -306,3 +306,4 @@ helm install cluster-router startx/cluster-router -f https://raw.githubuserconte
 | 14.6.149 | 2024-02-03 | Update all startx dependencies chart to 14.6.141 chart release
 | 14.6.150 | 2024-02-03 | Stable 14.6.150 release
 | 14.6.161 | 2024-02-08 | publish stable update for the full repository
+| 14.6.171 | 2024-02-08 | publish stable update for the full repository
