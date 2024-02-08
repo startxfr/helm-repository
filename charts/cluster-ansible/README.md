@@ -233,3 +233,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 14.6.150 | 2024-02-03 | Stable 14.6.150 release
 | 14.6.161 | 2024-02-08 | publish stable update for the full repository
 | 14.6.171 | 2024-02-08 | publish stable update for the full repository
+| 14.6.181 | 2024-02-08 | publish stable update for the full repository
