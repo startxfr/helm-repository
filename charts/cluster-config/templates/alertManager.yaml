@@ -49,5 +49,8 @@ stringData:
         - receiver: {{- .Values.alertmanager.receiverName }}
           match:
             alertname: Watchdog
+  {{- else }}
+  alertmanager.yaml: |-
+    {{- .Values.alertmanager.config | nindent 4 }}
   {{ end }}
 {{- end -}}
