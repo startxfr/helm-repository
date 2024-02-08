@@ -31,7 +31,7 @@ spec:
       logAsJSON: true
   runtime:
     defaults:
-    {{- if .Values.istio.infra }}
+    {{- if .Values.istio.infra_enabled }}
       pod:
         nodeSelector: 
           node-role.kubernetes.io/infra: ""
