@@ -290,3 +290,4 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 14.6.171 | 2024-02-08 | publish stable update for the full repository
 | 14.6.189 | 2024-02-08 | publish stable update for the full repository
 | 14.6.195 | 2024-02-08 | publish stable update for the full repository
+| 14.6.197 | 2024-02-08 | publish stable update for the full repository
