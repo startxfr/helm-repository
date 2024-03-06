@@ -6,7 +6,7 @@ description: Helm chart used to deploy all project required to deploy a full CI/
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.109
+version: 14.6.208
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 0.0.2
 # Icon of this helm-chart
@@ -39,28 +39,28 @@ maintainers:
 
 dependencies: 
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: project_devel
     condition: project_devel.activated
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: project_integration
     condition: project_integration.activated
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: project_preprod
     condition: project_preprod.activated
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: project_prod
     condition: project_prod.activated
   - name: example-imagestreams
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: imagestreams
     condition: imagestreams.activated
 
@@ -78,6 +78,6 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update all chart dependencies to version 14.6.105"
+      description: "Align all dependencies to 14.6.208 release"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

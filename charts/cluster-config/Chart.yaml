@@ -6,7 +6,7 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.111
+version: 14.6.208
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.14.6"
 # Icon of this helm-chart
@@ -37,28 +37,28 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: operatorGlobal
     condition: operatorGlobal.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: projectSosReport
     condition: projectSosReport.enabled
   - name: operator
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: operatorSosReport
     condition: operatorSosReport.enabled
 
@@ -76,16 +76,14 @@ annotations:
   # Artifacthub operator capabilities
   artifacthub.io/operatorCapabilities: "Seamless Upgrades"
   # Artifacthub chart recommandations
-  artifacthub.io/recommendations: |
-    - name: Startx basic chart : Project
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
       url: https://helm-repository.readthedocs.io/en/latest/charts/project
-    - name: Startx basic chart : Operator
+    - name: Startx basic chart - Operator
       url: https://helm-repository.readthedocs.io/en/latest/charts/operator
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Adding support of Raw values for ingresscontroller certificates. Values must be encoded in base64 elswhere."
-    - kind: changed
-      description: "Adding support of Raw values for APIServer certificates. Values must be encoded in base64 elswhere."
+      description: "Align all dependencies to 14.6.208 release"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

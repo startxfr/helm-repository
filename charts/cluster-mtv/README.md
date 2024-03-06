@@ -1,6 +1,7 @@
-# Cluster Chart : MTV
+# Cluster Chart : MTV [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--mtv-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+mtv+startx)
 
 This helm chart is used to deploy Migration Toolkit for Virtualisation operator to help you drive migration of your VM workloads into a Kubevirt enabled kubernetes cluster.
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -104,3 +105,19 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 14.6.105 | 2024-01-03 | publish stable update for the full repository
 | 14.6.107 | 2024-01-04 | publish stable update for the full repository
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
+| 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
+| 14.6.135 | 2024-01-18 | debug artifacthub recommandations
+| 14.6.137 | 2024-01-18 | publish stable update for the full repository
+| 14.6.141 | 2024-02-03 | upgrade of the full startx repository
+| 14.6.143 | 2024-02-03 | Align to 14.6.143 chart release
+| 14.6.145 | 2024-02-03 | Update all startx dependencies chart to 14.6.141 chart release
+| 14.6.149 | 2024-02-03 | Update all startx dependencies chart to 14.6.141 chart release
+| 14.6.150 | 2024-02-03 | Stable 14.6.150 release
+| 14.6.161 | 2024-02-08 | publish stable update for the full repository
+| 14.6.171 | 2024-02-08 | publish stable update for the full repository
+| 14.6.189 | 2024-02-08 | publish stable update for the full repository
+| 14.6.195 | 2024-02-08 | publish stable update for the full repository
+| 14.6.197 | 2024-02-08 | publish stable update for the full repository
+| 14.6.201 | 2024-02-08 | publish stable update for the full repository
+| 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release

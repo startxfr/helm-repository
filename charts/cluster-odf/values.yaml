@@ -18,9 +18,9 @@ context:  &context
 # configuration of the Storage service
 odf:
   # Enable the deployment of a ODF cluster
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # Redhat Network access user to the RH container catalog
   name: default-odf
   # Version of the ODF to use for this cluster
@@ -31,6 +31,16 @@ odf:
   - name: odf-deviceset
     # Number of OSD replicas
     replicas: 3
+    # Number of OSD count
+    count: 1
+    # configuration of the OSD pods
+    config: {}
+    # Ressource sizing for OSD pods
+    resources: {}
+    # placement rules for OSD pods
+    placement: {}
+    # preparePlacement rules for OSD pods
+    preparePlacement: {}
     # Size of each OSD storage volume
     size: 512Gi
     # Storage class used to provision OSD storage

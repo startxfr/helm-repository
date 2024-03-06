@@ -6,7 +6,7 @@ description: Helm chart used to deploy a chaos testing suit composed of chaos me
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.109
+version: 14.6.208
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.14.6"
 # Icon of this helm-chart
@@ -39,23 +39,23 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: project
     condition: project.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: cerberus_project
     condition: cerberus_project.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: kraken_project
     condition: kraken_project.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: mesh_project
     condition: mesh_project.enabled
   - name: chaos-mesh
@@ -64,8 +64,8 @@ dependencies:
     alias: mesh
     condition: mesh.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: monkey_project
     condition: monkey_project.enabled
   - name: kube-monkey
@@ -74,8 +74,8 @@ dependencies:
     alias: monkey
     condition: monkey.enabled
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: litmus_project
     condition: litmus_project.enabled
   - name: litmus
@@ -96,12 +96,12 @@ annotations:
   # Artifacthub is an operator chart
   artifacthub.io/operator: "false"
   # Artifacthub chart recommandations
-  artifacthub.io/recommendations: |
-    - name: Startx Chaos chart : Common
+  startx.io/recommendations: |
+    - name: Startx Chaos chart - Common
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update all chart dependencies to version 14.6.105"
+      description: "Align all dependencies to 14.6.208 release"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.109
+version: 14.6.208
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.14.6"
 # Icon of this helm-chart
@@ -41,28 +41,28 @@ maintainers:
 
 dependencies:
   - name: "chaos-cerberus"
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.105"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.195"
     alias: monkey
     condition: monkey.enabled
 
@@ -80,20 +80,20 @@ annotations:
   # Artifacthub operator capabilities
   artifacthub.io/operatorCapabilities: "Seamless Upgrades"
   # Artifacthub chart recommandations
-  artifacthub.io/recommendations: |
-    - name: Startx Chaos chart : Cerberus
+  startx.io/recommendations: |
+    - name: Startx Chaos chart - Cerberus
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus
-    - name: Startx Chaos chart : Kraken
+    - name: Startx Chaos chart - Kraken
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken
-    - name: Startx Chaos chart : Litmus
+    - name: Startx Chaos chart - Litmus
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus
-    - name: Startx Chaos chart : ChaosMesh
+    - name: Startx Chaos chart - ChaosMesh
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh
-    - name: Startx Chaos chart : ChaosMonkey
+    - name: Startx Chaos chart - ChaosMonkey
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update all chart dependencies to version 14.6.105"
+      description: "Align all dependencies to 14.6.208 release"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
