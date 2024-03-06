@@ -321,3 +321,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.195 | 2024-02-08 | publish stable update for the full repository
 | 14.6.197 | 2024-02-08 | publish stable update for the full repository
 | 14.6.201 | 2024-02-08 | publish stable update for the full repository
+| 14.6.202 | 2024-03-06 | Add support of S3 storage backend for internal registry
