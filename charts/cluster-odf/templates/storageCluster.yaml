@@ -40,17 +40,37 @@ spec:
 {{- range .Values.odf.storage }}
     - name: {{ .name | default "default-deviceset" | quote }}
       replica: {{ int .replicas | default 3 }}
-      count: 1
+      count: {{ int .count | default 1 }}
+      {{- if .config }}
+      config: 
+        {{- .config | toYaml | nindent 8 -}}
+      {{- else }}
       config: {}
+      {{- end }}
+      {{- if .resources }}
+      resources: 
+        {{- .resources | toYaml | nindent 8 -}}
+      {{- else }}
       resources: {}
+      {{- end }}
+      {{- if .placement }}
+      placement: 
+        {{- .placement | toYaml | nindent 8 -}}
+      {{- else }}
       placement: {}
+      {{- end }}
+      {{- if .preparePlacement }}
+      preparePlacement: 
+        {{- .preparePlacement | toYaml | nindent 8 -}}
+      {{- else }}
       preparePlacement: {}
+      {{- end }}
       portable: true
       dataPVCTemplate:
         metadata: {}
         spec:
           accessModes:
-            - ReadWriteOnce
+            - {{ .accessMode | default "ReadWriteOnce" | quote }}
           resources:
             requests:
               storage: {{ .size | default "512Gi" | quote }}
