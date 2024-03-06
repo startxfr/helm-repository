@@ -86,3 +86,4 @@ helm install cluster-ods startx/cluster-ods -f https://raw.githubusercontent.com
 | 14.6.195 | 2024-02-08 | publish stable update for the full repository
 | 14.6.197 | 2024-02-08 | publish stable update for the full repository
 | 14.6.201 | 2024-02-08 | publish stable update for the full repository
+| 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release

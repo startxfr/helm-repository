@@ -221,6 +221,12 @@ registryconfig:
   enabled: false
   # Enable the configuration of the ingresscontroller service into infra nodes
   infra_enabled: true
+  # Enable the configuration of the S3 backend storage
+  s3Storage: true
+  # Define the S3 bucket to use for configuration
+  s3Bucket: "image-registry-us-east-1-c92e88cad85b48ec8b312344dff03c82-392c"
+  # Define the S3 Region to use (default is us-east-1)
+  s3Region: "eu-west-3"
 
 # Configuration of the ingresscontroller
 ingresscontroller:
@@ -370,7 +376,7 @@ projectSosReport:
 
 # Configuration of the sosreport operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorSosReport:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
@@ -397,7 +403,7 @@ operatorSosReport:
 
 # Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorGlobal:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
