@@ -21,6 +21,12 @@ spec:
   {{- if .Values.registryconfig.s3Storage }}
   storage:
     s3:
+      {{- if .Values.registryconfig.s3RegionEndpoint }}
+      regionEndpoint: {{ .Values.registryconfig.s3RegionEndpoint | quote }}
+      {{- end }}
+      {{- if .Values.registryconfig.s3VirtualHostedStyle }}
+      virtualHostedStyle: {{ .Values.registryconfig.s3VirtualHostedStyle | quote }}
+      {{- end }}
       bucket: {{ .Values.registryconfig.s3Bucket | default "mybucketname" | quote }}
       region: {{ .Values.registryconfig.s3Region | default "us-east-1" | quote }}
   {{- end }}
@@ -33,7 +39,6 @@ spec:
           topologyKey: kubernetes.io/hostname
         weight: 100
   logLevel: Normal
-  managementState: Managed
   {{- if .Values.registryconfig.infra_enabled }}
   nodeSelector:
     node-role.kubernetes.io/infra: ""
