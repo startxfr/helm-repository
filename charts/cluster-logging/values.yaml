@@ -82,11 +82,13 @@ logging:
     # resources:
     #   requests:
     #     cpu: "100m"
-  # configuration of the fluentd service
-  fluentd:
-    # Enable the deployment of the fluentd service
+  # configuration of the collector service
+  collector:
+    # Enable the deployment of the collector service
     enabled: true
-    # # Resource spec for fluentd pods
+    # Type of collector engine (must be vector or fluentd. default is vector)
+    type: "vector"
+    # # Resource spec for collector pods
     # resources:
     #   requests:
     #     cpu: "100m"
