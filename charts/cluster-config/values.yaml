@@ -316,8 +316,26 @@ helm_reposistory:
   list: []
   #   # Name of the helm chart repository
   # - name: startx
-  #   # UR: of the helm chart repository
+  #   # URL: of the helm chart repository
   #   url: https://helm-repository.readthedocs.io/en/latest/repos/stable
+
+
+# Configuration of a bunch of priorityClass ressources
+priorityClass:
+  # Enable the priorityClass clreation
+  enabled: false
+  # Define the priorityClass content
+  list: []
+  #   # Name of the priorityClass
+  # - name: high-priority-nonpreempting
+  #   # Order of the priorityClass among all (default is 0)
+  #   value: 1000000
+  #   # Description of the purpose of your priorityClass
+  #   description: "This priority class will not cause other pods to be preempted."
+  #   # Set to Never if pod part of this priorityClass could not preemt other pods (default is PreemptLowerPriority)
+  #   preemptionPolicy: Never
+  #   # set to true only for one priorityClass that will become the default one
+  #   default: false
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
