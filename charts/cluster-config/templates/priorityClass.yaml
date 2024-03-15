@@ -5,6 +5,8 @@ apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
   name: {{ .name | default "" | quote }}
+  labels:
+    startx.io: infra
 value: {{ .value | default 0 | int }}
 preemptionPolicy: {{ .preemptionPolicy | default "PreemptLowerPriority" | quote }}
 globalDefault: {{ .default | default false }}
