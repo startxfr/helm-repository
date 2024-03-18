@@ -327,3 +327,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
 | 14.6.217 | 2024-03-13 | Add support for creating a list of priorityClass
 | 14.6.219 | 2024-03-15 | Add label to priorityClass
+| 14.6.223 | 2024-03-18 | Add common labels to priorityClass and 10min timeout on registry route

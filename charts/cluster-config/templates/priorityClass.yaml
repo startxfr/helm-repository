@@ -4,9 +4,13 @@
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
-  name: {{ .name | default "" | quote }}
+  name: {{ .name | default "my-priority" | quote }}
   labels:
-    startx.io: infra
+    {{- include "cluster-config.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "my-priority" }}-priorityclass"
+  annotations:
+    {{- include "cluster-config.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-10" 
 value: {{ .value | default 0 | int }}
 preemptionPolicy: {{ .preemptionPolicy | default "PreemptLowerPriority" | quote }}
 globalDefault: {{ .default | default false }}
