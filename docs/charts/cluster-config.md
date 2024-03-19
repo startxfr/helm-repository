@@ -329,3 +329,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.219 | 2024-03-15 | Add label to priorityClass
 | 14.6.223 | 2024-03-18 | Add common labels to priorityClass and 10min timeout on registry route
 | 14.6.225 | 2024-03-19 | Add storageSizeAlert for monitoring alert PVC size
+| 14.6.227 | 2024-03-19 | Add storageSizeAlert for monitoring alert PVC size
