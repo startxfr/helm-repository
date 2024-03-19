@@ -326,3 +326,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 14.6.205 | 2024-02-09 | Improve cluster-istio options
 | 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release
 | 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
+| 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
