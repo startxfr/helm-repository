@@ -321,3 +321,4 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release
 | 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
 | 14.6.217 | 2024-03-19 | Add support for is-default-class annotation
+| 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
