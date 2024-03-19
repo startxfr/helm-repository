@@ -120,5 +120,5 @@ data:
           storageClassName: {{ default "gp3-csi" .Values.monitoring.storageClass }}
           resources:
             requests:
-             storage: {{ default .Values.monitoring.storageSize .Values.monitoring.storageSizeAlert }}
+             storage: {{ default "5Gi" .Values.monitoring.storageSizeAlert }}
 {{- end -}}
