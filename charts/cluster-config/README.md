@@ -331,3 +331,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.225 | 2024-03-19 | Add storageSizeAlert for monitoring alert PVC size
 | 14.6.227 | 2024-03-19 | Add storageSizeAlert for monitoring alert PVC size
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
+| 14.6.233 | 2024-03-22 | Add PVC storage and replicas support for registry

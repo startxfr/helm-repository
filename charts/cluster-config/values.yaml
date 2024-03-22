@@ -223,8 +223,10 @@ registryconfig:
   enabled: false
   # Enable the configuration of the ingresscontroller service into infra nodes
   infra_enabled: true
+  # Number of replicas for the deployed registry (default is 1)
+  replicas: 1
   # Enable the configuration of the S3 backend storage
-  s3Storage: true
+  s3Storage: false
   # Define the S3 bucket to use for configuration
   s3Bucket: "image-registry-us-east-1-c92e88cad85b48ec8b312344dff03c82-392c"
   # Define the S3 Region to use (default is us-east-1)
@@ -233,6 +235,10 @@ registryconfig:
   # s3RegionEndpoint: ""
   # # Define the S3 Virtual Hosted Style to use (default is none)
   # s3VirtualHostedStyle: ""
+  # Enable the configuration of the pvc backend storage
+  pvcStorage: false
+  # Define the pvc Name to use for configuration
+  pvcName: "image-registry-storage"
 
 # Configuration of the ingresscontroller
 ingresscontroller:
