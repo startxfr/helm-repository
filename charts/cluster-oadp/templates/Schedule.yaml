@@ -2,6 +2,7 @@
 {{- $namespace := .Values.project.project.name | default "openshift-adp" -}}
 {{ range .Values.oadp.schedule.list }}
 {{- $spec := .spec | default "{}" -}}
+---
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
