@@ -14,7 +14,7 @@ spec:
   logging: 2
   managementState: Managed
   proxy: {}
-  replicas: 3
+  replicas: {{ .Values.registryconfig.replicas | default 1 }}
   requests:
     read: {}
     write: {}
@@ -29,6 +29,11 @@ spec:
       {{- end }}
       bucket: {{ .Values.registryconfig.s3Bucket | default "mybucketname" | quote }}
       region: {{ .Values.registryconfig.s3Region | default "us-east-1" | quote }}
+  {{- else if .Values.registryconfig.pvcStorage }}
+  storage:
+    managementState: Managed
+    pvc:
+      claim: {{ .Values.registryconfig.pvcName | default "image-registry-storage" | quote }}
   {{- end }}
   affinity:
     podAntiAffinity:
