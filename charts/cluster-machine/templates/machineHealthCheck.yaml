@@ -1,5 +1,6 @@
 {{- if .Values.machineHealthCheck.enabled }}
 {{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
+{{- $deftype := "worker" -}}
 {{ range .Values.machineHealthCheck.list }}
 ---
 apiVersion: machine.openshift.io/v1beta1
@@ -23,8 +24,8 @@ spec:
       machine.openshift.io/cluster-api-machine-role: master
       machine.openshift.io/cluster-api-machine-type: master
     {{- else }}
-      machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
-      machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
+      machine.openshift.io/cluster-api-machine-role: "{{ .type | default $deftype }}"
+      machine.openshift.io/cluster-api-machine-type: "{{ .type | default $deftype }}"
     {{- end }}
     {{- if .group }}
       machine.startx.io/group: "{{ .group }}"
