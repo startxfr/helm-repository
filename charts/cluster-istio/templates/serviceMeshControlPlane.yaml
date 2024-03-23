@@ -1,4 +1,4 @@
-{{- if .Values.istio.enabled }}
+{{- if .Values.istio.enabled }}{{- if .Values.istio.enabledControlPlane }}
 {{- $namespace := .Values.project.project.name | default "default-istio" -}}
 ---
 kind: ServiceMeshControlPlane
@@ -21,7 +21,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "10"
     startx.fr/help: https://docs.openshift.com/container-platform/4.5/service_mesh/service_mesh_install/customizing-installation-ossm.html
 spec:
-  version: "v2.1"
+  version: {{ .Values.istio.version | default "v2.3" | quote }}
   telemetry:
     type: Istiod
   policy:
@@ -81,4 +81,4 @@ spec:
           enableTracing: true
     prometheus:
       enabled: true
-{{- end }}
+{{- end }}{{- end }}
