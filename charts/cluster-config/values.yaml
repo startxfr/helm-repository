@@ -222,9 +222,11 @@ registryconfig:
   # Enable the configuration of the registryconfig
   enabled: false
   # Enable the configuration of the ingresscontroller service into infra nodes
-  infra_enabled: true
+  infra_enabled: false
   # Number of replicas for the deployed registry (default is 1)
   replicas: 1
+  # The httpSecret used (default is null)
+  # httpSecret: d9a012ccd117b1e6616ceccb2c3bb66a5fed1b5e481623
   # Enable the configuration of the S3 backend storage
   s3Storage: false
   # Define the S3 bucket to use for configuration
@@ -235,6 +237,12 @@ registryconfig:
   # s3RegionEndpoint: ""
   # # Define the S3 Virtual Hosted Style to use (default is none)
   # s3VirtualHostedStyle: ""
+  # Create the secret with S3 credentials (default is false)
+  s3StorageEnableSecret: false
+  # Set the AWS S3 access key credentials (default is myaccesskey)
+  s3BucketAccessKey: minio
+  # Set the AWS S3 secret key credentials (default is mysecretkey)
+  s3BucketSecretKey: minio123
   # Enable the configuration of the pvc backend storage
   pvcStorage: false
   # Define the pvc Name to use for configuration
