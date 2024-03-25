@@ -8,6 +8,9 @@ metadata:
   labels:
     {{- include "cluster-storage.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ include "startx.appScope" $ }}-{{ .name }}-volumesnapshotclass"
+    {{- if .veleroEnabled }}
+    velero.io/csi-volumesnapshot-class: "true"
+    {{- end }}
   annotations:
     {{- include "cluster-storage.annotations" $ | nindent 4 }}
     {{- if .isDefault }}
