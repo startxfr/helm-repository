@@ -1,4 +1,4 @@
-{{- if .Values.enabled -}}
+{{- if .Values.enabled -}}{{- if .Values.enabledStorageClasses -}}
 {{ range .Values.storageClasses }}
 ---
 kind: StorageClass
@@ -34,4 +34,4 @@ allowVolumeExpansion: {{ .allowVolumeExpansion }}
 volumeBindingMode: {{ .volumeBindingMode | quote }}
 {{- end }}
 {{ end }}
-{{- end -}}
+{{- end -}}{{- end -}}
