@@ -323,3 +323,4 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 14.6.217 | 2024-03-19 | Add support for is-default-class annotation
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
 | 14.6.233 | 2024-03-25 | Add support for creation of VolumeSnapshotClasses
+| 14.6.235 | 2024-03-25 | Debug the volumeSnapshotClass
