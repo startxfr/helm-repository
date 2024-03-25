@@ -51,6 +51,8 @@ VolumeSnapshotClasses:
   name: example-gp3
   # Provisionner for this storageClass
   provisioner: "kubernetes.io/aws-ebs"
+  # Enable to be usable by velero for snapshot
+  veleroEnabled: false
   # Specific parameters according to the provisionner
   parameters: |
     encrypted: "true"
