@@ -1,0 +1,29 @@
+{{- if .Values.enabled -}}{{- if .Values.enabledVolumeSnapshotClasses -}}
+{{ range .Values.VolumeSnapshotClasses }}
+---
+apiVersion: snapshot.storage.k8s.io/v1
+driver: kubernetes.io/vsphere-volume
+kind: VolumeSnapshotClass
+metadata:
+  name: "{{ .id }}"
+  labels:
+    {{- include "cluster-storage.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ include "startx.appScope" $ }}-{{ .name }}-volumesnapshotclass"
+  annotations:
+    {{- include "cluster-storage.annotations" $ | nindent 4 }}
+    {{- if .isDefault }}
+    snapshot.storage.kubernetes.io/is-default-class: 'true'
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+provisioner: {{ .provisioner | default "kubernetes.io/aws-ebs" | quote }}
+{{- if .parameters }}
+parameters:
+  {{- .parameters | nindent 2 }}
+{{- else }}
+parameters: {}
+{{- end -}}
+{{- if .deletionPolicy }}
+deletionPolicy: {{ .deletionPolicy | quote }}
+{{- end }}
+{{ end }}
+{{- end -}}{{- end -}}
