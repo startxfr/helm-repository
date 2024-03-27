@@ -297,3 +297,4 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
 | 14.6.233 | 2024-03-22 | Debug multiple doc creation
 | 14.6.235 | 2024-03-22 | Debug scheduled
+| 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251

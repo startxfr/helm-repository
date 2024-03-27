@@ -310,3 +310,4 @@ xxxx to do xxxxxx
 | 14.6.217 | 2024-03-12 | Add support for vector or fluentd collector backend configuration
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
 | 14.6.233 | 2024-03-27 | Adding immutable option to ConfigMap resources
+| 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
