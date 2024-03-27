@@ -333,3 +333,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
 | 14.6.233 | 2024-03-22 | Add PVC storage and replicas support for registry
 | 14.6.235 | 2024-03-23 | Add support for S3 secret credentials for the internal repository
+| 14.6.237 | 2024-03-27 | Adding immutable option to ConfigMap resources
