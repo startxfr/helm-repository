@@ -320,3 +320,4 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
 | 14.6.233 | 2024-03-22 | Hardcode default node type to worker
+| 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
