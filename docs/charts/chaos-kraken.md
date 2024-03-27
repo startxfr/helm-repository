@@ -275,3 +275,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release
 | 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
+| 14.6.233 | 2024-03-27 | Adding immutable option to ConfigMap resources
