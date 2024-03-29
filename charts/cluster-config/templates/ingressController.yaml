@@ -43,6 +43,11 @@ spec:
     matchLabels:
       "{{ .routeSelectorKey }}": "{{ .routeSelectorValue }}"
 {{- end }}
+{{- if .nsSelectorKey }}
+  namespaceSelector:
+    matchLabels:
+      "{{ .nsSelectorKey }}": "{{ .nsSelectorValue }}"
+{{- end }}
   routeAdmission:
     namespaceOwnership: InterNamespaceAllowed
 {{- if eq "internal" .loadBalancerMode }}
