@@ -18,19 +18,21 @@ spec:
     nodeSelector:
       matchLabels:
         node-role.kubernetes.io/infra: ""
-        {{- if .nodeSelector }}
-        machine.startx.io/group: "{{ .nodeSelector }}"
-        {{- end }}
     tolerations:
       - effect: NoSchedule 
         key: node-role.kubernetes.io/infra 
         operator: Exists
 {{- else }}
-  {{- if .nodeSelector }}
+  {{- if or .nodeSelector .tolerations }}
   nodePlacement:
+    {{- with .nodeSelector }}
     nodeSelector:
-      matchLabels:
-        machine.startx.io/group: "{{ .nodeSelector }}"
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .tolerations }}
+    tolerations:
+      {{- toYaml .list | nindent 6 }}
+    {{- end }}
   {{- end }}
 {{- end }}
 {{- if .domain }}
@@ -75,15 +77,15 @@ metadata:
 data:
   tls.crt: >-
 {{- if .certificate.CABundleRaw }}
-    {{ .certificate.CABundleRaw }}
+    {{- .certificate.CABundleRaw | nindent 4 }}
 {{- else }}
-    {{ .certificate.CABundle | b64enc }}
+    {{- .certificate.CABundle | b64enc | nindent 4 }}
 {{- end }}
   tls.key: >-
 {{- if .certificate.privateKeyRaw }}
-    {{ .certificate.privateKeyRaw }}
+    {{- .certificate.privateKeyRaw | nindent 4 }}
 {{- else }}
-    {{ .certificate.privateKey | b64enc }}
+    {{- .certificate.privateKey | b64enc | nindent 4 }}
 {{- end }}
 {{- end }}{{- end }}
 {{- end }}

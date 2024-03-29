@@ -262,10 +262,18 @@ ingresscontroller:
   #   routeSelectorKey: mylabel
   #   # The label value for routeSelection
   #   routeSelectorValue: myvalue
-  #   # The node label value for machine.startx.io/group
-  #   nodeSelector: public
   #   # Enable the configuration of the ingresscontroller service into infra nodes
-  #   infra_enabled: true
+  #   infra_enabled: false
+  #   # The node label values for nodeSelector
+  #   nodeSelector: 
+  #     machine.startx.io/group: public
+  #   # The list of tolerations rules
+  #   tolerations:
+  #     list:
+  #     - key: "env.example.com"
+  #       operator: "Equal"
+  #       value: "demo"
+  #       effect: "NoSchedule"
   #   # Define the load balancer mode (internal or external)
   #   loadBalancerMode: "external"
   #   # Number of replicas to use for this ingress controller
