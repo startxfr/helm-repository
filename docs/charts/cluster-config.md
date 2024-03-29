@@ -336,3 +336,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.237 | 2024-03-27 | Adding immutable option to ConfigMap resources
 | 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
 | 14.6.253 | 2024-03-29 | Add support for nodeSelector and tolerations for ingresscontrollers
+| 14.6.255 | 2024-03-29 | Add support for namespaceSelector in ingresscontrollers
