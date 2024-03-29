@@ -27,7 +27,8 @@ spec:
   nodePlacement:
     {{- with .nodeSelector }}
     nodeSelector:
-      {{- toYaml . | nindent 6 }}
+      matchLabels:
+        {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- with .tolerations }}
     tolerations:
