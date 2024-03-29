@@ -339,3 +339,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.255 | 2024-03-29 | Add support for namespaceSelector in ingresscontrollers
 | 14.6.257 | 2024-03-29 | Debug nodeSelector in ingresscontrollers
 | 14.6.259 | 2024-03-29 | Debug nodeSelector in ingresscontrollers
+| 14.6.261 | 2024-03-29 | Improve cluster-config options
