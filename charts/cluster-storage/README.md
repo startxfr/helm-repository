@@ -326,3 +326,4 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 14.6.235 | 2024-03-25 | Debug the volumeSnapshotClass
 | 14.6.237 | 2024-03-25 | Add support for velero in VolumeSnapshotClasses
 | 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
+| 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
