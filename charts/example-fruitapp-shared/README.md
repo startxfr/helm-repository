@@ -234,3 +234,4 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
 | 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
+| 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
