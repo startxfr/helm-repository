@@ -42,15 +42,21 @@ spec:
 {{- if .routeSelectorKey }}
   routeSelector:
     matchLabels:
-      "{{ .routeSelectorKey }}": "{{ .routeSelectorValue }}"
+      "{{ .routeSelectorKey }}": '{{ .routeSelectorValue | default "" }}'
 {{- end }}
 {{- if .nsSelectorKey }}
   namespaceSelector:
     matchLabels:
-      "{{ .nsSelectorKey }}": "{{ .nsSelectorValue }}"
+      "{{ .nsSelectorKey }}": '{{ .nsSelectorValue | default "" }}'
 {{- end }}
+{{- if .enabledInterNamespace }}
   routeAdmission:
     namespaceOwnership: InterNamespaceAllowed
+{{- end }}
+{{- if .httpHeadersForwardedPolicy }}
+  httpHeaders:
+    forwardedHeaderPolicy: '{{ .httpHeadersForwardedPolicy | default "Append" }}'
+{{- end }}
 {{- if eq "internal" .loadBalancerMode }}
   endpointPublishingStrategy:
     loadBalancer:
