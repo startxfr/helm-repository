@@ -34,6 +34,7 @@ spec:
     {{- with .Values.logging.elasticsearch }}
     elasticsearch:
       nodeCount: {{ .replicas | default 3 }}
+      redundancyPolicy: {{ .redundancyPolicy | default "SingleRedundancy" }}
       {{- if $.Values.logging.infra_enabled }}
       tolerations:
         - effect: NoSchedule 
