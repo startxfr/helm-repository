@@ -312,3 +312,4 @@ xxxx to do xxxxxx
 | 14.6.233 | 2024-03-27 | Adding immutable option to ConfigMap resources
 | 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.271 | 2024-04-05 | Adding support for redundancyPolicy of elasticSearch configuration
