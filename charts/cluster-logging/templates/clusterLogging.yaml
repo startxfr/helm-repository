@@ -34,6 +34,7 @@ spec:
     {{- with .Values.logging.elasticsearch }}
     elasticsearch:
       nodeCount: {{ .replicas | default 3 }}
+      redundancyPolicy: {{ .redundancyPolicy | default "SingleRedundancy" }}
       {{- if $.Values.logging.infra_enabled }}
       tolerations:
         - effect: NoSchedule 
@@ -46,7 +47,6 @@ spec:
       resources:
         {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
-      redundancyPolicy: "SingleRedundancy"
       storage:
         storageClassName: {{ .storage.class | default "gp3-csi" | quote }}
         size: {{ .storage.size | default "200G" | quote }}
