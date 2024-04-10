@@ -1,5 +1,4 @@
 # Default values for cluster-vault.
-
 # Application deployment context
 context: &context
   # Name of the global scope for this application (organisational tenant)
@@ -53,6 +52,9 @@ route:
 # Configuration of the operator (see https://github.com/hashicorp/vault-helm)
 vault:
   # Available parameters and their default values for the Vault chart, see https://github.com/hashicorp/vault-helm/blob/main/values.yaml
+  
+  enable: true
+  namespace: xxxxxxxxxx
   server:
     image:
       repository: "registry.connect.redhat.com/hashicorp/vault"
