@@ -342,3 +342,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.261 | 2024-03-29 | Improve cluster-config options
 | 14.6.263 | 2024-03-31 | Add support for httpHeader forward policy in ingresscontroller
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
