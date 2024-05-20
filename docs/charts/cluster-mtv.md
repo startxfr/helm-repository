@@ -125,3 +125,4 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
 | 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
