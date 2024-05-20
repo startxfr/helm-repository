@@ -356,3 +356,4 @@ helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubuser
 | 14.6.233 | 2024-03-27 | Adding immutable option to ConfigMap resources
 | 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
