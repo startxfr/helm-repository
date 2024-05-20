@@ -306,3 +306,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 14.6.233 | 2024-03-27 | Adding immutable option to ConfigMap resources
 | 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.271 | 2024-05-20 | Add support for embeded template file. Mode = embed
