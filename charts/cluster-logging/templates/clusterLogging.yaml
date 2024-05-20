@@ -47,7 +47,6 @@ spec:
       resources:
         {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
-      redundancyPolicy: "SingleRedundancy"
       storage:
         storageClassName: {{ .storage.class | default "gp3-csi" | quote }}
         size: {{ .storage.size | default "200G" | quote }}
