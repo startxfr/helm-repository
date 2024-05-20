@@ -1,11 +1,11 @@
 # Default values for configuration of a STARTX cluster
 # see values.yaml for explanation on each params
 context: &context
-  scope: cdf
+  scope: ct
   cluster: poc
   environment: infra
   component: console
-  app: cdf-console
+  app: ct-console
 console:
   enabled: true
   namespace: openshift-config
@@ -14,6 +14,8 @@ console:
     name: CloudTemple Console
     logo: 
       name: ct-logo
+      format: svg
+      mode: file
       tplFile: webtpl/ct-logo-d1.svg
   links:
   - name: ct-console-link-all-namespaces-dashboard
