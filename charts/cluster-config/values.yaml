@@ -221,7 +221,7 @@ registryroute:
 registryconfig:
   # Enable the configuration of the registryconfig
   enabled: false
-  # Enable the configuration of the ingresscontroller service into infra nodes
+  # Enable the configuration of the registry service into infra nodes
   infra_enabled: false
   # Number of replicas for the deployed registry (default is 1)
   replicas: 1
@@ -258,14 +258,38 @@ ingresscontroller:
   # - name: default
   #   # The domain suffix to manage
   #   domain: example.com
-  #   # The label name for routeSelection
-  #   routeSelectorKey: mylabel
-  #   # The label value for routeSelection
-  #   routeSelectorValue: myvalue
-  #   # The label name for namespaceSelection
-  #   nsSelectorKey: mylabel
-  #   # The label value for namespaceSelection
-  #   nsSelectorValue: myvalue
+  #   # The section if you whant to restrict router to dedicated namespaces
+  #   routeSelector: 
+  #     # enable selection by label for candidates namespaces
+  #     isLabel: true
+  #     # The label key used for label selection
+  #     labelKey: "mylabel"
+  #     # The label value used for label selection (default is empty string)
+  #     labelValue: "myvalue"
+  #     # enable selection by expression for candidates namespaces
+  #     isExpressions: true
+  #     # The label key used for expression selection
+  #     expressionKey: "mylabel"
+  #     # The operator used for expression selection (default is NotIn)
+  #     expressionOperator: "In"
+  #     # The label value used for expression selection (default is empty string)
+  #     expressionValue: "myvalue"
+  #   # The section if you whant to restrict router to dedicated namespaces
+  #   nsSelector: 
+  #     # enable selection by label for candidates namespaces
+  #     isLabel: true
+  #     # The label key used for label selection
+  #     labelKey: "router.example"
+  #     # The label value used for label selection (default is empty string)
+  #     labelValue: "myexample"
+  #     # enable selection by expression for candidates namespaces
+  #     isExpressions: true
+  #     # The label key used for expression selection
+  #     expressionKey: "router.example"
+  #     # The operator used for expression selection (default is NotIn)
+  #     expressionOperator: "In"
+  #     # The label value used for expression selection (default is empty string)
+  #     expressionValue: "myexample"
   #   # Enable interNamespace sharing of hosts
   #   enabledInterNamespace: false
   #   # Enable and define the forwardedHeaderPolicy (Append, Replace, IfNone, or Never)

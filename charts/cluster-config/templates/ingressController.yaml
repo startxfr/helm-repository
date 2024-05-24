@@ -39,15 +39,33 @@ spec:
 {{- if .domain }}
   domain: "{{ .domain }}"
 {{- end }}
-{{- if .routeSelectorKey }}
-  routeSelector:
+{{- with .routeSelector }}
+  routeSelector:    
+  {{- if .isLabel }}
     matchLabels:
-      "{{ .routeSelectorKey }}": '{{ .routeSelectorValue | default "" }}'
+      "{{ .labelKey }}": '{{ .labelValue | default "" }}'
+  {{- end }}
+  {{- if .isExpressions }}
+    matchExpressions:
+      - key: "{{ .expressionKey }}"
+        operator: '{{ .expressionOperator | default "NotIn" }}'
+        values:
+          - '{{ .expressionValue | default "" }}'
+  {{- end }}
 {{- end }}
-{{- if .nsSelectorKey }}
-  namespaceSelector:
+{{- with .nsSelector }}
+  namespaceSelector:    
+  {{- if .isLabel }}
     matchLabels:
-      "{{ .nsSelectorKey }}": '{{ .nsSelectorValue | default "" }}'
+      "{{ .labelKey }}": '{{ .labelValue | default "" }}'
+  {{- end }}
+  {{- if .isExpressions }}
+    matchExpressions:
+      - key: "{{ .expressionKey }}"
+        operator: '{{ .expressionOperator | default "NotIn" }}'
+        values:
+          - '{{ .expressionValue | default "" }}'
+  {{- end }}
 {{- end }}
 {{- if .enabledInterNamespace }}
   routeAdmission:
