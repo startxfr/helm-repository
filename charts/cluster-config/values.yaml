@@ -262,10 +262,9 @@ ingresscontroller:
   #   routeSelector: 
   #     # enable selection by label for candidates namespaces
   #     isLabel: true
-  #     # The label key used for label selection
-  #     labelKey: "mylabel"
-  #     # The label value used for label selection (default is empty string)
-  #     labelValue: "myvalue"
+  #     # The list of labels key and values used for label selection
+  #     matchLabels: 
+  #       mylabel: myvalue
   #     # enable selection by expression for candidates namespaces
   #     isExpressions: true
   #     # The label key used for expression selection
@@ -273,15 +272,15 @@ ingresscontroller:
   #     # The operator used for expression selection (default is NotIn)
   #     expressionOperator: "In"
   #     # The label value used for expression selection (default is empty string)
-  #     expressionValue: "myvalue"
+  #     expressionValues: 
+  #       - "myvalue"
   #   # The section if you whant to restrict router to dedicated namespaces
   #   nsSelector: 
   #     # enable selection by label for candidates namespaces
   #     isLabel: true
-  #     # The label key used for label selection
-  #     labelKey: "router.example"
-  #     # The label value used for label selection (default is empty string)
-  #     labelValue: "myexample"
+  #     # The list of labels key and values used for label selection
+  #     matchLabels: 
+  #       "router.example": myexample
   #     # enable selection by expression for candidates namespaces
   #     isExpressions: true
   #     # The label key used for expression selection
@@ -289,7 +288,8 @@ ingresscontroller:
   #     # The operator used for expression selection (default is NotIn)
   #     expressionOperator: "In"
   #     # The label value used for expression selection (default is empty string)
-  #     expressionValue: "myexample"
+  #     expressionValues: 
+  #       - "myexample"
   #   # Enable interNamespace sharing of hosts
   #   enabledInterNamespace: false
   #   # Enable and define the forwardedHeaderPolicy (Append, Replace, IfNone, or Never)
