@@ -43,28 +43,36 @@ spec:
   routeSelector:    
   {{- if .isLabel }}
     matchLabels:
-      "{{ .labelKey }}": '{{ .labelValue | default "" }}'
+    {{- range $key, $value := .matchLabels }}
+      {{ $key  | quote }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
   {{- if .isExpressions }}
     matchExpressions:
       - key: "{{ .expressionKey }}"
         operator: '{{ .expressionOperator | default "NotIn" }}'
         values:
-          - '{{ .expressionValue | default "" }}'
+          {{- range .expressionValues }}
+          - {{ . | quote }}
+          {{- end }}
   {{- end }}
 {{- end }}
 {{- with .nsSelector }}
   namespaceSelector:    
   {{- if .isLabel }}
     matchLabels:
-      "{{ .labelKey }}": '{{ .labelValue | default "" }}'
+    {{- range $key, $value := .matchLabels }}
+      {{ $key  | quote }}: {{ $value | quote }}
+    {{- end }}
   {{- end }}
   {{- if .isExpressions }}
     matchExpressions:
       - key: "{{ .expressionKey }}"
         operator: '{{ .expressionOperator | default "NotIn" }}'
         values:
-          - '{{ .expressionValue | default "" }}'
+          {{- range .expressionValues }}
+          - {{ . | quote }}
+          {{- end }}
   {{- end }}
 {{- end }}
 {{- if .enabledInterNamespace }}
