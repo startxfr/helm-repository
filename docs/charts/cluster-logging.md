@@ -314,3 +314,4 @@ xxxx to do xxxxxx
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
 | 14.6.271 | 2024-04-05 | Adding support for redundancyPolicy of elasticSearch configuration
 | 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
