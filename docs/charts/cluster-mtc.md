@@ -60,3 +60,4 @@ helm install cluster-mtc startx/cluster-mtc -f https://raw.githubusercontent.com
 | -------- | ---------- | ---------------------------------------- |
 | 14.6.281 | 2024-05-29 | Initialize the MTC cluster-service chart |
 | 14.6.283 | 2024-05-29 | Update shcema and startx values
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
