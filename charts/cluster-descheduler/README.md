@@ -62,3 +62,4 @@ helm install cluster-descheduler startx/cluster-descheduler -f https://raw.githu
 | 14.6.283 | 2024-05-29 | Creation of the cluster-descheduler chart                         |
 | 14.6.285 | 2024-05-29 | Move descheduler name to cluster by default                       |
 | 14.6.287 | 2024-05-29 | Move descheduler namespace to openshift-kube-descheduler-operator |
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
