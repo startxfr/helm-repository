@@ -1,0 +1,66 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: descheduler
+  app: startx-descheduler
+descheduler:
+  enabled: false
+  hooked: true
+  namespace: startx-descheduler
+  name: default
+  spec: |
+    deschedulingIntervalSeconds: 3600
+    logLevel: Normal
+    managementState: Managed
+    operatorLogLevel: Normal
+    mode: Predictive
+    profileCustomizations:
+      namespaces:
+        excluded:
+        - my-namespace
+      podLifetime: 48h
+      thresholdPriorityClassName: startx-vital
+    profiles:
+    - AffinityAndTaints
+    - TopologyAndDuplicates
+    - LifecycleAndUtilization
+    - EvictPodsWithLocalStorage
+    - EvictPodsWithPVC
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "startx-descheduler"
+    display_name: Operator descheduler
+    description: KubeDescheduler configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cluster-kube-descheduler-operator"
+    namespace: "startx-descheduler"
+    version: "4.13.0-202405141537"
+    operator: 
+      channel: "stable"
+      name: cluster-kube-descheduler-operator
+      installPlanApproval: Automatic
+      csv: clusterkubedescheduleroperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-descheduler"
+    namespace: "startx-descheduler"
+    providedAPIs: " KubeDescheduler.v1.operator.openshift.io"
