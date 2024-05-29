@@ -1,0 +1,26 @@
+{{- if .Values.mtc.enabled -}}{{- if .Values.mtc.forklift -}}{{- if .Values.mtc.forklift.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-mtc" -}}
+{{- $ns2 := .Values.mtc.namespace | default ($ns1) -}}
+{{- $namespace := .Values.mtc.forklift.namespace | default ($ns2) -}}
+{{- $spec := .Values.mtc.forklift.spec | default "{}" -}}
+apiVersion: forklift.konveyor.io/v1beta1
+kind: ForkliftController
+metadata:
+  name: {{ .Values.mtc.forklift.name | default "quote" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-mtc.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.mtc.forklift.name | default "quote" -}}-forklift"
+  annotations:
+    {{- include "cluster-mtc.annotations" . | nindent 4 }}
+    {{- if .Values.mtc.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}{{- end -}}

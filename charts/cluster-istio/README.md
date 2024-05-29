@@ -332,3 +332,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
 | 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
 | 14.6.283 | 2024-05-21 | Move default limits for ephemeral-storage to 500Mi
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
