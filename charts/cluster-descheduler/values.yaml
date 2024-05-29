@@ -22,9 +22,9 @@ descheduler:
   # Activate the manager as a helm hook
   hooked: true
   # Default namespace for all ressources (if not set, use project)
-  namespace: openshift-descheduler
+  namespace: openshift-kube-descheduler-operator
   # Name of the deployed instance of KubeDescheduler
-  name: default
+  name: cluster
   # The applyed descheduler specifications
   spec: |
     deschedulingIntervalSeconds: 3600
@@ -54,7 +54,7 @@ project:
     enabled: false
     hooked: false
     type: namespace
-    name: "openshift-descheduler"
+    name: "openshift-kube-descheduler-operator"
     display_name: Operator descheduler
     description: KubeDescheduler configured by STARTX
 
@@ -67,7 +67,7 @@ operator:
     enabled: true
     hooked: false
     name: "cluster-kube-descheduler-operator"
-    namespace: "openshift-descheduler"
+    namespace: "openshift-kube-descheduler-operator"
     version: "4.13.0-202405141537"
     operator: 
       channel: "stable"
@@ -80,6 +80,6 @@ operator:
   operatorGroup:
     enabled: true
     hooked: false
-    name: "openshift-descheduler"
-    namespace: "openshift-descheduler"
+    name: "openshift-kube-descheduler-operator"
+    namespace: "openshift-kube-descheduler-operator"
     providedAPIs: " KubeDescheduler.v1.operator.openshift.io"

@@ -9,7 +9,7 @@ context: &context
 descheduler:
   enabled: false
   hooked: true
-  namespace: startx-descheduler
+  namespace: openshift-kube-descheduler-operator
   name: default
   spec: |
     deschedulingIntervalSeconds: 3600
@@ -37,7 +37,7 @@ project:
     enabled: false
     hooked: false
     type: namespace
-    name: "startx-descheduler"
+    name: "openshift-kube-descheduler-operator"
     display_name: Operator descheduler
     description: KubeDescheduler configured by STARTX
 operator:
@@ -48,7 +48,7 @@ operator:
     enabled: true
     hooked: false
     name: "cluster-kube-descheduler-operator"
-    namespace: "startx-descheduler"
+    namespace: "openshift-kube-descheduler-operator"
     version: "4.13.0-202405141537"
     operator: 
       channel: "stable"
@@ -62,5 +62,5 @@ operator:
     enabled: true
     hooked: false
     name: "openshift-descheduler"
-    namespace: "startx-descheduler"
+    namespace: "openshift-kube-descheduler-operator"
     providedAPIs: " KubeDescheduler.v1.operator.openshift.io"
