@@ -52,6 +52,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-mustgather](charts/cluster-mustgather.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mustgather)      | configure mustgather at the cluster level                    |
 | **[cluster-nfd](charts/cluster-nfd.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nfd)      | configure Node Feature Discovery at the cluster level                    |
 | **[cluster-gpu](charts/cluster-gpu.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-gpu)      | configure GPU Drivers (NVidia) at the cluster level                    |
+| **[cluster-descheduler](charts/cluster-descheduler.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-descheduler)      | configure KubeDescheduler to optimize pod distribution         |
 
 #### Use Cluster charts
 
@@ -88,7 +89,10 @@ helm install startx/cluster-certmanager
 helm install startx/cluster-oadp
 helm install startx/cluster-router
 helm install startx/cluster-couchbase
-helm install startx/cluster-crunchy
+helm install startx/cluster-mustgather
+helm install startx/cluster-nfd
+helm install startx/cluster-gpu
+helm install startx/cluster-descheduler
 ```
 
 ### Basic Helm charts
