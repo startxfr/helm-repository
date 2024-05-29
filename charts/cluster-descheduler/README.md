@@ -60,3 +60,4 @@ helm install cluster-descheduler startx/cluster-descheduler -f https://raw.githu
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 14.6.283 | 2024-05-29 | Initialize the descheduler cluster-service chart
 | 14.6.283 | 2024-05-29 | Creation of the cluster-descheduler chart
+| 14.6.285 | 2024-05-29 | Move descheduler name to cluster by default
