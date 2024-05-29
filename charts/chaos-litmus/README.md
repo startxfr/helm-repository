@@ -251,3 +251,4 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
 | 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
