@@ -1,0 +1,55 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: mtc
+  app: startx-mtc
+mtc:
+  enabled: false
+  hooked: false
+  namespace: openshift-mtc
+  forklift:
+    enabled: true
+    name: forklift-controller
+    spec: |
+      feature_must_gather_api: 'true'
+      feature_ui_plugin: 'true'
+      feature_validation: 'true'
+      feature_volume_populator: 'true'
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-migration"
+    display_name: Operator MTC
+    description: Migration Toolkit for Containers configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "mtc-operator"
+    namespace: "openshift-migration"
+    version: "v1.8.3"
+    operator: 
+      channel: "release-v1.8"
+      name: mtc-operator
+      installPlanApproval: Automatic
+      csv: mtc-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-migration"
+    namespace: "openshift-migration"
+    providedAPIs: "Backup.v1.velero.io,BackupRepository.v1.velero.io,BackupStorageLocation.v1.velero.io,CloudStorage.v1alpha1.oadp.openshift.io,DataDownload.v2alpha1.velero.io,DataProtectionApplication.v1alpha1.oadp.openshift.io,DataUpload.v2alpha1.velero.io,DeleteBackupRequest.v1.velero.io,DirectImageMigration.v1alpha1.migration.openshift.io,DirectImageStreamMigration.v1alpha1.migration.openshift.io,DirectVolumeMigration.v1alpha1.migration.openshift.io,DirectVolumeMigrationProgress.v1alpha1.migration.openshift.io,DownloadRequest.v1.velero.io,MigAnalytic.v1alpha1.migration.openshift.io,MigCluster.v1alpha1.migration.openshift.io,MigHook.v1alpha1.migration.openshift.io,MigMigration.v1alpha1.migration.openshift.io,MigPlan.v1alpha1.migration.openshift.io,MigStorage.v1alpha1.migration.openshift.io,MigrationController.v1alpha1.migration.openshift.io,PodVolumeBackup.v1.velero.io,PodVolumeRestore.v1.velero.io,Restore.v1.velero.io,Schedule.v1.velero.io,ServerStatusRequest.v1.velero.io,VolumeSnapshotLocation.v1.velero.io"
