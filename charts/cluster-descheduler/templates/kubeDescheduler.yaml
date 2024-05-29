@@ -5,11 +5,11 @@
 apiVersion: operator.openshift.io/v1
 kind: KubeDescheduler
 metadata:
-  name: {{ .Values.descheduler.name | default "default" | quote }}
+  name: {{ .Values.descheduler.name | default "cluster" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-descheduler.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.descheduler.name | default "default" -}}-descheduler"
+    app.kubernetes.io/name: "{{- .Values.descheduler.name | default "cluster" -}}-descheduler"
   annotations:
     {{- include "cluster-descheduler.annotations" . | nindent 4 }}
     {{- if .Values.descheduler.hooked }}
