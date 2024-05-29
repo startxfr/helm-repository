@@ -1,5 +1,5 @@
 {{- if .Values.descheduler.enabled -}}
-{{- $ns1 := .Values.project.project.name | default "openshift-descheduler" -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-kube-descheduler-operator" -}}
 {{- $namespace := .Values.descheduler.namespace | default ($ns1) -}}
 {{- $spec := .Values.descheduler.spec | default "{}" -}}
 apiVersion: operator.openshift.io/v1
