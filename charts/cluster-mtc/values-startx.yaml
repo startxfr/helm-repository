@@ -1,0 +1,56 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: mtc
+  app: startx-mtc
+mtc:
+  enabled: false
+  hooked: false
+  namespace: openshift-mtc
+  forklift:
+    enabled: true
+    name: forklift-controller
+    spec: |
+      feature_must_gather_api: 'true'
+      feature_ui_plugin: 'true'
+      feature_validation: 'true'
+      feature_volume_populator: 'true'
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-mtc"
+    display_name: "Startx MTC"
+    requester: startx
+    description: Migration Toolkit for Containers configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "mtc-operator"
+    namespace: "openshift-mtc"
+    version: "v2.5.3"
+    operator: 
+      channel: "release-v2.5"
+      name: mtc-operator
+      installPlanApproval: Automatic
+      csv: mtc-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-mtc"
+    namespace: "openshift-mtc"
+    providedAPIs: "ForkliftController.v1beta1.forklift.konveyor.io,Hook.v1beta1.forklift.konveyor.io,Host.v1beta1.forklift.konveyor.io,Migration.v1beta1.forklift.konveyor.io,NetworkMap.v1beta1.forklift.konveyor.io,OpenstackVolumePopulator.v1beta1.forklift.konveyor.io,OvirtVolumePopulator.v1beta1.forklift.konveyor.io,Plan.v1beta1.forklift.konveyor.io,Provider.v1beta1.forklift.konveyor.io,StorageMap.v1beta1.forklift.konveyor.io"
