@@ -94,3 +94,4 @@ helm install cluster-mustgather startx/cluster-mustgather -f https://raw.githubu
 | 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
 | 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
 | 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
+| 14.6.301 | 2024-05-30 | Helm package are now signed
