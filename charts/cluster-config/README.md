@@ -346,3 +346,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.283 | 2024-05-24 | Enhence routeSelector and nsSelector for both label and expressions selection of route subset
 | 14.6.285 | 2024-05-25 | Improve routeSelector and nsSelector with multiple labels and expression values
 | 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
+| 14.6.301 | 2024-05-30 | Helm package are now signed
