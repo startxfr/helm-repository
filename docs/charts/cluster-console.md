@@ -309,3 +309,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 14.6.271 | 2024-05-20 | Add support for embeded template file. Mode = embed
 | 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
 | 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
+| 14.6.301 | 2024-05-30 | Helm package are now signed
