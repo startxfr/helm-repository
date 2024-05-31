@@ -31,7 +31,7 @@ metadata:
   name: "custom-logo"
   namespace: "openshift-console"
 data:
-{{- with .Values.console.customize.logo -}}
+{{- with .Values.console.customize.logo }}
   {{ .name | default "default-logo" -}}.{{ .format | default "svg" }}: |-
 {{- if and (eq .mode "embed") (ne .tplContent "") }}
     {{ .tplContent | nindent 4 }}
