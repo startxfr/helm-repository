@@ -23,6 +23,7 @@ data:
 {{- end }}
 {{- end }}
 {{- if .Values.console.customize.logo.manageSubresource }}
+{{- with .Values.console.customize.logo }}
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -30,8 +31,12 @@ immutable: false
 metadata:
   name: "custom-logo"
   namespace: "openshift-console"
+  labels:
+    {{- include "cluster-console.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name | default "default-logo" -}}-configmap"
+  annotations:
+    {{- include "cluster-console.annotations" $ | nindent 4 }}
 data:
-{{- with .Values.console.customize.logo }}
   {{ .name | default "default-logo" -}}.{{ .format | default "svg" }}: |-
 {{- if and (eq .mode "embed") (ne .tplContent "") }}
     {{ .tplContent | nindent 4 }}
