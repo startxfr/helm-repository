@@ -29,6 +29,8 @@ auth:
     login: 
       # Name of the template secret
       name: default-login
+      # Create sub-resource v4-0-config-user-template-login in ns openshift-authentication
+      manageSubresource: false
       # The template mode (could be file or embed. default is file)
       mode: file
       # name of the template file (in webtpl)
@@ -37,6 +39,8 @@ auth:
     errors: 
       # Name of the template secret
       name: default-errors
+      # Create sub-resource v4-0-config-user-template-error in ns openshift-authentication
+      manageSubresource: false
       # The template mode (could be file or embed. default is file)
       mode: embed
       # content of the template file (in html)
@@ -79,6 +83,8 @@ auth:
     providers: 
       # Name of the template secret
       name: default-providers
+      # Create sub-resource v4-0-config-user-template-provider-selection in ns openshift-authentication
+      manageSubresource: false
       # The template mode (could be file or embed. default is file)
       mode: file
       # name of the template file (in webtpl)
@@ -88,6 +94,8 @@ auth:
     # - name: myhtpasswd
     #   # Type of auth backend (htpasswd, ldap or oidc)
     #   type: htpasswd
+    #   # Create sub-resource v4-0-config-user-idp-0-file-data in ns openshift-authentication
+    #   manageSubresource: false
     #   # If type is htpasswd, the following parameters are allowed
     #   # Example of command to generate the htpasswd
     #   htpasswdComment: |
@@ -100,6 +108,8 @@ auth:
     # - name: myldap
     #   # Type of auth backend (htpasswd, ldap or oidc)
     #   type: ldap
+    #   # Create sub-resource v4-0-config-user-idp-0-bind-password in ns openshift-authentication
+    #   manageSubresource: false
     #   # If type is ldap, the following parameters are allowed
     #   # An RFC 2255 URL which specifies the LDAP host and search parameters to use.
     #   ldapURL: "ldap://ldap.example.com/ou=users,dc=acme,dc=com?uid"
@@ -138,6 +148,8 @@ auth:
     # - name: myoidc
     #   # Type of auth backend (htpasswd, ldap or oidc)
     #   type: oidc
+    #   # Create sub-resource v4-0-config-user-idp-0-client-secret in ns openshift-authentication
+    #   manageSubresource: false
     #   # The client ID of a client registered with the OpenID provider.
     #   # The client must be allowed to redirect to https://oauth-openshift.apps.<cluster_name>.<cluster_domain>/oauth2callback/<idp_provider_name>.
     #   oidcClientID: "..."
