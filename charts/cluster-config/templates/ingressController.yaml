@@ -103,6 +103,7 @@ spec:
     nodePort:
       protocol: PROXY
     type: NodePortService
+{{- else if eq "none" .loadBalancerMode }}
 {{- end }}
   replicas: {{ default 2 .replicas }}
 {{- if .certificate }}{{- if .certificate.enabled }}
