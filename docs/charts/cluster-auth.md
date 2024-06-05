@@ -344,3 +344,4 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.303 | 2024-05-31 | Adding support for manageSubresource flag who create openshift-authentication resources
 | 14.6.309 | 2024-05-31 | Adding labels and annotations for managed subresources
+| 14.6.311 | 2024-05-31 | Debug property name for managed subresource
