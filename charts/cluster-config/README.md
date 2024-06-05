@@ -347,3 +347,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.285 | 2024-05-25 | Improve routeSelector and nsSelector with multiple labels and expression values
 | 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
 | 14.6.301 | 2024-05-30 | Helm package are now signed
+| 14.6.303 | 2024-06-05 | Adding support for nodePort export strategy in ingress controller

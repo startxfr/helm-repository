@@ -93,6 +93,16 @@ spec:
     loadBalancer:
       scope: External
     type: LoadBalancerService
+{{- else if eq "nodeport" .loadBalancerMode }}
+  endpointPublishingStrategy:
+    nodePort:
+      protocol: TCP
+    type: NodePortService
+{{- else if eq "nodeport-proxy" .loadBalancerMode }}
+  endpointPublishingStrategy:
+    nodePort:
+      protocol: PROXY
+    type: NodePortService
 {{- end }}
   replicas: {{ default 2 .replicas }}
 {{- if .certificate }}{{- if .certificate.enabled }}
