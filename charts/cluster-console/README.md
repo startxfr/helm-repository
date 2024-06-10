@@ -314,3 +314,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 14.6.305 | 2024-05-31 | Debug manageSubresource flag
 | 14.6.307 | 2024-05-31 | Debug manageSubresource flag 2
 | 14.6.309 | 2024-05-31 | Adding labels and annotations for managed subresources
+| 14.6.311 | 2024-06-10 | Updating images
