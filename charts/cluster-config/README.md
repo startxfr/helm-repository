@@ -350,3 +350,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.303 | 2024-06-05 | Adding support for nodePort export strategy in ingress controller
 | 14.6.305 | 2024-06-05 | Adding none endpoint strategy in ingress controller
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
+| 14.6.323 | 2024-06-25 | Align all chart to latest release
