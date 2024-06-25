@@ -336,3 +336,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.303 | 2024-06-24 | Stop eviction with 1Gi limits for prometheus epemeral-storage
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
+| 14.6.323 | 2024-06-25 | Align all chart to latest release
