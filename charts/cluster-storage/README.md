@@ -1,4 +1,5 @@
-# Cluster Chart : Storage [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--storage-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+storage+startx)
+# ![cluster-storage](https://helm-repository.readthedocs.io/en/latest/img/cluster-storage.svg "Cluster Chart : Storage") Cluster Chart : Storage
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--storage-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+storage+startx)
 
 This helm chart is used to create a list of storageClass available for the cluster.
 

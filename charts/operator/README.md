@@ -1,4 +1,5 @@
-# Basic Chart : Operator [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_operator-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=operator+startx)
+# ![operator](https://helm-repository.readthedocs.io/en/latest/img/operator.svg "Basic Chart : Operator") Basic Chart : Operator
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_operator-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=operator+startx)
 
 This helm chart is used to configure various operator using subscription (openshift) or CRD (k8s) ressources.
 

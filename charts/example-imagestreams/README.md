@@ -1,4 +1,5 @@
-# Example Chart : ImageStreams [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--imagestreams-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+imagestreams+startx)
+# ![example-imagestreams](https://helm-repository.readthedocs.io/en/latest/img/example-imagestreams.svg "Example Chart : ImageStreams") Example Chart : ImageStreams
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--imagestreams-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+imagestreams+startx)
 
 This helm chart is used to used to load imagestreams into a given namespace.
 

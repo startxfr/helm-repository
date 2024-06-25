@@ -1,4 +1,5 @@
-# Cluster Chart : AWS EFS [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--storage--efs-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+storage+efs+startx)
+# ![cluster-storage-efs](https://helm-repository.readthedocs.io/en/latest/img/cluster-storage-efs.svg "Cluster Chart : Storage EFS") Cluster Chart : Storage EFS (AWS)
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--storage--efs-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+storage+efs+startx)
 
 This helm chart is used to configure Openshift Container Storage at the cluster level.
 

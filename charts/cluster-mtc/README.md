@@ -1,4 +1,5 @@
-# Cluster Chart : MTC [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--mtc-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+mtc+startx)
+# ![cluster-mtc](https://helm-repository.readthedocs.io/en/latest/img/cluster-mtc.svg "Cluster Chart : MTC") Cluster Chart : MTC
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--mtc-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+mtc+startx)
 
 This helm chart is used to deploy Migration Toolkit for Containers operator to help you drive migration of your VM workloads into a Kubevirt enabled kubernetes cluster.
 
@@ -64,3 +65,4 @@ helm install cluster-mtc startx/cluster-mtc -f https://raw.githubusercontent.com
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
