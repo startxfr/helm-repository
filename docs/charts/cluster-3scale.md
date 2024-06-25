@@ -1,4 +1,5 @@
-# Cluster Chart : 3Scale [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--3scale-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+3scale+startx)
+# ![cluster-3scale](https://helm-repository.readthedocs.io/en/latest/img/cluster-3scale.svg "Cluster Chart : 3Scale") Cluster Chart : 3Scale (API Management)
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--3scale-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+3scale+startx)
 
 This helm chart is used to create a deployment of a 3scale, operator based, deployment of 3Scale API management tools.
 
@@ -333,3 +334,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
