@@ -1,4 +1,4 @@
-# Cluster Chart : MTV [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--mtv-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+mtv+startx)
+# ![cluster-mtv](https://helm-repository.readthedocs.io/en/latest/img/cluster-mtv.svg "Cluster Chart : MTV") Cluster Chart : MTV [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--mtv-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+mtv+startx)
 
 This helm chart is used to deploy Migration Toolkit for Virtualisation operator to help you drive migration of your VM workloads into a Kubevirt enabled kubernetes cluster.
 

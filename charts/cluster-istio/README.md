@@ -1,4 +1,5 @@
-# Cluster Chart : Istio [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--istio-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+istio+startx)
+# ![cluster-istio](https://helm-repository.readthedocs.io/en/latest/img/cluster-istio.svg "Cluster Chart : Istio") Cluster Chart : Istio
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--istio-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+istio+startx)
 
 This helm chart is used to configure Istio at the cluster level.
 

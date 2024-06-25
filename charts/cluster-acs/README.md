@@ -1,4 +1,5 @@
-# Cluster Chart : ACS [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--acs-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+acs+startx)
+# ![cluster-acs](https://helm-repository.readthedocs.io/en/latest/img/cluster-acs.svg "Cluster Chart : ACS") Cluster Chart : Advanced Cluster Security (Stackrox)
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--acs-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+acs+startx)
 
 This helm chart must have a description
 

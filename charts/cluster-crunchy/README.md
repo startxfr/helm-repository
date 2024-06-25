@@ -1,4 +1,5 @@
-# Cluster Chart : Crunchy [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--crunchy-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+crunchy+startx)
+# ![cluster-crunchy](https://helm-repository.readthedocs.io/en/latest/img/cluster-crunchy.svg "Cluster Chart : Crunchy") Cluster Chart : Crunchy
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--crunchy-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+crunchy+startx)
 
 This helm chart is used to deploy CrunchyDB instances managed by a dedicated operator.
 

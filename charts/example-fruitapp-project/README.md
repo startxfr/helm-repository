@@ -1,4 +1,5 @@
-# Example Chart : Fruitapp -project [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--fruitapp--project-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+fruitapp+startx)
+# ![example-fruitapp-project](https://helm-repository.readthedocs.io/en/latest/img/example-fruitapp-project.svg "Example Chart : Fruitapp - project") Example Chart : Fruitapp - Project
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--fruitapp--project-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+fruitapp+startx)
 
 This helm chart is used to deploy all project required to deploy a full CI/CD chain for the fruitapp demo application.
 

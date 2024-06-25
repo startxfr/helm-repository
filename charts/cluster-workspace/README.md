@@ -1,4 +1,5 @@
-# Cluster Chart : Workspace [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--workspace-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+workspace+startx)
+# ![cluster-workspace](https://helm-repository.readthedocs.io/en/latest/img/cluster-workspace.svg "Cluster Chart : Workspace") Cluster Chart : Workspace
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--workspace-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+workspace+startx)
 
 This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
 

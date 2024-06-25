@@ -1,4 +1,5 @@
-# Example Chart : catalog [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--catalog-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+catalog+startx)
+# ![example-catalog](https://helm-repository.readthedocs.io/en/latest/img/example-catalog.svg "Example Chart : Catalog") Example Chart : catalog
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--catalog-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+catalog+startx)
 
 This helm chart is chart used to deploy various example of application used in Startx demo and mostly based on [sxapi helm chart](https://helm-repository.readthedocs.io/en/latest/charts/sxapi) microservice framework.
 

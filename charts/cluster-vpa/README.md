@@ -1,4 +1,5 @@
-# Cluster Chart : VPA [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--vpa-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+vpa+startx)
+# ![cluster-vpa](https://helm-repository.readthedocs.io/en/latest/img/cluster-vpa.svg "Cluster Chart : VPA") Cluster Chart : VPA
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--vpa-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+vpa+startx)
 
 This helm chart is used to deploy VerticalPodAutoscaler pod managed by a dedicated operator.
 

@@ -1,4 +1,5 @@
-# Cluster Chart : Vault [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--vault-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+vault+startx)
+# ![cluster-vault](https://helm-repository.readthedocs.io/en/latest/img/cluster-vault.svg "Cluster Chart : Vault") Cluster Chart : Vault
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--vault-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+vault+startx)
 
 This helm chart is used to create a deployment of a vault, helm based, deployment of Hashicorp Vault solution.
 

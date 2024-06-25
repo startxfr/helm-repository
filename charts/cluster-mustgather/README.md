@@ -1,4 +1,5 @@
-# Cluster Chart : MustGather [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--mustgather-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+mustgather+startx)
+# ![cluster-mustgather](https://helm-repository.readthedocs.io/en/latest/img/cluster-mustgather.svg "Cluster Chart : MustGather") Cluster Chart : MustGather
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--mustgather-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+mustgather+startx)
 
 This helm chart is used to configure MustGather at the cluster level and help you manage attaching this MustGather to an existing case from the redhat support.
 

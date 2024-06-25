@@ -1,4 +1,5 @@
-# Chaos Chart : Kraken [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--kraken-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+kraken+startx)
+# ![chaos-kraken](https://helm-repository.readthedocs.io/en/latest/img/chaos-kraken.svg "Chaos Chart : Kraken") Chaos Chart : Kraken
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--kraken-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+kraken+startx)
 
 This helm chart used to deploy kraken on Openshift or Kubernetes cluster. 
 Kraken is as a chaos engine with chaos scenarios for Openshift clusters. 

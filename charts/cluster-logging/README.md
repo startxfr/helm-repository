@@ -1,4 +1,5 @@
-# Cluster Chart : Logging [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--logging-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+logging+startx)
+# ![cluster-logging](https://helm-repository.readthedocs.io/en/latest/img/cluster-logging.svg "Cluster Chart : Logging") Cluster Chart : Logging
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--logging-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+logging+startx)
 
 This helm chart is used to configure Metering at the cluster level.
 

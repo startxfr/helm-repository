@@ -1,4 +1,5 @@
-# Cluster Chart : Descheduler [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--descheduler-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+descheduler+startx)
+# ![cluster-descheduler](https://helm-repository.readthedocs.io/en/latest/img/cluster-descheduler.svg "Cluster Chart : Descheduler") Cluster Chart : Descheduler
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--descheduler-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+descheduler+startx)
 
 This helm chart is used to deploy the KubeDescheduler operator to help you evict pods based on specific strategies so that the pods can be rescheduled onto more appropriate nodes.
 

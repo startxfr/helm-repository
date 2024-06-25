@@ -1,4 +1,5 @@
-# Cluster Chart : Config [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--config-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+config+startx)
+# ![cluster-config](https://helm-repository.readthedocs.io/en/latest/img/cluster-config.svg "Cluster Chart : Config") Cluster Chart : Config
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--config-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+config+startx)
 
 This helm chart is used to create a personnalized cluster configuration with various cluster level components configured as required.
 

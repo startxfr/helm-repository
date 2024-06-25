@@ -1,4 +1,5 @@
-# Example Chart : SXAPI [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--sxapi-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+sxapi+startx)
+# ![sxapi](https://helm-repository.readthedocs.io/en/latest/img/example-sxapi.svg "Example Chart : SXAPI") Example Chart : SXAPI
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--sxapi-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+sxapi+startx)
 
 This helm chart is used to create a deployment of a small an simple micro-service based on [sxapi helm chart](https://helm-repository.readthedocs.io/en/latest/charts/sxapi).
 

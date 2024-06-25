@@ -1,4 +1,5 @@
-# Cluster Chart : KNative [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--knative-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+knative+startx)
+# ![cluster-knative](https://helm-repository.readthedocs.io/en/latest/img/cluster-knative.svg "Cluster Chart : KNative") Cluster Chart : KNative
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--knative-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+knative+startx)
 
 This helm chart is used to configure Knative at the cluster level.
 
