@@ -316,3 +316,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 14.6.309 | 2024-05-31 | Adding labels and annotations for managed subresources
 | 14.6.311 | 2024-06-10 | Updating images
 | 14.6.315 | 2024-06-10 | Change images
+| 14.6.321 | 2024-06-25 | publish stable update for the full repository

@@ -420,3 +420,4 @@ chaos-monkey startx/chaos-monkey
 | 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
 | 14.6.294 | 2024-05-30 | Improve chaos options
 | 14.6.301 | 2024-05-30 | Helm package are now signed
+| 14.6.321 | 2024-06-25 | publish stable update for the full repository
