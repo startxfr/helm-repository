@@ -1,4 +1,5 @@
-# Cluster Chart : Auth [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--auth-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+auth+startx)
+# ![cluster-auth](https://helm-repository.readthedocs.io/en/latest/img/cluster-auth.svg "Cluster Chart : Auth") Cluster Chart : Auth
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--auth-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+auth+startx)
 
 This helm chart is used to configure Auth at the cluster level.
 
@@ -347,3 +348,4 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 14.6.311 | 2024-05-31 | Debug property name for managed subresource
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
