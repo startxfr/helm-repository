@@ -1,4 +1,5 @@
-# Basic Chart : Operator [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_operator-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=operator+startx)
+# ![operator](https://helm-repository.readthedocs.io/en/latest/img/operator.svg "Basic Chart : Operator") Basic Chart : Operator
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_operator-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=operator+startx)
 
 This helm chart is used to configure various operator using subscription (openshift) or CRD (k8s) ressources.
 
@@ -427,3 +428,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 14.6.310 | 2024-06-25 | Addding support for config parameter
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository
