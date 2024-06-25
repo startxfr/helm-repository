@@ -498,3 +498,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
 | 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
 | 14.6.301 | 2024-05-30 | Helm package are now signed
+| 14.6.310 | 2024-06-25 | Align all basic chart to release 14.6.310

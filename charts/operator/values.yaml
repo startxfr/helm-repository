@@ -20,7 +20,7 @@ enabled: true
 # Configuration of the subscription
 subscription:
   # enable deployment of the subscription
-  enabled: true
+  enabled: false
   # name of the subscription (mandatory)
   name: "codeready-workspaces"
   # namespace of the subscription (mandatory)
@@ -46,11 +46,25 @@ subscription:
       # namespace of the operator (default is 'openshift-marketplace')
       namespace: openshift-marketplace
       # specific operator configuration
-    config: {}
+    config: 
+      infra: false
+      nodeSelector: 
+        node-role.kubernetes.io/worker: ''
+      tolerations: 
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/worker
+          operator: Exists
+      resources: 
+        limits:
+          cpu: 400m
+        requests:
+          cpu: 400m
+      env: 
+        MYENV: test
 # Configuration of the subscription
 operatorGroup:
   # enable deployment of an operatorGroup for the subscription
-  enabled: true
+  enabled: false
   # name of the operatorGroup (if not set, use the subscription name)
   name: "codeready-workspaces"
   # operatorGroup is started as an helm hook (default is false)
