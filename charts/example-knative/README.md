@@ -1,4 +1,5 @@
-# Example Chart : KNative [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--knative-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+knative+startx)
+# ![example-knative](https://helm-repository.readthedocs.io/en/latest/img/example-knative.svg "Example Chart : KNative") Example Chart : KNative
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--knative-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+knative+startx)
 
 This helm chart is used to create various serverless application based on [knative helm chart](https://helm-repository.readthedocs.io/en/latest/charts/cluster-knative/).
 
@@ -331,3 +332,4 @@ helm install example-knative-helloworld-go startx/example-knative -f https://raw
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

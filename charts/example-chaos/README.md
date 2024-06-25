@@ -1,4 +1,5 @@
-# Example Chart : chaos [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--chaos-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+chaos+startx)
+# ![example-chaos](https://helm-repository.readthedocs.io/en/latest/img/example-chaos.svg "Example Chart : Chaos") Example Chart : Chaos
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--chaos-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+chaos+startx)
 
 This helm chart is used to deploy a chaos testing suit composed of chaos mesh and kraken test suite.
 
@@ -267,3 +268,4 @@ helm install example-chaos startx/example-chaos -f https://raw.githubusercontent
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

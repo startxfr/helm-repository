@@ -1,4 +1,5 @@
-# Chaos Chart : Kube-monkey [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--monkey-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+monkey+startx)
+# ![chaos-monkey](https://helm-repository.readthedocs.io/en/latest/img/chaos-monkey.svg "Chaos Chart : Monkeys") Chaos Chart : ChaosMonkeys
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--monkey-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+monkey+startx)
 
 This helm chart used to deploy kube-monkey on Openshift or Kubernetes cluster. 
 Monkey is as a watchdog who act as a global cluster healthcheck. 
@@ -251,3 +252,5 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

@@ -1,4 +1,5 @@
-# Cluster Chart : OADP [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--oadp-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+oadp+startx)
+# ![cluster-oadp](https://helm-repository.readthedocs.io/en/latest/img/cluster-oadp.svg "Cluster Chart : OADP") Cluster Chart : OADP
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--oadp-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+oadp+startx)
 
 This helm chart is used to deploy Openshift Application Data Protection handled by an operator to configure application and cluster backup strategies.
 
@@ -304,3 +305,5 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

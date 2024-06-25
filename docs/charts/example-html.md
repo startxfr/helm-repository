@@ -1,4 +1,5 @@
-# Example Chart : HTML [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--html-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+html+startx)
+# ![example-html](https://helm-repository.readthedocs.io/en/latest/img/example-html.svg "Example Chart : Static web") Example Chart : HTML
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--html-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+html+startx)
 
 This helm chart is used to create a deployment of a small webserver based on [startx apache image](https://quay.io/startx/apache).
 
@@ -335,3 +336,4 @@ helm install example-html startx/example-html -f https://raw.githubusercontent.c
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

@@ -1,4 +1,5 @@
-# Example Chart : PHP [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--php-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+php+startx)
+# ![example-php](https://helm-repository.readthedocs.io/en/latest/img/example-php.svg "Example Chart : PHP") Example Chart : PHP
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--php-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+php+startx)
 
 This helm chart is used to create a deployment of a small PHP webserver based on [startx apache PHP image](https://quay.io/startx/php).
 
@@ -325,3 +326,4 @@ helm install example-php-hpa startx/example-php -f https://raw.githubusercontent
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

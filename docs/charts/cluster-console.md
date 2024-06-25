@@ -1,4 +1,5 @@
-# Cluster Chart : Console [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--console-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+console+startx)
+# ![cluster-console](https://helm-repository.readthedocs.io/en/latest/img/cluster-console.svg "Cluster Chart : Console") Cluster Chart : Console
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--console-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+console+startx)
 
 This helm chart is used to configure openshift console at the cluster level.
 
@@ -318,3 +319,5 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 14.6.315 | 2024-06-10 | Change images
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository
