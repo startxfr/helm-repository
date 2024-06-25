@@ -242,3 +242,4 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
 | 14.6.325 | 2024-06-25 | publish stable update for the full repository
+| 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
