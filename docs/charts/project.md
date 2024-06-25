@@ -500,3 +500,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.310 | 2024-06-25 | Align all basic chart to release 14.6.310
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
+| 14.6.323 | 2024-06-25 | Align all chart to latest release
