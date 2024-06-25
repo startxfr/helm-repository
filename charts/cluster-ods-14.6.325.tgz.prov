@@ -1,0 +1,80 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Adding chart logo in README header"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.1.2
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+  version: 14.6.310
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+  version: 14.6.310
+description: Helm chart used to configure OpenDataScience at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-ods.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - data
+- - data science
+- - AI
+- - AIML
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-ods
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-ods
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ods
+type: application
+version: 14.6.325
+
+...
+files:
+  cluster-ods-14.6.325.tgz: sha256:ac0fa9a276b3615ac42ee45bad5b2cf96f17cb4016e4a681b10fad230d3bff79
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJmevYxCRAPNrJQFdOjTQAAaewQAA7AwWKoPhMkuZnB3pBrd9Jo
+2sffYrzcZql2AQxX1pB7GWPJwNkEgQRxmvdLKx44W5hRGG1A4CgkW2gt9hDCYYfW
+mL6vdbVe6AWws4CDVtM4EuhAJVIlzBv/b4ud9X5Evsjg9UyXbITo65tpj2U/SBts
+ae1gpGRjN22DNCsGmfSvLt36A+uMNlTe+I0tr7wtlrsepfRKubXKT6/R4UMBnVmk
+OO1yWkG+lbZATaF32gkQDtepyeXfUoDPLMP6XkAzAFp7J9zTr8+H5re2kj4Dc0WR
+EODX1dSDnwBdNvIx3WZhLvWvz0lUN7NDfaodnZfzToiX0aSrLfmxs5WnzExWSfM4
+oAYX9312OXsSAlcX9fIeLzt4YAMJahYqwUwqCxqBukwK96+Hh1sQyPwjqcuFxL9h
+F9GSmYw6Iy/rrvnzsSbMpQ/oasK7biueioWdSiMD1OZJ/08zKZLNNjirLFzXfidg
+h33+1NIsxZOvmkOmB8j+N79jR6MpjG5XYK0rHwdAEeJZjDv79PysuJ/Wco7aeWsu
+JdJS4o3VqmaPyyiDWWPPn7WmszkoZE4iG6O8l5GBx5eR6Z8iKn2e5b+15he/8LdI
+IIXjpNfybvcOThTHNY9wnYeIBuG+4mZdZZOnF/Q49tZVWMZXkgP2x+kaQYExanXY
+U24FiudvRtXK+KvIxAvC
+=Qdd4
+-----END PGP SIGNATURE-----
