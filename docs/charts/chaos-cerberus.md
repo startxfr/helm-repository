@@ -1,4 +1,5 @@
-# Chaos Chart : Cerberus [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--cerberus-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+cerberus+startx)
+# ![chaos-cerberus](https://helm-repository.readthedocs.io/en/latest/img/chaos-cerberus.svg "Chaos Chart : Cerberus") Chaos Chart : Cerberus
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--cerberus-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+cerberus+startx)
 
 This helm chart used to deploy cerberus on Openshift or Kubernetes cluster. 
 Cerberus is as a watchdog who act as a global cluster healthcheck. 
@@ -284,3 +285,4 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
