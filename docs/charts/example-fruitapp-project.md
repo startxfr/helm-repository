@@ -244,3 +244,4 @@ helm install example-fruitapp-project startx/example-fruitapp-project
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
 | 14.6.325 | 2024-06-25 | publish stable update for the full repository
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
+| 14.6.335 | 2024-06-26 | publish stable update for the full repository
