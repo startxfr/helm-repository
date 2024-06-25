@@ -8,12 +8,6 @@
         "operatorGroup"
     ],
     "properties": {
-        "enabled": {
-            "type": "boolean",
-            "title": "Enable the operator creation",
-            "description": "Enable creation of the operator into an Openshift environment. Is required to be enabled if you want to create resources.",
-            "default": true
-        },
         "context": {
             "type": "object",
             "title": "Operator context",
@@ -26,16 +20,16 @@
                 "app"
             ],
             "properties": {
-                "scope": {
+                "app": {
                     "type": "string",
                     "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organisational tenant.",
-                    "default": "myscope",
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "default": "default-project",
                     "examples": [
-                        "myscope",
-                        "mycustomer"
+                        "myapp",
+                        "mymicroservice"
                     ]
                 },
                 "cluster": {
@@ -48,6 +42,18 @@
                     "examples": [
                         "mycluster",
                         "localhost"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "mycomp",
+                    "examples": [
+                        "mycomp",
+                        "myservice"
                     ]
                 },
                 "environment": {
@@ -64,28 +70,16 @@
                         "prod"
                     ]
                 },
-                "component": {
+                "scope": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 25,
-                    "title": "Component name",
-                    "description": "Name of the component consisting of this application. Define a logical tenant.",
-                    "default": "mycomp",
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "default": "myscope",
                     "examples": [
-                        "mycomp",
-                        "myservice"
-                    ]
-                },
-                "app": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 40,
-                    "title": "Application name",
-                    "description": "Name of the application name. Define a functionnal tenant.",
-                    "default": "default-project",
-                    "examples": [
-                        "myapp",
-                        "mymicroservice"
+                        "myscope",
+                        "mycustomer"
                     ]
                 },
                 "version": {
@@ -105,167 +99,11 @@
                 }
             }
         },
-        "subscription": {
-            "type": "object",
-            "title": "Subscription management",
-            "description": "Information about the subscription to the operator.",
-            "required": [
-                "enabled",
-                "name",
-                "namespace"
-            ],
-            "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "title": "Enable subscription creation",
-                    "description": "Enable the creation of the subscription.",
-                    "default": true
-                },
-                "hooked": {
-                    "type": "boolean",
-                    "title": "Helm hook",
-                    "description": "Subscription creation is done as an helm hook. Should be set to true when included as chart dependencies to create subscription prior to other resources (helm doesn't recognize subscription resources as it does for CRD)",
-                    "default": true
-                },
-                "name": {
-                    "type": "string",
-                    "title": "Name",
-                    "description": "Name of the subscription.",
-                    "default": "redis-operator",
-                    "examples": [
-                        "redis-operator",
-                        "startx-operator",
-                        "my-operator"
-                    ]
-                },
-                "namespace": {
-                    "type": "string",
-                    "title": "Namespace",
-                    "description": "Namespace hosting the subscription.",
-                    "default": "openshift-operators",
-                    "examples": [
-                        "default",
-                        "openshift-operators",
-                        "startx-operators",
-                        "mycorp-operators"
-                    ]
-                },
-                "version": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 30,
-                    "title": "Operator version",
-                    "description": "Version of the operator to deploy. Must be available in the operator catalog. If not set use the context version.",
-                    "default": "v0.8.0",
-                    "examples": [
-                        "0.0.1",
-                        "v0.1.1",
-                        "v0.0.1-snapshot",
-                        "0.0.1-202110300900"
-                    ]
-                },
-                "operator": {
-                    "type": "object",
-                    "title": "Operator definition",
-                    "description": "Define the operator to deploy.",
-                    "properties": {
-                        "channel": {
-                            "type": "string",
-                            "title": "Channel",
-                            "description": "The operator channel to use.",
-                            "default": "stable",
-                            "examples": [
-                                "stable",
-                                "preview"
-                            ]
-                        },
-                        "name": {
-                            "type": "string",
-                            "title": "Name",
-                            "description": "The operator name. If not set, use the subscription name.",
-                            "default": "redis-operator",
-                            "examples": [
-                                "redis-operator",
-                                "my-operator"
-                            ]
-                        },
-                        "csv": {
-                            "type": "string",
-                            "title": "ClusterServiceVersion ",
-                            "description": "The ClusterServiceVersion name to use.",
-                            "default": "redis-operator",
-                            "examples": [
-                                "redis-operator",
-                                "my-operator"
-                            ]
-                        },
-                        "installPlanApproval": {
-                            "type": "string",
-                            "title": "installPlanApproval ",
-                            "description": "The installPlanApproval mode to use.",
-                            "default": "Automatic",
-                            "enum": [
-                                "Automatic",
-                                "Manual"
-                            ],
-                            "examples": [
-                                "Automatic",
-                                "Manual"
-                            ]
-                        },
-                        "source": {
-                            "type": "object",
-                            "title": "Operator source",
-                            "description": "Define the operator source.",
-                            "properties": {
-                                "name": {
-                                    "type": "string",
-                                    "enum": [
-                                        "redhat-operators",
-                                        "community-operators",
-                                        "certified-operators"
-                                    ],
-                                    "title": "Source name",
-                                    "description": "Name of the operator source (default is 'redhat-operators').",
-                                    "default": "community-operators",
-                                    "examples": [
-                                        "redhat-operators",
-                                        "community-operators",
-                                        "certified-operators"
-                                    ]
-                                },
-                                "namespace": {
-                                    "type": "string",
-                                    "title": "Namespace",
-                                    "description": "Namespace hosting the markeplace operator delivering this subscription.",
-                                    "default": "openshift-marketplace",
-                                    "examples": [
-                                        "openshift-marketplace",
-                                        "startx-marketplace",
-                                        "my-marketplace"
-                                    ]
-                                }
-                            }
-                        },
-                        "config": {
-                            "type": "object",
-                            "title": "Operator configuration",
-                            "description": "Optional configuration for Operator",
-                            "default": {},
-                            "examples": [{
-                                    "infra": true
-                                },
-                                {
-                                    "env": [{
-                                        "name": "FOO",
-                                        "value": "bar"
-                                    }]
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
+        "enabled": {
+            "type": "boolean",
+            "title": "Enable the operator creation",
+            "description": "Enable creation of the operator into an Openshift environment. Is required to be enabled if you want to create resources.",
+            "default": true
         },
         "operatorGroup": {
             "type": "object",
@@ -311,6 +149,15 @@
                         "mycorp-operators"
                     ]
                 },
+                "providedAPIs": {
+                    "type": "string",
+                    "title": "Provided API",
+                    "description": "Comaa-separated list of the provided API.",
+                    "default": "Redis.v1beta1.redis.redis.opstreelabs.in,RedisCluster.v1beta1.redis.redis.opstreelabs.in",
+                    "examples": [
+                        "Redis.v1beta1.redis.redis.opstreelabs.in,RedisCluster.v1beta1.redis.redis.opstreelabs.in"
+                    ]
+                },
                 "target": {
                     "type": "string",
                     "enum": [
@@ -325,17 +172,290 @@
                         "all-ns",
                         "ns"
                     ]
-                },
-                "providedAPIs": {
-                    "type": "string",
-                    "title": "Provided API",
-                    "description": "Comaa-separated list of the provided API.",
-                    "default": "Redis.v1beta1.redis.redis.opstreelabs.in,RedisCluster.v1beta1.redis.redis.opstreelabs.in",
-                    "examples": [
-                        "Redis.v1beta1.redis.redis.opstreelabs.in,RedisCluster.v1beta1.redis.redis.opstreelabs.in"
-                    ]
                 }
             }
+        },
+        "subscription": {
+            "type": "object",
+            "title": "Subscription management",
+            "description": "Information about the subscription to the operator.",
+            "required": [
+                "enabled",
+                "name",
+                "namespace"
+            ],
+            "properties": {
+                "config": {
+                    "type": "object",
+                    "title": "Operator configuration",
+                    "default": {},
+                    "description": "Optional configuration for Operator",
+                    "examples": [{
+                            "infra": true
+                        },
+                        {
+                            "env": [{
+                                "name": "FOO",
+                                "value": "bar"
+                            }]
+                        }
+                    ],
+                    "properties": {
+                        "env": {
+                            "type": "object",
+                            "title": "Environment variables",
+                            "default": {},
+                            "description": "Hash of environment variables",
+                            "examples": [{
+                                "name": "FOO",
+                                "value": "bar"
+                            }]
+                        },
+                        "infra": {
+                            "type": "boolean",
+                            "title": "Infra operator",
+                            "description": "If enabled the operator will have toleration and node selector set to stick infrastructure node",
+                            "default": false
+                        },
+                        "nodeSelector": {
+                            "type": "object",
+                            "title": "Node Selector",
+                            "default": {},
+                            "description": "Hash of key and values for node-selecting the operator deployment",
+                            "examples": [{
+                                "node-role.kubernetes.io/worker": ""
+                            }]
+                        },
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources definitions for this operator",
+                            "default": {},
+                            "description": "Hash of limits and requests",
+                            "properties": {
+                                "limits": {
+                                    "default": {},
+                                    "description": "Hash of cpu and memory limits",
+                                    "properties": {
+                                        "cpu": {
+                                            "default": "500m",
+                                            "description": "CPU limits",
+                                            "title": "CPU limits",
+                                            "type": "string"
+                                        },
+                                        "memory": {
+                                            "default": "512Mi",
+                                            "description": "Memory limits",
+                                            "title": "Memory limits",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "title": "Resources definitions limits",
+                                    "type": "object"
+                                },
+                                "requests": {
+                                    "default": {},
+                                    "description": "Hash of cpu and memory requests",
+                                    "properties": {
+                                        "cpu": {
+                                            "default": "250m",
+                                            "description": "CPU requests",
+                                            "title": "CPU requests",
+                                            "type": "string"
+                                        },
+                                        "memory": {
+                                            "default": "256Mi",
+                                            "description": "Memory requests",
+                                            "title": "Memory requests",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "title": "Resources definitions requests",
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "tolerations": {
+                            "type": "array",
+                            "title": "Tolerations",
+                            "default": [],
+                            "description": "List of tolerations for this operator",
+                            "examples": [{
+                                "key": "mytaint",
+                                "operator": "Exists"
+                            }],
+                            "items": {
+                                "type": "object",
+                                "title": "Toleration item",
+                                "description": "Toleration rule",
+                                "properties": {
+                                    "effect": {
+                                        "type": "string",
+                                        "title": "Effect",
+                                        "description": "The effect for this toleration",
+                                        "default": "NoSchedule"
+                                    },
+                                    "key": {
+                                        "type": "string",
+                                        "title": "Key",
+                                        "description": "The key for this toleration",
+                                        "default": "exampleKey",
+                                        "examples": [
+                                            "node-role.kubernetes.io/worker"
+                                        ]
+                                    },
+                                    "operator": {
+                                        "type": "string",
+                                        "title": "Operator",
+                                        "description": "The operator for this toleration",
+                                        "default": "Exists",
+                                        "enum": [
+                                            "Exists",
+                                            "Equal"
+                                        ],
+                                        "examples": [
+                                            "Exists",
+                                            "Equal"
+                                        ]
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "title": "Value",
+                                        "description": "The value for this toleration (if Equal)",
+                                        "default": "exampleVal",
+                                        "examples": [
+                                            "app"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "csv": {
+                    "type": "string",
+                    "title": "ClusterServiceVersion",
+                    "description": "The ClusterServiceVersion name to use.",
+                    "default": "redis-operator",
+                    "examples": [
+                        "redis-operator",
+                        "my-operator"
+                    ]
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable subscription creation",
+                    "description": "Enable the creation of the subscription.",
+                    "default": true
+                },
+                "hooked": {
+                    "type": "boolean",
+                    "title": "Helm hook",
+                    "description": "Subscription creation is done as an helm hook. Should be set to true when included as chart dependencies to create subscription prior to other resources (helm doesn't recognize subscription resources as it does for CRD)",
+                    "default": true
+                },
+                "installPlanApproval": {
+                    "type": "string",
+                    "title": "installPlanApproval",
+                    "description": "The installPlanApproval mode to use.",
+                    "default": "Automatic",
+                    "enum": [
+                        "Automatic",
+                        "Manual"
+                    ],
+                    "examples": [
+                        "Automatic",
+                        "Manual"
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Name of the subscription.",
+                    "default": "redis-operator",
+                    "examples": [
+                        "redis-operator",
+                        "startx-operator",
+                        "my-operator"
+                    ]
+                },
+                "namespace": {
+                    "type": "string",
+                    "title": "Namespace",
+                    "description": "Namespace hosting the subscription.",
+                    "default": "openshift-operators",
+                    "examples": [
+                        "default",
+                        "openshift-operators",
+                        "startx-operators",
+                        "mycorp-operators"
+                    ]
+                },
+                "operator": {
+                    "type": "object",
+                    "title": "Operator definition",
+                    "description": "Define the operator to deploy.",
+                    "properties": {
+                        "channel": {
+                            "type": "string",
+                            "title": "Channel",
+                            "description": "The operator channel to use.",
+                            "default": "stable",
+                            "examples": [
+                                "stable",
+                                "preview"
+                            ]
+                        }
+                    }
+                },
+                "source": {
+                    "type": "object",
+                    "title": "Operator source",
+                    "description": "Define the operator source.",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "enum": [
+                                "redhat-operators",
+                                "community-operators",
+                                "certified-operators"
+                            ],
+                            "title": "Source name",
+                            "description": "Name of the operator source (default is 'redhat-operators').",
+                            "default": "community-operators",
+                            "examples": [
+                                "redhat-operators",
+                                "community-operators",
+                                "certified-operators"
+                            ]
+                        },
+                        "namespace": {
+                            "type": "string",
+                            "title": "Namespace",
+                            "description": "Namespace hosting the markeplace operator delivering this subscription.",
+                            "default": "openshift-marketplace",
+                            "examples": [
+                                "openshift-marketplace",
+                                "startx-marketplace",
+                                "my-marketplace"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "title": "Operator version",
+            "description": "Version of the operator to deploy. Must be available in the operator catalog. If not set use the context version.",
+            "default": "v0.8.0",
+            "examples": [
+                "0.0.1",
+                "v0.1.1",
+                "v0.0.1-snapshot",
+                "0.0.1-202110300900"
+            ]
         }
     }
 }
