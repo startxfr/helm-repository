@@ -319,3 +319,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 14.6.315 | 2024-06-10 | Change images
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
