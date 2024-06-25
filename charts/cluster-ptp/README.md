@@ -1,4 +1,5 @@
-# Cluster Chart : PTP [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ptp-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ptp+startx)
+# ![cluster-ptp](https://helm-repository.readthedocs.io/en/latest/img/cluster-sxapi.svg "Cluster Chart : PTP") Cluster Chart : PTP
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ptp-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ptp+startx)
 
 This helm chart is used to deploy Precision Time Protocol handled by an operator to configure node NTP configuration.
 
@@ -295,3 +296,4 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

@@ -1,4 +1,5 @@
-# Cluster Chart : Storage [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--storage-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+storage+startx)
+# ![cluster-storage](https://helm-repository.readthedocs.io/en/latest/img/cluster-storage.svg "Cluster Chart : Storage") Cluster Chart : Storage
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--storage-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+storage+startx)
 
 This helm chart is used to create a list of storageClass available for the cluster.
 
@@ -332,3 +333,4 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

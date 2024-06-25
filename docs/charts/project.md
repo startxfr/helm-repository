@@ -1,4 +1,5 @@
-# Basic Chart : Project [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_project-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=project+startx)
+# ![project](https://helm-repository.readthedocs.io/en/latest/img/project.svg "Basic Chart : Project") Basic Chart : Project
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_project-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=project+startx)
 
 This helm chart is used to create a project, or namespace, with various options constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
 
@@ -501,3 +502,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 14.6.310 | 2024-06-25 | Align all basic chart to release 14.6.310
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository

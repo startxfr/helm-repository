@@ -1,4 +1,5 @@
-# Cluster Chart : Config [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--config-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+config+startx)
+# ![cluster-config](https://helm-repository.readthedocs.io/en/latest/img/cluster-config.svg "Cluster Chart : Config") Cluster Chart : Config
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--config-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+config+startx)
 
 This helm chart is used to create a personnalized cluster configuration with various cluster level components configured as required.
 
@@ -351,3 +352,5 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 14.6.305 | 2024-06-05 | Adding none endpoint strategy in ingress controller
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository
