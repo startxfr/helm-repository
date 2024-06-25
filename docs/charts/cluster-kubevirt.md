@@ -1,4 +1,5 @@
-# Cluster Chart : KubeVirt [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--kubevirt-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+kubevirt+startx)
+# ![cluster-kubevirt](https://helm-repository.readthedocs.io/en/latest/img/cluster-kubevirt.svg "Cluster Chart : KubeVirt") Cluster Chart : KubeVirt
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--kubevirt-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+kubevirt+startx)
 
 This helm chart is used to configure code ready kubevirt via it's operator and deploy a VM into Openshift.
 
@@ -297,3 +298,4 @@ xxxx to do xxxxxxxx
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
