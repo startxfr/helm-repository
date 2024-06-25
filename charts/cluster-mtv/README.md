@@ -129,3 +129,4 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.303 | 2024-06-24 | Upgrade to version 2.6.2
+| 14.6.321 | 2024-06-25 | publish stable update for the full repository
