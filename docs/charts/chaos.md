@@ -1,4 +1,5 @@
-# Chaos Chart : Main [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+startx)
+# ![chaos](https://helm-repository.readthedocs.io/en/latest/img/chaos-sxapi.svg "Chaos Chart : Umbrella") Chaos Chart : Main
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+startx)
 
 This helm chart is used to deploy a chaos test suite composed of cerberus, kraken, litmus, chaos mesh and kube-monkey.
 
@@ -422,3 +423,4 @@ chaos-monkey startx/chaos-monkey
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
