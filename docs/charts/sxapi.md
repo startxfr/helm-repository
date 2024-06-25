@@ -1,4 +1,5 @@
-# Basic Chart : SXAPI [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_sxapi-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=sxapi+startx)
+# ![sxapi](https://helm-repository.readthedocs.io/en/latest/img/sxapi.svg "Basic Chart : SXAPI") Basic Chart : SXAPI
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_sxapi-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=sxapi+startx)
 
 This helm chart is used to deploy a lightweight micro-service based on
 the [sxapi engine](https://sxapi-core.readthedocs.io). The deployment is exposed into the cluster

@@ -1,4 +1,5 @@
-# Example Chart : PHP [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--php-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+php+startx)
+# ![example-php](https://helm-repository.readthedocs.io/en/latest/img/example-php.svg "Example Chart : PHP") Example Chart : PHP
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--php-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+php+startx)
 
 This helm chart is used to create a deployment of a small PHP webserver based on [startx apache PHP image](https://quay.io/startx/php).
 

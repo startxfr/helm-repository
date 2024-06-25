@@ -1,4 +1,5 @@
-# Cluster Chart : RBAC [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--rbac-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+rbac+startx)
+# ![cluster-rbac](https://helm-repository.readthedocs.io/en/latest/img/cluster-rbac.svg "Cluster Chart : RBAC") Cluster Chart : RBAC
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--rbac-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+rbac+startx)
 
 This helm chart is used to create a RBAC cluster configuration with group and user required as a default config fo the targeted cluster.
 

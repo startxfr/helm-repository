@@ -1,4 +1,5 @@
-# Cluster Chart : ACM [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--acm-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+acm+startx)
+# ![cluster-acm](https://helm-repository.readthedocs.io/en/latest/img/cluster-acm.svg "Cluster Chart : ACM") Cluster Chart : Advanced Cluster Management
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--acm-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+acm+startx)
 
 This helm chart must have a description
 
@@ -324,3 +325,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 14.6.301 | 2024-05-30 | Helm package are now signed
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository
 | 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
