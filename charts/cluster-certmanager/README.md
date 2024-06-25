@@ -1,4 +1,5 @@
-# Cluster Chart : CertManager [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--certmanager-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+certmanager+startx)
+# ![cluster-certmanager](https://helm-repository.readthedocs.io/en/latest/img/cluster-certmanager.svg "Cluster Chart : CertManager") Cluster Chart : CertManager
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--certmanager-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+certmanager+startx)
 
 This helm chart is used to deploy Cert-Manager handled by an operator to configure Certificate management at the cluster level.
 

@@ -1,4 +1,5 @@
-# Cluster Chart : Machine [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--machine-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+machine+startx)
+# ![cluster-machine](https://helm-repository.readthedocs.io/en/latest/img/cluster-machine.svg "Cluster Chart : Machine") Cluster Chart : Machine
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--machine-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+machine+startx)
 
 This helm chart is used to configure the Machine api of your cluster.
 

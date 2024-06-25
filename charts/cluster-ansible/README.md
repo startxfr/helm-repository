@@ -1,4 +1,5 @@
-# Cluster Chart : Ansible [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ansible-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ansible+startx)
+# ![cluster-ansible](https://helm-repository.readthedocs.io/en/latest/img/cluster-ansible.svg "Cluster Chart : Ansible") Cluster Chart : Ansible
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ansible-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ansible+startx)
 
 This helm chart is used to create an operator based deployment of Ansible Automation.
 

@@ -1,4 +1,5 @@
-# Cluster Chart : Quay [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--quay-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+quay+startx)
+# ![cluster-quay](https://helm-repository.readthedocs.io/en/latest/img/cluster-quay.svg "Cluster Chart : Quay") Cluster Chart : Quay
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--quay-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+quay+startx)
 
 This helm chart is used to create an operator based deployment of Quay Enterprise registry.
 

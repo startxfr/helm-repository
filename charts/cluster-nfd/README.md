@@ -1,4 +1,5 @@
-# Cluster Chart : NFD [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--nfd-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+nfd+startx)
+# ![cluster-nfd](https://helm-repository.readthedocs.io/en/latest/img/cluster-nfd.svg "Cluster Chart : NFD") Cluster Chart : NFD
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--nfd-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+nfd+startx)
 
 This helm chart is used to deploy Node Feature Discovery handled by an operator for discovery of hardware profile and feature and Label nodes with a representation of theses features.
 

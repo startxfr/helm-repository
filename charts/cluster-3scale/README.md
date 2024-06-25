@@ -1,4 +1,5 @@
-# Cluster Chart : 3Scale [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--3scale-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+3scale+startx)
+# ![cluster-3scale](https://helm-repository.readthedocs.io/en/latest/img/cluster-3scale.svg "Cluster Chart : 3Scale") Cluster Chart : 3Scale (API Management)
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--3scale-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+3scale+startx)
 
 This helm chart is used to create a deployment of a 3scale, operator based, deployment of 3Scale API management tools.
 

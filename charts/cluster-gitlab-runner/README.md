@@ -1,4 +1,5 @@
-# Cluster Chart : Gitlab Runners [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--gitlab--runner-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+gitlab+runner+startx)
+# ![cluster-gitlab-runner](https://helm-repository.readthedocs.io/en/latest/img/cluster-gitlab-runner.svg "Cluster Chart : Gitlab runner") Cluster Chart : Gitlab Runners
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--gitlab--runner-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+gitlab+runner+startx)
 
 This helm chart is used to deploy Gitlab instances managed by a dedicated operator.
 

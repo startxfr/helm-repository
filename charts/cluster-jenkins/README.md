@@ -1,4 +1,5 @@
-# Cluster Chart : Jenkins [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--jenkins-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+jenkins+startx)
+# ![cluster-jenkins](https://helm-repository.readthedocs.io/en/latest/img/cluster-jenkins.svg "Cluster Chart : Jenkins") Cluster Chart : Jenkins
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--jenkins-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+jenkins+startx)
 
 This helm chart is used to deploy Jenkins instances managed by a dedicated operator.
 

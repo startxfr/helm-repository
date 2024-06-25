@@ -1,4 +1,5 @@
-# Cluster Chart : Router [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--router-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+router+startx)
+# ![cluster-router](https://helm-repository.readthedocs.io/en/latest/img/cluster-router.svg "Cluster Chart : Router") Cluster Chart : Router
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--router-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+router+startx)
 
 This helm chart is used to create a personnalized cluster configuration with various cluster level components configured as required.
 

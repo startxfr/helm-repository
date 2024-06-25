@@ -1,4 +1,5 @@
-# Cluster Chart : ODF [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--odf-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+odf+startx)
+# ![cluster-odf](https://helm-repository.readthedocs.io/en/latest/img/cluster-odf.svg "Cluster Chart : ODF") Cluster Chart : ODF
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--odf-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+odf+startx)
 
 This helm chart is used to configure Openshift Container Storage at the cluster level.
 

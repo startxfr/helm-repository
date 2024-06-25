@@ -1,4 +1,5 @@
-# Cluster Chart : ACM [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--acm-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+acm+startx)
+# ![cluster-acm](https://helm-repository.readthedocs.io/en/latest/img/cluster-acm.svg "Cluster Chart : ACM") Cluster Chart : Advanced Cluster Management
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--acm-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+acm+startx)
 
 This helm chart must have a description
 

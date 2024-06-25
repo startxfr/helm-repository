@@ -1,4 +1,5 @@
-# Cluster Chart : RedHat ODS [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ods-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ods+startx)
+# ![cluster-ods](https://helm-repository.readthedocs.io/en/latest/img/cluster-ods.svg "Cluster Chart : ODS") Cluster Chart : RedHat ODS
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ods-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ods+startx)
 
 This helm chart is used to configure OpenDataScience at the cluster level.
 
