@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.345
+version: 14.6.351
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.4.5
 # Icon of this helm-chart
@@ -41,32 +41,32 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "14.6.339"
+    version: "14.6.343"
     alias: project
     condition: project.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "14.6.339"
+    version: "14.6.343"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "14.6.339"
+    version: "14.6.343"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "14.6.339"
+    version: "14.6.343"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "14.6.339"
+    version: "14.6.343"
     alias: operatorJaeger
     condition: operatorJaeger.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "14.6.339"
+    version: "14.6.343"
     alias: operatorIstio
     condition: operatorIstio.enabled
 
@@ -95,6 +95,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update startx dependencies chart to release 14.6.339"
+      description: "Update startx dependencies chart to release 14.6.343"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

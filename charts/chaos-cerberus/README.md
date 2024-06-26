@@ -292,3 +292,4 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository
 | 14.6.345 | 2024-06-26 | publish stable update for the full repository
+| 14.6.351 | 2024-06-26 | Update all dependencies
