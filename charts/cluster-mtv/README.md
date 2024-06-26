@@ -137,3 +137,4 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository
 | 14.6.345 | 2024-06-26 | publish stable update for the full repository
+| 14.6.351 | 2024-06-26 | Update all dependencies
