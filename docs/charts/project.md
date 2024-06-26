@@ -507,3 +507,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository
 | 14.6.339 | 2024-06-26 | Disable config example in default values.yaml
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository
+| 14.6.345 | 2024-06-26 | publish stable update for the full repository
