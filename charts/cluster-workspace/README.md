@@ -441,3 +441,4 @@ helm install cluster-workspace startx/cluster-workspace -f https://raw.githubuse
 | 14.6.325 | 2024-06-25 | publish stable update for the full repository
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository
+| 14.6.343 | 2024-06-26 | publish stable update for the full repository
