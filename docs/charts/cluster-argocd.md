@@ -337,3 +337,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository
 | 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository
+| 14.6.345 | 2024-06-26 | publish stable update for the full repository
