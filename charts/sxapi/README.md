@@ -561,3 +561,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository
 | 14.6.339 | 2024-06-26 | Align basic chart release
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository
+| 14.6.345 | 2024-06-26 | publish stable update for the full repository
