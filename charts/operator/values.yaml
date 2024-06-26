@@ -45,22 +45,22 @@ subscription:
       name: redhat-operators
       # namespace of the operator (default is 'openshift-marketplace')
       namespace: openshift-marketplace
-      # specific operator configuration
-    config: 
-      infra: false
-      nodeSelector: 
-        node-role.kubernetes.io/worker: ''
-      tolerations: 
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/worker
-          operator: Exists
-      resources: 
-        limits:
-          cpu: 400m
-        requests:
-          cpu: 400m
-      env: 
-        MYENV: test
+    # # specific operator configuration
+    # config: 
+    #   infra: false
+    #   nodeSelector: 
+    #     node-role.kubernetes.io/worker: ''
+    #   tolerations: 
+    #     - effect: NoSchedule
+    #       key: node-role.kubernetes.io/worker
+    #       operator: Exists
+    #   resources: 
+    #     limits:
+    #       cpu: 400m
+    #     requests:
+    #       cpu: 400m
+    #   env: 
+    #     MYENV: test
 # Configuration of the subscription
 operatorGroup:
   # enable deployment of an operatorGroup for the subscription
