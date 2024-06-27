@@ -18,25 +18,33 @@ context:  &context
 # Deploy an API manager
 mtc:
   # Enable the configuration of the MTC
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
   hooked: true
   # Default namespace for all ressources (if not set, use project)
   namespace: openshift-migration
-  # The Forklift configuration
-  forklift:
-    # Enable the configuration of the Forklift
+  # The controller configuration
+  controller:
+    # Enable the configuration of the migration
     enabled: true
-    # Name of the deployed instance of ForkliftController
-    name: forklift-controller
-    # Namespace of the deployed instance of ForkliftController (if not set, use default ns for MTC)
+    # Name of the migration controller
+    name: migration-controller
+    # Namespace of the deployed instance of migration controller (if not set, use default ns for MTC)
     namespace: openshift-migration
-    # The applyed Forklift specifications
+    # The applyed controller specifications
     spec: |
-      feature_must_gather_api: 'true'
-      feature_ui_plugin: 'true'
-      feature_validation: 'true'
-      feature_volume_populator: 'true'
+      mig_namespace_limit: '10'
+      migration_ui: true
+      mig_pod_limit: '100'
+      migration_controller: true
+      migration_log_reader: true
+      olm_managed: true
+      cluster_name: host
+      restic_timeout: 1h
+      migration_velero: true
+      mig_pv_limit: '100'
+      version: 1.8.3
+      azure_resource_group: ''
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
