@@ -9,7 +9,7 @@ context: &context
 mtc:
   enabled: false
   hooked: false
-  namespace: openshift-mtc
+  namespace: openshift-migration
   forklift:
     enabled: true
     name: forklift-controller
@@ -23,7 +23,7 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "openshift-migration"
