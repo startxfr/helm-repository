@@ -10,14 +10,23 @@ mtc:
   enabled: false
   hooked: false
   namespace: openshift-migration
-  forklift:
+  controller:
     enabled: true
-    name: forklift-controller
+    name: migration-controller
+    namespace: openshift-migration
     spec: |
-      feature_must_gather_api: 'true'
-      feature_ui_plugin: 'true'
-      feature_validation: 'true'
-      feature_volume_populator: 'true'
+      mig_namespace_limit: '10'
+      migration_ui: true
+      mig_pod_limit: '100'
+      migration_controller: true
+      migration_log_reader: true
+      olm_managed: true
+      cluster_name: host
+      restic_timeout: 1h
+      migration_velero: true
+      mig_pv_limit: '100'
+      version: 1.8.3
+      azure_resource_group: ''
 project: 
   enabled: false
   context: 
