@@ -15,7 +15,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-mtc.notes" -}}
--- Migration Toolkit Virt -----------
+-- Migration Toolkit Containers -----
 {{- if .mtc }}{{- if .mtc.enabled }}
          mtc : enabled
 {{- end }}{{- end }}
