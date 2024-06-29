@@ -20,11 +20,11 @@ mtr:
   # Enable the configuration of the MTR
   enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # Default namespace for all ressources (if not set, use project)
   namespace: openshift-mtr
   # The windup controller
-  winup:
+  windup:
     # Enable the configuration of the windup
     enabled: true
     # Name of the windup controller
@@ -41,7 +41,7 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "openshift-mtr"
