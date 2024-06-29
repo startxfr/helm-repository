@@ -23,6 +23,16 @@ mtv:
       feature_validation: 'true'
       feature_volume_populator: 'true'
       must_gather_api_cleanup_max_age: 12h
+  providers:
+    enabled: true
+    list: 
+      - name: host
+        namespace: openshift-mtv
+        type: openshift
+        enableSecret: false
+        openshift: 
+          url: ''
+          insecureSkipVerify: "true"
 project: 
   enabled: false
   context: 
