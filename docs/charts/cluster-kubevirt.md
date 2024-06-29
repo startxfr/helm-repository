@@ -307,3 +307,4 @@ xxxx to do xxxxxxxx
 | 14.6.351 | 2024-06-26 | Update all dependencies
 | 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
 | 14.6.354 | 2024-06-27 | Adding and enabling some features gates
+| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
