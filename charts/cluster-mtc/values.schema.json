@@ -250,10 +250,32 @@
         "mtc": {
             "type": "object",
             "properties": {
-                "enabled": {
-                    "type": "boolean"
+                "clusters": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "list": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "isHost": {
+                                        "type": "boolean"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "namespace": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
-                "forklift": {
+                "controller": {
                     "type": "object",
                     "properties": {
                         "enabled": {
@@ -270,11 +292,98 @@
                         }
                     }
                 },
+                "enabled": {
+                    "type": "boolean"
+                },
                 "hooked": {
                     "type": "boolean"
                 },
+                "migrations": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "list": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "namespace": {
+                                        "type": "string"
+                                    },
+                                    "spec": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "namespace": {
                     "type": "string"
+                },
+                "plans": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "list": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "namespace": {
+                                        "type": "string"
+                                    },
+                                    "spec": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "storages": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "list": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "accessKey": {
+                                        "type": "string"
+                                    },
+                                    "bucketName": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "namespace": {
+                                        "type": "string"
+                                    },
+                                    "provider": {
+                                        "type": "string"
+                                    },
+                                    "secretKey": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

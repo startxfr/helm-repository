@@ -3,6 +3,7 @@
 {{- $ns2 := .Values.mtc.namespace | default ($ns1) -}}
 {{- range .Values.mtc.storages.list -}}
 {{- $namespace := .namespace | default ($ns2) -}}
+{{- $namespaceSecret := .namespaceSecret | default "openshift-config" -}}
 {{- $name := .name | default "mystorage" -}}
 {{- $spec := .spec | default "{}" }}
 ---
@@ -22,19 +23,19 @@ spec:
     awsBucketName: {{ .bucketName | default "my-bucket-name" | quote }}
     credsSecretRef:
       name: "{{ $name  }}-creds"
-      namespace: openshift-config
+      namespace: "{{- $namespaceSecret -}}"
   backupStorageProvider: {{ .provider | default "aws" | quote }}
   volumeSnapshotConfig:
     credsSecretRef:
       name: "{{ $name  }}-creds"
-      namespace: openshift-config
+      namespace: "{{- $namespaceSecret -}}"
   volumeSnapshotProvider: {{ .provider | default "aws" | quote }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: "{{ $name }}-creds"
-  namespace: "{{- $namespace -}}"
+  namespace: "{{- $namespaceSecret -}}"
   labels:
     {{- include "cluster-mtc.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}"
