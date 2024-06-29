@@ -141,3 +141,4 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
 | 14.6.354 | 2024-06-27 | Adding support for providers (ovirt and kubevirt)
 | 14.6.357 | 2024-06-29 | Update the schema for mtc section
+| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
