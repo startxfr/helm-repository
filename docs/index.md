@@ -55,6 +55,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-descheduler](charts/cluster-descheduler.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-descheduler)  | configure KubeDescheduler to optimize pod distribution            |
 | **[cluster-mtv](charts/cluster-mtv.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtv)          | configure Migration toolkit for virtualisation                    |
 | **[cluster-mtc](charts/cluster-mtc.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtc)          | configure Migration toolkit for Containers                        |
+| **[cluster-mtr](charts/cluster-mtr.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtr)          | configure Migration toolkit for Runtimes                        |
 
 #### Use Cluster charts
 
@@ -97,6 +98,7 @@ helm install startx/cluster-gpu
 helm install startx/cluster-descheduler
 helm install startx/cluster-mtv
 helm install startx/cluster-mtc
+helm install startx/cluster-mtr
 ```
 
 ### Basic Helm charts
