@@ -74,3 +74,4 @@ helm install cluster-mtc startx/cluster-mtc -f https://raw.githubusercontent.com
 | 14.6.351 | 2024-06-26 | Update all dependencies
 | 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
 | 14.6.355 | 2024-06-29 | Add support for migration controller, migCluster, migStorage, migPlan and migMigration
+| 14.6.357 | 2024-06-29 | Update the schema for mtc section
