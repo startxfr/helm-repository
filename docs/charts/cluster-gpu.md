@@ -98,3 +98,4 @@ helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com
 | 14.6.345 | 2024-06-26 | publish stable update for the full repository
 | 14.6.351 | 2024-06-26 | Update all dependencies
 | 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
+| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367

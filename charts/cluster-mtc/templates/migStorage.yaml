@@ -1,0 +1,50 @@
+{{- if .Values.mtc.enabled -}}{{- if .Values.mtc.storages -}}{{- if .Values.mtc.storages.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-migration" -}}
+{{- $ns2 := .Values.mtc.namespace | default ($ns1) -}}
+{{- range .Values.mtc.storages.list -}}
+{{- $namespace := .namespace | default ($ns2) -}}
+{{- $namespaceSecret := .namespaceSecret | default "openshift-config" -}}
+{{- $name := .name | default "mystorage" -}}
+{{- $spec := .spec | default "{}" }}
+---
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigStorage
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-mtc.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mtc.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  backupStorageConfig:
+    awsBucketName: {{ .bucketName | default "my-bucket-name" | quote }}
+    credsSecretRef:
+      name: "{{ $name  }}-creds"
+      namespace: "{{- $namespaceSecret -}}"
+  backupStorageProvider: {{ .provider | default "aws" | quote }}
+  volumeSnapshotConfig:
+    credsSecretRef:
+      name: "{{ $name  }}-creds"
+      namespace: "{{- $namespaceSecret -}}"
+  volumeSnapshotProvider: {{ .provider | default "aws" | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ $name }}-creds"
+  namespace: "{{- $namespaceSecret -}}"
+  labels:
+    {{- include "cluster-mtc.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mtc.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+type: Opaque
+stringData:
+  aws-access-key-id: {{ .accessKey | default "AAAAAAAAAA" | quote }}
+  aws-secret-access-key: {{ .secretKey | default "xxxxxxxxxxxxx" | quote }}
+{{- end -}}
+{{- end -}}{{- end -}}{{- end -}}

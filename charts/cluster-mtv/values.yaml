@@ -1,8 +1,8 @@
 # Default values for cluster-mtv.
 
 # Application deployment context
-context:  &context
-  # Name of the global scope for this application (organisational tenant)
+context:
+  &context # Name of the global scope for this application (organisational tenant)
   scope: myscope
   # Name of the cluster running this application (plateform tenant)
   cluster: default
@@ -42,14 +42,51 @@ mtv:
       feature_validation: 'true'
       feature_volume_populator: 'true'
       must_gather_api_cleanup_max_age: 12h
-
+  # The Providers configuration
+  providers:
+    # Enable the configuration of the providers
+    enabled: false
+    # List of providers
+    list: []
+      #   # Name of the provider (ovirt)
+      # - name: rhv-demo
+      #   # Namespace of the provider (if not set, use default ns for MTV)
+      #   namespace: openshift-mtv
+      #   # The type of provider (only openshift or ovirt implemented)
+      #   type: ovirt
+      #   # The ovirt configuration (all mandatory)
+      #   ovirt: 
+      #     # The ovirt url
+      #     url: https://rhv-manager.demo.startx.fr/ovirt-engine/api
+      #     # Skip cert verification
+      #     insecureSkipVerify: "true"
+      #     # Username for rhv manager
+      #     user: admin@internal
+      #     # Password for rhv manager
+      #     password: mypassword
+      #   # Name of the provider (openshift)
+      # - name: host
+      #   # Namespace of the provider (if not set, use default ns for MTV)
+      #   namespace: openshift-mtv
+      #   # The type of provider (only openshift or ovirt implemented)
+      #   type: openshift
+      #   # enable the creation of secret (default is false)
+      #   enableSecret: false
+      #   # The ovirt configuration (all mandatory)
+      #   openshift: 
+      #     # The openshift api url
+      #     url: https://api.mycluster.demo.startx.fr:6443
+      #     # Skip cert verification
+      #     insecureSkipVerify: "true"
+      #     # The bearer token fro the cluster
+      #     token: sha256~abcdef
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
-project: 
+project:
   enabled: false
-  context: 
+  context:
     <<: *context
-  project: 
+  project:
     enabled: false
     hooked: false
     type: namespace
@@ -60,7 +97,7 @@ project:
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
@@ -68,15 +105,15 @@ operator:
     name: "mtv-operator"
     namespace: "openshift-mtv"
     version: "v2.6.2"
-    operator: 
+    operator:
       channel: "release-v2.6"
       name: mtv-operator
       installPlanApproval: Automatic
       csv: mtv-operator
-      source: 
+      source:
         name: redhat-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
   operatorGroup:
     enabled: true
