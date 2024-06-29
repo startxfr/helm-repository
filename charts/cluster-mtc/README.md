@@ -1,7 +1,7 @@
 # ![cluster-mtc](https://helm-repository.readthedocs.io/en/latest/img/cluster-mtc.svg "Cluster Chart : MTC") Cluster Chart : MTC
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--mtc-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+mtc+startx)
 
-This helm chart is used to deploy Migration Toolkit for Containers operator to help you drive migration of your VM workloads into a Kubevirt enabled kubernetes cluster.
+This helm chart is used to deploy Migration Toolkit for Containers operator to help you drive migration of your already containerized application into other kubernetes cluster.
 
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
