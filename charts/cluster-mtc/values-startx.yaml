@@ -13,7 +13,6 @@ mtc:
   controller:
     enabled: true
     name: migration-controller
-    namespace: openshift-migration
     spec: |
       mig_namespace_limit: '10'
       migration_ui: true
@@ -27,6 +26,56 @@ mtc:
       mig_pv_limit: '100'
       version: 1.8.3
       azure_resource_group: ''
+  clusters:
+    enabled: false
+    list:
+    - name: host
+      isHost: true
+    - name: source
+      insecure: true
+      registry: "https://registry.apps.mycluster.example.com"
+      saToken: "mytoken"
+      url: "https://api.mycluster.example.com:6443"
+  storages:
+    enabled: false
+    list:
+    - name: aws-paris
+      namespace: openshift-migration
+      provider: aws
+      accessKey: AIAXXXXXX
+      secretKey: xxxxxxxxxxxxxxxxx
+      bucketName: my-migration-bucket
+  plans:
+    enabled: false
+    list:
+    - name: myapp-cluster1-to-cluster2
+      namespace: openshift-migration
+      spec: |
+        destMigClusterRef:
+          name: host
+          namespace: openshift-migration
+        indirectImageMigration: true 
+        indirectVolumeMigration: true 
+        migStorageRef:
+          name: aws-paris
+          namespace: openshift-migration
+        namespaces:
+          - myapp:myapp-dev
+          - myapp:myapp-rec
+        srcMigClusterRef:
+          name: source
+          namespace: openshift-migration
+  migrations:
+    enabled: false
+    list:
+    - name: myapp-cluster1-to-cluster2
+      spec: |
+        migPlanRef:
+          name: myapp-cluster1-to-cluster2
+          namespace: openshift-migration
+        quiescePods: true 
+        stage: false 
+        rollback: false 
 project: 
   enabled: false
   context: 
