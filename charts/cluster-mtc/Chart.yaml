@@ -6,9 +6,9 @@ description: Helm chart used to configure Migration Toolkit for Containers at th
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.355
+version: 14.6.357
 # Version name of the mtc operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 2.5.3
+appVersion: 1.8.3
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-mtc.svg
 # Kube minimum version
@@ -73,14 +73,8 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: "Adding support for migration controller"
-    - kind: added
-      description: "Adding support for migCluster"
-    - kind: added
-      description: "Adding support for migPlan"
-    - kind: added
-      description: "Adding support for migStorage"
-    - kind: added
-      description: "Adding support for MigMigration"
+      description: "Debug location of the storage secret creation"
+    - kind: changed
+      description: "Update the schema for mtc section"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
