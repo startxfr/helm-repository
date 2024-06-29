@@ -18,26 +18,116 @@ context:  &context
 # Deploy an API manager
 mtc:
   # Enable the configuration of the MTC
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
   hooked: true
   # Default namespace for all ressources (if not set, use project)
   namespace: openshift-migration
-  # The Forklift configuration
-  forklift:
-    # Enable the configuration of the Forklift
+  # The controller configuration
+  controller:
+    # Enable the configuration of the migration
     enabled: true
-    # Name of the deployed instance of ForkliftController
-    name: forklift-controller
-    # Namespace of the deployed instance of ForkliftController (if not set, use default ns for MTC)
+    # Name of the migration controller
+    name: migration-controller
+    # Namespace of the deployed instance of migration controller (if not set, use default ns for MTC)
     namespace: openshift-migration
-    # The applyed Forklift specifications
+    # The applyed controller specifications
     spec: |
-      feature_must_gather_api: 'true'
-      feature_ui_plugin: 'true'
-      feature_validation: 'true'
-      feature_volume_populator: 'true'
-
+      mig_namespace_limit: '10'
+      migration_ui: true
+      mig_pod_limit: '100'
+      migration_controller: true
+      migration_log_reader: true
+      olm_managed: true
+      cluster_name: host
+      restic_timeout: 1h
+      migration_velero: true
+      mig_pv_limit: '100'
+      version: 1.8.3
+      azure_resource_group: ''
+  # List of the clusters
+  clusters:
+    # Enable the creation of clusters
+    enabled: false
+    # List of cluster to configure
+    list:
+      # Name of the migration controller (example local cluster)
+    - name: host
+      # Namespace of the deployed instance of migration controller (if not set, use default ns for MTC)
+      namespace: openshift-migration
+      # Enable the fact that this cluster is the host (default is false)
+      isHost: true
+      # Name of the migration controller (example local cluster)
+    - name: source
+      # Enable the fact that this cluster is the host (default is false)
+      insecure: true
+      # The registry access for this cluster
+      registry: "https://registry.apps.mycluster.example.com"
+      # The serviceAccount that allow acces to registry as well as cluster rrequired resources
+      saToken: "mytoken"
+      # The url of this cluster (mandatory if isHost=flase)
+      url: "https://api.mycluster.example.com:6443"
+  # List of the migrations storages
+  storages:
+    # Enable the creation of migrations storages
+    enabled: false
+    # List of migrations storages to configure
+    list:
+      # Name of the migration storage (example myapp-cluster1-to-cluster2)
+    - name: aws-paris
+      # Namespace of the migration storage (if not set, use default ns for MTC)
+      namespace: openshift-migration
+      # The storage provider (mandatory, could be aws, gcp, azure)
+      provider: aws
+      # Tha AWS access key (mandatory for the provider aws)
+      accessKey: AIAXXXXXX
+      # Tha AWS secret key (mandatory for the provider aws)
+      secretKey: xxxxxxxxxxxxxxxxx
+      # Tha AWS secret key (mandatory for the provider aws)
+      bucketName: my-migration-bucket
+  # List of the migrations plans
+  plans:
+    # Enable the creation of migrations plans
+    enabled: false
+    # List of migrations plans to configure
+    list:
+      # Name of the migration plan (example myapp-cluster1-to-cluster2)
+    - name: myapp-cluster1-to-cluster2
+      # Namespace of the migration plan (if not set, use default ns for MTC)
+      namespace: openshift-migration
+      # The applyed plan specifications
+      spec: |
+        destMigClusterRef:
+          name: host
+          namespace: openshift-migration
+        indirectImageMigration: true 
+        indirectVolumeMigration: true 
+        migStorageRef:
+          name: host-storage
+          namespace: openshift-migration
+        namespaces:
+          - myapp:myapp-dev
+        srcMigClusterRef:
+          name: source
+          namespace: openshift-migration
+  # List of the migrationPlan executions
+  migrations:
+    # Enable the creation of migrations plans
+    enabled: false
+    # List of migrations plans to configure
+    list:
+      # Name of the migration (example myapp-cluster1-to-cluster2)
+    - name: myapp-cluster1-to-cluster2
+      # Namespace of the migration plan (if not set, use default ns for MTC)
+      namespace: openshift-migration
+      # The applyed plan specifications
+      spec: |
+        migPlanRef:
+          name: myapp-cluster1-to-cluster2
+          namespace: openshift-migration
+        quiescePods: true 
+        stage: false 
+        rollback: false 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
