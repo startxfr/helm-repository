@@ -61,4 +61,4 @@ helm install cluster-mtr startx/cluster-mtr -f https://raw.githubusercontent.com
 | Release  | Date       | Description                              |
 | -------- | ---------- | ---------------------------------------- |
 | 14.6.357 | 2025-06-29 | Initialize the MTR cluster-service chart |
-| 14.6.357 | 2024-06-29 | Update the schema for mtc section
+| 14.6.357 | 2024-06-29 | Update the schema for mtr section
