@@ -3,6 +3,8 @@
 
 This helm chart is used to configure code ready workspace via it's operator and deploy a cheCluster.
 
+!! This chart is now deprecated and replaced by [cluster-devworkspaces startx helm chart](https://helm-repository.readthedocs.io/en/latest/charts/cluster-devworkspaces)
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -446,3 +448,5 @@ helm install cluster-workspace startx/cluster-workspace -f https://raw.githubuse
 | 14.6.351 | 2024-06-26 | Update all dependencies
 | 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
 | 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
+| 14.6.369 | 2024-06-30 | Update docs for deprecation
+| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381
