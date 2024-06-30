@@ -56,6 +56,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-mtv](charts/cluster-mtv.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtv)          | configure Migration toolkit for virtualisation                    |
 | **[cluster-mtc](charts/cluster-mtc.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtc)          | configure Migration toolkit for Containers                        |
 | **[cluster-mtr](charts/cluster-mtr.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtr)          | configure Migration toolkit for Runtimes                        |
+| **[cluster-devworkspaces](charts/cluster-devworkspaces.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-devworkspaces)    | enable Dev workspace at the cluster level                   |
 
 #### Use Cluster charts
 
@@ -99,6 +100,7 @@ helm install startx/cluster-descheduler
 helm install startx/cluster-mtv
 helm install startx/cluster-mtc
 helm install startx/cluster-mtr
+helm install startx/cluster-devworkspaces
 ```
 
 ### Basic Helm charts

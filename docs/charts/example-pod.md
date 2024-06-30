@@ -335,3 +335,4 @@ helm install example-pod startx/example-pod -f https://raw.githubusercontent.com
 | 14.6.351 | 2024-06-26 | Update all dependencies
 | 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
 | 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
+| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381
