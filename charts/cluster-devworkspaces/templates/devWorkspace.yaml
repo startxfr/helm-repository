@@ -1,0 +1,24 @@
+{{- if .Values.devworkspaces.enabled -}}{{- if .Values.devworkspaces.workspaces -}}{{- if .Values.devworkspaces.workspaces.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "default" -}}
+{{- $ns2 := .Values.devworkspaces.namespace | default ($ns1) -}}
+{{- range .Values.devworkspaces.workspaces.list -}}
+{{- $namespace := .namespace | default ($ns2) -}}
+{{- $name := .name | default "workspace" -}}
+{{- $spec := .spec | default "{}" }}
+---
+apiVersion: workspace.devfile.io/v1alpha2
+kind: DevWorkspace
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-devworkspaces.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}"
+    controller.devfile.io/creator:  {{ $.Release.Service | quote  }}
+  annotations:
+    {{- include "cluster-devworkspaces.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}
+{{- end -}}{{- end -}}{{- end -}}
