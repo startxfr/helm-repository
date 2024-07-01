@@ -5,7 +5,7 @@ This helm chart must have a description
 ## Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
 ```
 
 ## Get information about this chart
