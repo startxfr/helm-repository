@@ -20,7 +20,7 @@ oc login -t <token> <cluster-url>
 ### 2. Install the repository
 
 ```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/packages/
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/11/
 ```
 
 ### 3. Get information about this chart
@@ -283,3 +283,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 11.40.0 | 2023-08-18 | Align all helm chart to release 11.40.0 stable for OCP 4.11.40
 | 11.47.0 | 2023-08-18 | Align all helm chart to release 11.47.0 stable for OCP 4.11.47
 | 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml
+| 11.47.101 | 2024-07-01 | Update all chart for version 4.11

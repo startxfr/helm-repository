@@ -6,7 +6,7 @@ description: Helm chart used to configure Metering at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 11.47.4
+version: 11.47.101
 # Version name of the metering operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 0.14.0
 # Version of Openshift 
@@ -44,12 +44,12 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/11/
     version: "11.28.25"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/packages/
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/11/
     version: "11.28.25"
     alias: operator
     condition: operator.enabled
