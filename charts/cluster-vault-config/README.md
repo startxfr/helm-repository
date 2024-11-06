@@ -1,6 +1,8 @@
-# Cluster Chart : Vault Config
+# ![cluster-vault-config](https://helm-repository.readthedocs.io/en/latest/img/cluster-vault-config.svg "Cluster Chart : Vault Config") Cluster Chart : Vault Config
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--vault--config-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+vault+startx)
 
 This helm chart is used to create a deployment of a vault-config provided by the Red Hat Community of Practice.
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -294,3 +296,39 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 14.6.91 | 2024-01-02 | publish stable update for the full repository
 | 14.6.99 | 2024-01-02 | Full stable release of the chart repository
 | 14.6.103 | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75
+| 14.6.105 | 2024-01-03 | publish stable update for the full repository
+| 14.6.107 | 2024-01-04 | publish stable update for the full repository
+| 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
+| 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
+| 14.6.135 | 2024-01-18 | debug artifacthub recommandations
+| 14.6.137 | 2024-01-18 | publish stable update for the full repository
+| 14.6.141 | 2024-02-03 | upgrade of the full startx repository
+| 14.6.143 | 2024-02-03 | Align to 14.6.143 chart release
+| 14.6.149 | 2024-02-03 | Update all startx dependencies chart to 14.6.141 chart release
+| 14.6.150 | 2024-02-03 | Stable 14.6.150 release
+| 14.6.161 | 2024-02-08 | publish stable update for the full repository
+| 14.6.171 | 2024-02-08 | publish stable update for the full repository
+| 14.6.189 | 2024-02-08 | publish stable update for the full repository
+| 14.6.195 | 2024-02-08 | publish stable update for the full repository
+| 14.6.197 | 2024-02-08 | publish stable update for the full repository
+| 14.6.201 | 2024-02-08 | publish stable update for the full repository
+| 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release
+| 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
+| 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
+| 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
+| 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
+| 14.6.301 | 2024-05-30 | Helm package are now signed
+| 14.6.321 | 2024-06-25 | publish stable update for the full repository
+| 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository
+| 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
+| 14.6.335 | 2024-06-26 | publish stable update for the full repository
+| 14.6.343 | 2024-06-26 | publish stable update for the full repository
+| 14.6.345 | 2024-06-26 | publish stable update for the full repository
+| 14.6.351 | 2024-06-26 | Update all dependencies
+| 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
+| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
+| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381

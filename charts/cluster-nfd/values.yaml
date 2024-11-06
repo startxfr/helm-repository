@@ -1,0 +1,218 @@
+# Default values for cluster-nfd.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-nfd
+  # Version name of this application (default use Chart appVersion)
+  # version: "0.0.3"
+
+# Deploy a list of NodeFeatureDiscovery
+nfd:
+  # Enable creation of NodeFeatureDiscovery
+  enabled: false
+  # List of NodeFeatureDiscovery resource to deploy
+  list:
+      # name of the NodeFeatureDiscovery
+    - name: nfd-instance
+      # namespace of the NodeFeatureDiscovery (default is project namespace)
+      namespace: openshift-nfd
+      # spec for the NodeFeatureDiscovery
+      spec: |-
+        customConfig:
+          configData: |
+            #    - name: "more.kernel.features"
+            #      matchOn:
+            #      - loadedKMod: ["example_kmod3"]
+            #    - name: "more.features.by.nodename"
+            #      value: customValue
+            #      matchOn:
+            #      - nodename: ["special-.*-node-.*"]
+        operand:
+          image: >-
+            registry.redhat.io/openshift4/ose-node-feature-discovery
+          servicePort: 12000
+        workerConfig:
+          configData: |
+            core:
+            #  labelWhiteList:
+            #  noPublish: false
+              sleepInterval: 60s
+            #  sources: [all]
+            #  klog:
+            #    addDirHeader: false
+            #    alsologtostderr: false
+            #    logBacktraceAt:
+            #    logtostderr: true
+            #    skipHeaders: false
+            #    stderrthreshold: 2
+            #    v: 0
+            #    vmodule:
+            ##   NOTE: the following options are not dynamically run-time 
+            ##          configurable and require a nfd-worker restart to take effect
+            ##          after being changed
+            #    logDir:
+            #    logFile:
+            #    logFileMaxSize: 1800
+            #    skipLogHeaders: false
+            sources:
+            #  cpu:
+            #    cpuid:
+            ##     NOTE: whitelist has priority over blacklist
+            #      attributeBlacklist:
+            #        - "BMI1"
+            #        - "BMI2"
+            #        - "CLMUL"
+            #        - "CMOV"
+            #        - "CX16"
+            #        - "ERMS"
+            #        - "F16C"
+            #        - "HTT"
+            #        - "LZCNT"
+            #        - "MMX"
+            #        - "MMXEXT"
+            #        - "NX"
+            #        - "POPCNT"
+            #        - "RDRAND"
+            #        - "RDSEED"
+            #        - "RDTSCP"
+            #        - "SGX"
+            #        - "SSE"
+            #        - "SSE2"
+            #        - "SSE3"
+            #        - "SSE4.1"
+            #        - "SSE4.2"
+            #        - "SSSE3"
+            #      attributeWhitelist:
+            #  kernel:
+            #    kconfigFile: "/path/to/kconfig"
+            #    configOpts:
+            #      - "NO_HZ"
+            #      - "X86"
+            #      - "DMI"
+              pci:
+                deviceClassWhitelist:
+                  - "0200"
+                  - "03"
+                  - "12"
+                deviceLabelFields:
+            #      - "class"
+                  - "vendor"
+            #      - "device"
+            #      - "subsystem_vendor"
+            #      - "subsystem_device"
+            #  usb:
+            #    deviceClassWhitelist:
+            #      - "0e"
+            #      - "ef"
+            #      - "fe"
+            #      - "ff"
+            #    deviceLabelFields:
+            #      - "class"
+            #      - "vendor"
+            #      - "device"
+            #  custom:
+            #    - name: "my.kernel.feature"
+            #      matchOn:
+            #        - loadedKMod: ["example_kmod1", "example_kmod2"]
+            #    - name: "my.pci.feature"
+            #      matchOn:
+            #        - pciId:
+            #            class: ["0200"]
+            #            vendor: ["15b3"]
+            #            device: ["1014", "1017"]
+            #        - pciId :
+            #            vendor: ["8086"]
+            #            device: ["1000", "1100"]
+            #    - name: "my.usb.feature"
+            #      matchOn:
+            #        - usbId:
+            #          class: ["ff"]
+            #          vendor: ["03e7"]
+            #          device: ["2485"]
+            #        - usbId:
+            #          class: ["fe"]
+            #          vendor: ["1a6e"]
+            #          device: ["089a"]
+            #    - name: "my.combined.feature"
+            #      matchOn:
+            #        - pciId:
+            #            vendor: ["15b3"]
+            #            device: ["1014", "1017"]
+            #          loadedKMod : ["vendor_kmod1", "vendor_kmod2"]
+# Deploy a list of NodeFeatureRule
+nfr:
+  # Enable creation of NodeFeatureRule
+  enabled: false
+  # List of NodeFeatureRule resource to deploy
+  list:
+      # name of the NodeFeatureRule. see https://kubernetes-sigs.github.io/node-feature-discovery/v0.11/advanced/customization-guide.html?highlight=NodeFeatureRule#a-nodefeaturerule-example
+    - name: my-sample-rule
+      # namespace of the NodeFeatureRule (default is project namespace)
+      namespace: openshift-nfd
+      # spec for the NodeFeatureRule
+      spec: |-
+        rules:
+          - name: my sample rule
+            labels:
+              nfd-dummy: 'true'
+            matchFeatures:
+              - feature: kernel.loadedmodule
+                matchExpressions:
+                  dummy:
+                    op: Exists
+              - feature: kernel.config
+                matchExpressions:
+                  X86:
+                    op: In
+                    value:
+                      - 'y'
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: project
+    name: "openshift-nfd"
+    display_name: Operator NFD
+    description: NFD configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "nfd"
+    namespace: "openshift-nfd"
+    version: "4.11.0-202311301649"
+    operator: 
+      channel: "stable"
+      name: nfd
+      installPlanApproval: Automatic
+      # csv: nfd
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "nfd"
+    namespace: "openshift-nfd"
+    providedAPIs: "NodeFeatureDiscovery.v1.nfd.openshift.io,NodeFeatureRule.v1alpha1.nfd.openshift.io,NodeResourceTopology.v1alpha1.topology.node.k8s.io"

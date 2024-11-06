@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![release](https://img.shields.io/badge/release-v14.6.103-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/14.6.103) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io)
+[![release](https://img.shields.io/badge/release-v15.27.1-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/15.27.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io) [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX-blue.svg)](https://artifacthub.io/packages/search?repo=startx)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 
@@ -49,6 +49,14 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-router](charts/cluster-router.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-router)       | configure router(s) at the cluster level                          |
 | **[cluster-couchbase](charts/cluster-couchbase.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-couchbase)    | configure couchbase at the cluster level                          |
 | **[cluster-crunchy](charts/cluster-crunchy.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-crunchy)      | configure crunchyDatabase at the cluster level                    |
+| **[cluster-mustgather](charts/cluster-mustgather.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mustgather)   | configure mustgather at the cluster level                         |
+| **[cluster-nfd](charts/cluster-nfd.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nfd)          | configure Node Feature Discovery at the cluster level             |
+| **[cluster-gpu](charts/cluster-gpu.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-gpu)          | configure GPU Drivers (NVidia) at the cluster level               |
+| **[cluster-descheduler](charts/cluster-descheduler.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-descheduler)  | configure KubeDescheduler to optimize pod distribution            |
+| **[cluster-mtv](charts/cluster-mtv.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtv)          | configure Migration toolkit for virtualisation                    |
+| **[cluster-mtc](charts/cluster-mtc.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtc)          | configure Migration toolkit for Containers                        |
+| **[cluster-mtr](charts/cluster-mtr.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtr)          | configure Migration toolkit for Runtimes                        |
+| **[cluster-devworkspaces](charts/cluster-devworkspaces.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-devworkspaces)    | enable Dev workspace at the cluster level                   |
 
 #### Use Cluster charts
 
@@ -85,7 +93,14 @@ helm install startx/cluster-certmanager
 helm install startx/cluster-oadp
 helm install startx/cluster-router
 helm install startx/cluster-couchbase
-helm install startx/cluster-crunchy
+helm install startx/cluster-mustgather
+helm install startx/cluster-nfd
+helm install startx/cluster-gpu
+helm install startx/cluster-descheduler
+helm install startx/cluster-mtv
+helm install startx/cluster-mtc
+helm install startx/cluster-mtr
+helm install startx/cluster-devworkspaces
 ```
 
 ### Basic Helm charts

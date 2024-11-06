@@ -75,6 +75,11 @@ machineHealthCheck:
     type: app
     maxUnhealthy: 40%
     timeouts: 300s
+  - name: app-gpu
+    type: gpu
+    group: app-gpu
+    maxUnhealthy: 40%
+    timeouts: 300s
 
 machineAutoscaler: 
   enabled: false
@@ -97,6 +102,12 @@ machineAutoscaler:
   - name: app-c
     minReplicas: 1
     maxReplicas: 3
+  - name: app-gpu-a
+    minReplicas: 0
+    maxReplicas: 2
+  - name: app-gpu-b
+    minReplicas: 0
+    maxReplicas: 2
 
 machineSet: 
   enabled: false
@@ -143,3 +154,19 @@ machineSet:
     instanceType: "r5a.2xlarge"
     volumeSize: 150
     replicas: 1
+  - name: app-gpu-a
+    az: a
+    type: gpu
+    group: app-gpu
+    ami: ami-0add59eb238c299d5
+    instanceType: "g4dn.xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: app-gpu-b
+    az: b
+    type: gpu
+    group: app-gpu
+    ami: ami-0add59eb238c299d5
+    instanceType: "g4dn.xlarge"
+    volumeSize: 150
+    replicas: 0

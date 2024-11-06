@@ -28,7 +28,7 @@ spec: {}
   {{- else }}
   spec: 
     targetNamespaces:
-      - {{ $namespace | default "default" | quote }}
+      - {{ .Values.operatorGroup.target | default $namespace | quote }}
   {{- end }}
 {{- else }}
 spec: 

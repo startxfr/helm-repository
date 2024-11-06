@@ -6,15 +6,11 @@ description: Helm chart used to configure Redhat-SSO at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.103
+version: 15.27.1
 # Version name of the redhat-sso operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 7.6.6
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-sso.svg
-# category associated to this package
-category: cluster
-# tags
-tags: infra,cluster,sso,authentification,signle-sign-on
 # Kube minimum version
 kubeVersion: ">=1.25.0-0"
 # Keyword list for this chart
@@ -43,18 +39,41 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.75"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.343"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://startxfr.github.io/helm-repository/repos/stable/
-    version: "14.6.75"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "14.6.343"
     alias: operator
     condition: operator.enabled
 
 annotations:
+  # category associated to this package
+  category: cluster
+  # Artifacthub category associated to this package
+  artifacthub.io/category: integration-delivery
+  # Artifacthub license
+  artifacthub.io/license: "GPL-3.0-or-later"
+  # Artifacthub is this release a pre-release
+  artifacthub.io/prerelease: "true"
+  # Artifacthub is an operator chart
+  artifacthub.io/operator: "true"
+  # Artifacthub operator capabilities
+  artifacthub.io/operatorCapabilities: "Seamless Upgrades"
+  # Artifacthub chart recommandations
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+  # Artifacthub changes logs
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 14.6.75"
+      description: "Align all startx charts to release 15.27.1"
+  # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

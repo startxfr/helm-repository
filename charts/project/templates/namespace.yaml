@@ -40,7 +40,7 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "-10"
     {{- if .Values.project.additionalAnnotations }}
-    {{- .Values.project.additionalAnnotation | trim | nindent 4 }}
+    {{- .Values.project.additionalAnnotations | trim |  nindent 4 }}
     {{- end}}
 spec: {}
 {{- end -}}{{- end -}}{{- end }}

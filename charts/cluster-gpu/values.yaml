@@ -1,0 +1,147 @@
+# Default values for cluster-gpu.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-gpu
+  # Version name of this application (default use Chart appVersion)
+  # version: "0.0.3"
+
+# Deploy the ClusterPolicy
+gpu:
+  # Enable creation of the ClusterPolicy
+  enabled: false
+  # name of the ClusterPolicy (default is gpu-cluster-policy)
+  name: gpu-cluster-policy
+  # spec of the ClusterPolicy
+  spec: |-
+    vgpuDeviceManager:
+      enabled: true
+    migManager:
+      enabled: true
+    operator:
+      defaultRuntime: crio
+      initContainer: {}
+      runtimeClass: nvidia
+      use_ocp_driver_toolkit: true
+    dcgm:
+      enabled: true
+    gfd:
+      enabled: true
+    dcgmExporter:
+      config:
+        name: ''
+      enabled: true
+      serviceMonitor:
+        enabled: true
+    driver:
+      licensingConfig:
+        configMapName: ''
+        nlsEnabled: true
+      enabled: true
+      certConfig:
+        name: ''
+      useNvidiaDriverCRD: false
+      kernelModuleConfig:
+        name: ''
+      upgradePolicy:
+        autoUpgrade: true
+        drain:
+          deleteEmptyDir: false
+          enable: false
+          force: false
+          timeoutSeconds: 300
+        maxParallelUpgrades: 1
+        maxUnavailable: 25%
+        podDeletion:
+          deleteEmptyDir: false
+          force: false
+          timeoutSeconds: 300
+        waitForCompletion:
+          timeoutSeconds: 0
+      repoConfig:
+        configMapName: ''
+      useOpenKernelModules: false
+      virtualTopology:
+        config: ''
+    devicePlugin:
+      config:
+        default: ''
+        name: ''
+      enabled: true
+    mig:
+      strategy: single
+    sandboxDevicePlugin:
+      enabled: true
+    validator:
+      plugin:
+        env:
+          - name: WITH_WORKLOAD
+            value: 'false'
+    nodeStatusExporter:
+      enabled: true
+    daemonsets:
+      rollingUpdate:
+        maxUnavailable: '1'
+      updateStrategy: RollingUpdate
+    sandboxWorkloads:
+      defaultWorkload: container
+      enabled: false
+    gds:
+      enabled: false
+    vgpuManager:
+      enabled: false
+    vfioManager:
+      enabled: true
+    toolkit:
+      enabled: true
+      installDir: /usr/local/nvidia
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "nvidia-gpu-operator"
+    display_name: Operator GPU-NVidia
+    description: GPU-NVidia configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "gpu-operator-certified"
+    namespace: "nvidia-gpu-operator"
+    version: "v23.9.1"
+    operator: 
+      channel: "stable"
+      name: gpu-operator-certified
+      installPlanApproval: Automatic
+      # csv: gpu-operator-certified
+      source: 
+        name: certified-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "nvidia-gpu-operator"
+    namespace: "nvidia-gpu-operator"
+    providedAPIs: "ClusterPolicy.v1.nvidia.com,NVIDIADriver.v1alpha1.nvidia.com"

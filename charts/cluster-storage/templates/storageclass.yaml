@@ -1,4 +1,4 @@
-{{- if .Values.enabled -}}
+{{- if .Values.enabled -}}{{- if .Values.enabledStorageClasses -}}
 {{ range .Values.storageClasses }}
 ---
 kind: StorageClass
@@ -13,6 +13,9 @@ metadata:
     app.kubernetes.io/name: "{{ include "startx.appScope" $ }}-{{ .name }}-storageclass"
   annotations:
     {{- include "cluster-storage.annotations" $ | nindent 4 }}
+    {{- if .isDefault }}
+    storageclass.kubernetes.io/is-default-class: 'true'
+    {{- end }}
     argocd.argoproj.io/sync-wave: "10"
 provisioner: {{ .provisioner | default "kubernetes.io/aws-ebs" | quote }}
 {{- if .parameters }}
@@ -31,4 +34,4 @@ allowVolumeExpansion: {{ .allowVolumeExpansion }}
 volumeBindingMode: {{ .volumeBindingMode | quote }}
 {{- end }}
 {{ end }}
-{{- end -}}
+{{- end -}}{{- end -}}

@@ -44,6 +44,8 @@ logging:
     enabled: true
     # number of elasticsearch instances
     replicas: 3
+    # the redundancy policy applied to this elastic (could be ZeroRedundancy, SingleRedundancy, MultipleRedundancy and FullRedundancy)
+    redundancyPolicy: SingleRedundancy
     # Resource spec for elasticsearch pods
     resources:
       limits:
@@ -82,11 +84,13 @@ logging:
     # resources:
     #   requests:
     #     cpu: "100m"
-  # configuration of the fluentd service
-  fluentd:
-    # Enable the deployment of the fluentd service
+  # configuration of the collector service
+  collector:
+    # Enable the deployment of the collector service
     enabled: true
-    # # Resource spec for fluentd pods
+    # Type of collector engine (must be vector or fluentd. default is vector)
+    type: "vector"
+    # # Resource spec for collector pods
     # resources:
     #   requests:
     #     cpu: "100m"
@@ -123,7 +127,7 @@ logforwarder:
   # Configuration of the secret for external logging stack
   secret:
     # Enable the creation of the external secret configuration
-    enabled: true
+    enabled: false
     # Name of the secret (default is elk-secret)
     name: elasticsearch-external
     # CA Bundle that sign the certificate
@@ -187,7 +191,7 @@ operator:
     enabled: true
     name: "cluster-logging"
     namespace: "openshift-logging"
-    version: "5.8.0"
+    version: "5.8.2"
     operator: 
       channel: "stable"
       name: cluster-logging
@@ -196,12 +200,14 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     hooked: false
     name: "openshift-logging"
     namespace: "openshift-logging"
-    providedAPIs: "ClusterLogForwarder.v1.logging.openshift.io,ClusterLogging.v1.logging.openshift.io"
+    providedAPIs: "ClusterLogForwarder.v1.logging.openshift.io,ClusterLogging.v1.logging.openshift.io,LogFileMetricExporter.v1alpha1.logging.openshift.io"
 
 
 # Configuration of the elasticSearch operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
@@ -214,7 +220,7 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.8.0"
+    version: "5.8.2"
     operator: 
       channel: "stable"
       name: elasticsearch-operator
@@ -223,6 +229,8 @@ operatorElastic:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     hooked: false

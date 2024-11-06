@@ -14,15 +14,19 @@ auth:
     login: 
       name: startx-login
       tplFile: webtpl/startx-login.html
+      manageSubresource: true
     errors: 
       name: startx-errors
       tplFile: webtpl/startx-errors.html
+      manageSubresource: true
     providers: 
       name: startx-providers
       tplFile: webtpl/startx-providers.html
+      manageSubresource: true
   authBackend:
   - name: startx-htpasswd
     type: htpasswd
+    manageSubresource: true
     htpasswdComment: |
       htpasswd -c -b _console/ocp.passwd admin secretdemerde
       htpasswd -b _console/ocp.passwd dev dev

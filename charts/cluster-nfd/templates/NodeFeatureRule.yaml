@@ -1,0 +1,22 @@
+{{- if .Values.nfr -}}{{- if .Values.nfr.enabled -}}
+{{- $defaultns := .Values.project.project.name | default "openshift-nfd" -}}
+{{ range .Values.nfr.list }}
+{{- $name := .name | default "default-rule" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $spec := .spec | default "{}" -}}
+---
+kind: NodeFeatureRule
+apiVersion: nfd.openshift.io/v1alpha1
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-nfd.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-nfr"
+  annotations:
+    {{- include "cluster-nfd.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- $spec | nindent 2 }}
+{{ end }}
+{{- end -}}{{- end -}}

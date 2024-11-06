@@ -1,0 +1,19 @@
+{{- if .Values.priorityClass.enabled -}}
+{{ range .Values.priorityClass.list }}
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ .name | default "my-priority" | quote }}
+  labels:
+    {{- include "cluster-config.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "my-priority" }}-priorityclass"
+  annotations:
+    {{- include "cluster-config.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-10" 
+value: {{ .value | default 0 | int }}
+preemptionPolicy: {{ .preemptionPolicy | default "PreemptLowerPriority" | quote }}
+globalDefault: {{ .default | default false }}
+description: {{ .description | default "priority class default description" | quote }}
+{{- end -}}
+{{- end -}}

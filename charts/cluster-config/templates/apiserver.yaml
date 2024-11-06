@@ -34,7 +34,15 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
 data:
   tls.crt: >-
+{{- if .Values.api.certificateChainRaw }}
+    {{ default "xxxxxx" .Values.api.certificateChainRaw }}
+{{- else }}
     {{ .Values.api.certificateChain | b64enc }}
+{{- end }}
   tls.key: >-
+{{- if .Values.api.privateKeyRaw }}
+    {{ default "xxxxxx" .Values.api.privateKeyRaw }}
+{{- else }}
     {{ .Values.api.privateKey | b64enc }}
+{{- end }}
 {{- end }}

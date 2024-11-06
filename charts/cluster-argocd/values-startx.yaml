@@ -85,7 +85,9 @@ application:
           namespace: "default"
           jsonPointers:
             - /
-
+argocd_repocreds:
+  enabled: false
+  list: []
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -233,6 +235,13 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: false
     hooked: false

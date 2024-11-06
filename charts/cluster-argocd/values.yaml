@@ -40,8 +40,10 @@ argocd_repocreds:
       namespace: "openshift-gitops"
       # URL of the repository (or path if used for multiple repository)
       url: "https://github.com/argoproj/private-repo"
+      # ArgoCD Secret type (should be repository, repo-creds or cluster)
+      secretType: "repository"
       # Credentials type for this secret (should be https, ssh or githubapp)
-      type: "ssh"
+      type: "https"
       # Is the connection must be SSL checked
       insecure: true
       # Options if credentials type is https
@@ -205,6 +207,8 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false
     hooked: false

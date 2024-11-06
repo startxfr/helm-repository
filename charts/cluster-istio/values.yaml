@@ -21,8 +21,14 @@ istio:
   enabled: false
   # Activate the manager as a helm hook
   hooked: false
+  # Place the istio controlePlane onto infra node
+  infra_enabled: false
+  # Enable the deployment of the istio ServiceMeshControlPlane
+  enabledControlPlane: true
   # Name of the istio service
   name: default
+  # # version of the istio serviceMeshMember (default is v2.1)
+  # version: "v2.2"
   # deploy a list of report ressources
   members:
     # Enable the deployment of MemberRoll
@@ -98,6 +104,8 @@ operatorElastic:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false
 
@@ -119,6 +127,8 @@ operatorKiali:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false
 
@@ -140,6 +150,8 @@ operatorJaeger:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false
 
@@ -161,6 +173,8 @@ operatorIstio:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     name: "istio-operators"
