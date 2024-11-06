@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![release](https://img.shields.io/badge/release-v14.6.103-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/14.6.103) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io) [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX-blue.svg)](https://artifacthub.io/packages/search?repo=startx)
+[![release](https://img.shields.io/badge/release-v15.27.1-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/15.27.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io) [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX-blue.svg)](https://artifacthub.io/packages/search?repo=startx)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 
@@ -194,8 +194,9 @@ helm install startx/example-fruitapp-app
 
 | Repository                                                                             | Command                                                                                         | Description                                                                                 |
 | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **[stable](https://helm-repository.readthedocs.io/en/latest/repos/stable/index.yaml)** | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable`            | The default repository  with latest stable release for 14,13,12,11,10,9,8 and 7 releases    |
+| **[stable](https://helm-repository.readthedocs.io/en/latest/repos/stable/index.yaml)** | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable`            | The default repository  with latest stable release for 15,14,13,12,11,10,9,8 and 7 releases    |
 | [noschema](https://helm-repository.readthedocs.io/en/latest/repos/noschema/index.yaml) | `helm repo add startx-noschema https://helm-repository.readthedocs.io/en/latest/repos/noschema` | Archive repository without schema definition                                                |
+| [15](https://helm-repository.readthedocs.io/en/latest/repos/15/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/15`                | Archive repository for the 15.x packages (Compatible with OCP 4.15.x)                       |
 | [14](https://helm-repository.readthedocs.io/en/latest/repos/14/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/14`                | Archive repository for the 14.x packages (Compatible with OCP 4.14.x)                       |
 | [13](https://helm-repository.readthedocs.io/en/latest/repos/13/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/13`                | Archive repository for the 13.x packages (Compatible with OCP 4.13.x)                       |
 | [12](https://helm-repository.readthedocs.io/en/latest/repos/12/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/12`                | Archive repository for the 12.x packages (Compatible with OCP 4.12.x)                       |
