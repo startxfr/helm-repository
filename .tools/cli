@@ -1,7 +1,7 @@
 #!/bin/bash
 
-STABLE_MAINRELEASE="14"
-STABLE_SUBRELEASE="6"
+STABLE_MAINRELEASE="15"
+STABLE_SUBRELEASE="27"
 SXV4_CONSOLE_VERSION="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}.1"
 SHARED_TEMPLATE_NAME=_startx.tpl
 SHARED_TEMPLATE=.tools/$SHARED_TEMPLATE_NAME
@@ -11,7 +11,7 @@ export SHARED_SAMPLE_RESOURCE=.tools/sample/templates/example.yaml
 WORK_BRANCH=devel
 MASTER_BRANCH=master
 STABLE_BRANCH=stable
-STABLE_RELEASE="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}"
+# STABLE_RELEASE="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}"
 # GITHUB_USER=startxfr
 GITHUB_REPOSITORY=helm-repository
 GITHUB_REPONAME="origin"
@@ -105,7 +105,8 @@ function routerPublish {
 
 # router for archive command
 function routerArchive {
-    # doHelmrepositoryRefresh release-14 "14" $HELM_REPO_BASEURL Archive 37
+    # doHelmrepositoryRefresh release-15 "15" $HELM_REPO_BASEURL Archive 37
+    doHelmrepositoryRefresh release-14 "14" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-13 "13" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-12 "12" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-11 "11" $HELM_REPO_BASEURL Archive 37
