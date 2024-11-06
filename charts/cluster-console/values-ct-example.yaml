@@ -1,0 +1,87 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: ct
+  cluster: poc
+  environment: infra
+  component: console
+  app: ct-console
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: CloudTemple Console
+    logo: 
+      name: ct-logo
+      format: svg
+      mode: file
+      tplFile: webtpl/ct-logo-d1.svg
+  links:
+  - name: ct-console-link-all-namespaces-dashboard
+    spec: |
+      href: 'https://console.cloud-temple.com'
+      location: NamespaceDashboard
+      text: CloudTemple Console
+  - name: ct-ocpoffer-link-all-namespaces-dashboard
+    spec: |
+      href: 'https://www.cloud-temple.com/produits/paas-openshift/'
+      location: NamespaceDashboard
+      text: CloudTemple Openshift
+  - name: ct-console-link-application-menu
+    spec: |
+      href: 'https://console.cloud-temple.com'
+      location: ApplicationMenu
+      text: CloudTemple Console
+  - name: sx-console-link-application-menu
+    spec: |
+      href: 'https://github.com/startxfr'
+      location: ApplicationMenu
+      text: STARTX Github
+  - name: ct-console-link-help-menu
+    spec: |
+      href: 'https://console.cloud-temple.com'
+      location: HelpMenu
+      text: CloudTemple Console
+      HelpMenu:
+        section: CloudTemple help
+  - name: sx-console-link-help-menu
+    spec: |
+      href: 'https://github.com/startxfr'
+      location: HelpMenu
+      text: STARTX Github
+  - name: ct-console-link-user-menu
+    spec: |
+      href: 'https://console.cloud-temple.com/issues/new'
+      location: UserMenu
+      text: Create issue
+      UserMenu:
+        section: CloudTemple help
+  logLinks:
+  - name: ct-externallog
+    spec: |
+      hrefTemplate: >-
+        https://console.cloud-temple.com/logstack/kibana/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
+      text: Show in CloudTemple central logs
+  notifications:
+  - name: generic-banner-top-cluster
+    spec: |
+      backgroundColor: 'green'
+      color: '#fff'
+      location: BannerTop 
+      text: Vous etes sur le cluster <b>CLIxxx-001</b>
+  # - name: generic-banner-top-maintenance
+  #   spec: |
+  #     backgroundColor: 'red'
+  #     color: '#fff'
+  #     location: BannerTopBottom
+  #     text: Ce cluster est en cours de mise a jour
+  - name: generic-banner-bottom-support
+    spec: |
+      backgroundColor: 'green'
+      color: '#fff'
+      link:
+        href: 'https://console.cloud-temple.com/issues/new'
+        text: creer un ticket d'incident
+      location: BannerBottom
+      text: En cas de probleme sur ce cluster, vous pouvez

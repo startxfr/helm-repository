@@ -51,8 +51,9 @@ logging:
       requests:
         cpu: 100m
         memory: 256Mi
-  fluentd:
+  collector:
     enabled: true
+    type: vector
     resources:
       limits:
         memory: 736Mi
@@ -138,6 +139,13 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false
@@ -165,6 +173,13 @@ operatorElastic:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false

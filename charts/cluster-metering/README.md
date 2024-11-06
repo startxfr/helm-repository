@@ -1,4 +1,5 @@
-# Cluster Chart : Metering [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--metering-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+metering+startx)
+# ![cluster-metering](https://helm-repository.readthedocs.io/en/latest/img/cluster-metering.svg "Cluster Chart : Metering") Cluster Chart : Metering
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--metering-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+metering+startx)
 
 This helm chart is used to configure Metering at the cluster level.
 
@@ -299,3 +300,22 @@ helm install cluster-metering startx/cluster-metering -f https://raw.githubuserc
 | 14.6.197 | 2024-02-08 | publish stable update for the full repository
 | 14.6.201 | 2024-02-08 | publish stable update for the full repository
 | 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release
+| 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
+| 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
+| 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
+| 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
+| 14.6.301 | 2024-05-30 | Helm package are now signed
+| 14.6.321 | 2024-06-25 | publish stable update for the full repository
+| 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository
+| 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
+| 14.6.335 | 2024-06-26 | publish stable update for the full repository
+| 14.6.343 | 2024-06-26 | publish stable update for the full repository
+| 14.6.345 | 2024-06-26 | publish stable update for the full repository
+| 14.6.351 | 2024-06-26 | Update all dependencies
+| 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
+| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
+| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381

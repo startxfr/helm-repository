@@ -44,6 +44,8 @@ logging:
     enabled: true
     # number of elasticsearch instances
     replicas: 3
+    # the redundancy policy applied to this elastic (could be ZeroRedundancy, SingleRedundancy, MultipleRedundancy and FullRedundancy)
+    redundancyPolicy: SingleRedundancy
     # Resource spec for elasticsearch pods
     resources:
       limits:
@@ -82,11 +84,13 @@ logging:
     # resources:
     #   requests:
     #     cpu: "100m"
-  # configuration of the fluentd service
-  fluentd:
-    # Enable the deployment of the fluentd service
+  # configuration of the collector service
+  collector:
+    # Enable the deployment of the collector service
     enabled: true
-    # # Resource spec for fluentd pods
+    # Type of collector engine (must be vector or fluentd. default is vector)
+    type: "vector"
+    # # Resource spec for collector pods
     # resources:
     #   requests:
     #     cpu: "100m"
@@ -196,6 +200,8 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     hooked: false
@@ -223,6 +229,8 @@ operatorElastic:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     hooked: false

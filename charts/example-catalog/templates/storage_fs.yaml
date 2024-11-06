@@ -10,6 +10,8 @@
 
 ---
 kind: ConfigMap
+immutable: false
+immutable: false
 apiVersion: v1
 metadata:
   name: "fs-loader-config"
@@ -29,8 +31,10 @@ data:
   SX_VERBOSE: "true"
   SX_DEBUG: "true"
 ---
+immutable: false
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "fs-k8snode-emptydir-rwo-config"
   namespace: {{ $namespace | quote }}
@@ -47,10 +51,12 @@ data:
   SX_SUMMARY: Storage fs-k8snode-emptydir-rwo application
   SX_VERSION: "{{- $env -}}"
   SX_VERBOSE: "true"
-  SX_DEBUG: "true"
+  SX_DEBUG: "tr
+immutable: falseue"
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "fs-k8snode-hostpath-rwo-config"
   namespace: {{ $namespace | quote }}
@@ -66,11 +72,13 @@ data:
   SX_NAME: Storage node hosted application
   SX_SUMMARY: Storage fs-k8snode-hostpath-rwo application
   SX_VERSION: "{{- $env -}}"
-  SX_VERBOSE: "true"
+  SX_VERBOSE: "
+immutable: falsetrue"
   SX_DEBUG: "true"
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "fs-k8snode-hostpath2-rwo-config"
   namespace: {{ $namespace | quote }}
@@ -85,12 +93,14 @@ data:
   SX_COMPONENT: "{{- $component -}}"
   SX_NAME: Storage node hosted application
   SX_SUMMARY: Storage fs-k8snode-hostpath2-rwo application
-  SX_VERSION: "{{- $env -}}"
+kind: ConfigMap
+immutable: false{{- $env -}}"
   SX_VERBOSE: "true"
   SX_DEBUG: "true"
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "storage-fs-config"
   namespace: {{ $namespace | quote }}
@@ -353,19 +363,22 @@ data:
           description: update a file in the file resource
           method: PUT
           endpoint: update
-        - path: "/storage/:id"
+kind: ConfigMap
+immutable: false "/storage/:id"
           description: Delete a file in the file resource
           method: DELETE
           endpoint: delete
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: img-schema-fs-k8snode-emptydir-rwo
   namespace: {{ $namespace | quote }}
   labels:
     app.kubernetes.io/name: "img-schema-fs-k8snode-emptydir-rwo-configmap"
-    {{- include "example-catalog.labels" $ | nindent 4 }}
+kind: ConfigMap
+immutable: false "example-catalog.labels" $ | nindent 4 }}
   annotations:
     {{- include "example-catalog.annotations" $ | nindent 4 }}
 binaryData:
@@ -373,6 +386,7 @@ binaryData:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: img-schema-fs-k8snode-hostpath-rwo
   namespace: {{ $namespace | quote }}

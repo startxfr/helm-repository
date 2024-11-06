@@ -1,4 +1,5 @@
-# Cluster Chart : Istio [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--istio-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+istio+startx)
+# ![cluster-istio](https://helm-repository.readthedocs.io/en/latest/img/cluster-istio.svg "Cluster Chart : Istio") Cluster Chart : Istio
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--istio-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+istio+startx)
 
 This helm chart is used to configure Istio at the cluster level.
 
@@ -325,3 +326,25 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 14.6.203 | 2024-02-09 | Remove the NoExecute from the infra toleration
 | 14.6.205 | 2024-02-09 | Improve cluster-istio options
 | 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release
+| 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
+| 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
+| 14.6.233 | 2024-03-23 | Adding support for serviceMesh version
+| 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
+| 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
+| 14.6.283 | 2024-05-21 | Move default limits for ephemeral-storage to 500Mi
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
+| 14.6.301 | 2024-05-30 | Helm package are now signed
+| 14.6.303 | 2024-06-24 | Stop eviction with 1Gi limits for prometheus epemeral-storage
+| 14.6.321 | 2024-06-25 | publish stable update for the full repository
+| 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository
+| 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
+| 14.6.335 | 2024-06-26 | publish stable update for the full repository
+| 14.6.343 | 2024-06-26 | publish stable update for the full repository
+| 14.6.345 | 2024-06-26 | publish stable update for the full repository
+| 14.6.351 | 2024-06-26 | Update all dependencies
+| 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
+| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
+| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381

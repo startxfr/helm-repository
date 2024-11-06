@@ -2,6 +2,8 @@
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.html.namespace | default $appName -}}
 kind: ConfigMap
+immutable: false
+immutable: false
 apiVersion: v1
 metadata:
   name: {{ $appName }}-lib

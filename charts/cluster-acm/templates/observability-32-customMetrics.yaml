@@ -2,6 +2,7 @@
 {{- $namespace := .Values.projectObservability.project.name | default "open-cluster-management-observability" -}}
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: observability-metrics-custom-allowlist
   namespace: "{{- $namespace -}}"
