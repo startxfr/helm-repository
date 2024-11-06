@@ -62,3 +62,4 @@ helm install cluster-devworkspaces startx/cluster-devworkspaces -f https://raw.g
 | 14.6.369 | 2025-06-30 | Initialize the cluster-devworkspaces structure inherited from cluster-mtr (inspired by cluster-workspace)  |
 | 14.6.368 | 2024-06-30 | Create the cluster-devworkspaces structure inherited from cluster-mtr (inspired by cluster-workspace)
 | 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381
+| 15.27.3 | 2024-11-06 | create init release for version 15.x
