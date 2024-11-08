@@ -23,7 +23,6 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-localstorage](charts/cluster-localstorage.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-localstorage) | enable local storage at the cluster level                         |
 | **[cluster-logging](charts/cluster-logging.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-logging)      | deploy a EFK (puit de log) at the cluster level                   |
 | **[cluster-pipeline](charts/cluster-pipeline.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline)     | enable tekton pipeline at the cluster level                       |
-| **[cluster-metering](charts/cluster-metering.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metering)     | enable Metering at the cluster level                              |
 | **[cluster-istio](charts/cluster-istio.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio)        | enable ServiceMesh at the cluster level                           |
 | **[cluster-knative](charts/cluster-knative.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-knative)      | enable Serverless (knative) at the cluster level                  |
 | **[cluster-ocs](charts/cluster-ocs.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ocs)          | enable Openshift Container Storage at the cluster level           |
@@ -71,7 +70,6 @@ helm install startx/cluster-console
 helm install startx/cluster-storage
 helm install startx/cluster-logging
 helm install startx/cluster-pipeline
-helm install startx/cluster-metering
 helm install startx/cluster-istio
 helm install startx/cluster-knative
 helm install startx/cluster-ocs
