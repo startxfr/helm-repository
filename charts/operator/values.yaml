@@ -75,3 +75,22 @@ operatorGroup:
   namespace: "openshift-workspaces"
   # List of the provided APIs (mandatory if enabled)
   providedAPIs: "CheCluster.v1.org.eclipse.che"
+
+# Configuration of the ConsolePlugin
+consolePlugin:
+  # enable ConsolePlugin
+  enabled: false
+  # name of the ConsolePlugin (if not set, use the subscription name)
+  name: "gitops-plugin"
+  # The specifications of the ConsolePlugin
+  spec: |
+    backend:
+      service:
+        basePath: /
+        name: gitops-plugin
+        namespace: openshift-gitops
+        port: 9001
+      type: Service
+    displayName: GitOps Plugin
+    i18n:
+      loadType: Preload
