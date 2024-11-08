@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: ansible
   app: startx-ansible
+  version: "2.5.0"
 ansibleHub:
   enabled: false
   hooked: false
@@ -17,7 +18,7 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "ansible-automation-platform-operator"
+    name: "openshift-aap-operator"
     display_name: "Startx ANSIBLE"
     requester: startx
     description: Ansible automation configured by STARTX
@@ -29,10 +30,10 @@ operator:
     enabled: true
     hooked: false
     name: "ansible-automation-platform-operator"
-    namespace: "ansible-automation-platform-operator"
-    version: "v2.4.0-0.1700771214"
+    namespace: "openshift-aap-operator"
+    version: "v2.5.0-0.1729742145"
     operator: 
-      channel: stable-2.4-cluster-scoped
+      channel: stable-2.5-cluster-scoped
       name: ansible-automation-platform-operator
       installPlanApproval: Automatic
       csv: aap-operator
@@ -51,5 +52,5 @@ operator:
     hooked: false
     target: "all-ns"
     name: "startx-ansible"
-    namespace: "ansible-automation-platform-operator"
+    namespace: "openshift-aap-operator"
     providedAPIs: "AnsibleJob.v1alpha1.tower.ansible.com,AutomationController.v1beta1.automationcontroller.ansible.com,AutomationControllerBackup.v1beta1.automationcontroller.ansible.com,AutomationControllerRestore.v1beta1.automationcontroller.ansible.com,AutomationHub.v1beta1.automationhub.ansible.com,AutomationHubBackup.v1beta1.automationhub.ansible.com,AutomationHubRestore.v1beta1.automationhub.ansible.com,JobTemplate.v1alpha1.tower.ansible.com"
