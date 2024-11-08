@@ -39,12 +39,12 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: project
     condition: project.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: operator
     condition: operator.enabled
 
@@ -73,6 +73,8 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all startx charts dependencies to release 15.27.3"
+      description: "Upgrade basic startx charts dependencies to release 15.27.8"
+    - kind: added
+      description: "Implement the consolePlugin for gitops"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

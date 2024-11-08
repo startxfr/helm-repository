@@ -233,6 +233,20 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+  consolePlugin:
+    enabled: true
+    name: "gitops-plugin"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: gitops-plugin
+          namespace: openshift-gitops
+          port: 9001
+        type: Service
+      displayName: GitOps Plugin
+      i18n:
+        loadType: Preload
   operatorGroup:
     enabled: false
     hooked: false
