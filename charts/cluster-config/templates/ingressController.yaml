@@ -13,6 +13,8 @@ metadata:
   annotations:
     {{- include "cluster-config.annotations" $ | nindent 4 }}
 spec:
+  # tuningOptions:
+  #   connectTimeout: 300
 {{- if .infra_enabled }}
   nodePlacement:
     nodeSelector:
