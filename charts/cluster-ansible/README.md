@@ -40,11 +40,11 @@ helm install cluster-ansible startx/cluster-ansible
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **project:** named **ansible-automation-platform-operator** with the following properties
-- 1 **operator:** named **ansible-automation-platform-operator** configured with
+- 1 **project:** named **openshift-aap-operator** with the following properties
+- 1 **operator:** named **openshift-aap-operator** configured with
   - The **stable-2.2-cluster-scoped** channel
   - The **2.2.1** version
-  - Deployed under the **ansible-automation-platform-operator** project
+  - Deployed under the **openshift-aap-operator** project
 - 1 **ansible** deployed
 - 1 **ansibleHub:** enabled
 
