@@ -330,3 +330,4 @@ helm install cluster-pipeline startx/cluster-pipeline -f https://raw.githubuserc
 | 15.27.5 | 2024-11-06 | publish stable update for the full repository
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
 | 15.27.9 | 2024-11-09 | Upgrade the Pipeline operator version to v1.16.1
+| 15.27.11 | 2024-11-09 | Adding ConsolePlugin support
