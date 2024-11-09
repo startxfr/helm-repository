@@ -7,30 +7,38 @@ context: &context
   component: rh-ods
   app: openshift-rh-ods
 
-redhatCreds:
-  enabled: true
-  name: "startx-rhsupport-creds"
-  namespace: "openshift-startx-rh-ods"
-  username: startx_info_mco
-  password: mypassword
-
-report:
+DataScienceCluster:
   enabled: false
-  name: "startx-gather"
+  name: "startx-dsc"
+  namespace: "rhods-operator"
   spec: |
-    caseID: '02527285'
-    caseManagementAccountSecretRef:
-      name: startx-rhsupport-creds
-    serviceAccountRef:
-      name: rh-ods-admin
-    audit: true
-    # proxyConfig:
-    #   http_proxy: http://myproxy
-    #   https_proxy: https://my_http_proxy
-    #   no_proxy: master-api
-    # mustGatherImages:
-    # - quay.io/kubevirt/must-gather:latest
-    # - quay.io/ocs-dev/ocs-must-gather
+    components:
+      codeflare:
+        managementState: Managed
+      dashboard:
+        managementState: Managed
+      datasciencepipelines:
+        managementState: Managed
+      kserve:
+        serving:
+          ingressGateway:
+            certificate:
+              type: OpenshiftDefaultIngress
+          managementState: Managed
+          name: knative-serving
+        managementState: Managed
+      kueue:
+        managementState: Managed
+      modelmeshserving:
+        managementState: Managed
+      ray:
+        managementState: Managed
+      trainingoperator:
+        managementState: Removed
+      trustyai:
+        managementState: Removed
+      workbenches:
+        managementState: Managed
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -41,10 +49,10 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "openshift-startx-rh-ods"
+    name: "rhods-operator"
     display_name: "Startx OpenDataScience"
     requester: startx
-    description: Startx Must Gather area
+    description: Startx OpenDataScience operator
   rbac: 
     enabled: true
     groups: 
@@ -54,10 +62,6 @@ project:
     - id: ops-admin
       name: ops
       role: admin
-    sa: 
-    - id: rh-ods
-      name: rh-ods
-      role: cluster-admin
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
@@ -67,16 +71,16 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "must-gather-operator"
-    namespace: "openshift-startx-rh-ods"
-    version: "v1.1.2"
+    name: "rhods-operator"
+    namespace: "rhods-operator"
+    version: "2.13.1"
     operator: 
-      channel: "alpha"
-      name: must-gather-operator
+      channel: "stable"
+      name: rhods-operator
       installPlanApproval: Automatic
-      # csv: must-gather-operator
+      # csv: rhods-operator
       source: 
-        name: community-operators
+        name: redhat-operators
         namespace: openshift-marketplace
       config: 
         infra: true
@@ -89,6 +93,6 @@ operator:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "must-gather-operator"
-    namespace: "openshift-startx-rh-ods"
-    providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"
+    name: "rhods-operator"
+    namespace: "rhods-operator"
+    providedAPIs: "DSCInitialization.v1.dscinitialization.opendatahub.io,DataScienceCluster.v1.datasciencecluster.opendatahub.io,FeatureTracker.v1.features.opendatahub.io"
