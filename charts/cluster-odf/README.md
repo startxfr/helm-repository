@@ -329,3 +329,4 @@ helm install cluster-odf startx/cluster-odf -f https://raw.githubusercontent.com
 | 15.27.5 | 2024-11-06 | publish stable update for the full repository
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
 | 15.27.9 | 2024-11-09 | Upgrade the ODF operator version to v4.15.7
+| 15.27.11 | 2024-11-09 | Adding ConsolePlugin support
