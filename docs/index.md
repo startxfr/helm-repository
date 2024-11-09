@@ -38,7 +38,6 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-ptp](charts/cluster-ptp.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ptp)          | enable Precision Time Protocol at the cluster level               |
 | **[cluster-nexus](charts/cluster-nexus.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nexus)        | enable Nexus at the cluster level                                 |
 | **[cluster-keycloak](charts/cluster-keycloak.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-keycloak)     | enable Keycloak at the cluster level                              |
-| **[cluster-jenkins](charts/cluster-jenkins.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-jenkins)      | enable Jenkins at the cluster level                               |
 | **[cluster-gitlab](charts/cluster-gitlab.md)**             | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-gitlab)       | enable Gitlab at the cluster level                                |
 | **[cluster-compliance](charts/cluster-compliance.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-compliance)   | enable Compliance at the cluster level                            |
 | **[cluster-machine](charts/cluster-machine.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-machine)      | enable Machine management at the cluster level                    |
@@ -83,7 +82,6 @@ helm install startx/cluster-sso
 helm install startx/cluster-ptp
 helm install startx/cluster-nexus
 helm install startx/cluster-keycloak
-helm install startx/cluster-jenkins
 helm install startx/cluster-gitlab
 helm install startx/cluster-compliance
 helm install startx/cluster-machine
@@ -100,6 +98,14 @@ helm install startx/cluster-mtc
 helm install startx/cluster-mtr
 helm install startx/cluster-devworkspaces
 ```
+#### Deprecated Helm charts
+
+List of the deprecated helm charts.
+
+| Chart                                                      | Source                                                                                        | Description                                                       |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| **[cluster-metering](charts/cluster-metering.md)**           | [source](https://github.com/startxfr/helm-repository/tree/14/charts/cluster-metering)      | enable metering at the cluster level                               |
+| **[cluster-jenkins](charts/cluster-jenkins.md)**           | [source](https://github.com/startxfr/helm-repository/tree/14/charts/cluster-jenkins)      | enable Jenkins at the cluster level                               |
 
 ### Basic Helm charts
 

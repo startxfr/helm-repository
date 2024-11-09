@@ -46,7 +46,7 @@ Complete deployment of a project with the following characteristics :
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **openshift-gitops-operator** configured with
   - The **stable** channel
-  - The **1.5.6** version
+  - The **1.14.1** version
   - Deployed under the **openshift-operators** project
 - 1 **argocd:** named **openshift-gitops**
 - 1 **argocd_export:** every days
@@ -345,3 +345,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 15.27.3 | 2024-11-06 | create init release for version 15.x
 | 15.27.5 | 2024-11-06 | publish stable update for the full repository
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
+| 15.27.11 | 2024-11-08 | Implement the consolePlugin for gitops

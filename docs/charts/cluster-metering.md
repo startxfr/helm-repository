@@ -1,7 +1,7 @@
-# ![cluster-3scale](https://helm-repository.readthedocs.io/en/latest/img/cluster-3scale.svg "Cluster Chart : 3Scale") Cluster Chart : 3Scale (API Management)
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--3scale-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+3scale+startx)
+# ![cluster-metering](https://helm-repository.readthedocs.io/en/latest/img/cluster-metering.svg "Cluster Chart : Metering") Cluster Chart : Metering
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--metering-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+metering+startx)
 
-This helm chart is used to create a deployment of a 3scale, operator based, deployment of 3Scale API management tools.
+This helm chart is used to configure Metering at the cluster level.
 
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
@@ -27,62 +27,49 @@ helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stab
 ### 3. Get information about this chart
 
 ```bash
-helm show chart startx/cluster-3scale
+helm show chart startx/cluster-metering
 ```
 
 ### 4. Install this chart
 
 ```bash
-helm install cluster-3scale startx/cluster-3scale
+helm install cluster-metering startx/cluster-metering
 ```
 
 ## Default values
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **project:** named **startx-3scale** with the following properties
-  - 1 **LimitRange:** defined for this projet
-  - 1 **Quotas:** defined for this projet
-  - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
-- 1 **operator:** named **3scale-operator** configured with
-  - The **threescale-2.11** channel
-  - The **0.8.0** version
-  - Deployed under the **openshift-operators** project
-  - The **manager** deployed
-- 1 **Secret:** named **startx-3scale-rhn** that hold rhn credentials used fo image pulling
+xxxx to do xxxxxx
 
 ```bash
 # base configuration running default configuration
-helm install cluster-3scale startx/cluster-3scale
+helm install cluster-metering startx/cluster-metering
 ```
 
 ## Others values availables
 
-- **startx** : Startx 3scale cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml))
+- **startx** : metering cluster wide service configuration using metering operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-metering/values-startx.yaml))
 
 ```bash
-helm install cluster-3scale startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml
+helm install cluster-metering startx/cluster-metering -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-metering/values-startx.yaml
 ```
 
 ## History
 
 | Release  | Date       | Description                                                                                            |
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------ |
-| 0.2.0    | 2020-10-24 | Initial commit for this helm chart with default value example                                          |
-| 0.2.51   | 2020-10-31 | Common release for all chart                                                                           |
-| 0.3.0    | 2020-10-31 | Stable 0.3 release                                                                                     |
-| 0.3.5    | 2020-11-01 | Update dependency to 0.3.3 release and improve Note display                                            |
+| 0.3.19   | 2020-11-06 | Create chart cluster-metering from cluster-ocs                                                         |
 | 0.3.21   | 2020-11-06 | Align all charts on the repository release 0.3.21                                                      |
 | 0.3.23   | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information |
-| 0.3.33   | 2020-11-07 | publish stable update for the full repository                                                          |
-| 0.3.37   | 2020-11-07 | Improve helm hook ordering cordinated with dependencies                                                |
+| 0.3.29   | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies                                                   |
 | 0.3.47   | 2020-11-08 | Update dependency to 0.3.45 release                                                                    |
 | 0.3.93   | 2020-11-10 | Move to 0.3.93 dependencies for all cluster-xxx charts in the startx repository                        |
 | 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release                                              |
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                               |
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts                                                          |
 | 0.3.141  | 2020-11-24 | publish stable update for the full repository                                                          |
-| 0.3.151  | 2021-01-23 | Upgrade to 3Scale version 0.6.1                                                                        |
+| 0.3.151  | 2021-01-23 | Upgrade to Metering version 4.6.0                                                                      |
 | 0.3.151  | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                    |
 | 0.3.153  | 2021-01-23 | publish stable update for the full repository                                                          |
 | 0.3.165  | 2021-01-23 | Upgrade all chart dependencies                                                                         |
@@ -97,16 +84,14 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 0.3.209  | 2021-05-06 | Prepare upgrade to 4.7 and add template for AFD                                                        |
 | 0.3.215  | 2021-05-06 | Align all chart to release 0.3.215                                                                     |
 | 0.3.225  | 2021-05-10 | Update all chart to use new RBAC naming                                                                |
-| 0.3.226  | 2021-06-02 | Update the 3scale operator to version 0.7.0                                                            |
-| 0.3.303  | 2021-06-02 | Update documentation and align all charts to release 0.3.303                                           |
-| 0.3.311  | 2021-06-03 | Align cluster chart to version 0.3.311                                                                 |
-| 0.3.312  | 2021-06-03 | Stable charts                                                                                          |
+| 0.3.226  | 2021-06-02 | Update metering operator (end of active support) to version 4.7.0                                      |
 | 0.3.305  | 2021-06-04 | publish stable update for the full repository                                                          |
 | 0.3.343  | 2021-06-06 | publish stable update for the full repository                                                          |
 | 0.3.381  | 2021-06-10 | Align example and cluster charts dependencies to basic chart version 0.3.377                           |
 | 0.3.390  | 2021-06-12 | Prepare 0.4.0 release                                                                                  |
 | 0.3.423  | 2021-06-17 | Prepare the v0.4 release. Stable aligned version of all charts                                         |
 | 0.3.431  | 2021-07-05 | Move to dependencies 1.18.0                                                                            |
+| 0.3.443  | 2021-07-27 | Update the metering operator to version 4.7.0-202107141046                                             |
 | 0.3.480  | 2021-08-03 | publish stable update for the full repository                                                          |
 | 0.3.998  | 2021-08-04 | publish stable update for the full repository                                                          |
 | 0.3.999  | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13                                                   |
@@ -122,36 +107,38 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 7.22.27  | 2021-10-06 | publish stable update for the full repository                                                          |
 | 8.13.1   | 2021-10-06 | Stable release for OCP 4.8.13 version                                                                  |
 | 8.13.3   | 2021-10-08 | Improve code execution, syntax and introduce the ACS helm-chart                                        |
+| 8.13.5   | 2021-10-21 | publish stable update for the full repository                                                          |
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                          |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                                      |
+| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                             |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                             |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23         |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                          |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                           |
-| 8.20.3   | 2021-11-11 | stable release for all chart for openshift version 4.8.20                                              |
 | 8.20.5   | 2021-11-12 | Upgrade all appVersion and align chart release                                                         |
-| 8.20.7   | 2021-11-12 | Upgrade all schema for context subtree                                                                 |
 | 8.20.9   | 2021-11-12 | Align all startx chart to version 8.20.9                                                               |
+| 0.20.11  | 2021-11-12 | Move chart dependencies to version 8.20.5                                                              |
+| 0.20.33  | 2021-11-14 | publish stable update for the full repository                                                          |
+| 0.20.41  | 2021-11-14 | Aling all dependencies to version 0.20.34                                                              |
+| 8.20.46  | 2021-11-19 | Transitionnal chart                                                                                    |
 | 8.20.60  | 2021-11-19 | publish stable update for the full repository                                                          |
 | 8.20.66  | 2021-11-20 | Updating limits for context vars in values schema                                                      |
+| 8.20.67  | 2021-11-20 | Update metering operator to release 4.8.0-202111041632                                                 |
 | 8.20.70  | 2021-11-20 | publish stable update for the full repository                                                          |
 | 8.20.71  | 2021-11-20 | Align all charts to Openshift version 4.8.21                                                           |
 | 9.8.1    | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                                     |
-| 9.8.2    | 2021-11-20 | Upgrade 3scale operator to version 0.8.0-0.1634606167                                                  |
+| 9.8.2    | 2021-11-20 | Disable this chart for Openshift version 4.9.x release because of deprecation removal                  |
 | 9.8.4    | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                                    |
 | 9.8.7    | 2021-11-20 | Debug dependencies problem                                                                             |
 | 9.8.9    | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update                                    |
 | 9.8.15   | 2021-11-20 | Update startx chart dependencies version to 9.8.11                                                     |
-| 9.8.16   | 2021-11-20 | Upgrade context limits into the values schema                                                          |
 | 9.8.19   | 2021-11-20 | Update startx chart dependencies version to 9.8.15 and improve values schema                           |
-| 9.8.28   | 2021-11-20 | Update the startx chart dependencies to version 9.8.23                                                 |
 | 9.8.28   | 2021-11-20 | Update the startx chart dependencies to version 9.8.23                                                 |
 | 9.8.39   | 2021-11-21 | Debug version check with more permissive mode                                                          |
 | 9.8.43   | 2021-11-21 | Update the startx chart dependencies to version 9.8.39                                                 |
 | 9.8.45   | 2021-11-21 | Update the values schema limits for context properties                                                 |
 | 9.8.47   | 2021-11-21 | Improve version management for chart                                                                   |
 | 9.8.51   | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                     |
-| 9.8.52   | 2021-11-22 | Debug storage configuration issue due to update in APIManager resource. Comment errored properties     |
 | 9.8.67   | 2021-12-18 | Align all charts to release 9.8.67                                                                     |
 | 9.8.71   | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                       |
 | 9.8.75   | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                             |
@@ -159,10 +146,6 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 9.8.81   | 2021-12-20 | Update the storage context                                                                             |
 | 9.8.91   | 2022-03-06 | publish stable update for the full repository                                                          |
 | 9.8.93   | 2022-03-07 | Enable conditionnal loading of charts dependencies                                                     |
-| 9.8.94   | 2022-03-07 | Improve group management                                                                               |
-| 9.8.95   | 2022-03-07 | Upgrade 3scale operator to version 0.8.3-0.1645735250.p                                                |
-| 9.8.96   | 2022-04-21 | Upgrade 3scale operator to version 0.8.3-0.1649688682.p                                                |
-| 9.8.109  | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                    |
 | 9.8.109  | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                                    |
 | 9.8.110  | 2022-04-27 | Stable release for all charts                                                                          |
 | 9.8.111  | 2022-04-27 | publish stable update for the full repository                                                          |
@@ -178,9 +161,6 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 9.15.2   | 2022-06-01 | Align all charts to release 9.15.1                                                                     |
 | 9.15.3   | 2022-06-01 | Align all charts to release 9.15.3                                                                     |
 | 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                                    |
-| 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                                    |
-| 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                                    |
-| 10.12.3  | 2022-06-01 | Align all charts to release 10.12.3                                                                    |
 | 10.12.3  | 2022-06-01 | publish stable update for the full repository                                                          |
 | 10.12.4  | 2022-06-01 | Align all charts to release 10.12.4                                                                    |
 | 10.12.5  | 2022-06-01 | publish stable update for the full repository                                                          |
@@ -255,20 +235,16 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 11.40.0 | 2023-08-18 | Align all helm chart to release 11.40.0 stable for OCP 4.11.40
 | 11.47.0 | 2023-08-18 | Align all helm chart to release 11.47.0 stable for OCP 4.11.47
 | 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml
-| 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml
 | 12.0.0 | 2023-08-18 | Align all helm chart to release 12.0.0 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable)
 | 12.0.5 | 2023-08-18 | publish stable update for the full repository
 | 12.0.11 | 2023-08-18 | publish stable update for the full repository
-| 12.0.12 | 2023-09-28 | upgrade to version 0.10.5 of the 3scale operator
 | 12.30.1 | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30
 | 12.36.1 | 2023-09-29 | release 12.36.0 aligned with OCP 4.12.36 (unstable)
-| 12.36.2 | 2023-09-29 | Move 3Scale operator to openshift-startx-3scale namespace
 | 12.36.9 | 2023-10-01 | publish stable update for the full repository
 | 12.36.36 | 2023-10-11 | publish stable update for the full repository
 | 12.36.49 | 2023-11-13 | publish stable update for the full repository
 | 12.36.51 | 2023-11-13 | publish stable update for the full repository
-| 12.36.53 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.58 | 2023-11-13 | Align all startx dependencies packages to version 12.36.49 stable for OCP 4.12.36
 | 12.36.59 | 2023-11-13 | publish stable update for the full repository
 | 12.36.63 | 2023-11-13 | publish stable update for the full repository
@@ -319,7 +295,6 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 14.6.150 | 2024-02-03 | Stable 14.6.150 release
 | 14.6.161 | 2024-02-08 | publish stable update for the full repository
 | 14.6.171 | 2024-02-08 | publish stable update for the full repository
-| 14.6.181 | 2024-02-08 | publish stable update for the full repository
 | 14.6.189 | 2024-02-08 | publish stable update for the full repository
 | 14.6.195 | 2024-02-08 | publish stable update for the full repository
 | 14.6.197 | 2024-02-08 | publish stable update for the full repository
@@ -338,14 +313,9 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 14.6.325 | 2024-06-25 | publish stable update for the full repository
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository
-| 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository
 | 14.6.345 | 2024-06-26 | publish stable update for the full repository
 | 14.6.351 | 2024-06-26 | Update all dependencies
 | 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
 | 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
 | 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381
-| 15.27.3 | 2024-11-06 | create init release for version 15.x
-| 15.27.5 | 2024-11-06 | publish stable update for the full repository
-| 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
-| 15.27.9 | 2024-11-08 | Upgrade the 3Scale version to v0.11.12
