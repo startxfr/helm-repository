@@ -33,6 +33,20 @@ operator:
         #     cpu: 400m
         #   requests:
         #     cpu: 400m
+  consolePlugin:
+    enabled: true
+    name: "pipelines-console-plugin"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: pipelines-console-plugin
+          namespace: openshift-pipelines
+          port: 8443
+        type: Service
+      displayName: Pipelines Console Plugin
+      i18n:
+        loadType: Preload
   operatorGroup:
     enabled: false
     hooked: false
