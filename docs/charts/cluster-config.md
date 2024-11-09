@@ -366,3 +366,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 15.27.3 | 2024-11-06 | create init release for version 15.x
 | 15.27.5 | 2024-11-06 | publish stable update for the full repository
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
+| 15.27.9 | 2024-11-09 | Upgrade the ElasticSearch version to v5.8.14
