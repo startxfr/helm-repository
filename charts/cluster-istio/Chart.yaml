@@ -8,7 +8,7 @@ type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
 version: 15.27.7
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 2.4.5
+appVersion: 2.6.2
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-istio.svg
 # Kube minimum version
@@ -41,32 +41,32 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: project
     condition: project.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: operatorJaeger
     condition: operatorJaeger.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: operatorIstio
     condition: operatorIstio.enabled
 
@@ -95,6 +95,14 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all startx charts dependencies to release 15.27.3"
+      description: "Upgrade basic startx charts dependencies to release 15.27.8"
+    - kind: changed
+      description: "Upgrade the ElasticSearch version to v5.8.14"
+    - kind: changed
+      description: "Upgrade the Kiali version to v1.89.6"
+    - kind: changed
+      description: "Upgrade the Jaeger version to v1.57.0-10-0.1730817420.p"
+    - kind: changed
+      description: "Upgrade the Istio version to v2.6.2"
   # Is this release contain security updates
-  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/containsSecurityUpdates: "true"
