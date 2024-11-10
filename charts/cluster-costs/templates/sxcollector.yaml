@@ -1,0 +1,176 @@
+{{- if .Values.sxcollector.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "default-costs" -}}
+{{- $serviceAccount := .Values.sxcollector.serviceAccount | default "default" -}}
+{{- $namespace := .Values.sxcollector.namespace | default ($ns1) -}}
+
+{{- if .Values.sxcollector.config -}}{{- if .Values.sxcollector.config.enabled -}}
+---
+kind: Secret
+apiVersion: v1
+type: Opaque
+metadata:
+  name: {{ .Values.sxcollector.config.name | default "sxcollector-env" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-costs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.sxcollector.config.name | default "sxcollector-env" -}}-secret"
+  annotations:
+    {{- include "cluster-costs.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+stringData:
+  {{- .Values.sxcollector.config.spec | default "{}" | nindent 2 }}
+{{ end }}{{ end }}
+
+{{- if .Values.sxcollector.imageStream -}}{{- if .Values.sxcollector.imageStream.enabled -}}
+---
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: {{ .Values.sxcollector.imageStream.name | default "sxcollector" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-costs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "sxcollector-is"
+  annotations:
+    {{- include "cluster-costs.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: {{ .Values.sxcollector.version | default "latest" | quote }}
+      annotations:
+        openshift.io/generated-by: sxcollector
+        openshift.io/imported-from: docker.io/startx/sxcollector
+      from:
+        kind: DockerImage
+        name: docker.io/startx/sxcollector
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Local
+{{ end }}{{ end }}
+
+{{- if .Values.sxcollector.debug -}}{{- if .Values.sxcollector.debug.enabled -}}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.sxcollector.debug.name | default "sxcollector-debug" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-costs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ .Values.sxcollector.debug.name | default "sxcollector-debug" }}-deployment"
+  annotations:
+    {{- include "cluster-costs.annotations" . | nindent 4 }}
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"{{ .Values.sxcollector.imageStream.name | default "sxcollector" }}:{{ .Values.sxcollector.version | default "latest" }}","namespace":"{{- $namespace -}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"sxcollector\")].image","paused":"false"}]'
+    argocd.argoproj.io/sync-wave: "50"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sxcollector-debug
+  template:
+    metadata:
+      labels:
+        {{- include "cluster-costs.labels" . | nindent 8 }}
+        app: sxcollector-debug
+      annotations:
+        {{- include "cluster-costs.annotations" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Values.sxcollector.serviceAccount | default "sxcollector" | quote }}
+      serviceAccount: {{ .Values.sxcollector.serviceAccount | default "sxcollector" | quote }}
+      containers:
+        - name: sxcollector
+          image: 'image-registry.openshift-image-registry.svc:5000/{{- $namespace -}}/sxcollector:{{ .Values.sxcollector.version | default "latest" }}'
+          command:
+            - sleep
+            - infinity
+          envFrom:
+            - secretRef:
+                name: {{ .Values.sxcollector.config.name | default "sxcollector-env" | quote }}
+          resources:
+            limits:
+              cpu: 50m
+              memory: 48Mi
+            requests:
+              cpu: 20m
+              memory: 24Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 20
+{{ end }}{{ end }}
+
+{{- if .Values.sxcollector.enableCronjobs -}}
+{{- $root := . -}}
+{{ range .Values.sxcollector.cronjobs }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .name | default "sxcollector-default-jobs" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-costs.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "sxcollector-default-jobs" }}-deployment"
+    app: {{ .name | default "sxcollector-default-jobs" | quote }}
+  annotations:
+    {{- include "cluster-costs.annotations" $root | nindent 4 }}
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"{{ $root.Values.sxcollector.imageStream.name | default "sxcollector" }}:{{ $root.Values.sxcollector.version | default "latest" }}","namespace":"{{- $namespace -}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"sxcollector\")].image","paused":"false"}]'
+    argocd.argoproj.io/sync-wave: "45"
+spec:
+  schedule: {{ .schedule | default "@hourly" | quote }}
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "cluster-costs.labels" $root | nindent 8 }}
+        app.kubernetes.io/name: "{{ .name | default "sxcollector-default-jobs" }}-deployment"
+        app: {{ .name | default "sxcollector-default-jobs" | quote }}
+      annotations:
+        {{- include "cluster-costs.annotations" $root | nindent 8 }}
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "cluster-costs.labels" $root | nindent 12 }}
+            app.kubernetes.io/name: "{{ .name | default "sxcollector-default-jobs" }}-deployment"
+            app: {{ .name | default "sxcollector-default-jobs" | quote }}
+          annotations:
+            {{- include "cluster-costs.annotations" $root | nindent 12 }}
+        spec:
+          serviceAccountName: {{ $root.Values.sxcollector.serviceAccount | default "sxcollector" | quote }}
+          serviceAccount: {{ $root.Values.sxcollector.serviceAccount | default "sxcollector" | quote }}
+          containers:
+            - name: sxcollector
+              image: 'image-registry.openshift-image-registry.svc:5000/{{- $namespace -}}/sxcollector:{{ $root.Values.sxcollector.version | default "latest" }}'
+              command:
+                {{- .command | default "- sleep infinity" | nindent 16 }}
+              envFrom:
+                - secretRef:
+                    name: {{ $root.Values.sxcollector.config.name | default "sxcollector-env" | quote }}
+              resources:
+                limits:
+                  cpu: 40m
+                  memory: 48Mi
+                requests:
+                  cpu: 40m
+                  memory: 48Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              imagePullPolicy: Always
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 2
+{{- end -}}{{- end -}}
+{{- end -}}
