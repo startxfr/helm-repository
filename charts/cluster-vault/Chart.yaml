@@ -6,9 +6,9 @@ description: Helm chart used to configure vault at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 15.27.7
+version: 15.27.9
 # Version name of the vault service (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "1.12.1"
+appVersion: "1.18.1"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-vault.svg
 # Kube minimum version
@@ -39,12 +39,12 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.8"
     alias: project
     condition: project.enabled
   - name: vault
     repository: https://helm.releases.hashicorp.com
-    version: "0.23.0"
+    version: "0.29.0"
     alias: vault
     condition: vault.enabled
 
@@ -73,6 +73,8 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all startx charts dependencies to release 15.27.3"
+      description: "Upgrade basic startx charts dependencies to release 15.27.8"
+    - kind: changed
+      description: "Upgrade the Vault server version to v1.18.1" 
   # Is this release contain security updates
-  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/containsSecurityUpdates: "true"

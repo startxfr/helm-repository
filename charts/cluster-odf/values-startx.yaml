@@ -10,7 +10,7 @@ odf:
   enabled: false
   hooked: false
   name: startx-odf
-  version: "4.14.4"
+  version: "4.15.7"
   storage:
   - name: odf-deviceset
     replicas: 3
@@ -55,9 +55,9 @@ operator:
     hooked: false
     name: "odf-operator"
     namespace: "openshift-storage"
-    version: "v4.14.4-rhodf"
+    version: "v4.15.7-rhodf"
     operator: 
-      channel: stable-4.14
+      channel: stable-4.15
       name: odf-operator
       installPlanApproval: Automatic
       # csv: odf-operator
@@ -71,6 +71,29 @@ operator:
         #     cpu: 400m
         #   requests:
         #     cpu: 400m
+  consolePlugin:
+    enabled: true
+    name: "odf-console"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: odf-console-service
+          namespace: openshift-storage
+          port: 9001
+        type: Service
+      displayName: ODF Plugin
+      i18n:
+        loadType: ''
+      proxy:
+        - alias: provider-proxy
+          authorization: UserToken
+          endpoint:
+            service:
+              name: ux-backend-proxy
+              namespace: openshift-storage
+              port: 8888
+            type: Service
   operatorGroup:
     enabled: true
     hooked: false
