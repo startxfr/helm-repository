@@ -27,7 +27,7 @@ litmus:
     DBUSER: "admin"
     DBPASSWORD: "1234"
     JWTSecret: "litmus-portal@123"
-    VERSION: "2.9.0"
+    VERSION: "3.11.0"
     SKIP_SSL_VERIFY: "false"
     # -- leave empty if uses Mongo DB deployed by this chart
     DB_SERVER: ""
@@ -44,7 +44,7 @@ litmus:
     controlPlane:
       image:
         repository: upgrade-agent-cp
-        tag: "2.9.0"
+        tag: "3.11.0"
         pullPolicy: "Always"
       restartPolicy: OnFailure
     nodeSelector: {}
@@ -61,7 +61,7 @@ litmus:
         runAsNonRoot: true
       image:
         repository: litmusportal-frontend
-        tag: 2.9.0
+        tag: 3.11.0
         pullPolicy: "Always"
       containerPort: 8080
       customLabels: {}
@@ -105,7 +105,7 @@ litmus:
       waitForMongodb:
         image:
           repository: curl
-          tag: 2.9.0
+          tag: 3.11.0
           pullPolicy: "Always"
         resources:
           requests:
@@ -134,7 +134,7 @@ litmus:
           readOnlyRootFilesystem: true
         image:
           repository: litmusportal-server
-          tag: 2.9.0
+          tag: 3.11.0
           pullPolicy: "Always"
         ports:
           - name: gql-server
@@ -142,13 +142,13 @@ litmus:
           - name: gql-rpc-server
             containerPort: 8000
         imageEnv:
-          SUBSCRIBER_IMAGE: "litmusportal-subscriber:2.9.0"
-          EVENT_TRACKER_IMAGE: "litmusportal-event-tracker:2.9.0"
-          ARGO_WORKFLOW_CONTROLLER_IMAGE: "workflow-controller:v3.2.9"
-          ARGO_WORKFLOW_EXECUTOR_IMAGE: "argoexec:v3.2.9"
-          LITMUS_CHAOS_OPERATOR_IMAGE: "chaos-operator:2.8.0"
-          LITMUS_CHAOS_RUNNER_IMAGE: "chaos-runner:2.8.0"
-          LITMUS_CHAOS_EXPORTER_IMAGE: "chaos-exporter:2.8.0"
+          SUBSCRIBER_IMAGE: "litmusportal-subscriber:3.11.0"
+          EVENT_TRACKER_IMAGE: "litmusportal-event-tracker:3.11.0"
+          ARGO_WORKFLOW_CONTROLLER_IMAGE: "workflow-controller:v3.11.0"
+          ARGO_WORKFLOW_EXECUTOR_IMAGE: "argoexec:v3.11.0"
+          LITMUS_CHAOS_OPERATOR_IMAGE: "chaos-operator:3.11.0"
+          LITMUS_CHAOS_RUNNER_IMAGE: "chaos-runner:3.11.0"
+          LITMUS_CHAOS_EXPORTER_IMAGE: "chaos-exporter:3.11.0"
         genericEnv:
           TLS_SECRET_NAME: ""
           TLS_CERT_64: ""
@@ -189,7 +189,7 @@ litmus:
         automountServiceAccountToken: false
         image:
           repository: litmusportal-auth-server
-          tag: 2.9.0
+          tag: 3.11.0
           pullPolicy: "Always"
         ports:
           - name: auth-server
