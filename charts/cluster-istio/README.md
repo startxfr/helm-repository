@@ -351,3 +351,5 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 15.27.3 | 2024-11-06 | create init release for version 15.x
 | 15.27.5 | 2024-11-06 | publish stable update for the full repository
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
+| 15.27.9 | 2024-11-09 | Upgrade the Istio version to v2.6.2, Jaeger version to v1.57.0-10-0.1730817420, Kiali version to v1.89.6 and ElasticSearch version to v5.8.14
+| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27

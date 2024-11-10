@@ -1,0 +1,18 @@
+{{- if .Values.enabled }}{{- if .Values.consolePlugin }}{{- if .Values.consolePlugin.enabled }}
+{{- $name := .Values.consolePlugin.name -}}
+{{- $spec := .Values.consolePlugin.spec | default "{}" -}}
+{{- $version := .Values.consolePlugin.version | default (include "startx.appVersion" .) -}}
+---
+apiVersion: console.openshift.io/v1
+kind: ConsolePlugin
+metadata:
+  name: {{ $name | default "default" | quote }}
+  labels:
+    {{- include "operator.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-consolePlugin"
+  annotations:
+    {{- include "operator.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end }}{{- end }}{{- end }}

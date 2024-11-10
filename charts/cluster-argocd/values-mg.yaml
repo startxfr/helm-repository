@@ -212,9 +212,9 @@ operator:
     hooked: false
     name: "openshift-gitops-operator"
     namespace: "openshift-operators"
-    version: "v1.5.6"
+    version: "v1.14.1"
     operator: 
-      channel: "stable"
+      channel: "gitops-1.14"
       name: openshift-gitops-operator
       # csv: openshift-gitops-operator
       installPlanApproval: Automatic
@@ -228,10 +228,24 @@ operator:
         #     cpu: 400m
         #   requests:
         #     cpu: 400m
+  consolePlugin:
+    enabled: true
+    name: "gitops-plugin"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: gitops-plugin
+          namespace: openshift-gitops
+          port: 9001
+        type: Service
+      displayName: GitOps Plugin
+      i18n:
+        loadType: Preload
   operatorGroup:
     enabled: false
     hooked: false
-    name: "gitops"
+    name: "startx-gitops"
     target: "all-ns"
     namespace: "openshift-operators"
     providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,GitopsService.v1alpha1.pipelines.openshift.io"

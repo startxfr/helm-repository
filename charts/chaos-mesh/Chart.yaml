@@ -9,9 +9,9 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 15.27.7
+version: 15.27.17
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "2.6.1"
+appVersion: "2.7.0"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-mesh.svg
 # Kube minimum version
@@ -40,12 +40,12 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.3"
+    version: "15.27.17"
     alias: project
     condition: project.enabled
   - name: chaos-mesh
     repository: https://charts.chaos-mesh.org
-    version: "2.2.0"
+    version: "2.7.0"
     alias: mesh
     condition: mesh.enabled
 
@@ -72,6 +72,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all startx charts dependencies to release 15.27.3"
+      description: "Release aligned for OCP 4.15.27"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

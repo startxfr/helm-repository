@@ -17,7 +17,7 @@ operator:
     hooked: false
     name: "openshift-pipelines-operator-rh"
     namespace: "openshift-operators"
-    version: "v1.13.0"
+    version: "v1.16.1"
     operator: 
       channel: latest
       name: openshift-pipelines-operator-rh
@@ -33,6 +33,20 @@ operator:
         #     cpu: 400m
         #   requests:
         #     cpu: 400m
+  consolePlugin:
+    enabled: true
+    name: "pipelines-console-plugin"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: pipelines-console-plugin
+          namespace: openshift-pipelines
+          port: 8443
+        type: Service
+      displayName: Pipelines Console Plugin
+      i18n:
+        loadType: Preload
   operatorGroup:
     enabled: false
     hooked: false
