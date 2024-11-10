@@ -243,3 +243,4 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 15.27.9 | 2024-11-09 | Upgrade the Gitlab helm version to v17.5.1
 | 15.27.11 | 2024-11-09 | Debug dependencies
 | 15.27.12 | 2024-11-09 | Improve cluster-gitlab options
+| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
