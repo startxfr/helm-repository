@@ -304,3 +304,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
 | 16.19.4 | 2024-11-10 | stable chaos charts to prepare dependencies
 | 16.19.5 | 2024-11-10 | Improve chaos-kraken options
+| 16.19.7 | 2024-11-10 | Update all dependencies to version 16.19.4
