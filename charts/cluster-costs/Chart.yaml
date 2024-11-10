@@ -6,7 +6,7 @@ description: Helm chart used to configure CostManagement at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 15.27.17
+version: 15.27.19
 # Version name of the costs operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "3.3.1"
 # Icon of this helm-chart
@@ -43,6 +43,11 @@ dependencies:
     version: "15.27.8"
     alias: project
     condition: project.enabled
+  - name: project
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "15.27.8"
+    alias: projectOperator
+    condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
     version: "15.27.8"
@@ -74,6 +79,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: added
-      description: "Created the costs management chart based on release v3.3.1"
+      description: "Add the sxcollector support"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

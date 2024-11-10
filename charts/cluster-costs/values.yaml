@@ -15,6 +15,53 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   # version: "2.5.3"
 
+# Deploy an sxcollector cronjobs collection
+sxcollector:
+  # Enable the sxcollector
+  enabled: false
+  # Default namespace for all ressources (if not set, use project)
+  namespace: default-costs
+  # the sxcollector version (default is latest)
+  version: latest
+  # Default serviceAccount for sxcollector runntime (if not set, use default)
+  serviceAccount: sxcollector
+  # secret configuration for sxcollector
+  config: 
+    # enable the secret configuration for sxcollector
+    enabled: true
+    # Default configuration for sxcollector (if not set, use sxcollector-env)
+    name: sxcollector-env
+    # Spec configuration for sxcollector
+    spec: |
+      SXCOLLECTOR_INSECURE: "true"
+      SXCOLLECTOR_SEP: ","
+      SXCOLLECTOR_FORMAT: "csv"
+  # imageStream for sxcollector
+  imageStream: 
+    # enable the imageStream management
+    enabled: true
+    # Default imageStream for sxcollector (if not set, use sxcollector)
+    name: sxcollector
+  # debug pod for sxcollector
+  debug: 
+    # enable the debug pod
+    enabled: true
+    # Default debug pod for sxcollector (if not set, use sxcollector-debug)
+    name: sxcollector-debug
+  enableCronjobs: true
+  # list of the tasks to deploy
+  cronjobs:
+    # name of the console link
+  - name: sxcollector-ns-state-hourly
+    # the schedule rythm (default is @hourly)
+    schedule: '@hourly'
+    # spec of the console link
+    command: |
+      - sxcollector
+      - ns-state
+      - "--output-format"
+      - "tab"
+
 # Deploy an CostManagementMetricsConfig
 CostManagementMetricsConfig:
   # Enable the configuration of the CostManagementMetricsConfig
@@ -22,7 +69,7 @@ CostManagementMetricsConfig:
   # Activate the manager as a helm hook
   hooked: false
   # Default namespace for all ressources (if not set, use project)
-  namespace: rhcstm-operator
+  namespace: default-costs
   # Name of the deployed instance of KubeDescheduler
   name: startx-cost
   # The applyed CostManagementMetricsConfig specifications
@@ -61,9 +108,39 @@ project:
     enabled: false
     hooked: false
     type: namespace
+    name: "default-costs"
+    display_name: Startx Costs
+    description: Cost management configured by STARTX
+  rbac: 
+    enabled: true
+    groups:
+      - id: devops-view
+        name: devops
+        role: view
+      - id: ops-admin
+        name: ops
+        role: admin
+    sa:
+      - id: sxcollector-admin
+        name: sxcollector
+        role: cluster-admin
+  serviceAccounts: 
+    enabled: true
+    list: 
+      - name: sxcollector
+
+# Configuration of the project operator (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+projectOperator: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
     name: "rhcstm-operator"
     display_name: Operator costs
-    description: KubeDescheduler configured by STARTX
+    description: CostManagement Metrics operator configured by STARTX
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
@@ -89,6 +166,7 @@ operator:
   operatorGroup:
     enabled: true
     hooked: false
+    target: "default-costs"
     name: "costmanagement-metrics-operator"
     namespace: "rhcstm-operator"
     providedAPIs: "CostManagementMetricsConfig.v1beta1.costmanagement-metrics-cfg.openshift.io"
