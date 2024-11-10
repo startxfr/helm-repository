@@ -349,3 +349,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 15.27.5 | 2024-11-06 | publish stable update for the full repository
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
 | 15.27.9 | 2024-11-08 | Upgrade the 3Scale version to v0.11.12
+| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
