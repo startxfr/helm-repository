@@ -1,9 +1,31 @@
 # Release history
 
+## version 17.0.x (champagnole)
+
+_The objectif of this release is to stabilize the full repository content and offer a stable release of the helm charts for the Openshift Container platform version 4.17.x version._
+
 ## version 16.0.x (champignac)
 
-_The objectif of this release is to stabilize the full repository content and offer a stable release of the helm charts for the Openshift Container platform version 4.15.x version._
+This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.16 release](https://docs.openshift.com/container-platform/4.16)**.
 
+### Objectives of this release
+
+- Stable support for cluster service running under an Openshift 4.16.x cluster
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.16.x version, you can add the ([v16 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/16/index.yaml)) dedicated for v16.x releases.
+
+```bash
+helm repo add startx-16 https://helm-repository.readthedocs.io/en/latest/repos/16
+helm search repo startx
+```
+
+### History
+
+| Release                                                                     | Date       | Description          |
+| --------------------------------------------------------------------------- | ---------- | -------------------- |
+| [16.19.1](https://github.com/startxfr/helm-repository/releases/tag/16.19.1) | 2024-11-10 | Init the v16 release |
 
 ## version 15.0.x (champagnac)
 
@@ -24,10 +46,11 @@ helm search repo startx
 
 ### History
 
-| Release                                                                     | Date       | Description          |
-| --------------------------------------------------------------------------- | ---------- | -------------------- |
-| [15.27.1](https://github.com/startxfr/helm-repository/releases/tag/15.27.1) | 2024-11-06 | Init the v15 release |
-
+| Release                                                                       | Date       | Description                        |
+| ----------------------------------------------------------------------------- | ---------- | ---------------------------------- |
+| [15.27.17](https://github.com/startxfr/helm-repository/releases/tag/15.27.17) | 2024-11-10 | All charts stable for v4.15.x      |
+| [15.27.8](https://github.com/startxfr/helm-repository/releases/tag/15.27.8)   | 2024-11-08 | All basic chart stable for v4.15.x |
+| [15.27.1](https://github.com/startxfr/helm-repository/releases/tag/15.27.1)   | 2024-11-06 | Init the v15 release               |
 
 ## version 14.0.x (chamberet)
 

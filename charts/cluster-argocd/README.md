@@ -348,3 +348,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 15.27.11 | 2024-11-08 | Implement the consolePlugin for gitops
 | 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
 | 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
+| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
