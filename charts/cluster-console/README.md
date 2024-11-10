@@ -336,3 +336,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 15.27.9 | 2024-11-09 | Improve cluster-console options
 | 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
 | 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
+| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19

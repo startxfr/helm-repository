@@ -63,3 +63,4 @@ helm install cluster-costs startx/cluster-costs -f https://raw.githubusercontent
 | 15.27.17 | 2024-11-10 | Created the costs management chart based on release v3.3.1
 | 15.27.19 | 2024-11-10 | Add the sxcollector support
 | 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
+| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
