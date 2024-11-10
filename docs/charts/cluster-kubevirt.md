@@ -314,3 +314,4 @@ xxxx to do xxxxxxxx
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
 | 15.27.9 | 2024-11-09 | Upgrade the Kubevirt operator version to v4.15.6
 | 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
+| 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37

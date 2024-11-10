@@ -1,0 +1,172 @@
+# Default values for cluster-costs.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-costs
+  # Version name of this application (default use Chart appVersion)
+  # version: "2.5.3"
+
+# Deploy an sxcollector cronjobs collection
+sxcollector:
+  # Enable the sxcollector
+  enabled: false
+  # Default namespace for all ressources (if not set, use project)
+  namespace: default-costs
+  # the sxcollector version (default is latest)
+  version: latest
+  # Default serviceAccount for sxcollector runntime (if not set, use default)
+  serviceAccount: sxcollector
+  # secret configuration for sxcollector
+  config: 
+    # enable the secret configuration for sxcollector
+    enabled: true
+    # Default configuration for sxcollector (if not set, use sxcollector-env)
+    name: sxcollector-env
+    # Spec configuration for sxcollector
+    spec: |
+      SXCOLLECTOR_INSECURE: "true"
+      SXCOLLECTOR_SEP: ","
+      SXCOLLECTOR_FORMAT: "csv"
+  # imageStream for sxcollector
+  imageStream: 
+    # enable the imageStream management
+    enabled: true
+    # Default imageStream for sxcollector (if not set, use sxcollector)
+    name: sxcollector
+  # debug pod for sxcollector
+  debug: 
+    # enable the debug pod
+    enabled: true
+    # Default debug pod for sxcollector (if not set, use sxcollector-debug)
+    name: sxcollector-debug
+  enableCronjobs: true
+  # list of the tasks to deploy
+  cronjobs:
+    # name of the console link
+  - name: sxcollector-ns-state-hourly
+    # the schedule rythm (default is @hourly)
+    schedule: '@hourly'
+    # spec of the console link
+    command: |
+      - sxcollector
+      - ns-state
+      - "--output-format"
+      - "tab"
+
+# Deploy an CostManagementMetricsConfig
+CostManagementMetricsConfig:
+  # Enable the configuration of the CostManagementMetricsConfig
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # Default namespace for all ressources (if not set, use project)
+  namespace: default-costs
+  # Name of the deployed instance of KubeDescheduler
+  name: startx-cost
+  # The applyed CostManagementMetricsConfig specifications
+  spec: |
+    upload:
+      ingress_path: /api/ingress/v1/upload
+      upload_cycle: 360
+      upload_toggle: true
+      validate_cert: true
+    packaging:
+      max_reports_to_store: 30
+      max_size_MB: 100
+    api_url: 'https://console.redhat.com'
+    prometheus_config:
+      collect_previous_data: true
+      context_timeout: 120
+      disable_metrics_collection_cost_management: false
+      disable_metrics_collection_resource_optimization: false
+      service_address: 'https://thanos-querier.openshift-monitoring.svc:9091'
+      skip_tls_verification: false
+    authentication:
+      token_url: 'https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token'
+      type: token
+    source:
+      check_cycle: 1440
+      create_source: false
+      sources_path: /api/sources/v1.0/
+      name: ''
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "default-costs"
+    display_name: Startx Costs
+    description: Cost management configured by STARTX
+  rbac: 
+    enabled: true
+    groups:
+      - id: devops-view
+        name: devops
+        role: view
+      - id: ops-admin
+        name: ops
+        role: admin
+    sa:
+      - id: sxcollector-admin
+        name: sxcollector
+        role: cluster-admin
+  serviceAccounts: 
+    enabled: true
+    list: 
+      - name: sxcollector
+
+# Configuration of the project operator (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+projectOperator: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "rhcstm-operator"
+    display_name: Operator costs
+    description: CostManagement Metrics operator configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "costmanagement-metrics-operator"
+    namespace: "rhcstm-operator"
+    version: "3.3.1"
+    operator: 
+      channel: "stable"
+      name: costmanagement-metrics-operator
+      installPlanApproval: Automatic
+      csv: costmanagement-metrics-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "default-costs"
+    name: "costmanagement-metrics-operator"
+    namespace: "rhcstm-operator"
+    providedAPIs: "CostManagementMetricsConfig.v1beta1.costmanagement-metrics-cfg.openshift.io"
