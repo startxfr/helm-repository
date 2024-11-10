@@ -144,3 +144,4 @@ helm install cluster-storage-efs startx/cluster-storage-efs -f https://raw.githu
 | 15.27.9 | 2024-11-10 | Upgrade basic startx charts dependencies to release 15.27.8
 | 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
 | 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
+| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19

@@ -245,3 +245,4 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 15.27.12 | 2024-11-09 | Improve cluster-gitlab options
 | 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
 | 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
+| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
