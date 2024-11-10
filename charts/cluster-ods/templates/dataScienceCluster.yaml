@@ -1,17 +1,17 @@
-{{- if .Values.report -}}{{- if .Values.report.enabled -}}
+{{- if .Values.DataScienceCluster -}}{{- if .Values.DataScienceCluster.enabled -}}
 {{- $ns := .Values.project.project.name | default "default-ods" -}}
-{{- with .Values.report }}
+{{- with .Values.DataScienceCluster }}
 {{- $namespace := .namespace | default $ns -}}
-{{- $name := .name | default "default-report" -}}
+{{- $name := .name | default "default-dsc" -}}
 ---
-kind: OpenDataScience
-apiVersion: redhatcop.redhat.io/v1alpha1
+apiVersion: datasciencecluster.opendatahub.io/v1
+kind: DataScienceCluster
 metadata:
-  name: "{{ $name }}-{{ lower (randAlphaNum 5 | nospace) }}"
+  name: "{{ $name }}"
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-ods.labels" $ | nindent 4 }}
-    app.kubernetes.io/name: "{{ $name }}-report"
+    app.kubernetes.io/name: "{{ $name }}-dsc"
   annotations:
     {{- include "cluster-ods.annotations" $ | nindent 4 }}
 spec:
