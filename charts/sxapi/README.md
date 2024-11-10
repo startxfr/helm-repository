@@ -573,3 +573,5 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
 | 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
 | 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
+| 16.19.4 | 2024-11-10 | stable basic charts to prepare dependencies
+| 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
