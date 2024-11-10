@@ -306,3 +306,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 16.19.5 | 2024-11-10 | Improve chaos-kraken options
 | 16.19.7 | 2024-11-10 | Update all dependencies to version 16.19.4
 | 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
+| 16.19.15 | 2024-11-10 | publish stable update for the full repository
