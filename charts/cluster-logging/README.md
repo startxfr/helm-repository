@@ -334,3 +334,4 @@ xxxx to do xxxxxx
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
 | 15.27.9 | 2024-11-09 | Upgrade the Logging operator version to v6.0.1 and Elastic operator version to v5.8.14
 | 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
+| 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
