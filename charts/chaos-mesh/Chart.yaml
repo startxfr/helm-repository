@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.3
+version: 16.19.11
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "2.7.0"
 # Icon of this helm-chart
@@ -40,7 +40,7 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "15.27.21"
+    version: "16.19.4"
     alias: project
     condition: project.enabled
   - name: chaos-mesh
@@ -72,6 +72,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Init release 16.19.3 aligned for OCP 4.16.19"
+      description: "stable chaos charts to prepare dependencies"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
