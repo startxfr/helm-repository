@@ -271,4 +271,4 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 15.27.5 | 2024-11-06 | publish stable update for the full repository
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
 | 15.27.8 | 2024-11-10 | Upgrade the Litmus chart version to v3.11.0
-| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
+| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.37
