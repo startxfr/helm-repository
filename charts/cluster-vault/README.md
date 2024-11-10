@@ -406,3 +406,5 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 15.27.3 | 2024-11-06 | create init release for version 15.x
 | 15.27.5 | 2024-11-06 | publish stable update for the full repository
 | 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
+| 15.27.9 | 2024-11-10 | Upgrade the Vault server version to v1.18.1
+| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
