@@ -373,3 +373,5 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 16.19.7 | 2024-11-10 | Update all dependencies to version 16.19.4
 | 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
 | 16.19.15 | 2024-11-10 | publish stable update for the full repository
+| 16.19.17 | 2024-11-11 | Adding support for the loki operator
+| 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release

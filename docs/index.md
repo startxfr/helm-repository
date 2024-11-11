@@ -55,7 +55,8 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-mtr](charts/cluster-mtr.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtr)           | configure Migration toolkit for Runtimes                          |
 | **[cluster-devworkspaces](charts/cluster-devworkspaces.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-devworkspaces) | enable Dev workspace at the cluster level                         |
 | **[cluster-costs](charts/cluster-costs.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-costs)         | configure the costs management features                           |
-
+| **[cluster-maintenance](charts/cluster-maintenance.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-maintenance)   | configure the node maintenance feature                            |
+| **[cluster-mongo](charts/cluster-mongo.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mongo)         | configure MongoDB at the cluster level                            |
 
 #### Use Cluster charts
 
@@ -85,11 +86,13 @@ helm install startx/cluster-keycloak
 helm install startx/cluster-gitlab
 helm install startx/cluster-compliance
 helm install startx/cluster-machine
+helm install startx/cluster-maintenance
 helm install startx/cluster-certmanager
 helm install startx/cluster-oadp
 helm install startx/cluster-router
 helm install startx/cluster-couchbase
 helm install startx/cluster-mustgather
+helm install startx/cluster-mongo
 helm install startx/cluster-nfd
 helm install startx/cluster-gpu
 helm install startx/cluster-descheduler

@@ -1,0 +1,70 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- $scope := .Values.context.scope -}}
+{{- $defaultns := .Values.project.project.name | default .Chart.Name -}}
+{{/* Loop over the cluster list */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- $ns := .namespace | default $defaultns -}}
+{{- if .enabled -}}
+---
+kind: Secret
+apiVersion: v1
+immutable: false
+metadata:
+  name: "{{ $name }}-credentials"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-mongo.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-secret"
+    mongo_cluster: "{{- $name -}}"
+    mongo: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mongo.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+stringData:
+  publicKey: {{ .publicKey | default "setMyPublicKey" | quote }}
+  privateKey: {{ .privateKey | default "setMyPrivateKey" | quote }}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: "{{ $name }}-config"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-mongo.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-cm"
+    mongo_cluster: "{{- $name -}}"
+    mongo: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mongo.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+data:
+  projectName: {{ .projectName | default $name | quote }}
+  orgId: {{ .orgId | default "myorgid" | quote }}
+  baseUrl: {{ .baseUrl | default "https://ops.example.com:8443" | quote }}
+---
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: "{{ $name }}"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-mongo.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-mongodb"
+    mongo_cluster: "{{- $name -}}"
+    mongo: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mongo.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  opsManager:
+    configMapRef:
+      name: "{{ $name }}-config"
+  credentials: "{{ $name }}-credentials"
+  members: {{ .replicas | default 3 }}
+  persistent: {{ .isPersistent | default true }}
+  type: ReplicaSet
+  version: {{ .version | default "4.4.0-ent" | quote }}
+{{- end -}}{{- end -}}
+{{- end -}}{{- end }}
