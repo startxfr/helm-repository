@@ -10,39 +10,26 @@ context: &context
 loader:
   enabled: false
   list: 
-  - name: startx
+  - name: mongo
     namespace: startx-mongo
     command: | 
       #!/bin/bash
-      echo "write your workload generator script using psql ..." 
+      echo "write your workload generator script using mongo ..." 
       exit 0;
 
 cluster:
   enabled: false
   list: 
-  - name: startx-db
+  - name: mongodb
     enabled: true
     namespace: startx-mongo
-    postgresVersion: 14
-    storageClassName: gp3-csi
-    storageInstanceSize: "2Gi"
-    storageBackupSize: "2Gi"
-    username: startx-user
-    istioSidecarEnabled: false
-    initScript: |-
-      -- Create the "startx" database and "startx" user
-      CREATE DATABASE "startx";
-      CREATE USER "startx" WITH PASSWORD 'Default123$';
-      GRANT ALL PRIVILEGES ON DATABASE "startx" TO "startx";
-      -- Create the "startx" database and "startx" user
-      CREATE DATABASE "startx";
-      \c startx
-      CREATE TABLE startx_table (
-        field       TEXT COLLATE "C" NOT NULL,
-        CONSTRAINT field PRIMARY KEY (field)
-      );
-      CREATE INDEX field_idx ON field (field);
-      GRANT ALL PRIVILEGES ON DATABASE "startx" TO "startx";
+    publicKey: myPublicKey
+    privateKey: myPrivateKey
+    orgId: abcdef012345678901234567
+    baseUrl: https://ops.example.com:8443
+    replicas: 3
+    isPersistent: true
+    version: 4.4.0-ent
 
 project: 
   enabled: false
@@ -85,7 +72,7 @@ operator:
     hooked: false
     name: "mongo-postgres-operator"
     namespace: "startx-mongo"
-    version: "v5.7.0"
+    version: "v1.28.0"
     operator: 
       channel: v5
       name: mongo-postgres-operator
