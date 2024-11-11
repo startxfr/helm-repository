@@ -92,150 +92,181 @@
                 }
             }
         },
-        "alertmanager": {
-            "type": "object",
-            "properties": {
-                "api": {
-                    "type": "object",
-                    "properties": {
-                        "endpoint": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "pagerDutty": {
-                    "type": "object",
-                    "properties": {
-                        "key": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "receiverName": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "autoscaling": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "max": {
-                    "type": "object",
-                    "properties": {
-                        "cores": {
-                            "type": "integer"
-                        },
-                        "memory": {
-                            "type": "integer"
-                        },
-                        "nodes": {
-                            "type": "integer"
-                        }
-                    }
-                },
-                "min": {
-                    "type": "object",
-                    "properties": {
-                        "cores": {
-                            "type": "integer"
-                        },
-                        "memory": {
-                            "type": "integer"
-                        },
-                        "nodes": {
-                            "type": "integer"
-                        }
-                    }
-                },
-                "scaleDown": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "clusterversion": {
-            "type": "object",
-            "properties": {
-                "channel": {
-                    "type": "string"
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "version": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 30,
-                    "title": "Version name",
-                    "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
-                    "default": "0.0.1",
-                    "examples": [
-                        "0.0.1",
-                        "0.1",
-                        "0.0.1-snapshot",
-                        "0.0.1-202110300900"
-                    ]
-                }
-            }
-        },
-        "helm_reposistory": {
+        "cluster": {
             "type": "object",
             "properties": {
                 "enabled": {
                     "type": "boolean"
                 },
                 "list": {
-                    "type": "array"
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "initScript": {
+                                "type": "string"
+                            },
+                            "istioSidecarEnabled": {
+                                "type": "boolean"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "postgresVersion": {
+                                "type": "integer"
+                            },
+                            "storageBackupSize": {
+                                "type": "string"
+                            },
+                            "storageClassName": {
+                                "type": "string"
+                            },
+                            "storageInstanceSize": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },
-        "imageprunner": {
+        "loader": {
             "type": "object",
             "properties": {
                 "enabled": {
                     "type": "boolean"
                 },
-                "history": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "properties": {
+                "context": {
                     "type": "object",
                     "properties": {
-                        "failed": {
-                            "type": "integer"
+                        "app": {
+                            "type": "string"
                         },
-                        "successful": {
-                            "type": "integer"
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
                         }
                     }
                 },
-                "schedule": {
-                    "type": "string"
-                },
-                "suspend": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "monitoring": {
-            "type": "object",
-            "properties": {
                 "enabled": {
                     "type": "boolean"
                 },
-                "infra_enabled": {
-                    "type": "boolean"
+                "operatorGroup": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "providedAPIs": {
+                            "type": "string"
+                        }
+                    }
                 },
-                "storageClass": {
-                    "type": "string"
-                },
-                "storageSize": {
-                    "type": "string"
+                "subscription": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "properties": {
+                                "channel": {
+                                    "type": "string"
+                                },
+                                "csv": {
+                                    "type": "string"
+                                },
+                                "installPlanApproval": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "namespace": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "version": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 30,
+                            "title": "Version name",
+                            "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                            "default": "0.0.1",
+                            "examples": [
+                                "0.0.1",
+                                "0.1",
+                                "0.0.1-snapshot",
+                                "0.0.1-202110300900"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -283,67 +314,10 @@
                         "name": {
                             "type": "string"
                         },
-                        "requester": {
-                            "type": "string"
-                        },
                         "type": {
                             "type": "string"
                         }
                     }
-                }
-            }
-        },
-        "projecttemplate": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "networkpolicy": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "rbac": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        }
-                    }
-                }
-            }
-        },
-        "redhat": {
-            "type": "object",
-            "properties": {
-                "operators": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "tracing": {
-            "type": "object",
-            "properties": {
-                "operators": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "registryroute": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "namespace": {
-                    "type": "string"
                 }
             }
         }
