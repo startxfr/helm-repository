@@ -336,3 +336,4 @@ helm install cluster-odf startx/cluster-odf -f https://raw.githubusercontent.com
 | 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
 | 16.19.15 | 2024-11-10 | publish stable update for the full repository
 | 16.19.17 | 2024-11-11 | Upgrade the ODF operator version to v4.16.3
+| 16.19.19 | 2024-11-11 | Debug the subscription channel
