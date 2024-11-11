@@ -31,41 +31,36 @@ project:
 
 # Configuration of the elasticSearch operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorElastic:
+  enabled: false
+
+# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorLoki:
   enabled: true
   context: 
     <<: *context
   subscription:
     enabled: true
     hooked: false
-    name: "elasticsearch-operator"
+    name: "loki-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.8.14"
+    version: "6.0.1"
     operator: 
-      channel: "stable"
-      name: elasticsearch-operator
+      channel: "stable-6.0"
+      name: loki-operator
       installPlanApproval: Automatic
-      # csv: elasticsearch-operator
+      # csv: loki-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
       config: 
         infra: true
-        # resources: 
-        #   limits:
-        #     cpu: 400m
-        #   requests:
-        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "elasticsearch-operator"
+    name: "loki-operator"
     namespace: "openshift-operators-redhat"
-    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
-
-# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
-operatorLoki:
-  enabled: false
+    providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"
 
 # Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorGlobal:
