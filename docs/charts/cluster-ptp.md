@@ -315,3 +315,4 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
 | 16.19.15 | 2024-11-10 | publish stable update for the full repository
 | 16.19.17 | 2024-11-11 | Upgrade the PTP operator version to v4.16.0
+| 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
