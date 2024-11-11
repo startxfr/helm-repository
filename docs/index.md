@@ -55,6 +55,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-mtr](charts/cluster-mtr.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtr)           | configure Migration toolkit for Runtimes                          |
 | **[cluster-devworkspaces](charts/cluster-devworkspaces.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-devworkspaces) | enable Dev workspace at the cluster level                         |
 | **[cluster-costs](charts/cluster-costs.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-costs)         | configure the costs management features                           |
+| **[cluster-maintenance](charts/cluster-maintenance.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-maintenance)   | configure the node maintenance feature                            |
 
 
 #### Use Cluster charts
