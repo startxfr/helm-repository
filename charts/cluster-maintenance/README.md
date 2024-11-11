@@ -59,32 +59,4 @@ helm install cluster-maintenance startx/cluster-maintenance -f https://raw.githu
 
 | Release  | Date       | Description                                                       |
 | -------- | ---------- | ----------------------------------------------------------------- |
-| 14.6.283 | 2024-05-29 | Initialize the maintenance cluster-service chart                  |
-| 14.6.283 | 2024-05-29 | Creation of the cluster-maintenance chart                         |
-| 14.6.285 | 2024-05-29 | Move maintenance name to cluster by default                       |
-| 14.6.287 | 2024-05-29 | Move maintenance namespace to openshift-kube-maintenance-operator |
-| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
-| 14.6.301 | 2024-05-30 | Helm package are now signed
-| 14.6.321 | 2024-06-25 | publish stable update for the full repository
-| 14.6.323 | 2024-06-25 | Align all chart to latest release
-| 14.6.325 | 2024-06-25 | Adding chart logo in README header
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository
-| 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
-| 14.6.335 | 2024-06-26 | publish stable update for the full repository
-| 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339
-| 14.6.343 | 2024-06-26 | publish stable update for the full repository
-| 14.6.345 | 2024-06-26 | publish stable update for the full repository
-| 14.6.351 | 2024-06-26 | Update all dependencies
-| 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
-| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
-| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381
-| 15.27.3 | 2024-11-06 | create init release for version 15.x
-| 15.27.5 | 2024-11-06 | publish stable update for the full repository
-| 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
-| 15.27.9 | 2024-11-09 | Upgrade the Maintenance operator version to v5.0.1
-| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
-| 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
-| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
-| 16.19.7 | 2024-11-10 | Update all dependencies to version 16.19.4
-| 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
-| 16.19.15 | 2024-11-10 | publish stable update for the full repository
+| 16.19.15 | 2024-11-11 | Initialize the maintenance cluster-service chart                  |
