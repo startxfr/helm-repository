@@ -28,7 +28,7 @@ loader:
     # Command to execute for the loader
     command: | 
       #!/bin/bash
-      echo "write your workload generator script using psql ..." 
+      echo "write your workload generator script using mongo ..." 
       exit 0;
 
 # Configure the mongo envionment
@@ -42,34 +42,23 @@ cluster:
     # Enable the creation and deployment of this cluster
     enabled: true
     # namespace of this cluster
-    namespace: demo-mongo
-    # Version of the postgresql to deploy
-    postgresVersion: 14
-    # storageClass to use for storage provisionning
-    storageClassName: gp3-csi
-    # storage size to use for persistence
-    storageInstanceSize: "2Gi"
-    # storage size to use for backup persistence
-    storageBackupSize: "2Gi"
-    # default created username
-    username: default-user
-    # Enable the istio sidecar
-    istioSidecarEnabled: false
-    # Init scripts
-    initScript: |-
-      -- Create the "default" database and "default" user
-      CREATE DATABASE "default";
-      CREATE USER "default" WITH PASSWORD 'Default123$';
-      GRANT ALL PRIVILEGES ON DATABASE "default" TO "default";
-      -- Create the "default" database and "default" user
-      CREATE DATABASE "default";
-      \c default
-      CREATE TABLE default_table (
-        field       TEXT COLLATE "C" NOT NULL,
-        CONSTRAINT field PRIMARY KEY (field)
-      );
-      CREATE INDEX field_idx ON field (field);
-      GRANT ALL PRIVILEGES ON DATABASE "default" TO "default";
+    namespace: default-mongo
+    # the public key to OpsManager
+    publicKey: myPublicKey
+    # the private key to OpsManager
+    privateKey: myPrivateKey
+    # the project name (default is name of the cluster)
+    projectName: default-db
+    # the organisation ID (mandatory)
+    orgId: abcdef012345678901234567
+    # the url to the Ops Manager
+    baseUrl: https://ops.example.com:8443
+    # the number of replicas for this cluster (default is 3)
+    replicas: 3
+    # enable the persistence (default is true)
+    isPersistent: true
+    # the version of the cluster (default is 4.4.0-ent)
+    version: 4.4.0-ent
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -80,8 +69,8 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "demo-mongo"
-    display_name: "Demo MongoDB"
+    name: "default-mongo"
+    display_name: "Default MongoDB"
     description: Demo MongoDB configured by STARTX
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
@@ -92,14 +81,14 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "mongo-postgres-operator"
-    namespace: "demo-mongo"
-    version: "v5.7.0"
+    name: "mongodb-enterprise"
+    namespace: "openshift-operators"
+    version: "v1.28.0"
     operator: 
-      channel: v5
-      name: mongo-postgres-operator
+      channel: stable
+      name: mongodb-enterprise
       installPlanApproval: Automatic
-      csv: postgresoperator
+      # csv: mongodb-enterprise
       source: 
         name: certified-operators
         namespace: openshift-marketplace
@@ -109,6 +98,5 @@ operator:
     enabled: true
     hooked: false
     name: "mongo-operator"
-    namespace: "demo-mongo"
-    providedAPIs: "PostgresCluster.v1beta1.postgres-operator.mongodata.com"
-
+    namespace: "openshift-operators"
+    providedAPIs: "MongoDB.v1.mongodb.com,MongoDBMultiCluster.v1.mongodb.com,MongoDBOpsManager.v1.mongodb.com,MongoDBUser.v1.mongodb.com"
