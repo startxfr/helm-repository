@@ -61,3 +61,4 @@ helm install cluster-maintenance startx/cluster-maintenance -f https://raw.githu
 | -------- | ---------- | ----------------------------------------------------------------- |
 | 16.19.15 | 2024-11-11 | Initialize the maintenance cluster-service chart                  |
 | 16.19.17 | 2024-11-11 | Added support for the NodeMaintenance CRD
+| 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
