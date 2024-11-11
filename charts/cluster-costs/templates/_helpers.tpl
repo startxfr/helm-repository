@@ -15,7 +15,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 
 {{/* Common operator note */}}
 {{- define "cluster-costs.notes" -}}
--- KubeDescheduler ------------------
+-- CostManagementMetricsConfig ------
 {{- if .costs }}{{- if .costs.enabled }}
          costs : enabled
 {{- end }}{{- end }}

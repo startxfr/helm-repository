@@ -38,11 +38,11 @@ data:
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: "{{ $name }}-pgbouncer-config"
+  name: "{{ $name }}"
   namespace: {{ $ns | quote }}
   labels:
     {{- include "cluster-crunchy.labels" $ | nindent 4 }}
-    app.kubernetes.io/name: "{{ $name }}-pgbouncer-cm"
+    app.kubernetes.io/name: "{{ $name }}-pgcluster"
     postgresql_cluster: "{{- $name -}}"
     postgresql: "{{- $name -}}"
   annotations:

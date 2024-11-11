@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.15
+version: 16.19.29
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.6.2
 # Icon of this helm-chart
@@ -57,6 +57,11 @@ dependencies:
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
     version: "16.19.4"
+    alias: operatorLoki
+    condition: operatorLoki.enabled
+  - name: operator
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
@@ -95,6 +100,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Update all dependencies to version 16.19.4"
+      description: "Align all chart to the 16.19.29 release"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

@@ -374,3 +374,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
 | 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
 | 16.19.15 | 2024-11-10 | publish stable update for the full repository
+| 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
