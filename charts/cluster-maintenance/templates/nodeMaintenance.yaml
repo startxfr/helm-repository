@@ -1,0 +1,25 @@
+{{- if .Values.maintenance.enabled -}}
+{{- $root := . }}
+{{- range .Values.maintenance.list }}
+{{- $node := .node | default "mynodename" -}}
+{{- $defName := print $node "-maintenance" -}}
+{{- $nameRaw := .name | default $defName -}}
+{{- $name := $nameRaw | replace "." "-" | replace " " "-" -}}
+{{- $defReason := print "maintenance of node " $node -}}
+{{- $reason := .reason | default $defReason }}
+---
+apiVersion: nodemaintenance.medik8s.io/v1beta1
+kind: NodeMaintenance
+metadata:
+  name: "{{- $name -}}"
+  labels:
+    {{- include "cluster-maintenance.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-maintenance"
+  annotations:
+    {{- include "cluster-maintenance.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  nodeName: "{{- $node -}}"
+  reason: "{{ $reason }}"
+{{- end }}
+{{- end }}
