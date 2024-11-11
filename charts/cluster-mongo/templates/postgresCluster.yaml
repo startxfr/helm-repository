@@ -1,0 +1,189 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- $scope := .Values.context.scope -}}
+{{- $defaultns := .Values.project.project.name | default .Chart.Name -}}
+
+
+{{/* Loop over the cluster list */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- $ns := .namespace | default $defaultns -}}
+{{- if .enabled -}}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: "{{ $name }}-pgbouncer-config"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-mongo.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-pgbouncer-cm"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mongo.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "5"
+data:
+  ada_hba.conf: |-
+    host all all 0.0.0.0/0 trust
+    host all all 127.0.0.1/32 trust
+    host all all  ::1/128  md5
+  pgbouncer.ini: |-
+    [pgbouncer]
+    auth_type = hba
+    auth_hba_file = /etc/pgbouncer/ada_hba.conf
+    client_tls_sslmode = disable
+    server_tls_sslmode = disable
+---
+apiVersion: postgres-operator.mongodata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: "{{ $name }}-pgbouncer-config"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-mongo.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-pgbouncer-cm"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mongo.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- if .istioSidecarEnabled }}
+  metadata:
+    annotations:
+      sidecar.istio.io/inject: "true"
+  {{- end }}
+  {{- if .initScript }}
+  databaseInitSQL:
+    key: init.sql
+    name: '{{ $name }}-initdb'
+  {{- end }}
+  users:
+    - name: {{ .username | default $name | quote }}
+      databases:
+        - {{ $name | quote }}
+      password:
+        type: ASCII
+  backups:
+    pgbackrest:
+      {{- if .istioSidecarEnabled }}
+      metadata:
+        annotations:
+          sidecar.istio.io/inject: "true"
+      {{- end }}
+      image: >-
+        registry.developers.mongodata.com/mongodata/mongo-pgbackrest:ubi8-2.41-0
+      # This section is usefull if you wan't to execute a manual backup using the 
+      # postgres-operator.mongodata.com/pgbackrest-backup annotation
+      manual:
+        repoName: repo1
+        options:
+         - --type=full
+      global:
+        repo1-retention-full: "14"
+        repo1-retention-full-type: time
+      repos:
+        - name: repo1
+          schedules:
+            full: "0 1 * * 0"
+            differential: "0 1 * * 1-6"
+          volume:
+            volumeClaimSpec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: {{ .storageBackupSize | default "1Gi" | quote }}
+              storageClassName: {{ .storageClassName | default "gp3-csi" | quote }}
+  image: 'registry.developers.mongodata.com/mongodata/mongo-postgres:ubi8-14.6-0'
+  imagePullPolicy: IfNotPresent
+  patroni:
+    dynamicConfiguration:
+      bootstrap:
+        pg_hba:
+          - host all all 0.0.0.0/0 trust
+          - host all postgres 127.0.0.1/32 trust
+          - host all all  ::1/128  md5
+      postgresql:
+        pg_hba:
+          - "host all all 0.0.0.0/0 trust" # this line enabled logical replication with programmatic access
+          - host all postgres 127.0.0.1/32 trust
+          - host all all  ::1/128  md5
+    leaderLeaseDurationSeconds: 30
+    port: 8008
+    syncPeriodSeconds: 10
+  instances:
+    - name: instance1
+      replicas: 1
+      {{- if .istioSidecarEnabled }}
+      metadata:
+        annotations:
+          sidecar.istio.io/inject: "true"
+      {{- end }}
+      dataVolumeClaimSpec:
+        storageClassName: {{ .storageClassName | default "gp3-csi" | quote }}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .storageInstanceSize | default "1Gi" | quote }}
+  openshift: true
+  proxy:
+    pgBouncer:
+      config:
+        files:
+          - configMap:
+              name: "{{ $name }}-pgbouncer-config"
+        global:
+          auth_hba_file: /etc/pgbouncer/ada_hba.conf
+          auth_query: ''
+          auth_type: hba
+          auth_user: ''
+          client_tls_sslmode: disable
+          server_tls_sslmode: disable
+      port: 5432
+      replicas: 1
+      service:
+        type: ClusterIP
+  paused: false
+  port: 5432
+  postgresVersion: {{ .postgresVersion | default 14 }}
+  service:
+    type: ClusterIP
+  shutdown: false
+  standby:
+    enabled: false
+  userInterface:
+    pgAdmin:
+      # https://access.mongodata.com/documentation/postgres-operator/5.7.0/references/crd/#postgresclusterspecuserinterfacepgadminconfig
+      dataVolumeClaimSpec:
+        storageClassName: {{ .storageClassName | default "gp3-csi" | quote }}
+        resources:
+          requests:
+            storage: 1Gi
+      replicas: 1
+      service:
+        type: ClusterIP
+{{- if .initScript }}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: "{{ $name }}-initdb"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-mongo.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-initdb-cm"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mongo.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "5"
+data:
+  init.sql: |-
+    {{- .initScript | nindent 4 }}
+{{- end }}
+{{- end -}}{{- end -}}
+{{- end -}}{{- end }}
