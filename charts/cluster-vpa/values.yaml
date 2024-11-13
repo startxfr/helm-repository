@@ -33,12 +33,39 @@ vpaController:
       updater:
         container:
           resources: {}
-    minReplicas: 2
+    minReplicas: 1
     podMinCPUMillicores: 25
     podMinMemoryMb: 250
     recommendationOnly: false
     safetyMarginFraction: 0.15
 
+vpa:
+  # Enable the configuration of VerticalPodAutoscaler
+  enabled: false
+  # list of various VerticalPodAutoscaler
+  list: 
+    # The VerticalPodAutoscaler name
+  - name: demo
+    # The namespace for this VPA (default is project.name)
+    namespace: demo-vpa
+    # The spec of this VPA (default is empty)
+    spec: |
+      targetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: manpage
+      resourcePolicy:
+        containerPolicies:
+          - containerName: '*'
+            controlledResources:
+              - cpu
+              - memory
+            maxAllowed:
+              cpu: 1
+              memory: 500Mi
+            minAllowed:
+              cpu: 10m
+              memory: 50Mi
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
