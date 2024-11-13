@@ -16,17 +16,28 @@ context:  &context
   # version: "0.0.3"
 
 # Deploy an API manager
-vpa:
+vpaController:
   # Enable the configuration of the API manager
-  enabled: true
-  # Activate the manager as a helm hook
-  hooked: true
+  enabled: false
   # Name of the deployed instance of VerticalPodAutoscalerConfig
   name: default
   # The applyed VerticalPodAutoscaler config specifications
   spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
+    deploymentOverrides:
+      admission:
+        container:
+          resources: {}
+      recommender:
+        container:
+          resources: {}
+      updater:
+        container:
+          resources: {}
+    minReplicas: 2
+    podMinCPUMillicores: 25
+    podMinMemoryMb: 250
+    recommendationOnly: false
+    safetyMarginFraction: 0.15
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
