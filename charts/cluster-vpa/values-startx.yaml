@@ -6,23 +6,43 @@ context: &context
   environment: infra
   component: vpa
   app: startx-vpa
-vpa:
+vpaController:
   enabled: false
-  hooked: false
   name: default
   spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
-    # profile:
-    # - name: "profile1"
-    #   interface: "enp134s0f0"
-    #   vpa4lOpts: "-s -2"
-    #   phc2sysOpts: "-a -r"
-    # recommend:
-    # - profile: "profile1"
-    #   priority: 4
-    #   match:
-    #   - nodeLabel: "node-role.kubernetes.io/worker"
+    deploymentOverrides:
+      admission:
+        container:
+          resources: {}
+        nodeSelector:
+          node-role.kubernetes.io/infra: ''
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/infra
+            operator: Exists
+      recommender:
+        container:
+          resources: {}
+        nodeSelector:
+          node-role.kubernetes.io/infra: ''
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/infra
+            operator: Exists
+      updater:
+        container:
+          resources: {}
+        nodeSelector:
+          node-role.kubernetes.io/infra: ''
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/infra
+            operator: Exists
+    minReplicas: 2
+    podMinCPUMillicores: 25
+    podMinMemoryMb: 250
+    recommendationOnly: false
+    safetyMarginFraction: 0.15
 project: 
   enabled: false
   context: 
