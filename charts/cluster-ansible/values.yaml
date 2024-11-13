@@ -20,8 +20,78 @@ ansibleHub:
   # Enable the configuration of the AutomationHub manager
   enabled: true
   # Activate the hub as a helm hook
-  hooked: true
+  hooked: false
+  # Name of the AutomationHub instance (default is app name)
+  name: ansible-hub
+  # Namespace of the AutomationHub instance (default is project name)
+  namespace: default-ansible
+  # the persistant storage size (default is 20Gi)
+  storageSize: "20Gi"
+  # the persistant storage class (default is efs-sc)
+  storageClass: "efs-sc"
+  # the persistant storage access mode (default is ReadWriteMany)
+  storageAccessMode: "ReadWriteMany"
+  # the number of replicas for default components (default is 1)
+  replicas: 1
+  # the number of replicas for HA components (default is 2)
+  replicasHA: 2
 
+# Deploy an AutomationController manager
+ansibleController:
+  # Enable the configuration of the AutomationController manager
+  enabled: true
+  # Activate the hub as a helm hook
+  hooked: false
+  # Name of the AutomationController instance (default is app name)
+  name: ansible-controller
+  # Namespace of the AutomationController instance (default is project name)
+  namespace: default-ansible
+  # The applyed AutomationController specifications
+  spec: |
+    admin_user: admin
+    replicas: 1
+    projects_storage_size: 8Gi
+    projects_storage_access_mode: ReadWriteMany
+    projects_persistence: true
+    postgres_keepalives: true
+    postgres_keepalives_count: 5
+    postgres_keepalives_idle: 5
+    postgres_keepalives_interval: 5
+    metrics_utility_console_enabled: false
+    metrics_utility_enabled: false
+    metrics_utility_pvc_claim_size: 5Gi
+    metrics_utility_cronjob_report_schedule: '@monthly'
+    metrics_utility_cronjob_gather_schedule: '@hourly'
+    web_manage_replicas: true
+    web_liveness_failure_threshold: 3
+    web_liveness_period: 0
+    web_liveness_timeout: 1
+    web_liveness_initial_delay: 5
+    web_readiness_timeout: 1
+    web_readiness_initial_delay: 20
+    web_readiness_period: 0
+    web_readiness_failure_threshold: 3
+    task_liveness_failure_threshold: 3
+    task_liveness_period: 0
+    task_liveness_initial_delay: 5
+    task_liveness_timeout: 3
+    task_readiness_initial_delay: 20
+    task_readiness_period: 0
+    task_readiness_timeout: 1
+    task_readiness_failure_threshold: 3
+    task_privileged: false
+    task_manage_replicas: true
+    ingress_type: Route
+    route_tls_termination_mechanism: Edge
+    loadbalancer_port: 80
+    loadbalancer_protocol: http
+    ipv6_disabled: false
+    create_preload_data: true
+    no_log: true
+    auto_upgrade: true
+    set_self_labels: true
+    garbage_collect_secrets: false
+    image_pull_policy: IfNotPresent
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -32,9 +102,22 @@ project:
     enabled: false
     hooked: false
     type: project
+    name: "default-ansible"
+    display_name: Instance ANSIBLE
+    description: Ansible automation configured by STARTX
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+projectOperator: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: project
     name: "rhaap-operator"
     display_name: Operator ANSIBLE
-    description: Ansible automation configured by STARTX
+    description: Ansible automation operator configured by STARTX
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
