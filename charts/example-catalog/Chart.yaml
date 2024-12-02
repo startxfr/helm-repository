@@ -35,6 +35,23 @@ maintainers:
     email: "dev@startx.fr"
     url: "https://www.startx.fr"
 
+dependencies:
+  - name: cluster-ansible
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.29"
+    alias: demoAnsibleProject
+    condition: demoAnsibleProject.enabled
+  - name: cluster-ansible
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.29"
+    alias: demoAnsibleController
+    condition: demoAnsibleController.enabled
+  - name: cluster-ansible
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.29"
+    alias: demoAnsibleHub
+    condition: demoAnsibleHub.enabled
+
 annotations:
   # category associated to this package
   category: example

@@ -11,11 +11,154 @@ context: &context
   app: example-catalog-automation
   version: "0.0.2"
 
-demo:
-  automation: 
+demoAnsibleProject:
+  enabled: false
+  context: 
     <<: *context
-    enabled: true 
-    enabledOperator: false 
-    enabledController: false 
-    enabledBackup: false 
-    namespace: demo-automation
+  ansibleHub:
+    enabled: false
+  ansibleController:
+    enabled: false
+  project: 
+    enabled: true
+    context: 
+      <<: *context
+    project: 
+      enabled: true
+      hooked: false
+      type: project
+      name: "demo-aap"
+      display_name: Instance ANSIBLE
+      description: Ansible automation configured by STARTX
+  projectOperator: 
+    enabled: false
+    context: 
+      <<: *context
+    project: 
+      enabled: false
+      name: "rhaap-operator"
+  operator:
+    enabled: false
+    context: 
+      <<: *context
+    subscription:
+      enabled: false
+    operatorGroup:
+      enabled: false
+demoAnsibleController:
+  enabled: false
+  context: 
+    <<: *context
+  ansibleHub:
+    enabled: false
+  ansibleController:
+    enabled: false
+    hooked: false
+    name: ansible-controller
+    namespace: demo-aap
+    spec: |
+      admin_user: admin
+      replicas: 1
+      projects_storage_size: 8Gi
+      projects_storage_access_mode: ReadWriteMany
+      projects_persistence: true
+      postgres_keepalives: true
+      postgres_keepalives_count: 5
+      postgres_keepalives_idle: 5
+      postgres_keepalives_interval: 5
+      metrics_utility_console_enabled: false
+      metrics_utility_enabled: false
+      metrics_utility_pvc_claim_size: 5Gi
+      metrics_utility_cronjob_report_schedule: '@monthly'
+      metrics_utility_cronjob_gather_schedule: '@hourly'
+      web_manage_replicas: true
+      web_liveness_failure_threshold: 3
+      web_liveness_period: 0
+      web_liveness_timeout: 1
+      web_liveness_initial_delay: 5
+      web_readiness_timeout: 1
+      web_readiness_initial_delay: 20
+      web_readiness_period: 0
+      web_readiness_failure_threshold: 3
+      task_liveness_failure_threshold: 3
+      task_liveness_period: 0
+      task_liveness_initial_delay: 5
+      task_liveness_timeout: 3
+      task_readiness_initial_delay: 20
+      task_readiness_period: 0
+      task_readiness_timeout: 1
+      task_readiness_failure_threshold: 3
+      task_privileged: false
+      task_manage_replicas: true
+      ingress_type: Route
+      api_urlpattern_prefix: startx
+      route_tls_termination_mechanism: Edge
+      loadbalancer_port: 80
+      loadbalancer_protocol: http
+      ipv6_disabled: false
+      create_preload_data: true
+      no_log: true
+      auto_upgrade: true
+      set_self_labels: true
+      garbage_collect_secrets: false
+      image_pull_policy: IfNotPresent
+  project: 
+    enabled: false
+    context: 
+      <<: *context
+    project: 
+      enabled: false
+      name: "demo-aap"
+  projectOperator: 
+    enabled: false
+    context: 
+      <<: *context
+    project: 
+      enabled: false
+      name: "rhaap-operator"
+  operator:
+    enabled: false
+    context: 
+      <<: *context
+    subscription:
+      enabled: false
+    operatorGroup:
+      enabled: false
+demoAnsibleHub:
+  enabled: false
+  context: 
+    <<: *context
+  ansibleHub:
+    enabled: true
+    hooked: false
+    name: startx-hub
+    namespace: demo-aap
+    storageSize: "20Gi"
+    storageClass: "startx-aws-efs"
+    storageAccessMode: "ReadWriteMany"
+    replicas: 1
+    replicasHA: 2
+  ansibleController:
+    enabled: false
+  project: 
+    enabled: false
+    context: 
+      <<: *context
+    project: 
+      enabled: false
+      name: "demo-aap"
+  projectOperator: 
+    enabled: false
+    context: 
+      <<: *context
+    project: 
+      enabled: false
+      name: "rhaap-operator"
+  operator:
+    enabled: false
+    context: 
+      <<: *context
+    subscription:
+      enabled: false
+    operatorGroup:
+      enabled: false
