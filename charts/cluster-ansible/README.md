@@ -274,3 +274,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 16.19.31 | 2024-11-11 | Adding support for ansible controller creation
 | 16.19.33 | 2024-12-02 | Enable projects creation if global is enabled
 | 16.19.35 | 2024-12-02 | Enable projects creation if global is enabled
+| 16.19.36 | 2024-12-02 | Improve cluster-ansible options
