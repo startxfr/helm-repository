@@ -277,3 +277,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 16.19.36 | 2024-12-02 | Improve cluster-ansible options
 | 16.19.37 | 2024-12-02 | Improve cluster-ansible options
 | 16.19.38 | 2024-12-02 | Upgrade to version 2.5.0-0.1731456854
+| 16.19.38 | 2024-12-02 | Upgrade to version 2.5.0-0.1731456854 v2
