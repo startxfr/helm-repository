@@ -279,3 +279,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 16.19.38 | 2024-12-02 | Upgrade to version 2.5.0-0.1731456854
 | 16.19.38 | 2024-12-02 | Upgrade to version 2.5.0-0.1731456854 v2
 | 16.19.39 | 2024-12-02 | Update all CRD generation
+| 16.19.41 | 2024-12-02 | Default values disbale controller and hub
