@@ -281,3 +281,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 16.19.39 | 2024-12-02 | Update all CRD generation
 | 16.19.41 | 2024-12-02 | Default values disbale controller and hub
 | 16.19.42 | 2024-12-02 | Improve cluster-ansible options
+| 16.19.43 | 2024-12-04 | Adding AAP CRD support
