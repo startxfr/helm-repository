@@ -1,0 +1,25 @@
+{{- if .Values.ansibleAAP.enabled -}}
+{{- $namespace := .Values.project.project.name | default "ansible-automation-platform" }}
+{{- $spec := .Values.ansibleAAP.spec | default "{}" -}}
+---
+apiVersion: aap.ansible.com/v1alpha1
+kind: AnsibleAutomationPlatform
+metadata:
+  name: "{{- .Values.ansibleAAP.name | default (include "startx.appName" .) -}}"
+  namespace: "{{- .Values.ansibleAAP.namespace | default $namespace -}}"
+  labels:
+    {{- include "cluster-ansible.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.ansibleAAP.name | default (include "startx.appName" .) -}}-automationhub"
+  annotations:
+    {{- include "cluster-ansible.annotations" . | nindent 4 }}
+    {{- if .Values.ansibleAAP.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}
