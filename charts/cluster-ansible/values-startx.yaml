@@ -7,6 +7,28 @@ context: &context
   component: ansible
   app: startx-ansible
   version: "2.5.0"
+ansibleAAP:
+  enabled: false
+  hooked: false
+  name: demo
+  namespace: startx-ansible
+  spec: |
+    eda:
+      disabled: false
+    no_log: false
+    redis_mode: standalone
+    image_pull_policy: Always
+    lightspeed:
+      disabled: false
+    hub:
+      disabled: false
+      object_storage_s3_secret: automationhub-s3
+      storage_type: S3
+    api:
+      log_level: INFO
+      replicas: 1
+    controller:
+      disabled: false
 ansibleHub:
   enabled: false
   hooked: false

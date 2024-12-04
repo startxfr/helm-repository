@@ -15,6 +15,33 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   version: "2.5.0"
 
+# Deploy an AAP manager
+ansibleAAP:
+  # Enable the configuration of the AAP manager
+  enabled: false
+  # Activate the hub as a helm hook
+  hooked: false
+  # Name of the AAP instance (default is app name)
+  name: demo
+  # Namespace of the AAP instance (default is project name)
+  namespace: default-ansible
+  # The applyed AAP specifications
+  spec: |
+    eda:
+      disabled: false
+    no_log: false
+    redis_mode: standalone
+    image_pull_policy: Always
+    lightspeed:
+      disabled: false
+    hub:
+      disabled: false
+    api:
+      log_level: INFO
+      replicas: 1
+    controller:
+      disabled: false
+
 # Deploy an AutomationHub manager
 ansibleHub:
   # Enable the configuration of the AutomationHub manager
