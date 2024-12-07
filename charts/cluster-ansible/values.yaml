@@ -177,27 +177,48 @@ aapConfigs:
           description: Default SSH example
           #The organization for the credential
           organization: Default
-          #A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
-          connection_secret: default-aap-token
-          #The credential type for the credential
-          type: Machine
-          # #The k8s api for the Bearer credential
-          # kubernetes_api: 
-          #The username for the SSH credential
-          ssh_username: username
-          #The k8s secret for the SSH credential
-          ssh_secret: my-sshkey
-          # #The k8s secret for the Bearer credential
-          # kubernetes_bearer_token_secret: 
-          # #The credential inputs for the credential
-          # inputs:
-          # #Runner image version used when running jobs
-          # runner_version: 
-          # #Runner image used when running jobs
-          # runner_image: 
-          # #Runner image pull policy used when running jobs
-          # runner_pull_policy: Always
-
+          # #Example for a machine (SSH) credential
+          # type: "Machine"
+          # ssh_username: myuser
+          # ssh_secret: dev-admin-sshkey
+          # #Example for a Kubernetes bearer credential
+          # type: "OpenShift or Kubernetes API Bearer Token"
+          # kubernetes_api: https://api-miniocp-startx-fr:6443
+          # kubernetes_bearer_token_secret: dev-admin-bearer
+          # #Example for a SCM Personal Access Token
+          # type: "GitHub Personal Access Token"
+          # token_secret: dev-admin-git-token
+          # #Example for a SCM User access
+          # type: "Source Control"
+          # username_secret: dev-admin-git-user
+          # password_secret: dev-admin-git-user
+  # Configure Inventories into the AAP backend in a declarative way
+  inventories:
+    enabled: false
+    list:
+        # Name of the inventory to create (mandatory)
+      - name: dev
+        # Namespace for the credentials (default is project name)
+        namespace: startx-ansible
+        # Spec of the inventory (example for a static)
+        spec: |-
+          name: dev
+          description: my dev inventory
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          state: present
+          instance_groups:
+            - default
+          variables:
+            string: "string_value"
+            bool: true
+            number: 1
+            list:
+              - item1: true
+              - item2: "1"
+            object:
+              string: "string_value"
+              number: 2
 
 
 
