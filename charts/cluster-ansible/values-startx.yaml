@@ -166,6 +166,30 @@ aapConfigs:
           type: "Source Control"
           username_secret: dev-admin-git-user
           password_secret: dev-admin-git-user
+  inventories:
+    enabled: false
+    list:
+      - name: newinventory
+        namespace: startx-ansible
+        spec: |-
+          name: newinventory
+          description: my new inventory
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          state: present
+          instance_groups:
+            - default
+          variables:
+            string: "string_value"
+            bool: true
+            number: 1
+            list:
+              - item1: true
+              - item2: "1"
+            object:
+              string: "string_value"
+              number: 2
+
 project: 
   enabled: false
   context: 
