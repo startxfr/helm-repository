@@ -22,8 +22,6 @@ ansibleAAP:
       disabled: false
     hub:
       disabled: false
-      object_storage_s3_secret: automationhub-s3
-      storage_type: S3
     api:
       log_level: INFO
       replicas: 1
@@ -90,6 +88,51 @@ ansibleController:
     set_self_labels: true
     garbage_collect_secrets: false
     image_pull_policy: IfNotPresent
+ansibleSecrets:
+  enabled: false
+  list:
+    - name: dev-admin-aap-token
+      namespace: startx-ansible
+      type: aaptoken
+      token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
+      host: "http://dev.startx-ansible.svc.cluster.local:80"
+    - name: prod-admin-aap-token
+      namespace: startx-ansible
+      type: aaptoken
+      token: "MYTOKENPRODXXXXXXXXXXXXXXX"
+      host: "http://prod.startx-ansible.svc.cluster.local:80"
+    - name: my-sshkey
+      namespace: startx-ansible
+      type: sshkey
+      id_rsa: |-
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        PLACE YOUR PRIVATE KEY HERE
+        -----END OPENSSH PRIVATE KEY-----
+aapConfigs:
+  credentials:
+    enabled: false
+    list:
+      - name: default-ssh
+        namespace: startx-ansible
+        spec: |-
+          name: default-ssh 
+          description: Default SSH example
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          type: Machine
+          ssh_username: username
+          ssh_secret: my-sshkey
+      - name: alcor-ssh
+        namespace: startx-ansible
+        spec: |-
+          name: alcor-ssh
+          description: MyCred demo via CRD
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          type: Machine
+          ssh_username: cl
+          ssh_secret: my-sshkey
+          runner_pull_policy: Always
 project: 
   enabled: false
   context: 
