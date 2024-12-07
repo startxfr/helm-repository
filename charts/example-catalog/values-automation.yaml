@@ -11,46 +11,39 @@ context: &context
   app: example-catalog-automation
   version: "0.0.2"
 
-demoAnsibleProject:
-  enabled: false
-  context: 
-    <<: *context
+demoAnsible:
+  ansibleAAP:
+    enabled: false
+    hooked: false
+    name: demo
+    namespace: demo-aap
+    spec: |
+      eda:
+        disabled: false
+      no_log: false
+      redis_mode: standalone
+      image_pull_policy: Always
+      lightspeed:
+        disabled: false
+      hub:
+        disabled: false
+        object_storage_s3_secret: automationhub-s3
+        storage_type: S3
+      api:
+        log_level: INFO
+        replicas: 1
+      controller:
+        disabled: false
   ansibleHub:
     enabled: false
-  ansibleController:
-    enabled: false
-  project: 
-    enabled: true
-    context: 
-      <<: *context
-    project: 
-      enabled: true
-      hooked: false
-      type: project
-      name: "demo-aap"
-      display_name: Instance ANSIBLE
-      description: Ansible automation configured by STARTX
-  projectOperator: 
-    enabled: false
-    context: 
-      <<: *context
-    project: 
-      enabled: false
-      name: "rhaap-operator"
-  operator:
-    enabled: false
-    context: 
-      <<: *context
-    subscription:
-      enabled: false
-    operatorGroup:
-      enabled: false
-demoAnsibleController:
-  enabled: false
-  context: 
-    <<: *context
-  ansibleHub:
-    enabled: false
+    hooked: false
+    name: startx-hub
+    namespace: demo-aap
+    storageSize: "20Gi"
+    storageClass: "startx-aws-efs"
+    storageAccessMode: "ReadWriteMany"
+    replicas: 1
+    replicasHA: 2
   ansibleController:
     enabled: false
     hooked: false
@@ -102,19 +95,79 @@ demoAnsibleController:
       set_self_labels: true
       garbage_collect_secrets: false
       image_pull_policy: IfNotPresent
+  ansibleSecrets:
+    enabled: false
+    list:
+      - name: dev-admin-aap-token
+        namespace: demo-aap
+        type: aaptoken
+        token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
+        host: "http://dev.demo-aap.svc.cluster.local:80"
+      - name: prod-admin-aap-token
+        namespace: demo-aap
+        type: aaptoken
+        token: "MYTOKENPRODXXXXXXXXXXXXXXX"
+        host: "http://prod.demo-aap.svc.cluster.local:80"
+      - name: my-sshkey
+        namespace: demo-aap
+        type: sshkey
+        id_rsa: |-
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          PLACE YOUR PRIVATE KEY HERE
+          -----END OPENSSH PRIVATE KEY-----
+      - name: my-password
+        type: password
+        password: "mypassword"
+      - name: my-s3
+        type: s3
+        accessId: "_PLACE_YOUR_ID_HERE_"
+        accessSecret: "_________place_your_secret_here_________"
+        bucket: "miniocp-aap-hub"
+        region: "eu-west-3"
+  aapConfigs:
+    credentials:
+      enabled: false
+      list:
+        - name: default-ssh
+          namespace: demo-aap
+          spec: |-
+            name: default-ssh 
+            description: Default SSH example
+            organization: Default
+            connection_secret: dev-admin-aap-token
+            type: Machine
+            ssh_username: username
+            ssh_secret: my-sshkey
+        - name: alcor-ssh
+          namespace: demo-aap
+          spec: |-
+            name: alcor-ssh
+            description: MyCred demo via CRD
+            organization: Default
+            connection_secret: dev-admin-aap-token
+            type: Machine
+            ssh_username: cl
+            ssh_secret: my-sshkey
+            runner_pull_policy: Always
   project: 
     enabled: false
     context: 
       <<: *context
     project: 
-      enabled: false
+      enabled: true
+      hooked: false
+      type: project
       name: "demo-aap"
+      display_name: Instance ANSIBLE
+      description: Ansible automation configured by STARTX
   projectOperator: 
     enabled: false
     context: 
       <<: *context
     project: 
       enabled: false
+      hooked: false
+      type: project
       name: "rhaap-operator"
   operator:
     enabled: false
@@ -122,43 +175,8 @@ demoAnsibleController:
       <<: *context
     subscription:
       enabled: false
-    operatorGroup:
-      enabled: false
-demoAnsibleHub:
-  enabled: false
-  context: 
-    <<: *context
-  ansibleHub:
-    enabled: true
-    hooked: false
-    name: startx-hub
-    namespace: demo-aap
-    storageSize: "20Gi"
-    storageClass: "startx-aws-efs"
-    storageAccessMode: "ReadWriteMany"
-    replicas: 1
-    replicasHA: 2
-  ansibleController:
-    enabled: false
-  project: 
-    enabled: false
-    context: 
-      <<: *context
-    project: 
-      enabled: false
-      name: "demo-aap"
-  projectOperator: 
-    enabled: false
-    context: 
-      <<: *context
-    project: 
-      enabled: false
-      name: "rhaap-operator"
-  operator:
-    enabled: false
-    context: 
-      <<: *context
-    subscription:
-      enabled: false
+      hooked: false
+      name: "ansible-automation-platform-operator"
+      namespace: "rhaap-operator"
     operatorGroup:
       enabled: false

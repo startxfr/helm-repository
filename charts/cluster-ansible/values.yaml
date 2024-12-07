@@ -120,6 +120,90 @@ ansibleController:
     garbage_collect_secrets: false
     image_pull_policy: IfNotPresent
 
+# Create secrets used in ansible CRD
+ansibleSecrets:
+  # Enable the creation of the secrets
+  enabled: false
+  # List of secrets to create
+  list:
+      # Name of the secret to create (mandatory)
+    - name: default-aap-token
+      # Namespace for the secret (default is project name)
+      namespace: default-ansible
+      # The type of secret, could be aaptoken, s3, password or sshkey (default is aaptoken)
+      type: aaptoken
+      # If type is aaptoken, define the ansible AAP token (mandatory)
+      token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
+      # If type is aaptoken, define the ansible AAP host (mandatory)
+      host: "http://dev.startx-ansible.svc.cluster.local:80"
+      # Name of the secret to create (mandatory)
+    - name: my-sshkey
+      type: sshkey
+      # If type is sshkey, define the SSH private kkey (mandatory)
+      id_rsa: |-
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        PLACE YOUR PRIVATE KEY HERE
+        -----END OPENSSH PRIVATE KEY-----
+    - name: my-password
+      type: password
+      # If type is password, define the password (mandatory)
+      password: "mypassword"
+    - name: my-s3
+      type: s3
+      # If type is s3, define the access-key-id (mandatory)
+      accessId: "_PLACE_YOUR_ID_HERE_"
+      # If type is s3, define the secret-access-key (mandatory)
+      accessSecret: "_________place_your_secret_here_________"
+      # If type is s3, define the bucket name (mandatory)
+      bucket: "mydefaultbucket"
+      # If type is s3, define the region to use (default is eu-west-3)
+      region: "eu-west-3"
+# Use operator CRD to configure the AAP
+aapConfigs:
+  # Configure Credentials into the AAP backend in a declarative way
+  credentials:
+    # Enable the creation of the AAP credentials
+    enabled: false
+    list:
+        # Name of the credentials to create (mandatory)
+      - name: default-ssh
+        # Namespace for the credentials (default is project name)
+        namespace: startx-ansible
+        # Spec of the credentials (example for a Machine credential)
+        spec: |-
+          #The name for the credential
+          name: default-ssh 
+          #The description for the credential
+          description: Default SSH example
+          #The organization for the credential
+          organization: Default
+          #A k8s secret that contains an access token for AWX. To create an access token see these docs: https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#add-tokens.
+          connection_secret: default-aap-token
+          #The credential type for the credential
+          type: Machine
+          # #The k8s api for the Bearer credential
+          # kubernetes_api: 
+          #The username for the SSH credential
+          ssh_username: username
+          #The k8s secret for the SSH credential
+          ssh_secret: my-sshkey
+          # #The k8s secret for the Bearer credential
+          # kubernetes_bearer_token_secret: 
+          # #The credential inputs for the credential
+          # inputs:
+          # #Runner image version used when running jobs
+          # runner_version: 
+          # #Runner image used when running jobs
+          # runner_image: 
+          # #Runner image pull policy used when running jobs
+          # runner_pull_policy: Always
+
+
+
+
+
+
+
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
   enabled: false
