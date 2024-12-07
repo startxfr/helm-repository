@@ -96,52 +96,100 @@ ansibleSecrets:
       type: aaptoken
       token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
       host: "http://dev.startx-ansible.svc.cluster.local:80"
-    - name: prod-admin-aap-token
-      namespace: startx-ansible
-      type: aaptoken
-      token: "MYTOKENPRODXXXXXXXXXXXXXXX"
-      host: "http://prod.startx-ansible.svc.cluster.local:80"
-    - name: my-sshkey
+    - name: dev-admin-sshkey
       namespace: startx-ansible
       type: sshkey
       id_rsa: |-
         -----BEGIN OPENSSH PRIVATE KEY-----
         PLACE YOUR PRIVATE KEY HERE
         -----END OPENSSH PRIVATE KEY-----
-    - name: my-password
+    - name: dev-admin-bearer
+      namespace: startx-ansible
+      type: kubetoken
+      token: sadevtoken
+    - name: dev-admin-password
       type: password
       password: "mypassword"
-    - name: my-s3
+    - name: dev-admin-s3
       type: s3
       accessId: "_PLACE_YOUR_ID_HERE_"
       accessSecret: "_________place_your_secret_here_________"
       bucket: "miniocp-aap-hub"
       region: "eu-west-3"
+    - name: dev-admin-git-token
+      type: scmtoken
+      token: "_PLACE_YOUR_TOKEN_HERE_"
+    - name: dev-admin-git-user
+      type: scmuser
+      username: "myuser"
+      password: "mypassword"
 aapConfigs:
   credentials:
     enabled: false
     list:
-      - name: default-ssh
+      - name: dev-admin-sshkey-cred
         namespace: startx-ansible
         spec: |-
-          name: default-ssh 
-          description: Default SSH example
+          name: admin-sshkey
+          description: Admin SSHKey
           organization: Default
           connection_secret: dev-admin-aap-token
-          type: Machine
-          ssh_username: username
-          ssh_secret: my-sshkey
-      - name: alcor-ssh
+          type: "Machine"
+          ssh_username: myuser
+          ssh_secret: dev-admin-sshkey
+      - name: dev-admin-bearer-cred
         namespace: startx-ansible
         spec: |-
-          name: alcor-ssh
-          description: MyCred demo via CRD
+          name: admin-bearer
+          description: "Admin bearer token"
           organization: Default
           connection_secret: dev-admin-aap-token
-          type: Machine
-          ssh_username: cl
-          ssh_secret: my-sshkey
-          runner_pull_policy: Always
+          type: "OpenShift or Kubernetes API Bearer Token"
+          kubernetes_api: https://api-miniocp-startx-fr:6443
+          kubernetes_bearer_token_secret: dev-admin-bearer
+      - name: dev-admin-git-token-cred
+        namespace: startx-ansible
+        spec: |-
+          name: admin-git-token
+          description: "Git token credentials"
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          type: "GitHub Personal Access Token"
+          token_secret: dev-admin-git-token
+      - name: dev-admin-git-user-cred
+        namespace: startx-ansible
+        spec: |-
+          name: admin-git-user
+          description: "Git user credentials"
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          type: "Source Control"
+          username_secret: dev-admin-git-user
+          password_secret: dev-admin-git-user
+  inventories:
+    enabled: false
+    list:
+      - name: dev
+        namespace: startx-ansible
+        spec: |-
+          name: dev
+          description: my new inventory
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          state: present
+          instance_groups:
+            - default
+          variables:
+            string: "string_value"
+            bool: true
+            number: 1
+            list:
+              - item1: true
+              - item2: "1"
+            object:
+              string: "string_value"
+              number: 2
+
 project: 
   enabled: false
   context: 
