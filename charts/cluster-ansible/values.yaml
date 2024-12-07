@@ -130,7 +130,7 @@ ansibleSecrets:
     - name: default-aap-token
       # Namespace for the secret (default is project name)
       namespace: default-ansible
-      # The type of secret, could be aaptoken or sshkey (default is aaptoken)
+      # The type of secret, could be aaptoken, s3, password or sshkey (default is aaptoken)
       type: aaptoken
       # If type is aaptoken, define the ansible AAP token (mandatory)
       token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
@@ -138,13 +138,26 @@ ansibleSecrets:
       host: "http://dev.startx-ansible.svc.cluster.local:80"
       # Name of the secret to create (mandatory)
     - name: my-sshkey
-      # The type of secret, could be aaptoken or sshkey (default is aaptoken)
       type: sshkey
       # If type is sshkey, define the SSH private kkey (mandatory)
       id_rsa: |-
         -----BEGIN OPENSSH PRIVATE KEY-----
         PLACE YOUR PRIVATE KEY HERE
         -----END OPENSSH PRIVATE KEY-----
+    - name: my-password
+      type: password
+      # If type is password, define the password (mandatory)
+      password: "mypassword"
+    - name: my-s3
+      type: s3
+      # If type is s3, define the access-key-id (mandatory)
+      accessId: "_PLACE_YOUR_ID_HERE_"
+      # If type is s3, define the secret-access-key (mandatory)
+      accessSecret: "_________place_your_secret_here_________"
+      # If type is s3, define the bucket name (mandatory)
+      bucket: "mydefaultbucket"
+      # If type is s3, define the region to use (default is eu-west-3)
+      region: "eu-west-3"
 # Use operator CRD to configure the AAP
 aapConfigs:
   # Configure Credentials into the AAP backend in a declarative way

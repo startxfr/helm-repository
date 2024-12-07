@@ -283,3 +283,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 16.19.42 | 2024-12-02 | Improve cluster-ansible options
 | 16.19.43 | 2024-12-04 | Adding AAP CRD support
 | 16.19.45 | 2024-12-07 | Add creation of AAP secret and credentials
+| 16.19.46 | 2024-12-07 | Adding creation of AAP secret s3 or password in addition to aaptoken or sshkey
