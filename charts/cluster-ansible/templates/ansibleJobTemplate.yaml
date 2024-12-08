@@ -15,7 +15,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-ansiblejobtemplate"
   annotations:
     {{- include "cluster-ansible.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   {{- $spec | nindent 2 }}
 {{ end }}
