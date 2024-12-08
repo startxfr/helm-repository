@@ -272,7 +272,7 @@ aapConfigs:
           branch: main
           scm_type: git
   jobTemplates:
-    enabled: true
+    enabled: false
     list:
       - name: ansible-samples-broken
         namespace: startx-ansible
@@ -312,6 +312,33 @@ aapConfigs:
           inventory: clonned
           ask_variables_on_launch: false
           ask_inventory_on_launch: false
+  workflowTemplates:
+    enabled: false
+    list:
+      - name: ansible-samples-workflow
+        namespace: startx-ansible
+        spec: |-
+          name: ExampleTowerWorkflow
+          organization: Default
+          connection_secret: dev-example-aap-token
+          state: present
+          description: Example of a workflow template
+          inventory: clonned
+          workflow_nodes:
+          - identifier: localhost
+            unified_job_template:
+              name: Demo Job Template
+              type: job_template
+              inventory:
+                organization:
+                  name: Default
+          - identifier: localhost
+            unified_job_template:
+              name: Demo Job Template
+              type: job_template
+              inventory:
+                organization:
+                  name: Default
 project: 
   enabled: false
   context: 
