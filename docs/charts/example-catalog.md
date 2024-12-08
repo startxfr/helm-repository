@@ -349,3 +349,4 @@ helm install example-catalog startx/example-catalog -f https://raw.githubusercon
 | 16.19.43 | 2024-12-07 | Improve the AAP demo relying on cluster-ansible chart
 | 16.19.44 | 2024-12-07 | Improve ansible aap demo with inventory and multiple credentails and secrets
 | 16.19.45 | 2024-12-07 | Improve the AAP inventories values
+| 16.19.46 | 2024-12-08 | Improve example-catalog options
