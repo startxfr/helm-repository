@@ -1,0 +1,80 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Add support for AnsibleProject in AAP example"
+    - kind: added
+      description: "Add support for JobTemplate in AAP example"
+    - kind: added
+      description: "Add support for WorkflowTemplate in AAP example"
+    - kind: added
+      description: "Add support for Workflow in AAP example"
+    - kind: added
+      description: "Add support for Job in AAP example"
+    - kind: added
+      description: "Add support for InstanceGroup in AAP example"
+    - kind: added
+      description: "Add support for Schedule in AAP example"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: example
+apiVersion: v2
+appVersion: 4.16.19
+dependencies:
+- - alias: demoAnsible
+  condition: demoAnsible.enabled
+  name: cluster-ansible
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+  version: 16.19.49
+description: Helm chart used to deploy various example of application used in Startx
+  demo.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/example-catalog.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - example-chart
+- - example
+- - caas
+- - demo
+- - catalog
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: example-catalog
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/example-catalog
+- - https://github.com/startxfr/helm-repository/tree/master/charts/example-catalog
+type: application
+version: 16.19.46
+
+...
+files:
+  example-catalog-16.19.46.tgz: sha256:e23ba9843857b28b147af9874e5e4fcecd10e2574569eb98064d26a5029c7b08
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJnVZeYCRAPNrJQFdOjTQAA5/UQAKi8jCzlGasXjPBYBrbbs2Sn
+CJCNPuaQar/u67lObMhtDbOhiyALbtI3HNulbW7XTRJm4X/1npdW6ozNp8c07osU
+Tkrh7GVJ4sFFQIFEsmY7lpbfum9mOp5iZzFGvCglbpKpI7AeubYFahXKb3yW3/JL
+o/WsLKoE14FS3CoFfiNeVq7oWHvecyuSWhmqU/S+UpDIY63V7Y5PnwcvIztx54R3
+PWy8NxV9P3ppaFdrYQHVHfHv+HiBAkq+dL8T2+QEx0G6UmIzfcILQJQGuP01i9LU
+6cVx1cO/LsY6BSVihTuG/f2t4vRJiirxtD9o1HEk6xCuq2tHSNo8kwdfbQxn37yn
+DDpHNnlxif2qzdduKTMGUOdX6wd9wR56i53PHwodK4uY2GgIzPDWG23Umzy1qaY4
+XE4EwKQmLHkuageuMlpyTrmv1b5sNJDtYQGsoVpGDXuFSsAXtKsDOSKsXTu16oN8
+4s3ihpImtImPjUimCbwIJyVDhHC5zRt5wHTyzEyAHojrQxy/yXK5IRj/5NZPf6PD
+S4L+3JGaA9mnsv3ybv3YfK7+43lhx4mvUC9VQADQpF5/de6eDB/i71ZZW4/9RmLq
+QHBCdTBG67eiLIpjgYIppVQvw8+IG4VtZzPyJm8oIqCT2rG67l+J+CXAh9XUHlAt
+skRBwtD5CVC1Y5zP2VSs
+=cHDs
+-----END PGP SIGNATURE-----
