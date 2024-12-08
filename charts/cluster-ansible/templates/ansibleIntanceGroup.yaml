@@ -1,21 +1,21 @@
-{{- if .Values.aapConfigs -}}{{- if .Values.aapConfigs.jobs -}}{{- if .Values.aapConfigs.jobs.enabled -}}
+{{- if .Values.aapConfigs -}}{{- if .Values.aapConfigs.instancesGroup -}}{{- if .Values.aapConfigs.instancesGroup.enabled -}}
 {{- $defaultns := .Values.project.project.name | default "aap" -}}
-{{ range .Values.aapConfigs.jobs.list }}
+{{ range .Values.aapConfigs.instancesGroup.list }}
 {{- $name := .name | default "default" -}}
 {{- $namespace := .namespace | default $defaultns -}}
 {{- $spec := .spec | default "{}" -}}
 ---
 apiVersion: tower.ansible.com/v1alpha1
-kind: AnsibleJob
+kind: AnsibleInstanceGroup
 metadata:
   name: {{ $name | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-ansible.labels" $ | nindent 4 }}
-    app.kubernetes.io/name: "{{- $name -}}-ansiblejob"
+    app.kubernetes.io/name: "{{- $name -}}-ansibleinstancegroup"
   annotations:
     {{- include "cluster-ansible.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "45"
+    argocd.argoproj.io/sync-wave: "41"
 spec:
   {{- $spec | nindent 2 }}
 {{ end }}

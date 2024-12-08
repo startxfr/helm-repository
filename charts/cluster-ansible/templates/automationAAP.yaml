@@ -9,7 +9,7 @@ metadata:
   namespace: "{{- .Values.ansibleAAP.namespace | default $namespace -}}"
   labels:
     {{- include "cluster-ansible.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.ansibleAAP.name | default (include "startx.appName" .) -}}-automationhub"
+    app.kubernetes.io/name: "{{- .Values.ansibleAAP.name | default (include "startx.appName" .) -}}-aap"
   annotations:
     {{- include "cluster-ansible.annotations" . | nindent 4 }}
     {{- if .Values.ansibleAAP.hooked }}

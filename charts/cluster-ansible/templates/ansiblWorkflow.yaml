@@ -12,7 +12,7 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-ansible.labels" $ | nindent 4 }}
-    app.kubernetes.io/name: "{{- $name -}}-ansiblejobtemplate"
+    app.kubernetes.io/name: "{{- $name -}}-ansibleworkflow"
   annotations:
     {{- include "cluster-ansible.annotations" $ | nindent 4 }}
     argocd.argoproj.io/sync-wave: "50"
