@@ -362,7 +362,6 @@ aapConfigs:
           connection_secret: dev-example-aap-token
           state: present
           description: Example of a job execution
-          inventory: clonned
           job_template_name: ExampleHelloworldTemplate
           inventory: clonned
           extra_vars:
@@ -389,6 +388,20 @@ aapConfigs:
           policy_instance_percentage: 100
           policy_instance_minimum: 1
           instance_list: []
+          runner_pull_policy: IfNotPresent
+  schedules:
+    enabled: false
+    list:
+      - name: ansible-samples-daily-schedule
+        namespace: startx-ansible
+        spec: |-
+          organization: Default
+          connection_secret: dev-example-aap-token
+          state: present
+          description: Example of a scheduled job execution
+          name: ExampleDailySchedule
+          rrule: "DTSTART:20210101T000000Z RRULE:FREQ=DAILY;INTERVAL=1;COUNT=1"
+          unified_job_template: ansible-samples-helloworld
           runner_pull_policy: IfNotPresent
 project: 
   enabled: false
