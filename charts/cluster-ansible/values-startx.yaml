@@ -137,26 +137,35 @@ aapConfigs:
           type: "Machine"
           ssh_username: myuser
           ssh_secret: dev-example-sshkey
-      - name: dev-example-bearer-cred
+      - name: dev-example-k8s-bearer-cred
         namespace: startx-ansible
         spec: |-
-          name: admin-bearer
-          description: "Admin bearer token"
+          name: admin-k8s-bearer
+          description: "Admin bearer token for kubernetes"
           organization: Default
           connection_secret: dev-example-aap-token
           type: "OpenShift or Kubernetes API Bearer Token"
           kubernetes_api: https://api-miniocp-startx-fr:6443
           kubernetes_bearer_token_secret: dev-example-bearer
-      - name: dev-example-git-token-cred
+      - name: dev-example-github-token-cred
         namespace: startx-ansible
         spec: |-
-          name: admin-git-token
-          description: "Git token credentials"
+          name: admin-github-token
+          description: "Github token credentials"
           organization: Default
           connection_secret: dev-example-aap-token
           type: "GitHub Personal Access Token"
           token_secret: dev-example-git-token
-      - name: dev-example-git-user-cred
+      - name: dev-example-gitlab-token-cred
+        namespace: startx-ansible
+        spec: |-
+          name: admin-gitlab-token
+          description: "Gitlab token credentials"
+          organization: Default
+          connection_secret: dev-example-aap-token
+          type: "GitLab Personal Access Token"
+          token_secret: dev-example-git-token
+      - name: dev-example-scm-user-cred
         namespace: startx-ansible
         spec: |-
           name: admin-git-user
@@ -173,7 +182,7 @@ aapConfigs:
         namespace: startx-ansible
         spec: |-
           name: dev
-          description: my new inventory
+          description: my new dev inventory
           organization: Default
           connection_secret: dev-example-aap-token
           state: present
@@ -189,6 +198,19 @@ aapConfigs:
             object:
               string: "string_value"
               number: 2
+      - name: clonned
+        namespace: startx-ansible
+        spec: |-
+          name: clonned
+          description: my new inventory clonned from Demo inventory
+          organization: Default
+          connection_secret: dev-example-aap-token
+          state: present
+          copy_from: Demo Inventory
+          instance_groups:
+            - default
+          variables:
+            string: "string_value"
 
 project: 
   enabled: false
