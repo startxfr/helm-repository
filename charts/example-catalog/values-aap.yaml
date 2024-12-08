@@ -10,7 +10,6 @@ context: &context
   component: automation
   app: example-catalog-automation
   version: "0.0.2"
-
 demoAnsible:
   ansibleAAP:
     enabled: false
@@ -98,35 +97,35 @@ demoAnsible:
   ansibleSecrets:
     enabled: false
     list:
-      - name: dev-admin-aap-token
+      - name: dev-example-aap-token
         namespace: demo-aap
         type: aaptoken
         token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
         host: "http://dev.demo-aap.svc.cluster.local:80"
-      - name: dev-admin-sshkey
+      - name: dev-example-sshkey
         namespace: demo-aap
         type: sshkey
         id_rsa: |-
           -----BEGIN OPENSSH PRIVATE KEY-----
           PLACE YOUR PRIVATE KEY HERE
           -----END OPENSSH PRIVATE KEY-----
-      - name: dev-admin-bearer
+      - name: dev-example-bearer
         namespace: demo-aap
         type: kubetoken
-        token: sadevtoken
-      - name: dev-admin-password
+        serviceAccount: default
+      - name: dev-example-password
         type: password
         password: "mypassword"
-      - name: dev-admin-s3
+      - name: dev-example-s3
         type: s3
         accessId: "_PLACE_YOUR_ID_HERE_"
         accessSecret: "_________place_your_secret_here_________"
         bucket: "miniocp-aap-hub"
         region: "eu-west-3"
-      - name: dev-admin-git-token
+      - name: dev-example-git-token
         type: scmtoken
         token: "_PLACE_YOUR_TOKEN_HERE_"
-      - name: dev-admin-git-user
+      - name: dev-example-git-user
         type: scmuser
         username: "myuser"
         password: "mypassword"
@@ -134,45 +133,45 @@ demoAnsible:
     credentials:
       enabled: false
       list:
-        - name: dev-admin-sshkey-cred
+        - name: dev-example-sshkey-cred
           namespace: demo-aap
           spec: |-
             name: admin-sshkey
             description: Admin SSHKey
             organization: Default
-            connection_secret: dev-admin-aap-token
+            connection_secret: dev-example-aap-token
             type: "Machine"
             ssh_username: myuser
-            ssh_secret: dev-admin-sshkey
-        - name: dev-admin-bearer-cred
+            ssh_secret: dev-example-sshkey
+        - name: dev-example-bearer-cred
           namespace: demo-aap
           spec: |-
             name: admin-bearer
             description: "Admin bearer token"
             organization: Default
-            connection_secret: dev-admin-aap-token
+            connection_secret: dev-example-aap-token
             type: "OpenShift or Kubernetes API Bearer Token"
             kubernetes_api: https://api-miniocp-startx-fr:6443
-            kubernetes_bearer_token_secret: dev-admin-bearer
-        - name: dev-admin-git-token-cred
+            kubernetes_bearer_token_secret: dev-example-bearer
+        - name: dev-example-git-token-cred
           namespace: demo-aap
           spec: |-
             name: admin-git-token
             description: "Git token credentials"
             organization: Default
-            connection_secret: dev-admin-aap-token
+            connection_secret: dev-example-aap-token
             type: "GitHub Personal Access Token"
-            token_secret: dev-admin-git-token
-        - name: dev-admin-git-user-cred
+            token_secret: dev-example-git-token
+        - name: dev-example-git-user-cred
           namespace: demo-aap
           spec: |-
             name: admin-git-user
             description: "Git user credentials"
             organization: Default
-            connection_secret: dev-admin-aap-token
+            connection_secret: dev-example-aap-token
             type: "Source Control"
-            username_secret: dev-admin-git-user
-            password_secret: dev-admin-git-user
+            username_secret: dev-example-git-user
+            password_secret: dev-example-git-user
     inventories:
       enabled: false
       list:
@@ -182,7 +181,7 @@ demoAnsible:
             name: dev
             description: my new inventory
             organization: Default
-            connection_secret: dev-admin-aap-token
+            connection_secret: dev-example-aap-token
             state: present
             instance_groups:
               - default
