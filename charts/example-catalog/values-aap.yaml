@@ -345,6 +345,19 @@ demoAnsible:
                 inventory:
                   organization:
                     name: Default
+    workflows:
+      enabled: false
+      list:
+        - name: ansible-samples-workflow
+          namespace: demo-aap
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of a workflow execution
+            inventory: clonned
+            workflow_template_name: ExampleTowerWorkflow
+            runner_pull_policy: IfNotPresent
   project: 
     enabled: false
     context: 
