@@ -1,0 +1,22 @@
+{{- if .Values.aapConfigs -}}{{- if .Values.aapConfigs.projects -}}{{- if .Values.aapConfigs.projects.enabled -}}
+{{- $defaultns := .Values.project.project.name | default "aap" -}}
+{{ range .Values.aapConfigs.projects.list }}
+{{- $name := .name | default "default" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $spec := .spec | default "{}" -}}
+---
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleProject
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-ansible.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-ansibleinventory"
+  annotations:
+    {{- include "cluster-ansible.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{ end }}
+{{- end -}}{{- end -}}{{- end -}}

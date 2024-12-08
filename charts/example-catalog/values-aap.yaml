@@ -217,6 +217,66 @@ demoAnsible:
               - default
             variables:
               string: "string_value"
+    projects:
+      enabled: true
+      list:
+        - name: ansible-samples-dev
+          namespace: demo-aap
+          spec: |-
+            name: ansible-samples-dev
+            description: Ansible examples from Startx team (devel)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/startxfr/ansible-tower-samples
+            branch: master
+            scm_type: git
+            scm_credential: admin-git-user
+            runner_pull_policy: IfNotPresent
+        - name: ansible-samples-master
+          namespace: demo-aap
+          spec: |-
+            name: ansible-samples-master
+            description: Ansible examples from Ansible team (master)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/ansible/ansible-tower-samples
+            branch: master
+            scm_type: git
+        - name: ansible-samples-stable
+          namespace: demo-aap
+          spec: |-
+            name: ansible-samples-stable
+            description: Ansible examples from Ansible team (stable)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/ansible/ansible-tower-samples
+            branch: master
+            scm_type: git
+        - name: ansible-samples-archive
+          namespace: demo-aap
+          spec: |-
+            name: ansible-samples-archive
+            description: Ansible example archive from Ansible team (archive)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/ansible/ansible-tower-samples/archive/refs/heads/master.zip
+            scm_type: archive
+            runner_pull_policy: IfNotPresent
+        - name: rhcop-samples-main
+          namespace: demo-aap
+          spec: |-
+            name: rhcop-samples-main
+            description: Ansible examples from Redhat COP team (main)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/redhat-cop/aap_configuration_template
+            branch: main
+            scm_type: git
   project: 
     enabled: false
     context: 
