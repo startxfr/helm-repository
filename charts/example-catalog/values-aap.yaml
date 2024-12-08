@@ -358,6 +358,26 @@ demoAnsible:
             inventory: clonned
             workflow_template_name: ExampleTowerWorkflow
             runner_pull_policy: IfNotPresent
+    jobs:
+      enabled: false
+      list:
+        - name: ansible-samples-helloworld-job
+          namespace: startx-ansible
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of a job execution
+            inventory: clonned
+            job_template_name: ExampleHelloworldTemplate
+            inventory: clonned
+            extra_vars:
+              cost: 6.88
+              ghosts: ["inky", "pinky", "clyde", "sue"]
+              is_enable: false
+            job_tags: "provision,install,configuration"
+            skip_tags: "configuration,restart"
+            runner_pull_policy: IfNotPresent
   project: 
     enabled: false
     context: 
