@@ -218,7 +218,7 @@ demoAnsible:
             variables:
               string: "string_value"
     projects:
-      enabled: true
+      enabled: false
       list:
         - name: ansible-samples-dev
           namespace: demo-aap
@@ -277,6 +277,47 @@ demoAnsible:
             repo: https://github.com/redhat-cop/aap_configuration_template
             branch: main
             scm_type: git
+    jobTemplates:
+      enabled: false
+      list:
+        - name: ansible-samples-broken
+          namespace: demo-aap
+          spec: |-
+            name: ExampleBrokenTemplate
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of a deprecated template
+            project: BROKEN PROJECT
+            playbook: hello_world.yml
+            inventory: clonned
+            ask_variables_on_launch: true
+            ask_inventory_on_launch: true
+            runner_pull_policy: IfNotPresent
+        - name: ansible-samples-deprecated
+          namespace: demo-aap
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            tower_auth_secret: dev-example-aap-token
+            job_template_name: ExampleDeprecatedTemplate
+            job_template_project: ansible-samples-master
+            job_template_playbook: hello_squirrel.yml
+            job_template_inventory: clonned
+        - name: ansible-samples-helloworld
+          namespace: demo-aap
+          spec: |-
+            name: ExampleHelloworldTemplate
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of an hello world template
+            project: ansible-samples-master
+            playbook: hello_world.yml
+            inventory: clonned
+            ask_variables_on_launch: false
+            ask_inventory_on_launch: false
   project: 
     enabled: false
     context: 
