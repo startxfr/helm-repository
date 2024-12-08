@@ -285,3 +285,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 16.19.45 | 2024-12-07 | Add creation of AAP secret and credentials
 | 16.19.46 | 2024-12-07 | Adding creation of AAP secret s3 or password in addition to aaptoken or sshkey
 | 16.19.47 | 2024-12-07 | Adding creation of AAP inventories and improve aap secret and credentials
+| 16.19.48 | 2024-12-08 | Add support for service-account-token secret
