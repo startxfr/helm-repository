@@ -6,7 +6,7 @@ description: Helm chart used to deploy various example of application used in St
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.43
+version: 16.19.46
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.16.19"
 # Icon of this helm-chart
@@ -38,7 +38,7 @@ maintainers:
 dependencies:
   - name: cluster-ansible
     repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "16.19.47"
+    version: "16.19.48"
     alias: demoAnsible
     condition: demoAnsible.enabled
 
@@ -59,8 +59,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Improve the AAP demo using the 16.19.47 version"
-    - kind: added
-      description: "Deploy inventory demo"
+      description: "Improve the AAP inventories values"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
