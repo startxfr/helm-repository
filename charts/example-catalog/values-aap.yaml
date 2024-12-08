@@ -362,7 +362,7 @@ demoAnsible:
       enabled: false
       list:
         - name: ansible-samples-helloworld-job
-          namespace: startx-ansible
+          namespace: demo-aap
           spec: |-
             organization: Default
             connection_secret: dev-example-aap-token
@@ -377,6 +377,24 @@ demoAnsible:
               is_enable: false
             job_tags: "provision,install,configuration"
             skip_tags: "configuration,restart"
+            runner_pull_policy: IfNotPresent
+    instancesGroup:
+      enabled: false
+      list:
+        - name: dev-kuber-instance-group
+          namespace: demo-aap
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            name: kuber-instance-group
+            description: Example of a kubernetes instance group
+            credential_name: admin-k8s-bearer
+            is_container_group: true
+            policy_spec_override: ""
+            policy_instance_percentage: 100
+            policy_instance_minimum: 1
+            instance_list: []
             runner_pull_policy: IfNotPresent
   project: 
     enabled: false
