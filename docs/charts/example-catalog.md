@@ -351,3 +351,4 @@ helm install example-catalog startx/example-catalog -f https://raw.githubusercon
 | 16.19.45 | 2024-12-07 | Improve the AAP inventories values
 | 16.19.46 | 2024-12-08 | Improve example-catalog options
 | 16.19.49 | 2024-12-09 | Update package cluster-ansible to version 16.19.51
+| 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
