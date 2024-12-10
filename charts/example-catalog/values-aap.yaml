@@ -1,0 +1,442 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+nameOverride: example-catalog-automation
+versionOverride: "0.0.2"
+context: &context
+  scope: startx
+  cluster: default
+  environment: dev
+  component: automation
+  app: example-catalog-automation
+  version: "0.0.2"
+demoAnsible:
+  ansibleAAP:
+    enabled: false
+    hooked: false
+    name: demo
+    namespace: demo-aap
+    spec: |
+      eda:
+        disabled: false
+      no_log: false
+      redis_mode: standalone
+      image_pull_policy: Always
+      lightspeed:
+        disabled: false
+      hub:
+        disabled: false
+        object_storage_s3_secret: automationhub-s3
+        storage_type: S3
+      api:
+        log_level: INFO
+        replicas: 1
+      controller:
+        disabled: false
+  ansibleHub:
+    enabled: false
+    hooked: false
+    name: startx-hub
+    namespace: demo-aap
+    storageSize: "20Gi"
+    storageClass: "startx-aws-efs"
+    storageAccessMode: "ReadWriteMany"
+    replicas: 1
+    replicasHA: 2
+  ansibleController:
+    enabled: false
+    hooked: false
+    name: ansible-controller
+    namespace: demo-aap
+    spec: |
+      admin_user: admin
+      replicas: 1
+      projects_storage_size: 8Gi
+      projects_storage_access_mode: ReadWriteMany
+      projects_persistence: true
+      postgres_keepalives: true
+      postgres_keepalives_count: 5
+      postgres_keepalives_idle: 5
+      postgres_keepalives_interval: 5
+      metrics_utility_console_enabled: false
+      metrics_utility_enabled: false
+      metrics_utility_pvc_claim_size: 5Gi
+      metrics_utility_cronjob_report_schedule: '@monthly'
+      metrics_utility_cronjob_gather_schedule: '@hourly'
+      web_manage_replicas: true
+      web_liveness_failure_threshold: 3
+      web_liveness_period: 0
+      web_liveness_timeout: 1
+      web_liveness_initial_delay: 5
+      web_readiness_timeout: 1
+      web_readiness_initial_delay: 20
+      web_readiness_period: 0
+      web_readiness_failure_threshold: 3
+      task_liveness_failure_threshold: 3
+      task_liveness_period: 0
+      task_liveness_initial_delay: 5
+      task_liveness_timeout: 3
+      task_readiness_initial_delay: 20
+      task_readiness_period: 0
+      task_readiness_timeout: 1
+      task_readiness_failure_threshold: 3
+      task_privileged: false
+      task_manage_replicas: true
+      ingress_type: Route
+      api_urlpattern_prefix: startx
+      route_tls_termination_mechanism: Edge
+      loadbalancer_port: 80
+      loadbalancer_protocol: http
+      ipv6_disabled: false
+      create_preload_data: true
+      no_log: true
+      auto_upgrade: true
+      set_self_labels: true
+      garbage_collect_secrets: false
+      image_pull_policy: IfNotPresent
+  ansibleSecrets:
+    enabled: false
+    list:
+      - name: dev-example-aap-token
+        namespace: demo-aap
+        type: aaptoken
+        token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
+        host: "http://dev.demo-aap.svc.cluster.local:80"
+      - name: dev-example-sshkey
+        namespace: demo-aap
+        type: sshkey
+        id_rsa: |-
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          PLACE YOUR PRIVATE KEY HERE
+          -----END OPENSSH PRIVATE KEY-----
+      - name: dev-example-bearer
+        namespace: demo-aap
+        type: kubetoken
+        serviceAccount: default
+      - name: dev-example-password
+        type: password
+        password: "mypassword"
+      - name: dev-example-s3
+        type: s3
+        accessId: "_PLACE_YOUR_ID_HERE_"
+        accessSecret: "_________place_your_secret_here_________"
+        bucket: "miniocp-aap-hub"
+        region: "eu-west-3"
+      - name: dev-example-git-token
+        type: scmtoken
+        token: "_PLACE_YOUR_TOKEN_HERE_"
+      - name: dev-example-git-user
+        type: scmuser
+        username: "myuser"
+        password: "mypassword"
+  aapConfigs:
+    credentials:
+      enabled: true
+      list:
+        - name: dev-example-sshkey-cred
+          namespace: demo-aap
+          spec: |-
+            name: admin-sshkey
+            description: Admin SSHKey
+            organization: Default
+            connection_secret: dev-example-aap-token
+            type: "Machine"
+            ssh_username: myuser
+            ssh_secret: dev-example-sshkey
+        - name: dev-example-k8s-bearer-cred
+          namespace: demo-aap
+          spec: |-
+            name: admin-k8s-bearer
+            description: "Admin bearer token for kubernetes"
+            organization: Default
+            connection_secret: dev-example-aap-token
+            type: "OpenShift or Kubernetes API Bearer Token"
+            kubernetes_api: https://api-miniocp-startx-fr:6443
+            kubernetes_bearer_token_secret: dev-example-bearer
+        - name: dev-example-github-token-cred
+          namespace: demo-aap
+          spec: |-
+            name: admin-github-token
+            description: "Github token credentials"
+            organization: Default
+            connection_secret: dev-example-aap-token
+            type: "GitHub Personal Access Token"
+            token_secret: dev-example-git-token
+        - name: dev-example-gitlab-token-cred
+          namespace: demo-aap
+          spec: |-
+            name: admin-gitlab-token
+            description: "Gitlab token credentials"
+            organization: Default
+            connection_secret: dev-example-aap-token
+            type: "GitLab Personal Access Token"
+            token_secret: dev-example-git-token
+        - name: dev-example-scm-user-cred
+          namespace: demo-aap
+          spec: |-
+            name: admin-git-user
+            description: "Git user credentials"
+            organization: Default
+            connection_secret: dev-example-aap-token
+            type: "Source Control"
+            username_secret: dev-example-git-user
+            password_secret: dev-example-git-user
+    inventories:
+      enabled: true
+      list:
+        - name: dev
+          namespace: demo-aap
+          spec: |-
+            name: dev
+            description: my new dev inventory
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            instance_groups:
+              - default
+            variables:
+              string: "string_value"
+              bool: true
+              number: 1
+              list:
+                - item1: true
+                - item2: "1"
+              object:
+                string: "string_value"
+                number: 2
+        - name: clonned
+          namespace: demo-aap
+          spec: |-
+            name: clonned
+            description: my new inventory clonned from Demo inventory
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            copy_from: Demo Inventory
+            instance_groups:
+              - default
+            variables:
+              string: "string_value"
+    projects:
+      enabled: true
+      list:
+        - name: ansible-samples-dev
+          namespace: demo-aap
+          spec: |-
+            name: ansible-samples-dev
+            description: Ansible examples from Startx team (devel)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/startxfr/ansible-tower-samples
+            branch: master
+            scm_type: git
+            scm_credential: admin-git-user
+            runner_pull_policy: IfNotPresent
+        - name: ansible-samples-master
+          namespace: demo-aap
+          spec: |-
+            name: ansible-samples-master
+            description: Ansible examples from Ansible team (master)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/ansible/ansible-tower-samples
+            branch: master
+            scm_type: git
+        - name: ansible-samples-stable
+          namespace: demo-aap
+          spec: |-
+            name: ansible-samples-stable
+            description: Ansible examples from Ansible team (stable)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/ansible/ansible-tower-samples
+            branch: master
+            scm_type: git
+        - name: ansible-samples-archive
+          namespace: demo-aap
+          spec: |-
+            name: ansible-samples-archive
+            description: Ansible example archive from Ansible team (archive)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/ansible/ansible-tower-samples/archive/refs/heads/master.zip
+            scm_type: archive
+            runner_pull_policy: IfNotPresent
+        - name: rhcop-samples-main
+          namespace: demo-aap
+          spec: |-
+            name: rhcop-samples-main
+            description: Ansible examples from Redhat COP team (main)
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            repo: https://github.com/redhat-cop/aap_configuration_template
+            branch: main
+            scm_type: git
+    jobTemplates:
+      enabled: true
+      list:
+        - name: ansible-samples-broken
+          namespace: demo-aap
+          spec: |-
+            name: ExampleBrokenTemplate
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of a deprecated template
+            project: BROKEN PROJECT
+            playbook: hello_world.yml
+            inventory: clonned
+            ask_variables_on_launch: true
+            ask_inventory_on_launch: true
+            runner_pull_policy: IfNotPresent
+        - name: ansible-samples-deprecated
+          namespace: demo-aap
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            tower_auth_secret: dev-example-aap-token
+            job_template_name: ExampleDeprecatedTemplate
+            job_template_project: ansible-samples-master
+            job_template_playbook: hello_squirrel.yml
+            job_template_inventory: clonned
+        - name: ansible-samples-helloworld
+          namespace: demo-aap
+          spec: |-
+            name: ExampleHelloworldTemplate
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of an hello world template
+            project: ansible-samples-master
+            playbook: hello_world.yml
+            inventory: clonned
+            ask_variables_on_launch: false
+            ask_inventory_on_launch: false
+    workflowTemplates:
+      enabled: true
+      list:
+        - name: ansible-samples-workflow
+          namespace: demo-aap
+          spec: |-
+            name: ExampleTowerWorkflow
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of a workflow template
+            inventory: clonned
+            workflow_nodes:
+            - identifier: localhost
+              unified_job_template:
+                name: Demo Job Template
+                type: job_template
+                inventory:
+                  organization:
+                    name: Default
+            - identifier: localhost
+              unified_job_template:
+                name: Demo Job Template
+                type: job_template
+                inventory:
+                  organization:
+                    name: Default
+    workflows:
+      enabled: true
+      list:
+        - name: ansible-samples-workflow
+          namespace: demo-aap
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of a workflow execution
+            inventory: clonned
+            workflow_template_name: ExampleTowerWorkflow
+            runner_pull_policy: IfNotPresent
+    jobs:
+      enabled: true
+      list:
+        - name: ansible-samples-helloworld-job
+          namespace: demo-aap
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of a job execution
+            job_template_name: ExampleHelloworldTemplate
+            inventory: clonned
+            extra_vars:
+              cost: 6.88
+              ghosts: ["inky", "pinky", "clyde", "sue"]
+              is_enable: false
+            job_tags: "provision,install,configuration"
+            skip_tags: "configuration,restart"
+            runner_pull_policy: IfNotPresent
+    instancesGroup:
+      enabled: true
+      list:
+        - name: dev-kuber-instance-group
+          namespace: demo-aap
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            name: kuber-instance-group
+            description: Example of a kubernetes instance group
+            credential_name: admin-k8s-bearer
+            is_container_group: true
+            policy_spec_override: ""
+            policy_instance_percentage: 100
+            policy_instance_minimum: 1
+            instance_list: []
+            runner_pull_policy: IfNotPresent
+    schedules:
+      enabled: true
+      list:
+        - name: ansible-samples-daily-schedule
+          namespace: demo-aap
+          spec: |-
+            organization: Default
+            connection_secret: dev-example-aap-token
+            state: present
+            description: Example of a scheduled job execution
+            name: ExampleDailySchedule
+            rrule: "DTSTART:20210101T000000Z RRULE:FREQ=DAILY;INTERVAL=1;COUNT=1"
+            unified_job_template: ansible-samples-helloworld
+            runner_pull_policy: IfNotPresent
+  project: 
+    enabled: false
+    context: 
+      <<: *context
+    project: 
+      enabled: true
+      hooked: false
+      type: project
+      name: "demo-aap"
+      display_name: Instance ANSIBLE
+      description: Ansible automation configured by STARTX
+  projectOperator: 
+    enabled: false
+    context: 
+      <<: *context
+    project: 
+      enabled: false
+      hooked: false
+      type: project
+      name: "rhaap-operator"
+  operator:
+    enabled: false
+    context: 
+      <<: *context
+    subscription:
+      enabled: false
+      hooked: false
+      name: "ansible-automation-platform-operator"
+      namespace: "rhaap-operator"
+    operatorGroup:
+      enabled: false

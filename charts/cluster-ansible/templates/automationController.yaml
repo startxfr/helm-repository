@@ -9,7 +9,7 @@ metadata:
   namespace: "{{- .Values.ansibleController.namespace | default $namespace -}}"
   labels:
     {{- include "cluster-ansible.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.ansibleController.name | default (include "startx.appName" .) -}}-automationhub"
+    app.kubernetes.io/name: "{{- .Values.ansibleController.name | default (include "startx.appName" .) -}}-automationcontroller"
   annotations:
     {{- include "cluster-ansible.annotations" . | nindent 4 }}
     {{- if .Values.ansibleController.hooked }}
@@ -19,7 +19,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   {{- $spec | nindent 2 }}
 {{- end -}}

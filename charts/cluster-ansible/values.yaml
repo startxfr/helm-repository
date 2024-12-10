@@ -15,10 +15,37 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   version: "2.5.0"
 
+# Deploy an AAP manager
+ansibleAAP:
+  # Enable the configuration of the AAP manager
+  enabled: false
+  # Activate the hub as a helm hook
+  hooked: false
+  # Name of the AAP instance (default is app name)
+  name: demo
+  # Namespace of the AAP instance (default is project name)
+  namespace: default-ansible
+  # The applyed AAP specifications
+  spec: |
+    eda:
+      disabled: false
+    no_log: false
+    redis_mode: standalone
+    image_pull_policy: Always
+    lightspeed:
+      disabled: false
+    hub:
+      disabled: false
+    api:
+      log_level: INFO
+      replicas: 1
+    controller:
+      disabled: false
+
 # Deploy an AutomationHub manager
 ansibleHub:
   # Enable the configuration of the AutomationHub manager
-  enabled: true
+  enabled: false
   # Activate the hub as a helm hook
   hooked: false
   # Name of the AutomationHub instance (default is app name)
@@ -39,7 +66,7 @@ ansibleHub:
 # Deploy an AutomationController manager
 ansibleController:
   # Enable the configuration of the AutomationController manager
-  enabled: true
+  enabled: false
   # Activate the hub as a helm hook
   hooked: false
   # Name of the AutomationController instance (default is app name)
@@ -93,13 +120,118 @@ ansibleController:
     garbage_collect_secrets: false
     image_pull_policy: IfNotPresent
 
+# Create secrets used in ansible CRD
+ansibleSecrets:
+  # Enable the creation of the secrets
+  enabled: false
+  # List of secrets to create
+  list:
+      # Name of the secret to create (mandatory)
+    - name: default-aap-token
+      # Namespace for the secret (default is project name)
+      namespace: default-ansible
+      # The type of secret, could be aaptoken, s3, password or sshkey (default is aaptoken)
+      type: aaptoken
+      # If type is aaptoken, define the ansible AAP token (mandatory)
+      token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
+      # If type is aaptoken, define the ansible AAP host (mandatory)
+      host: "http://dev.startx-ansible.svc.cluster.local:80"
+      # Name of the secret to create (mandatory)
+    - name: my-sshkey
+      type: sshkey
+      # If type is sshkey, define the SSH private kkey (mandatory)
+      id_rsa: |-
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        PLACE YOUR PRIVATE KEY HERE
+        -----END OPENSSH PRIVATE KEY-----
+    - name: my-password
+      type: password
+      # If type is password, define the password (mandatory)
+      password: "mypassword"
+    - name: my-s3
+      type: s3
+      # If type is s3, define the access-key-id (mandatory)
+      accessId: "_PLACE_YOUR_ID_HERE_"
+      # If type is s3, define the secret-access-key (mandatory)
+      accessSecret: "_________place_your_secret_here_________"
+      # If type is s3, define the bucket name (mandatory)
+      bucket: "mydefaultbucket"
+      # If type is s3, define the region to use (default is eu-west-3)
+      region: "eu-west-3"
+# Use operator CRD to configure the AAP
+aapConfigs:
+  # Configure Credentials into the AAP backend in a declarative way
+  credentials:
+    # Enable the creation of the AAP credentials
+    enabled: false
+    list:
+        # Name of the credentials to create (mandatory)
+      - name: default-ssh
+        # Namespace for the credentials (default is project name)
+        namespace: startx-ansible
+        # Spec of the credentials (example for a Machine credential)
+        spec: |-
+          #The name for the credential
+          name: default-ssh 
+          #The description for the credential
+          description: Default SSH example
+          #The organization for the credential
+          organization: Default
+          # #Example for a machine (SSH) credential
+          # type: "Machine"
+          # ssh_username: myuser
+          # ssh_secret: dev-admin-sshkey
+          # #Example for a Kubernetes bearer credential
+          # type: "OpenShift or Kubernetes API Bearer Token"
+          # kubernetes_api: https://api-miniocp-startx-fr:6443
+          # kubernetes_bearer_token_secret: dev-admin-bearer
+          # #Example for a SCM Personal Access Token
+          # type: "GitHub Personal Access Token"
+          # token_secret: dev-admin-git-token
+          # #Example for a SCM User access
+          # type: "Source Control"
+          # username_secret: dev-admin-git-user
+          # password_secret: dev-admin-git-user
+  # Configure Inventories into the AAP backend in a declarative way
+  inventories:
+    enabled: false
+    list:
+        # Name of the inventory to create (mandatory)
+      - name: dev
+        # Namespace for the credentials (default is project name)
+        namespace: startx-ansible
+        # Spec of the inventory (example for a static)
+        spec: |-
+          name: dev
+          description: my dev inventory
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          state: present
+          instance_groups:
+            - default
+          variables:
+            string: "string_value"
+            bool: true
+            number: 1
+            list:
+              - item1: true
+              - item2: "1"
+            object:
+              string: "string_value"
+              number: 2
+
+
+
+
+
+
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
   enabled: false
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: project
     name: "default-ansible"
@@ -112,7 +244,7 @@ projectOperator:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: project
     name: "rhaap-operator"
@@ -129,7 +261,7 @@ operator:
     hooked: false
     name: "ansible-automation-platform-operator"
     namespace: "rhaap-operator"
-    version: "v2.5.0-0.1729742145"
+    version: "v2.5.0-0.1731456854"
     operator: 
       channel: stable-2.5-cluster-scoped
       name: ansible-automation-platform-operator
