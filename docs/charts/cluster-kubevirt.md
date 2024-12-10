@@ -322,3 +322,4 @@ xxxx to do xxxxxxxx
 | 16.19.17 | 2024-11-11 | Upgrade the Kubevirt operator version to v4.15.6
 | 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
+| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
