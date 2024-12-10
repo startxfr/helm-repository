@@ -6,7 +6,7 @@ description: Helm chart used to deploy various example of application used in St
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.29
+version: 16.19.31
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.16.19"
 # Icon of this helm-chart
@@ -35,6 +35,13 @@ maintainers:
     email: "dev@startx.fr"
     url: "https://www.startx.fr"
 
+dependencies:
+  - name: cluster-ansible
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.51"
+    alias: demoAnsible
+    condition: demoAnsible.enabled
+
 annotations:
   # category associated to this package
   category: example
@@ -52,6 +59,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all chart to the 16.19.29 release"
+      description: "Align all chart to the 16.19.61 release"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

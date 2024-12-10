@@ -147,3 +147,5 @@ helm install cluster-mongo startx/cluster-mongo -f https://raw.githubusercontent
 | 16.19.15 | 2024-11-10 | Init cluster-mongo skeleton from cluster-mongo |
 | 16.19.17 | 2024-11-11 | Implement the MongoDB CRD and mongo loader
 | 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
+| 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
+| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31

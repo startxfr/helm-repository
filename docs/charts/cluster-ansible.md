@@ -272,3 +272,21 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 16.19.15 | 2024-11-10 | publish stable update for the full repository
 | 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
 | 16.19.31 | 2024-11-11 | Adding support for ansible controller creation
+| 16.19.33 | 2024-12-02 | Enable projects creation if global is enabled
+| 16.19.35 | 2024-12-02 | Enable projects creation if global is enabled
+| 16.19.36 | 2024-12-02 | Improve cluster-ansible options
+| 16.19.37 | 2024-12-02 | Improve cluster-ansible options
+| 16.19.38 | 2024-12-02 | Upgrade to version 2.5.0-0.1731456854
+| 16.19.38 | 2024-12-02 | Upgrade to version 2.5.0-0.1731456854 v2
+| 16.19.39 | 2024-12-02 | Update all CRD generation
+| 16.19.41 | 2024-12-02 | Default values disbale controller and hub
+| 16.19.42 | 2024-12-02 | Improve cluster-ansible options
+| 16.19.43 | 2024-12-04 | Adding AAP CRD support
+| 16.19.45 | 2024-12-07 | Add creation of AAP secret and credentials
+| 16.19.46 | 2024-12-07 | Adding creation of AAP secret s3 or password in addition to aaptoken or sshkey
+| 16.19.47 | 2024-12-07 | Adding creation of AAP inventories and improve aap secret and credentials
+| 16.19.48 | 2024-12-08 | Add support for service-account-token secret
+| 16.19.49 | 2024-12-08 | Add support for AnsibleProject, JobTemplate, WorkflowTemplate, InstanceGroup as well as Workflow, Job and Schedule execution
+| 16.19.51 | 2024-12-09 | Stable support for AnsibleProject, JobTemplate, WorkflowTemplate, Workflow, Job, InstanceGroup and Schedule
+| 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
+| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31

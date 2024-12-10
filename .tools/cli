@@ -108,6 +108,10 @@ function routerArchive {
     # doHelmrepositoryRefresh release-16 "16" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-15 "15" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-14 "14" $HELM_REPO_BASEURL Archive 37
+}
+
+# router for archive legacy command
+function routerArchiveLegacy {
     doHelmrepositoryRefresh release-13 "13" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-12 "12" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-11 "11" $HELM_REPO_BASEURL Archive 37
@@ -486,7 +490,8 @@ Usage:
   - list                           list all helm-chart managed
   - release                        Upgrade all charts, publish all change into repository and tag this release
   - publish                        Publish all change into repository
-  - archive                        Generate and publish all charts into the archive directory 
+  - archive                        Generate and publish all charts into the archive (prior to 4.16) directory 
+  - archiveLegacy                  Generate and publish all legacy charts (prior to 4.14) into the archive directory 
   - syncfroms3                     Download all content from the S3 repo backend into local repocopy
   - synctos3                       Upload all content from the local repocopy into the S3 repo backend
   - version                        Get version of this tools
