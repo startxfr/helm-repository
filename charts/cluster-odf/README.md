@@ -339,3 +339,4 @@ helm install cluster-odf startx/cluster-odf -f https://raw.githubusercontent.com
 | 16.19.19 | 2024-11-11 | Debug the subscription channel
 | 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
+| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
