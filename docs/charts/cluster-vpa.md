@@ -315,3 +315,5 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 16.19.31 | 2024-11-13 | Implement the VerticalPodAutoscalerController
 | 16.19.33 | 2024-11-13 | Add nodeSelector to infra node for values-startx example
 | 16.19.35 | 2024-11-13 | Add the VerticalPodAutoscaler resource
+| 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
+| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
