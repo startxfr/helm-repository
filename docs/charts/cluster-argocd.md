@@ -356,3 +356,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
 | 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
 | 16.19.32 | 2024-12-11 | Add support for spec in the argoCD CRD
+| 16.19.33 | 2024-12-11 | Move ArgoCD CRD to v1beta1 version for gitops 1.14
