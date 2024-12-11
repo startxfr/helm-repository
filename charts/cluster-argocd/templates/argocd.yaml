@@ -1,4 +1,5 @@
 {{- if .Values.argocd }}{{- if .Values.argocd.enabled }}
+{{- $spec := .Values.argocd.spec | default "{}" -}}
 ---
 kind: ArgoCD
 apiVersion: argoproj.io/v1alpha1
@@ -20,6 +21,9 @@ metadata:
     {{- end }}
     argocd.argoproj.io/sync-wave: "10"
 spec: 
+{{- if ne "" $spec }}
+  {{- $spec | nindent 2 }}
+{{- else }}
   # server:
   #   autoscale:
   #     enabled: false
@@ -126,7 +130,6 @@ spec:
   #       cpu: 250m
   #       memory: 1Gi
   #   sharding: {}
-  applicationInstanceLabelKey: argocd.argoproj.io/instance
   # resourceCustomizations: |
   #   PersistentVolumeClaim:
   #     health.lua: |
@@ -155,9 +158,10 @@ spec:
   #     - Snapshot
   #     clusters:
   #     - "*"
+  applicationInstanceLabelKey: argocd.argoproj.io/instance
   server:
     autoscale:
-      enabled: true
+      enabled: false
       hpa:
         maxReplicas: 4
         minReplicas: 2
@@ -224,7 +228,7 @@ spec:
   rbac:
     defaultPolicy: edit
   grafana:
-    enabled: true
+    enabled: false
     size: 2
     resources:
       limits:
@@ -243,7 +247,7 @@ spec:
     enabled: true
     size: 2
     route:
-      enabled: true
+      enabled: false
   repo:
     mountsatoken: true
     resources:
@@ -255,4 +259,5 @@ spec:
         cpu: 100m
         ephemeral-storage: 1Gi
         memory: 128Mi
+{{- end }}
 {{- end }}{{- end }}

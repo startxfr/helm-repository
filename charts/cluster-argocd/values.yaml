@@ -20,9 +20,44 @@ argocd:
   # enable deployment of the argocd cluster
   enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # name of the argocd cluster
   name: "openshift-gitops"
+  # # the spec of the argoCD config (default is a generic config with example)
+  # spec: |-
+  #   applicationInstanceLabelKey: argocd.argoproj.io/instance
+  #   server:
+  #     autoscale:
+  #       enabled: false
+  #     insecure: true
+  #     route:
+  #       enabled: true
+  #       tls:
+  #         termination: edge
+  #   statusBadgeEnabled: true
+  #   usersAnonymousEnabled: false
+  #   controller:
+  #     appSync: 120s
+  #     processors:
+  #       operation: 10
+  #       status: 25
+  #   ha:
+  #     enabled: false
+  #   redis:
+  #     resources:
+  #       requests:
+  #         cpu: 50m
+  #   dex:
+  #     openShiftOAuth: true
+  #   grafana:
+  #     enabled: false
+  #   prometheus:
+  #     enabled: true
+  #     size: 2
+  #     route:
+  #       enabled: false
+  #   repo:
+  #     mountsatoken: true
 
 # Configuration of secrets to access various private repository used in argocd applications
 # Read https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ for more 
