@@ -17,6 +17,10 @@ Service-mesh (istio) is enabled, at the cluster level, with the following charac
 {{ include "operator.notes" .Values.operatorElastic }}
 {{- end }}{{- end }}
 
+{{- if .Values.operatorLoki }}{{- if .Values.operatorLoki.enabled }}
+{{ include "operator.notes" .Values.operatorLoki }}
+{{- end }}{{- end }}
+
 {{- if .Values.operatorKiali }}{{- if .Values.operatorKiali.enabled }}
 {{ include "operator.notes" .Values.operatorKiali }}
 {{- end }}{{- end }}

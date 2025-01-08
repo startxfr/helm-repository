@@ -21,8 +21,8 @@ autoscaling:
 clusterversion:
   enabled: false
   channel: fast
-  version: "4.14"
-  desiredVersion: 4.14.6
+  version: "4.15"
+  desiredVersion: 4.15.37
 alertmanager:
   enabled: false
   receiverName: PagerDutyStartx
@@ -155,6 +155,10 @@ project:
 
 # Configuration of the elasticSearch operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorElastic:
+  enabled: false
+
+# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorLoki:
   enabled: false
 
 # Configuration of the SosReport project (see https://helm-repository.readthedocs.io/en/latest/charts/project)

@@ -13,14 +13,216 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-ansible
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "2.5.0"
+
+# Deploy an AAP manager
+ansibleAAP:
+  # Enable the configuration of the AAP manager
+  enabled: false
+  # Activate the hub as a helm hook
+  hooked: false
+  # Name of the AAP instance (default is app name)
+  name: demo
+  # Namespace of the AAP instance (default is project name)
+  namespace: default-ansible
+  # The applyed AAP specifications
+  spec: |
+    eda:
+      disabled: false
+    no_log: false
+    redis_mode: standalone
+    image_pull_policy: Always
+    lightspeed:
+      disabled: false
+    hub:
+      disabled: false
+    api:
+      log_level: INFO
+      replicas: 1
+    controller:
+      disabled: false
 
 # Deploy an AutomationHub manager
 ansibleHub:
   # Enable the configuration of the AutomationHub manager
-  enabled: true
+  enabled: false
   # Activate the hub as a helm hook
-  hooked: true
+  hooked: false
+  # Name of the AutomationHub instance (default is app name)
+  name: ansible-hub
+  # Namespace of the AutomationHub instance (default is project name)
+  namespace: default-ansible
+  # the persistant storage size (default is 20Gi)
+  storageSize: "20Gi"
+  # the persistant storage class (default is efs-sc)
+  storageClass: "efs-sc"
+  # the persistant storage access mode (default is ReadWriteMany)
+  storageAccessMode: "ReadWriteMany"
+  # the number of replicas for default components (default is 1)
+  replicas: 1
+  # the number of replicas for HA components (default is 2)
+  replicasHA: 2
+
+# Deploy an AutomationController manager
+ansibleController:
+  # Enable the configuration of the AutomationController manager
+  enabled: false
+  # Activate the hub as a helm hook
+  hooked: false
+  # Name of the AutomationController instance (default is app name)
+  name: ansible-controller
+  # Namespace of the AutomationController instance (default is project name)
+  namespace: default-ansible
+  # The applyed AutomationController specifications
+  spec: |
+    admin_user: admin
+    replicas: 1
+    projects_storage_size: 8Gi
+    projects_storage_access_mode: ReadWriteMany
+    projects_persistence: true
+    postgres_keepalives: true
+    postgres_keepalives_count: 5
+    postgres_keepalives_idle: 5
+    postgres_keepalives_interval: 5
+    metrics_utility_console_enabled: false
+    metrics_utility_enabled: false
+    metrics_utility_pvc_claim_size: 5Gi
+    metrics_utility_cronjob_report_schedule: '@monthly'
+    metrics_utility_cronjob_gather_schedule: '@hourly'
+    web_manage_replicas: true
+    web_liveness_failure_threshold: 3
+    web_liveness_period: 0
+    web_liveness_timeout: 1
+    web_liveness_initial_delay: 5
+    web_readiness_timeout: 1
+    web_readiness_initial_delay: 20
+    web_readiness_period: 0
+    web_readiness_failure_threshold: 3
+    task_liveness_failure_threshold: 3
+    task_liveness_period: 0
+    task_liveness_initial_delay: 5
+    task_liveness_timeout: 3
+    task_readiness_initial_delay: 20
+    task_readiness_period: 0
+    task_readiness_timeout: 1
+    task_readiness_failure_threshold: 3
+    task_privileged: false
+    task_manage_replicas: true
+    ingress_type: Route
+    route_tls_termination_mechanism: Edge
+    loadbalancer_port: 80
+    loadbalancer_protocol: http
+    ipv6_disabled: false
+    create_preload_data: true
+    no_log: true
+    auto_upgrade: true
+    set_self_labels: true
+    garbage_collect_secrets: false
+    image_pull_policy: IfNotPresent
+
+# Create secrets used in ansible CRD
+ansibleSecrets:
+  # Enable the creation of the secrets
+  enabled: false
+  # List of secrets to create
+  list:
+      # Name of the secret to create (mandatory)
+    - name: default-aap-token
+      # Namespace for the secret (default is project name)
+      namespace: default-ansible
+      # The type of secret, could be aaptoken, s3, password or sshkey (default is aaptoken)
+      type: aaptoken
+      # If type is aaptoken, define the ansible AAP token (mandatory)
+      token: "MYTOKENDEVXXXXXXXXXXXXXXXXXXX"
+      # If type is aaptoken, define the ansible AAP host (mandatory)
+      host: "http://dev.startx-ansible.svc.cluster.local:80"
+      # Name of the secret to create (mandatory)
+    - name: my-sshkey
+      type: sshkey
+      # If type is sshkey, define the SSH private kkey (mandatory)
+      id_rsa: |-
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        PLACE YOUR PRIVATE KEY HERE
+        -----END OPENSSH PRIVATE KEY-----
+    - name: my-password
+      type: password
+      # If type is password, define the password (mandatory)
+      password: "mypassword"
+    - name: my-s3
+      type: s3
+      # If type is s3, define the access-key-id (mandatory)
+      accessId: "_PLACE_YOUR_ID_HERE_"
+      # If type is s3, define the secret-access-key (mandatory)
+      accessSecret: "_________place_your_secret_here_________"
+      # If type is s3, define the bucket name (mandatory)
+      bucket: "mydefaultbucket"
+      # If type is s3, define the region to use (default is eu-west-3)
+      region: "eu-west-3"
+# Use operator CRD to configure the AAP
+aapConfigs:
+  # Configure Credentials into the AAP backend in a declarative way
+  credentials:
+    # Enable the creation of the AAP credentials
+    enabled: false
+    list:
+        # Name of the credentials to create (mandatory)
+      - name: default-ssh
+        # Namespace for the credentials (default is project name)
+        namespace: startx-ansible
+        # Spec of the credentials (example for a Machine credential)
+        spec: |-
+          #The name for the credential
+          name: default-ssh 
+          #The description for the credential
+          description: Default SSH example
+          #The organization for the credential
+          organization: Default
+          # #Example for a machine (SSH) credential
+          # type: "Machine"
+          # ssh_username: myuser
+          # ssh_secret: dev-admin-sshkey
+          # #Example for a Kubernetes bearer credential
+          # type: "OpenShift or Kubernetes API Bearer Token"
+          # kubernetes_api: https://api-miniocp-startx-fr:6443
+          # kubernetes_bearer_token_secret: dev-admin-bearer
+          # #Example for a SCM Personal Access Token
+          # type: "GitHub Personal Access Token"
+          # token_secret: dev-admin-git-token
+          # #Example for a SCM User access
+          # type: "Source Control"
+          # username_secret: dev-admin-git-user
+          # password_secret: dev-admin-git-user
+  # Configure Inventories into the AAP backend in a declarative way
+  inventories:
+    enabled: false
+    list:
+        # Name of the inventory to create (mandatory)
+      - name: dev
+        # Namespace for the credentials (default is project name)
+        namespace: startx-ansible
+        # Spec of the inventory (example for a static)
+        spec: |-
+          name: dev
+          description: my dev inventory
+          organization: Default
+          connection_secret: dev-admin-aap-token
+          state: present
+          instance_groups:
+            - default
+          variables:
+            string: "string_value"
+            bool: true
+            number: 1
+            list:
+              - item1: true
+              - item2: "1"
+            object:
+              string: "string_value"
+              number: 2
+
+
+
+
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
@@ -29,12 +231,25 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: project
-    name: "ansible-automation-platform-operator"
-    display_name: Operator ANSIBLE
+    name: "default-ansible"
+    display_name: Instance ANSIBLE
     description: Ansible automation configured by STARTX
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+projectOperator: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "rhaap-operator"
+    display_name: Operator ANSIBLE
+    description: Ansible automation operator configured by STARTX
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
@@ -45,22 +260,24 @@ operator:
     enabled: false
     hooked: false
     name: "ansible-automation-platform-operator"
-    namespace: "ansible-automation-platform-operator"
-    version: "v2.4.0-0.1700771214"
+    namespace: "rhaap-operator"
+    version: "v2.5.0-0.1731456854"
     operator: 
-      channel: stable-2.4-cluster-scoped
+      channel: stable-2.5-cluster-scoped
       name: ansible-automation-platform-operator
       installPlanApproval: Automatic
       csv: aap-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false
     hooked: false
     target: "all-ns"
-    name: "ansible-operator"
-    namespace: "ansible-automation-platform-operator"
+    name: "startx-aap"
+    namespace: "rhaap-operator"
     providedAPIs: "AnsibleJob.v1alpha1.tower.ansible.com,AutomationController.v1beta1.automationcontroller.ansible.com,AutomationControllerBackup.v1beta1.automationcontroller.ansible.com,AutomationControllerRestore.v1beta1.automationcontroller.ansible.com,AutomationHub.v1beta1.automationhub.ansible.com,AutomationHubBackup.v1beta1.automationhub.ansible.com,AutomationHubRestore.v1beta1.automationhub.ansible.com,JobTemplate.v1alpha1.tower.ansible.com"
 
   

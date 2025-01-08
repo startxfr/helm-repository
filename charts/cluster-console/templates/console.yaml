@@ -18,7 +18,7 @@ spec:
   managementState: {{ $.Values.console.state | default "Managed" | quote }}
   customization:
     customLogoFile:
-      key: "{{- .logo.name | default "default-logo" -}}.svg"
+      key: "{{- .logo.name | default "default-logo" -}}.{{- .logo.format | default "svg" -}}"
       name: "{{- .logo.name | default "default-logo" -}}"
     customProductName: "{{- .name | default "default console" -}}"
 {{- end }}

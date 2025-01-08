@@ -1,0 +1,27 @@
+{{- if .Values.mtr.enabled -}}{{- if .Values.mtr.windup -}}{{- if .Values.mtr.windup.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-mtr" -}}
+{{- $ns2 := .Values.mtr.namespace | default ($ns1) -}}
+{{- $namespace := .Values.mtr.windup.namespace | default ($ns2) -}}
+{{- $spec := .Values.mtr.windup.spec | default "{}" -}}
+---
+apiVersion: windup.jboss.org/v1
+kind: Windup
+metadata:
+  name: {{ .Values.mtr.windup.name | default "mtr" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-mtr.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.mtr.windup.name | default "mtr" -}}"
+  annotations:
+    {{- include "cluster-mtr.annotations" . | nindent 4 }}
+    {{- if .Values.mtr.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}{{- end -}}

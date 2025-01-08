@@ -7,14 +7,16 @@ context: &context
   component: console
   app: cdf-console
 console:
-  enabled: true
+  enabled: false
   namespace: openshift-config
   state: Managed
   customize:
-    name: STARTX Console
+    name: CollegeDeFrance Console
     logo: 
-      name: startx-logo
-      tplFile: webtpl/startx-logo.svg
+      name: cdf-logo
+      format: svg
+      mode: file
+      tplFile: webtpl/cdf-logo-poc.png
   links:
   - name: startx-link-all-namespaces-dashboard
     spec: |

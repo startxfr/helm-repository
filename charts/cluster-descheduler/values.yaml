@@ -1,0 +1,87 @@
+# Default values for cluster-descheduler.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-descheduler
+  # Version name of this application (default use Chart appVersion)
+  # version: "2.5.3"
+
+# Deploy an API manager
+descheduler:
+  # Enable the configuration of the descheduler
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # Default namespace for all ressources (if not set, use project)
+  namespace: openshift-kube-descheduler-operator
+  # Name of the deployed instance of KubeDescheduler
+  name: cluster
+  # The applyed descheduler specifications
+  spec: |
+    deschedulingIntervalSeconds: 3600
+    logLevel: Normal
+    managementState: Managed
+    operatorLogLevel: Normal
+    mode: Predictive
+    profileCustomizations:
+      namespaces:
+        excluded:
+        - my-namespace
+      podLifetime: 48h
+      thresholdPriorityClassName: default-vital
+    profiles:
+    - AffinityAndTaints
+    - TopologyAndDuplicates
+    - LifecycleAndUtilization
+    - EvictPodsWithLocalStorage
+    - EvictPodsWithPVC
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-kube-descheduler-operator"
+    display_name: Operator descheduler
+    description: KubeDescheduler configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cluster-kube-descheduler-operator"
+    namespace: "openshift-kube-descheduler-operator"
+    version: "v5.0.1"
+    operator: 
+      channel: "stable"
+      name: cluster-kube-descheduler-operator
+      installPlanApproval: Automatic
+      csv: clusterkubedescheduleroperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-kube-descheduler-operator"
+    namespace: "openshift-kube-descheduler-operator"
+    providedAPIs: " KubeDescheduler.v1.operator.openshift.io"

@@ -20,7 +20,7 @@ sso:
   # Enable the configuration of the Keycloak instance
   enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # Name of the deployed instance of Redhat-SSOConfig
   name: default
   # The applyed Redhat-SSO config specifications
@@ -107,7 +107,7 @@ operator:
     hooked: false
     name: "rhsso-operator"
     namespace: "startx-sso"
-    version: "7.6.6-opr-001"
+    version: "7.6.11-opr-001"
     operator: 
       channel: stable
       name: rhsso-operator
@@ -116,6 +116,8 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: false
   operatorGroup:
     enabled: true
     hooked: false

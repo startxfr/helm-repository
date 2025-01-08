@@ -1,0 +1,171 @@
+# Default values for cluster-mtc.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-mtc
+  # Version name of this application (default use Chart appVersion)
+  # version: "2.5.3"
+
+# Deploy an API manager
+mtc:
+  # Enable the configuration of the MTC
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # Default namespace for all ressources (if not set, use project)
+  namespace: openshift-migration
+  # The controller configuration
+  controller:
+    # Enable the configuration of the migration
+    enabled: true
+    # Name of the migration controller
+    name: migration-controller
+    # Namespace of the deployed instance of migration controller (if not set, use default ns for MTC)
+    namespace: openshift-migration
+    # The applyed controller specifications
+    spec: |
+      mig_namespace_limit: '10'
+      migration_ui: true
+      mig_pod_limit: '100'
+      migration_controller: true
+      migration_log_reader: true
+      olm_managed: true
+      cluster_name: host
+      restic_timeout: 1h
+      migration_velero: true
+      mig_pv_limit: '100'
+      version: 1.8.4
+      azure_resource_group: ''
+  # List of the clusters
+  clusters:
+    # Enable the creation of clusters
+    enabled: false
+    # List of cluster to configure
+    list:
+      # Name of the migration controller (example local cluster)
+    - name: host
+      # Namespace of the deployed instance of migration controller (if not set, use default ns for MTC)
+      namespace: openshift-migration
+      # Enable the fact that this cluster is the host (default is false)
+      isHost: true
+      # Name of the migration controller (example local cluster)
+    - name: source
+      # Enable the fact that this cluster is the host (default is false)
+      insecure: true
+      # The registry access for this cluster
+      registry: "https://registry.apps.mycluster.example.com"
+      # The serviceAccount that allow acces to registry as well as cluster rrequired resources
+      saToken: "mytoken"
+      # The url of this cluster (mandatory if isHost=flase)
+      url: "https://api.mycluster.example.com:6443"
+  # List of the migrations storages
+  storages:
+    # Enable the creation of migrations storages
+    enabled: false
+    # List of migrations storages to configure
+    list:
+      # Name of the migration storage (example myapp-cluster1-to-cluster2)
+    - name: aws-paris
+      # Namespace of the migration storage (if not set, use default ns for MTC)
+      namespace: openshift-migration
+      # The storage provider (mandatory, could be aws, gcp, azure)
+      provider: aws
+      # Tha AWS access key (mandatory for the provider aws)
+      accessKey: AIAXXXXXX
+      # Tha AWS secret key (mandatory for the provider aws)
+      secretKey: xxxxxxxxxxxxxxxxx
+      # Tha AWS secret key (mandatory for the provider aws)
+      bucketName: my-migration-bucket
+  # List of the migrations plans
+  plans:
+    # Enable the creation of migrations plans
+    enabled: false
+    # List of migrations plans to configure
+    list:
+      # Name of the migration plan (example myapp-cluster1-to-cluster2)
+    - name: myapp-cluster1-to-cluster2
+      # Namespace of the migration plan (if not set, use default ns for MTC)
+      namespace: openshift-migration
+      # The applyed plan specifications
+      spec: |
+        destMigClusterRef:
+          name: host
+          namespace: openshift-migration
+        indirectImageMigration: true 
+        indirectVolumeMigration: true 
+        migStorageRef:
+          name: host-storage
+          namespace: openshift-migration
+        namespaces:
+          - myapp:myapp-dev
+        srcMigClusterRef:
+          name: source
+          namespace: openshift-migration
+  # List of the migrationPlan executions
+  migrations:
+    # Enable the creation of migrations plans
+    enabled: false
+    # List of migrations plans to configure
+    list:
+      # Name of the migration (example myapp-cluster1-to-cluster2)
+    - name: myapp-cluster1-to-cluster2
+      # Namespace of the migration plan (if not set, use default ns for MTC)
+      namespace: openshift-migration
+      # The applyed plan specifications
+      spec: |
+        migPlanRef:
+          name: myapp-cluster1-to-cluster2
+          namespace: openshift-migration
+        quiescePods: true 
+        stage: false 
+        rollback: false 
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-migration"
+    display_name: Operator MTC
+    description: Migration Toolkit for Containers configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "mtc-operator"
+    namespace: "openshift-migration"
+    version: "v1.8.4"
+    operator: 
+      channel: "release-v1.8"
+      name: mtc-operator
+      installPlanApproval: Automatic
+      csv: mtc-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-migration"
+    namespace: "openshift-migration"
+    providedAPIs: "Backup.v1.velero.io,BackupRepository.v1.velero.io,BackupStorageLocation.v1.velero.io,CloudStorage.v1alpha1.oadp.openshift.io,DataDownload.v2alpha1.velero.io,DataProtectionApplication.v1alpha1.oadp.openshift.io,DataUpload.v2alpha1.velero.io,DeleteBackupRequest.v1.velero.io,DirectImageMigration.v1alpha1.migration.openshift.io,DirectImageStreamMigration.v1alpha1.migration.openshift.io,DirectVolumeMigration.v1alpha1.migration.openshift.io,DirectVolumeMigrationProgress.v1alpha1.migration.openshift.io,DownloadRequest.v1.velero.io,MigAnalytic.v1alpha1.migration.openshift.io,MigCluster.v1alpha1.migration.openshift.io,MigHook.v1alpha1.migration.openshift.io,MigMigration.v1alpha1.migration.openshift.io,MigPlan.v1alpha1.migration.openshift.io,MigStorage.v1alpha1.migration.openshift.io,MigrationController.v1alpha1.migration.openshift.io,PodVolumeBackup.v1.velero.io,PodVolumeRestore.v1.velero.io,Restore.v1.velero.io,Schedule.v1.velero.io,ServerStatusRequest.v1.velero.io,VolumeSnapshotLocation.v1.velero.io"

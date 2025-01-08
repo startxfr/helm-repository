@@ -24,7 +24,7 @@ acs:
     # Enable the deployment of the reporting-operator service
     enabled: true
     # Activate the manager as a helm hook
-    hooked: true
+    hooked: false
     # name of the central deployment
     name: "default"
   # configuration of the scanner service
@@ -68,18 +68,20 @@ operator:
     enabled: true
     name: "rhacs-operator"
     namespace: "openshift-operators"
-    version: "v4.3.0"
+    version: "v4.5.4"
     operator: 
-      channel: "rhacs-4.3"
+      channel: "rhacs-4.5"
       name: rhacs-operator
       installPlanApproval: Automatic
       # csv: rhacs-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     target: "all-ns"
-    name: "rhacs-operator"
+    name: "startx-rhacs"
     namespace: "openshift-operators"
     providedAPIs: " Central.v1alpha1.platform.stackrox.io,SecuredCluster.v1alpha1.platform.stackrox.io"

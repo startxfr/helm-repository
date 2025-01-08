@@ -6,9 +6,9 @@ description: Helm chart used to create a project, or namespace, with various opt
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.131-noschema
+version: 16.19.5-noschema
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "4.14.6"
+appVersion: "4.16.19"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/project.svg
 # Kube minimum version
@@ -49,7 +49,10 @@ annotations:
   # Artifacthub is an operator chart
   artifacthub.io/operator: "false"
   # Artifacthub changes logs
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 14.6.105-noschema"
+      description: "Upgrade all startx chart dependencies to version 16.19.5-noschema"
   artifacthub.io/containsSecurityUpdates: "false"

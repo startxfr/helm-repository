@@ -42,11 +42,24 @@ spec:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
         operator: Exists
-  {{- end }}{{- /* end condition line 36 */ -}}
+  {{- else }}
+  {{- if .config.nodeSelector }}
+    nodeSelector:
+      {{- .config.nodeSelector | toYaml | nindent 6 }}
+  {{- end }}
+  {{- if .config.tolerations }}
+    tolerations:
+      {{- .config.tolerations | toYaml | nindent 6 }}
+  {{- end }}
+  {{- end }}
   {{- if .config.env }}
     env:
       {{- .config.env | toYaml | nindent 6 }}
-  {{- end }}{{- /* end condition line 44 */ -}}
-  {{- end }}{{- /* end condition line 34 */ -}}
-  {{- end }}{{- /* end condition line 26 */ -}}
+  {{- end }}
+  {{- if .config.resources }}
+    resources:
+      {{- .config.resources | toYaml | nindent 6 }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
 {{- end }}{{- end }}{{- end }}

@@ -109,7 +109,7 @@ operator:
     hooked: false
     name: "serverless-operator"
     namespace: "openshift-serverless"
-    version: "v1.30.2"
+    version: "v1.34.0"
     operator: 
       channel: "stable"
       name: serverless-operator
@@ -118,6 +118,13 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false

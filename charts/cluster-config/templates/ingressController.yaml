@@ -13,36 +13,78 @@ metadata:
   annotations:
     {{- include "cluster-config.annotations" $ | nindent 4 }}
 spec:
+  # tuningOptions:
+  #   connectTimeout: 300
 {{- if .infra_enabled }}
   nodePlacement:
     nodeSelector:
       matchLabels:
         node-role.kubernetes.io/infra: ""
-        {{- if .nodeSelector }}
-        machine.startx.io/group: "{{ .nodeSelector }}"
-        {{- end }}
     tolerations:
       - effect: NoSchedule 
         key: node-role.kubernetes.io/infra 
         operator: Exists
 {{- else }}
-  {{- if .nodeSelector }}
+  {{- if or .nodeSelector .tolerations }}
   nodePlacement:
+    {{- with .nodeSelector }}
     nodeSelector:
       matchLabels:
-        machine.startx.io/group: "{{ .nodeSelector }}"
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .tolerations }}
+    tolerations:
+      {{- toYaml .list | nindent 6 }}
+    {{- end }}
   {{- end }}
 {{- end }}
 {{- if .domain }}
   domain: "{{ .domain }}"
 {{- end }}
-{{- if .routeSelectorKey }}
-  routeSelector:
+{{- with .routeSelector }}
+  routeSelector:    
+  {{- if .isLabel }}
     matchLabels:
-      "{{ .routeSelectorKey }}": "{{ .routeSelectorValue }}"
+    {{- range $key, $value := .matchLabels }}
+      {{ $key  | quote }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if .isExpressions }}
+    matchExpressions:
+      - key: "{{ .expressionKey }}"
+        operator: '{{ .expressionOperator | default "NotIn" }}'
+        values:
+          {{- range .expressionValues }}
+          - {{ . | quote }}
+          {{- end }}
+  {{- end }}
 {{- end }}
+{{- with .nsSelector }}
+  namespaceSelector:    
+  {{- if .isLabel }}
+    matchLabels:
+    {{- range $key, $value := .matchLabels }}
+      {{ $key  | quote }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if .isExpressions }}
+    matchExpressions:
+      - key: "{{ .expressionKey }}"
+        operator: '{{ .expressionOperator | default "NotIn" }}'
+        values:
+          {{- range .expressionValues }}
+          - {{ . | quote }}
+          {{- end }}
+  {{- end }}
+{{- end }}
+{{- if .enabledInterNamespace }}
   routeAdmission:
     namespaceOwnership: InterNamespaceAllowed
+{{- end }}
+{{- if .httpHeadersForwardedPolicy }}
+  httpHeaders:
+    forwardedHeaderPolicy: '{{ .httpHeadersForwardedPolicy | default "Append" }}'
+{{- end }}
 {{- if eq "internal" .loadBalancerMode }}
   endpointPublishingStrategy:
     loadBalancer:
@@ -53,6 +95,17 @@ spec:
     loadBalancer:
       scope: External
     type: LoadBalancerService
+{{- else if eq "nodeport" .loadBalancerMode }}
+  endpointPublishingStrategy:
+    nodePort:
+      protocol: TCP
+    type: NodePortService
+{{- else if eq "nodeport-proxy" .loadBalancerMode }}
+  endpointPublishingStrategy:
+    nodePort:
+      protocol: PROXY
+    type: NodePortService
+{{- else if eq "none" .loadBalancerMode }}
 {{- end }}
   replicas: {{ default 2 .replicas }}
 {{- if .certificate }}{{- if .certificate.enabled }}
@@ -75,15 +128,15 @@ metadata:
 data:
   tls.crt: >-
 {{- if .certificate.CABundleRaw }}
-    {{ .certificate.CABundleRaw }}
+    {{- .certificate.CABundleRaw | nindent 4 }}
 {{- else }}
-    {{ .certificate.CABundle | b64enc }}
+    {{- .certificate.CABundle | b64enc | nindent 4 }}
 {{- end }}
   tls.key: >-
 {{- if .certificate.privateKeyRaw }}
-    {{ .certificate.privateKeyRaw }}
+    {{- .certificate.privateKeyRaw | nindent 4 }}
 {{- else }}
-    {{ .certificate.privateKey | b64enc }}
+    {{- .certificate.privateKey | b64enc | nindent 4 }}
 {{- end }}
 {{- end }}{{- end }}
 {{- end }}

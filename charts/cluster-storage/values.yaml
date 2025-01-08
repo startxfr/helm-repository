@@ -17,6 +17,8 @@ context:
 
 # enable the basic chart globally
 enabled: false
+# enable the creation of storageclasses
+enabledStorageClasses: true
 # List of storageClass to create
 storageClasses:
   # Storage class ID to use
@@ -30,7 +32,43 @@ storageClasses:
     encrypted: "true"
   # Reclaim policy to use
   reclaimPolicy: Delete
+  # Define if the storageClass must be the default one (ahould be unique accross storageClasses)
+  isDefault: false
+  # Add annotation if the provider has a VolumeSnapshot plugin
+  hasCSIVolumeSnapshot: true
   # Enable volume expansion for this storageClass
   allowVolumeExpansion: true
   # Binding mode strategy for this storageClass
   volumeBindingMode: WaitForFirstConsumer
+
+# enable the creation of VolumeSnapshotClasses
+enabledVolumeSnapshotClasses: false
+# List of storageClass to create
+VolumeSnapshotClasses:
+  # Storage class ID to use
+- id: example-gp3
+  # Storage class name to use
+  name: example-gp3
+  # Provisionner for this storageClass
+  provisioner: "kubernetes.io/aws-ebs"
+  # Enable to be usable by velero for snapshot
+  veleroEnabled: false
+  # Specific parameters according to the provisionner
+  parameters: |
+    encrypted: "true"
+  # deletion policy to use
+  deletionPolicy: Delete
+  # Define if the storageClass must be the default one (ahould be unique accross VolumeSnapshotClasses)
+  isDefault: false
+- id: vsphere-volume
+  # Storage class name to use
+  name: vsphere-volume
+  # Provisionner for this storageClass
+  provisioner: "kubernetes.io/vsphere-volume"
+  # Specific parameters according to the provisionner
+  # parameters: |
+  #   encrypted: "true"
+  # deletion policy to use
+  deletionPolicy: Delete
+  # Define if the storageClass must be the default one (ahould be unique accross VolumeSnapshotClasses)
+  isDefault: false

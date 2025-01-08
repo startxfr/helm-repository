@@ -80,7 +80,7 @@ operator:
     hooked: false
     name: "rhsso-operator"
     namespace: "startx-sso"
-    version: "7.6.6-opr-001"
+    version: "7.6.11-opr-001"
     operator: 
       channel: stable
       name: rhsso-operator
@@ -89,6 +89,13 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false

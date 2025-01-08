@@ -1,11 +1,11 @@
 #!/bin/bash
-PROJECT_PATH=$(dirname "$(readlink -f $0)")
+PROJECT_PATH=$(dirname "$(readlink -f "$0")")
 export PROJECT_CHARTPATH=$PROJECT_PATH/charts
 PROJECT_LIBPATH=$PROJECT_PATH/.tools
 
 # shellcheck source=/dev/null
 source "$PROJECT_LIBPATH/cli"
-source "$PROJECT_LIBPATH/cli-s3"
+source "${PROJECT_LIBPATH}/cli-s3"
 
 ## Start prog switch
 
@@ -15,6 +15,7 @@ if [[ "$1" != "" ]]; then
         publish)                routerPublish;;
         release)                routerRelease "$@" ;;
         archive)                routerArchive "$@" ;;
+        archiveLegacy)          routerArchiveLegacy "$@" ;;
         syncfroms3)             routerSyncFromS3 "$@" ;;
         synctos3)               routerSyncToS3 "$@" ;;
         version)                routerVersion;;

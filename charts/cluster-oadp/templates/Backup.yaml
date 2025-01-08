@@ -2,6 +2,7 @@
 {{- $namespace := .Values.project.project.name | default "openshift-adp" -}}
 {{ range .Values.oadp.backups.list }}
 {{- $spec := .spec | default "{}" -}}
+---
 apiVersion: velero.io/v1
 kind: Backup
 metadata:

@@ -21,6 +21,7 @@ report:
   serviceAccount: "mustgather-admin"
   audit: true
   # mustGatherImages: |-
+  #   - registry.redhat.io/migration-toolkit-virtualization/mtv-must-gather-rhel8:2.6.2
   #   - quay.io/kubevirt/must-gather:latest
   #   - quay.io/ocs-dev/ocs-must-gather
 
@@ -74,6 +75,13 @@ operator:
       source:
         name: community-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false

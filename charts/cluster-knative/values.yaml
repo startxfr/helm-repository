@@ -20,7 +20,7 @@ kServing:
   # Enable the deployment of the knative-serving service
   enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # name of the knative-serving service
   name: "knative-serving"
   # configuration of service HA
@@ -30,7 +30,7 @@ kEventing:
   # Enable the deployment of the knative-eventing service
   enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # name of the knative-eventing service
   name: "knative-eventing"
 # configuration of the knative-kafka service
@@ -38,7 +38,7 @@ kKafka:
   # Enable the deployment of the knative-kafka service
   enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # name of the knative-kafka service
   name: "knative-kafka"
 
@@ -113,7 +113,7 @@ operator:
     hooked: false
     name: "serverless-operator"
     namespace: "openshift-serverless"
-    version: "v1.30.2"
+    version: "v1.34.0"
     operator: 
       channel: "stable"
       name: serverless-operator
@@ -122,6 +122,8 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     hooked: false

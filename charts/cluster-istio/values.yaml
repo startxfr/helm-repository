@@ -21,8 +21,14 @@ istio:
   enabled: false
   # Activate the manager as a helm hook
   hooked: false
+  # Place the istio controlePlane onto infra node
+  infra_enabled: false
+  # Enable the deployment of the istio ServiceMeshControlPlane
+  enabledControlPlane: true
   # Name of the istio service
   name: default
+  # # version of the istio serviceMeshMember (default is v2.1)
+  # version: "v2.2"
   # deploy a list of report ressources
   members:
     # Enable the deployment of MemberRoll
@@ -89,7 +95,7 @@ operatorElastic:
     enabled: true
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.8.0"
+    version: "5.8.14"
     operator: 
       channel: "stable"
       name: elasticsearch-operator
@@ -98,8 +104,39 @@ operatorElastic:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false
+
+# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorLoki:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "loki-operator"
+    namespace: "openshift-operators-redhat"
+    version: "6.0.1"
+    operator: 
+      channel: "stable-6.0"
+      name: loki-operator
+      installPlanApproval: Automatic
+      # csv: loki-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: true
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "loki-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"
 
 # Configuration of the kiali operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorKiali:
@@ -110,7 +147,7 @@ operatorKiali:
     enabled: true
     name: "kiali-ossm"
     namespace: "openshift-operators"
-    version: "v1.65.11"
+    version: "v1.89.6"
     operator: 
       channel: "stable"
       name: kiali-ossm
@@ -119,6 +156,8 @@ operatorKiali:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false
 
@@ -131,7 +170,7 @@ operatorJaeger:
     enabled: true
     name: "jaeger-product"
     namespace: "openshift-distributed-tracing"
-    version: "v1.51.0-1"
+    version: "v1.57.0-10-0.1730817420.p"
     operator: 
       channel: "stable"
       name: jaeger-product
@@ -140,6 +179,8 @@ operatorJaeger:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false
 
@@ -152,7 +193,7 @@ operatorIstio:
     enabled: true
     name: "servicemeshoperator"
     namespace: "istio-operators"
-    version: "v2.4.5"
+    version: "v2.6.2"
     operator: 
       channel: "stable"
       name: servicemeshoperator
@@ -161,6 +202,8 @@ operatorIstio:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     name: "istio-operators"
