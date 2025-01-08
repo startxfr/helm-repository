@@ -1,0 +1,22 @@
+{{- if .Values.vpa.enabled -}}
+{{- $root := . }}
+{{- $namespaceDef := .Values.project.project.name | default "openshift-vertical-pod-autoscaler" -}}
+{{- range .Values.vpa.list }}
+{{- $namespace := .namespace | default $namespaceDef -}}
+{{- $spec := .spec | default "{}" -}}
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ .name | default "default" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-vpa.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name | default "default" -}}-vpa"
+  annotations:
+    {{- include "cluster-vpa.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}
+{{- end -}}

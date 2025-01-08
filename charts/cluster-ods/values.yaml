@@ -15,42 +15,43 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   # version: "0.0.3"
 
-# configuration of the redhat credentials for case association
-redhatCreds:
-  # Enable the creation of the redhat credentials
+# configuration of the rh-ods DataScienceCluster
+DataScienceCluster:
+  # Enable the creation of a DataScienceCluster
   enabled: true
-  # Prefix of the rh-ods report
-  name: "my-rhsupport-creds"
-  # Namespace used for the rh-ods (default is the project)
-  namespace: "openshift-startx-rh-ods"
-  # Username of the redhat account
-  username: myredhatusername
-  # Password of the redhat account
-  password: mypassword
-
-# configuration of the rh-ods report
-report:
-  # Enable the creation of a rh-ods report
-  enabled: false
-  # Prefix of the rh-ods report
-  name: "my-gather"
-  # Namespace used for the rh-ods (default is the project)
-  namespace: "openshift-startx-rh-ods"
-  # Spec of the rh-ods
+  # Name of the cluster
+  name: "default-dsc"
+  # Namespace used for the DataScienceCluster (default is the project)
+  namespace: "rhods-operator"
+  # Spec of the DataScienceCluster
   spec: |
-    caseID: '02527285'
-    caseManagementAccountSecretRef:
-      name: my-rhsupport-creds
-    serviceAccountRef:
-      name: rh-ods-admin
-    audit: true
-    # proxyConfig:
-    #   http_proxy: http://myproxy
-    #   https_proxy: https://my_http_proxy
-    #   no_proxy: master-api
-    # mustGatherImages:
-    # - quay.io/kubevirt/must-gather:latest
-    # - quay.io/ocs-dev/ocs-must-gather
+    components:
+      codeflare:
+        managementState: Managed
+      dashboard:
+        managementState: Managed
+      datasciencepipelines:
+        managementState: Managed
+      kserve:
+        serving:
+          ingressGateway:
+            certificate:
+              type: OpenshiftDefaultIngress
+          managementState: Managed
+          name: knative-serving
+        managementState: Managed
+      kueue:
+        managementState: Managed
+      modelmeshserving:
+        managementState: Managed
+      ray:
+        managementState: Managed
+      trainingoperator:
+        managementState: Removed
+      trustyai:
+        managementState: Removed
+      workbenches:
+        managementState: Managed
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -61,10 +62,10 @@ project:
     enabled: true
     hooked: false
     type: project
-    name: "openshift-startx-rh-ods"
+    name: "rhods-operator"
     display_name: "Startx OpenDataScience"
     requester: startx
-    description: Startx Must Gather area
+    description: Startx OpenDataScience operator
   rbac: 
     enabled: true
     groups: 
@@ -74,10 +75,6 @@ project:
     - id: ops-admin
       name: ops
       role: admin
-    sa: 
-    - id: rh-ods-admin
-      name: rh-ods-admin
-      role: cluster-admin
 
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
@@ -88,21 +85,23 @@ operator:
   subscription:
     enabled: true
     hooked: false
-    name: "must-gather-operator"
-    namespace: "openshift-startx-rh-ods"
-    version: "v1.1.2"
+    name: "rhods-operator"
+    namespace: "rhods-operator"
+    version: "2.13.1"
     operator: 
-      channel: "alpha"
-      name: must-gather-operator
+      channel: "stable"
+      name: rhods-operator
       installPlanApproval: Automatic
-      # csv: must-gather-operator
+      # csv: rhods-operator
       source: 
-        name: community-operators
+        name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "must-gather-operator"
-    namespace: "openshift-startx-rh-ods"
-    providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"
+    name: "rhods-operator"
+    namespace: "rhods-operator"
+    providedAPIs: "DSCInitialization.v1.dscinitialization.opendatahub.io,DataScienceCluster.v1.datasciencecluster.opendatahub.io,FeatureTracker.v1.features.opendatahub.io"

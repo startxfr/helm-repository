@@ -20,7 +20,7 @@ hyperconvergedCluster:
   # enable deployment of the hyperconverged cluster
   enabled: true
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # name of the hyperconverged cluster
   name: "kubevirt-hyperconverged"
   # name of the local storage class used as default storage
@@ -207,7 +207,7 @@ operator:
     hooked: false
     name: "kubevirt-hyperconverged"
     namespace: "openshift-cnv"
-    version: "v4.14.6"
+    version: "v4.16.3"
     operator: 
       channel: "stable"
       name: kubevirt-hyperconverged
@@ -216,6 +216,8 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: true
     hooked: false

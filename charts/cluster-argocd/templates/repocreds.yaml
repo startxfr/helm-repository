@@ -13,7 +13,7 @@ metadata:
   labels:
     {{- include "cluster-argocd.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{- $name -}}-export"
-    argocd.argoproj.io/secret-type: repository
+    argocd.argoproj.io/secret-type: {{ .secretType | default "repository" | quote }}
   annotations:
     {{- include "cluster-argocd.annotations" $ | nindent 4 }}
 stringData:

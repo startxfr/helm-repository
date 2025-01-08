@@ -20,7 +20,7 @@ ptp:
   # Enable the configuration of the API manager
   enabled: true
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # Name of the deployed instance of PTPConfig
   name: default
   # The applyed PTP config specifications
@@ -52,7 +52,7 @@ operator:
     hooked: false
     name: "ptp-operator"
     namespace: "openshift-ptp"
-    version: "4.14.0-202311211131"
+    version: "4.16.0-202410242205"
     operator: 
       channel: "stable"
       name: ptp-operator
@@ -61,6 +61,8 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: false
   operatorGroup:
     enabled: false
     hooked: false

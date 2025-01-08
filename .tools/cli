@@ -1,7 +1,7 @@
 #!/bin/bash
 
-STABLE_MAINRELEASE="14"
-STABLE_SUBRELEASE="6"
+STABLE_MAINRELEASE="16"
+STABLE_SUBRELEASE="19"
 SXV4_CONSOLE_VERSION="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}.1"
 SHARED_TEMPLATE_NAME=_startx.tpl
 SHARED_TEMPLATE=.tools/$SHARED_TEMPLATE_NAME
@@ -25,6 +25,10 @@ HELM_REPO_BASEURL="http://${HELM_REPO_AWSBUCKET}.s3-website.${HELM_REPO_AWSDC}.a
 HELM_REPO_SUBDEFAULT="noschema"
 HELM_REPO_LOCALSYNC="${PROJECT_PATH}/.reposync"
 HELM_REPO_LOCALIDX="${PROJECT_PATH}/docs/repos"
+SXHELM_SIGN=enabled
+SXHELM_SIGN_KEY="dev@startx.fr"
+SXHELM_SIGN_KEYRING="$HOME/.gnupg/secring.gpg"
+SXHELM_SIGN_KEYPASSPHRASEFILE="$HOME/.ssh/pgp-dev_startx-private_key-passphrase.txt"
 
 #####################
 ## GENERICS FUNCTIONS
@@ -101,7 +105,13 @@ function routerPublish {
 
 # router for archive command
 function routerArchive {
-    # doHelmrepositoryRefresh release-14 "14" $HELM_REPO_BASEURL Archive 37
+    # doHelmrepositoryRefresh release-16 "16" $HELM_REPO_BASEURL Archive 37
+    doHelmrepositoryRefresh release-15 "15" $HELM_REPO_BASEURL Archive 37
+    doHelmrepositoryRefresh release-14 "14" $HELM_REPO_BASEURL Archive 37
+}
+
+# router for archive legacy command
+function routerArchiveLegacy {
     doHelmrepositoryRefresh release-13 "13" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-12 "12" $HELM_REPO_BASEURL Archive 37
     doHelmrepositoryRefresh release-11 "11" $HELM_REPO_BASEURL Archive 37
@@ -187,7 +197,7 @@ function doHelmrepositoryRefresh {
     local action="${4:-Publish}"
     local color="${5:-36}"
     doHelmrepositoryGenerate "${reponame}" "${subrepo}" "${helmrepourl}" "${action}" "${color}"
-    echo -e "\e[${color}m${action}\e[0m Uupdate repository \e[1m${reponame}\e[0m into \e[1m$HELM_REPO_LOCALIDX\e[0m"
+    echo -e "\e[${color}m${action}\e[0m Update repository \e[1m${reponame}\e[0m into \e[1m$HELM_REPO_LOCALIDX\e[0m"
     git add "$HELM_REPO_LOCALIDX" &>/dev/null
     git commit -m "[docs] update repository ${reponame} index" "$HELM_REPO_LOCALIDX" &>/dev/null
     echo -e "\e[${color}m${action}\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
@@ -307,8 +317,16 @@ function routerChartPackage {
         git commit -m "[chart/$chart_name] package version $current_release" "$chart_name" &>/dev/null
         echo -e "\e[34mPackage\e[0m \e[1mdownload dendencies\e[0m for chart \e[1m$chart_name\e[0m in $chart_dir/charts"
         helm dependency update "$chart_dir"
-        echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH"
-        helm package "$chart_name"
+        if [[ "$SXHELM_SIGN" == "enabled" ]]; then
+            echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH (signed by $SXHELM_SIGN_KEY)"
+            helm package "$chart_name" --sign \
+            --key "$SXHELM_SIGN_KEY" \
+            --keyring "$SXHELM_SIGN_KEYRING" \
+            --passphrase-file "$SXHELM_SIGN_KEYPASSPHRASEFILE"
+        else
+            echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH"
+            helm package "$chart_name"
+        fi
         cd - &>/dev/null || exit
     else
         echo -e "\e[34mPackage\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
@@ -334,7 +352,7 @@ function routerChartRelease {
     next_date="$(date +%Y-%m-%d)"
     if [[ -r $chart_dir ]]; then
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m helm chart"
-        current_release=$(chartReadVersion $chart_name)
+        current_release=$(chartReadVersion "$chart_name")
         next_release=$(cat $chart_dir/Chart.yaml | yq .version - | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
         if [[ "" != "$force_version" ]]; then
             next_release=$force_version
@@ -369,7 +387,7 @@ function routerChartRelease {
         local packagename="${chart_name}-${next_release}.tgz"
         git checkout $WORK_BRANCH &>/dev/null
         echo -e "\e[35mRelease\e[0m Update \e[1m$chart_name\e[0m release number $next_release in $chart_name/Chart.yaml"
-        echo "| $next_release | $next_date | $next_description" >> $chart_dir/README.md
+        echo "| $next_release | $next_date | $next_description" >> "${chart_dir}/README.md"
         sed -i "s/$current_release/$next_release/" "$chart_dir/Chart.yaml"
         git add "$chart_dir"
         cp "$chart_dir/README.md" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
@@ -380,6 +398,10 @@ function routerChartRelease {
         echo -e "\e[35mRelease\e[0m \e[1mmove $packagename\e[0m to \e[1m$subrepo\e[0m in ${pkgdestpath}"
         mv "${PROJECT_CHARTPATH}/${packagename}" "${pkgdestpath}/${packagename}"
         awsS3FileUpload "${pkgdestpath}/${packagename}" "${subrepo}" $HELM_REPO_AWSBUCKET
+        if [[ "$SXHELM_SIGN" == "enabled" ]]; then
+            mv "${PROJECT_CHARTPATH}/${packagename}.prov" "${pkgdestpath}/${packagename}.prov"
+            awsS3FileUpload "${pkgdestpath}/${packagename}.prov" "${subrepo}" $HELM_REPO_AWSBUCKET
+        fi
     else
         echo -e "\e[35mRelease\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
         routerList
@@ -440,7 +462,7 @@ function routerChartDelete {
         echo -e "\e[37mDelete\e[0m Delete chart \e[1m${chart_name}\e[0m from \e[1m$chart_dir\e[0m"
         git commit -m "[chart/$chart_name] deleted chart $chart_name" "$chart_dir" "$PROJECT_PATH" &>/dev/null
         if [[ "$remove_repository" == "yes" ]]; then
-            rm -rf "${HELM_REPO_LOCALSYNC}"/*/"${chart_name}"-*.tgz &>/dev/null
+            rm -rf "${HELM_REPO_LOCALSYNC}"/*/"${chart_name}"-*.tg* &>/dev/null
             awsS3SyncUploadDelete "${HELM_REPO_LOCALSYNC}" ""
             if [[ "$publish_repository" == "yes" ]]; then
                 routerPublish
@@ -468,7 +490,8 @@ Usage:
   - list                           list all helm-chart managed
   - release                        Upgrade all charts, publish all change into repository and tag this release
   - publish                        Publish all change into repository
-  - archive                        Generate and publish all charts into the archive directory 
+  - archive                        Generate and publish all charts into the archive (prior to 4.16) directory 
+  - archiveLegacy                  Generate and publish all legacy charts (prior to 4.14) into the archive directory 
   - syncfroms3                     Download all content from the S3 repo backend into local repocopy
   - synctos3                       Upload all content from the local repocopy into the S3 repo backend
   - version                        Get version of this tools

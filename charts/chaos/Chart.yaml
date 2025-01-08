@@ -9,9 +9,9 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.131-noschema
+version: 16.19.4-noschema
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "4.14.6"
+appVersion: "4.16.19"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/chaos.svg
 # Kube minimum version
@@ -41,28 +41,28 @@ maintainers:
 
 dependencies:
   - name: "chaos-cerberus"
-    repository: https://startxfr.github.io/helm-repository/repos/noschema/
-    version: "14.6.105-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
-    repository: https://startxfr.github.io/helm-repository/repos/noschema/
-    version: "14.6.105-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
-    repository: https://startxfr.github.io/helm-repository/repos/noschema/
-    version: "14.6.105-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
-    repository: https://startxfr.github.io/helm-repository/repos/noschema/
-    version: "14.6.105-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
-    repository: https://startxfr.github.io/helm-repository/repos/noschema/
-    version: "14.6.105-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: monkey
     condition: monkey.enabled
 
@@ -80,19 +80,23 @@ annotations:
   # Artifacthub operator capabilities
   artifacthub.io/operatorCapabilities: "Seamless Upgrades"
   # Artifacthub chart recommandations
-  artifacthub.io/recommendations: |
-    - name: Startx Chaos chart : Cerberus
+  startx.io/recommendations: |
+    - name: Startx Chaos chart - Cerberus
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus
-    - name: Startx Chaos chart : Kraken
+    - name: Startx Chaos chart - Kraken
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken
-    - name: Startx Chaos chart : Litmus
+    - name: Startx Chaos chart - Litmus
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus
-    - name: Startx Chaos chart : ChaosMesh
+    - name: Startx Chaos chart - ChaosMesh
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh
-    - name: Startx Chaos chart : ChaosMonkey
+    - name: Startx Chaos chart - ChaosMonkey
       url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey
   # Artifacthub changes logs
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 14.6.105-noschema"
+      description: "Upgrade all startx chart dependencies to version 16.19.4-noschema"
+  # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"

@@ -34,6 +34,7 @@ spec:
     {{- with .Values.logging.elasticsearch }}
     elasticsearch:
       nodeCount: {{ .replicas | default 3 }}
+      redundancyPolicy: {{ .redundancyPolicy | default "SingleRedundancy" }}
       {{- if $.Values.logging.infra_enabled }}
       tolerations:
         - effect: NoSchedule 
@@ -46,7 +47,6 @@ spec:
       resources:
         {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
-      redundancyPolicy: "SingleRedundancy"
       storage:
         storageClassName: {{ .storage.class | default "gp3-csi" | quote }}
         size: {{ .storage.size | default "200G" | quote }}
@@ -101,17 +101,13 @@ spec:
         {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
   {{- end }}{{- end }}{{- end }}
-  {{- if .Values.logging.fluentd }}{{- if .Values.logging.fluentd.enabled }}
+  {{- if .Values.logging.collector }}{{- if .Values.logging.collector.enabled }}
+  {{- with .Values.logging.collector}}
   collection:
-    logs:
-      type: "fluentd"
-      {{- with .Values.logging.fluentd}}
-      fluentd: 
+      type: {{ .type | default "vector" | quote }}
       {{- if .resources }}
-        resources:
-          {{- .resources | toYaml | nindent 10 -}}
-      {{- else }}
-        resources: {}
+      resources:
+        {{- .resources | toYaml | nindent 8 -}}
       {{- end }}
       {{- end }}
   {{- end }}{{- end }}

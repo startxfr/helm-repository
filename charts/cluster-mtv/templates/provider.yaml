@@ -1,0 +1,71 @@
+{{- if .Values.mtv.enabled -}}{{- if .Values.mtv.providers -}}{{- if .Values.mtv.providers.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-mtv" -}}
+{{- $ns2 := .Values.mtv.namespace | default ($ns1) -}}
+{{- $namespace := .Values.mtv.providers.namespace | default ($ns2) -}}
+{{- range .Values.mtv.providers.list -}}
+{{- $name := .name | default "myprovider" }}
+---
+apiVersion: forklift.konveyor.io/v1beta1
+kind: Provider
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-mtv.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-providers"
+  annotations:
+    {{- include "cluster-mtv.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+{{- if eq .type "ovirt" }}
+  secret:
+    name: "{{- $name -}}-creds"
+    namespace: "{{- $namespace -}}"
+  type: ovirt
+  url: {{ .ovirt.url | quote }}
+{{- else if eq .type "openshift" }}
+  {{- if .enableSecret }}
+  secret:
+    name: "{{- $name -}}-creds"
+    namespace: "{{- $namespace -}}"
+  {{- else }}
+  secret: {}
+  {{- end }}
+  type: openshift
+  url: {{ .openshift.url | default "" | quote }}
+{{- end }}
+{{- if eq .type "ovirt" }}
+---
+kind: Secret
+apiVersion: v1
+type: Opaque
+metadata:
+  name: "{{- $name -}}-creds"
+  namespace: "{{- $namespace -}}"
+  labels:
+    createdForProviderType: ovirt
+    createdForResourceType: providers
+stringData:
+  insecureSkipVerify: {{ .ovirt.insecureSkipVerify | default "false" | quote }}
+  password: {{ .ovirt.password | default "mypassword" | quote }}
+  url: {{ .ovirt.url | quote }}
+  user: {{ .ovirt.user | default "user@internal" | quote }}
+{{- else if eq .type "openshift" }}
+{{- if .enableSecret }}
+---
+kind: Secret
+apiVersion: v1
+type: Opaque
+metadata:
+  name: "{{- $name -}}-creds"
+  namespace: "{{- $namespace -}}"
+  labels:
+    createdForProviderType: openshift
+    createdForResourceType: providers
+stringData:
+  insecureSkipVerify: {{ .openshift.insecureSkipVerify | default "false" | quote }}
+  token: {{ .openshift.token | default "mytoken" | quote }}
+  url: {{ .openshift.url | default "" | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}{{- end -}}{{- end -}}{{- end -}}

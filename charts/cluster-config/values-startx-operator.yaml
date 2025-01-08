@@ -33,13 +33,17 @@ project:
 operatorElastic:
   enabled: false
 
+# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorLoki:
+  enabled: false
+
 # Configuration of the SosReport project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 projectSosReport: 
   enabled: false
 
 # Configuration of the sosreport operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorSosReport:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
@@ -56,6 +60,13 @@ operatorSosReport:
       source: 
         name: community-operators
         namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false

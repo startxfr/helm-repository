@@ -20,9 +20,44 @@ argocd:
   # enable deployment of the argocd cluster
   enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # name of the argocd cluster
   name: "openshift-gitops"
+  # # the spec of the argoCD config (default is a generic config with example)
+  # spec: |-
+  #   applicationInstanceLabelKey: argocd.argoproj.io/instance
+  #   server:
+  #     autoscale:
+  #       enabled: false
+  #     insecure: true
+  #     route:
+  #       enabled: true
+  #       tls:
+  #         termination: edge
+  #   statusBadgeEnabled: true
+  #   usersAnonymousEnabled: false
+  #   controller:
+  #     appSync: 120s
+  #     processors:
+  #       operation: 10
+  #       status: 25
+  #   ha:
+  #     enabled: false
+  #   redis:
+  #     resources:
+  #       requests:
+  #         cpu: 50m
+  #   dex:
+  #     openShiftOAuth: true
+  #   grafana:
+  #     enabled: false
+  #   prometheus:
+  #     enabled: true
+  #     size: 2
+  #     route:
+  #       enabled: false
+  #   repo:
+  #     mountsatoken: true
 
 # Configuration of secrets to access various private repository used in argocd applications
 # Read https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ for more 
@@ -40,8 +75,10 @@ argocd_repocreds:
       namespace: "openshift-gitops"
       # URL of the repository (or path if used for multiple repository)
       url: "https://github.com/argoproj/private-repo"
+      # ArgoCD Secret type (should be repository, repo-creds or cluster)
+      secretType: "repository"
       # Credentials type for this secret (should be https, ssh or githubapp)
-      type: "ssh"
+      type: "https"
       # Is the connection must be SSL checked
       insecure: true
       # Options if credentials type is https
@@ -196,19 +233,35 @@ operator:
     hooked: false
     name: "openshift-gitops-operator"
     namespace: "openshift-operators"
-    version: "v1.5.6"
+    version: "v1.14.1"
     operator: 
-      channel: "stable"
+      channel: "gitops-1.14"
       name: openshift-gitops-operator
       # csv: openshift-gitops-operator
       installPlanApproval: Automatic
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+  consolePlugin:
+    enabled: true
+    name: "gitops-plugin"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: gitops-plugin
+          namespace: openshift-gitops
+          port: 9001
+        type: Service
+      displayName: GitOps Plugin
+      i18n:
+        loadType: Preload
   operatorGroup:
     enabled: false
     hooked: false
-    name: "gitops"
+    name: "startx-gitops"
     target: "all-ns"
     namespace: "openshift-operators"
-    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,GitopsService.v1alpha1.pipelines.openshift.io"
+    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1beta1.argoproj.io,GitopsService.v1alpha1.pipelines.openshift.io"

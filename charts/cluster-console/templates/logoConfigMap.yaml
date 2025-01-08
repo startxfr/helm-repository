@@ -5,6 +5,7 @@
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "{{- .name | default "default-logo" -}}"
   namespace: "{{- $namespace -}}"
@@ -14,7 +15,34 @@ metadata:
   annotations:
     {{- include "cluster-console.annotations" $ | nindent 4 }}
 data:
-  {{ .name | default "default-logo" -}}.svg: |-
+  {{ .name | default "default-logo" -}}.{{ .format | default "svg" }}: |-
+{{- if and (eq .mode "embed") (ne .tplContent "") }}
+    {{ .tplContent | nindent 4 }}
+{{- else }}
     {{- $files.Get .tplFile | nindent 4 }}
+{{- end }}
+{{- end }}
+{{- if .Values.console.customize.logo.manageSubresource }}
+{{- with .Values.console.customize.logo }}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: "custom-logo"
+  namespace: "openshift-console"
+  labels:
+    {{- include "cluster-console.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name | default "default-logo" -}}-configmap"
+  annotations:
+    {{- include "cluster-console.annotations" $ | nindent 4 }}
+data:
+  {{ .name | default "default-logo" -}}.{{ .format | default "svg" }}: |-
+{{- if and (eq .mode "embed") (ne .tplContent "") }}
+    {{ .tplContent | nindent 4 }}
+{{- else }}
+    {{- $files.Get .tplFile | nindent 4 }}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end -}}{{- end -}}{{- end -}}

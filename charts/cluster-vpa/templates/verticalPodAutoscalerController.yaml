@@ -1,0 +1,18 @@
+{{- if .Values.vpaController.enabled -}}
+{{- $namespace := .Values.project.project.name | default "openshift-vertical-pod-autoscaler" -}}
+{{- $spec := .Values.vpaController.spec | default "{}" -}}
+---
+apiVersion: autoscaling.openshift.io/v1
+kind: VerticalPodAutoscalerController
+metadata:
+  name: {{ .Values.vpaController.name | default "default" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-vpa.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.vpaController.name | default "default" -}}-vpac"
+  annotations:
+    {{- include "cluster-vpa.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}

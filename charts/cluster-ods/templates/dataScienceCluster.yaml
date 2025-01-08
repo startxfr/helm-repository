@@ -1,0 +1,20 @@
+{{- if .Values.DataScienceCluster -}}{{- if .Values.DataScienceCluster.enabled -}}
+{{- $ns := .Values.project.project.name | default "default-ods" -}}
+{{- with .Values.DataScienceCluster }}
+{{- $namespace := .namespace | default $ns -}}
+{{- $name := .name | default "default-dsc" -}}
+---
+apiVersion: datasciencecluster.opendatahub.io/v1
+kind: DataScienceCluster
+metadata:
+  name: "{{ $name }}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-ods.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-dsc"
+  annotations:
+    {{- include "cluster-ods.annotations" $ | nindent 4 }}
+spec:
+  {{- .spec | nindent 2 }}
+{{- end }}
+{{- end -}}{{- end -}}

@@ -53,18 +53,25 @@ operator:
     infra: false ## set this to true if infra node available
     name: "rhacs-operator"
     namespace: "openshift-operators"
-    version: "v4.3.0"
+    version: "v4.5.4"
     operator: 
-      channel: "rhacs-4.3"
+      channel: "rhacs-4.5"
       name: rhacs-operator
       installPlanApproval: Automatic
       # csv: rhacs-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: false
     target: "all-ns"
-    name: "rhacs-operator"
+    name: "startx-rhacs"
     namespace: "openshift-operators"
     providedAPIs: " Central.v1alpha1.platform.stackrox.io,SecuredCluster.v1alpha1.platform.stackrox.io"

@@ -38,15 +38,22 @@ operatorsec:
     hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
-    version: "v3.10.0"
+    version: "v3.13.0"
     operator: 
-      channel: stable-3.10
+      channel: stable-3.13
       name: container-security-operator
       installPlanApproval: Automatic
       # csv: container-security-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: false
     hooked: false

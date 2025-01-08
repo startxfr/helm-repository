@@ -25,15 +25,15 @@ enabled: true
 # Project configuration
 project: 
   # Enable creation and management of the project
-  enabled: true
+  enabled: false
   # Enable location of resources into infra node
   infra: false
   # Type of project to create (namespace or project)
   type: project
   # Name of the project
   name: default-project
-  # Project or namespace is started as an helm hook (default is false)
-  hooked: false
+  # # Project or namespace is started as an helm hook (default is false)
+  # hooked: false
   # # NodeSelector filter to apply to project workloads (default is false)
   # nodeSelector: "node-role.kubernetes.io/worker="
   # # Display name of the project (only for project)
@@ -50,7 +50,7 @@ project:
 rbac: 
   # Enable RBAC default for this project
   enabled: false
-  # # List groups to authorize on this project
+  # List groups to authorize on this project
   groups: []
   # # Example group ID
   # - id: mygroup_default
@@ -67,7 +67,7 @@ rbac:
   #   type: cluster
   #   # Example group role in this project
   #   role: edit
-  # # List users to authorize on this project
+  # List users to authorize on this project
   users: []
   # # Example user ID
   # - id: myuser
@@ -77,7 +77,7 @@ rbac:
   #   namespace: default
   #   # Example user role in this project
   #   role: basic-user
-  # # List serviceAccount to authorize on this project
+  # List serviceAccount to authorize on this project
   sa: []
   # # Example user ID
   # - id: mysa
@@ -86,7 +86,56 @@ rbac:
   #   # Example of the serviceaccount namespace (default is project name)
   #   namespace: default
   #   # Example user role in this project
-  #   role: basic-user
+  #   role: myrole
+  rolesbinding: []
+  # # Example binding ID
+  # - id: myrolebinding
+  #   # Example binding name
+  #   name: myrolebinding
+  #   # Example of the rolebinding namespace (default is project name)
+  #   namespace: default
+  #   # Type of rolebinding. Could be cluster or local (default is local). If cluster, namespace is ignored
+  #   type: local
+  #   # Name of role for this rolebinding
+  #   role: myrole
+  #   # Type of role. Could be cluster or local (default is rolebinding type). If cluster, namespace is ignored
+  #   typeRole: local
+  #   # Define the list of user/group/SA associated to this binding
+  #   subjects:
+  #   - kind: ServiceAccount
+  #     name: default
+  #     namespace: "default"
+  # - id: myclusterrolebinding
+  #   name: myrolebinding
+  #   type: cluster
+  #   role: myclusterrole
+  #   subjects:
+  #   - kind: ServiceAccount
+  #     name: default
+  #     namespace: "default"
+  roles: []
+  # # Example role ID
+  # - id: myrole
+  #   # Example role name
+  #   name: myrole
+  #   # Example of the role namespace (default is project name)
+  #   namespace: default
+  #   # Type of role. Could be cluster or local (default is local). If cluster, namespace is ignored
+  #   type: local
+  #   # Rules for the role definition
+  #   rules:
+  #   - apiGroups: ["security.openshift.io"]
+  #     resources: ["securitycontextconstraints"]
+  #     verbs: ["use"]
+  #     resourceNames: ["anyuid"]
+  # - id: myclusterrole
+  #   name: myrole
+  #   type: cluster
+  #   rules:
+  #   - apiGroups: ["security.openshift.io"]
+  #     resources: ["securitycontextconstraints"]
+  #     verbs: ["use"]
+  #     resourceNames: ["anyuid"]
 
 # Configure NetworkPolicy for project
 networkpolicy: 
@@ -125,7 +174,7 @@ limits:
   # Enable limitRange default for this project
   enabled: false
   # Specification of the limitRange ressource
-  rules:  |
+  rules: |
     limits:
       - type: "Pod"
         max:
@@ -135,7 +184,7 @@ limits:
         max:
           cpu: 100m
           memory: 128Mi
-  # Custom configuration
+  # # Custom configuration
   # additionalLabels: |
   #   label: "limit"
   # additionalAnnotations: |
@@ -166,15 +215,15 @@ serviceAccounts:
   enabled: false
   # List of the credentials to record
   list: []
-    #   # Name of the service account (default is default)
-    # - name: default
-    #   # List of the imagePullSecrets to link to this SA
-    #   imagePullSecrets: []
-    #     # Name of the secret with registry credentials
-    #     - name: startx-registrycreds-quay
-    #     # Name of the namespace where the secret reside (default is same project)
-    #       namespace: default-project
-  # Custom configuration
+  # # Name of the service account (default is default)
+  # - name: default
+  #   # List of the imagePullSecrets to link to this SA
+  #   imagePullSecrets: 
+  #     # Name of the secret with registry credentials
+  #     - name: startx-registrycreds-quay
+  #     # Name of the namespace where the secret reside (default is same project)
+  #       namespace: default-project
+  # # Custom configuration
   # additionalLabels: |
   #   label: "sa"
   # additionalAnnotations: |
@@ -186,19 +235,19 @@ dockercfg:
   enabled: false
   # List of the credentials to record
   list: []
-    #   # Name of the credential secret (default is registrycreds)
-    # - name: startx-registrycreds-quay
-    #   # Namespace (default is the context.name)
-    #   namespace: default-project
-    #   # Name of the registry
-    #   registry: quay.io
-    #   # Username to use for authentification
-    #   username: startx
-    #   # Password associated to the user (could be a token)
-    #   password: xxxx
-    #   # email associated to the user 
-    #   email: xxxx
-  # Custom configuration
+  # # Name of the credential secret (default is registrycreds)
+  # - name: startx-registrycreds-quay
+  #   # Namespace (default is the context.name)
+  #   namespace: default-project
+  #   # Name of the registry
+  #   registry: quay.io
+  #   # Username to use for authentification
+  #   username: startx
+  #   # Password associated to the user (could be a token)
+  #   password: xxxx
+  #   # email associated to the user 
+  #   email: xxxx
+  # # Custom configuration
   # additionalLabels: |
   #   label: "secret"
   # additionalAnnotations: |
@@ -210,20 +259,20 @@ serviceMonitor:
   enabled: false
   # List of the serviceMonitor to create
   list: []
-    #   # Name of the serviceMonitor (default is my-default-service-monitor)
-    # - name: startx-example-service-monitor
-    #   # Namespace (default is the context.name)
-    #   namespace: default-project
-    #   # The specification of the monitor
-    #   spec: |
-    #     endpoints:
-    #     - interval: 30s
-    #       port: web
-    #       scheme: http
-    #     selector:
-    #       matchLabels:
-    #         app: prometheus-example-app
-  # Custom configuration
+  # # Name of the serviceMonitor (default is my-default-service-monitor)
+  # - name: startx-example-service-monitor
+  #   # Namespace (default is the context.name)
+  #   namespace: default-project
+  #   # The specification of the monitor
+  #   spec: |
+  #     endpoints:
+  #     - interval: 30s
+  #       port: web
+  #       scheme: http
+  #     selector:
+  #       matchLabels:
+  #         app: prometheus-example-app
+  # # Custom configuration
   # additionalLabels: |
   #   label: "svcmon"
   # additionalAnnotations: |
@@ -235,20 +284,20 @@ podMonitor:
   enabled: false
   # List of the podMonitor to create
   list: []
-    #   # Name of the podMonitor (default is my-default-pod-monitor)
-    # - name: startx-example-pod-monitor
-    #   # Namespace (default is the context.name)
-    #   namespace: default-project
-    #   # The specification of the monitor
-    #   spec: |
-    #     podMetricsEndpoints:
-    #     - interval: 30s
-    #       port: web
-    #       scheme: http
-    #     selector:
-    #       matchLabels:
-    #         app: prometheus-example-app
-  # Custom configuration
+  # # Name of the podMonitor (default is my-default-pod-monitor)
+  # - name: startx-example-pod-monitor
+  #   # Namespace (default is the context.name)
+  #   namespace: default-project
+  #   # The specification of the monitor
+  #   spec: |
+  #     podMetricsEndpoints:
+  #     - interval: 30s
+  #       port: web
+  #       scheme: http
+  #     selector:
+  #       matchLabels:
+  #         app: prometheus-example-app
+  # # Custom configuration
   # additionalLabels: |
   #   label: "podmon"
   # additionalAnnotations: |
