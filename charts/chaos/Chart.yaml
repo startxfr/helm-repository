@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.5-noschema
+version: 16.19.6-noschema
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.16.19"
 # Icon of this helm-chart
@@ -41,28 +41,28 @@ maintainers:
 
 dependencies:
   - name: "chaos-cerberus"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "16.19.4"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
+    version: "16.19.6-noschema"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "16.19.4"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
+    version: "16.19.6-noschema"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "16.19.4"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
+    version: "16.19.6-noschema"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "16.19.4"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
+    version: "16.19.6-noschema"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "16.19.4"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
+    version: "16.19.6-noschema"
     alias: monkey
     condition: monkey.enabled
 
@@ -97,6 +97,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 16.19.5-noschema"
+      description: "Upgrade all startx chart dependencies to version 16.19.6-noschema"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
