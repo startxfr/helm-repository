@@ -18,7 +18,7 @@ context:  &context
 # configuration of the console service
 console:
   # Enable the configuration of the console service
-  enabled: true
+  enabled: false
   # namespace were to deploy the console artifacts
   namespace: openshift-config
   # The state of the openshift cluster console operator
@@ -31,8 +31,17 @@ console:
     logo: 
       # Name of the logo configMap
       name: default-logo
+      # the logo file format (default is svg)
+      format: svg 
       # name of the logo template file (in webtpl)
-      tplFile: webtpl/default-logo.svg
+      tplFile: webtpl/default-logo.svg 
+      # The template mode (could be file or embed. default is file)
+      mode: file
+      # name of the template file (in webtpl)
+      tplContent: |-
+        <!DOCTYPE html>
+      # Create sub-resource custom-logo in ns openshift-console
+      manageSubresource: true
   # configuration of the console links
   links:
     # name of the console link

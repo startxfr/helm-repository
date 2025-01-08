@@ -1,6 +1,8 @@
-# Cluster Chart : Config
+# ![cluster-config](https://helm-repository.readthedocs.io/en/latest/img/cluster-config.svg "Cluster Chart : Config") Cluster Chart : Config
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--config-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+config+startx)
 
 This helm chart is used to create a personnalized cluster configuration with various cluster level components configured as required.
+
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
 ## Requirements and guidelines
@@ -279,22 +281,103 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository
 | 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2
-| 14.6.5-noschema | 2023-12-10 | Prepare upgrading to 14.6.5-noschema dependencies
-| 14.6.7-noschema | 2023-12-10 | intermediate noschema release stable but same as 14.6.5-noschema release
-| 14.6.9-noschema | 2023-12-10 | upgrade all dependencies charts to version 14.6.5-noschema
-| 14.6.15-noschema | 2023-12-18 | publish stable update for the full repository
-| 14.6.17-noschema | 2023-12-18 | publish stable update for the full repository
-| 14.6.19-noschema | 2023-12-18 | stable publication of the noschema release
-| 14.6.21-noschema | 2023-12-18 | publish stable update for the full repository
-| 14.6.25-noschema | 2023-12-18 | stabel version 14.6.25 for the noschema release
-| 14.6.27-noschema | 2023-12-19 | publish stable update for the full repository
-| 14.6.35-noschema | 2023-12-20 | publish stable update for the full repository
-| 14.6.71-noschema | 2023-12-28 | full build from s3 helm repo
-| 14.6.73-noschema | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71-noschema
-| 14.6.75-noschema | 2023-12-29 | publish stable update for the full repository
-| 14.6.99-noschema | 2024-01-02 | Stable noschema version for 14.6 release
-| 14.6.103-noschema | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75-noschema
-| 14.6.105-noschema | 2024-01-04 | Revove all schema for noschema branch
-| 14.6.109-noschema | 2024-01-04 | Upgrade all startx chart dependencies to version 14.6.105-noschema
-| 14.6.111-noschema | 2024-01-12 | Adding support of Raw values for ingresscontroller and apiserver certificates.
-| 14.6.131-noschema | 2024-01-18 | upgrade dependencies to basic charts for noschema branch
+| 14.6.9 | 2023-12-10 | publish stable update for the full repository
+| 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5
+| 14.6.15 | 2023-12-11 | update packages for OCP 4.14.6
+| 14.6.21 | 2023-12-18 | publish stable update for the full repository
+| 14.6.22 | 2023-12-18 | stable si good
+| 14.6.27 | 2023-12-19 | publish stable update for the full repository
+| 14.6.29 | 2023-12-19 | publish stable update for the full repository
+| 14.6.31 | 2023-12-19 | move to kubeversion min 1.25.0
+| 14.6.33 | 2023-12-19 | Move dependencies to github-pages
+| 14.6.35 | 2023-12-20 | publish stable update for the full repository
+| 14.6.39 | 2023-12-22 | adding sample of a mustgather instance
+| 14.6.45 | 2023-12-22 | publish stable update for the full repository
+| 14.6.46 | 2023-12-22 | publish stable update for the full repository
+| 14.6.55 | 2023-12-22 | align all dependencies chart to 14.6.45
+| 14.6.59 | 2023-12-22 | move back dependencies to version 14.6.35
+| 14.6.61 | 2023-12-22 | Remove management of the mustgather operator
+| 14.6.63 | 2023-12-22 | Align all startx helm-chart to version 14.6.63
+| 14.6.65 | 2023-12-27 | test with repo stored in s3 public bucket
+| 14.6.71 | 2023-12-28 | Move to S3 helm repository
+| 14.6.73 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.65
+| 14.6.75 | 2023-12-29 | Upgrade all startx chart dependencies to version 14.6.71
+| 14.6.91 | 2024-01-02 | publish stable update for the full repository
+| 14.6.99 | 2024-01-02 | Full stable release of the chart repository
+| 14.6.103 | 2024-01-03 | Upgrade all startx chart dependencies to version 14.6.75
+| 14.6.105 | 2024-01-03 | publish stable update for the full repository
+| 14.6.107 | 2024-01-04 | publish stable update for the full repository
+| 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
+| 14.6.111 | 2024-01-12 | Adding support of Raw values for ingresscontroller and apiserver certificates.
+| 14.6.131 | 2024-01-18 | publish stable update for the full repository
+| 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
+| 14.6.135 | 2024-01-18 | debug artifacthub recommandations
+| 14.6.137 | 2024-01-18 | publish stable update for the full repository
+| 14.6.141 | 2024-02-03 | upgrade of the full startx repository
+| 14.6.143 | 2024-02-03 | Align to 14.6.143 chart release
+| 14.6.145 | 2024-02-03 | Update all startx dependencies chart to 14.6.141 chart release
+| 14.6.149 | 2024-02-03 | Update all startx dependencies chart to 14.6.141 chart release
+| 14.6.150 | 2024-02-03 | Stable 14.6.150 release
+| 14.6.161 | 2024-02-08 | publish stable update for the full repository
+| 14.6.165 | 2024-02-08 | Adding support for manual config of the alertManager
+| 14.6.171 | 2024-02-08 | publish stable update for the full repository
+| 14.6.189 | 2024-02-08 | publish stable update for the full repository
+| 14.6.195 | 2024-02-08 | publish stable update for the full repository
+| 14.6.197 | 2024-02-08 | publish stable update for the full repository
+| 14.6.201 | 2024-02-08 | publish stable update for the full repository
+| 14.6.202 | 2024-03-06 | Add support of S3 storage backend for internal registry
+| 14.6.208 | 2024-03-06 | Align all dependencies to 14.6.208 release
+| 14.6.211 | 2024-03-08 | add support for internalregistry S3 backend of regionEndpoint and virtualHostedStyle parameters
+| 14.6.215 | 2024-03-08 | Align all charts to release 14.6.215
+| 14.6.217 | 2024-03-13 | Add support for creating a list of priorityClass
+| 14.6.219 | 2024-03-15 | Add label to priorityClass
+| 14.6.223 | 2024-03-18 | Add common labels to priorityClass and 10min timeout on registry route
+| 14.6.225 | 2024-03-19 | Add storageSizeAlert for monitoring alert PVC size
+| 14.6.227 | 2024-03-19 | Add storageSizeAlert for monitoring alert PVC size
+| 14.6.231 | 2024-03-19 | Align all charts to release 14.6.231
+| 14.6.233 | 2024-03-22 | Add PVC storage and replicas support for registry
+| 14.6.235 | 2024-03-23 | Add support for S3 secret credentials for the internal repository
+| 14.6.237 | 2024-03-27 | Adding immutable option to ConfigMap resources
+| 14.6.251 | 2024-03-27 | Align all charts to release 14.6.251
+| 14.6.253 | 2024-03-29 | Add support for nodeSelector and tolerations for ingresscontrollers
+| 14.6.255 | 2024-03-29 | Add support for namespaceSelector in ingresscontrollers
+| 14.6.257 | 2024-03-29 | Debug nodeSelector in ingresscontrollers
+| 14.6.259 | 2024-03-29 | Debug nodeSelector in ingresscontrollers
+| 14.6.261 | 2024-03-29 | Improve cluster-config options
+| 14.6.263 | 2024-03-31 | Add support for httpHeader forward policy in ingresscontroller
+| 14.6.269 | 2024-03-31 | Align all charts to release 14.6.269
+| 14.6.281 | 2024-05-20 | Align all charts to release 14.6.281
+| 14.6.283 | 2024-05-24 | Enhence routeSelector and nsSelector for both label and expressions selection of route subset
+| 14.6.285 | 2024-05-25 | Improve routeSelector and nsSelector with multiple labels and expression values
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
+| 14.6.301 | 2024-05-30 | Helm package are now signed
+| 14.6.303 | 2024-06-05 | Adding support for nodePort export strategy in ingress controller
+| 14.6.305 | 2024-06-05 | Adding none endpoint strategy in ingress controller
+| 14.6.321 | 2024-06-25 | publish stable update for the full repository
+| 14.6.323 | 2024-06-25 | Align all chart to latest release
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository
+| 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
+| 14.6.335 | 2024-06-26 | publish stable update for the full repository
+| 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339
+| 14.6.343 | 2024-06-26 | publish stable update for the full repository
+| 14.6.345 | 2024-06-26 | publish stable update for the full repository
+| 14.6.351 | 2024-06-26 | Update all dependencies
+| 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
+| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
+| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381
+| 15.27.3 | 2024-11-06 | create init release for version 15.x
+| 15.27.5 | 2024-11-06 | publish stable update for the full repository
+| 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
+| 15.27.9 | 2024-11-09 | Upgrade the ElasticSearch version to v5.8.14
+| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
+| 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
+| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
+| 16.19.7 | 2024-11-10 | Update all dependencies to version 16.19.4
+| 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
+| 16.19.15 | 2024-11-10 | publish stable update for the full repository
+| 16.19.17 | 2024-11-11 | Adding support for the loki operator
+| 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
+| 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
+| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
+| 16.19.32 | 2024-12-11 | Disable loki as default operator

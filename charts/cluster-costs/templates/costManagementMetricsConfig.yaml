@@ -1,0 +1,26 @@
+{{- if .Values.CostManagementMetricsConfig.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "default-costs" -}}
+{{- $namespace := .Values.CostManagementMetricsConfig.namespace | default ($ns1) -}}
+{{- $spec := .Values.CostManagementMetricsConfig.spec | default "{}" -}}
+---
+apiVersion: costmanagement-metrics-cfg.openshift.io/v1beta1
+kind: CostManagementMetricsConfig
+metadata:
+  name: {{ .Values.costs.name | default "cluster" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-costs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.costs.name | default "cluster" -}}-costs"
+  annotations:
+    {{- include "cluster-costs.annotations" . | nindent 4 }}
+    {{- if .Values.costs.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}

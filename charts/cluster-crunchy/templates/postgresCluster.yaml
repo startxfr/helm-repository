@@ -11,6 +11,7 @@
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "{{ $name }}-pgbouncer-config"
   namespace: {{ $ns | quote }}
@@ -37,11 +38,11 @@ data:
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: "{{ $name }}-pgbouncer-config"
+  name: "{{ $name }}"
   namespace: {{ $ns | quote }}
   labels:
     {{- include "cluster-crunchy.labels" $ | nindent 4 }}
-    app.kubernetes.io/name: "{{ $name }}-pgbouncer-cm"
+    app.kubernetes.io/name: "{{ $name }}-pgcluster"
     postgresql_cluster: "{{- $name -}}"
     postgresql: "{{- $name -}}"
   annotations:
@@ -155,7 +156,7 @@ spec:
     enabled: false
   userInterface:
     pgAdmin:
-      # https://access.crunchydata.com/documentation/postgres-operator/5.5.0/references/crd/#postgresclusterspecuserinterfacepgadminconfig
+      # https://access.crunchydata.com/documentation/postgres-operator/5.7.0/references/crd/#postgresclusterspecuserinterfacepgadminconfig
       dataVolumeClaimSpec:
         storageClassName: {{ .storageClassName | default "gp3-csi" | quote }}
         resources:
@@ -168,6 +169,7 @@ spec:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "{{ $name }}-initdb"
   namespace: {{ $ns | quote }}

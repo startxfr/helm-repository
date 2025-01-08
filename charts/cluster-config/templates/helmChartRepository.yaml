@@ -12,7 +12,7 @@ metadata:
   annotations:
     {{- include "cluster-config.annotations" $ | nindent 4 }}
     helm.sh/resource-policy: keep
-    argocd.argoproj.io/sync-wave: "-10" 
+    argocd.argoproj.io/sync-wave: "5" 
 spec:
   name: "{{ .name }}"
   connectionConfig:

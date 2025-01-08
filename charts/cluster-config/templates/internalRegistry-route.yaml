@@ -12,6 +12,7 @@ metadata:
     app.kubernetes.io/name: "{{- include "startx.appName" . -}}-route-{{- include "startx.appVersion" . -}}"
   annotations:
     {{- include "cluster-config.annotations" . | nindent 4 }}
+    haproxy.router.openshift.io/timeout: 600s
 spec:
   to:
     kind: Service

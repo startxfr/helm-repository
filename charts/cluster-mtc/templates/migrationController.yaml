@@ -1,0 +1,27 @@
+{{- if .Values.mtc.enabled -}}{{- if .Values.mtc.controller -}}{{- if .Values.mtc.controller.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-migration" -}}
+{{- $ns2 := .Values.mtc.namespace | default ($ns1) -}}
+{{- $namespace := .Values.mtc.controller.namespace | default ($ns2) -}}
+{{- $spec := .Values.mtc.controller.spec | default "{}" -}}
+---
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigrationController
+metadata:
+  name: {{ .Values.mtc.controller.name | default "migration-controller" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-mtc.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.mtc.controller.name | default "migration-controller" -}}"
+  annotations:
+    {{- include "cluster-mtc.annotations" . | nindent 4 }}
+    {{- if .Values.mtc.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}{{- end -}}{{- end -}}

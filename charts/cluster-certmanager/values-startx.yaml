@@ -53,7 +53,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "openshift-cert-manager-operator"
+    name: "rhcertmanager-operator"
     display_name: Operator CertManager
     description: CertManager configured by STARTX
 operator:
@@ -64,19 +64,26 @@ operator:
     enabled: true
     hooked: false
     name: "openshift-cert-manager-operator"
-    namespace: "openshift-cert-manager-operator"
-    version: "v1.12.1"
+    namespace: "rhcertmanager-operator"
+    version: "v1.14.1"
     operator: 
-      channel: "stable-v1"
+      channel: "stable-v1.14"
       name: openshift-cert-manager-operator
       installPlanApproval: Automatic
       # csv: openshift-cert-manager
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false
-    name: "openshift-cert-manager-operator"
-    namespace: "openshift-cert-manager-operator"
+    name: "startx-cert-manager"
+    namespace: "rhcertmanager-operator"
     providedAPIs: "Certificate.v1.cert-manager.io,CertificateRequest.v1.cert-manager.io,Challenge.v1.acme.cert-manager.io,ClusterIssuer.v1.cert-manager.io"

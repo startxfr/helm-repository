@@ -1,6 +1,7 @@
 {{- if .Values.monitoring.enabled -}}
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: cluster-monitoring-config
   namespace: openshift-monitoring
@@ -120,5 +121,5 @@ data:
           storageClassName: {{ default "gp3-csi" .Values.monitoring.storageClass }}
           resources:
             requests:
-             storage: {{ default "20Gi" .Values.monitoring.storageSize }}
+             storage: {{ default "5Gi" .Values.monitoring.storageSizeAlert }}
 {{- end -}}

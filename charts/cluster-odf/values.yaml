@@ -18,9 +18,9 @@ context:  &context
 # configuration of the Storage service
 odf:
   # Enable the deployment of a ODF cluster
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # Redhat Network access user to the RH container catalog
   name: default-odf
   # Version of the ODF to use for this cluster
@@ -31,6 +31,16 @@ odf:
   - name: odf-deviceset
     # Number of OSD replicas
     replicas: 3
+    # Number of OSD count
+    count: 1
+    # configuration of the OSD pods
+    config: {}
+    # Ressource sizing for OSD pods
+    resources: {}
+    # placement rules for OSD pods
+    placement: {}
+    # preparePlacement rules for OSD pods
+    preparePlacement: {}
     # Size of each OSD storage volume
     size: 512Gi
     # Storage class used to provision OSD storage
@@ -65,15 +75,40 @@ operator:
     enabled: true
     name: "odf-operator"
     namespace: "openshift-storage"
-    version: "v4.14.4-rhodf"
+    version: "v4.16.3-rhodf"
     operator: 
-      channel: stable-4.14
+      channel: stable-4.16
       name: odf-operator
       installPlanApproval: Automatic
       # csv: odf-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+  consolePlugin:
+    enabled: true
+    name: "odf-console"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: odf-console-service
+          namespace: openshift-storage
+          port: 9001
+        type: Service
+      displayName: ODF Plugin
+      i18n:
+        loadType: ''
+      proxy:
+        - alias: provider-proxy
+          authorization: UserToken
+          endpoint:
+            service:
+              name: ux-backend-proxy
+              namespace: openshift-storage
+              port: 8888
+            type: Service
   operatorGroup:
     enabled: true
     name: "openshift-storage"

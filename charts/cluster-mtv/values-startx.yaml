@@ -14,10 +14,25 @@ mtv:
     enabled: true
     name: forklift-controller
     spec: |
+      controller_container_limits_cpu: 500m
+      controller_container_limits_memory: 800Mi
+      controller_max_vm_inflight: 2
+      controller_precopy_interval: 60
       feature_must_gather_api: 'true'
       feature_ui_plugin: 'true'
       feature_validation: 'true'
       feature_volume_populator: 'true'
+      must_gather_api_cleanup_max_age: 12h
+  providers:
+    enabled: true
+    list: 
+      - name: host
+        namespace: openshift-mtv
+        type: openshift
+        enableSecret: false
+        openshift: 
+          url: ''
+          insecureSkipVerify: "true"
 project: 
   enabled: false
   context: 
@@ -39,15 +54,22 @@ operator:
     hooked: false
     name: "mtv-operator"
     namespace: "openshift-mtv"
-    version: "v2.5.3"
+    version: "v2.7.4"
     operator: 
-      channel: "release-v2.5"
+      channel: "release-v2.7"
       name: mtv-operator
       installPlanApproval: Automatic
       csv: mtv-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false

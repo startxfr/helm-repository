@@ -53,7 +53,7 @@ localstorageset:
     # Node label used tu identify node with storage
     nodeKey: "kubernetes.io/os"
     # Node value coresponding to the nodeKey value
-    nodeKey: "linux"
+    nodeValue: "linux"
 
 # configuration of the LocalVolumeDiscovery service
 localstoragediscovery:
@@ -66,7 +66,7 @@ localstoragediscovery:
     # Node label used tu identify node with storage
     nodeKey: "kubernetes.io/os"
     # Node value coresponding to the nodeKey value
-    nodeKey: "linux"
+    nodeValue: "linux"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -110,7 +110,7 @@ operator:
     hooked: false
     name: "local-storage-operator"
     namespace: "openshift-local-storage"
-    version: "v4.14.0-202311211133"
+    version: "v4.16.0-202410242205"
     operator: 
       channel: "stable"
       name: local-storage-operator
@@ -119,6 +119,8 @@ operator:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: false
   operatorGroup:
     enabled: true
     hooked: false

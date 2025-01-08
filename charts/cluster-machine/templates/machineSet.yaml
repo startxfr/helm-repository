@@ -1,6 +1,7 @@
 {{- if .Values.machineSet.enabled }}
 {{- $clusterid := .Values.cluster.id | default "default-xxxxx" -}}
 {{- $region := .Values.cluster.region | default "eu-west-3" -}}
+{{- $deftype := "worker" -}}
 {{ range .Values.machineSet.list }}
 ---
 apiVersion: machine.openshift.io/v1beta1
@@ -11,11 +12,11 @@ metadata:
     {{- include "cluster-machine.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ .name }}-machineset"
     machine.openshift.io/cluster-api-cluster: "{{ $.Values.cluster.id }}"
-    machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
+    machine.openshift.io/cluster-api-machine-role: "{{ .type | default $deftype }}"
     {{- if .group }}
     machine.startx.io/group: "{{ .group }}"
     {{- end }}
-    machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
+    machine.openshift.io/cluster-api-machine-type: "{{ .type | default $deftype }}"
   namespace: openshift-machine-api
   annotations:
     {{- include "cluster-machine.annotations" $ | nindent 4 }}
@@ -27,8 +28,8 @@ spec:
   template:
     metadata:
       labels:
-        machine.openshift.io/cluster-api-machine-role: "{{ .type }}"
-        machine.openshift.io/cluster-api-machine-type: "{{ .type }}"
+        machine.openshift.io/cluster-api-machine-role: "{{ .type | default $deftype }}"
+        machine.openshift.io/cluster-api-machine-type: "{{ .type | default $deftype }}"
         machine.openshift.io/cluster-api-machineset: "{{ .name }}"
         {{- if .group }}
         machine.startx.io/group: "{{ .group }}"
