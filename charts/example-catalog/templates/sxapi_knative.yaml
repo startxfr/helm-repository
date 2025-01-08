@@ -11,6 +11,7 @@
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata: 
   name: "{{- $namespace -}}-config"
   namespace: {{ $namespace | quote }}
@@ -31,6 +32,7 @@ data:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "{{- $namespace -}}-lib-latest"
   namespace: {{ $namespace | quote }}
@@ -107,6 +109,7 @@ data:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "{{- $namespace -}}-lib-v1"
   namespace: {{ $namespace | quote }}
@@ -183,6 +186,7 @@ data:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "{{- $namespace -}}-lib-v2"
   namespace: {{ $namespace | quote }}

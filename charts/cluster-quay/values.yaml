@@ -34,7 +34,7 @@ quay:
   # Enable the configuration of the API manager
   enabled: true
   # Activate the manager as a helm hook
-  hooked: true
+  hooked: false
   # Image to use for the database deployment
   image: 'quay.io/redhat/quay:v3.2.0'
   # The size of the persistant volume to use form image layer storage
@@ -78,15 +78,17 @@ operator:
     hooked: false
     name: "quay-operator"
     namespace: "openshift-startx-quay"
-    version: "v3.10.0"
+    version: "v3.13.0"
     operator: 
-      channel: stable-3.10
+      channel: stable-3.13
       name: quay-operator
       installPlanApproval: Automatic
       # csv: quay-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: false
   operatorGroup:
     enabled: false
     hooked: false
@@ -104,14 +106,16 @@ operatorsec:
     hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
-    version: "v3.10.0"
+    version: "v3.13.0"
     operator: 
-      channel: stable-3.10
+      channel: stable-3.13
       name: container-security-operator
       installPlanApproval: Automatic
       # csv: container-security-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
   operatorGroup:
     enabled: false

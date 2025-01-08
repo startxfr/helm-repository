@@ -1,13 +1,14 @@
 {{- if .Values.ansibleHub.enabled -}}
-{{- $namespace := .Values.project.project.name | default "ansible-automation-platform" -}}
+{{- $namespace := .Values.project.project.name | default "ansible-automation-platform" }}
+---
 apiVersion: automationhub.ansible.com/v1beta1
 kind: AutomationHub
 metadata:
-  name: "{{- include "startx.appName" . -}}"
-  namespace: "{{- $namespace -}}"
+  name: "{{- .Values.ansibleHub.name | default (include "startx.appName" .) -}}"
+  namespace: "{{- .Values.ansibleHub.namespace | default $namespace -}}"
   labels:
     {{- include "cluster-ansible.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-automationhub"
+    app.kubernetes.io/name: "{{- .Values.ansibleHub.name | default (include "startx.appName" .) -}}-automationhub"
   annotations:
     {{- include "cluster-ansible.annotations" . | nindent 4 }}
     {{- if .Values.ansibleHub.hooked }}
@@ -17,28 +18,27 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   route_tls_termination_mechanism: Edge
   ingress_type: Route
   loadbalancer_port: 80
-  file_storage_size: 20Gi
+  file_storage_size: {{ .Values.ansibleHub.storageSize | default "20Gi" | quote }}
   image_pull_policy: IfNotPresent
-  file_storage_storage_class: efs-sc
+  file_storage_storage_class: {{ .Values.ansibleHub.storageClass | default "efs-sc" | quote }}
   web:
-    replicas: 1
-  file_storage_access_mode: ReadWriteMany
+    replicas: {{ .Values.ansibleHub.replicas | default 1 | quote }}
+  file_storage_access_mode: {{ .Values.ansibleHub.storageAccessMode | default "ReadWriteMany" | quote }}
   content:
     log_level: INFO
-    replicas: 2
+    replicas: {{ .Values.ansibleHub.replicasHA | default 2 | quote }}
   api:
     log_level: INFO
-    replicas: 1
+    replicas: {{ .Values.ansibleHub.replicas | default 1 | quote }}
   loadbalancer_protocol: http
   resource_manager:
-    replicas: 1
+    replicas: {{ .Values.ansibleHub.replicas | default 1 | quote }}
   storage_type: File
   worker:
-    replicas: 2
-
+    replicas: {{ .Values.ansibleHub.replicasHA | default 2 | quote }}
 {{- end -}}

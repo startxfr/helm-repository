@@ -6,23 +6,46 @@ context: &context
   environment: infra
   component: vpa
   app: demo-vpa
-vpa:
+vpaController:
   enabled: false
-  hooked: false
   name: default
   spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
-    # profile:
-    # - name: "profile1"
-    #   interface: "enp134s0f0"
-    #   vpa4lOpts: "-s -2"
-    #   phc2sysOpts: "-a -r"
-    # recommend:
-    # - profile: "profile1"
-    #   priority: 4
-    #   match:
-    #   - nodeLabel: "node-role.kubernetes.io/worker"
+    deploymentOverrides:
+      admission:
+        container:
+          resources: {}
+      recommender:
+        container:
+          resources: {}
+      updater:
+        container:
+          resources: {}
+    minReplicas: 1
+    podMinCPUMillicores: 15
+    podMinMemoryMb: 32
+    recommendationOnly: false
+    safetyMarginFraction: 0.15
+vpa:
+  enabled: false
+  list: 
+  - name: demo
+    spec: |
+      targetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: manpage
+      resourcePolicy:
+        containerPolicies:
+          - containerName: '*'
+            controlledResources:
+              - cpu
+              - memory
+            maxAllowed:
+              cpu: 1
+              memory: 500Mi
+            minAllowed:
+              cpu: 10m
+              memory: 50Mi
 project: 
   enabled: false
   context: 
@@ -44,7 +67,7 @@ operator:
     hooked: false
     name: "vertical-pod-autoscaler"
     namespace: "openshift-vertical-pod-autoscaler"
-    version: "4.14.0-202311211131"
+    version: "4.16.0-202410242205"
     operator: 
       channel: "stable"
       name: vertical-pod-autoscaler

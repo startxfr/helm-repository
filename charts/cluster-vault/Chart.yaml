@@ -6,9 +6,9 @@ description: Helm chart used to configure vault at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.131-noschema
+version: 16.19.4-noschema
 # Version name of the vault service (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "1.12.1"
+appVersion: "1.18.1"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-vault.svg
 # Kube minimum version
@@ -38,13 +38,13 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/noschema/
-    version: "14.6.111-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: project
     condition: project.enabled
   - name: vault
     repository: https://helm.releases.hashicorp.com
-    version: "0.23.0"
+    version: "0.29.0"
     alias: vault
     condition: vault.enabled
 
@@ -62,13 +62,16 @@ annotations:
   # Artifacthub operator capabilities
   artifacthub.io/operatorCapabilities: "Seamless Upgrades"
   # Artifacthub chart recommandations
-  artifacthub.io/recommendations: |
-    - name: Startx basic chart : Project
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
       url: https://helm-repository.readthedocs.io/en/latest/charts/project
     - name: Hashicorp : Vault
       url: https://helm.releases.hashicorp.com
   # Artifacthub changes logs
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 14.6.105-noschema"
+      description: "Upgrade all startx chart dependencies to version 16.19.4-noschema"
   artifacthub.io/containsSecurityUpdates: "false"

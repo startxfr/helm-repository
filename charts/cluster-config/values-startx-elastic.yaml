@@ -39,7 +39,7 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.8.0"
+    version: "5.8.14"
     operator: 
       channel: "stable"
       name: elasticsearch-operator
@@ -48,6 +48,13 @@ operatorElastic:
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false
@@ -55,6 +62,10 @@ operatorElastic:
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
     providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
+
+# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorLoki:
+  enabled: false
 
 # Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorGlobal:

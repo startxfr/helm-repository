@@ -1,0 +1,23 @@
+{{- if .Values.mtc.enabled -}}{{- if .Values.mtc.migrations -}}{{- if .Values.mtc.migrations.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "openshift-migration" -}}
+{{- $ns2 := .Values.mtc.namespace | default ($ns1) -}}
+{{- range .Values.mtc.migrations.list -}}
+{{- $namespace := .namespace | default ($ns2) -}}
+{{- $name := .name | default "myplan" -}}
+{{- $spec := .spec | default "{}" }}
+---
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigMigration
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-mtc.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-mtc.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}
+{{- end -}}{{- end -}}{{- end -}}

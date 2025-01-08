@@ -74,6 +74,7 @@ preemptionPolicy: PreemptLowerPriority
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "veryhigh-priority-config"
   namespace: {{ $namespace | quote }}
@@ -95,6 +96,7 @@ data:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "high-priority-config"
   namespace: {{ $namespace | quote }}
@@ -116,6 +118,7 @@ data:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "low-priority-config"
   namespace: {{ $namespace | quote }}
@@ -137,6 +140,7 @@ data:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "verylow-priority-config"
   namespace: {{ $namespace | quote }}
@@ -158,6 +162,7 @@ data:
 ---
 kind: ConfigMap
 apiVersion: v1
+immutable: false
 metadata:
   name: "apps-config"
   namespace: {{ $namespace | quote }}

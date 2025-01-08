@@ -6,9 +6,9 @@ description: Helm chart used to configure Migration Toolkit for Virtualisation a
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 14.6.131-noschema
+version: 16.19.4-noschema
 # Version name of the mtv operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 2.5.3
+appVersion: 2.7.4
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-mtv.svg
 # Kube minimum version
@@ -38,13 +38,13 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://startxfr.github.io/helm-repository/repos/noschema/
-    version: "14.6.111-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://startxfr.github.io/helm-repository/repos/noschema/
-    version: "14.6.111-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
     alias: operator
     condition: operator.enabled
 
@@ -62,13 +62,17 @@ annotations:
   # Artifacthub operator capabilities
   artifacthub.io/operatorCapabilities: "Seamless Upgrades"
   # Artifacthub chart recommandations
-  artifacthub.io/recommendations: |
-    - name: Startx basic chart : Project
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
       url: https://helm-repository.readthedocs.io/en/latest/charts/project
-    - name: Startx basic chart : Operator
+    - name: Startx basic chart - Operator
       url: https://helm-repository.readthedocs.io/en/latest/charts/operator
   # Artifacthub changes logs
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade all startx chart dependencies to version 14.6.105-noschema"
-  artifacthub.io/containsSecurityUpdates: "false"
+      description: "Upgrade all startx chart dependencies to version 16.19.4-noschema"
+  # Is this release contain security updates
+  artifacthub.io/containsSecurityUpdates: "true"

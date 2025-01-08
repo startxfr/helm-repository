@@ -1,0 +1,25 @@
+{{- if .Values.ansibleController.enabled -}}
+{{- $namespace := .Values.project.project.name | default "ansible-automation-platform" }}
+{{- $spec := .Values.ansibleController.spec | default "{}" -}}
+---
+apiVersion: automationcontroller.ansible.com/v1beta1
+kind: AutomationController
+metadata:
+  name: "{{- .Values.ansibleController.name | default (include "startx.appName" .) -}}"
+  namespace: "{{- .Values.ansibleController.namespace | default $namespace -}}"
+  labels:
+    {{- include "cluster-ansible.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.ansibleController.name | default (include "startx.appName" .) -}}-automationcontroller"
+  annotations:
+    {{- include "cluster-ansible.annotations" . | nindent 4 }}
+    {{- if .Values.ansibleController.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}

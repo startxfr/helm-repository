@@ -88,18 +88,18 @@ clusterversion:
   # The clusterID used in clusterversion resource
   clusterID: "xxxxx-xxxx-xxxxxx"
   # Define the maximum
-  version: "4.14"
+  version: "4.15"
   # Define the targeted applyed version (if cluster update are managed in a gitops way)
-  desiredVersion: 4.14.6
+  desiredVersion: 4.15.37
 
 # Configuration of the cluster alert-manager feature
 alertmanager:
   # Enable the cluster alert-manager
   enabled: false
+  # Define the type of alert receiver (pagerDutty, config or api)
+  type: pagerDutty
   # Define the related channel
   receiverName: PagerDutyStartx
-  # Define the type of alert receiver (pagerDutty or api)
-  type: pagerDutty
   # PagerDutty specific params
   pagerDutty:
     # PagerDutty application key
@@ -108,6 +108,61 @@ alertmanager:
   api:
     # API endpoint for receiver
     endpoint: _api_endpoint_
+  # Config specific params
+  config: |-
+    global:
+      resolve_timeout: 5m
+      smtp_from: mycluster@example.com
+      smtp_smarthost: 'mysmtphost:25'
+      smtp_hello: smtp
+      smtp_require_tls: false
+    inhibit_rules:
+      - equal:
+          - namespace
+          - alertname
+        source_matchers:
+          - severity = critical
+        target_matchers:
+          - severity =~ warning|info
+      - equal:
+          - namespace
+          - alertname
+        source_matchers:
+          - severity = warning
+        target_matchers:
+          - severity = info
+      - equal:
+          - namespace
+        source_matchers:
+          - alertname = InfoInhibitor
+        target_matchers:
+          - severity = info
+    receivers:
+      - name: Default
+        email_configs:
+          - to: alert@example.com
+      - name: Watchdog
+      - name: Critical
+        email_configs:
+          - to: alert@example.com
+      - name: 'null'
+    route:
+      group_by:
+        - namespace
+      group_interval: 5m
+      group_wait: 30s
+      receiver: Default
+      repeat_interval: 12h
+      routes:
+        - matchers:
+            - alertname = Watchdog
+          receiver: Watchdog
+        - matchers:
+            - alertname = InfoInhibitor
+          receiver: 'null'
+        - receiver: Critical
+          match:
+            severity: critical
 
 # Configuration of the cluster monitoring feature
 monitoring:
@@ -119,8 +174,10 @@ monitoring:
   storageClass: gp3-csi
   # Define the storage size to use for persistance (default is 20Gi)
   storageSize: "20Gi"
+  # Define the storage size to use for persistance of alertManager (default is 5Gi)
+  storageSizeAlert: "5Gi"
   # Enabling monitoring for user-defined projects (see https://docs.openshift.com/container-platform/4.14/monitoring/enabling-monitoring-for-user-defined-projects.html)
-  enableUserWorkload: true
+  enableUserWorkload: false
   # Define the prometheus retention period (default is 7d)
   retentionPeriod: 7d
 
@@ -153,7 +210,7 @@ imageprunner:
 
 # Configuration of the external registry route
 registryroute:
-  # Enable the cluster image-prunner
+  # Enable the cluster registry route
   enabled: false
   # Name of the route (default is external)
   name: "external"
@@ -164,8 +221,32 @@ registryroute:
 registryconfig:
   # Enable the configuration of the registryconfig
   enabled: false
-  # Enable the configuration of the ingresscontroller service into infra nodes
-  infra_enabled: true
+  # Enable the configuration of the registry service into infra nodes
+  infra_enabled: false
+  # Number of replicas for the deployed registry (default is 1)
+  replicas: 1
+  # The httpSecret used (default is null)
+  # httpSecret: d9a012ccd117b1e6616ceccb2c3bb66a5fed1b5e481623
+  # Enable the configuration of the S3 backend storage
+  s3Storage: false
+  # Define the S3 bucket to use for configuration
+  s3Bucket: "image-registry-us-east-1-c92e88cad85b48ec8b312344dff03c82-392c"
+  # Define the S3 Region to use (default is us-east-1)
+  s3Region: "eu-west-3"
+  # # Define the S3 Region endpoint to use (default is none)
+  # s3RegionEndpoint: ""
+  # # Define the S3 Virtual Hosted Style to use (default is none)
+  # s3VirtualHostedStyle: ""
+  # Create the secret with S3 credentials (default is false)
+  s3StorageEnableSecret: false
+  # Set the AWS S3 access key credentials (default is myaccesskey)
+  s3BucketAccessKey: minio
+  # Set the AWS S3 secret key credentials (default is mysecretkey)
+  s3BucketSecretKey: minio123
+  # Enable the configuration of the pvc backend storage
+  pvcStorage: false
+  # Define the pvc Name to use for configuration
+  pvcName: "image-registry-storage"
 
 # Configuration of the ingresscontroller
 ingresscontroller:
@@ -177,16 +258,56 @@ ingresscontroller:
   # - name: default
   #   # The domain suffix to manage
   #   domain: example.com
-  #   # The label name for routeSelection
-  #   routeSelectorKey: mylabel
-  #   # The label value for routeSelection
-  #   routeSelectorValue: myvalue
-  #   # The node label value for machine.startx.io/group
-  #   nodeSelector: public
+  #   # The section if you whant to restrict router to dedicated namespaces
+  #   routeSelector: 
+  #     # enable selection by label for candidates namespaces
+  #     isLabel: true
+  #     # The list of labels key and values used for label selection
+  #     matchLabels: 
+  #       mylabel: myvalue
+  #     # enable selection by expression for candidates namespaces
+  #     isExpressions: true
+  #     # The label key used for expression selection
+  #     expressionKey: "mylabel"
+  #     # The operator used for expression selection (default is NotIn)
+  #     expressionOperator: "In"
+  #     # The label value used for expression selection (default is empty string)
+  #     expressionValues: 
+  #       - "myvalue"
+  #   # The section if you whant to restrict router to dedicated namespaces
+  #   nsSelector: 
+  #     # enable selection by label for candidates namespaces
+  #     isLabel: true
+  #     # The list of labels key and values used for label selection
+  #     matchLabels: 
+  #       "router.example": myexample
+  #     # enable selection by expression for candidates namespaces
+  #     isExpressions: true
+  #     # The label key used for expression selection
+  #     expressionKey: "router.example"
+  #     # The operator used for expression selection (default is NotIn)
+  #     expressionOperator: "In"
+  #     # The label value used for expression selection (default is empty string)
+  #     expressionValues: 
+  #       - "myexample"
+  #   # Enable interNamespace sharing of hosts
+  #   enabledInterNamespace: false
+  #   # Enable and define the forwardedHeaderPolicy (Append, Replace, IfNone, or Never)
+  #   httpHeadersForwardedPolicy: "Append"
   #   # Enable the configuration of the ingresscontroller service into infra nodes
-  #   infra_enabled: true
-  #   # Define the load balancer mode (internal or external)
-  #   loadBalancerMode: "external"
+  #   infra_enabled: false
+  #   # The node label values for nodeSelector
+  #   nodeSelector: 
+  #     machine.startx.io/group: public
+  #   # The list of tolerations rules
+  #   tolerations:
+  #     list:
+  #     - key: "env.example.com"
+  #       operator: "Equal"
+  #       value: "demo"
+  #       effect: "NoSchedule"
+  #   # Define the load balancer mode (none, internal, external, nodeport or nodeport-proxy)
+  #   loadBalancerMode: "none"
   #   # Number of replicas to use for this ingress controller
   #   replicas: 2
   #   # Managing the certificate used by the ingresscontroller
@@ -251,8 +372,26 @@ helm_reposistory:
   list: []
   #   # Name of the helm chart repository
   # - name: startx
-  #   # UR: of the helm chart repository
+  #   # URL: of the helm chart repository
   #   url: https://helm-repository.readthedocs.io/en/latest/repos/stable
+
+
+# Configuration of a bunch of priorityClass ressources
+priorityClass:
+  # Enable the priorityClass clreation
+  enabled: false
+  # Define the priorityClass content
+  list: []
+  #   # Name of the priorityClass
+  # - name: high-priority-nonpreempting
+  #   # Order of the priorityClass among all (default is 0)
+  #   value: 1000000
+  #   # Description of the purpose of your priorityClass
+  #   description: "This priority class will not cause other pods to be preempted."
+  #   # Set to Never if pod part of this priorityClass could not preemt other pods (default is PreemptLowerPriority)
+  #   preemptionPolicy: Never
+  #   # set to true only for one priorityClass that will become the default one
+  #   default: false
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
@@ -269,7 +408,6 @@ project:
     requester: startx
     description: Startx default cluster configuration
 
-
 # Configuration of the elasticSearch operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorElastic:
   enabled: false
@@ -280,7 +418,7 @@ operatorElastic:
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.8.0"
+    version: "5.8.14"
     operator: 
       channel: "stable"
       name: elasticsearch-operator
@@ -297,6 +435,34 @@ operatorElastic:
     namespace: "openshift-operators-redhat"
     providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
 
+# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorLoki:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "loki-operator"
+    namespace: "openshift-operators-redhat"
+    version: "6.0.1"
+    operator: 
+      channel: "stable-6.0"
+      name: loki-operator
+      installPlanApproval: Automatic
+      # csv: loki-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: true
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "loki-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"
 
 # Configuration of the SosReport project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 projectSosReport: 
@@ -315,7 +481,7 @@ projectSosReport:
 
 # Configuration of the sosreport operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorSosReport:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
@@ -342,7 +508,7 @@ operatorSosReport:
 
 # Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorGlobal:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:

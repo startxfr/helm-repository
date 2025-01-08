@@ -47,15 +47,22 @@ operator:
     hooked: false
     name: "quay-operator"
     namespace: "openshift-startx-quay"
-    version: "v3.10.0"
+    version: "v3.13.0"
     operator: 
-      channel: stable-3.10
+      channel: stable-3.13
       name: quay-operator
       installPlanApproval: Automatic
       # csv: quay-operator
       source: 
         name: redhat-operators
         namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
   operatorGroup:
     enabled: true
     hooked: false

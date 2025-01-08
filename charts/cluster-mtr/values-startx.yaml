@@ -1,0 +1,59 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: mtr
+  app: startx-mtr
+mtr:
+  enabled: false
+  hooked: false
+  namespace: openshift-mtr
+  windup:
+    enabled: true
+    name: migration
+    spec: |
+      executorInstances: 2
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-mtr"
+    display_name: Operator MTR
+    description: Migration Toolkit for Runtimes configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "mtr-operator"
+    namespace: "openshift-mtr"
+    version: "1.2.7"
+    operator: 
+      channel: "alpha"
+      name: mtr-operator
+      installPlanApproval: Automatic
+      # csv: mtr-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: true
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-mtr"
+    namespace: "openshift-mtr"
+    providedAPIs: "Windup.v1.windup.jboss.org"

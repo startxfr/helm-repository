@@ -30,8 +30,8 @@ elasticsearch : {{ .replicas | default 3 }} node(s) - {{ .storage.size | default
   {{- if .logging.curation }}{{- if .logging.curation.enabled }}{{- with .logging.curation }}
       curator : {{ .schedule | default "30 3 * * *" }}
   {{- end }}{{- end }}{{- end }}
-  {{- if .logging.fluentd }}{{- if .logging.fluentd.enabled }}{{- with .logging.fluentd }}
-      fluentd : enabled
+  {{- if .logging.collector }}{{- if .logging.collector.enabled }}{{- with .logging.collector }}
+         type : {{ .type | default "vector" }}
   {{- end }}{{- end }}{{- end }}
 {{- end }}{{- end }}
 {{- if .eventrouter }}{{- if .eventrouter.enabled }}
