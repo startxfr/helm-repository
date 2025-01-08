@@ -37,14 +37,14 @@ DOC_ADD_HISTORY="true"
 # read chart version
 function chartReadVersion {
     if [[ "" != "$1" ]]; then
-        cat  | yq .version "$PROJECT_CHARTPATH"/$1/Chart.yaml | tr -d \"
+        yq .version "$PROJECT_CHARTPATH"/$1/Chart.yaml | tr -d \"
     fi
 }
 
 # read chart description
 function chartReadDescription {
     if [[ "" != "$1" ]]; then
-        cat  | yq .description "$PROJECT_CHARTPATH"/"$1"/Chart.yaml
+        yq .description "$PROJECT_CHARTPATH"/"$1"/Chart.yaml
     fi
 }
 
