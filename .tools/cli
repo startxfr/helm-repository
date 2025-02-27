@@ -29,6 +29,7 @@ SXHELM_SIGN=enabled
 SXHELM_SIGN_KEY="dev@startx.fr"
 SXHELM_SIGN_KEYRING="$HOME/.gnupg/secring.gpg"
 SXHELM_SIGN_KEYPASSPHRASEFILE="$HOME/.ssh/pgp-dev_startx-private_key-passphrase.txt"
+DOC_ADD_HISTORY="true"
 
 #####################
 ## GENERICS FUNCTIONS
@@ -36,36 +37,28 @@ SXHELM_SIGN_KEYPASSPHRASEFILE="$HOME/.ssh/pgp-dev_startx-private_key-passphrase.
 # read chart version
 function chartReadVersion {
     if [[ "" != "$1" ]]; then
-        echo $(cat "$PROJECT_CHARTPATH"/$1/Chart.yaml | yq .version - | tr -d \")
-    else
-        echo ""
+        yq .version "$PROJECT_CHARTPATH"/$1/Chart.yaml | tr -d \"
     fi
 }
 
 # read chart description
 function chartReadDescription {
     if [[ "" != "$1" ]]; then
-        echo $(cat "$PROJECT_CHARTPATH"/$1/Chart.yaml | yq .description -)
-    else
-        echo ""
+        yq .description "$PROJECT_CHARTPATH"/"$1"/Chart.yaml
     fi
 }
 
 # read chart name
 function chartReadName {
     if [[ "" != "$1" ]]; then
-        echo $(cat "$PROJECT_CHARTPATH"/$1/Chart.yaml | yq .name -)
-    else
-        echo ""
+        yq .name "$PROJECT_CHARTPATH"/"$1"/Chart.yaml
     fi
 }
 
 # read chart appVersion
 function chartReadAppVersion {
     if [[ "" != "$1" ]]; then
-        echo $(cat "$PROJECT_CHARTPATH/${1}/Chart.yaml" | yq .appVersion - | tr -d \")
-    else
-        echo ""
+        yq .appVersion "$PROJECT_CHARTPATH/${1}/Chart.yaml" | tr -d \"
     fi
 }
 
@@ -183,7 +176,7 @@ function doHelmrepositoryGenerate {
     local path="$HELM_REPO_LOCALSYNC/${subrepo}"
     local helmrepourl="${3:-$HELM_REPO_BASEURL}"
     echo -e "\e[36mGenerate\e[0m Generate helm index for ${helmrepourl}/${subrepo} from ${path} content"
-    helm repo index --url ${helmrepourl}/${subrepo} "${path}"
+    helm repo index --url "${helmrepourl}"/"${subrepo}" "${path}"
     echo -e "\e[36mCopy\e[0m Copy ${path}/index.yaml to ${HELM_REPO_LOCALIDX}/${subrepo}"
     cp "${path}/index.yaml" "${HELM_REPO_LOCALIDX}/${subrepo}/index.yaml"
     awsS3SyncUpload "${path}" "${subrepo}"
@@ -266,12 +259,14 @@ function routerChartCreate {
     fi
     echo -e "\e[32mCreate\e[0m \e[1m$chart_name\e[0m helm chart from \e[1m$template_name\e[0m"
     cp -R "$template_dir" "$chart_dir" &>/dev/null
-    sed -i "s/$template_name/$chart_name/g" $(find "$chart_dir" -type f)
+    sed -i "s/$template_name/$chart_name/g" "$(find "$chart_dir" -type f)"
     rm "$chart_dir/templates/$SHARED_TEMPLATE_NAME" &>/dev/null
     ln -P "$PROJECT_PATH/$SHARED_TEMPLATE" "$chart_dir/templates/$SHARED_TEMPLATE_NAME" &>/dev/null
-    chart_release=$(cat "$chart_dir/Chart.yaml" | yq .version -)
+    chart_release=$(yq .version "$chart_dir/Chart.yaml")
     message="Create chart $chart_name from $template_name"
-    echo "| $chart_release  | $next_date | $message" >> "$chart_dir/README.md"
+    if [[ $DOC_ADD_HISTORY == "true" ]]; then
+        echo "| $chart_release  | $next_date | $message" >> "$chart_dir/README.md"
+    fi
     git add "$chart_dir" &>/dev/null
     git commit -m "[chart/$chart_name] $message" "$chart_dir" &>/dev/null
 }
@@ -298,6 +293,23 @@ function routerChartTest {
         helm lint "$chart_dir"
     else
         echo -e "\e[33mTest\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        routerList
+    fi
+}
+
+# router for chart test sub-command
+function routerChartSchemagen {
+    local chart_name=$1
+    local valuesExample=${2:-values.yaml}
+    local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    local test_dir=$chart_dir/templates/tests
+    if [[ -r $chart_dir ]]; then
+        echo -e "\e[33mSGen\e[0m \e[1m$chart_name\e[0m helm chart"
+        cd "$chart_dir" || exit
+        helm schema-gen "$valuesExample" > values.schema.json
+        cd - || exit
+    else
+        echo -e "\e[33mSGen\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
         routerList
     fi
 }
@@ -353,7 +365,7 @@ function routerChartRelease {
     if [[ -r $chart_dir ]]; then
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m helm chart"
         current_release=$(chartReadVersion "$chart_name")
-        next_release=$(cat $chart_dir/Chart.yaml | yq .version - | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
+        next_release=$(yq .version "$chart_dir"/Chart.yaml | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
         if [[ "" != "$force_version" ]]; then
             next_release=$force_version
         fi
@@ -387,11 +399,15 @@ function routerChartRelease {
         local packagename="${chart_name}-${next_release}.tgz"
         git checkout $WORK_BRANCH &>/dev/null
         echo -e "\e[35mRelease\e[0m Update \e[1m$chart_name\e[0m release number $next_release in $chart_name/Chart.yaml"
-        echo "| $next_release | $next_date | $next_description" >> "${chart_dir}/README.md"
         sed -i "s/$current_release/$next_release/" "$chart_dir/Chart.yaml"
+        if [[ $DOC_ADD_HISTORY == "true" ]]; then
+            echo "| $next_release | $next_date | $next_description" >> "${chart_dir}/README.md"
+        fi
         git add "$chart_dir"
-        cp "$chart_dir/README.md" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
-        git add "$PROJECT_PATH/docs/charts/${chart_name}.md"
+        if [[ $DOC_ADD_HISTORY == "true" ]]; then
+            cp "$chart_dir/README.md" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
+            git add "$PROJECT_PATH/docs/charts/${chart_name}.md"
+        fi
         git commit -m "[chart/$chart_name] Upgrade release number, from $current_release to $next_release : $next_description" "$chart_dir" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
         echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m version $next_release"
         routerChartPackage "$chart_name"
@@ -520,6 +536,7 @@ Usage:
   - create                         Create an new helm chart
   - info                           Get information about a given helm-chart
   - test                           Test an helm chart
+  - schemagen                      Generate the schema according to the given value filename (default is values.yaml)
   - package                        Package an helm chart
   - release                        Release an helm chart
   - publish                        Release and publish an helm chart into repository

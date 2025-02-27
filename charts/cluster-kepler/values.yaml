@@ -1,0 +1,79 @@
+# Default values for cluster-kepler.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-kepler
+  # Version name of this application (default use Chart appVersion)
+  # version: "0.0.3"
+
+# Deploy an API manager
+kepler:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: false
+  # Name of the deployed instance of KeplerConfig
+  name: default
+  # The applyed Kepler config specifications
+  spec: |
+    exporter:
+      deployment:
+        nodeSelector:
+          kubernetes.io/os: linux
+        port: 9103
+        tolerations:
+          - operator: Exists
+
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-power-monitoring"
+    display_name: Kepler console
+    description: Kepler configured by STARTX
+    additionalLabels:
+      openshift.io/cluster-monitoring: "true"
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "power-monitoring-operator"
+    namespace: "openshift-operators"
+    version: "v0.3.0"
+    operator: 
+      channel: "tech-preview"
+      name: power-monitoring-operator
+      installPlanApproval: Automatic
+      # csv: power-monitoring-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "startx-kepler"
+    target: "all-ns"
+    namespace: "openshift-operators"
+    providedAPIs: "Kepler.v1alpha1.kepler.system.sustainable.computing.io,KeplerInternal.v1alpha1.kepler.system.sustainable.computing.io"

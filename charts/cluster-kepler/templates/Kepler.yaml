@@ -1,0 +1,36 @@
+{{- if .Values.kepler.enabled -}}
+{{- $namespace := .Values.project.project.name | default "kepler" -}}
+{{- $spec := .Values.kepler.spec | default "{}" -}}
+---
+apiVersion: kepler.system.sustainable.computing.io/v1alpha1
+kind: Kepler
+metadata:
+  name: {{ .Values.kepler.name | default "kepler" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-kepler.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.kepler.name | default "kepler" -}}-kepler"
+  annotations:
+    {{- include "cluster-kepler.annotations" . | nindent 4 }}
+    {{- if .Values.kepler.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "20"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "20"
+{{- if eq $spec "{}" }}
+spec:
+  exporter:
+    deployment:
+      nodeSelector:
+        kubernetes.io/os: linux
+      port: 9103
+      tolerations:
+        - operator: Exists
+{{- else }}
+spec:
+  {{- $spec | nindent 2 }}
+{{- end }}
+{{- end -}}

@@ -1,0 +1,78 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-kepler
+# Description of this Helm chart
+description: Helm chart used to configure Kepler at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 16.19.43
+# Version name of the kepler operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: "4.16.0"
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-kepler.svg
+# Kube minimum version
+kubeVersion: ">=1.25.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - NTP
+  - Kepler
+  - time
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-kepler
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kepler
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
+    alias: project
+    condition: project.enabled
+  - name: operator
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "16.19.4"
+    alias: operator
+    condition: operator.enabled
+
+annotations:
+  # category associated to this package
+  category: cluster
+  # Artifacthub category associated to this package
+  artifacthub.io/category: integration-delivery
+  # Artifacthub license
+  artifacthub.io/license: "GPL-3.0-or-later"
+  # Artifacthub is this release a pre-release
+  artifacthub.io/prerelease: "true"
+  # Artifacthub is an operator chart
+  artifacthub.io/operator: "true"
+  # Artifacthub operator capabilities
+  artifacthub.io/operatorCapabilities: "Seamless Upgrades"
+  # Artifacthub chart recommandations
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+  # Artifacthub changes logs
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to the 16.19.61 release"
+  # Is this release contain security updates
+  artifacthub.io/containsSecurityUpdates: "false"
