@@ -1,0 +1,25 @@
+{{- if .Values.kubecost.enabled -}}
+{{- $namespace := .Values.project.project.name | default "kubecost" -}}
+{{- $spec := .Values.kubecost.spec | default "{}" -}}
+---
+apiVersion: charts.kubecost.com/v1alpha1
+kind: CostAnalyzer
+metadata:
+  name: {{ .Values.kubecost.name | default "kubecost" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-kubecost.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.kubecost.name | default "kubecost" -}}-costanalyzer"
+  annotations:
+    {{- include "cluster-kubecost.annotations" . | nindent 4 }}
+    {{- if .Values.kubecost.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "20"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}
