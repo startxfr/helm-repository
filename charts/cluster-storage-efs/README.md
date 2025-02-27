@@ -151,3 +151,4 @@ helm install cluster-storage-efs startx/cluster-storage-efs -f https://raw.githu
 | 16.19.31 | 2024-11-11 | Improve cluster-storage-efs options
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
 | 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
+| 16.19.43 | 2025-02-27 | publish stable update for the full repository
