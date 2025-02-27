@@ -449,3 +449,4 @@ chaos-monkey startx/chaos-monkey
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
 | 16.19.31 | 2024-12-10 | Align all chart to the 16.19.61 release
 | 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
+| 16.19.41 | 2025-02-27 | publish stable update for the full repository
