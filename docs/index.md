@@ -58,6 +58,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-maintenance](charts/cluster-maintenance.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-maintenance)   | configure the node maintenance feature                            |
 | **[cluster-mongo](charts/cluster-mongo.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mongo)         | configure MongoDB at the cluster level                            |
 | **[cluster-kubecost](charts/cluster-kubecost.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubecost)           | enable Kubecost cost dashboard               |
+| **[cluster-kepler](charts/cluster-kepler.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kepler)           | enable Kepler power consumption observability               |
 
 #### Use Cluster charts
 
