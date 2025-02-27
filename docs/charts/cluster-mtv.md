@@ -157,3 +157,4 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 16.19.31 | 2024-12-02 | Upgrade the MTV operator version to v2.7.4
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
 | 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
+| 16.19.43 | 2025-02-27 | publish stable update for the full repository
