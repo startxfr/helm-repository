@@ -6,9 +6,9 @@ description: Helm chart used to deploy a chaos testing suit composed of chaos me
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.5-noschema
+version: 17.14.5
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "4.16.19"
+appVersion: "4.17.14"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/example-chaos.svg
 # Kube minimum version
@@ -39,23 +39,23 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "15.27.3"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: project
     condition: project.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "15.27.3"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: cerberus_project
     condition: cerberus_project.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "15.27.3"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: kraken_project
     condition: kraken_project.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "15.27.3"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: mesh_project
     condition: mesh_project.enabled
   - name: chaos-mesh
@@ -64,8 +64,8 @@ dependencies:
     alias: mesh
     condition: mesh.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "15.27.3"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: monkey_project
     condition: monkey_project.enabled
   - name: kube-monkey
@@ -74,8 +74,8 @@ dependencies:
     alias: monkey
     condition: monkey.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "15.27.3"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: litmus_project
     condition: litmus_project.enabled
   - name: litmus

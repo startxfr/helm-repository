@@ -6,7 +6,7 @@ description: Helm chart used to configure tekton at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.5-noschema
+version: 17.14.5
 # Version name of the pipeline operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 1.16.1
 # Icon of this helm-chart
@@ -39,13 +39,13 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operator
     condition: operator.enabled
 

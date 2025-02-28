@@ -1,0 +1,60 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: kepler
+  app: demo-kepler
+kepler:
+  enabled: false
+  hooked: false
+  name: demo
+  spec: |
+    exporter:
+      deployment:
+        nodeSelector:
+          kubernetes.io/os: linux
+        port: 9103
+        tolerations:
+          - operator: Exists
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-power-monitoring"
+    display_name: Kepler demo console
+    description: Kepler demo configured by STARTX
+    additionalLabels:
+      openshift.io/cluster-monitoring: "true"
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "power-monitoring-operator"
+    namespace: "openshift-operators"
+    version: "v0.3.0"
+    operator: 
+      channel: "tech-preview"
+      name: power-monitoring-operator
+      installPlanApproval: Automatic
+      # csv: power-monitoring-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "demo-kepler"
+    target: "all-ns"
+    namespace: "openshift-operators"
+    providedAPIs: "Kepler.v1alpha1.kepler.system.sustainable.computing.io,KeplerInternal.v1alpha1.kepler.system.sustainable.computing.io"

@@ -6,9 +6,9 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.5-noschema
+version: 17.14.5
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "4.16.19"
+appVersion: "4.17.14"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-config.svg
 # Kube minimum version
@@ -37,33 +37,33 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorLoki
     condition: operatorLoki.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorGlobal
     condition: operatorGlobal.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: projectSosReport
     condition: projectSosReport.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorSosReport
     condition: operatorSosReport.enabled
 

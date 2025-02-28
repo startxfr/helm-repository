@@ -384,3 +384,7 @@ helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubuser
 | 16.19.15 | 2024-11-10 | publish stable update for the full repository
 | 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
 | 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
+| 16.19.43 | 2025-02-27 | publish stable update for the full repository
+| 17.14.1 | 2025-02-28 | Initial release for v17.x version
+| 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes
+| 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1

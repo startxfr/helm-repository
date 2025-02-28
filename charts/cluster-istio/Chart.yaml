@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 16.19.5-noschema
+version: 17.14.5
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.6.2
 # Icon of this helm-chart
@@ -40,38 +40,38 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: project
     condition: project.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorLoki
     condition: operatorLoki.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorJaeger
     condition: operatorJaeger.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
-    version: "16.19.5-noschema"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    version: "17.14.1"
     alias: operatorIstio
     condition: operatorIstio.enabled
 

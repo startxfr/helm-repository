@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![release](https://img.shields.io/badge/release-v16.19.1-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/16.19.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io) [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX-blue.svg)](https://artifacthub.io/packages/search?repo=startx)
+[![release](https://img.shields.io/badge/release-v17.14.1-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/17.14.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io) [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX-blue.svg)](https://artifacthub.io/packages/search?repo=startx)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 
@@ -57,6 +57,8 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-costs](charts/cluster-costs.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-costs)         | configure the costs management features                           |
 | **[cluster-maintenance](charts/cluster-maintenance.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-maintenance)   | configure the node maintenance feature                            |
 | **[cluster-mongo](charts/cluster-mongo.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mongo)         | configure MongoDB at the cluster level                            |
+| **[cluster-kubecost](charts/cluster-kubecost.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubecost)           | enable Kubecost cost dashboard               |
+| **[cluster-kepler](charts/cluster-kepler.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kepler)           | enable Kepler power consumption observability               |
 
 #### Use Cluster charts
 
@@ -81,6 +83,7 @@ helm install startx/cluster-3scale
 helm install startx/cluster-vpa
 helm install startx/cluster-sso
 helm install startx/cluster-ptp
+helm install startx/cluster-kubecost
 helm install startx/cluster-nexus
 helm install startx/cluster-keycloak
 helm install startx/cluster-gitlab
