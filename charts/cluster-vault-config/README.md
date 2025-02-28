@@ -347,3 +347,4 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 16.19.43 | 2025-02-27 | publish stable update for the full repository
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version
 | 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes
+| 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1
