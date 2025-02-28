@@ -359,3 +359,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 16.19.33 | 2024-12-11 | Move ArgoCD CRD to v1beta1 version for gitops 1.14
 | 16.19.43 | 2025-02-27 | publish stable update for the full repository
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version
+| 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes
