@@ -1,0 +1,73 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Upgrade all startx chart dependencies to version 16.19.5-noschema"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: chaos
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+apiVersion: v2
+appVersion: 1.0.4
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+  version: 17.14.1-noschema
+description: Helm chart used to deploy cerberus on Openshift or Kubernetes cluster.  Cerberus
+  is as a watchdog who act as a cluster healthcheck.  This chart is part of the startx
+  chaos helm chart suite.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-cerberus.svg
+keywords:
+- - kubernetes
+- - openshift
+- - helm
+- - startx
+- - chaos testing
+- - test
+- - cerberus
+- - cluster
+- - healthcheck
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: chaos-cerberus
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus
+- - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-cerberus
+type: application
+version: 17.14.5-noschema
+
+...
+files:
+  chaos-cerberus-17.14.5-noschema.tgz: sha256:1b98b8cc8b8efeb7586fcf4e41c6b5a7936c470291cb4765bea56d36f5e24491
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJnwcyhCRAPNrJQFdOjTQAApm4QAClf+5l4hxyKe19/w0f9pl0I
+IinCx6PRKbARsXkSKWdqVuUspzlnxbsf7HOJ/+sBIg15OzdVmZX5x4iGhNvx9cei
+eykDSJtSEXeXDHzvpGFuy92BmPnFVRtw+P9BcD4GoBQtxvDsYMY0HBjvQ51bqhZW
+CyVoy62FiXCxRoShOp1U57DYy8Fx+FM1uMnOxjwGlESY6E1l981va8AbZWmyxc1b
+m1eG/VZxv967ZfgAgaHvtpoIPfZBkBMZpzI7PwceHLSOyHypwV2dRlHeq2mALw94
+LzTv76kUDyEgYlARuKrcDhqzQCIf/LwHDCfGCLC53reXtaG3IWu9bX1nI7iekrgG
+TQVNXvf7O7OQwM0gj5v4cDYGRsSCX3MoFqU3rQMF5mg9xAu4ym0Z2PkKulVVPjO6
+KAAwta6CH7y+nJLlSHuqT27BCaI1PAWNzzBlQMZ1EnX/eY4R0SqXDOhBoX2X4ZB9
+23zKrCPUqvIiwcOP9yZhk9dJZypgEyxYsemmTRfluUtSTbVgW+y65ajsB3ONBKUg
+nQWDF1E3nsSIskvB8jSYdKsW4vjajqfm1PxaI1Q8QmlIpoq4OWG4n5TM98M2mYMy
+7kb1eHP3YIPAS99063x8Ex4QSeA2JsJy9inrU6Skyhjagqnf0dI6Uwb+RBhRfaq7
+7nXUHWfzjzLD4fOU79A1
+=G7RS
+-----END PGP SIGNATURE-----

@@ -12,7 +12,7 @@ appVersion: "0.11.12"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-3scale.svg
 # Kube minimum version
-    version: "17.14.1"
+    version: "17.14.1-noschema"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -37,13 +37,13 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
+    version: "17.14.1-noschema"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/noschema/
+    version: "17.14.1-noschema"
     alias: operator
     condition: operator.enabled
 
