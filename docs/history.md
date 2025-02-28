@@ -25,7 +25,7 @@ helm search repo startx
 
 | Release                                                                   | Date       | Description          |
 | ------------------------------------------------------------------------- | ---------- | -------------------- |
-| [17.1.1](https://github.com/startxfr/helm-repository/releases/tag/17.1.1) | 2025-02-28 | Init the v17 release |
+| [17.14.1](https://github.com/startxfr/helm-repository/releases/tag/17.14.1) | 2025-02-28 | Init the v17 release |
 
 
 ## version 16.0.x (champignac)
