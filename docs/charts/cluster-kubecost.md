@@ -62,3 +62,4 @@ helm install cluster-kubecost startx/cluster-kubecost -f https://raw.githubuserc
 | 16.19.31 | 2025-02-27 | Create chart cluster-kubecost from cluster-ptp |
 | 16.19.43 | 2025-02-27 | publish stable update for the full repository
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version
+| 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes
