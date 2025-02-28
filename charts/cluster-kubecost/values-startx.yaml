@@ -1,0 +1,1170 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: kubecost
+  app: startx-kubecost
+kubecost:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    pricingCsv:
+      enabled: false
+      location:
+        URI: 's3://kc-csv-test/pricing_schema.csv'
+        csvAccessCredentials: pricing-schema-access-secret
+        provider: AWS
+        region: us-east-1
+    nodeSelector: {}
+    global:
+      platforms:
+        cicd:
+          enabled: false
+          skipSanityChecks: false
+        openshift:
+          createMonitoringClusterRoleBinding: true
+          createMonitoringResourceReaderRoleBinding: true
+          enabled: true
+          monitoringServiceAccountName: prometheus-k8s
+          monitoringServiceAccountNamespace: openshift-monitoring
+          route:
+            annotations: {}
+            enabled: false
+          scc:
+            networkCosts: true
+            nodeExporter: true
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+      grafana:
+        domainName: cost-analyzer-grafana.default.svc
+        enabled: false
+        proxy: false
+        scheme: http
+      amp:
+        enabled: false
+        prometheusServerEndpoint: 'http://localhost:8005/workspaces/<workspaceId>/'
+        remoteWriteService: 'https://aps-workspaces.us-west-2.amazonaws.com/workspaces/<workspaceId>/api/v1/remote_write'
+        sigv4:
+          region: us-west-2
+      annotations: {}
+      additionalLabels: {}
+      notifications:
+        alertmanager:
+          enabled: false
+          fqdn: 'http://cost-analyzer-prometheus-server.default.svc'
+      gmp:
+        enabled: false
+      prometheus:
+        enabled: false
+        fqdn: 'https://prometheus-k8s.openshift-monitoring.svc.cluster.local:9091'
+        insecureSkipVerify: false
+        kubeRBACProxy: true
+      gcpstore:
+        enabled: false
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+      assetReports:
+        enabled: false
+        reports:
+          - accumulate: false
+            aggregateBy: type
+            filters:
+              - property: cluster
+                value: cluster-one
+            title: Example Asset Report 0
+            window: today
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1001
+        runAsNonRoot: true
+        runAsUser: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      updateCaTrust:
+        caCertsMountPath: /etc/pki/ca-trust/source/anchors
+        caCertsSecret: ca-certs-secret
+        enabled: false
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 0
+          runAsNonRoot: false
+          runAsUser: 0
+          seccompProfile:
+            type: RuntimeDefault
+      mimirProxy:
+        annotations: {}
+        enabled: false
+        mimirEndpoint: $mimir_endpoint
+        name: mimir-proxy
+        orgIdentifier: $your_tenant_ID
+        port: 8085
+      savedReports:
+        enabled: false
+        reports:
+          - accumulate: false
+            aggregateBy: namespace
+            chartDisplay: category
+            filters:
+              - key: cluster
+                operator: ':'
+                value: dev
+            idle: separate
+            rate: cumulative
+            title: Example Saved Report 0
+            window: today
+          - accumulate: false
+            aggregateBy: controllerKind
+            chartDisplay: category
+            filters:
+              - key: namespace
+                operator: '!:'
+                value: kubecost
+            idle: share
+            rate: monthly
+            title: Example Saved Report 1
+            window: month
+          - accumulate: true
+            aggregateBy: service
+            chartDisplay: category
+            filters: []
+            idle: hide
+            rate: daily
+            title: Example Saved Report 2
+            window: '2020-11-11T00:00:00Z,2020-12-09T23:59:59Z'
+      cloudCostReports:
+        enabled: false
+        reports:
+          - accumulate: false
+            aggregateBy: service
+            title: Cloud Cost Report 0
+            window: today
+      ammsp:
+        aadAuthProxy:
+          port: 8081
+          enabled: false
+          audience: 'https://prometheus.monitor.azure.com/.default'
+          aadTenantId: $<AZURE_MANAGED_IDENTITY_TENANT_ID>
+          aadClientId: $<AZURE_MANAGED_IDENTITY_CLIENT_ID>
+          name: aad-auth-proxy
+          imagePullPolicy: IfNotPresent
+          identityType: userAssigned
+          image: null
+        enabled: false
+        prometheusServerEndpoint: 'http://localhost:8081/'
+        queryEndpoint: $<AMMSP_QUERY_ENDPOINT>
+        remoteWriteService: $<AMMSP_METRICS_INGESTION_ENDPOINT>
+      integrations:
+        postgres:
+          enabled: false
+          databaseHost: ''
+          databaseName: ''
+          databaseUser: ''
+          queryConfigs:
+            allocations: []
+            assets: []
+            cloudCosts: []
+          runInterval: 12h
+          databasePassword: ''
+          databaseSecretName: ''
+          databasePort: ''
+        turbonomic:
+          clientId: ''
+          clientSecret: ''
+          enabled: false
+          host: ''
+          insecureClient: false
+          role: ''
+      podAnnotations: {}
+    kubecostAggregator:
+      dbConcurrentIngestionCount: 1
+      logLevel: info
+      persistentConfigsStorage:
+        storageClass: ''
+        storageRequest: 1Gi
+      enabled: false
+      cloudCost:
+        readinessProbe:
+          enabled: true
+          failureThreshold: 200
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      numDBCopyPartitions: 25
+      containerResourceUsageRetentionDays: 1
+      resources:
+        limits:
+          cpu: 2000m
+          memory: 40Gi
+        requests:
+          cpu: 500m
+          memory: 1Gi
+      jaeger:
+        enabled: false
+      readinessProbe:
+        enabled: true
+        failureThreshold: 200
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      deployMethod: singlepod
+      etlHourlyStoreDurationHours: 49
+      dbWriteThreads: 1
+      etlDailyStoreDurationDays: 91
+      imagePullPolicy: IfNotPresent
+      aggregatorDbStorage:
+        storageClass: ''
+        storageRequest: 128Gi
+      dbReadThreads: 1
+      service:
+        labels: {}
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model@sha256:4049ec12460b555da74f129d8aa406356946307c04e149ed82ecd61518d4a11b'
+      dbTrimMemoryOnClose: true
+      dbWriteMemoryLimit: 0GB
+      replicas: 1
+      dbMemoryLimit: 0GB
+      stagingEmptyDirSizeLimit: 2Gi
+    awsstore:
+      annotations: {}
+      createServiceAccount: false
+      nodeSelector: {}
+      priorityClassName: ''
+      useAwsStore: false
+    grafana:
+      plugins: []
+      nodeSelector: {}
+      annotations: {}
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      readinessProbe:
+        httpGet:
+          path: /api/health
+          port: 3000
+      envFromSecret: ''
+      affinity: {}
+      adminPassword: strongpassword
+      livenessProbe:
+        failureThreshold: 10
+        httpGet:
+          path: /api/health
+          port: 3000
+        initialDelaySeconds: 60
+        timeoutSeconds: 30
+      env: {}
+      dashboardProviders: {}
+      securityContext: {}
+      rbac:
+        create: true
+      service:
+        annotations: {}
+        labels: {}
+        port: 80
+        type: ClusterIP
+      deploymentStrategy: RollingUpdate
+      serviceAccount:
+        create: true
+        name: ''
+      dashboardsConfigMaps: {}
+      grafana.ini:
+        analytics:
+          check_for_updates: true
+        auth.anonymous:
+          enabled: true
+          org_name: Main Org.
+          org_role: Editor
+        grafana_net:
+          url: 'https://grafana.net'
+        log:
+          mode: console
+        paths:
+          data: /var/lib/grafana/data
+          logs: /var/log/grafana
+          plugins: /var/lib/grafana/plugins
+          provisioning: /etc/grafana/provisioning
+        server:
+          root_url: '%(protocol)s://%(domain)s:%(http_port)s/grafana'
+          serve_from_sub_path: false
+      extraSecretMounts: []
+      adminUser: admin
+      image:
+        pullPolicy: IfNotPresent
+        repository: 'registry.redhat.io/rhel9/grafana@sha256:d9a0e6646f970db628f171ec78a508e6ac329c4457aec85f0a88894ab3d5f734'
+        tag: 11.3.1
+      replicas: 1
+      tolerations: []
+      sidecar:
+        dashboards:
+          annotations: {}
+          enabled: true
+          error_throttle_sleep: 0
+          folder: /tmp/dashboards
+          label: grafana_dashboard
+          labelValue: '1'
+        datasources:
+          enabled: false
+          error_throttle_sleep: 0
+          label: grafana_datasource
+        image:
+          pullPolicy: IfNotPresent
+          repository: 'quay.io/kiwigrid/k8s-sidecar@sha256:636290ab9e852814b21af53fbd909f4a8ac88f26ed4cc4dca032d88bf6c788a9'
+          tag: 1.28.1
+        resources: {}
+      dashboards: {}
+      persistence:
+        enabled: false
+      priorityClassName: ''
+      podAnnotations: {}
+    priority:
+      enabled: false
+      name: ''
+    extraObjects: []
+    extraVolumeMounts: []
+    serviceMonitor:
+      additionalLabels: {}
+      aggregatorMetrics:
+        additionalLabels: {}
+        enabled: false
+        interval: 1m
+        metricRelabelings: []
+        relabelings:
+          - action: replace
+            sourceLabels:
+              - __meta_kubernetes_namespace
+            targetLabel: namespace
+        scrapeTimeout: 10s
+      enabled: true
+      interval: 1m
+      metricRelabelings: []
+      networkCosts:
+        additionalLabels: {}
+        enabled: false
+        interval: 1m
+        metricRelabelings: []
+        relabelings: []
+        scrapeTimeout: 10s
+      relabelings: []
+      scrapeTimeout: 10s
+    prometheusRule:
+      additionalLabels: {}
+      enabled: true
+    forecasting:
+      nodeSelector: {}
+      enabled: true
+      priority:
+        enabled: false
+        name: ''
+      annotations: {}
+      resources:
+        limits:
+          cpu: 1500m
+          memory: 1Gi
+        requests:
+          cpu: 200m
+          memory: 300Mi
+      readinessProbe:
+        enabled: true
+        failureThreshold: 200
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      affinity: {}
+      livenessProbe:
+        enabled: true
+        failureThreshold: 200
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      env:
+        GUNICORN_CMD_ARGS: '--log-level info -t 1200'
+      imagePullPolicy: IfNotPresent
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-modeling@sha256:ef6be6b1e7be57d85a54c115ad15fd201fe7fee86ddb7eb6394f119358a04b59'
+      tolerations: []
+    affinity: {}
+    extraVolumes: []
+    kubecostMetrics: null
+    prometheus:
+      networkPolicy:
+        enabled: false
+      imagePullSecrets: null
+      server:
+        emptyDir:
+          sizeLimit: ''
+        nodeSelector: {}
+        enabled: true
+        alertmanagers: []
+        global:
+          evaluation_interval: 1m
+          external_labels:
+            cluster_id: cluster-one
+          scrape_interval: 1m
+          scrape_timeout: 60s
+        extraConfigmapMounts: []
+        podLabels: {}
+        annotations: {}
+        extraVolumeMounts: []
+        resources: {}
+        readinessProbeInitialDelay: 5
+        readinessProbeFailureThreshold: 3
+        configPath: /etc/config/prometheus.yml
+        affinity: {}
+        extraVolumes: []
+        terminationGracePeriodSeconds: 300
+        name: server
+        livenessProbeInitialDelay: 5
+        env: []
+        extraArgs:
+          query.max-concurrency: 1
+          query.max-samples: 100000000
+        verticalAutoscaler:
+          enabled: false
+        livenessProbeFailureThreshold: 3
+        readinessProbeSuccessThreshold: 1
+        containerSecurityContext: {}
+        securityContext: {}
+        sidecarContainers: null
+        configMapOverrideName: ''
+        persistentVolume:
+          accessModes:
+            - ReadWriteOnce
+          annotations: {}
+          enabled: true
+          existingClaim: ''
+          mountPath: /data
+          size: 32Gi
+          subPath: ''
+        extraInitContainers: []
+        strategy:
+          rollingUpdate: null
+          type: Recreate
+        livenessProbeTimeout: 3
+        livenessProbeSuccessThreshold: 1
+        ingress:
+          annotations: {}
+          enabled: false
+          extraLabels: {}
+          extraPaths: []
+          hosts: []
+          pathType: Prefix
+          tls: []
+        service:
+          externalIPs: []
+          clusterIP: ''
+          statefulsetReplica:
+            enabled: false
+            replica: 0
+          loadBalancerIP: ''
+          annotations: {}
+          loadBalancerSourceRanges: []
+          servicePort: 80
+          type: ClusterIP
+          sessionAffinity: None
+          gRPC:
+            enabled: false
+            servicePort: 10901
+          labels: {}
+        statefulSet:
+          annotations: {}
+          enabled: false
+          headless:
+            annotations: {}
+            labels: {}
+            servicePort: 80
+          labels: {}
+          podManagementPolicy: OrderedReady
+        extraFlags:
+          - web.enable-lifecycle
+        replicaCount: 1
+        extraHostPathMounts: []
+        remoteWrite: {}
+        extraSecretMounts: []
+        readinessProbeTimeout: 3
+        remoteRead: {}
+        tolerations: []
+        podDisruptionBudget:
+          enabled: false
+          maxUnavailable: 1
+        prefixURL: ''
+        baseURL: ''
+        retention: 97h
+        priorityClassName: ''
+        podAnnotations: {}
+      alertmanagerFiles:
+        alertmanager.yml:
+          global: {}
+          receivers:
+            - name: default-receiver
+          route:
+            group_interval: 5m
+            group_wait: 10s
+            receiver: default-receiver
+            repeat_interval: 3h
+      alertRelabelConfigs: null
+      extraScrapeConfigs: |
+        - job_name: kubecost
+          honor_labels: true
+          scrape_interval: 1m
+          scrape_timeout: 60s
+          metrics_path: /metrics
+          scheme: http
+          dns_sd_configs:
+          - names:
+            - {{ template "cost-analyzer.serviceName" . }}
+            type: 'A'
+            port: 9003
+        - job_name: kubecost-networking
+          kubernetes_sd_configs:
+            - role: pod
+          relabel_configs:
+          # Scrape only the the targets matching the following metadata
+            - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_instance]
+              action: keep
+              regex:  kubecost
+            - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+              action: keep
+              regex:  network-costs
+        - job_name: kubecost-aggregator
+          scrape_interval: 1m
+          scrape_timeout: 60s
+          metrics_path: /metrics
+          scheme: http
+          dns_sd_configs:
+          - names:
+            - {{ template "aggregator.serviceName" . }}
+            type: 'A'
+            {{- if or .Values.saml.enabled .Values.oidc.enabled }}
+            port: 9008
+            {{- else }}
+            port: 9004
+            {{- end }}
+        ## Enables scraping of NVIDIA GPU metrics via dcgm-exporter. Scrapes all
+        ## endpoints which contain "dcgm-exporter" in labels "app",
+        ## "app.kubernetes.io/component", or "app.kubernetes.io/name" with a case
+        ## insensitive match. The label must be present on the K8s service endpoints and not just pods.
+        ## Refs:
+        ## https://github.com/NVIDIA/gpu-operator/blob/d4316a415bbd684ce8416a88042305fc1a093aa4/assets/state-dcgm-exporter/0600_service.yaml#L7
+        ## https://github.com/NVIDIA/dcgm-exporter/blob/54fd1ca137c66511a87a720390613680b9bdabdd/deployment/templates/service.yaml#L23
+        - job_name: kubecost-dcgm-exporter
+          kubernetes_sd_configs:
+            - role: endpoints
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_pod_label_app, __meta_kubernetes_pod_label_app_kubernetes_io_component, __meta_kubernetes_pod_label_app_kubernetes_io_name]
+              action: keep
+              regex: (?i)(.*dcgm-exporter.*|.*dcgm-exporter.*|.*dcgm-exporter.*)
+      alertmanager:
+        nodeSelector: {}
+        enabled: false
+        podLabels: {}
+        annotations: {}
+        resources: {}
+        affinity: {}
+        configFileName: alertmanager.yml
+        name: alertmanager
+        extraArgs: {}
+        securityContext:
+          fsGroup: 1001
+          runAsGroup: 1001
+          runAsNonRoot: true
+          runAsUser: 1001
+        configMapOverrideName: ''
+        persistentVolume:
+          accessModes:
+            - ReadWriteOnce
+          annotations: {}
+          enabled: true
+          existingClaim: ''
+          mountPath: /data
+          size: 2Gi
+          subPath: ''
+        strategy:
+          rollingUpdate: null
+          type: Recreate
+        ingress:
+          annotations: {}
+          enabled: false
+          extraLabels: {}
+          extraPaths: []
+          hosts: []
+          tls: []
+        service:
+          externalIPs: []
+          clusterIP: ''
+          loadBalancerIP: ''
+          annotations: {}
+          loadBalancerSourceRanges: []
+          servicePort: 80
+          type: ClusterIP
+          sessionAffinity: None
+          labels: {}
+        statefulSet:
+          annotations: {}
+          enabled: false
+          headless:
+            annotations: {}
+            labels: {}
+            servicePort: 80
+          podManagementPolicy: OrderedReady
+        replicaCount: 1
+        extraSecretMounts: []
+        tolerations: []
+        configFromSecret: ''
+        podDisruptionBudget:
+          enabled: false
+          maxUnavailable: 1
+        prefixURL: ''
+        extraEnv: {}
+        baseURL: 'http://localhost:9093'
+        priorityClassName: ''
+        podAnnotations: {}
+      rbac:
+        create: true
+      configmapReload:
+        alertmanager:
+          enabled: false
+          extraArgs: {}
+          extraConfigmapMounts: []
+          extraVolumeDirs: []
+          name: configmap-reload
+          resources: {}
+        prometheus:
+          containerSecurityContext: {}
+          enabled: false
+          extraArgs: {}
+          extraConfigmapMounts: []
+          extraVolumeDirs: []
+          name: configmap-reload
+          resources: {}
+      serverFiles:
+        alerting_rules.yml: {}
+        prometheus.yml:
+          rule_files:
+            - /etc/config/recording_rules.yml
+            - /etc/config/alerting_rules.yml
+          scrape_configs:
+            - job_name: prometheus
+              static_configs:
+                - targets:
+                    - 'localhost:9090'
+            - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              job_name: kubernetes-nodes-cadvisor
+              kubernetes_sd_configs:
+                - role: node
+              metric_relabel_configs:
+                - action: keep
+                  regex: (container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_network_receive_errors_total|container_network_transmit_errors_total|container_network_receive_packets_dropped_total|container_network_transmit_packets_dropped_total|container_memory_usage_bytes|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_periods_total|container_fs_usage_bytes|container_fs_limit_bytes|container_cpu_cfs_periods_total|container_fs_inodes_free|container_fs_inodes_total|container_fs_usage_bytes|container_fs_limit_bytes|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_periods_total|container_network_receive_bytes_total|container_network_transmit_bytes_total|container_fs_inodes_free|container_fs_inodes_total|container_fs_usage_bytes|container_fs_limit_bytes|container_spec_cpu_shares|container_spec_memory_limit_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|container_fs_reads_bytes_total|container_network_receive_bytes_total|container_fs_writes_bytes_total|container_fs_reads_bytes_total|cadvisor_version_info|kubecost_pv_info)
+                  source_labels:
+                    - __name__
+                - action: replace
+                  regex: (.+)
+                  source_labels:
+                    - container
+                  target_label: container_name
+                - action: replace
+                  regex: (.+)
+                  source_labels:
+                    - pod
+                  target_label: pod_name
+              relabel_configs:
+                - action: labelmap
+                  regex: __meta_kubernetes_node_label_(.+)
+                - replacement: 'kubernetes.default.svc:443'
+                  target_label: __address__
+                - regex: (.+)
+                  replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+                  source_labels:
+                    - __meta_kubernetes_node_name
+                  target_label: __metrics_path__
+              scheme: https
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: true
+            - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              job_name: kubernetes-nodes
+              kubernetes_sd_configs:
+                - role: node
+              metric_relabel_configs:
+                - action: keep
+                  regex: (kubelet_volume_stats_used_bytes)
+                  source_labels:
+                    - __name__
+              relabel_configs:
+                - action: labelmap
+                  regex: __meta_kubernetes_node_label_(.+)
+                - replacement: 'kubernetes.default.svc:443'
+                  target_label: __address__
+                - regex: (.+)
+                  replacement: /api/v1/nodes/$1/proxy/metrics
+                  source_labels:
+                    - __meta_kubernetes_node_name
+                  target_label: __metrics_path__
+              scheme: https
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: true
+            - job_name: kubernetes-service-endpoints
+              kubernetes_sd_configs:
+                - role: endpoints
+              metric_relabel_configs:
+                - action: keep
+                  regex: (container_cpu_allocation|container_cpu_usage_seconds_total|container_fs_limit_bytes|container_fs_writes_bytes_total|container_gpu_allocation|container_memory_allocation_bytes|container_memory_usage_bytes|container_memory_working_set_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|DCGM_FI_DEV_GPU_UTIL|deployment_match_labels|kube_daemonset_status_desired_number_scheduled|kube_daemonset_status_number_ready|kube_deployment_spec_replicas|kube_deployment_status_replicas|kube_deployment_status_replicas_available|kube_job_status_failed|kube_namespace_annotations|kube_namespace_labels|kube_node_info|kube_node_labels|kube_node_status_allocatable|kube_node_status_allocatable_cpu_cores|kube_node_status_allocatable_memory_bytes|kube_node_status_capacity|kube_node_status_capacity_cpu_cores|kube_node_status_capacity_memory_bytes|kube_node_status_condition|kube_persistentvolume_capacity_bytes|kube_persistentvolume_status_phase|kube_persistentvolumeclaim_info|kube_persistentvolumeclaim_resource_requests_storage_bytes|kube_pod_container_info|kube_pod_container_resource_limits|kube_pod_container_resource_limits_cpu_cores|kube_pod_container_resource_limits_memory_bytes|kube_pod_container_resource_requests|kube_pod_container_resource_requests_cpu_cores|kube_pod_container_resource_requests_memory_bytes|kube_pod_container_status_restarts_total|kube_pod_container_status_running|kube_pod_container_status_terminated_reason|kube_pod_labels|kube_pod_owner|kube_pod_status_phase|kube_replicaset_owner|kube_statefulset_replicas|kube_statefulset_status_replicas|kubecost_cluster_info|kubecost_cluster_management_cost|kubecost_cluster_memory_working_set_bytes|kubecost_load_balancer_cost|kubecost_network_internet_egress_cost|kubecost_network_region_egress_cost|kubecost_network_zone_egress_cost|kubecost_node_is_spot|kubecost_pod_network_egress_bytes_total|node_cpu_hourly_cost|node_cpu_seconds_total|node_disk_reads_completed|node_disk_reads_completed_total|node_disk_writes_completed|node_disk_writes_completed_total|node_filesystem_device_error|node_gpu_count|node_gpu_hourly_cost|node_memory_Buffers_bytes|node_memory_Cached_bytes|node_memory_MemAvailable_bytes|node_memory_MemFree_bytes|node_memory_MemTotal_bytes|node_network_transmit_bytes_total|node_ram_hourly_cost|node_total_hourly_cost|pod_pvc_allocation|pv_hourly_cost|service_selector_labels|statefulSet_match_labels|kubecost_pv_info|up)
+                  source_labels:
+                    - __name__
+              relabel_configs:
+                - action: keep
+                  regex: true
+                  source_labels:
+                    - __meta_kubernetes_service_annotation_prometheus_io_scrape
+                - action: keep
+                  regex: (.*node-exporter|kubecost-network-costs)
+                  source_labels:
+                    - __meta_kubernetes_endpoints_name
+                - action: replace
+                  regex: (https?)
+                  source_labels:
+                    - __meta_kubernetes_service_annotation_prometheus_io_scheme
+                  target_label: __scheme__
+                - action: replace
+                  regex: (.+)
+                  source_labels:
+                    - __meta_kubernetes_service_annotation_prometheus_io_path
+                  target_label: __metrics_path__
+                - action: replace
+                  regex: '([^:]+)(?::\d+)?;(\d+)'
+                  replacement: '$1:$2'
+                  source_labels:
+                    - __address__
+                    - __meta_kubernetes_service_annotation_prometheus_io_port
+                  target_label: __address__
+                - action: labelmap
+                  regex: __meta_kubernetes_service_label_(.+)
+                - action: replace
+                  source_labels:
+                    - __meta_kubernetes_namespace
+                  target_label: kubernetes_namespace
+                - action: replace
+                  source_labels:
+                    - __meta_kubernetes_service_name
+                  target_label: kubernetes_name
+                - action: replace
+                  source_labels:
+                    - __meta_kubernetes_pod_node_name
+                  target_label: kubernetes_node
+        recording_rules.yml: {}
+        rules:
+          groups:
+            - name: CPU
+              rules:
+                - expr: 'sum(rate(container_cpu_usage_seconds_total{container!=""}[5m]))'
+                  record: 'cluster:cpu_usage:rate5m'
+                - expr: 'rate(container_cpu_usage_seconds_total{container!=""}[5m])'
+                  record: 'cluster:cpu_usage_nosum:rate5m'
+                - expr: 'avg(irate(container_cpu_usage_seconds_total{container!="POD", container!=""}[5m])) by (container,pod,namespace)'
+                  record: kubecost_container_cpu_usage_irate
+                - expr: 'sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (container,pod,namespace)'
+                  record: kubecost_container_memory_working_set_bytes
+                - expr: 'sum(container_memory_working_set_bytes{container!="POD",container!=""})'
+                  record: kubecost_cluster_memory_working_set_bytes
+            - name: Savings
+              rules:
+                - expr: 'sum(avg(kube_pod_owner{owner_kind!="DaemonSet"}) by (pod) * sum(container_cpu_allocation) by (pod))'
+                  labels:
+                    daemonset: 'false'
+                  record: kubecost_savings_cpu_allocation
+                - expr: 'sum(avg(kube_pod_owner{owner_kind="DaemonSet"}) by (pod) * sum(container_cpu_allocation) by (pod)) / sum(kube_node_info)'
+                  labels:
+                    daemonset: 'true'
+                  record: kubecost_savings_cpu_allocation
+                - expr: 'sum(avg(kube_pod_owner{owner_kind!="DaemonSet"}) by (pod) * sum(container_memory_allocation_bytes) by (pod))'
+                  labels:
+                    daemonset: 'false'
+                  record: kubecost_savings_memory_allocation_bytes
+                - expr: 'sum(avg(kube_pod_owner{owner_kind="DaemonSet"}) by (pod) * sum(container_memory_allocation_bytes) by (pod)) / sum(kube_node_info)'
+                  labels:
+                    daemonset: 'true'
+                  record: kubecost_savings_memory_allocation_bytes
+      serviceAccounts:
+        alertmanager:
+          create: true
+          name: null
+        nodeExporter:
+          create: true
+          name: null
+        server:
+          annotations: {}
+          create: true
+          name: null
+    kubecostAdmissionController:
+      caBundle: '${CA_BUNDLE}'
+      enabled: false
+      secretName: webhook-server-tls
+    kubecostFrontend:
+      enabled: true
+      resources:
+        limits:
+          cpu: 20m
+          memory: 110Mi
+        requests:
+          cpu: 10m
+          memory: 55Mi
+      readinessProbe:
+        enabled: true
+        failureThreshold: 6
+        initialDelaySeconds: 1
+        periodSeconds: 5
+      ipv6:
+        enabled: true
+      deployMethod: singlepod
+      livenessProbe:
+        enabled: true
+        failureThreshold: 6
+        initialDelaySeconds: 1
+        periodSeconds: 5
+      useDefaultFqdn: false
+      imagePullPolicy: IfNotPresent
+      haReplicas: 2
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-frontend@sha256:0a87ca3fa61ae283b66529d82b769b53ad73d714cf2b8ccabb18588f4dd0f381'
+      deploymentStrategy: {}
+    diagnostics:
+      collectHelmValues: false
+      deployment:
+        nodeSelector: {}
+        enabled: false
+        annotations: {}
+        resources:
+          limits:
+            cpu: 100m
+            memory: 200Mi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        affinity: {}
+        env: {}
+        containerSecurityContext: {}
+        securityContext: {}
+        tolerations: []
+        labels: {}
+      enabled: true
+      keepDiagnosticHistory: false
+      pollingInterval: 300s
+      primary:
+        enabled: false
+        readonly: false
+        retention: 7d
+    supportNFS: false
+    saml:
+      enabled: false
+      rbac:
+        enabled: false
+    reporting:
+      errorReporting: true
+      logCollection: true
+      productAnalytics: true
+      valuesReporting: true
+    kubecostModel:
+      allocation: null
+      logLevel: info
+      plugins:
+        enabled: false
+        enabledPlugins: []
+        existingCustomSecret:
+          enabled: false
+          name: ''
+        folder: /opt/opencost/plugin
+        install:
+          enabled: false
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            seccompProfile:
+              type: RuntimeDefault
+        secretName: kubecost-plugin-secret
+      etlReadOnlyMode: false
+      extraPorts: []
+      containerStatsEnabled: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 500Mi
+        requests:
+          cpu: 200m
+          memory: 100Mi
+      readinessProbe:
+        enabled: true
+        failureThreshold: 200
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      etlHourlyStoreDurationHours: 49
+      federatedStorageConfigSecret: null
+      livenessProbe:
+        enabled: true
+        failureThreshold: 200
+        initialDelaySeconds: 10
+        periodSeconds: 10
+      extraArgs: []
+      maxQueryConcurrency: 5
+      etlDailyStoreDurationDays: 91
+      imagePullPolicy: IfNotPresent
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model@sha256:4049ec12460b555da74f129d8aa406356946307c04e149ed82ecd61518d4a11b'
+      federatedStorageConfig: null
+    persistentVolume:
+      annotations: {}
+      enabled: true
+      labels: {}
+      size: 32Gi
+    topologySpreadConstraints: []
+    etlUtils:
+      affinity: {}
+      annotations: {}
+      enabled: false
+      env: {}
+      fullImageName: null
+      nodeSelector: {}
+      resources: {}
+      tolerations: []
+    costEventsAudit:
+      enabled: false
+    ingress:
+      annotations: null
+      enabled: false
+      hosts:
+        - cost-analyzer.local
+      labels: null
+      pathType: ImplementationSpecific
+      paths:
+        - /
+      tls: []
+    service:
+      annotations: {}
+      labels: {}
+      nodePort: {}
+      port: 9090
+      sessionAffinity:
+        enabled: false
+        timeoutSeconds: 10800
+      targetPort: 9090
+      type: ClusterIP
+    clusterController:
+      nodeSelector: {}
+      enabled: false
+      annotations: {}
+      resources:
+        limits:
+          cpu: 500m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      affinity: {}
+      imagePullPolicy: IfNotPresent
+      kubescaler:
+        defaultResizeAll: false
+      namespaceTurndown:
+        rbac:
+          enabled: true
+      image:
+        repository: registry.connect.redhat.com/kubecost/kubecost-cluster-controller@sha256
+        tag: 067923686d0d7db22d96ca68c11605845ba1e3ea7ebd175eebdc64296c75e649
+      actionConfigs:
+        clusterRightsize: null
+        clusterTurndown: []
+        containerRightsize: null
+        namespaceTurndown: null
+      tolerations: []
+      priorityClassName: ''
+    networkCosts:
+      logLevel: info
+      nodeSelector: {}
+      port: 3001
+      enabled: false
+      trafficLogging: true
+      config:
+        destinations:
+          cross-region: []
+          direct-classification: []
+          in-region: []
+          in-zone:
+            - 127.0.0.0/8
+            - 169.254.0.0/16
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+          internet: []
+        services:
+          amazon-web-services: true
+          azure-cloud-services: true
+          google-cloud-services: true
+      annotations: {}
+      resources:
+        limits:
+          cpu: 500m
+          memory: 200Mi
+        requests:
+          cpu: 50m
+          memory: 20Mi
+      additionalLabels: {}
+      affinity: {}
+      additionalSecurityContext: {}
+      extraArgs: []
+      healthCheckProbes: {}
+      imagePullPolicy: IfNotPresent
+      service:
+        annotations: {}
+        labels: {}
+      podMonitor:
+        additionalLabels: {}
+        enabled: false
+      image:
+        repository: registry.connect.redhat.com/kubecost/kubecost-network-costs@sha256
+        tag: c36342ddc8b3acd2cb5bccfc4a46f9a2a26e34b9683406875ebedabf569a0806
+      tolerations: []
+      updateStrategy:
+        type: RollingUpdate
+      prometheusScrape: false
+      priorityClassName: ''
+    serviceAccount:
+      annotations: {}
+      create: true
+    federatedETL:
+      agentOnly: false
+      federatedCluster: false
+      readOnlyPrimary: false
+      redirectS3Backup: false
+      useMultiClusterDB: false
+    oidc:
+      skipOnlineTokenValidation: false
+      enabled: false
+      useClientSecretPost: false
+      clientID: ''
+      authURL: ''
+      loginRedirectURL: ''
+      hostedDomain: ''
+      existingCustomSecret:
+        enabled: false
+        name: ''
+      rbac:
+        enabled: false
+      secretName: kubecost-oidc-secret
+      clientSecret: ''
+      discoveryURL: ''
+    initChownData:
+      resources: {}
+    kubecostProductConfigs:
+      alibabaServiceKeyPassword: null
+      discount: null
+      hideKubecostActions: false
+      shareTenancyCosts: false
+      clusterName: cluster-one
+      hideCloudIntegrationsUI: false
+      customPricesEnabled: false
+      negotiatedDiscount: null
+      cloudIntegrationJSON: null
+      gpuLabel: null
+      gpuLabelValue: false
+      hideDiagnostics: false
+      grafanaURL: null
+      savingsRecommendationsAllowLists: null
+      clusterProfile: null
+      cloudIntegrationSecret: null
+      alibabaServiceKeyName: null
+      spotLabel: null
+      hideSpotCommander: false
+      hideTeams: false
+      hideReservedInstances: false
+      defaultIdle: false
+      smtp: null
+      cloudAccountMapping: null
+      labelMappingConfigs: null
+      sharedOverhead: null
+      clusters: null
+      hideUnclaimedVolumes: false
+      hideOrphanedResources: false
+      sharedNamespaces: null
+      defaultModelPricing: null
+      carbonEstimates: true
+      currencyCode: USD
+      standardDiscount: null
+      hideBellIcon: false
+      spotLabelValue: null
+    upgrade:
+      toV2: false
+    tolerations: []
+    sigV4Proxy:
+      extraEnv: null
+      host: aps-workspaces.us-west-2.amazonaws.com
+      imagePullPolicy: IfNotPresent
+      name: aps
+      port: 8005
+      region: us-west-2
+      resources: {}
+    systemProxy:
+      enabled: false
+      httpProxyUrl: ''
+      httpsProxyUrl: ''
+      noProxy: ''
+    kubecostDeployment:
+      annotations: {}
+      labels: {}
+      replicas: 1
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "kubecost"
+    display_name: Kubecost console
+    description: Kubecost configured by STARTX
+    additionalLabels:
+      openshift.io/cluster-monitoring: "true"
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "kubecost-operator"
+    namespace: "kubecost"
+    version: "v2.5.3"
+    operator: 
+      channel: "alpha"
+      name: kubecost-operator
+      installPlanApproval: Automatic
+      # csv: kubecost-operator
+      source: 
+        name: certified-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "kubecost"
+    namespace: "kubecost"
+    providedAPIs: "CostAnalyzer.v1alpha1.charts.kubecost.com"
