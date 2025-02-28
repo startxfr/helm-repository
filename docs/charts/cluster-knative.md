@@ -338,3 +338,4 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 | 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
 | 16.19.43 | 2025-02-27 | publish stable update for the full repository
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version
+| 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes
