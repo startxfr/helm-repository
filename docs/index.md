@@ -57,8 +57,8 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-costs](charts/cluster-costs.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-costs)         | configure the costs management features                           |
 | **[cluster-maintenance](charts/cluster-maintenance.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-maintenance)   | configure the node maintenance feature                            |
 | **[cluster-mongo](charts/cluster-mongo.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mongo)         | configure MongoDB at the cluster level                            |
-| **[cluster-kubecost](charts/cluster-kubecost.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubecost)           | enable Kubecost cost dashboard               |
-| **[cluster-kepler](charts/cluster-kepler.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kepler)           | enable Kepler power consumption observability               |
+| **[cluster-kubecost](charts/cluster-kubecost.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubecost)      | enable Kubecost cost dashboard                                    |
+| **[cluster-kepler](charts/cluster-kepler.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kepler)        | enable Kepler power consumption observability                     |
 
 #### Use Cluster charts
 
@@ -202,6 +202,37 @@ helm install startx/example-fruitapp-app
 ```
 
 ### Helm repositories
+
+=== "Stable"
+    |             |                                                                                                |
+    | ----------- | ---------------------------------------------------------------------------------------------- |
+    | Repository  | **[stable](https://helm-repository.readthedocs.io/en/latest/repos/stable/index.yaml)**         |
+    | Description | The default repository  with latest stable release for 16,15,14,13,12,11,10,9,8 and 7 releases |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable`           |
+    | -------     | ------------------------------------------------------------------------------------           |
+
+=== "Noschema"
+    |             |                                                                                                 |
+    | ----------- | ----------------------------------------------------------------------------------------------- |
+    | Repository  | **[noschema](https://helm-repository.readthedocs.io/en/latest/repos/noschema/index.yaml)**      |
+    | Description | Repository without schema definition                                                            |
+    | Command     | `helm repo add startx-noschema https://helm-repository.readthedocs.io/en/latest/repos/noschema` |
+
+=== "17"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[17](https://helm-repository.readthedocs.io/en/latest/repos/17/index.yaml)**   |
+    | Description | Archive repository for the 17.x packages (Compatible with OCP 4.17.x)            |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/17` |
+
+=== "16"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[16](https://helm-repository.readthedocs.io/en/latest/repos/16/index.yaml)**   |
+    | Description | Archive repository for the 16.x packages (Compatible with OCP 4.16.x)            |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/16` |
+
+
 
 | Repository                                                                             | Command                                                                                         | Description                                                                                    |
 | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
