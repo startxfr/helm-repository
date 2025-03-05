@@ -1,12 +1,13 @@
 # Release history
 
-## version 18.0.x (chezine)
+## version 18.x (chanteix)
 
 _The objectif of this release is to stabilize the full repository content and offer a stable release of the helm charts for the Openshift Container platform version 4.18.x version._
 
-## version 17.0.x (champagnole)
+## version 17.x (chameyrat)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.17 release](https://docs.openshift.com/container-platform/4.17)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.17 release](https://docs.openshift.com/container-platform/4.17)**.
 
 ### Objectives of this release
 
@@ -28,9 +29,10 @@ helm search repo startx
 | [17.14.1](https://github.com/startxfr/helm-repository/releases/tag/17.14.1) | 2025-02-28 | Init the v17 release |
 
 
-## version 16.0.x (champignac)
+## version 16.x (chamboulive)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.16 release](https://docs.openshift.com/container-platform/4.16)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.16 release](https://docs.openshift.com/container-platform/4.16)**.
 
 ### Objectives of this release
 
@@ -53,9 +55,10 @@ helm search repo startx
 | [16.19.3](https://github.com/startxfr/helm-repository/releases/tag/16.19.3)   | 2024-11-10 | All charts stable for v4.16.19 |
 | [16.19.1](https://github.com/startxfr/helm-repository/releases/tag/16.19.1)   | 2024-11-10 | Init the v16 release           |
 
-## version 15.0.x (champagnac)
+## version 15.x (champagnac)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.15 release](https://docs.openshift.com/container-platform/4.15)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.15 release](https://docs.openshift.com/container-platform/4.15)**.
 
 ### Objectives of this release
 
@@ -79,9 +82,10 @@ helm search repo startx
 | [15.27.8](https://github.com/startxfr/helm-repository/releases/tag/15.27.8)   | 2024-11-08 | All basic chart stable for v4.15.x |
 | [15.27.1](https://github.com/startxfr/helm-repository/releases/tag/15.27.1)   | 2024-11-06 | Init the v15 release               |
 
-## version 14.0.x (chamberet)
+## version 14.x (chamberet)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.14 release](https://docs.openshift.com/container-platform/4.14)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.14 release](https://docs.openshift.com/container-platform/4.14)**.
 
 ### Objectives of this release
 
@@ -107,9 +111,10 @@ helm search repo startx
 | [14.6.35](https://github.com/startxfr/helm-repository/releases/tag/14.6.35) | 2023-12-20 | publish stable update for the full repository                                           |
 | [14.6.9](https://github.com/startxfr/helm-repository/releases/tag/14.6.9)   | 2023-12-09 | Stable version aligned to Openshift version 4.14.6                                      |
 
-## version 13.0.x (chanac)
+## version 13.x (chanac)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.13 release](https://docs.openshift.com/container-platform/4.13)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.13 release](https://docs.openshift.com/container-platform/4.13)**.
 
 ### Objectives of this release
 
@@ -130,9 +135,10 @@ helm search repo startx
 | --------------------------------------------------------------------------- | ---------- | --------------------------------------------------- |
 | [13.26.3](https://github.com/startxfr/helm-repository/releases/tag/13.26.3) | 2023-12-09 | Stable version aligned to Openshift version 4.13.26 |
 
-## version 12.0.x (chastang)
+## version 12.x (chastang)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.12 release](https://docs.openshift.com/container-platform/4.12)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.12 release](https://docs.openshift.com/container-platform/4.12)**.
 
 ### Objectives of this release
 
@@ -157,9 +163,10 @@ helm search repo startx
 | [12.30.1](https://github.com/startxfr/helm-repository/releases/tag/12.30.1)   | 2023-09-29 | release 12.30.1 aligned and tested with OCP 4.12.30 |
 | [12.0.5](https://github.com/startxfr/helm-repository/releases/tag/12.0.5)     | 2023-08-18 | publish stable update for the full repository       |
 
-## version 11.0.x (chazal)
+## version 11.x (chazal)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.11 release](https://docs.openshift.com/container-platform/4.11)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.11 release](https://docs.openshift.com/container-platform/4.11)**.
 
 ### Objectives of this release
 
@@ -193,9 +200,10 @@ helm search repo startx
 | [11.7.3](https://github.com/startxfr/helm-repository/releases/tag/11.7.3)       | 2022-10-01 | Upgrade charts to be aligned with Openshift version 4.11.7     |
 | [11.5.5](https://github.com/startxfr/helm-repository/releases/tag/11.5.5)       | 2022-09-16 | Upgrade charts to be aligned with Openshift version 4.11.5     |
 
-## version 10.0.x (chauvignac)
+## version 10.x (chauvignac)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.10 release](https://docs.openshift.com/container-platform/4.10)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.10 release](https://docs.openshift.com/container-platform/4.10)**.
 
 ### Objectives of this release
 
@@ -224,7 +232,8 @@ helm search repo startx
 
 ## version 9.x.x (chaux)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.9 release](https://docs.openshift.com/container-platform/4.9)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.9 release](https://docs.openshift.com/container-platform/4.9)**.
 
 ### Objectives of this release
 
@@ -253,7 +262,8 @@ helm search repo startx
 
 ## version 8.x.x (charbonnel)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.8 release](https://docs.openshift.com/container-platform/4.8)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.8 release](https://docs.openshift.com/container-platform/4.8)**.
 
 ### Objectives of this release
 
@@ -287,14 +297,16 @@ helm search repo startx
 | [8.13.1](https://github.com/startxfr/helm-repository/releases/tag/8.13.1)   | 2021-10-06 | Move to release 8.1.13 aligned with openshift 4.8.13 release                      |
 | [8.1.1](https://github.com/startxfr/helm-repository/releases/tag/8.1.1)     | 2021-08-04 | Move to release 8.1.1 aligned with openshift 4.8.1 release                        |
 
-## version 7.22.x (chaumeil)
+## version 7.x (chaumeil)
 
-This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.7 release](https://docs.openshift.com/container-platform/4.7)**.
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.7 release](https://docs.openshift.com/container-platform/4.7)**.
 
 ### Objectives of this release
 
 - Stable support for cluster service running under an Openshift 4.7.x cluster
 - Stable helm-repository catalog
+- Change release version to align major release to OCP minor release
 
 ### Install for this release
 
@@ -352,7 +364,8 @@ helm search repo startx
 
 ## version 0.2.x (chastang)
 
-This version is designed to use with the [Openshift](https://docs.openshift.com) **[4.5 release](https://docs.openshift.com/container-platform/4.5)**.
+!!! info
+    This version is designed to use with the [Openshift](https://docs.openshift.com) **[4.5 release](https://docs.openshift.com/container-platform/4.5)**.
 
 ### Objectives of this release
 
@@ -379,7 +392,8 @@ helm search repo startx
 
 ## version 0.1.x (chauzu)
 
-This version was constructed using the [Openshift](https://docs.openshift.com) **[4.4 release](https://docs.openshift.com/container-platform/4.4)**.
+!!! info
+    This version was constructed using the [Openshift](https://docs.openshift.com) **[4.4 release](https://docs.openshift.com/container-platform/4.4)**.
 
 ### Objectives of this release
 
@@ -405,9 +419,12 @@ helm search repo startx
 | [0.1.13](https://github.com/startxfr/helm-repository/releases/tag/0.1.13) | 20-10-17 | Pblish stable update for the full repository           |
 | 0.1.0                                                                     | 20-09-26 | Stable basic structure preparing the public repository |
 
-## version 0.0.x (champeaux)
+## version 0.x (champeaux)
 
-This version was constructed using the [Openshift](https://docs.openshift.com) **[4.3 release](https://docs.openshift.com/container-platform/4.3)**.
+!!! info
+    This version was constructed using the [Openshift](https://docs.openshift.com) **[4.3 release](https://docs.openshift.com/container-platform/4.3)**.
+
+### Objectives of this release
 
 The objectif of this release is to create the repository structure.
 
