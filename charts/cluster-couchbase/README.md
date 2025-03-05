@@ -40,7 +40,7 @@ helm install cluster-couchbase startx/cluster-couchbase
 
 Complete deployment of a project with the following characteristics :
 
-xxxxxx TO DO xxxxxx
+TODO: complete this section
 
 ```bash
 # base configuration running default configuration
