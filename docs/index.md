@@ -7,7 +7,8 @@ helm charts for various infrastructure configuration and services running under 
 ## Helm repository content
 
 This repository host various helm chart targeting the Openshift Container Platform environment. Charts could be
-divided into 4 main category :
+divided into 4 main category 
+
 - [basic charts](index.md#basic-helm-charts)
 - [cluster charts](index.md#cluster-helm-charts)
 - [chaos charts](index.md#chaos-helm-charts) 
@@ -15,7 +16,7 @@ divided into 4 main category :
 
 <div class="grid cards" markdown>
 
--   :material-clock-fast:{ .lg .middle } __basic charts__
+-   :fontawesome-solid-gear:{ .lg .middle } __basic charts__
 
     ---
 
@@ -153,7 +154,6 @@ List of the deprecated helm charts.
 | **[cluster-jenkins](charts/cluster-jenkins.md)**   | [source](https://github.com/startxfr/helm-repository/tree/14/charts/cluster-jenkins)  | NOT used anymore           |  | **[cluster-workspace](charts/cluster-workspace.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace) | REPLACED by cluster-devworkspaces chart |
 
 
-
 ### Helm repositories
 
 === "Stable"
@@ -181,6 +181,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/17` |
 
 === "16"
+
     |                 |                                                                                  |
     | --------------- | -------------------------------------------------------------------------------- |
     | **Repository**  | **[16](https://helm-repository.readthedocs.io/en/latest/repos/16/index.yaml)**   |
@@ -188,6 +189,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/16` |
 
 === "15"
+
     |                 |                                                                                  |
     | --------------- | -------------------------------------------------------------------------------- |
     | **Repository**  | **[15](https://helm-repository.readthedocs.io/en/latest/repos/15/index.yaml)**   |
@@ -195,6 +197,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/15` |
 
 === "14"
+
     |                 |                                                                                  |
     | --------------- | -------------------------------------------------------------------------------- |
     | **Repository**  | **[14](https://helm-repository.readthedocs.io/en/latest/repos/14/index.yaml)**   |
@@ -202,6 +205,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/14` |
 
 === "13"
+
     |                 |                                                                                  |
     | --------------- | -------------------------------------------------------------------------------- |
     | **Repository**  | **[13](https://helm-repository.readthedocs.io/en/latest/repos/13/index.yaml)**   |
@@ -209,6 +213,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/13` |
 
 === "12"
+
     |                 |                                                                                  |
     | --------------- | -------------------------------------------------------------------------------- |
     | **Repository**  | **[12](https://helm-repository.readthedocs.io/en/latest/repos/12/index.yaml)**   |
@@ -216,6 +221,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/12` |
 
 === "11"
+
     |                 |                                                                                  |
     | --------------- | -------------------------------------------------------------------------------- |
     | **Repository**  | **[11](https://helm-repository.readthedocs.io/en/latest/repos/11/index.yaml)**   |
@@ -223,6 +229,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/11` |
 
 === "10"
+
     |                 |                                                                                  |
     | --------------- | -------------------------------------------------------------------------------- |
     | **Repository**  | **[10](https://helm-repository.readthedocs.io/en/latest/repos/10/index.yaml)**   |
@@ -230,6 +237,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/10` |
 
 === "9"
+
     |                 |                                                                                 |
     | --------------- | ------------------------------------------------------------------------------- |
     | **Repository**  | **[9](https://helm-repository.readthedocs.io/en/latest/repos/9/index.yaml)**    |
@@ -237,6 +245,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/9` |
 
 === "8"
+
     |                 |                                                                                 |
     | --------------- | ------------------------------------------------------------------------------- |
     | **Repository**  | **[8](https://helm-repository.readthedocs.io/en/latest/repos/8/index.yaml)**    |
@@ -244,6 +253,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/8` |
 
 === "7"
+
     |                 |                                                                                 |
     | --------------- | ------------------------------------------------------------------------------- |
     | **Repository**  | **[7](https://helm-repository.readthedocs.io/en/latest/repos/7/index.yaml)**    |
@@ -251,6 +261,7 @@ List of the deprecated helm charts.
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/7` |
 
 === "6 and previous"
+
     |                 |                                                                                  |
     | --------------- | -------------------------------------------------------------------------------- |
     | **Repository**  | **[6x](https://helm-repository.readthedocs.io/en/latest/repos/6x/index.yaml)**   |
