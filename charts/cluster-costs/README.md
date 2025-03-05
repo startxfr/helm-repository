@@ -40,7 +40,8 @@ helm install cluster-costs startx/cluster-costs
 
 Complete deployment of a project with the following characteristics :
 
-TODO: complete this section
+!!! todo
+    Complete this section
 
 ```bash
 # base configuration running default configuration

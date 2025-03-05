@@ -1,7 +1,10 @@
 # ![cluster-metering](https://helm-repository.readthedocs.io/en/latest/img/cluster-metering.svg "Cluster Chart : Metering") Cluster Chart : Metering
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--metering-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+metering+startx)
 
-This helm chart is used to configure Metering at the cluster level.
+!!! warning
+    This chart is now DEPRECATED and replaced by [cluster-kubecost startx helm chart](https://helm-repository.readthedocs.io/en/latest/charts/cluster-kubecost) or [cluster-costs startx helm chart](https://helm-repository.readthedocs.io/en/latest/charts/cluster-costs)
+
+This helm chart is used to configure Metering at the cluster level for billing purposes.
 
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 

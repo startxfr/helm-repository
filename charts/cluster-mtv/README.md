@@ -39,7 +39,8 @@ helm install cluster-mtv startx/cluster-mtv
 
 Complete deployment of a project with the following characteristics :
 
-TODO: complete this section
+!!! todo
+    Complete this section
 
 ```bash
 # base configuration running default configuration

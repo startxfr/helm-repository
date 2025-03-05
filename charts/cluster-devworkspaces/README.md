@@ -40,7 +40,8 @@ helm install cluster-devworkspaces startx/cluster-devworkspaces
 
 Complete deployment of a project with the following characteristics :
 
-TODO: complete this section
+!!! todo
+    Complete this section
 
 ```bash
 # base configuration running default configuration
