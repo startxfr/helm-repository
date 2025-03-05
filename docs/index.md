@@ -9,44 +9,10 @@ helm charts for various infrastructure configuration and services running under 
 This repository host various helm chart targeting the Openshift Container Platform environment. Charts could be
 divided into 4 main category 
 
-- [basic charts](index.md#basic-helm-charts)
-- [cluster charts](index.md#cluster-helm-charts)
-- [chaos charts](index.md#chaos-helm-charts) 
-- [examples charts](index.md#examples-helm-charts)
-
-<div class="grid cards" markdown>
-
--   :fontawesome-solid-gear:{ .lg .middle } __basic charts__
-
-    ---
-
-    Basic charts configure basic element such as project (NS, NP, RB, SA) or operators subscriptions
-
-    [:octicons-arrow-right-24: Get charts list](#basic-helm-charts)
-
-
--   :material-clock-fast:{ .lg .middle } __cluster charts__
-
-    ---
-
-    Cluster charts configure cluster configuration or enable cluster service
-
-    [:octicons-arrow-right-24: Get charts list](#cluster-helm-charts)
-
-</div>
-
-
-other test
-
-<div class="grid cards" markdown>
-
-- :fontawesome-brands-html5: __[basic charts](#basic-helm-charts)__ for content and structure
-- :fontawesome-brands-js: __[cluster charts](index.md#cluster-helm-charts)__ for interactivity
-- :fontawesome-brands-css3: __[chaos charts](index.md#chaos-helm-charts)__ for text running out of boxes
-- :fontawesome-brands-internet-explorer: __[examples charts](index.md#examples-helm-charts)__ ... huh?
-
-</div>
-
+- [basic charts](index.md#basic-helm-charts) used to configure basic element such as project (NS, NP, RB, SA) or operators subscriptions
+- [cluster charts](index.md#cluster-helm-charts) used to deploy various add-on at the cluster level
+- [chaos charts](index.md#chaos-helm-charts) used to deploy various chaos testing tools and chaos pipelines
+- [examples charts](index.md#examples-helm-charts) used to deploy various examples charts
 
 ### Basic Charts
 
