@@ -209,7 +209,6 @@ helm install startx/example-fruitapp-app
     | Repository  | **[stable](https://helm-repository.readthedocs.io/en/latest/repos/stable/index.yaml)**         |
     | Description | The default repository  with latest stable release for 16,15,14,13,12,11,10,9,8 and 7 releases |
     | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable`           |
-    | -------     | ------------------------------------------------------------------------------------           |
 
 === "Noschema"
     |             |                                                                                                 |
@@ -232,23 +231,75 @@ helm install startx/example-fruitapp-app
     | Description | Archive repository for the 16.x packages (Compatible with OCP 4.16.x)            |
     | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/16` |
 
+=== "15"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[15](https://helm-repository.readthedocs.io/en/latest/repos/15/index.yaml)**   |
+    | Description | Archive repository for the 15.x packages (Compatible with OCP 4.15.x)            |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/15` |
 
+=== "14"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[14](https://helm-repository.readthedocs.io/en/latest/repos/14/index.yaml)**   |
+    | Description | Archive repository for the 14.x packages (Compatible with OCP 4.14.x)            |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/14` |
 
-| Repository                                                                             | Command                                                                                         | Description                                                                                    |
-| -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| **[stable](https://helm-repository.readthedocs.io/en/latest/repos/stable/index.yaml)** | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable`            | The default repository  with latest stable release for 16,15,14,13,12,11,10,9,8 and 7 releases |
-| [noschema](https://helm-repository.readthedocs.io/en/latest/repos/noschema/index.yaml) | `helm repo add startx-noschema https://helm-repository.readthedocs.io/en/latest/repos/noschema` | Archive repository without schema definition                                                   |
-| [16](https://helm-repository.readthedocs.io/en/latest/repos/16/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/16`                | Archive repository for the 16.x packages (Compatible with OCP 4.16.x)                          |
-| [15](https://helm-repository.readthedocs.io/en/latest/repos/15/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/15`                | Archive repository for the 15.x packages (Compatible with OCP 4.15.x)                          |
-| [14](https://helm-repository.readthedocs.io/en/latest/repos/14/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/14`                | Archive repository for the 14.x packages (Compatible with OCP 4.14.x)                          |
-| [13](https://helm-repository.readthedocs.io/en/latest/repos/13/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/13`                | Archive repository for the 13.x packages (Compatible with OCP 4.13.x)                          |
-| [12](https://helm-repository.readthedocs.io/en/latest/repos/12/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/12`                | Archive repository for the 12.x packages (Compatible with OCP 4.12.x)                          |
-| [11](https://helm-repository.readthedocs.io/en/latest/repos/11/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/11`                | Archive repository for the 11.x packages (Compatible with OCP 4.11.x)                          |
-| [10](https://helm-repository.readthedocs.io/en/latest/repos/10/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/10`                | Archive repository for the 10.x packages (Compatible with OCP 4.10.x)                          |
-| [9](https://helm-repository.readthedocs.io/en/latest/repos/9/index.yaml)               | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/9`                 | Archive repository for the 9.x packages (Compatible with OCP 4.9.x)                            |
-| [8](https://helm-repository.readthedocs.io/en/latest/repos/8/index.yaml)               | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/8`                 | Archive repository for the 8.x packages (Compatible with OCP 4.8.x)                            |
-| [7](https://helm-repository.readthedocs.io/en/latest/repos/7/index.yaml)               | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/7`                 | Archive repository for the 7.x packages (Compatible with OCP 4.7.x)                            |
-| [6x](https://helm-repository.readthedocs.io/en/latest/repos/6x/index.yaml)             | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/6x`                | Archive repository for the 6.x and previous packages (Compatible with OCP 4.6.x and before)    |
+=== "13"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[13](https://helm-repository.readthedocs.io/en/latest/repos/13/index.yaml)**   |
+    | Description | Archive repository for the 13.x packages (Compatible with OCP 4.13.x)            |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/13` |
+
+=== "12"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[12](https://helm-repository.readthedocs.io/en/latest/repos/12/index.yaml)**   |
+    | Description | Archive repository for the 12.x packages (Compatible with OCP 4.12.x)            |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/12` |
+
+=== "11"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[11](https://helm-repository.readthedocs.io/en/latest/repos/11/index.yaml)**   |
+    | Description | Archive repository for the 11.x packages (Compatible with OCP 4.11.x)            |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/11` |
+
+=== "10"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[10](https://helm-repository.readthedocs.io/en/latest/repos/10/index.yaml)**   |
+    | Description | Archive repository for the 10.x packages (Compatible with OCP 4.10.x)            |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/10` |
+
+=== "9"
+    |             |                                                                                 |
+    | ----------- | ------------------------------------------------------------------------------- |
+    | Repository  | **[9](https://helm-repository.readthedocs.io/en/latest/repos/9/index.yaml)**    |
+    | Description | Archive repository for the 9.x packages (Compatible with OCP 4.9.x)             |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/9` |
+
+=== "8"
+    |             |                                                                                 |
+    | ----------- | ------------------------------------------------------------------------------- |
+    | Repository  | **[8](https://helm-repository.readthedocs.io/en/latest/repos/8/index.yaml)**    |
+    | Description | Archive repository for the 8.x packages (Compatible with OCP 4.8.x)             |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/8` |
+
+=== "7"
+    |             |                                                                                 |
+    | ----------- | ------------------------------------------------------------------------------- |
+    | Repository  | **[7](https://helm-repository.readthedocs.io/en/latest/repos/7/index.yaml)**    |
+    | Description | Archive repository for the 7.x packages (Compatible with OCP 4.7.x)             |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/7` |
+
+=== "6 and previous"
+    |             |                                                                                  |
+    | ----------- | -------------------------------------------------------------------------------- |
+    | Repository  | **[6x](https://helm-repository.readthedocs.io/en/latest/repos/6x/index.yaml)**   |
+    | Description | Archive repository for the 6.x packages (Compatible with OCP 4.6.x)              |
+    | Command     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/6x` |
 
 
 ## Install STARTX repository
