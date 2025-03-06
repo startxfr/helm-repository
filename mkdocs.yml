@@ -1,15 +1,37 @@
 site_name: STARTX Helm repository
 site_description: Helm repo with various charts used to deploy days2 components on Openshift 
 site_author: STARTX
-# site_favicon: img/favicon.ico
 use_directory_urls: true
 theme:
-    name: material
-    highlightjs: true
-    hljs_languages:
-    - yaml
-    - bash
-    include_homepage_in_sidebar: false
+  palette:
+    primary: teal
+    accent: teal
+  name: material
+  highlightjs: true
+  hljs_languages:
+  - yaml
+  - bash
+  include_homepage_in_sidebar: false
+  logo: img/helm-repo.svg
+  favicon: img/favicon.ico
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    repo: fontawesome/brands/git-alt
+    previous: fontawesome/solid/angle-left
+    next: fontawesome/solid/angle-right
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.expand
+    - navigation.path
+    - toc.follow
+    - toc.integrate
+    - header.autohide
+    - navigation.footer
 nav:
   - Introduction: 'index.md'
   - installation:
@@ -115,3 +137,21 @@ markdown_extensions:
 - pymdownx.tabbed:
     alternate_style: true
 - pymdownx.emoji
+plugins:
+  - privacy
+  - optimize
+copyright: Copyright &copy; 2020 - 2025 Startx
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github 
+      link: https://github.com/startxfr/helm-repository
+      name: Startx charts on github
+    - icon: fontawesome/brands/gitlab 
+      link: https://gitlab.com/startx1/helm
+      name: Startx charts on gitlab
+    - icon: fontawesome/brands/artifacthub 
+      link: https://artifacthub.io/packages/search?user=startxfr
+      name: Startx charts on artifacthub
+repo_url: https://github.com/startxfr/helm-repository
+repo_name: startxfr/helm-repository
