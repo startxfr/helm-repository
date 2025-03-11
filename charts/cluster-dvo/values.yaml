@@ -1,0 +1,67 @@
+# Default values for cluster-dvo.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-dvo
+  # Version name of this application (default use Chart appVersion)
+  # version: "0.0.3"
+
+# Configure the graphana stack
+graphana:
+  # Enable the deployment of the graphana
+  enabled: false
+  # Name of the deployed instance of graphana (default is deployment-validation-operator)
+  name: deployment-validation-operator
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "deployment-validation-operator"
+    display_name: DVO center
+    description: DVO configured by STARTX
+    additionalLabels:
+      openshift.io/cluster-monitoring: "true"
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "deployment-validation-operator"
+    namespace: "deployment-validation-operator"
+    version: "v0.7.8"
+    operator: 
+      channel: "alpha"
+      name: deployment-validation-operator
+      installPlanApproval: Automatic
+      # csv: deployment-validation-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "startx-dvo"
+    target: "all-ns"
+    namespace: "deployment-validation-operator"
+    providedAPIs: ""
