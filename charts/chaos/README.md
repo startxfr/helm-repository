@@ -456,3 +456,4 @@ chaos-monkey startx/chaos-monkey
 | 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1
 | 17.14.11 | 2025-03-05 | Adjust doc to material layout
 | 17.14.13 | 2025-03-06 | Debug icon in doc
+| 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release
