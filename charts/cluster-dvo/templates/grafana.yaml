@@ -1,21 +1,6 @@
 {{- if .Values.graphana.enabled -}}
-{{- $name := .Values.graphana.name | default "deployment-validation-operator" -}}
-{{- $namespace := .Values.project.project.name | default "deployment-validation-operator" -}}
----
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: prometheus
-  namespace: "{{- $namespace -}}"
-  labels:
-    {{- include "cluster-dvo.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "prometheus-operatorgroup"
-  annotations:
-    {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
-spec:
-  targetNamespaces:
-  - "{{- $namespace -}}"
+{{- $name := .Values.graphana.name | default "deployment-validation" -}}
+{{- $namespace := .Values.graphanaProject.project.name | default "deployment-validation-monitoring" -}}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -51,7 +36,7 @@ metadata:
     app.kubernetes.io/name: "grafana-config-cm"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "5"
 data:
   grafana.ini: |-
     [auth.anonymous]
@@ -68,7 +53,7 @@ metadata:
     app.kubernetes.io/name: "grafana-dashboard-dvo-cm"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "5"
 data:
   deployment-validation-operator.json: |-
     {
@@ -131,7 +116,7 @@ data:
           "targets": [
             {
               "expr": "label_replace((sum by (__name__) ({__name__=~\"deployment_validation_operator_.*\", exported_namespace=~\"$namespace\"})), \"validation\", \"$1\",\"__name__\", \"deployment_validation_operator_(.*)\")",
-              "legendFormat": "{{validation}}",
+              "legendFormat": "{{ print "{{validation}}" }}",
               "instant": true,
               "refId": "A"
             }
@@ -326,7 +311,7 @@ metadata:
     app.kubernetes.io/name: "grafana-dashboards-cm"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "5"
 data:
   dashboards.yaml: |-
     {
@@ -354,7 +339,7 @@ metadata:
     app.kubernetes.io/name: "grafana-datasources-cm"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "5"
 data:
   datasources.yaml: |-
     {
@@ -363,7 +348,7 @@ data:
             {
                 "name": "Prometheus",
                 "type": "prometheus",
-                "url": "http://prometheus-operated.deployment-validation-operator.svc.cluster.local:9090",
+                "url": "http://prometheus-operated.{{$namespace}}.svc.cluster.local:9090",
                 "access": "proxy"
             }
         ]
@@ -380,7 +365,7 @@ metadata:
     grafana: "{{- $name -}}"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   port:
     targetPort: https
@@ -403,7 +388,7 @@ metadata:
     grafana: "{{- $name -}}"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   ports:
   - name: https
@@ -424,7 +409,7 @@ metadata:
     grafana: "{{- $name -}}"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "25"
 spec:
   replicas: 1
   selector:
@@ -497,25 +482,6 @@ spec:
           defaultMode: 420
           name: grafana-dashboard-dvo
 ---
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: prometheus
-  namespace: "{{- $namespace -}}"
-  labels:
-    {{- include "cluster-dvo.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "prometheus-subscription"
-  annotations:
-    {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
-spec:
-  channel: beta
-  installPlanApproval: Automatic
-  name: prometheus
-  source: community-operators
-  sourceNamespace: openshift-marketplace
-  startingCSV: prometheusoperator.0.47.0
----
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
@@ -526,7 +492,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-prometheus"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "6"
 spec:
   replicas: 1
   serviceAccountName: prometheus-k8s

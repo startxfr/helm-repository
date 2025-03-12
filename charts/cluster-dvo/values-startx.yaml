@@ -8,19 +8,59 @@ context: &context
   app: startx-dvo
 graphana:
   enabled: false
-  name: deployment-validation-operator
+  name: deployment-validation
+graphanaProject: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "deployment-validation-monitoring"
+    display_name: DVO monitor
+    description: DVO monitoring configured by STARTX
+    additionalLabels: |-
+      openshift.io/cluster-monitoring: "true"
+graphanaOperator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "prometheus"
+    namespace: "deployment-validation-monitoring"
+    version: "0.56.3"
+    operator: 
+      channel: "beta"
+      name: prometheus
+      installPlanApproval: Automatic
+      csv: prometheusoperator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-prometheus"
+    target: ""
+    namespace: "deployment-validation-monitoring"
+    providedAPIs: ""
 project: 
   enabled: false
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "deployment-validation-operator"
-    display_name: DVO center
-    description: DVO configured by STARTX
-    additionalLabels:
+    display_name: DVO operator
+    description: DVO collector configured by STARTX
+    additionalLabels: |-
       openshift.io/cluster-monitoring: "true"
 operator:
   enabled: false
@@ -36,13 +76,17 @@ operator:
       channel: "alpha"
       name: deployment-validation-operator
       installPlanApproval: Automatic
+      # csv: deployment-validation-operator
       source: 
         name: community-operators
         namespace: openshift-marketplace
       config: 
         infra: false
+        env:
+          - name: NAMESPACE_IGNORE_PATTERN
+            value: '^(openshift.*|kube-.*|open-cluster-.*|hypershift.*|local-cluster.*|rhacs-.*|multicluster-.*|hive.*|deployment-validation-.*)$'
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "startx-dvo"
     target: "all-ns"
