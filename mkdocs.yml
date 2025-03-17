@@ -1,18 +1,68 @@
 site_name: STARTX Helm repository
 site_description: Helm repo with various charts used to deploy days2 components on Openshift 
 site_author: STARTX
-# site_favicon: img/favicon.ico
 use_directory_urls: true
+repo_url: https://github.com/startxfr/helm-repository
+repo_name: startxfr/helm-repository
+copyright: Copyright &copy; 2020 - 2025 Startx
+# plugins:
+#   - privacy
+#   - optimize
+markdown_extensions:
+- attr_list
+- md_in_html
+- smarty
+- admonition
+- pymdownx.details
+- pymdownx.superfences
+- pymdownx.tabbed:
+    alternate_style: true
+- pymdownx.emoji
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github 
+      link: https://github.com/startxfr/helm-repository
+      name: Startx charts on github
+    - icon: fontawesome/brands/gitlab 
+      link: https://gitlab.com/startx1/helm
+      name: Startx charts on gitlab
+    - icon: simple/artifacthub
+      link: https://artifacthub.io/packages/search?user=startxfr
+      name: Startx charts on artifacthub
 theme:
-    name: readthedocs
-    highlightjs: true
-    hljs_languages:
-    - yaml
-    - bash
-    include_homepage_in_sidebar: false
+  palette:
+    primary: teal
+    accent: teal
+  name: material
+  highlightjs: true
+  hljs_languages:
+  - yaml
+  - bash
+  include_homepage_in_sidebar: false
+  logo: img/helm-repo.svg
+  favicon: img/favicon.ico
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    repo: fontawesome/brands/git-alt
+    previous: fontawesome/solid/angle-left
+    next: fontawesome/solid/angle-right
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.expand
+    - navigation.path
+    - toc.follow
+    - toc.integrate
+    # - header.autohide
+    - navigation.footer
 nav:
   - Introduction: 'index.md'
-  - installation:
+  - Installation:
     - 'Requirements': 'install/requirements.md'
     - 'Git installation': 'install/git.md'
     - 'Helm installation': 'install/helm.md'
@@ -35,6 +85,8 @@ nav:
     - 'Couchbase': 'charts/cluster-couchbase.md'
     - 'Costs Management': 'charts/cluster-costs.md'
     - 'Descheduler': 'charts/cluster-descheduler.md'
+    - 'DevWorkspaces': 'charts/cluster-devworkspaces.md'
+    - 'Deployment Validation': 'charts/cluster-dvo.md'
     - 'Crunchy': 'charts/cluster-crunchy.md'
     - 'GPU (NVidia)': 'charts/cluster-gpu.md'
     - 'Gitlab': 'charts/cluster-gitlab.md'
@@ -50,12 +102,15 @@ nav:
     - 'Maintenance': 'charts/cluster-maintenance.md'
     - 'Mongo': 'charts/cluster-mongo.md'
     - 'MTV': 'charts/cluster-mtv.md'
+    - 'MTC': 'charts/cluster-mtc.md'
+    - 'MTR': 'charts/cluster-mtr.md'
     - 'MustGather': 'charts/cluster-mustgather.md'
     - 'Nexus': 'charts/cluster-nexus.md'
     - 'NFD': 'charts/cluster-nfd.md'
     - 'OADP': 'charts/cluster-oadp.md'
     - 'ODF': 'charts/cluster-odf.md'
-    - 'ODS': 'charts/cluster-ods.md'
+    - 'OCS': 'charts/cluster-ods.md'
+    - 'ODS': 'charts/cluster-ocs.md'
     - 'Pipeline': 'charts/cluster-pipeline.md'
     - 'PTP': 'charts/cluster-ptp.md'
     - 'Quay': 'charts/cluster-quay.md'
@@ -95,11 +150,8 @@ nav:
     - 'Metering': 'charts/cluster-metering.md'
     - 'Jenkins': 'charts/cluster-jenkins.md'
     - 'Workspace': 'charts/cluster-workspace.md'
-  - Releases:
-    - 'License': 'license.md'
-    - 'History': 'history.md'
+  - Releases: 'history.md'
   - Contribute:
     - 'Build env': 'contribute-build.md'
     - 'Release Notes': 'contribute-releases.md'
-markdown_extensions: 
-- smarty
+    - 'License': 'license.md'

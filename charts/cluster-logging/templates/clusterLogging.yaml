@@ -20,6 +20,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   managementState: {{ .Values.logging.managementState | default "Managed" | quote }}
+  {{- if .Values.logging.elasticsearch }}
+  {{- if .Values.logging.elasticsearch.enabled }}
+  {{- with .Values.logging.elasticsearch }}
   logStore:
     type: "elasticsearch" 
     retentionPolicy: 
@@ -29,9 +32,6 @@ spec:
         maxAge: 7d
       audit:
         maxAge: 7d
-    {{- if .Values.logging.elasticsearch }}
-    {{- if .Values.logging.elasticsearch.enabled }}
-    {{- with .Values.logging.elasticsearch }}
     elasticsearch:
       nodeCount: {{ .replicas | default 3 }}
       redundancyPolicy: {{ .redundancyPolicy | default "SingleRedundancy" }}
@@ -50,17 +50,9 @@ spec:
       storage:
         storageClassName: {{ .storage.class | default "gp3-csi" | quote }}
         size: {{ .storage.size | default "200G" | quote }}
-    {{- end }}
-    {{- if .Values.logging.infra_enabled }}
-      nodeSelector:
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-      - key: "node-role.kubernetes.io/infra"
-        operator: "Exists"
-        effect: "NoSchedule"
-    {{- end }}
-    {{- end }}
-    {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
   {{- if .Values.logging.kibana }}
   {{- if .Values.logging.kibana.enabled }}
   visualization:

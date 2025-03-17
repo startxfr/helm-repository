@@ -346,3 +346,5 @@ helm install cluster-pipeline startx/cluster-pipeline -f https://raw.githubuserc
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version
 | 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes
 | 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1
+| 17.14.11 | 2025-03-05 | Adjust doc to material layout
+| 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release
