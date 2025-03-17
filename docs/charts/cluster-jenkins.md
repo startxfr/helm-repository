@@ -1,6 +1,9 @@
 # ![cluster-jenkins](https://helm-repository.readthedocs.io/en/latest/img/cluster-jenkins.svg "Cluster Chart : Jenkins") Cluster Chart : Jenkins
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--jenkins-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+jenkins+startx)
 
+!!! warning
+    This chart is now DEPRECATED and is not maintained anymore after release 15.x versions. See [history](https://helm-repository.readthedocs.io/en/devel/history/#version-15x-champagnac)
+
 This helm chart is used to deploy Jenkins instances managed by a dedicated operator.
 
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.

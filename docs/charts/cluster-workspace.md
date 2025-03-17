@@ -1,7 +1,9 @@
 # ![cluster-workspace](https://helm-repository.readthedocs.io/en/latest/img/cluster-workspace.svg "Cluster Chart : Workspace") Cluster Chart : Workspace
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--workspace-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+workspace+startx)
 
-!! This chart is now DEPRECATED and replaced by [cluster-devworkspaces startx helm chart](https://helm-repository.readthedocs.io/en/latest/charts/cluster-devworkspaces)
+
+!!! warning
+    This chart is now DEPRECATED and replaced by [cluster-devworkspaces startx helm chart](https://helm-repository.readthedocs.io/en/latest/charts/cluster-devworkspaces)
 
 This chart was part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
