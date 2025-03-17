@@ -18,7 +18,7 @@ context:  &context
 # configuration of the logging service
 logging:
   # Enable the deployment of the logging service
-  enabled: true
+  enabled: false
   # Enable the deployment of the logging service into infra nodes
   infra_enabled: false
   # Activate the manager as a helm hook
@@ -41,7 +41,7 @@ logging:
   # configuration of the elasticsearch service
   elasticsearch:
     # Enable the deployment of the elasticsearch service
-    enabled: true
+    enabled: false
     # number of elasticsearch instances
     replicas: 3
     # the redundancy policy applied to this elastic (could be ZeroRedundancy, SingleRedundancy, MultipleRedundancy and FullRedundancy)
@@ -187,6 +187,9 @@ project:
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
+  enabled: false
+  context: 
+    <<: *context
   subscription:
     enabled: true
     name: "cluster-logging"
@@ -241,7 +244,7 @@ operatorElastic:
 
 # Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorLoki:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
   subscription:
