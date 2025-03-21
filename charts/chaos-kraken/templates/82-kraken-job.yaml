@@ -31,12 +31,13 @@ spec:
         image: quay.io/redhat-chaos/krkn
         imagePullPolicy: Always
         args:
-          - python3 run_kraken.py -c config/config.yaml
+          - python3.9 run_kraken.py -c config/config.yaml
         command:
           - /bin/sh
           - -c
         env:
           - name: KUBECONFIG
+            value: /root/.kube/config
         {{- if $.Values.kraken.aws }}{{- if $.Values.kraken.aws.enabled }}
         envFrom:
           - secretRef:
