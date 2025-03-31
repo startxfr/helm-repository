@@ -53,6 +53,9 @@ spec:
     - effect: NoSchedule 
       key: node-role.kubernetes.io/infra 
       operator: Exists
+    - effect: NoExecute
+      key: node-role.kubernetes.io/infra
+      operator: Exists
   {{- end }}
 {{- if .Values.registryconfig.s3Storage }}{{- if .Values.registryconfig.s3StorageEnableSecret }}
 ---
