@@ -25,9 +25,9 @@ helm search repo startx
 
 ### History
 
-| Release                                                                     | Date       | Description          |
-| --------------------------------------------------------------------------- | ---------- | -------------------- |
-| [18.11.1](https://github.com/startxfr/helm-repository/releases/tag/18.11.1) | 2025-04-30 | Init the v18 release |
+| Release                                                                     | Date       | Description                                 |
+| --------------------------------------------------------------------------- | ---------- | ------------------------------------------- |
+| [18.11.3](https://github.com/startxfr/helm-repository/releases/tag/18.11.3) | 2025-04-30 | Init the v18 release with 18.x dependencies |
 
 
 
@@ -51,11 +51,11 @@ helm search repo startx
 
 ### History
 
-| Release                                                                       | Date       | Description                             |
-| ----------------------------------------------------------------------------- | ---------- | --------------------------------------- |
-| [17.14.90](https://github.com/startxfr/helm-repository/releases/tag/17.14.90) | 2025-04-30 | Publish stable release for 4.17 version |
-| [17.14.19](https://github.com/startxfr/helm-repository/releases/tag/17.14.19) | 2025-03-12 | Align all chart to the 17.14.19 release |
-| [17.14.1](https://github.com/startxfr/helm-repository/releases/tag/17.14.1)   | 2025-02-28 | Init the v17 release                    |
+| Release                                                                       | Date       | Description                                 |
+| ----------------------------------------------------------------------------- | ---------- | ------------------------------------------- |
+| [17.14.90](https://github.com/startxfr/helm-repository/releases/tag/17.14.90) | 2025-04-30 | Publish stable release for 4.17 version     |
+| [17.14.19](https://github.com/startxfr/helm-repository/releases/tag/17.14.19) | 2025-03-12 | Align all chart to the 17.14.19 release     |
+| [17.14.5](https://github.com/startxfr/helm-repository/releases/tag/17.14.5)   | 2025-02-28 | Init the v17 release with 17.x dependencies |
 
 
 ## version 16.x (chamboulive)
