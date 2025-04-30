@@ -532,3 +532,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release
 | 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version
 | 18.11.1 | 2025-04-30 | first release of the basic operators
+| 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
