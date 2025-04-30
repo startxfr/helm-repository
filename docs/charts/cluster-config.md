@@ -387,3 +387,4 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 17.14.21 | 2025-03-31 | Add NoExecute toleration for node-role.kubernetes.io/infra
 | 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version
 | 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
+| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
