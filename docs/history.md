@@ -78,11 +78,12 @@ helm search repo startx
 
 ### History
 
-| Release                                                                       | Date       | Description                    |
-| ----------------------------------------------------------------------------- | ---------- | ------------------------------ |
-| [16.19.29](https://github.com/startxfr/helm-repository/releases/tag/16.19.29) | 2024-11-11 | All charts stable for v4.16.19 |
-| [16.19.3](https://github.com/startxfr/helm-repository/releases/tag/16.19.3)   | 2024-11-10 | All charts stable for v4.16.19 |
-| [16.19.1](https://github.com/startxfr/helm-repository/releases/tag/16.19.1)   | 2024-11-10 | Init the v16 release           |
+| Release                                                                       | Date       | Description                                   |
+| ----------------------------------------------------------------------------- | ---------- | --------------------------------------------- |
+| [16.19.43](https://github.com/startxfr/helm-repository/releases/tag/16.19.43) | 2025-02-27 | publish stable update for the full repository |
+| [16.19.29](https://github.com/startxfr/helm-repository/releases/tag/16.19.29) | 2024-11-11 | All charts stable for v4.16.19                |
+| [16.19.3](https://github.com/startxfr/helm-repository/releases/tag/16.19.3)   | 2024-11-10 | All charts stable for v4.16.19                |
+| [16.19.1](https://github.com/startxfr/helm-repository/releases/tag/16.19.1)   | 2024-11-10 | Init the v16 release                          |
 
 ## version 15.x (champagnac)
 
