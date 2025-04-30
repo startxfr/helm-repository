@@ -304,3 +304,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
 | 18.11.9 | 2025-04-30 | Upgrade to ACS version 4.7.2
 | 18.11.11 | 2025-04-30 | Upgrade to ACS version 4.7.2
+| 18.11.15 | 2025-04-30 | Improve version tagging
