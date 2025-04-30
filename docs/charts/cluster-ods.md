@@ -126,3 +126,4 @@ helm install cluster-ods startx/cluster-ods -f https://raw.githubusercontent.com
 | 17.14.11 | 2025-03-05 | Adjust doc to material layout                                                                         |
 | 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release                                                               |
 | 17.14.21 | 2025-04-30 | Upgrade the OpenDataScience operator version to v2.19.0
+| 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version
