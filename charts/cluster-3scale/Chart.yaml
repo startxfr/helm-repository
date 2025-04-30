@@ -6,13 +6,13 @@ description: Helm chart used to configure 3scale at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 17.14.5
+version: 18.11.5
 # Version of 3scale operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "0.11.12"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-3scale.svg
 # Kube minimum version
-    version: "17.14.1"
+kubeVersion: ">=1.25.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -37,13 +37,13 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.1"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.1"
     alias: operator
     condition: operator.enabled
 

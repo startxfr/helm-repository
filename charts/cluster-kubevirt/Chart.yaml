@@ -6,7 +6,7 @@ description: Helm chart used to configure Code Ready Workspace at the cluster le
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 18.11.3
+version: 18.11.5
 # Version name of the CRW operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.17.7"
 # Icon of this helm-chart
@@ -39,13 +39,13 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.1"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.1"
     alias: operator
     condition: operator.enabled
 
