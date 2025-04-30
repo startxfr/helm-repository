@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 18.11.1
+version: 18.11.3
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.18.11"
 # Icon of this helm-chart
@@ -41,27 +41,27 @@ maintainers:
 
 dependencies:
   - name: "chaos-cerberus"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
     version: "17.14.1"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
     version: "17.14.1"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
     version: "17.14.1"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
     version: "17.14.1"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/17/
     version: "17.14.1"
     alias: monkey
     condition: monkey.enabled
@@ -97,6 +97,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all chart to the 18.11.1 release"
+      description: "Align all chart to the 18.11.3 release"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
