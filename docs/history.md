@@ -1,8 +1,35 @@
 # Release history
 
+## version 19.x (champroux)
+
+_The objectif of this release is to stabilize the full repository content and offer a stable release of the helm charts for the Openshift Container platform version 4.19.x version._
+
 ## version 18.x (chanteix)
 
-_The objectif of this release is to stabilize the full repository content and offer a stable release of the helm charts for the Openshift Container platform version 4.18.x version._
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.18 release](https://docs.openshift.com/container-platform/4.18)**.
+
+### Objectives of this release
+
+- Stable support for cluster service running under an Openshift 4.18.x cluster
+- Adding new operators to the catalog (see roadmap)
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.18.x version, you can add the ([18 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/18/index.yaml)) dedicated for 18.x releases.
+
+```bash
+helm repo add startx-18 https://helm-repository.readthedocs.io/en/latest/repos/18
+helm search repo startx
+```
+
+### History
+
+| Release                                                                     | Date       | Description          |
+| --------------------------------------------------------------------------- | ---------- | -------------------- |
+| [18.11.1](https://github.com/startxfr/helm-repository/releases/tag/18.11.1) | 2025-04-30 | Init the v18 release |
+
+
 
 ## version 17.x (chameyrat)
 
@@ -24,9 +51,11 @@ helm search repo startx
 
 ### History
 
-| Release                                                                   | Date       | Description          |
-| ------------------------------------------------------------------------- | ---------- | -------------------- |
-| [17.14.1](https://github.com/startxfr/helm-repository/releases/tag/17.14.1) | 2025-02-28 | Init the v17 release |
+| Release                                                                       | Date       | Description                             |
+| ----------------------------------------------------------------------------- | ---------- | --------------------------------------- |
+| [17.14.90](https://github.com/startxfr/helm-repository/releases/tag/17.14.90) | 2025-04-30 | Publish stable release for 4.17 version |
+| [17.14.19](https://github.com/startxfr/helm-repository/releases/tag/17.14.19) | 2025-03-12 | Align all chart to the 17.14.19 release |
+| [17.14.1](https://github.com/startxfr/helm-repository/releases/tag/17.14.1)   | 2025-02-28 | Init the v17 release                    |
 
 
 ## version 16.x (chamboulive)
