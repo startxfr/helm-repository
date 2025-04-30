@@ -27,7 +27,7 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: example-chaos
     display_name: Chaos - Main
     description: Chaos test suite configured by STARTX
@@ -39,7 +39,7 @@ cerberus_project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: example-chaos-cerberus
     display_name: Chaos - Cerberus
     description: Cerberus watchdog in STARTX Chaos test suite
@@ -93,7 +93,7 @@ kraken_project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: example-chaos-kraken
     display_name: Chaos - Kraken
     description: Kraken chaos orchestrator in STARTX Chaos test suite
@@ -167,7 +167,7 @@ mesh_project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: example-chaos-mesh
     display_name: Chaos - Mesh
     description: Chaos-mesh chaos orchestrator in STARTX Chaos test suite
@@ -176,9 +176,6 @@ mesh_project:
 mesh: 
   enabled: false
   expose: true
-  chaosDaemon:
-    runtime: crio
-    socketPath: /var/run/crio/crio.sock
   nameOverride: ""
   fullnameOverride: ""
   customLabels: {}
@@ -328,7 +325,7 @@ monkey_project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: example-chaos-kubemonkey
     display_name: Chaos - Monkey
     description: Kubernetes chaos monkey in STARTX Chaos test suite
@@ -368,7 +365,7 @@ litmus_project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: example-chaos-litmus
     display_name: Chaos - Litmus
     description: Litmus chaos orchestrator in STARTX Chaos test suite

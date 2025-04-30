@@ -27,7 +27,7 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: chaos-mesh
     display_name: Chaos - Mesh
     description: chaos-mesh orchestrator in STARTX Chaos test suite
@@ -36,9 +36,6 @@ project:
 mesh: 
   enabled: false
   expose: true
-  chaosDaemon:
-    runtime: crio
-    socketPath: /var/run/crio/crio.sock
   nameOverride: ""
   fullnameOverride: ""
   customLabels: {}
