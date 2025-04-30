@@ -27,6 +27,7 @@ helm search repo startx
 
 | Release                                                                     | Date       | Description                                 |
 | --------------------------------------------------------------------------- | ---------- | ------------------------------------------- |
+| [18.11.7](https://github.com/startxfr/helm-repository/releases/tag/18.11.7) | 2025-04-30 | All dependencies linked to version 18.x     |
 | [18.11.3](https://github.com/startxfr/helm-repository/releases/tag/18.11.3) | 2025-04-30 | Init the v18 release with 18.x dependencies |
 
 
