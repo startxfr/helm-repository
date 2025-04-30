@@ -358,3 +358,4 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release
 | 17.14.21 | 2025-04-24 | Add snobm profile
 | 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version
+| 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
