@@ -219,3 +219,4 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version
 | 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
 | 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
+| 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
