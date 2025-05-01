@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: logging
   app: openshift-logging
+  version: "6.2.1"
 logging:
   enabled: false
   infra_enabled: true
@@ -130,9 +131,9 @@ operator:
     enabled: true
     name: "cluster-logging"
     namespace: "openshift-logging"
-    version: "6.0.1"
+    version: "6.2.1"
     operator: 
-      channel: "stable"
+      channel: "stable-6.2"
       name: cluster-logging
       installPlanApproval: Automatic
       # csv: cluster-logging
@@ -198,9 +199,9 @@ operatorLoki:
     hooked: false
     name: "loki-operator"
     namespace: "openshift-operators-redhat"
-    version: "6.0.1"
+    version: "6.2.1"
     operator: 
-      channel: "stable-6.0"
+      channel: "stable-6.2"
       name: loki-operator
       installPlanApproval: Automatic
       # csv: loki-operator
