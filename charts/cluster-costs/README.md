@@ -81,3 +81,4 @@ helm install cluster-costs startx/cluster-costs -f https://raw.githubusercontent
 | 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
 | 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
+| 18.11.9 | 2025-05-01 | Update cost-management operator to version 3.3.1
