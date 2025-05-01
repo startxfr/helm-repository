@@ -150,6 +150,7 @@ operatorElastic:
   enabled: false
   context: 
     <<: *context
+    version: "5.8.19"
   subscription:
     enabled: true
     hooked: false
@@ -184,6 +185,7 @@ operatorLoki:
   enabled: true
   context: 
     <<: *context
+    version: "6.2.1"
   subscription:
     enabled: true
     hooked: false
@@ -213,6 +215,7 @@ operatorKiali:
   enabled: false
   context: 
     <<: *context
+    version: "2.4.4"
   subscription:
     enabled: true
     hooked: false
@@ -242,12 +245,12 @@ operatorKiali:
     namespace: "openshift-operators"
     providedAPIs: "Kiali.v1alpha1.kiali.io,MonitoringDashboard.v1alpha1.monitoring.kiali.io"
 
-
 # Configuration of the jaeger operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorJaeger:
   enabled: false
   context: 
     <<: *context
+    version: "1.65.0"
   subscription:
     enabled: true
     hooked: false
@@ -282,6 +285,7 @@ operatorIstio:
   enabled: false
   context: 
     <<: *context
+    version: "2.6.7"
   subscription:
     enabled: true
     hooked: false
