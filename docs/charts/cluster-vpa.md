@@ -329,3 +329,4 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
 | 18.11.9 | 2025-05-02 | Update VPA operator to version 4.18.0
+| 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
