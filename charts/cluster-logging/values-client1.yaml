@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: logging
   app: openshift-logging
+  version: "6.2.1"
 
 # see https://access.redhat.com/documentation/en-us/openshift_container_platform/4.14/html/logging/configuring-your-logging-deployment
 logging:
@@ -137,9 +138,9 @@ operatorLoki:
     hooked: false
     name: "loki-operator"
     namespace: "openshift-operators-redhat"
-    version: "6.0.1"
+    version: "6.2.1"
     operator: 
-      channel: "stable-6.0"
+      channel: "stable-6.2"
       name: loki-operator
       installPlanApproval: Automatic
       # csv: loki-operator

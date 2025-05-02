@@ -7,18 +7,18 @@
 
 # Application chaos context
 context:  &context
-# Name of the global scope for this application (organisational tenant)
- scope: companyname
-# Name of the cluster running this application (plateform tenant)
- cluster: clustername
-# Name of the environement for this application (ex: dev, factory, preprod or prod)
- environment: dev
-# Component name of this application (logical tenant)
- component: chaos
-# Application name (functionnal tenant, default use Chart name)
- app: cerberus
-# Version name of this application (default use Chart appVersion)
- version: "0.0.1"
+  # Name of the global scope for this application (organisational tenant)
+  scope: companyname
+  # Name of the cluster running this application (plateform tenant)
+  cluster: clustername
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: chaos
+  # Application name (functionnal tenant, default use Chart name)
+  app: cerberus
+  # Version name of this application (default use Chart appVersion)
+  version: "1.0.0"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -36,6 +36,8 @@ project:
 cerberus: 
   # Deploy the cerberus watchdog
   enabled: false
+  # version of the cerberus image
+  version: "latest"
   # Enable exposition for this application (route based)
   expose: true
   # Enable kraken pod to query the cerberus healthcheck (networkpolicy)

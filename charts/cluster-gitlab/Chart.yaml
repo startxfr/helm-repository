@@ -6,9 +6,9 @@ description: Helm chart used to configure Gitlab at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 18.11.7
+version: 18.11.9
 # Version name of the gitlab operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "16.6.1"
+appVersion: "8.11.1"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-gitlab.svg
 # Kube minimum version
@@ -46,7 +46,7 @@ dependencies:
     condition: project.enabled
   - name: gitlab
     repository: https://charts.gitlab.io/
-    version: "8.5.1"
+    version: "8.11.1"
     alias: gitlab
     condition: gitlab.enabled
 
@@ -75,6 +75,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all chart to the 18.11.7 release"
+      description: "Update the helm chart gitlab 8.11.1"
   # Is this release contain security updates
-  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/containsSecurityUpdates: "true"

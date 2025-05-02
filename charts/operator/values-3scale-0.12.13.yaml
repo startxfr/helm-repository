@@ -1,0 +1,37 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: default
+  environment: dev
+  component: api
+  app: startx-api-3scale
+  version: "0.12.13"
+enabled: true
+subscription:
+  enabled: true
+  hooked: false
+  name: "3scale-operator"
+  namespace: "rh3scale-operator"
+  version: "v0.12.13"
+  operator: 
+    channel: threescale-2.15
+    name: 3scale-operator
+    installPlanApproval: Automatic
+    # csv: 3scale-operator
+    source: 
+      name: redhat-operators
+      namespace: openshift-marketplace
+    config: 
+      infra: true
+      # resources: 
+      #   limits:
+      #     cpu: 400m
+      #   requests:
+      #     cpu: 400m
+operatorGroup:
+  enabled: false
+  target: "all-ns"
+  name: "startx-3scale"
+  namespace: "rh3scale-operator"
+  providedAPIs: "APIManager.v1alpha1.apps.3scale.net,APIManagerBackup.v1alpha1.apps.3scale.net,APIManagerRestore.v1alpha1.apps.3scale.net,ActiveDoc.v1beta1.capabilities.3scale.net,Backend.v1beta1.capabilities.3scale.net,CustomPolicyDefinition.v1beta1.capabilities.3scale.net,DeveloperAccount.v1beta1.capabilities.3scale.net,DeveloperUser.v1beta1.capabilities.3scale.net,OpenAPI.v1beta1.capabilities.3scale.net,Product.v1beta1.capabilities.3scale.net,ProxyConfigPromote.v1beta1.capabilities.3scale.net"

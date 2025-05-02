@@ -6,6 +6,7 @@ context: &context
   environment: swm
   component: argocd
   app: startx-argocd
+  version: "1.16.0"
 
 argocd:
   enabled: false
@@ -226,9 +227,9 @@ operator:
     hooked: false
     name: "openshift-gitops-operator"
     namespace: "openshift-operators"
-    version: "v1.14.1"
+    version: "v1.16.0"
     operator: 
-      channel: "gitops-1.14"
+      channel: "gitops-1.16"
       name: openshift-gitops-operator
       # csv: openshift-gitops-operator
       installPlanApproval: Automatic
