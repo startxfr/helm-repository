@@ -1,6 +1,7 @@
 {{- if .Values.kraken.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
+{{- $version := .Values.kraken.version | default "v3.0.3" -}}
 {{- if eq .Values.kraken.mode "pipeline" -}}{{- if .Values.kraken.pipeline -}}
 {{- with .Values.kraken.pipeline }}
 ---
@@ -120,7 +121,7 @@ spec:
       description: Name of the secret key holding the vcloud-credentials.
       default: kraken-vcloud-creds
   steps:
-    - image: quay.io/redhat-chaos/krkn
+    - image: "quay.io/redhat-chaos/krkn:{{- $version -}}"
       args:
         - python3.9 run_kraken.py -c config/config.yaml
       command:
