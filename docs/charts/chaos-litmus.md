@@ -297,3 +297,4 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 18.11.15 | 2025-05-02 | Intermediate common release for chaos charts
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
 | 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts
