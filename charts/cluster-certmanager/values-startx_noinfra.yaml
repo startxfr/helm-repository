@@ -1,0 +1,90 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: certmanager
+  app: startx-certmanager
+  version: "1.15.1"
+certmanager:
+  enabled: false
+  list:
+    - name: example-manual-demo-certmanager
+      namespace: demo-certmanager
+      kind: manual
+      manual: 
+        spec: |-
+          commonName: example-manual-demo-certmanager.example.com
+          dnsNames:
+          - example-manual-demo-certmanager.example.com
+          issuerRef:
+            kind: ClusterIssuer
+            name: letsencrypt-demo
+          secretName: example-manual-demo-certmanager-tls
+    - name: example-ingress-demo-certmanager
+      namespace: demo-certmanager
+      kind: ingress
+      ingress: 
+        host: example-demo-certmanager.example.com
+        issuer: letsencrypt-demo
+        serviceName: example
+        servicePort: 8080
+clusterIssuer: 
+  enabled: false
+  list:
+    - name: letsencrypt-demo
+      namespace: openshift-certmanager
+      spec: |-
+        acme:
+        email: myemail@corp.com
+        preferredChain: ""
+        privateKeySecretRef:
+          name: letsencrypt-demo-cert
+        server: https://demo-letsencrypt-demo.api.letsencrypt.org/directory
+        solvers:
+        - http01:
+            ingress:
+              class: openshift-default
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "rhcertmanager-operator"
+    display_name: Operator CertManager
+    description: CertManager configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "openshift-cert-manager-operator"
+    namespace: "rhcertmanager-operator"
+    version: "v1.15.1"
+    operator: 
+      channel: "stable-v1.15"
+      name: openshift-cert-manager-operator
+      installPlanApproval: Automatic
+      # csv: openshift-cert-manager
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-cert-manager"
+    namespace: "rhcertmanager-operator"
+    providedAPIs: "Certificate.v1.cert-manager.io,CertificateRequest.v1.cert-manager.io,Challenge.v1.acme.cert-manager.io,ClusterIssuer.v1.cert-manager.io"

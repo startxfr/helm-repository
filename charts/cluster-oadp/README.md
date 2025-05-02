@@ -340,3 +340,4 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 | 18.11.9 | 2025-05-01 | Update OADP operator to version 1.4.4
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
 | 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts

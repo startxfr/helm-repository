@@ -10,7 +10,7 @@ context:
 
 cluster:
   id: startx-xyzab
-  region: ap-south-1
+  region: eu-west-3
   autoscaler: 
     enabled: true
     spec: |
@@ -39,7 +39,7 @@ machineConfigPool:
   - name: worker
     machineConfigSelector: |-
       matchExpressions:
-        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,master]}
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker]}
     nodeSelector: |-
       matchLabels:
         node-role.kubernetes.io/worker: ""

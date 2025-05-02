@@ -1,0 +1,210 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: vault
+  app: startx-vault
+  version: "0.30.0"
+enabled: true
+route: 
+  enabled: false
+  service: "vault-ui"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    name: startx-vault
+    display_name: "Startx VAULT"
+    requester: startx
+    description: Vault storage & control plane configured by STARTX
+  rbac: 
+    enabled: true
+    user: 
+    - id: vault-sa-edit
+      name: system:serviceaccount:startx-vault:{{ .Release.name }}
+      role: edit
+    - id: vault-agent-injector-sa-admin
+      name: system:serviceaccount:startx-vault:{{ .Release.name }}-agent-injector
+      role: admin
+vault:
+  enabled: true
+  fullnameOverride: startx-vault
+  global:
+    enabled: false
+    # imagePullSecrets: []
+    tlsDisable: true
+    openshift: true
+  injector:
+    enabled: "-"
+    image:
+      repository: "registry.connect.redhat.com/hashicorp/vault-k8s"
+      tag: "0.14.1-ubi"
+      pullPolicy: IfNotPresent
+    agentImage:
+      repository: "registry.connect.redhat.com/hashicorp/vault"
+      tag: "1.9.0-ubi"
+    authPath: "auth/kubernetes"
+    logLevel: "info"
+    logFormat: "standard"
+    revokeOnShutdown: false
+    # namespaceSelector: {}
+    certs:
+      secretName: null
+      caBundle: ""
+      certName: tls.crt
+      keyName: tls.key
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 100m
+      limits:
+        memory: 256Mi
+        cpu: 250m
+    # extraEnvironmentVars: {}
+    # affinity: null
+    # tolerations: null
+    # nodeSelector: null
+  server:
+    image:
+      repository: "registry.connect.redhat.com/hashicorp/vault"
+      tag: "1.9.0-ubi"
+      pullPolicy: IfNotPresent
+    updateStrategyType: "OnDelete"
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 100m
+      limits:
+        memory: 256Mi
+        cpu: 250m
+    ingress:
+      enabled: false
+      # labels: {}
+      # annotations: {}
+      hosts:
+        - host: startx-vault.local
+      #     paths: []
+      # tls: []
+    authDelegator:
+      enabled: true
+    extraContainers: null
+    shareProcessNamespace: false
+    extraArgs: ""
+    readinessProbe:
+      enabled: true
+    livenessProbe:
+      enabled: true
+      path: "/v1/sys/health?standbyok=true"
+      initialDelaySeconds: 60
+    preStopSleepSeconds: 5
+    affinity: |
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: {{ template "vault.name" . }}
+                app.kubernetes.io/instance: "{{ .Release.Name }}"
+                component: server
+            topologyKey: kubernetes.io/hostname
+    # extraEnvironmentVars: {}
+    # extraSecretEnvironmentVars: []
+    # extraVolumes: []
+    # tolerations: {}
+    # nodeSelector: {}
+    # extraLabels: {}
+    # annotations: {}
+    service:
+      enabled: true
+      clusterIP: None
+      type: ClusterIP
+      port: 8200
+      targetPort: 8200
+      annotations: {}
+    dataStorage:
+      enabled: true
+      size: 10Gi
+      storageClass: null
+      accessMode: ReadWriteOnce
+    auditStorage:
+      enabled: false
+      size: 10Gi
+      storageClass: null
+      accessMode: ReadWriteOnce
+    dev:
+      enabled: true
+    standalone:
+      enabled: "-"
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        storage "file" {
+          path = "/vault/data"
+        }
+
+        # Example configuration for using auto-unseal, using Google Cloud KMS. The
+        # GKMS keys must already exist, and the cluster must have a service account
+        # that is authorized to access GCP KMS.
+        #seal "gcpckms" {
+        #   project     = "vault-helm-dev"
+        #   region      = "global"
+        #   key_ring    = "vault-helm-unseal-kr"
+        #   crypto_key  = "vault-helm-unseal-key"
+        #}
+    ha:
+      enabled: false
+      replicas: 3
+      raft:
+        enabled: false
+        config: |
+          ui = true
+          listener "tcp" {
+            tls_disable = 1
+            address = "[::]:8200"
+            cluster_address = "[::]:8201"
+          }
+          storage "raft" {
+            path = "/vault/data"
+          }
+
+          service_registration "kubernetes" {}
+      config: |
+        ui = true
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+        storage "consul" {
+          path = "vault"
+          address = "HOST_IP:8500"
+        }
+        service_registration "kubernetes" {}
+        # Example configuration for using auto-unseal, using Google Cloud KMS. The
+        # GKMS keys must already exist, and the cluster must have a service account
+        # that is authorized to access GCP KMS.
+        #seal "gcpckms" {
+        #   project     = "vault-helm-dev-246514"
+        #   region      = "global"
+        #   key_ring    = "vault-helm-unseal-kr"
+        #   crypto_key  = "vault-helm-unseal-key"
+        #}
+      disruptionBudget:
+        enabled: true
+    #     maxUnavailable: null
+    # serviceAccount:
+    #   annotations: {}
+  ui:
+    enabled: true
+    serviceType: "ClusterIP"
+    # serviceNodePort: null
+    externalPort: 8200
+    # annotations: {}

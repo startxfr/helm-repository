@@ -1,0 +1,61 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: default
+  environment: infra
+  component: config
+  app: startx-rbac
+  version: "4.18.11"
+groups:
+  enabled: true
+  list: 
+  - id: dev
+    name: dev
+    role: basic-user
+    users: 
+    - dev
+  - id: admin
+    name: admin
+    role: cluster-admin
+    users: 
+    - admin
+  - id: devops
+    name: devops
+    role: self-provisionner
+    users: 
+    - devops
+  - id: ops
+    name: ops
+    role: edit
+    users: 
+    - ops
+  - id: testops
+    name: testops
+    role: self-provisionner
+    users: 
+    - ops
+
+roles:
+  enabled: false
+  list: 
+  - id: customrole
+    name: customrole
+    namespace: default
+    rules: |-
+      - apiGroups:
+        - ""
+        resources:
+        - pod
+        verbs:
+        - list
+  - id: customclusterrole
+    name: customclusterrole
+    scope: global
+    rules: |-
+      - apiGroups:
+        - ""
+        resources:
+        - pod
+        verbs:
+        - list

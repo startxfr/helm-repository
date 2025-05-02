@@ -74,3 +74,4 @@ helm install cluster-kepler startx/cluster-kepler -f https://raw.githubuserconte
 | 18.11.9 | 2025-05-01 | Update kepler operator to version 0.4.0
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
 | 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts

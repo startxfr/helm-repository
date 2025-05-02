@@ -1,0 +1,92 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: mustgather
+  app: openshift-mustgather
+  version: "1.1.2"
+
+redhatCreds:
+  enabled: false
+  name: "startx-rhsupport-creds"
+  namespace: "openshift-startx-mustgather"
+  username: startx_info_mco
+  password: mypassword
+
+report:
+  enabled: false
+  caseID: "02527285"
+  rhnCreds: "startx-rhsupport-creds"
+  serviceAccount: "mustgather-admin"
+  audit: true
+  # mustGatherImages: |-
+  #   - registry.redhat.io/migration-toolkit-virtualization/mtv-must-gather-rhel8:2.6.2
+  #   - quay.io/kubevirt/must-gather:latest
+  #   - quay.io/ocs-dev/ocs-must-gather
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: project
+    name: "openshift-startx-mustgather"
+    display_name: "Startx MustGather"
+    requester: startx
+    description: Startx Must Gather area
+  rbac:
+    enabled: true
+    groups:
+      - id: devops-view
+        name: devops
+        role: view
+      - id: ops-admin
+        name: ops
+        role: admin
+    sa:
+      - id: mustgather-admin
+        name: mustgather-admin
+        role: cluster-admin
+  serviceAccounts: 
+    enabled: true
+    list: 
+      - name: mustgather-admin
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "must-gather-operator"
+    namespace: "openshift-startx-mustgather"
+    version: "v1.1.2"
+    operator:
+      channel: "alpha"
+      name: must-gather-operator
+      installPlanApproval: Automatic
+      # csv: must-gather-operator
+      source:
+        name: community-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "must-gather-operator"
+    namespace: "openshift-startx-mustgather"
+    providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"

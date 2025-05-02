@@ -1,0 +1,111 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: crunchy
+  app: startx-crunchy
+  version: "5.8.1"
+
+loader:
+  enabled: false
+  list: 
+  - name: startx
+    namespace: startx-crunchy
+    command: | 
+      #!/bin/bash
+      echo "write your workload generator script using psql ..." 
+      exit 0;
+
+cluster:
+  enabled: false
+  list: 
+  - name: startx-db
+    enabled: true
+    namespace: startx-crunchy
+    postgresVersion: 14
+    storageClassName: gp3-csi
+    storageInstanceSize: "2Gi"
+    storageBackupSize: "2Gi"
+    username: startx-user
+    istioSidecarEnabled: false
+    initScript: |-
+      -- Create the "startx" database and "startx" user
+      CREATE DATABASE "startx";
+      CREATE USER "startx" WITH PASSWORD 'Default123$';
+      GRANT ALL PRIVILEGES ON DATABASE "startx" TO "startx";
+      -- Create the "startx" database and "startx" user
+      CREATE DATABASE "startx";
+      \c startx
+      CREATE TABLE startx_table (
+        field       TEXT COLLATE "C" NOT NULL,
+        CONSTRAINT field PRIMARY KEY (field)
+      );
+      CREATE INDEX field_idx ON field (field);
+      GRANT ALL PRIVILEGES ON DATABASE "startx" TO "startx";
+
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-crunchy"
+    display_name: "Startx CrunchyDB"
+    requester: startx
+    description: CrunchyDB configured by STARTX
+  rbac: 
+    enabled: false
+    groups: []
+    users: []
+  serviceAccounts:
+    enabled: false
+    list: []
+  dockercfg:
+    enabled: false
+    list: []
+  networkpolicy: 
+    enabled: false
+    rules: []
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "crunchy-postgres-operator"
+    namespace: "startx-crunchy"
+    version: "v5.8.1"
+    operator: 
+      channel: v5
+      name: crunchy-postgres-operator
+      installPlanApproval: Automatic
+      csv: postgresoperator
+      source: 
+        name: certified-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "crunchy-operator"
+    namespace: "startx-crunchy"
+    providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"
+

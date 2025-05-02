@@ -331,3 +331,4 @@ helm install cluster-compliance startx/cluster-compliance -f https://raw.githubu
 | 18.11.9 | 2025-05-01 | Update compliance operator to version 1.7.0
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
 | 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts

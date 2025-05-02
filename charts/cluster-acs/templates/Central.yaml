@@ -42,16 +42,16 @@ spec:
   egress:
     connectivityPolicy: Online
   scanner:
-  {{- if .Values.acs.infra }}
-    nodeSelector:
-      node-role.kubernetes.io/infra: ''
-    tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/infra
-        operator: Exists  
-  {{- end }}
   {{- if .Values.acs.scanner.enabled }}
     analyzer:
+    {{- if .Values.acs.infra }}
+      nodeSelector:
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists  
+    {{- end }}
       scaling:
         autoScaling: Enabled
         maxReplicas: 5

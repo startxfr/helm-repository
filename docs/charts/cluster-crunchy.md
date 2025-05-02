@@ -276,3 +276,4 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 | 18.11.9 | 2025-05-01 | Upgrade crunchy operator to version 5.8.1
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
 | 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts

@@ -376,3 +376,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 18.11.11 | 2025-05-01 | Update all operators version context
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
 | 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts

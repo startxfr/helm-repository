@@ -1,0 +1,135 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: gpu
+  app: startx-gpu
+  version: "25.3.0"
+gpu:
+  enabled: false
+  spec: |-
+    vgpuDeviceManager:
+      enabled: true
+    migManager:
+      enabled: true
+    operator:
+      defaultRuntime: crio
+      initContainer: {}
+      runtimeClass: nvidia
+      use_ocp_driver_toolkit: true
+    dcgm:
+      enabled: true
+    gfd:
+      enabled: true
+    dcgmExporter:
+      config:
+        name: ''
+      enabled: true
+      serviceMonitor:
+        enabled: true
+    driver:
+      licensingConfig:
+        configMapName: ''
+        nlsEnabled: true
+      enabled: true
+      certConfig:
+        name: ''
+      useNvidiaDriverCRD: false
+      kernelModuleConfig:
+        name: ''
+      upgradePolicy:
+        autoUpgrade: true
+        drain:
+          deleteEmptyDir: false
+          enable: false
+          force: false
+          timeoutSeconds: 300
+        maxParallelUpgrades: 1
+        maxUnavailable: 25%
+        podDeletion:
+          deleteEmptyDir: false
+          force: false
+          timeoutSeconds: 300
+        waitForCompletion:
+          timeoutSeconds: 0
+      repoConfig:
+        configMapName: ''
+      useOpenKernelModules: false
+      virtualTopology:
+        config: ''
+    devicePlugin:
+      config:
+        default: ''
+        name: ''
+      enabled: true
+    mig:
+      strategy: single
+    sandboxDevicePlugin:
+      enabled: true
+    validator:
+      plugin:
+        env:
+          - name: WITH_WORKLOAD
+            value: 'false'
+    nodeStatusExporter:
+      enabled: true
+    daemonsets:
+      rollingUpdate:
+        maxUnavailable: '1'
+      updateStrategy: RollingUpdate
+    sandboxWorkloads:
+      defaultWorkload: container
+      enabled: false
+    gds:
+      enabled: false
+    vgpuManager:
+      enabled: false
+    vfioManager:
+      enabled: true
+    toolkit:
+      enabled: true
+      installDir: /usr/local/nvidia
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "nvidia-gpu-operator"
+    display_name: Operator GPU-NVidia
+    description: GPU-NVidia configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "gpu-operator-certified"
+    namespace: "nvidia-gpu-operator"
+    version: "v25.3.0"
+    operator: 
+      channel: "stable"
+      name: gpu-operator-certified
+      installPlanApproval: Automatic
+      # csv: gpu-operator-certified
+      source: 
+        name: certified-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "nvidia-gpu-operator"
+    namespace: "nvidia-gpu-operator"
+    providedAPIs: "ClusterPolicy.v1.nvidia.com,NVIDIADriver.v1alpha1.nvidia.com"
