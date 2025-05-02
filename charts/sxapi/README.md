@@ -590,3 +590,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
 | 18.11.8 | 2025-05-02 | Align to version 18.11.8 for basic charts
+| 18.11.15 | 2025-05-02 | Intermediate common release for basic charts
