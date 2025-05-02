@@ -321,3 +321,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
 | 18.11.8 | 2025-05-02 | Update the kraken image to version 3.0.6
+| 18.11.9 | 2025-05-02 | Update context version

@@ -1,7 +1,7 @@
 {{- if .Values.kraken.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
-{{- $version := .Values.kraken.version | default "v3.0.3" -}}
+{{- $version := .Values.kraken.version | default "latest" -}}
 {{- if eq .Values.kraken.mode "job" -}}{{- if .Values.kraken.job -}}
 {{- with .Values.kraken.job }}
 ---
