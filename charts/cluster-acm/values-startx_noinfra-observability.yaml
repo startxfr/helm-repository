@@ -1,0 +1,87 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: acm
+  app: startx-acm
+  version: "2.13.2"
+acm:
+  enabled: false
+  mch:
+    enabled: false
+    hooked: false
+import:
+  enabled: false
+  hooked: false
+create:
+  enabled: false
+  hooked: false
+# read docs on https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.4/html-single/observability/index#enable-observability
+observability:
+  enabled: false
+  hooked: false
+  infra: false
+  bucket:
+    s3bucket: "s3bucket-value"
+    s3host: "s3host-value"
+    s3accesskey: "s3accesskey-value"
+    s3secretkey: "s3secretkey-value"
+  clusterPullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+  alertmanager_config:
+    enabled: false
+  custom_rules:
+    enabled: false
+    content: |
+      groups:
+        - name: startx-container-memory
+          rules:
+          - record: pod:container_memory_cache:sum
+            expr: sum(container_memory_cache{pod!=""}) BY (pod, container)
+  custom_metrics:
+    enabled: false
+    content: |
+      names:
+        - node_memory_MemTotal_bytes
+        - -cluster_infrastructure_provider
+      rules:
+      - record: apiserver_request_duration_seconds:histogram_quantile_90
+        expr: histogram_quantile(0.90,sum(rate(apiserver_request_duration_seconds_bucket{job=\"apiserver\",verb!=\"WATCH\"}[5m])) by (verb,le))
+  mco:
+    availabilityConfig: "High"
+    imagePullPolicy: "Always"
+    imagePullSecret: "multiclusterhub-operator-pull-secret"
+    observabilityAddonSpec:
+      enableMetrics: true
+      interval: 60
+      retentionResolution1h: "30d" 
+      retentionResolution5m: "14d"
+      retentionResolutionRaw: "5d"
+      storageConfigObject:
+        metricObjectStorage:
+          name: thanos-object-storage
+          key: thanos.yaml
+        statefulSetSize: "10Gi"
+        statefulSetStorageClass: "gp3-csi"
+project: 
+  enabled: false
+  project: 
+    enabled: false
+    hooked: false
+    name: "open-cluster-management"
+operator:
+  enabled: false
+  subscription:
+    enabled: false
+projectObservability: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "open-cluster-management-observability"
+    display_name: Startx ACM Observability
+    description: ACM Observability configured by startx

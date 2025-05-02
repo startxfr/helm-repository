@@ -1,0 +1,62 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: vault-config
+  app: startx-vault-config
+  version: "0.8.32"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    name: startx-vault-config
+    display_name: "Startx VAULT"
+    requester: startx
+    description: Vault storage & control plane configured by STARTX
+  rbac: 
+    enabled: true
+    user: 
+    - id: vault-config-sa-edit
+      name: system:serviceaccount:startx-vault-config:{{ .Release.name }}
+      role: edit
+    - id: vault-config-agent-injector-sa-admin
+      name: system:serviceaccount:startx-vault-config:{{ .Release.name }}-agent-injector
+      role: admin
+operator:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "vault-config-operator"
+    namespace: "startx-vault-config"
+    version: "v0.8.32"
+    operator: 
+      channel: alpha
+      name: vault-config-operator
+      installPlanApproval: Automatic
+      # csv: vault-config-operator
+      source: 
+        name: community-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-vault-config"
+    namespace: "startx-vault-config"
+    providedAPIs: "AuthEngineMount.v1alpha1.redhatcop.redhat.io,DatabaseSecretEngineConfig.v1alpha1.redhatcop.redhat.io,DatabaseSecretEngineRole.v1alpha1.redhatcop.redhat.io,KubernetesAuthEngineConfig.v1alpha1.redhatcop.redhat.io,KubernetesAuthEngineRole.v1alpha1.redhatcop.redhat.io,PasswordPolicy.v1alpha1.redhatcop.redhat.io,Policy.v1alpha1.redhatcop.redhat.io,RandomSecret.v1alpha1.redhatcop.redhat.io,SecretEngineMount.v1alpha1.redhatcop.redhat.io"
+vault:
+  RandomSecret:
+    enabled: true

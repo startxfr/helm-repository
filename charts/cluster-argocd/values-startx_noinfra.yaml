@@ -1,0 +1,266 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: argocd
+  app: startx-argocd
+  version: "1.16.0"
+
+argocd:
+  enabled: false
+  hooked: false
+  name: "startx-argocd" 
+argocd_export:
+  enabled: false
+  list: 
+    - name: "startx-export"
+      namespace: "startx-argocd"
+      argocd: "startx-argocd"
+      schedule: "0 * * * *"
+      storageclass: "startx-aws-slow-retain"
+argocd_project:
+  enabled: false
+  list: 
+    - name: "startx-argocd"
+    - name: "cluster-admin"
+    - name: "startx-argocd"
+      namespace: "startx-argocd"
+application:
+  enabled: false
+  list: 
+    - name: "example-application"
+      # Namespace where to deploy this VM (default is project)
+      namespace: "startx-argocd"
+      # enable argocd finalizer for this application
+      finalizer: true
+      # name of the destination server (default is https://kubernetes.default.svc) 
+      server: "https://kubernetes.default.svc"
+      # name of the parent project (default is cluster-admin) 
+      project: "cluster-admin"
+      # Application source
+      source: 
+        # repository URL to the application code (default is https://github.com/startxfr/helm-repository.git)
+        repo: "https://github.com/startxfr/helm-repository.git"
+        # revision to use for this source-code (default is master) 
+        rev: "stable"
+        # path to the application code (default is charts/example-html/)
+        path: "charts/example-html/"
+      # Configuration of the helm chart
+      helm: | 
+        valueFiles:
+          - values.yaml
+        parameters:
+          - name: context.scope
+            value: "${SCOPE}"
+          - name: context.cluster
+            value: "${CLUSTER}"
+          - name: context.environment
+            value: "${ENV}"
+          - name: context.version
+            value: "${VERSION}"
+          - name: context.app
+            value: "exemple-html-helm"
+          - name: html.expose.enabled
+            value: "true"
+          - name: html.namespace
+            value: "default"
+      # Configuration of the syncPolicy chart
+      syncPolicy: | 
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+      ignoreDifferences: | 
+        - group: "apps"
+          kind: Secret
+          namespace: "default"
+          jsonPointers:
+            - /
+argocd_repocreds:
+  enabled: false
+  list: []
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: project
+    name: startx-argocd
+    display_name: "Startx ARGOCD"
+    requester: startx
+    description: ArgoCD and gitops features configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-argocd-admin
+      name: devops
+      role: argocd_projects.argoproj.io-v1alpha1-admin
+    - id: devops-argocd-edit
+      name: devops
+      role: edit
+    - id: "cluster-admins-argocd-admin"
+      name: "system:cluster-admins"
+      role: argocd_projects.argoproj.io-v1alpha1-admin
+    - id: dev-argocd-view
+      name: dev
+      role: argocd_projects.argoproj.io-v1alpha1-view
+    users: 
+    - id: argocd-application-controller-cluster-admin
+      name: system:serviceaccount:startx-argocd:argocd-application-controller
+      type: cluster
+      role: cluster-admin
+  networkpolicy: 
+    enabled: true
+    rules: 
+      - id: registry-allow-all-ns
+        spec: |
+          podSelector:
+            matchLabels:
+              app: argocd-operator
+              argocd-enterprise-component: app
+              argocd-enterprise-cr: startx
+          ingress:
+            - from:
+                - namespaceSelector: {}
+  limits: 
+    enabled: true
+    rules:  |
+      limits:
+        - type: "Pod"
+          min:
+            cpu: "20m"
+            memory: "32Mi"
+          max:
+            cpu: 6
+            ephemeral-storage: "5Gi"
+            memory: "4Gi"
+        - type: "Container"
+          defaultRequest:
+            cpu: "100m"
+            memory: "128Mi"
+          default:
+            cpu: "200m"
+            memory: "256Mi"
+          min:
+            cpu: "20m"
+            # ephemeral-storage: 32Mi
+            memory: "32Mi"
+          max:
+            cpu: 6
+            ephemeral-storage: "5Gi"
+            memory: "4Gi"
+  quotas: 
+    enabled: true
+    rules:  |
+      hard:
+        limits.cpu: "12000m"
+        limits.memory: "12Gi"
+        requests.cpu: "2500m"
+        requests.memory: "4Gi"
+        requests.storage: "0"
+        persistentvolumeclaims: "0"
+        ephemeral-storage: "20Gi"
+        gp2.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp3.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp2-csi.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3-csi.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp3-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-odf-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-odf-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-odf-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-odf-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-odf-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-odf-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-odf-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-odf-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        pods: "15"
+        services: "15"
+        services.loadbalancers: "0"
+        services.nodeports: "0"
+        secrets: "45"
+        configmaps: "40"
+        replicationcontrollers: "0"
+        openshift.io/imagestreams: "0"
+        count/replicasets.apps: "30"
+        count/daemonsets.apps: "0"
+        count/deployments.apps: "15"
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "openshift-gitops-operator"
+    namespace: "openshift-operators"
+    version: "v1.16.0"
+    operator: 
+      channel: "gitops-1.16"
+      name: openshift-gitops-operator
+      # csv: openshift-gitops-operator
+      installPlanApproval: Automatic
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  consolePlugin:
+    enabled: true
+    name: "gitops-plugin"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: gitops-plugin
+          namespace: openshift-gitops
+          port: 9001
+        type: Service
+      displayName: GitOps Plugin
+      i18n:
+        loadType: Preload
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "startx-gitops"
+    target: "all-ns"
+    namespace: "openshift-operators"
+    providedAPIs: "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1beta1.argoproj.io,GitopsService.v1alpha1.pipelines.openshift.io"

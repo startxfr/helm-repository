@@ -1,0 +1,105 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: localstorage
+  app: startx-localstorage
+  version: 4.18.0
+localstorage:
+  enabled: false
+  name: startx-localstorage
+  list:
+    - name: startx-local-fs
+      mode: fs
+      fsType: ext4
+      path: /data-localstorage-fs
+    - name: startx-local-block
+      mode: block
+      path: /data-localstorage-block
+localstorageset:
+  enabled: false
+  list:
+    - name: startx-local-fs
+      mode: fs
+      fsType: ext4
+      max: 20
+      minSize: 256Mi
+      maxSize: 2Gi
+      nodeKey: "kubernetes.io/os"
+      nodeValue: "linux"
+    - name: startx-local-block
+      mode: block
+      max: 20
+      minSize: 256Mi
+      maxSize: 2Gi
+      nodeKey: "kubernetes.io/os"
+      nodeValue: "linux"
+localstoragediscovery:
+  enabled: false
+  list:
+    - name: auto-discover-devices
+      nodeKey: "kubernetes.io/os"
+      nodeValue: "linux"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "openshift-local-storage"
+    display_name: "Startx Local Storage"
+    requester: startx
+    description: Local Storage configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev-view
+      name: dev
+      role: view
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "local-storage-operator"
+    namespace: "openshift-local-storage"
+    version: "v4.18.0-202504151633"
+    operator: 
+      channel: "stable"
+      name: local-storage-operator
+      installPlanApproval: Automatic
+      # csv: local-storage-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-local-storage"
+    namespace: "openshift-local-storage"
+    providedAPIs: "LocalVolume.v1.local.storage.openshift.io,LocalVolumeDiscovery.v1alpha1.local.storage.openshift.io,LocalVolumeDiscoveryResult.v1alpha1.local.storage.openshift.io,LocalVolumeSet.v1alpha1.local.storage.openshift.io"

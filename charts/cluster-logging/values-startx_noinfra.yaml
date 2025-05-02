@@ -1,0 +1,224 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: logging
+  app: openshift-logging
+  version: "6.2.1"
+logging:
+  enabled: false
+  infra_enabled: true
+  hooked: false
+  managementState: "Managed"
+  expose:
+    enabled: false
+    destinationCACert: |
+      -----BEGIN CERTIFICATE-----
+      place here your elasticsearch certificate. 
+      You can get it with 
+      oc extract secret/elasticsearch \
+      -n openshift-logging --to=. --keys=admin-ca && \
+      cat admin-ca
+      -----END CERTIFICATE-----
+  elasticsearch:
+    enabled: true
+    replicas: 3
+    resources:
+      limits:
+        memory: 16Gi
+      requests:
+        cpu: 500m
+        memory: 16Gi
+    storage:
+      class: "gp3-csi"
+      size: "200G"
+  kibana:
+    enabled: true
+    replicas: 1
+    resources:
+      limits:
+        memory: 736Mi
+      requests:
+        cpu: 100m
+        memory: 736Mi
+  curation:
+    enabled: true
+    schedule: "30 3 * * *"
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  collector:
+    enabled: true
+    type: vector
+    resources:
+      limits:
+        memory: 736Mi
+      requests:
+        cpu: 100m
+        memory: 736Mi
+eventrouter:
+  enabled: false
+  replicas: 1
+  resources:
+    limits:
+      cpu: 400m
+      memory: 512Mi
+    requests:
+      cpu: "100m"
+      memory: 128Mi
+logforwarder:
+  enabled: false
+  secret:
+    enabled: false
+  spec: |
+    pipelines: 
+    - name: all-to-default
+      inputRefs:
+      - infrastructure
+      - application
+      - audit
+      outputRefs:
+      - default
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "openshift-logging"
+    display_name: "Startx LOGGING"
+    requester: startx
+    description: Openshift logging configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+    rules: 
+    - id: allow-openshift-operators-redhat
+      spec: |
+        podSelector: null
+        ingress:
+        - from:
+          - namespaceSelector:
+              matchLabels:
+                project: openshift-operators-redhat
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+    
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    name: "cluster-logging"
+    namespace: "openshift-logging"
+    version: "6.2.1"
+    operator: 
+      channel: "stable-6.2"
+      name: cluster-logging
+      installPlanApproval: Automatic
+      # csv: cluster-logging
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-logging"
+    namespace: "openshift-logging"
+    providedAPIs: "ClusterLogForwarder.v1.logging.openshift.io,ClusterLogging.v1.logging.openshift.io,LogFileMetricExporter.v1alpha1.logging.openshift.io"
+
+
+# Configuration of the elasticSearch operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorElastic:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "5.8.14"
+    operator: 
+      channel: "stable"
+      name: elasticsearch-operator
+      installPlanApproval: Automatic
+      # csv: elasticsearch-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
+
+# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorLoki:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "loki-operator"
+    namespace: "openshift-operators-redhat"
+    version: "6.2.1"
+    operator: 
+      channel: "stable-6.2"
+      name: loki-operator
+      installPlanApproval: Automatic
+      # csv: loki-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "loki-operator"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"

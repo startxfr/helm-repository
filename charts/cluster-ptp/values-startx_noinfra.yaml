@@ -1,0 +1,69 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: ptp
+  app: startx-ptp
+  version: "4.18.0"
+ptp:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   ptp4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-ptp"
+    display_name: "Startx PTP"
+    requester: startx
+    description: Precision Time Protocol configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "ptp-operator"
+    namespace: "openshift-ptp"
+    version: "4.18.0-202504231304"
+    operator: 
+      channel: "stable"
+      name: ptp-operator
+      installPlanApproval: Automatic
+      # csv: ptp-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-ptp"
+    namespace: "openshift-ptp"
+    providedAPIs: "NodePtpDevice.v1.ptp.openshift.io,PtpConfig.v1.ptp.openshift.io,PtpOperatorConfig.v1.ptp.openshift.io"

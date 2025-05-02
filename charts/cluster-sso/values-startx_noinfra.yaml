@@ -1,0 +1,105 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: sso
+  app: startx-sso
+  version: "7.6.11"
+sso:
+  enabled: false
+  name: default
+  spec: |
+    externalAccess:
+      enabled: true
+    instances: 1
+    keycloakDeploymentSpec:
+      imagePullPolicy: Always
+    postgresDeploymentSpec:
+      imagePullPolicy: Always
+sso_realms:
+  enabled: false
+  list: 
+    - name: myrealm
+      spec: |-
+        instanceSelector:
+          matchLabels:
+            app: sso
+        realm:
+          displayName: My Realm
+          enabled: true
+          id: my-realm
+          realm: my-realm
+sso_clients:
+  enabled: false
+  list: 
+    - name: myapp
+      spec: |-
+        client:
+          enabled: true
+          clientAuthenticatorType: client-secret
+          redirectUris:
+            - 'https://myapp.example.com/*'
+          clientId: myapp
+          defaultClientScopes:
+            - openid
+            - profile
+            - email
+          rootUrl: 'https://myapp.example.com'
+          implicitFlowEnabled: false
+          publicClient: false
+          standardFlowEnabled: true
+          protocol: openid-connect
+          webOrigins:
+            - 'https://myapp.example.com/*'
+          protocolMappers: []
+          id: bfb396f5-f14b-4759-b2fe-34a9e797223c
+          directAccessGrantsEnabled: true
+        realmSelector:
+          matchLabels:
+            realm: my-realm
+        scopeMappings: {}
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-sso"
+    display_name: "Startx SSO"
+    requester: startx
+    description: Redhat-SSO configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "rhsso-operator"
+    namespace: "startx-sso"
+    version: "7.6.11-opr-006"
+    operator: 
+      channel: stable
+      name: rhsso-operator
+      installPlanApproval: Automatic
+      # csv: rhsso-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-sso"
+    namespace: "startx-sso"
+    providedAPIs: "Keycloak.v1alpha1.keycloak.org,KeycloakBackup.v1alpha1.keycloak.org,KeycloakClient.v1alpha1.keycloak.org,KeycloakRealm.v1alpha1.keycloak.org,KeycloakUser.v1alpha1.keycloak.org"

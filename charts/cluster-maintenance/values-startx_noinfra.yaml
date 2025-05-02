@@ -1,0 +1,58 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: maintenance
+  app: startx-maintenance
+  version: "5.4.0"
+maintenance:
+  enabled: false
+  list: 
+  - node: mynode.mycluster
+    name: mynode-test
+    reason: This is a test maintenance for node mynode.mycluster
+  - node: mynode2.mycluster
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "openshift-workload-availability"
+    display_name: Operator maintenance
+    description: NodeMaintenance configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "node-maintenance-operator"
+    namespace: "openshift-workload-availability"
+    version: "v5.4.0"
+    operator: 
+      channel: "stable"
+      name: node-maintenance-operator
+      installPlanApproval: Automatic
+      csv: node-maintenance-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-workload-availability"
+    namespace: "openshift-workload-availability"
+    providedAPIs: "NodeMaintenance.v1beta1.nodemaintenance.medik8s.io"

@@ -1,0 +1,97 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: devworkspaces
+  app: startx-devworkspaces
+  version: "0.33.0"
+devworkspaces:
+  enabled: false
+  hooked: false
+  namespace: startx-devworkspaces
+  workspaces:
+    enabled: true
+    list:
+    - name: startx-exapp-devworkspace
+      spec: |
+        contributions:
+          - components:
+              - container:
+                  env:
+                    - name: CODE_HOST
+                      value: 0.0.0.0
+                name: che-code-runtime-description
+            name: che-code
+            uri: 'https://eclipse-che.github.io/che-plugin-registry/main/v3/plugins/che-incubator/che-code/latest/devfile.yaml'
+        started: false
+        template:
+          commands:
+            - exec:
+                commandLine: echo "Hello from $(pwd)"
+                component: che-code-runtime-description
+                workingDir: '${PROJECT_SOURCE}/app'
+              id: say-hello
+          projects:
+            - git:
+                remotes:
+                  origin: 'https://github.com/startxfr/docker-images-example-bash.git'
+              name: startx-exapp-bash
+            - git:
+                remotes:
+                  origin: 'https://github.com/startxfr/docker-images-example-php.git'
+              name: startx-exapp-ms-bill
+            - git:
+                remotes:
+                  origin: 'https://github.com/startxfr/docker-images-example-nodejs.git'
+              name: startx-exapp-ms-customer
+            - git:
+                remotes:
+                  origin: 'https://github.com/startxfr/docker-images-example-apache.git'
+              name: startx-exapp-frontend
+            - git:
+                remotes:
+                  origin: 'https://github.com/startxfr/docker-images-example-mariadb.git'
+              name: startx-exapp-db-mariadb
+            - git:
+                remotes:
+                  origin: 'https://github.com/startxfr/docker-images-example-couchbase.git'
+              name: startx-exapp-db-couchbase
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "startx-devworkspaces"
+    display_name: Startx DevWorkspaces
+    description: Dev Workspaces configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "devworkspace-operator-fast-redhat-operators-openshift-marketplace"
+    namespace: "openshift-operators"
+    version: "v0.33.0"
+    operator: 
+      channel: "fast"
+      name: devworkspace-operator
+      installPlanApproval: Automatic
+      csv: devworkspace-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "openshift-devworkspace"
+    namespace: "openshift-operators"
+    providedAPIs: "DevWorkspace.v1alpha1.workspace.devfile.io,DevWorkspace.v1alpha2.workspace.devfile.io,DevWorkspaceOperatorConfig.v1alpha1.controller.devfile.io,DevWorkspaceRouting.v1alpha1.controller.devfile.io,DevWorkspaceTemplate.v1alpha1.workspace.devfile.io,DevWorkspaceTemplate.v1alpha2.workspace.devfile.io"

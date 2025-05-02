@@ -1,0 +1,263 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: gitlab
+  app: startx-gitlab
+  version: "8.11.1"
+gitlab:
+  enabled: false
+  global:
+    edition: ee
+    hosts:
+      domain: demoocp.startx.fr
+    ingress:
+      enabled: false
+    redis:
+      password:
+        enabled: false
+    gitaly:
+      enabled: true
+    praefect:
+      enabled: false
+    minio:
+      enabled: true
+    grafana:
+      enabled: true
+    appConfig:
+      enableUsagePing: true
+      enableSeatLink: true
+    smtp:
+      enabled: false
+      address: smtp.mailgun.org
+      port: 2525
+      user_name: ""
+      password:
+        secret: ""
+        key: password
+      authentication: "plain"
+      starttls_auto: false
+      openssl_verify_mode: "peer"
+      pool: false
+  certmanager-issuer:
+    email: dev@startx.fr
+  certmanager:
+    installCRDs: false
+    install: false
+    rbac:
+      create: false
+  prometheus:
+    install: true
+    rbac:
+      create: true
+    alertmanager:
+      enabled: true
+    alertmanagerFiles:
+      alertmanager.yml: {}
+    kubeStateMetrics:
+      enabled: false
+    nodeExporter:
+      enabled: false
+    pushgateway:
+      enabled: false
+    server:
+      retention: 15d
+      strategy:
+        type: Recreate
+    serverFiles:
+      prometheus.yml:
+        scrape_configs:
+          - job_name: prometheus
+            static_configs:
+              - targets:
+                - localhost:9090
+          - job_name: 'kubernetes-apiservers'
+            kubernetes_sd_configs:
+              - role: endpoints
+            scheme: https
+            tls_config:
+              ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecure_skip_verify: true
+            bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+            relabel_configs:
+              - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+                action: keep
+                regex: default;kubernetes;https
+          - job_name: 'kubernetes-pods'
+            kubernetes_sd_configs:
+              - role: pod
+            relabel_configs:
+              - source_labels: [__meta_kubernetes_pod_annotation_gitlab_com_prometheus_scrape]
+                action: keep
+                regex: true
+              - source_labels: [__meta_kubernetes_pod_annotation_gitlab_com_prometheus_path]
+                action: replace
+                target_label: __metrics_path__
+                regex: (.+)
+              - source_labels: [__address__, __meta_kubernetes_pod_annotation_gitlab_com_prometheus_port]
+                action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+              - source_labels: [__meta_kubernetes_namespace]
+                action: replace
+                target_label: kubernetes_namespace
+              - source_labels: [__meta_kubernetes_pod_name]
+                action: replace
+                target_label: kubernetes_pod_name
+          - job_name: 'kubernetes-service-endpoints'
+            kubernetes_sd_configs:
+              - role: endpoints
+            relabel_configs:
+              - action: keep
+                regex: true
+                source_labels:
+                  - __meta_kubernetes_service_annotation_gitlab_com_prometheus_scrape
+              - action: replace
+                regex: (https?)
+                source_labels:
+                  - __meta_kubernetes_service_annotation_gitlab_com_prometheus_scheme
+                target_label: __scheme__
+              - action: replace
+                regex: (.+)
+                source_labels:
+                  - __meta_kubernetes_service_annotation_gitlab_com_prometheus_path
+                target_label: __metrics_path__
+              - action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                source_labels:
+                  - __address__
+                  - __meta_kubernetes_service_annotation_gitlab_com_prometheus_port
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_service_label_(.+)
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_namespace
+                target_label: kubernetes_namespace
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_service_name
+                target_label: kubernetes_name
+              - action: replace
+                source_labels:
+                  - __meta_kubernetes_pod_node_name
+                target_label: kubernetes_node
+          - job_name: 'kubernetes-services'
+            metrics_path: /probe
+            params:
+              module: [http_2xx]
+            kubernetes_sd_configs:
+              - role: service
+            relabel_configs:
+              - source_labels: [__meta_kubernetes_service_annotation_gitlab_com_prometheus_probe]
+                action: keep
+                regex: true
+              - source_labels: [__address__]
+                target_label: __param_target
+              - target_label: __address__
+                replacement: blackbox
+              - source_labels: [__param_target]
+                target_label: instance
+              - action: labelmap
+                regex: __meta_kubernetes_service_label_(.+)
+              - source_labels: [__meta_kubernetes_namespace]
+                target_label: kubernetes_namespace
+              - source_labels: [__meta_kubernetes_service_name]
+                target_label: kubernetes_name
+  redis:
+    install: true
+    # existingSecret: gitlab-redis-secret
+    # existingSecretKey: redis-password
+    usePasswordFile: true
+    cluster:
+      enabled: false
+    metrics:
+      enabled: true
+
+  ## Installation & configuration of stable/prostgresql
+  ## See requirements.yaml for current version
+  postgresql:
+    postgresqlUsername: gitlab
+    postgresqlPostgresPassword: bogus
+    install: true
+    postgresqlDatabase: gitlabhq_production
+    image:
+      tag: 12.7.0
+    usePasswordFile: true
+    existingSecret: 'bogus'
+    initdbScriptsConfigMap: 'bogus'
+    master:
+      extraVolumeMounts:
+        - name: custom-init-scripts
+          mountPath: /docker-entrypoint-preinitdb.d/init_revision.sh
+          subPath: init_revision.sh
+      podAnnotations:
+        postgresql.gitlab/init-revision: "1"
+    metrics:
+      enabled: true
+  shared-secrets:
+    enabled: true
+    rbac:
+      create: true
+    selfsign:
+      image:
+        repository: registry.gitlab.com/gitlab-org/build/cng/cfssl-self-sign
+        tag: 1.2
+      keyAlgorithm: "rsa"
+      keySize: "4096"
+      expiry: "3650d"
+      caSubject: "GitLab Helm Chart"
+    env: production
+    serviceAccount:
+      enabled: true
+      create: true
+  ## Installation & configuration of gitlab/gitlab-runner
+  ## See requirements.yaml for current version
+  gitlab-runner:
+    install: true
+    rbac:
+      create: true
+    runners:
+      locked: false
+      config: |
+        [[runners]]
+          [runners.kubernetes]
+          image = "ubuntu:18.04"
+          {{- if .Values.global.minio.enabled }}
+          [runners.cache]
+            Type = "s3"
+            Path = "gitlab-runner"
+            Shared = true
+            [runners.cache.s3]
+              ServerAddress = {{ include "gitlab-runner.cache-tpl.s3ServerAddress" . }}
+              BucketName = "runner-cache"
+              BucketLocation = "us-east-1"
+              Insecure = false
+          {{ end }}
+    podAnnotations:
+      gitlab.com/prometheus_scrape: "true"
+      gitlab.com/prometheus_port: 9252
+  gitlab:
+    toolbox:
+      replicas: 1
+      antiAffinityLabels:
+        matchLabels:
+          app: 'gitaly'
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: project
+    name: "startx-gitlab"
+    display_name: "Startx GITLAB"
+    requester: startx
+    description: Gitlab configured by STARTX

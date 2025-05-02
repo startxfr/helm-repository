@@ -1,0 +1,121 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: mtc
+  app: startx-mtc
+  version: "1.8.6"
+mtc:
+  enabled: false
+  hooked: false
+  namespace: openshift-migration
+  controller:
+    enabled: true
+    name: migration-controller
+    spec: |
+      mig_namespace_limit: '10'
+      migration_ui: true
+      mig_pod_limit: '100'
+      migration_controller: true
+      migration_log_reader: true
+      olm_managed: true
+      cluster_name: host
+      restic_timeout: 1h
+      migration_velero: true
+      mig_pv_limit: '100'
+      version: 1.8.6
+      azure_resource_group: ''
+  clusters:
+    enabled: false
+    list:
+    - name: host
+      isHost: true
+    - name: source
+      insecure: true
+      registry: "https://registry.apps.mycluster.example.com"
+      saToken: "mytoken"
+      url: "https://api.mycluster.example.com:6443"
+  storages:
+    enabled: false
+    list:
+    - name: aws-paris
+      namespace: openshift-migration
+      provider: aws
+      accessKey: AIAXXXXXX
+      secretKey: xxxxxxxxxxxxxxxxx
+      bucketName: my-migration-bucket
+  plans:
+    enabled: false
+    list:
+    - name: myapp-cluster1-to-cluster2
+      namespace: openshift-migration
+      spec: |
+        destMigClusterRef:
+          name: host
+          namespace: openshift-migration
+        indirectImageMigration: true 
+        indirectVolumeMigration: true 
+        migStorageRef:
+          name: aws-paris
+          namespace: openshift-migration
+        namespaces:
+          - myapp:myapp-dev
+          - myapp:myapp-rec
+        srcMigClusterRef:
+          name: source
+          namespace: openshift-migration
+  migrations:
+    enabled: false
+    list:
+    - name: myapp-cluster1-to-cluster2
+      spec: |
+        migPlanRef:
+          name: myapp-cluster1-to-cluster2
+          namespace: openshift-migration
+        quiescePods: true 
+        stage: false 
+        rollback: false 
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-migration"
+    display_name: Operator MTC
+    description: Migration Toolkit for Containers configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "mtc-operator"
+    namespace: "openshift-migration"
+    version: "v1.8.6"
+    operator: 
+      channel: "release-v1.8"
+      name: mtc-operator
+      installPlanApproval: Automatic
+      csv: mtc-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-migration"
+    namespace: "openshift-migration"
+    providedAPIs: "Backup.v1.velero.io,BackupRepository.v1.velero.io,BackupStorageLocation.v1.velero.io,CloudStorage.v1alpha1.oadp.openshift.io,DataDownload.v2alpha1.velero.io,DataProtectionApplication.v1alpha1.oadp.openshift.io,DataUpload.v2alpha1.velero.io,DeleteBackupRequest.v1.velero.io,DirectImageMigration.v1alpha1.migration.openshift.io,DirectImageStreamMigration.v1alpha1.migration.openshift.io,DirectVolumeMigration.v1alpha1.migration.openshift.io,DirectVolumeMigrationProgress.v1alpha1.migration.openshift.io,DownloadRequest.v1.velero.io,MigAnalytic.v1alpha1.migration.openshift.io,MigCluster.v1alpha1.migration.openshift.io,MigHook.v1alpha1.migration.openshift.io,MigMigration.v1alpha1.migration.openshift.io,MigPlan.v1alpha1.migration.openshift.io,MigStorage.v1alpha1.migration.openshift.io,MigrationController.v1alpha1.migration.openshift.io,PodVolumeBackup.v1.velero.io,PodVolumeRestore.v1.velero.io,Restore.v1.velero.io,Schedule.v1.velero.io,ServerStatusRequest.v1.velero.io,VolumeSnapshotLocation.v1.velero.io"
