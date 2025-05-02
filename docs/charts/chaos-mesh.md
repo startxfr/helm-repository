@@ -291,3 +291,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
 | 18.11.8 | 2025-05-02 | Update mesh helm chart to version 2.7.1
 | 18.11.8 | 2025-05-02 | Update Chart.lock
+| 18.11.8 | 2025-05-02 | Update Chart.lock
