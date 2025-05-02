@@ -464,3 +464,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 18.11.8 | 2025-05-02 | update all version for current operator
 | 18.11.15 | 2025-05-02 | Improve operator options
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
+| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15

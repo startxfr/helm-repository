@@ -326,3 +326,4 @@ helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com
 | 18.11.9 | 2025-05-02 | Update the sso operator to version 7.6.11 opr 6
 | 18.11.9 | 2025-05-02 | Update the sso operator to version 7.6.11 opr 6
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
+| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15

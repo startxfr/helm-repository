@@ -592,3 +592,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 18.11.8 | 2025-05-02 | Align to version 18.11.8 for basic charts
 | 18.11.15 | 2025-05-02 | Intermediate common release for basic charts
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
+| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15

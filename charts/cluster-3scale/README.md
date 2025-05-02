@@ -370,3 +370,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
 | 18.11.9 | 2025-04-30 | Upgrade to 3Scale version 0.12.13
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
+| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15

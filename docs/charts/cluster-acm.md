@@ -362,3 +362,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 18.11.9 | 2025-04-30 | Upgrade to ACM version 2.13.2
 | 18.11.11 | 2025-04-30 | Improve version tagging
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
+| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15

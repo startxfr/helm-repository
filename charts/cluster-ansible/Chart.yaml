@@ -6,7 +6,7 @@ description: Helm chart used to configure Ansible Automation Platform (AAP) at t
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 18.11.19
+version: 18.11.21
 # Version name of the ansible operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "2.5.0"
 # Icon of this helm-chart
@@ -40,17 +40,17 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.3"
+    version: "18.11.15"
     alias: project
     condition: project.enabled
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.3"
+    version: "18.11.15"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
     repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.3"
+    version: "18.11.15"
     alias: operator
     condition: operator.enabled
 
@@ -80,5 +80,5 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Intermediate alignement of all helm charts"
+      description: "Update all basic chart dependencies to version 18.11.15"
   artifacthub.io/containsSecurityUpdates: "false"
