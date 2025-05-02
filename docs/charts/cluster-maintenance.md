@@ -76,3 +76,4 @@ helm install cluster-maintenance startx/cluster-maintenance -f https://raw.githu
 | 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
 | 18.11.9 | 2025-05-01 | Update node maintenance operator to version 5.4.0
+| 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
