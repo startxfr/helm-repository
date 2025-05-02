@@ -289,3 +289,4 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 | 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
 | 18.11.8 | 2025-05-02 | Update version context
+| 18.11.15 | 2025-05-02 | Intermediate common release for chaos charts
