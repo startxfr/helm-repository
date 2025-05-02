@@ -292,3 +292,5 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 18.11.8 | 2025-05-02 | Update mesh helm chart to version 2.7.1
 | 18.11.8 | 2025-05-02 | Update Chart.lock
 | 18.11.8 | 2025-05-02 | Update Chart.lock
+| 18.11.15 | 2025-05-02 | Intermediate common release for chaos charts
+| 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
