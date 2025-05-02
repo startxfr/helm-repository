@@ -6,14 +6,14 @@ context:
   environment: dev
   component: db
   app: startx-db-crunchy
-  version: "5.2.0"
+  version: "5.8.1"
 enabled: true
 subscription:
   enabled: true
   hooked: false
   name: "crunchy-postgres-operator"
-  namespace: "openshift-operators"
-  version: "v5.2.0"
+  namespace: "startx-crunchy"
+  version: "v5.8.1"
   operator: 
     channel: v5
     name: crunchy-postgres-operator
@@ -22,10 +22,17 @@ subscription:
     source: 
       name: certified-operators
       namespace: openshift-marketplace
+    config: 
+      infra: false
+      # resources: 
+      #   limits:
+      #     cpu: 400m
+      #   requests:
+      #     cpu: 400m
 operatorGroup:
-  enabled: false
+  enabled: true
   hooked: false
-  target: "all-ns"
-  name: "crunchy-postgres-operator"
-  namespace: "openshift-operators"
+  name: "crunchy-operator"
+  namespace: "startx-crunchy"
   providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"
+

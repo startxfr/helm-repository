@@ -6,26 +6,47 @@ context:
   environment: dev
   component: infra
   app: startx-infra-pipelines
-  version: "1.8.2"
+  version: "1.18.0"
 enabled: true
 subscription:
   enabled: true
   hooked: false
   name: "openshift-pipelines-operator-rh"
   namespace: "openshift-operators"
-  version: "v1.8.2"
+  version: "v1.18.0"
   operator: 
-    channel: ocp-4.12
+    channel: latest
     name: openshift-pipelines-operator-rh
     installPlanApproval: Automatic
-    # csv: openshift-pipelines-operator
+    # csv: openshift-pipelines-operator-rh
     source: 
       name: redhat-operators
       namespace: openshift-marketplace
-operatorGroup:
+    config: 
+      infra: true
+      # resources: 
+      #   limits:
+      #     cpu: 400m
+      #   requests:
+      #     cpu: 400m
+consolePlugin:
   enabled: true
+  name: "pipelines-console-plugin"
+  spec: |
+    backend:
+      service:
+        basePath: /
+        name: pipelines-console-plugin
+        namespace: openshift-pipelines
+        port: 8443
+      type: Service
+    displayName: Pipelines Console Plugin
+    i18n:
+      loadType: Preload
+operatorGroup:
+  enabled: false
   hooked: false
-  target: "all-ns"
-  name: "pipeline-operators"
+  target: "all-ns" 
+  name: "global-operators"
   namespace: "openshift-operators"
   providedAPIs: "Config.v1alpha1.operator.tekton.dev"
