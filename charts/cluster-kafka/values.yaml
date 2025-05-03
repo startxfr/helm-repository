@@ -117,4 +117,33 @@ operator:
     target: "all-ns"
     name: "kafka-operator"
     namespace: "openshift-operators"
-    providedAPIs: "Console.v1alpha1.console.streamshub.github.com,Kafka.v1beta2.kafka.strimzi.io,KafkaBridge.v1beta2.kafka.strimzi.io,KafkaConnect.v1beta2.kafka.strimzi.io,KafkaConnector.v1beta2.kafka.strimzi.io,KafkaMirrorMaker.v1beta2.kafka.strimzi.io,KafkaMirrorMaker2.v1beta2.kafka.strimzi.io,KafkaNodePool.v1beta2.kafka.strimzi.io,KafkaRebalance.v1beta2.kafka.strimzi.io,KafkaTopic.v1beta2.kafka.strimzi.io,KafkaUser.v1beta2.kafka.strimzi.io,StrimziPodSet.v1beta2.core.strimzi.io"
+    providedAPIs: "Kafka.v1beta2.kafka.strimzi.io,KafkaBridge.v1beta2.kafka.strimzi.io,KafkaConnect.v1beta2.kafka.strimzi.io,KafkaConnector.v1beta2.kafka.strimzi.io,KafkaMirrorMaker.v1beta2.kafka.strimzi.io,KafkaMirrorMaker2.v1beta2.kafka.strimzi.io,KafkaNodePool.v1beta2.kafka.strimzi.io,KafkaRebalance.v1beta2.kafka.strimzi.io,KafkaTopic.v1beta2.kafka.strimzi.io,KafkaUser.v1beta2.kafka.strimzi.io,StrimziPodSet.v1beta2.core.strimzi.io"
+
+# Configuration of the console operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorConsole:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "amq-streams-console"
+    namespace: "openshift-operators"
+    version: "v2.9.0-5"
+    operator: 
+      channel: "alpha"
+      name: "amq-streams-console"
+      installPlanApproval: Automatic
+      # csv: amq-streams-console
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "kafka-console-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "Console.v1alpha1.console.streamshub.github.com"
