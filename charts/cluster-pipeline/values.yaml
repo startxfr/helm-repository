@@ -69,6 +69,15 @@ operator:
       displayName: Pipelines Console Plugin
       i18n:
         loadType: Preload
+      proxy:
+        - alias: tekton-results-api-service
+          authorization: None
+          endpoint:
+            service:
+              name: tekton-results-api-service
+              namespace: openshift-pipeline
+              port: 8080
+            type: Service
   operatorGroup:
     enabled: false
     target: "all-ns"
