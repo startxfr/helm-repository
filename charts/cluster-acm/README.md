@@ -30,8 +30,8 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **advanced-cluster-management** configured with
-  - The **release-2.6** channel
-  - The **2.6.1** version
+  - The **release-2.13** channel
+  - The **2.13.2** version
   - Deployed under the **open-cluster-management** project
 - 1 **mch:** named **default-mch** configured with
   - **hive** enabled

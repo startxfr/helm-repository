@@ -40,12 +40,21 @@ helm install cluster-costs startx/cluster-costs
 
 Complete deployment of a project with the following characteristics :
 
-!!! todo
-    Complete this section
+- 2 **namespace:** named **rhcstm-operator** and **default-costs** without constraints
+- 1 **operator:** named **costs-operator** configured with
+  - The **stable** channel for community release
+  - The **v3.3.1** version
+  - Deployed under the **rhcstm-operator** project
+- 1 **CostManagementMetricsConfig** named **startx-cost** in **default-costs** namespace
+- 1 **sxcollector** in **default-costs** namespace with **sxcollector-ns-state-hourly** job
 
 ```bash
-# base configuration running default configuration
-helm install cluster-costs startx/cluster-costs
+# Create the project
+helm install cluster-costs-project startx/cluster-costs --set project.enabled=true,operator.enabled=false,costs.enabled=false
+# Deploy the costs operator
+helm install cluster-costs-operator startx/cluster-costs --set project.enabled=false,operator.enabled=true,costs.enabled=false && sleep 10
+# Configure default costs ressources
+helm install cluster-costs-instance startx/cluster-costs --set project.enabled=false,operator.enabled=false,costs.enabled=true
 ```
 
 ## Others values availables

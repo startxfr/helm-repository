@@ -40,11 +40,36 @@ helm install cluster-istio startx/cluster-istio
 
 Complete deployment of a project with the following characteristics :
 
-xxxx to do xxxxxx
+- 1 **namespace:** named **openshift-distributed-tracing** without constraints
+- 1 **operator:** named **servicemeshoperator** configured with
+  - The **stable** channel for community release
+  - The **v2.6.7** version
+  - Deployed under the **openshift-operators** project
+- 1 **operator:** named **jaeger-product** configured with
+  - The **stable** channel for community release
+  - The **v1.65.0** version
+  - Deployed under the **openshift-distributed-tracing** project
+- 1 **operator:** named **kiali-ossm** configured with
+  - The **stable** channel for community release
+  - The **v2.4.4** version
+  - Deployed under the **openshift-operators** project
+- 1 **operator:** named **loki-operator** configured with
+  - The **stable-6.2** channel for community release
+  - The **6.2.1** version
+  - Deployed under the **openshift-operators-redhat** project
+- 1 **operator:** named **elasticsearch-operator** configured with
+  - The **stable** channel for community release
+  - The **5.8.19** version
+  - Deployed under the **openshift-operators-redhat** project
+
 
 ```bash
-# base configuration running default configuration
-helm install cluster-istio startx/cluster-istio
+# Create the project
+helm install cluster-gpu-project startx/cluster-gpu --set project.enabled=true,operator.enabled=false,gpu.enabled=false
+# Deploy the istio operator
+helm install cluster-gpu-operator startx/cluster-gpu --set project.enabled=false,operator.enabled=true,gpu.enabled=false && sleep 10
+# Configure default istio ressources
+helm install cluster-gpu-instance startx/cluster-gpu --set project.enabled=false,operator.enabled=false,gpu.enabled=true
 ```
 
 ## Others values availables
