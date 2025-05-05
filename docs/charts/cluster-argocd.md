@@ -45,8 +45,8 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **openshift-gitops-operator** configured with
-  - The **stable** channel
-  - The **1.14.1** version
+  - The **gitops-1.16** channel
+  - The **1.16.0** version
   - Deployed under the **openshift-operators** project
 - 1 **argocd:** named **openshift-gitops**
 - 1 **argocd_export:** every days
@@ -373,3 +373,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme
