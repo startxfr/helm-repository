@@ -36,10 +36,9 @@ helm show chart startx/cluster-kafka
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **namespace:** named **startx-kafka** without constraints
-- 1 **operator:** named **kafka-operator** configured with
-  - The **stable** channel for community release
-  - The **v1.7.2** version
+- 1 **operator:** named **amq-streams-console** configured with
+  - The **alpha** channel for community release
+  - The **v2.9.0** version
   - Deployed under the **openshift-operators** project
 
 ```bash
@@ -65,3 +64,4 @@ helm install cluster-kafka startx/cluster-kafka -f https://raw.githubusercontent
 | ------- | ---------- | ------------------------------------------------- |
 | 18.11.31 | 2025-05-03 | Create chart cluster-kafka from cluster-certmanager
 | 18.11.33 | 2025-05-03 | Support for the kafka console operator
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme
