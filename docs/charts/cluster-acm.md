@@ -30,8 +30,8 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **advanced-cluster-management** configured with
-  - The **release-2.6** channel
-  - The **2.6.1** version
+  - The **release-2.13** channel
+  - The **2.13.2** version
   - Deployed under the **open-cluster-management** project
 - 1 **mch:** named **default-mch** configured with
   - **hive** enabled
@@ -366,3 +366,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme
