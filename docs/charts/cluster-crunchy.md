@@ -125,12 +125,19 @@ EOF
 
 Complete deployment of a project with the following characteristics :
 
-!!! todo
-    Complete this section
+- 1 **namespace:** named **demo-crunchy** without constraints
+- 1 **operator:** named **crunchy-postgres-operator** configured with
+  - The **v5** channel for community release
+  - The **v5.8.1** version
+  - Deployed under the **demo-crunchy** project
 
 ```bash
-# base configuration running default configuration
-helm install cluster-crunchy startx/cluster-crunchy
+# Create the project
+helm install cluster-crunchy-project startx/cluster-crunchy --set project.enabled=true,operator.enabled=false,crunchy.enabled=false
+# Deploy the crunchy operator
+helm install cluster-crunchy-operator startx/cluster-crunchy --set project.enabled=false,operator.enabled=true,crunchy.enabled=false && sleep 10
+# Configure default crunchy ressources
+helm install cluster-crunchy-instance startx/cluster-crunchy --set project.enabled=false,operator.enabled=false,crunchy.enabled=true
 ```
 
 ## Others values availables
@@ -145,8 +152,8 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 
 | Release  | Date       | Description                                            |
 | -------- | ---------- | ------------------------------------------------------ |
-| 11.28.68 | 2023-02-26 | Create cluster-crunchy skeleton from cluster-couchbase |
-| 11.28.68 | 2023-02-26 | Create cluster-crunchy skeleton from cluster-couchbase
+| 11.28.68 | 2023-02-26 | Create cluster-crunchy skeleton from cluster-crunchy |
+| 11.28.68 | 2023-02-26 | Create cluster-crunchy skeleton from cluster-crunchy
 | 11.28.69 | 2023-03-07 | publish stable update for the full repository
 | 11.28.89 | 2023-04-01 | publish stable update for the full repository
 | 11.28.93 | 2023-04-20 | publish stable update for the full repository
@@ -279,3 +286,4 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme

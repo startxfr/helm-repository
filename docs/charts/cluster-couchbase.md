@@ -40,12 +40,19 @@ helm install cluster-couchbase startx/cluster-couchbase
 
 Complete deployment of a project with the following characteristics :
 
-!!! todo
-    Complete this section
+- 1 **namespace:** named **openshift-startx-couchbase** without constraints
+- 1 **operator:** named **couchbase-enterprise-certified** configured with
+  - The **stable** channel for community release
+  - The **v2.8.0** version
+  - Deployed under the **openshift-startx-couchbase** project
 
 ```bash
-# base configuration running default configuration
-helm install cluster-couchbase startx/cluster-couchbase
+# Create the project
+helm install cluster-couchbase-project startx/cluster-couchbase --set project.enabled=true,operator.enabled=false,couchbase.enabled=false
+# Deploy the couchbase operator
+helm install cluster-couchbase-operator startx/cluster-couchbase --set project.enabled=false,operator.enabled=true,couchbase.enabled=false && sleep 10
+# Configure default couchbase ressources
+helm install cluster-couchbase-instance startx/cluster-couchbase --set project.enabled=false,operator.enabled=false,couchbase.enabled=true
 ```
 
 ## Others values availables
@@ -347,3 +354,4 @@ helm install cluster-couchbase startx/cluster-couchbase -f https://raw.githubuse
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme

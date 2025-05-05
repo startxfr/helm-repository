@@ -40,13 +40,10 @@ helm install cluster-kepler startx/cluster-kepler
 
 Complete deployment of a project with the following characteristics :
 
-!!! todo
-    Complete this section
-
-```bash
-# base configuration running default configuration
-helm install cluster-kepler startx/cluster-kepler
-```
+- 1 **operator:** named **power-monitoring-operator** configured with
+  - The **tech-preview** channel for community release
+  - The **v0.4.0** version
+  - Deployed under the **openshift-operators** project
 
 ## Others values availables
 
@@ -77,3 +74,4 @@ helm install cluster-kepler startx/cluster-kepler -f https://raw.githubuserconte
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme

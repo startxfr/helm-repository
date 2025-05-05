@@ -38,16 +38,16 @@ Complete deployment of a project with the following characteristics :
 
 - 1 **namespace:** named **startx-certmanager** without constraints
 - 1 **operator:** named **cert-manager-operator** configured with
-  - The **stable** channel for community release
-  - The **v1.7.2** version
+  - The **stable-v1.15** channel for community release
+  - The **v1.15.1** version
   - Deployed under the **openshift-operators** project
 
 ```bash
 # Create the project
 helm install cluster-certmanager-project startx/cluster-certmanager --set project.enabled=true,operator.enabled=false,certmanager.enabled=false
-# Deploy the OADP operator
+# Deploy the certmanager operator
 helm install cluster-certmanager-operator startx/cluster-certmanager --set project.enabled=false,operator.enabled=true,certmanager.enabled=false && sleep 10
-# Configure default OADP ressources
+# Configure default certmanager ressources
 helm install cluster-certmanager-instance startx/cluster-certmanager --set project.enabled=false,operator.enabled=false,certmanager.enabled=true
 ```
 
@@ -226,3 +226,4 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme

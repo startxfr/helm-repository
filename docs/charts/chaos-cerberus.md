@@ -51,7 +51,7 @@ helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-c
 | context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+| context.version     | 1.0.0     | Version name of this application (default use Chart appVersion)                   |
 
 ### chaos-cerberus values dictionary
 
@@ -330,3 +330,4 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme

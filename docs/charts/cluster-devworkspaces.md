@@ -40,12 +40,18 @@ helm install cluster-devworkspaces startx/cluster-devworkspaces
 
 Complete deployment of a project with the following characteristics :
 
-!!! todo
-    Complete this section
+- 1 **operator:** named **devworkspace-operator-fast-redhat-operators-openshift-marketplace** configured with
+  - The **fast** channel for community release
+  - The **v0.33.0** version
+  - Deployed under the **openshift-operators** project
 
 ```bash
-# base configuration running default configuration
-helm install cluster-devworkspaces startx/cluster-devworkspaces
+# Create the project
+helm install cluster-devworkspaces-project startx/cluster-devworkspaces --set project.enabled=true,operator.enabled=false,devworkspaces.enabled=false
+# Deploy the devworkspace operator
+helm install cluster-devworkspaces-operator startx/cluster-devworkspaces --set project.enabled=false,operator.enabled=true,devworkspaces.enabled=false && sleep 10
+# Configure default devworkspace ressources
+helm install cluster-devworkspaces-instance startx/cluster-devworkspaces --set project.enabled=false,operator.enabled=false,devworkspaces.enabled=true
 ```
 
 ## Others values availables
@@ -92,3 +98,4 @@ helm install cluster-devworkspaces startx/cluster-devworkspaces -f https://raw.g
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme

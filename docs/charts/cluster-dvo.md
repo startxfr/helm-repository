@@ -40,12 +40,19 @@ helm install cluster-dvo startx/cluster-dvo
 
 Complete deployment of a project with the following characteristics :
 
-!!! todo
-    Complete this section
+- 1 **namespace:** named **deployment-validation-operator** without constraints
+- 1 **operator:** named **deployment-validation-operator** configured with
+  - The **alpha** channel for community release
+  - The **v0.7.8** version
+  - Deployed under the **deployment-validation-operator** project
 
 ```bash
-# base configuration running default configuration
-helm install cluster-dvo startx/cluster-dvo
+# Create the project
+helm install cluster-dvo-project startx/cluster-dvo --set project.enabled=true,operator.enabled=false,dvo.enabled=false
+# Deploy the DVO operator
+helm install cluster-dvo-operator startx/cluster-dvo --set project.enabled=false,operator.enabled=true,dvo.enabled=false && sleep 10
+# Configure default DVO ressources
+helm install cluster-dvo-instance startx/cluster-dvo --set project.enabled=false,operator.enabled=false,dvo.enabled=true
 ```
 
 ## Others values availables
@@ -72,3 +79,4 @@ helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme
