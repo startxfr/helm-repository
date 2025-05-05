@@ -21,10 +21,14 @@ nfd:
         #       value: customValue
         #       matchOn:
         #       - nodename: ["special-.*-node-.*"]
+        enableTaints: false
+        instance: ''
         operand:
-          image: >-
-            registry.redhat.io/openshift4/ose-node-feature-discovery
+          image: 'registry.redhat.io/openshift4/ose-node-feature-discovery-rhel9'
+          imagePullPolicy: IfNotPresent
           servicePort: 12000
+        prunerOnDelete: false
+        topologyUpdater: false
         workerConfig:
           configData: |
             core:
