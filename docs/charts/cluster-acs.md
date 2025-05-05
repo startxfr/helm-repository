@@ -30,8 +30,8 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **rhacs-operator** configured with
-  - The **rhacs-3.72** channel
-  - The **3.72.0** version
+  - The **rhacs-4.7** channel
+  - The **4.7.2** version
   - Deployed under the **openshift-operators** project
 - 1 **acs:** enabled
   - **central** enabled
@@ -310,3 +310,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 18.11.22 | 2025-05-02 | Add noinfra values in all charts
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme
