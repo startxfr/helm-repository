@@ -51,7 +51,7 @@ helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-c
 | context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+| context.version     | 1.0.0     | Version name of this application (default use Chart appVersion)                   |
 
 ### chaos-cerberus values dictionary
 
