@@ -45,8 +45,8 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **3scale-operator** configured with
-  - The **threescale-2.11** channel
-  - The **0.8.0** version
+  - The **threescale-2.15** channel
+  - The **0.12.13** version
   - Deployed under the **openshift-operators** project
   - The **manager** deployed
 - 1 **Secret:** named **startx-3scale-rhn** that hold rhn credentials used fo image pulling

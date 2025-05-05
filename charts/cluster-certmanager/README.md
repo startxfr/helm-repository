@@ -38,16 +38,16 @@ Complete deployment of a project with the following characteristics :
 
 - 1 **namespace:** named **startx-certmanager** without constraints
 - 1 **operator:** named **cert-manager-operator** configured with
-  - The **stable** channel for community release
-  - The **v1.7.2** version
+  - The **stable-v1.15** channel for community release
+  - The **v1.15.1** version
   - Deployed under the **openshift-operators** project
 
 ```bash
 # Create the project
 helm install cluster-certmanager-project startx/cluster-certmanager --set project.enabled=true,operator.enabled=false,certmanager.enabled=false
-# Deploy the OADP operator
+# Deploy the certmanager operator
 helm install cluster-certmanager-operator startx/cluster-certmanager --set project.enabled=false,operator.enabled=true,certmanager.enabled=false && sleep 10
-# Configure default OADP ressources
+# Configure default certmanager ressources
 helm install cluster-certmanager-instance startx/cluster-certmanager --set project.enabled=false,operator.enabled=false,certmanager.enabled=true
 ```
 

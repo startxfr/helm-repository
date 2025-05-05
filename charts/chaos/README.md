@@ -93,7 +93,7 @@ destination:
 project: default
 source:
   repoURL: 'https://helm-repository.readthedocs.io/en/latest/repos/stable'
-  targetRevision: "14.6.103"
+  targetRevision: "18.11.31"
   chart: chaos
   helm:
     values: |

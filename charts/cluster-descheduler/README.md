@@ -40,12 +40,19 @@ helm install cluster-descheduler startx/cluster-descheduler
 
 Complete deployment of a project with the following characteristics :
 
-!!! todo
-    Complete this section
+- 1 **namespace:** named **openshift-kube-descheduler-operator** without constraints
+- 1 **operator:** named **cluster-kube-descheduler-operator** configured with
+  - The **stable** channel for community release
+  - The **v5.1.2** version
+  - Deployed under the **openshift-kube-descheduler-operator** project
 
 ```bash
-# base configuration running default configuration
-helm install cluster-descheduler startx/cluster-descheduler
+# Create the project
+helm install cluster-descheduler-project startx/cluster-descheduler --set project.enabled=true,operator.enabled=false,descheduler.enabled=false
+# Deploy the descheduler operator
+helm install cluster-descheduler-operator startx/cluster-descheduler --set project.enabled=false,operator.enabled=true,descheduler.enabled=false && sleep 10
+# Configure default descheduler ressources
+helm install cluster-descheduler-instance startx/cluster-descheduler --set project.enabled=false,operator.enabled=false,descheduler.enabled=true
 ```
 
 ## Others values availables

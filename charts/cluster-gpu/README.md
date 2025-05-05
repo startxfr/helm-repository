@@ -36,18 +36,18 @@ helm show chart startx/cluster-gpu
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **namespace:** named **startx-gpu** without constraints
-- 1 **operator:** named **nvidia-gpu-operator** configured with
+- 1 **namespace:** named **nvidia-gpu-operator** without constraints
+- 1 **operator:** named **gpu-operator-certified** configured with
   - The **stable** channel for community release
-  - The **v1.7.2** version
-  - Deployed under the **openshift-operators** project
-
+  - The **v25.3.0** version
+  - Deployed under the **nvidia-gpu-operator** project
+  
 ```bash
 # Create the project
 helm install cluster-gpu-project startx/cluster-gpu --set project.enabled=true,operator.enabled=false,gpu.enabled=false
-# Deploy the OADP operator
+# Deploy the nvidia-gpu operator
 helm install cluster-gpu-operator startx/cluster-gpu --set project.enabled=false,operator.enabled=true,gpu.enabled=false && sleep 10
-# Configure default OADP ressources
+# Configure default nvidia-gpu ressources
 helm install cluster-gpu-instance startx/cluster-gpu --set project.enabled=false,operator.enabled=false,gpu.enabled=true
 ```
 

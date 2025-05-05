@@ -40,12 +40,19 @@ helm install cluster-compliance startx/cluster-compliance
 
 Complete deployment of a project with the following characteristics :
 
-!!! todo
-    Complete this section
+- 1 **namespace:** named **openshift-compliance** without constraints
+- 1 **operator:** named **compliance-operator** configured with
+  - The **stable** channel for community release
+  - The **v1.7.0** version
+  - Deployed under the **openshift-operators** project
 
 ```bash
-# base configuration running default configuration
-helm install cluster-compliance startx/cluster-compliance
+# Create the project
+helm install cluster-compliance-project startx/cluster-compliance --set project.enabled=true,operator.enabled=false,compliance.enabled=false
+# Deploy the compliance operator
+helm install cluster-compliance-operator startx/cluster-compliance --set project.enabled=false,operator.enabled=true,compliance.enabled=false && sleep 10
+# Configure default compliance ressources
+helm install cluster-compliance-instance startx/cluster-compliance --set project.enabled=false,operator.enabled=false,compliance.enabled=true
 ```
 
 ## Others values availables

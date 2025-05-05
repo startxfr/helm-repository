@@ -36,10 +36,9 @@ helm show chart startx/cluster-kafka
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **namespace:** named **startx-kafka** without constraints
-- 1 **operator:** named **kafka-operator** configured with
-  - The **stable** channel for community release
-  - The **v1.7.2** version
+- 1 **operator:** named **amq-streams-console** configured with
+  - The **alpha** channel for community release
+  - The **v2.9.0** version
   - Deployed under the **openshift-operators** project
 
 ```bash

@@ -40,15 +40,45 @@ spec:
 apiVersion: machineconfiguration.openshift.io/v1
 kind: KubeletConfig
 metadata:
-  name: 05-worker-kubelet-connectiontimeout
+  name: 06-worker-kubelet-connectiontimeout
   labels:
-    app.kubernetes.io/name: "05-worker-kubelet-connectiontimeout"
+    app.kubernetes.io/name: "06-worker-kubelet-connectiontimeout"
 spec:
   machineConfigPoolSelector:
     matchLabels:
       pools.operator.machineconfiguration.openshift.io/worker: ''
   kubeletConfig:
     streamingConnectionIdleTimeout: "4h"
+{{ end }}
+{{- if .Values.machineConfig.kubelet_master_maxpodbig }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: 10-master-kubelet-maxpodbig
+  labels:
+    app.kubernetes.io/name: "10-master-kubelet-maxpodbig"
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/master: ''
+  kubeletConfig:
+    maxPods: 450
+{{ end }}
+{{- if .Values.machineConfig.kubelet_worker_maxpodbig }}
+---
+apiVersion: machineconfiguration.openshift.io/v1
+kind: KubeletConfig
+metadata:
+  name: 11-worker-kubelet-maxpodbig
+  labels:
+    app.kubernetes.io/name: "11-worker-kubelet-maxpodbig"
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      pools.operator.machineconfiguration.openshift.io/worker: ''
+  kubeletConfig:
+    maxPods: 450
 {{ end }}
 {{- if .Values.machineConfig.kubelet_protectkerneldefaults }}
 
