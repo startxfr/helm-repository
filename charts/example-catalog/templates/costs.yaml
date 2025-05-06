@@ -1,0 +1,17 @@
+{{- if .Values.demo }}{{- if .Values.demo.costs }}{{- if .Values.demo.costs.enabled -}}
+{{- with .Values.demo.costs -}}
+{{- $namespace := .namespace | default "demo-costs" -}}
+{{- $scope := .scope | default $.Values.context.scope -}}
+{{- $cluster := .cluster | default $.Values.context.cluster -}}
+{{- $env := .environment | default $.Values.context.environment -}}
+{{- $component := .component | default $.Values.context.component -}}
+{{- $version := .version | default $.Values.context.version -}}
+{{- $randrun := printf "%s%s" "a" (randAlphaNum 8 | lower | nospace) -}}
+---
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: costs
+  namespace: {{ $namespace | quote }}
+{{- end }}
+{{- end }}{{- end }}{{- end }}
