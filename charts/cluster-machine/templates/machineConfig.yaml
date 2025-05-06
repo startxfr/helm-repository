@@ -63,7 +63,7 @@ spec:
     matchLabels:
       pools.operator.machineconfiguration.openshift.io/master: ''
   kubeletConfig:
-    maxPods: 450
+    maxPods: 700
 {{ end }}
 {{- if .Values.machineConfig.kubelet_worker_maxpodbig }}
 ---
@@ -78,7 +78,7 @@ spec:
     matchLabels:
       pools.operator.machineconfiguration.openshift.io/worker: ''
   kubeletConfig:
-    maxPods: 450
+    maxPods: 500
 {{ end }}
 {{- if .Values.machineConfig.kubelet_protectkerneldefaults }}
 

@@ -330,3 +330,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
 | 18.11.39 | 2025-05-05 | Update icon with startx new theme
+| 18.11.51 | 2025-05-06 | publish stable update for the full repository
