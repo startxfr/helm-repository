@@ -377,3 +377,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 18.11.39 | 2025-05-05 | Update icon with startx new theme
 | 18.11.41 | 2025-05-06 | Update to version 0.12.3
 | 18.11.51 | 2025-05-06 | publish stable update for the full repository
+| 18.11.52 | 2025-05-07 | publish stable update for the full repository
