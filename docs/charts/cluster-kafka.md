@@ -66,3 +66,4 @@ helm install cluster-kafka startx/cluster-kafka -f https://raw.githubusercontent
 | 18.11.33 | 2025-05-03 | Support for the kafka console operator
 | 18.11.39 | 2025-05-05 | Update icon with startx new theme
 | 18.11.51 | 2025-05-06 | publish stable update for the full repository
+| 18.11.52 | 2025-05-07 | publish stable update for the full repository
