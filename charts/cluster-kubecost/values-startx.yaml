@@ -10,6 +10,7 @@ context: &context
 kubecost:
   enabled: false
   hooked: false
+  enabledRoute: true
   name: default
   spec: |
     pricingCsv:
@@ -1135,7 +1136,7 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "kubecost"
@@ -1164,7 +1165,7 @@ operator:
       config: 
         infra: false
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "kubecost"
     namespace: "kubecost"

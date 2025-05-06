@@ -10,6 +10,7 @@ context: &context
 kubecost:
   enabled: false
   hooked: false
+  enabledRoute: true
   name: default
   spec: |
     pricingCsv:
@@ -236,7 +237,7 @@ kubecost:
       dbReadThreads: 1
       service:
         labels: {}
-      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model@sha256:4049ec12460b555da74f129d8aa406356946307c04e149ed82ecd61518d4a11b'
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model:prod-2.7.1'
       dbTrimMemoryOnClose: true
       dbWriteMemoryLimit: 0GB
       replicas: 1
@@ -311,7 +312,7 @@ kubecost:
       adminUser: admin
       image:
         pullPolicy: IfNotPresent
-        repository: 'registry.redhat.io/rhel9/grafana@sha256:d9a0e6646f970db628f171ec78a508e6ac329c4457aec85f0a88894ab3d5f734'
+        repository: 'registry.redhat.io/rhel9/grafana'
         tag: 11.3.1
       replicas: 1
       tolerations: []
@@ -329,7 +330,7 @@ kubecost:
           label: grafana_datasource
         image:
           pullPolicy: IfNotPresent
-          repository: 'quay.io/kiwigrid/k8s-sidecar@sha256:636290ab9e852814b21af53fbd909f4a8ac88f26ed4cc4dca032d88bf6c788a9'
+          repository: 'quay.io/kiwigrid/k8s-sidecar'
           tag: 1.28.1
         resources: {}
       dashboards: {}
@@ -398,7 +399,7 @@ kubecost:
       env:
         GUNICORN_CMD_ARGS: '--log-level info -t 1200'
       imagePullPolicy: IfNotPresent
-      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-modeling@sha256:ef6be6b1e7be57d85a54c115ad15fd201fe7fee86ddb7eb6394f119358a04b59'
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-modeling:v0.1.24'
       tolerations: []
     affinity: {}
     extraVolumes: []
@@ -842,7 +843,7 @@ kubecost:
       useDefaultFqdn: false
       imagePullPolicy: IfNotPresent
       haReplicas: 2
-      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-frontend@sha256:0a87ca3fa61ae283b66529d82b769b53ad73d714cf2b8ccabb18588f4dd0f381'
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-frontend:prod-2.7.1'
       deploymentStrategy: {}
     diagnostics:
       collectHelmValues: false
@@ -929,7 +930,7 @@ kubecost:
       maxQueryConcurrency: 5
       etlDailyStoreDurationDays: 91
       imagePullPolicy: IfNotPresent
-      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model@sha256:4049ec12460b555da74f129d8aa406356946307c04e149ed82ecd61518d4a11b'
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model:prod-2.7.1'
       federatedStorageConfig: null
     persistentVolume:
       annotations: {}
@@ -987,8 +988,8 @@ kubecost:
         rbac:
           enabled: true
       image:
-        repository: registry.connect.redhat.com/kubecost/kubecost-cluster-controller@sha256
-        tag: 067923686d0d7db22d96ca68c11605845ba1e3ea7ebd175eebdc64296c75e649
+        repository: registry.connect.redhat.com/kubecost/kubecost-cluster-controller
+        tag: prod-2.7.1
       actionConfigs:
         clusterRightsize: null
         clusterTurndown: []
@@ -1039,8 +1040,8 @@ kubecost:
         additionalLabels: {}
         enabled: false
       image:
-        repository: registry.connect.redhat.com/kubecost/kubecost-network-costs@sha256
-        tag: c36342ddc8b3acd2cb5bccfc4a46f9a2a26e34b9683406875ebedabf569a0806
+        repository: registry.connect.redhat.com/kubecost/kubecost-network-costs
+        tag: v0.17.9
       tolerations: []
       updateStrategy:
         type: RollingUpdate
@@ -1135,13 +1136,13 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "kubecost"
     display_name: Kubecost console
     description: Kubecost configured by STARTX
-    additionalLabels:
+    additionalLabels: |-
       openshift.io/cluster-monitoring: "true"
 operator:
   enabled: false
@@ -1164,7 +1165,7 @@ operator:
       config: 
         infra: false
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "kubecost"
     namespace: "kubecost"

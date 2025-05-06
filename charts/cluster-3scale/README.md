@@ -46,7 +46,7 @@ Complete deployment of a project with the following characteristics :
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **3scale-operator** configured with
   - The **threescale-2.15** channel
-  - The **0.12.13** version
+  - The **0.12.3** version
   - Deployed under the **openshift-operators** project
   - The **manager** deployed
 - 1 **Secret:** named **startx-3scale-rhn** that hold rhn credentials used fo image pulling
@@ -375,3 +375,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 18.11.24 | 2025-05-02 | Align all to stable version
 | 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
 | 18.11.39 | 2025-05-05 | Update icon with startx new theme
+| 18.11.41 | 2025-05-06 | Update to version 0.12.3

@@ -21,6 +21,8 @@ kubecost:
   enabled: true
   # Activate the manager as a helm hook
   hooked: false
+  # Enable the creation of route for kubecost
+  enabledRoute: true
   # Name of the deployed instance of KubecostConfig
   name: default
   # The applyed Kubecost config specifications
@@ -1151,7 +1153,7 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "kubecost"
@@ -1182,7 +1184,7 @@ operator:
       config: 
         infra: false
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "kubecost"
     namespace: "kubecost"
