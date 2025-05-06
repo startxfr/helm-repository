@@ -236,7 +236,7 @@ kubecost:
       dbReadThreads: 1
       service:
         labels: {}
-      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model:latest'
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model:prod-2.7.1'
       dbTrimMemoryOnClose: true
       dbWriteMemoryLimit: 0GB
       replicas: 1
@@ -398,7 +398,7 @@ kubecost:
       env:
         GUNICORN_CMD_ARGS: '--log-level info -t 1200'
       imagePullPolicy: IfNotPresent
-      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-modeling:latest'
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-modeling:prod-2.7.1'
       tolerations: []
     affinity: {}
     extraVolumes: []
@@ -842,7 +842,7 @@ kubecost:
       useDefaultFqdn: false
       imagePullPolicy: IfNotPresent
       haReplicas: 2
-      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-frontend:latest'
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-frontend:prod-2.7.1'
       deploymentStrategy: {}
     diagnostics:
       collectHelmValues: false
@@ -929,7 +929,7 @@ kubecost:
       maxQueryConcurrency: 5
       etlDailyStoreDurationDays: 91
       imagePullPolicy: IfNotPresent
-      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model:latest'
+      fullImageName: 'registry.connect.redhat.com/kubecost/kubecost-cost-model:prod-2.7.1'
       federatedStorageConfig: null
     persistentVolume:
       annotations: {}
@@ -988,7 +988,7 @@ kubecost:
           enabled: true
       image:
         repository: registry.connect.redhat.com/kubecost/kubecost-cluster-controller
-        tag: latest
+        tag: prod-2.7.1
       actionConfigs:
         clusterRightsize: null
         clusterTurndown: []
@@ -1040,7 +1040,7 @@ kubecost:
         enabled: false
       image:
         repository: registry.connect.redhat.com/kubecost/kubecost-network-costs
-        tag: latest
+        tag: v0.17.9
       tolerations: []
       updateStrategy:
         type: RollingUpdate
