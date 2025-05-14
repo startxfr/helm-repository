@@ -371,3 +371,4 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 18.11.39 | 2025-05-05 | Update icon with startx new theme
 | 18.11.51 | 2025-05-06 | publish stable update for the full repository
 | 18.11.52 | 2025-05-07 | publish stable update for the full repository
+| 18.11.55 | 2025-05-14 | Debug the machineconfigpool nodeSelector
