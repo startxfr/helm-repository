@@ -1,0 +1,195 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: costs
+  app: demo-costs
+  version: "3.3.1"
+sxcollector:
+  enabled: false
+  namespace: demo-costs
+  version: latest
+  serviceAccount: sxcollector
+  config: 
+    enabled: true
+    name: sxcollector-env
+    spec: |
+      SMTP_HOST: smtp.example.com
+      SMTP_PORT: "587"
+      SMTP_USERNAME: mysmtpuser
+      SMTP_PASSWORD: mySmtPpwD
+      SMTP_INSECURE: "false"
+      MAIL_FROM: sender@example.com
+      MAIL_TO: recipient@example.com
+      SXCOLLECTOR_INSECURE: "true"
+      SXCOLLECTOR_SEP: ","
+      SXCOLLECTOR_FORMAT: "csv"
+      CONFLUENCE_BASE_URL: https://example.atlassian.net/wiki
+      CONFLUENCE_USERNAME : user@example.com
+      CONFLUENCE_API_TOKEN: mytoken
+      CONFLUENCE_SPACE_KEY: MYSPACE
+      CONFLUENCE_PARENTID: "123456"
+      GDRIVE_CREDENTIAL_FILENAME: "credentials.json"
+      GDRIVE_CREDENTIAL_PATH: "/tmp"
+      GDRIVE_CREDENTIAL_DOMAIN: "example.com"
+      GSPREADSHEET_TITLE: "MySXCollectorSpreadsheet"
+      GSPREADSHEET_SHEET_TITLE: "MySheet"
+  imageStream: 
+    enabled: true
+    name: sxcollector
+  debug: 
+    enabled: true
+    name: sxcollector-debug
+  enableCronjobs: true
+  cronjobs:
+  - name: sxcollector-ns-state-hourly
+    schedule: '@hourly'
+    command: |
+      - sxcollector
+      - ns-state
+      - "--output-format"
+      - "tab"
+  - name: sxcollector-ns-conso-weekly
+    schedule: '@weekly'
+    command: |
+      - sxcollector
+      - ns-conso
+      - "--duration"
+      - "-7d"
+      - "--mail-to" 
+      - "destination@example.com"
+  - name: sxcollector-node-state-hourly
+    schedule: '@hourly'
+    command: |
+      - sxcollector
+      - node-state
+      - "--output-format"
+      - "tab"
+  - name: sxcollector-node-conso-monthly
+    schedule: '@monthly'
+    command: |
+      - sxcollector
+      - node-conso
+      - "--from"
+      - "2024-10-01 00:00:00"
+      - "--to"
+      - "2024-10-31 00:00:00"
+      - "--mail-to"
+      - "$(MAIL_TO)"
+  - name: sxcollector-cluster-sub-monthly
+    schedule: '@monthly'
+    command: |
+      - sxcollector
+      - cluster-sub
+      - "--mail-to"
+      - "$(MAIL_TO)"
+  - name: sxcollector-node-billing-monthly
+    schedule: '@monthly'
+    command: |
+      - sxcollector
+      - node-billing
+      - "--mail-to"
+      - "$(MAIL_TO)"
+CostManagementMetricsConfig:
+  enabled: false
+  hooked: false
+  namespace: demo-costs
+  name: startx-cost
+  spec: |
+    upload:
+      ingress_path: /api/ingress/v1/upload
+      upload_cycle: 360
+      upload_toggle: true
+      validate_cert: true
+    packaging:
+      max_reports_to_store: 30
+      max_size_MB: 100
+    api_url: 'https://console.redhat.com'
+    prometheus_config:
+      collect_previous_data: true
+      context_timeout: 120
+      disable_metrics_collection_cost_management: false
+      disable_metrics_collection_resource_optimization: false
+      service_address: 'https://thanos-querier.openshift-monitoring.svc:9091'
+      skip_tls_verification: false
+    authentication:
+      token_url: 'https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token'
+      type: token
+    source:
+      check_cycle: 1440
+      create_source: false
+      sources_path: /api/sources/v1.0/
+      name: ''
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "demo-costs"
+    display_name: Demo Costs
+    description: "Demo on Costs management capacities using kubecost and sxcollector"
+  rbac: 
+    enabled: true
+    groups:
+      - id: devops-view
+        name: devops
+        role: view
+      - id: ops-admin
+        name: ops
+        role: admin
+    sa:
+      - id: sxcollector-admin
+        name: sxcollector
+        role: cluster-admin
+  serviceAccounts: 
+    enabled: true
+    list: 
+      - name: sxcollector
+projectOperator: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "rhcstm-operator"
+    display_name: Operator costs
+    description: CostManagement Metrics operator configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "costmanagement-metrics-operator"
+    namespace: "rhcstm-operator"
+    version: "3.3.1"
+    operator: 
+      channel: "stable"
+      name: costmanagement-metrics-operator
+      installPlanApproval: Automatic
+      csv: costmanagement-metrics-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "demo-costs"
+    name: "openshift-costs"
+    namespace: "rhcstm-operator"
+    providedAPIs: " CostManagementMetricsConfig.v1beta1.costmanagement-metrics-cfg.openshift.io"
