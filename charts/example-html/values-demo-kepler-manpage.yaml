@@ -5,11 +5,11 @@ context: &context
   scope: startx
   cluster: default
   environment: demo
-  component: vault
+  component: kepler
   app: manpage
   version: "0.0.1"
 html:
-  namespace: demo-vault
+  namespace: demo-kepler
   expose:
     enabled: true
   version: "alpine3"
@@ -24,16 +24,16 @@ html:
           <meta name="color-scheme" content="light dark">
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-          <title>Manpage of the Vault (Hashicorp) demo</title>
+          <title>Manpage of the kepler demo</title>
         </head>
         <body>
         <main class="container">
-          <h1><i class="fa-solid fa-book fa-2x"></i> Manpage of the Vault (Hashicorp) demo</h1>
+          <h1><i class="fa-solid fa-book fa-2x"></i> Manpage of the kepler demo</h1>
           <hr/>
           <h2><i class="fa-solid fa-bullseye"></i> Purpose of this demo</h2> 
           <p>
-            The purpose of this demo is to show you how vault API management work and how
-            it can help you dealing with API Management challenges.
+            The purpose of this demo is to show you how kepler work and how
+            it can help you dealing with Power consumption monitoring.
           </p> 
           <hr/>
           <h2><i class="fa-solid fa-box-open"></i> Installing this demo</h2> 
@@ -47,27 +47,32 @@ html:
             for a complete guideline on how to deploy an SXCM-managed cluster. 
           </p> 
           <h4>SXCM Cluster-service</h4> 
-          <p>Install the vault cluster service. This cluster service is based on the <a href="https://artifacthub.io/packages/helm/startx/cluster-vault" target="_blank" alt="startx cluster-vault Helm-chart">STARTX cluster-vault Helm-chart</a>.</p> 
-          <code>sxcm resource enable vault</code>
+          <p>Install the kepler cluster service. This cluster service is based on the <a href="https://artifacthub.io/packages/helm/startx/cluster-kepler" target="_blank" alt="startx cluster-kepler Helm-chart">STARTX cluster-kepler Helm-chart</a>.</p> 
+          <code>sxcm resource enable kepler</code>
           <h3>Initialize this demo</h3> 
           <p>Start the demo context with the following command :</p> 
-          <code>sxcm demo run vault begin</code>
-          <h2>Running the demo scenario</h2> 
+          <code>sxcm demo run kepler begin</code>
+          <p>
+            You should go to the Developper Observe &gt; Dashboards menu of the Openshift console.
+            You will observe 2 new Dashboards app:
+            <ul>
+              <li>Power monitoring / Overview</li>
+              <li>Power monitoring / Namespace</li>
+            </ul>
+          </p>
+          <p>
+            Observe both of theses dashboards and get familiar with the Power consumption monitoring.
+          </p> 
+          <h2><i class="fa-solid fa-person-running"></i> Running the demo scenario</h2> 
           <h3>Step 1</h3> 
           <p>Run first step with the following command :</p> 
-          <code>sxcm demo run vault step 1</code>
-          <p>
-            You should go to the Developper perspective view, &gt; Topology menu of the Openshift console.
-            You will observe the deployed application components. 
-            Observe the route exposed in namespace <strong>demo-vault</strong>.
-            To get access to the vault console, see route in namespace <strong>startx-vault</strong>.
-          </p> 
+          <code>sxcm demo run kepler step 1</code>
           <h3>Step 2</h3> 
           <p>Run second step with the following command :</p> 
-          <code>sxcm demo run vault step 2</code>
+          <code>sxcm demo run kepler step 2</code>
           <h2><i class="fa-solid fa-flag-checkered"></i> Finishing this demo</h2> 
           <p>Cleanup the demo context with the following command :</p> 
-          <code>sxcm demo run vault end</code>
+          <code>sxcm demo run kepler end</code>
         </main>
         </body>
       </html>

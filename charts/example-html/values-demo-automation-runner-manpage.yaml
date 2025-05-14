@@ -17,18 +17,26 @@ html:
   data: |
     index.html: |-
       <!DOCTYPE html>
-      <html lang="en-us">
+      <html lang="en-us" data-theme="dark">
         <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta name="color-scheme" content="light dark">
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
           <title>Manpage of the automation-runner demo</title>
         </head>
         <body>
-          <h1>Manpage of the automation-runner demo</h1> 
-          <h2>Purpose of this demo</h2> 
+        <main class="container">
+          <h1><i class="fa-solid fa-book fa-2x"></i> Manpage of the automation-runner demo</h1>
+          <hr/>
+          <h2><i class="fa-solid fa-bullseye"></i> Purpose of this demo</h2> 
           <p>
             The purpose of this demo is to show you how automation-runner work under an Openshift platform and how
             it can help you dealing with IT Automation workload challenges.
           </p> 
-          <h2>Installing this demo</h2> 
+          <hr/>
+          <h2><i class="fa-solid fa-box-open"></i> Installing this demo</h2> 
           <h3>Requirements</h3> 
           <h4>STARTX cluster manager (SXCM)</h4> 
           <p>
@@ -51,8 +59,9 @@ html:
           <h3>Step 2</h3> 
           <p>Run second step with the following command :</p> 
           <code>sxcm demo run automation-runner step 2</code>
-          <h2>Finishing this demo</h2> 
+          <h2><i class="fa-solid fa-flag-checkered"></i> Finishing this demo</h2> 
           <p>Cleanup the demo context with the following command :</p> 
           <code>sxcm demo run automation-runner end</code>
+        </main>
         </body>
       </html>

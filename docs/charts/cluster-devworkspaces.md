@@ -40,7 +40,7 @@ helm install cluster-devworkspaces startx/cluster-devworkspaces
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **operator:** named **devworkspace-operator-fast-redhat-operators-openshift-marketplace** configured with
+- 1 **operator:** named **devworkspace-operator** configured with
   - The **fast** channel for community release
   - The **v0.33.0** version
   - Deployed under the **openshift-operators** project
@@ -101,3 +101,4 @@ helm install cluster-devworkspaces startx/cluster-devworkspaces -f https://raw.g
 | 18.11.39 | 2025-05-05 | Update icon with startx new theme
 | 18.11.51 | 2025-05-06 | publish stable update for the full repository
 | 18.11.52 | 2025-05-07 | publish stable update for the full repository
+| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18

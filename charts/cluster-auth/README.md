@@ -393,3 +393,4 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 18.11.43 | 2025-05-05 | Update startx new theme for auth interfaces
 | 18.11.51 | 2025-05-06 | publish stable update for the full repository
 | 18.11.52 | 2025-05-07 | publish stable update for the full repository
+| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
