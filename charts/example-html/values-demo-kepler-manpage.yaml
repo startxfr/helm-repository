@@ -1,0 +1,69 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: kepler
+  app: manpage
+  version: "0.0.1"
+html:
+  namespace: demo-kepler
+  expose:
+    enabled: true
+  version: "alpine3"
+  replicas: 1
+  data: |
+    index.html: |-
+      <!DOCTYPE html>
+      <html lang="en-us">
+        <head>
+          <title>Manpage of the kepler demo</title>
+        </head>
+        <body>
+          <h1>Manpage of the kepler demo</h1> 
+          <h2>Purpose of this demo</h2> 
+          <p>
+            The purpose of this demo is to show you how kepler work and how
+            it can help you dealing with Power consumption monitoring.
+          </p> 
+          <h2>Installing this demo</h2> 
+          <h3>Requirements</h3> 
+          <h4>STARTX cluster manager (SXCM)</h4> 
+          <p>
+           Installing your cluster with <a href="https://sxcm.readthedocs.io/en/latest/" target="_blank" alt="STARTX SXCM">STARTX SXCM</a>
+            Allow you to instanciate this demo as well as its requirements. 
+            You can follow <a href="https://sxcm.readthedocs.io/en/latest/1-installation/" target="_blank" alt="SXCM installation docs">SXCM installation guide</a>
+            and <a href="https://sxcm.readthedocs.io/en/latest/2-cluster-management/" target="_blank" alt="SXCM cluster creation docs">SXCM cluster management</a> 
+            for a complete guideline on how to deploy an SXCM-managed cluster. 
+          </p> 
+          <h4>SXCM Cluster-service</h4> 
+          <p>Install the kepler cluster service. This cluster service is based on the <a href="https://artifacthub.io/packages/helm/startx/cluster-kepler" target="_blank" alt="startx cluster-kepler Helm-chart">STARTX cluster-kepler Helm-chart</a>.</p> 
+          <code>sxcm resource enable kepler</code>
+          <h3>Initialize this demo</h3> 
+          <p>Start the demo context with the following command :</p> 
+          <code>sxcm demo run kepler begin</code>
+          <p>
+            You should go to the Developper Observe &gt; Dashboards menu of the Openshift console.
+            You will observe 2 new Dashboards app:
+            <ul>
+              <li>Power monitoring / Overview</li>
+              <li>Power monitoring / Namespace</li>
+            </ul>
+          </p>
+          <p>
+            Observe both of theses dashboards and get familiar with the Power consumption monitoring.
+          </p> 
+          <h2>Running the demo scenario</h2> 
+          <h3>Step 1</h3> 
+          <p>Run first step with the following command :</p> 
+          <code>sxcm demo run kepler step 1</code>
+          <h3>Step 2</h3> 
+          <p>Run second step with the following command :</p> 
+          <code>sxcm demo run kepler step 2</code>
+          <h2>Finishing this demo</h2> 
+          <p>Cleanup the demo context with the following command :</p> 
+          <code>sxcm demo run kepler end</code>
+        </body>
+      </html>
