@@ -38,13 +38,19 @@ html:
   data: |
     index.html: |-
       <!DOCTYPE html>
-      <html lang="en-us">
+      <html lang="en-us" data-theme="dark">
         <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta name="color-scheme" content="light dark">
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
           <title>Default example of static page</title>
         </head>
         <body>
-          <h1>This is the default example static page helm chart</h1> 
-          <h1>Information</h1> 
+        <main class="container">
+          <h1><i class="fa-solid fa-book fa-2x"></i> This is the default example static page helm chart</h1>
+          <hr/>
           <p>
             To change this page, read 
             <a href="https://helm-repository.readthedocs.io/en/latest/charts/example-html">how to use Startx example-html chart</a>.
@@ -53,5 +59,6 @@ html:
             You can contact <a href="https://startx.fr">Startx company</a> 
             or go to the <a href="https://helm-repository.readthedocs.io/en/latest">to get more helm chart and examples</a>.
           </p> 
+        </main>
         </body>
       </html>
