@@ -59,12 +59,12 @@ metadata:
   annotations:
     {{- include "cluster-machine.annotations" $ | nindent 4 }}
 spec:
-  {{- if .machineConfigSelector -}}
+  {{- if .machineConfigSelector }}
   machineConfigSelector:
     {{- .machineConfigSelector | nindent 4 -}}
   {{- end }}
   maxUnavailable: {{ .maxUnavailable | default 1 }}
-  {{- if .nodeSelector -}}
+  {{- if .nodeSelector }}
   nodeSelector:
     {{- .nodeSelector | nindent 4 -}}
   {{- end }}
