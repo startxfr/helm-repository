@@ -2,7 +2,7 @@
 # see values.yaml for explanation on each params
 context: 
   scope: startx
-  cluster: startx-snobm
+  cluster: startx-snoai
   environment: infra
   component: config
   app: startx-machine
@@ -12,16 +12,16 @@ cluster:
   id: startx-xyzab
   region: eu-west-3
   autoscaler: 
-    enabled: false
+    enabled: true
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
-        maxNodesTotal: 2
+        maxNodesTotal: 3
         cores:
-          min: 0
-          max: 192
+          min: 32
+          max: 96
         memory:
-          min: 0
+          min: 128
           max: 384
       scaleDown: 
         enabled: true 
@@ -83,6 +83,6 @@ machineSet:
     type: worker
     group: worker
     ami: ami-073ea4e4624cedfa0
-    instanceType: "t2.2xlarge"
+    instanceType: "g6.8xlarge"
     volumeSize: 150
     replicas: 0

@@ -2,7 +2,7 @@
 # see values.yaml for explanation on each params
 context: 
   scope: startx
-  cluster: startx-snobm
+  cluster: startx-snobig
   environment: infra
   component: config
   app: startx-machine
@@ -12,17 +12,17 @@ cluster:
   id: startx-xyzab
   region: eu-west-3
   autoscaler: 
-    enabled: false
+    enabled: true
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
-        maxNodesTotal: 2
+        maxNodesTotal: 3
         cores:
-          min: 0
-          max: 192
+          min: 96
+          max: 288
         memory:
-          min: 0
-          max: 384
+          min: 192
+          max: 576
       scaleDown: 
         enabled: true 
         delayAfterAdd: 10m 
@@ -83,6 +83,6 @@ machineSet:
     type: worker
     group: worker
     ami: ami-073ea4e4624cedfa0
-    instanceType: "t2.2xlarge"
+    instanceType: "c5a.12xlarge"
     volumeSize: 150
     replicas: 0
