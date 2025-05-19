@@ -131,7 +131,7 @@ demoAnsible:
         password: "mypassword"
   aapConfigs:
     credentials:
-      enabled: true
+      enabled: false
       list:
         - name: dev-example-sshkey-cred
           namespace: demo-aap
@@ -182,7 +182,7 @@ demoAnsible:
             username_secret: dev-example-git-user
             password_secret: dev-example-git-user
     inventories:
-      enabled: true
+      enabled: false
       list:
         - name: dev
           namespace: demo-aap
@@ -218,7 +218,7 @@ demoAnsible:
             variables:
               string: "string_value"
     projects:
-      enabled: true
+      enabled: false
       list:
         - name: ansible-samples-dev
           namespace: demo-aap
@@ -278,7 +278,7 @@ demoAnsible:
             branch: main
             scm_type: git
     jobTemplates:
-      enabled: true
+      enabled: false
       list:
         - name: ansible-samples-broken
           namespace: demo-aap
@@ -319,7 +319,7 @@ demoAnsible:
             ask_variables_on_launch: false
             ask_inventory_on_launch: false
     workflowTemplates:
-      enabled: true
+      enabled: false
       list:
         - name: ansible-samples-workflow
           namespace: demo-aap
@@ -346,7 +346,7 @@ demoAnsible:
                   organization:
                     name: Default
     workflows:
-      enabled: true
+      enabled: false
       list:
         - name: ansible-samples-workflow
           namespace: demo-aap
@@ -359,7 +359,7 @@ demoAnsible:
             workflow_template_name: ExampleTowerWorkflow
             runner_pull_policy: IfNotPresent
     jobs:
-      enabled: true
+      enabled: false
       list:
         - name: ansible-samples-helloworld-job
           namespace: demo-aap
@@ -378,7 +378,7 @@ demoAnsible:
             skip_tags: "configuration,restart"
             runner_pull_policy: IfNotPresent
     instancesGroup:
-      enabled: true
+      enabled: false
       list:
         - name: dev-kuber-instance-group
           namespace: demo-aap
@@ -396,7 +396,7 @@ demoAnsible:
             instance_list: []
             runner_pull_policy: IfNotPresent
     schedules:
-      enabled: true
+      enabled: false
       list:
         - name: ansible-samples-daily-schedule
           namespace: demo-aap
