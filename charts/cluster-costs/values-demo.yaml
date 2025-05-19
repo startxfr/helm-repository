@@ -5,11 +5,11 @@ context: &context
   cluster: default
   environment: infra
   component: costs
-  app: startx-costs
+  app: demo-costs
   version: "3.3.1"
 sxcollector:
   enabled: false
-  namespace: startx-costs
+  namespace: demo-costs
   version: latest
   serviceAccount: sxcollector
   config: 
@@ -95,7 +95,7 @@ sxcollector:
 CostManagementMetricsConfig:
   enabled: false
   hooked: false
-  namespace: startx-costs
+  namespace: demo-costs
   name: startx-cost
   spec: |
     upload:
@@ -130,9 +130,9 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "startx-costs"
-    display_name: Startx Costs
-    description: Cost management configured by STARTX
+    name: "demo-costs"
+    display_name: Demo Costs
+    description: "Demo on Costs management capacities using kubecost and sxcollector"
   rbac: 
     enabled: true
     groups:
