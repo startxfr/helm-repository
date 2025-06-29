@@ -6,7 +6,7 @@ description: Helm chart used to configure openshift console at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 18.11.61
+version: 18.11.63
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.18.11"
 # Icon of this helm-chart
@@ -35,6 +35,13 @@ maintainers:
     email: "dev@startx.fr"
     url: "https://www.startx.fr"
 
+dependencies:
+  - name: operator
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.19"
+    alias: webTerminal
+    condition: webTerminal.enabled
+
 annotations:
   # category associated to this package
   category: cluster
@@ -60,8 +67,8 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
-    - kind: changed
-      description: "Debug display of the logo when embeded"
+    - kind: added
+      description: "Adding deployment of the console web-terminal"
   artifacthub.io/containsSecurityUpdates: "false"
 
 
