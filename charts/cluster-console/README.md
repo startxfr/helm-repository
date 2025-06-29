@@ -364,3 +364,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 18.11.52 | 2025-05-07 | publish stable update for the full repository
 | 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
 | 18.11.61 | 2025-06-18 | Debug display of the logo when embeded
+| 18.11.63 | 2025-06-29 | Adding deployment of the console web-terminal
