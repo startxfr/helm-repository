@@ -311,3 +311,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 18.11.52 | 2025-05-07 | publish stable update for the full repository
 | 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
 | 18.11.61 | 2025-05-19 | Adding creation of the redhat-operators-pull-secret
+| 18.11.71 | 2025-11-27 | Align all charts to the same releas
