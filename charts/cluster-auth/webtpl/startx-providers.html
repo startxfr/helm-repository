@@ -1191,15 +1191,15 @@
                     {{ range $provider := .Providers }}
                     <ul>
                         {{ if eq $provider.Name "kube:admin" }}
-                        <li class="idp">
-                            <a href="{{$provider.URL}}" class="pf-c-button pf-m-secondary pf-m-block" title="se connecter avec {{$provider.Name}}">{{$provider.Name}}</a>
+                        <li class="idp pf-v6-c-button pf-m-block pf-m-danger">
+                            <a href="{{$provider.URL}}" class="pf-c-button pf-m-secondary pf-m-block" title="se connecter avec kubeadmin">kubeadmin</a>
                         </li>
-                        {{ else if eq $provider.Name "monaco_auth" }}
-                        <li class="idp">
-                            <a href="{{$provider.URL}}" class="pf-c-button pf-m-danger pf-m-block" title="se connecter avec {{$provider.Name}}">{{$provider.Name}}</a>
+                        {{ else if eq $provider.Name "startx-htpasswd_auth" }}
+                        <li class="idp pf-v6-c-button pf-m-block pf-m-secondary">
+                            <a href="{{$provider.URL}}" class="pf-c-button pf-m-danger pf-m-block" title="se connecter avec STARTX local">STARTX Local provider</a>
                         </li>
                         {{ else }}
-                        <li class="idp">
+                        <li class="idp pf-v6-c-button pf-m-block pf-m-primary">
                             <a href="{{$provider.URL}}" class="pf-c-button pf-m-primary pf-m-block" title="se connecter avec {{$provider.Name}}">{{$provider.Name}}</a>
                         </li>
                         {{ end }}
