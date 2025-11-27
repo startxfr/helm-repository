@@ -366,3 +366,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 18.11.61 | 2025-06-18 | Debug display of the logo when embeded
 | 18.11.63 | 2025-06-29 | Adding deployment of the console web-terminal
 | 18.11.65 | 2025-11-27 | add devoteam brand name
+| 18.11.71 | 2025-11-27 | Align all charts to the same releas
