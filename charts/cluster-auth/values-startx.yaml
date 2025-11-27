@@ -1,6 +1,6 @@
 # Default values for configuration of a STARTX cluster
 # see values.yaml for explanation on each params
-context: &context
+context:
   scope: startx
   cluster: default
   environment: infra
@@ -14,15 +14,15 @@ auth:
   templates:
     login: 
       name: startx-login
-      tplFile: webtpl/startx-login.html
+      tplFile: webtpl/devoteam-login.html
       manageSubresource: true
     errors: 
       name: startx-errors
-      tplFile: webtpl/startx-errors.html
+      tplFile: webtpl/devoteam-errors.html
       manageSubresource: true
     providers: 
       name: startx-providers
-      tplFile: webtpl/startx-providers.html
+      tplFile: webtpl/devoteam-providers.html
       manageSubresource: true
   authBackend:
   - name: startx-htpasswd
