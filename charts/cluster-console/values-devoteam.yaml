@@ -2,37 +2,36 @@
 # see values.yaml for explanation on each params
 context: &context
   scope: startx
-  cluster: startx
+  cluster: lahsc
   environment: sf
   component: console
-  app: startx-console
+  app: lahsc-console
   version: "4.18.11"
 console:
   enabled: true
   namespace: openshift-config
   state: Managed
   customize:
-    name: STARTX Console
+    name: LaHSC Console
     logo: 
-      name: startx-logo
+      name: lahsc-logo
       format: svg
       mode: file
-      tplFile: webtpl/devoteam-logo.svg
-      manageSubresource: true
+      tplFile: webtpl/lahsc-logo.svg
   links:
-  - name: startx-link-all-namespaces-dashboard
+  - name: lahsc-link-all-namespaces-dashboard
     spec: |
-      href: 'https://www.startx.fr'
+      href: 'https://www.lahsc.fr'
       location: NamespaceDashboard
-      text: STARTX website
-  - name: startx-consolelink-application-menu
+      text: lahsc website
+  - name: lahsc-consolelink-application-menu
     spec: |
-      href: 'https://www.startx.fr'
+      href: 'https://www.lahsc.fr'
       location: ApplicationMenu
-      text: STARTX website
+      text: lahsc website
       # applicationMenu:
-      #   section: STARTX Content
-      #   imageURL: https://www.startx.fr/images/logo.startx.24x24.png
+      #   section: lahsc Content
+      #   imageURL: https://www.lahsc.fr/images/logo.lahsc.24x24.png
   - name: startxgit-consolelink-application-menu
     spec: |
       href: 'https://github.com/startxfr'
@@ -81,7 +80,7 @@ console:
       backgroundColor: 'green'
       color: '#fff'
       location: BannerTop 
-      text: Vous etes sur un cluster de demo
+      text: Vous etes sur un cluster de demo LaHSC
   - name: demo-console-notification-bottom
     spec: |
       backgroundColor: 'red'
