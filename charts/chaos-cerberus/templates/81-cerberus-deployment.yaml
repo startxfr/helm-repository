@@ -1,6 +1,7 @@
 {{- if .Values.cerberus.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
+{{- $version := .Values.kraken.version | default "latest" -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -34,7 +35,7 @@ spec:
     spec:
       containers:
       - name: cerberus
-        image: quay.io/redhat-chaos/cerberus
+        image: "quay.io/redhat-chaos/cerberus:{{- $version -}}"
         imagePullPolicy: Always
         args:
           - python3 start_cerberus.py -c config/config.yaml

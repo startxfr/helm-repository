@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-nfd
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "4.18.0"
 
 # Deploy a list of NodeFeatureDiscovery
 nfd:
@@ -27,19 +27,23 @@ nfd:
       namespace: openshift-nfd
       # spec for the NodeFeatureDiscovery
       spec: |-
-        customConfig:
-          configData: |
-            #    - name: "more.kernel.features"
-            #      matchOn:
-            #      - loadedKMod: ["example_kmod3"]
-            #    - name: "more.features.by.nodename"
-            #      value: customValue
-            #      matchOn:
-            #      - nodename: ["special-.*-node-.*"]
+        # customConfig:
+        #   configData: |
+        #     - name: "more.kernel.features"
+        #       matchOn:
+        #       - loadedKMod: ["example_kmod3"]
+        #     - name: "more.features.by.nodename"
+        #       value: customValue
+        #       matchOn:
+        #       - nodename: ["special-.*-node-.*"]
+        enableTaints: false
+        instance: ''
         operand:
-          image: >-
-            registry.redhat.io/openshift4/ose-node-feature-discovery
+          # image: 'registry.redhat.io/openshift4/ose-node-feature-discovery-rhel9'
+          imagePullPolicy: IfNotPresent
           servicePort: 12000
+        prunerOnDelete: false
+        topologyUpdater: false
         workerConfig:
           configData: |
             core:
@@ -182,9 +186,9 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "openshift-nfd"
     display_name: Operator NFD
     description: NFD configured by STARTX
@@ -199,7 +203,7 @@ operator:
     hooked: false
     name: "nfd"
     namespace: "openshift-nfd"
-    version: "4.16.0-202410251436"
+    version: "4.18.0-202504232132"
     operator: 
       channel: "stable"
       name: nfd
@@ -211,7 +215,7 @@ operator:
       config: 
         infra: false
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "nfd"
     namespace: "openshift-nfd"

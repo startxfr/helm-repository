@@ -6,13 +6,14 @@ context: &context
   environment: infra
   component: acm
   app: startx-acm
+  version: "2.13.2"
 acm:
   enabled: true
   infra: true ## set this to true if infra node available
   mch:
     enabled: true
     hooked: false
-    name: "startx-mch"
+    name: "multiclusterhub"
     availabilityConfig: High
     hive:
         enabled: true

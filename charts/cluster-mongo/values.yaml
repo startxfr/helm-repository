@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-mongo
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "1.33.0"
 
 # Configure the loaders pod
 loader:
@@ -68,7 +68,7 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "default-mongo"
     display_name: "Default MongoDB"
     description: Demo MongoDB configured by STARTX
@@ -83,7 +83,7 @@ operator:
     hooked: false
     name: "mongodb-enterprise"
     namespace: "openshift-operators"
-    version: "v1.28.0"
+    version: "v1.33.0"
     operator: 
       channel: stable
       name: mongodb-enterprise

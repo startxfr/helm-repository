@@ -6,6 +6,7 @@ context:  &context
   environment: infra
   component: config
   app: startx
+  version: "4.18.11"
 autoscaling:
   enabled: false
 clusterversion:
@@ -56,10 +57,10 @@ operatorElastic:
         #   requests:
         #     cpu: 400m
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     target: "all-ns"
-    name: "elasticsearch-operator"
+    name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
 

@@ -1,0 +1,21 @@
+{{- if .Values.clusters -}}{{- if .Values.clusters.enabled -}}
+{{- $defaultns := .Values.project.project.name | default "openshift-kafka" -}}
+{{ range .Values.clusters.list }}
+{{- $name := .name | default "my-cluster" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+---
+kind: Kafka
+apiVersion: kafka.strimzi.io/v1beta2
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-kafka.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-kafka"
+  annotations:
+    {{- include "cluster-kafka.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  {{- .spec | default "{}" | nindent 2 }}
+{{ end }}
+{{- end -}}{{- end -}}

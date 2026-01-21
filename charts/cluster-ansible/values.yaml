@@ -220,11 +220,6 @@ aapConfigs:
               string: "string_value"
               number: 2
 
-
-
-
-
-
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
   enabled: false
@@ -233,7 +228,7 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "default-ansible"
     display_name: Instance ANSIBLE
     description: Ansible automation configured by STARTX
@@ -246,7 +241,7 @@ projectOperator:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "rhaap-operator"
     display_name: Operator ANSIBLE
     description: Ansible automation operator configured by STARTX
@@ -261,7 +256,7 @@ operator:
     hooked: false
     name: "ansible-automation-platform-operator"
     namespace: "rhaap-operator"
-    version: "v2.5.0-0.1731456854"
+    version: "v2.5.0-0.1743660958"
     operator: 
       channel: stable-2.5-cluster-scoped
       name: ansible-automation-platform-operator
@@ -280,4 +275,19 @@ operator:
     namespace: "rhaap-operator"
     providedAPIs: "AnsibleJob.v1alpha1.tower.ansible.com,AutomationController.v1beta1.automationcontroller.ansible.com,AutomationControllerBackup.v1beta1.automationcontroller.ansible.com,AutomationControllerRestore.v1beta1.automationcontroller.ansible.com,AutomationHub.v1beta1.automationhub.ansible.com,AutomationHubBackup.v1beta1.automationhub.ansible.com,AutomationHubRestore.v1beta1.automationhub.ansible.com,JobTemplate.v1alpha1.tower.ansible.com"
 
-  
+# Additionnals resources for the AAP operator
+operatorAAP:
+  # creation of the Redhat Pull secret
+  pullSecret: 
+    # Enable the creation of the pull-secret
+    enabled: false
+    # Name of the secret (default is redhat-operators-pull-secret)
+    name: redhat-operators-pull-secret
+    # Redhat account username (default is myuser)
+    username: "myuser"
+    # Redhat account password (default is mypassword)
+    password: "mypassword"
+    # Email associated to your redhat account (default is myuser@example.com)
+    email: "myuser@example.com"
+    # Redhat registry (default is registry.redhat.io)
+    registry: "registry.redhat.io"

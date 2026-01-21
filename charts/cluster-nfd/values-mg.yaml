@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: nfd
   app: startx-nfd
+  version: "4.18.0"
 nfd:
   enabled: false
   list:
@@ -140,9 +141,9 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "openshift-nfd"
     display_name: Operator NFD
     description: NFD configured by STARTX
@@ -155,7 +156,7 @@ operator:
     hooked: false
     name: "nfd"
     namespace: "openshift-nfd"
-    version: "4.16.0-202410251436"
+    version: "4.18.0-202504232132"
     operator: 
       channel: "stable"
       name: nfd
@@ -165,7 +166,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "nfd"
     namespace: "openshift-nfd"

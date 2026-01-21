@@ -1,0 +1,105 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: rh-ods
+  app: openshift-rh-ods
+  version: "2.19.0"
+
+DataScienceCluster:
+  enabled: false
+  name: "startx-dsc"
+  namespace: "rhods-operator"
+  spec: |
+    components:
+      codeflare:
+        managementState: Managed
+      kserve:
+        managementState: Managed
+        nim:
+          managementState: Managed
+        rawDeploymentServiceConfig: Headless
+        serving:
+          ingressGateway:
+            certificate:
+              type: OpenshiftDefaultIngress
+          managementState: Managed
+          name: knative-serving
+      modelregistry:
+        managementState: Removed
+        registriesNamespace: rhoai-model-registries
+      trustyai:
+        managementState: Managed
+      ray:
+        managementState: Managed
+      kueue:
+        managementState: Managed
+      workbenches:
+        managementState: Managed
+      dashboard:
+        managementState: Managed
+      modelmeshserving:
+        managementState: Managed
+      datasciencepipelines:
+        managementState: Managed
+      trainingoperator:
+        managementState: Managed
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "rhods-operator"
+    display_name: "Startx OpenDataScience"
+    requester: startx
+    description: Startx OpenDataScience operator
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "rhods-operator"
+    namespace: "rhods-operator"
+    version: "2.19.0"
+    operator: 
+      channel: "stable"
+      name: rhods-operator
+      installPlanApproval: Automatic
+      # csv: rhods-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "rhods-operator"
+    namespace: "rhods-operator"
+    providedAPIs: "DSCInitialization.v1.dscinitialization.opendatahub.io,DataScienceCluster.v1.datasciencecluster.opendatahub.io,FeatureTracker.v1.features.opendatahub.io"

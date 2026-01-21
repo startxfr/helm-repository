@@ -36,26 +36,48 @@ spec:
 {{- end }}{{- end }}
   overrides:
     components:
-      - enabled: true
-        name: multiclusterhub-repo
-      - enabled: true
-        name: management-ingress
-      - enabled: true
-        name: console
-      - enabled: true
-        name: insights
-      - enabled: true
-        name: grc
-      - enabled: true
+      - configOverrides: {}
+        enabled: true
+        name: app-lifecycle
+      - configOverrides: {}
+        enabled: true
         name: cluster-lifecycle
-      - enabled: true
-        name: volsync
-      - enabled: true
+      - configOverrides: {}
+        enabled: true
+        name: cluster-permission
+      - configOverrides: {}
+        enabled: true
+        name: console
+      - configOverrides: {}
+        enabled: true
+        name: grc
+      - configOverrides: {}
+        enabled: true
+        name: insights
+      - configOverrides: {}
+        enabled: true
         name: multicluster-engine
-      - enabled: true
+      - configOverrides: {}
+        enabled: true
+        name: multicluster-observability
+      - configOverrides: {}
+        enabled: true
         name: search
-      - enabled: false
+      - configOverrides: {}
+        enabled: true
+        name: submariner-addon
+      - configOverrides: {}
+        enabled: true
+        name: volsync
+      - configOverrides: {}
+        enabled: false
         name: cluster-backup
+      - configOverrides: {}
+        enabled: false
+        name: siteconfig
+      - configOverrides: {}
+        enabled: false
+        name: edge-manager-preview
   separateCertificateManagement: false
 {{- if .Values.acm.mch.infra }}
   nodeSelector:

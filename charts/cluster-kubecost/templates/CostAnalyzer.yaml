@@ -1,15 +1,16 @@
 {{- if .Values.kubecost.enabled -}}
 {{- $namespace := .Values.project.project.name | default "kubecost" -}}
+{{- $name := .Values.kubecost.name | default "kubecost" -}}
 {{- $spec := .Values.kubecost.spec | default "{}" -}}
 ---
 apiVersion: charts.kubecost.com/v1alpha1
 kind: CostAnalyzer
 metadata:
-  name: {{ .Values.kubecost.name | default "kubecost" | quote }}
+  name: {{ $name | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-kubecost.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.kubecost.name | default "kubecost" -}}-costanalyzer"
+    app.kubernetes.io/name: "{{- $name -}}-costanalyzer"
   annotations:
     {{- include "cluster-kubecost.annotations" . | nindent 4 }}
     {{- if .Values.kubecost.hooked }}
@@ -22,4 +23,30 @@ metadata:
     argocd.argoproj.io/sync-wave: "20"
 spec:
   {{- $spec | nindent 2 }}
+{{- if .Values.kubecost.enabledRoute }}
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: "{{- $name -}}-analyser"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-kubecost.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-costanalyzer"
+  annotations:
+    {{- include "cluster-kubecost.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "40"
+spec:
+  path: /
+  to:
+    kind: Service
+    name: "{{- $name -}}-cost-analyzer"
+    weight: 100
+  port:
+    targetPort: tcp-frontend
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Allow
+  wildcardPolicy: None
+{{- end -}}
 {{- end -}}

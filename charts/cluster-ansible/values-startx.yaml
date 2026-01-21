@@ -410,7 +410,7 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "startx-ansible"
     display_name: Instance ANSIBLE
     description: Ansible automation configured by STARTX
@@ -421,7 +421,7 @@ projectOperator:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "rhaap-operator"
     display_name: Operator ANSIBLE
     description: Ansible automation operator configured by STARTX
@@ -434,7 +434,7 @@ operator:
     hooked: false
     name: "ansible-automation-platform-operator"
     namespace: "rhaap-operator"
-    version: "v2.5.0-0.1731456854"
+    version: "v2.5.0-0.1743660958"
     operator: 
       channel: stable-2.5-cluster-scoped
       name: ansible-automation-platform-operator
@@ -457,3 +457,10 @@ operator:
     name: "startx-aap"
     namespace: "rhaap-operator"
     providedAPIs: "AnsibleJob.v1alpha1.tower.ansible.com,AutomationController.v1beta1.automationcontroller.ansible.com,AutomationControllerBackup.v1beta1.automationcontroller.ansible.com,AutomationControllerRestore.v1beta1.automationcontroller.ansible.com,AutomationHub.v1beta1.automationhub.ansible.com,AutomationHubBackup.v1beta1.automationhub.ansible.com,AutomationHubRestore.v1beta1.automationhub.ansible.com,JobTemplate.v1alpha1.tower.ansible.com"
+
+operatorAAP:
+  pullSecret: 
+    enabled: false
+    username: "myuser"
+    password: "mypassword"
+    email: "myuser@example.com"

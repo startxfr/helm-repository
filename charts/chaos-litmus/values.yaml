@@ -7,18 +7,18 @@
 
 # Application chaos context
 context:  &context
-# Name of the global scope for this application (organisational tenant)
- scope: companyname
-# Name of the cluster running this application (plateform tenant)
- cluster: clustername
-# Name of the environement for this application (ex: dev, factory, preprod or prod)
- environment: dev
-# Component name of this application (logical tenant)
- component: chaos
-# Application name (functionnal tenant, default use Chart name)
- app: litmus
-# Version name of this application (default use Chart appVersion)
- version: "3.11.0"
+  # Name of the global scope for this application (organisational tenant)
+  scope: companyname
+  # Name of the cluster running this application (plateform tenant)
+  cluster: clustername
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: chaos
+  # Application name (functionnal tenant, default use Chart name)
+  app: litmus
+  # Version name of this application (default use Chart appVersion)
+  version: "3.18.0"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -27,7 +27,7 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: chaos-litmus
     display_name: Chaos - Litmus
     description: Litmus chaos orchestrator in STARTX Chaos test suite
@@ -42,7 +42,7 @@ litmus:
     DBUSER: "admin"
     DBPASSWORD: "1234"
     JWTSecret: "litmus-portal@123"
-    VERSION: "3.11.0"
+    VERSION: "3.18.0"
     SKIP_SSL_VERIFY: "false"
     # -- leave empty if uses Mongo DB deployed by this chart
     DB_SERVER: ""
@@ -59,7 +59,7 @@ litmus:
     controlPlane:
       image:
         repository: upgrade-agent-cp
-        tag: "3.11.0"
+        tag: "3.18.0"
         pullPolicy: "Always"
       restartPolicy: OnFailure
     nodeSelector: {}
@@ -76,7 +76,7 @@ litmus:
         runAsNonRoot: true
       image:
         repository: litmusportal-frontend
-        tag: 3.11.0
+        tag: 3.18.0
         pullPolicy: "Always"
       containerPort: 8080
       customLabels: {}
@@ -120,7 +120,7 @@ litmus:
       waitForMongodb:
         image:
           repository: curl
-          tag: 3.11.0
+          tag: 3.18.0
           pullPolicy: "Always"
         resources:
           requests:
@@ -149,7 +149,7 @@ litmus:
           readOnlyRootFilesystem: true
         image:
           repository: litmusportal-server
-          tag: 3.11.0
+          tag: 3.18.0
           pullPolicy: "Always"
         ports:
           - name: gql-server
@@ -157,13 +157,13 @@ litmus:
           - name: gql-rpc-server
             containerPort: 8000
         imageEnv:
-          SUBSCRIBER_IMAGE: "litmusportal-subscriber:3.11.0"
-          EVENT_TRACKER_IMAGE: "litmusportal-event-tracker:3.11.0"
-          ARGO_WORKFLOW_CONTROLLER_IMAGE: "workflow-controller:v3.11.0"
-          ARGO_WORKFLOW_EXECUTOR_IMAGE: "argoexec:v3.11.0"
-          LITMUS_CHAOS_OPERATOR_IMAGE: "chaos-operator:3.11.0"
-          LITMUS_CHAOS_RUNNER_IMAGE: "chaos-runner:3.11.0"
-          LITMUS_CHAOS_EXPORTER_IMAGE: "chaos-exporter:3.11.0"
+          SUBSCRIBER_IMAGE: "litmusportal-subscriber:3.18.0"
+          EVENT_TRACKER_IMAGE: "litmusportal-event-tracker:3.18.0"
+          ARGO_WORKFLOW_CONTROLLER_IMAGE: "workflow-controller:v3.18.0"
+          ARGO_WORKFLOW_EXECUTOR_IMAGE: "argoexec:v3.18.0"
+          LITMUS_CHAOS_OPERATOR_IMAGE: "chaos-operator:3.18.0"
+          LITMUS_CHAOS_RUNNER_IMAGE: "chaos-runner:3.18.0"
+          LITMUS_CHAOS_EXPORTER_IMAGE: "chaos-exporter:3.18.0"
         genericEnv:
           TLS_SECRET_NAME: ""
           TLS_CERT_64: ""
@@ -174,7 +174,7 @@ litmus:
           HUB_BRANCH_NAME: "v3.11.x"
           AGENT_DEPLOYMENTS: '["app=chaos-exporter", "name=chaos-operator", "app=event-tracker", "app=workflow-controller"]'
           LITMUS_AUTH_GRPC_PORT: ":3030"
-          LITMUS_CORE_VERSION: "3.11.0"
+          LITMUS_CORE_VERSION: "3.18.0"
         resources:
           requests:
             memory: "250Mi"
@@ -204,7 +204,7 @@ litmus:
         automountServiceAccountToken: false
         image:
           repository: litmusportal-auth-server
-          tag: 3.11.0
+          tag: 3.18.0
           pullPolicy: "Always"
         ports:
           - name: auth-server

@@ -1,0 +1,126 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: kafka
+  app: startx-kafka
+  version: "2.9.0"
+clusters:
+  enabled: false
+  list:
+    - name: startx-cluster
+      namespace: startx-kafka
+      spec: |-
+        kafka:
+          version: 3.9.0
+          replicas: 3
+          listeners:
+            - name: plain
+              port: 9092
+              type: internal
+              tls: false
+            - name: tls
+              port: 9093
+              type: internal
+              tls: true
+          config:
+            offsets.topic.replication.factor: 1
+            transaction.state.log.replication.factor: 1
+            transaction.state.log.min.isr: 1
+            default.replication.factor: 1
+            min.insync.replicas: 1
+            inter.broker.protocol.version: '3.9'
+          storage:
+            type: ephemeral
+        zookeeper:
+          replicas: 1
+          storage:
+            type: ephemeral
+        entityOperator:
+          topicOperator: {}
+          userOperator: {}
+topics: 
+  enabled: false
+  list:
+    - name: example-topic
+      namespace: startx-kafka
+      cluster: startx-cluster
+      spec: |-
+        topicName: example
+        partitions: 3
+        replicas: 1
+        config:
+          retention.ms: 604800000
+          segment.bytes: 1073741824
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "startx-kafka"
+    display_name: Instance Kafka
+    description: Kafka configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "amq-streams"
+    namespace: "openshift-operators"
+    version: "v2.9.0-1"
+    operator: 
+      channel: "stable"
+      name: "amq-streams"
+      installPlanApproval: Automatic
+      csv: amqstreams
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "kafka-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "Console.v1alpha1.console.streamshub.github.com,Kafka.v1beta2.kafka.strimzi.io,KafkaBridge.v1beta2.kafka.strimzi.io,KafkaConnect.v1beta2.kafka.strimzi.io,KafkaConnector.v1beta2.kafka.strimzi.io,KafkaMirrorMaker.v1beta2.kafka.strimzi.io,KafkaMirrorMaker2.v1beta2.kafka.strimzi.io,KafkaNodePool.v1beta2.kafka.strimzi.io,KafkaRebalance.v1beta2.kafka.strimzi.io,KafkaTopic.v1beta2.kafka.strimzi.io,KafkaUser.v1beta2.kafka.strimzi.io,StrimziPodSet.v1beta2.core.strimzi.io"
+operatorConsole:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "amq-streams-console"
+    namespace: "openshift-operators"
+    version: "v2.9.0-5"
+    operator: 
+      channel: "alpha"
+      name: "amq-streams-console"
+      installPlanApproval: Automatic
+      # csv: amq-streams-console
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "kafka-console-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "Console.v1alpha1.console.streamshub.github.com"

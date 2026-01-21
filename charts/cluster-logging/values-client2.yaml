@@ -6,12 +6,14 @@ context: &context
   environment: infra
   component: logging
   app: openshift-logging
+  version: "6.2.1"
 
 # see https://access.redhat.com/documentation/en-us/openshift_container_platform/4.14/html/logging/configuring-your-logging-deployment
 logging:
   enabled: false
 logforwarder:
   enabled: true
+  apiVersion: "logging.openshift.io/v1"
   spec: |
     outputs:
     - name: elasticsearch-mgmt1
@@ -123,7 +125,7 @@ operatorElastic:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "elasticsearch-operator"
+    name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
 
@@ -137,9 +139,9 @@ operatorLoki:
     hooked: false
     name: "loki-operator"
     namespace: "openshift-operators-redhat"
-    version: "6.0.1"
+    version: "6.2.1"
     operator: 
-      channel: "stable-6.0"
+      channel: "stable-6.2"
       name: loki-operator
       installPlanApproval: Automatic
       # csv: loki-operator
@@ -157,6 +159,6 @@ operatorLoki:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "loki-operator"
+    name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"

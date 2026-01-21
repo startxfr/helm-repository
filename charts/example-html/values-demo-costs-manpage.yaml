@@ -1,0 +1,67 @@
+
+# Default values for configuration of a dev demo
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: costs
+  app: manpage
+  version: "0.0.1"
+html:
+  namespace: demo-costs
+  expose:
+    enabled: true
+  version: "alpine3"
+  replicas: 1
+  data: |
+    index.html: |-
+      <!DOCTYPE html>
+      <html lang="en-us" data-theme="dark">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta name="color-scheme" content="light dark">
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+          <title>Manpage of the costs demo</title>
+        </head>
+        <body>
+        <main class="container">
+          <h1><i class="fa-solid fa-book fa-2x"></i> Manpage of the costs demo</h1>
+          <hr/>
+          <h2><i class="fa-solid fa-bullseye"></i> Purpose of this demo</h2> 
+          <p>
+            The purpose of this demo is to show you how sxcollector and kubecost work and how
+            it can help you dealing with cost Management challenges.
+          </p> 
+          <hr/>
+          <h2><i class="fa-solid fa-box-open"></i> Installing this demo</h2> 
+          <h3>Requirements</h3> 
+          <h4>STARTX cluster manager (SXCM)</h4> 
+          <p>
+           Installing your cluster with <a href="https://sxcm.readthedocs.io/en/latest/" target="_blank" alt="STARTX SXCM">STARTX SXCM</a>
+            Allow you to instanciate this demo as well as its requirements. 
+            You can follow <a href="https://sxcm.readthedocs.io/en/latest/1-installation/" target="_blank" alt="SXCM installation docs">SXCM installation guide</a>
+            and <a href="https://sxcm.readthedocs.io/en/latest/2-cluster-management/" target="_blank" alt="SXCM cluster creation docs">SXCM cluster management</a> 
+            for a complete guideline on how to deploy an SXCM-managed cluster. 
+          </p> 
+          <h4>SXCM Cluster-service</h4> 
+          <p>Install the costs cluster service. This cluster service is based on the <a href="https://artifacthub.io/packages/helm/startx/cluster-costs" target="_blank" alt="startx cluster-costs Helm-chart">STARTX cluster-costs Helm-chart</a> and the <a href="https://artifacthub.io/packages/helm/startx/cluster-kubecost" target="_blank" alt="startx cluster-kubecost Helm-chart">STARTX cluster-kubecost Helm-chart</a>.</p> 
+          <code>sxcm resource enable costs</code>
+          <h3>Initialize this demo</h3> 
+          <p>Start the demo context with the following command :</p> 
+          <code>sxcm demo run costs begin</code>
+          <h2>Running the demo scenario</h2> 
+          <h3>Step 1</h3> 
+          <p>Run first step with the following command :</p> 
+          <code>sxcm demo run costs step 1</code>
+          <h3>Step 2</h3> 
+          <p>Run second step with the following command :</p> 
+          <code>sxcm demo run costs step 2</code>
+          <h2><i class="fa-solid fa-flag-checkered"></i> Finishing this demo</h2> 
+          <p>Cleanup the demo context with the following command :</p> 
+          <code>sxcm demo run costs end</code>
+        </main>
+        </body>
+      </html>

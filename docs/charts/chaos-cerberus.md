@@ -51,7 +51,7 @@ helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-c
 | context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+| context.version     | 1.0.0     | Version name of this application (default use Chart appVersion)                   |
 
 ### chaos-cerberus values dictionary
 
@@ -323,3 +323,20 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1
 | 17.14.11 | 2025-03-05 | Adjust doc to material layout
 | 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release
+| 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version
+| 18.11.3 | 2025-04-30 | intermediate release to move dependencies to 18.x release
+| 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
+| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
+| 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
+| 18.11.8 | 2025-05-02 | Update context version
+| 18.11.15 | 2025-05-02 | Intermediate common release for chaos charts
+| 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
+| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts
+| 18.11.24 | 2025-05-02 | Align all to stable version
+| 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme
+| 18.11.51 | 2025-05-06 | publish stable update for the full repository
+| 18.11.52 | 2025-05-07 | publish stable update for the full repository
+| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
+| 18.11.71 | 2025-11-27 | Align all charts to the same releas

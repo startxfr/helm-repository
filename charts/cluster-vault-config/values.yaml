@@ -13,7 +13,7 @@ context: &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-vault-config
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "0.8.32"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -22,7 +22,7 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: default-vault-config
     display_name: Operator VAULT
     description: Vault storage & control plane configured by startx
@@ -53,7 +53,7 @@ operator:
     hooked: false
     name: "vault-config-operator"
     namespace: "default-vault-config"
-    version: "v0.8.29"
+    version: "v0.8.32"
     operator: 
       channel: alpha
       name: vault-config-operator

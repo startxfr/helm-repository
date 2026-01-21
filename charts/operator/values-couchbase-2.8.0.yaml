@@ -1,0 +1,38 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: default
+  environment: dev
+  component: db
+  app: startx-db-couchbase
+  version: "2.8.0"
+enabled: true
+subscription:
+  enabled: true
+  hooked: false
+  name: "couchbase-enterprise-certified"
+  namespace: "openshift-startx-couchbase"
+  version: "v2.8.0-2"
+  operator: 
+    channel: stable
+    name: couchbase-enterprise-certified
+    installPlanApproval: Automatic
+    # csv: couchbase-operator
+    source: 
+      name: certified-operators
+      namespace: openshift-marketplace
+    config: 
+      infra: false
+      # resources: 
+      #   limits:
+      #     cpu: 400m
+      #   requests:
+      #     cpu: 400m
+operatorGroup:
+  enabled: true
+  hooked: false
+  target: "all-ns"
+  name: "couchbase-operator-v2"
+  namespace: "openshift-startx-couchbase"
+  providedAPIs: "CouchbaseAutoscaler.v2.couchbase.com,CouchbaseBackup.v2.couchbase.com,CouchbaseBackupRestore.v2.couchbase.com,CouchbaseBucket.v2.couchbase.com,CouchbaseCluster.v2.couchbase.com,CouchbaseCollection.v2.couchbase.com,CouchbaseCollectionGroup.v2.couchbase.com,CouchbaseEphemeralBucket.v2.couchbase.com,CouchbaseGroup.v2.couchbase.com,CouchbaseMemcachedBucket.v2.couchbase.com,CouchbaseMigrationReplication.v2.couchbase.com,CouchbaseReplication.v2.couchbase.com,CouchbaseRoleBinding.v2.couchbase.com,CouchbaseScope.v2.couchbase.com,CouchbaseScopeGroup.v2.couchbase.com,CouchbaseUser.v2.couchbase.com"

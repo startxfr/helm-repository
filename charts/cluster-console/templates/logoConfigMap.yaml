@@ -39,7 +39,7 @@ metadata:
 data:
   {{ .name | default "default-logo" -}}.{{ .format | default "svg" }}: |-
 {{- if and (eq .mode "embed") (ne .tplContent "") }}
-    {{ .tplContent | nindent 4 }}
+    {{- .tplContent | nindent 4 }}
 {{- else }}
     {{- $files.Get .tplFile | nindent 4 }}
 {{- end }}

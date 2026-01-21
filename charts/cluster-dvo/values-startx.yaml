@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: dvo
   app: startx-dvo
+  version: "0.7.8"
 graphana:
   enabled: false
   name: deployment-validation
@@ -41,7 +42,7 @@ graphanaOperator:
         name: community-operators
         namespace: openshift-marketplace
       config: 
-        infra: false
+        infra: true
   operatorGroup:
     enabled: true
     hooked: false
@@ -81,7 +82,7 @@ operator:
         name: community-operators
         namespace: openshift-marketplace
       config: 
-        infra: false
+        infra: true
         env:
           - name: NAMESPACE_IGNORE_PATTERN
             value: '^(openshift.*|kube-.*|open-cluster-.*|hypershift.*|local-cluster.*|rhacs-.*|multicluster-.*|hive.*|deployment-validation-.*)$'

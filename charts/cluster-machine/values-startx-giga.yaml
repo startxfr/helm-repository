@@ -6,12 +6,13 @@ context:
   environment: infra
   component: config
   app: startx-machine
+  version: "4.18.11"
 
 cluster:
   id: startx-xyzab
   region: eu-west-3
   autoscaler: 
-    enabled: true
+    enabled: false
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
@@ -115,42 +116,42 @@ machineSet:
   - name: infra-a
     az: a
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 150
     replicas: 0
   - name: infra-b
     az: b
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 150
     replicas: 0
   - name: infra-c
     az: c
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 150
     replicas: 0
   - name: app-a
     az: a
     type: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 150
     replicas: 1
   - name: app-b
     az: b
     type: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 150
     replicas: 1
   - name: app-c
     az: c
     type: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 150
     replicas: 1
@@ -158,7 +159,7 @@ machineSet:
     az: a
     type: gpu
     group: app-gpu
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "g4dn.xlarge"
     volumeSize: 150
     replicas: 0
@@ -166,7 +167,7 @@ machineSet:
     az: b
     type: gpu
     group: app-gpu
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "g4dn.xlarge"
     volumeSize: 150
     replicas: 0

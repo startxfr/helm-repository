@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-quay
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "3.14.0"
 
 # RHN informations for the container catalog
 rhn:
@@ -63,7 +63,7 @@ project:
   project: 
     enabled: false
     hooked: false
-    type: project
+    type: namespace
     name: "quay-operator"
     display_name: Operator QUAY
     description: Quay enterprise registry configured by STARTX
@@ -78,9 +78,9 @@ operator:
     hooked: false
     name: "quay-operator"
     namespace: "openshift-startx-quay"
-    version: "v3.13.0"
+    version: "v3.14.0"
     operator: 
-      channel: stable-3.13
+      channel: stable-3.14
       name: quay-operator
       installPlanApproval: Automatic
       # csv: quay-operator
@@ -106,9 +106,9 @@ operatorsec:
     hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
-    version: "v3.13.0"
+    version: "v3.14.0"
     operator: 
-      channel: stable-3.13
+      channel: stable-3.14
       name: container-security-operator
       installPlanApproval: Automatic
       # csv: container-security-operator

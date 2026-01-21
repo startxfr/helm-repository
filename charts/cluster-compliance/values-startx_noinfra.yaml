@@ -1,0 +1,69 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: compliance
+  app: startx-compliance
+  version: "1.7.0"
+compliance:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   compliance4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-compliance"
+    display_name: "Startx COMPLIANCE"
+    requester: startx
+    description: Compliance configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "compliance-operator"
+    namespace: "openshift-compliance"
+    version: "v1.7.0"
+    operator: 
+      channel: "stable"
+      name: compliance-operator
+      installPlanApproval: Automatic
+      # csv: compliance-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-compliance"
+    namespace: "openshift-compliance"
+    providedAPIs: "ComplianceCheckResult.v1alpha1.compliance.openshift.io,ComplianceRemediation.v1alpha1.compliance.openshift.io,ComplianceScan.v1alpha1.compliance.openshift.io,ComplianceSuite.v1alpha1.compliance.openshift.io,Profile.v1alpha1.compliance.openshift.io,ProfileBundle.v1alpha1.compliance.openshift.io,Rule.v1alpha1.compliance.openshift.io,ScanSetting.v1alpha1.compliance.openshift.io,ScanSettingBinding.v1alpha1.compliance.openshift.io,TailoredProfile.v1alpha1.compliance.openshift.io,Variable.v1alpha1.compliance.openshift.io"

@@ -1,0 +1,88 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: startx-snobig
+  environment: infra
+  component: config
+  app: startx-machine
+  version: "4.18.11"
+
+cluster:
+  id: startx-xyzab
+  region: eu-west-3
+  autoscaler: 
+    enabled: false
+    spec: |
+      podPriorityThreshold: -10 
+      resourceLimits:
+        maxNodesTotal: 3
+        cores:
+          min: 96
+          max: 288
+        memory:
+          min: 192
+          max: 576
+      scaleDown: 
+        enabled: true 
+        delayAfterAdd: 10m 
+        delayAfterDelete: 5m 
+        delayAfterFailure: 35s 
+        unneededTime: 2m 
+
+machineConfigPool: 
+  enabled: false
+  infra: false
+  virt: false
+  storage: false
+  list: 
+  - name: worker
+    machineConfigSelector: |-
+      matchExpressions:
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker]}
+    nodeSelector: |-
+      matchLabels:
+        node-role.kubernetes.io/worker: ""
+    paused: false
+machineConfig: 
+  enabled: false
+  kubelet_gc_enabled: false
+  kubelet_connectiontimeout_enabled: false
+  kubelet_master_maxpodbig: true
+  kubelet_worker_maxpodbig: false
+  kubelet_protectkerneldefaults: false
+  infra_specialconfig: false
+  add_scc_netraw: false
+  add_clusterimageconfig: false
+
+machineHealthCheck:
+  enabled: false
+  list: 
+  - name: master
+    type: master
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: worker
+    type: worker
+    group: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+
+machineAutoscaler: 
+  enabled: false
+  list: 
+  - name: worker
+    minReplicas: 0
+    maxReplicas: 2
+
+machineSet: 
+  enabled: false
+  list:
+  - name: worker
+    az: a
+    type: worker
+    group: worker
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "c5a.12xlarge"
+    volumeSize: 150
+    replicas: 0

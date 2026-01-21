@@ -11,9 +11,9 @@ context:  &context
   # Component name of this application (logical tenant)
   component: mycomponent
   # Application name (functionnal tenant, default use Chart name)
-  app: default-rh-ods
+  app: datascience
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "2.19.0"
 
 # configuration of the rh-ods DataScienceCluster
 DataScienceCluster:
@@ -28,29 +28,35 @@ DataScienceCluster:
     components:
       codeflare:
         managementState: Managed
-      dashboard:
-        managementState: Managed
-      datasciencepipelines:
-        managementState: Managed
       kserve:
+        managementState: Managed
+        nim:
+          managementState: Managed
+        rawDeploymentServiceConfig: Headless
         serving:
           ingressGateway:
             certificate:
               type: OpenshiftDefaultIngress
           managementState: Managed
           name: knative-serving
-        managementState: Managed
-      kueue:
-        managementState: Managed
-      modelmeshserving:
+      modelregistry:
+        managementState: Removed
+        registriesNamespace: rhoai-model-registries
+      trustyai:
         managementState: Managed
       ray:
         managementState: Managed
-      trainingoperator:
-        managementState: Removed
-      trustyai:
-        managementState: Removed
+      kueue:
+        managementState: Managed
       workbenches:
+        managementState: Managed
+      dashboard:
+        managementState: Managed
+      modelmeshserving:
+        managementState: Managed
+      datasciencepipelines:
+        managementState: Managed
+      trainingoperator:
         managementState: Managed
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
@@ -61,7 +67,7 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "rhods-operator"
     display_name: "Startx OpenDataScience"
     requester: startx
@@ -87,7 +93,7 @@ operator:
     hooked: false
     name: "rhods-operator"
     namespace: "rhods-operator"
-    version: "2.13.1"
+    version: "2.19.0"
     operator: 
       channel: "stable"
       name: rhods-operator
@@ -97,7 +103,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
       config: 
-        infra: true
+        infra: false
   operatorGroup:
     enabled: true
     hooked: false

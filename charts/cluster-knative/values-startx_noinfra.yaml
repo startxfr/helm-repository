@@ -1,0 +1,135 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: knative
+  app: startx-knative
+  version: "1.35.1"
+kServing:
+  enabled: true
+  hooked: false
+  name: "knative-serving"
+  replicas: 2
+kEventing:
+  enabled: true
+  hooked: false
+  name: "knative-eventing"
+kKafka:
+  enabled: true
+  hooked: false
+  name: "knative-kafka"
+projectOperator: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-serverless"
+    display_name: "Startx SERVERLESS"
+    requester: startx
+    description: Knative serverless operator configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-edit
+      name: devops
+      role: edit
+    - id: ops-edit
+      name: ops
+      role: edit
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+projectKServing: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "knative-serving"
+    display_name: "Startx SERVERLESS Serv"
+    requester: startx
+    description: Knative serverless features configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-edit
+      name: devops
+      role: edit
+    - id: ops-edit
+      name: ops
+      role: edit
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+projectKEventing: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "knative-eventing"
+    display_name: "Startx SERVERLESS Event"
+    requester: startx
+    description: Knative eventing bus features configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-edit
+      name: devops
+      role: edit
+    - id: ops-edit
+      name: ops
+      role: edit
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "serverless-operator"
+    namespace: "openshift-serverless"
+    version: "v1.35.1"
+    operator: 
+      channel: "stable"
+      name: serverless-operator
+      installPlanApproval: Automatic
+      # csv: serverless-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "serverless-operator"
+    namespace: "openshift-serverless"
+    providedAPIs: "KnativeEventing.v1beta1.operator.knative.dev,KnativeKafka.v1beta1.operator.serverless.openshift.io,KnativeServing.v1alpha1.operator.knative.dev"
