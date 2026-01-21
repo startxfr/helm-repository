@@ -1,6 +1,6 @@
 {{- if .Values.logging.enabled }}
 {{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
-apiVersion: "logging.openshift.io/v1"
+apiVersion: "{{- .Values.logging.apiVersion | default "logging.openshift.io/v1" -}}"
 kind: "ClusterLogging"
 metadata:
   name: {{ .Values.logging.name | default "instance" | quote }}
