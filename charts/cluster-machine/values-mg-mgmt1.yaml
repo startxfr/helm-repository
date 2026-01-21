@@ -6,6 +6,7 @@ context:
   environment: mgmt
   component: machine
   app: mccm-machine
+  version: "4.18.11"
 
 cluster:
   id: startx-xyzab
@@ -32,6 +33,7 @@ cluster:
 machineConfigPool: 
   enabled: false
   infra: true
+  virt: false
   storage: true
   list: 
   - name: app
@@ -118,42 +120,42 @@ machineSet:
   - name: mgmt1-infra-a
     az: a
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
     volumeSize: 150
     replicas: 1
   - name: mgmt1-infra-b
     az: b
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 150
     replicas: 1
   - name: mgmt1-infra-c
     az: c
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 150
     replicas: 1
   - name: mgmt1-storage-a
     az: a
     type: storage
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
     volumeSize: 150
     replicas: 0
   - name: mgmt1-storage-b
     az: b
     type: storage
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 150
     replicas: 0
   - name: mgmt1-storage-c
     az: c
     type: storage
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 150
     replicas: 0
@@ -161,7 +163,7 @@ machineSet:
     az: a
     type: app
     group: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
     volumeSize: 100
     replicas: 2
@@ -169,7 +171,7 @@ machineSet:
     az: b
     type: app
     group: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5a.xlarge"
     volumeSize: 100
     replicas: 0
@@ -177,7 +179,7 @@ machineSet:
     az: c
     type: app
     group: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5a.xlarge"
     volumeSize: 100
     replicas: 2

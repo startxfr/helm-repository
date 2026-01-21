@@ -27,18 +27,6 @@ data:
     {{- if .Values.monitoring.enableUserWorkload }}
     enableUserWorkload: true
     {{- end }}
-    grafana:
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector: 
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-      {{- end }}
     k8sPrometheusAdapter:
       {{- if .Values.monitoring.infra_enabled }}
       nodeSelector: 
@@ -99,13 +87,12 @@ data:
           key: node-role.kubernetes.io/infra
           operator: Exists
       {{- end }}
-    prometheus: 
+    prometheusK8s: 
       retention: {{ default "7d" .Values.monitoring.retentionPeriod }}
       resources:
         requests:
           cpu: 200m 
           memory: 2Gi
-    prometheusK8s: 
       {{- if .Values.monitoring.infra_enabled }}
       nodeSelector: 
         node-role.kubernetes.io/infra: ''

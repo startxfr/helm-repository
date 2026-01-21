@@ -6,7 +6,7 @@ context: &context
   environment: infra
   component: 3scale
   app: startx-3scale
-  version: "0.11.12"
+  version: "0.12.3"
 manager:
   enabled: true
   hooked: false
@@ -17,7 +17,7 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: startx-3scale
     display_name: "Startx 3SCALE"
     requester: startx
@@ -143,10 +143,10 @@ operator:
     enabled: true
     hooked: false
     name: "3scale-operator"
-    namespace: "rh3scale-operator"
-    version: "v0.11.12"
+    namespace: "openshift-operators"
+    version: "v0.12.3"
     operator: 
-      channel: threescale-2.14
+      channel: threescale-2.15
       name: 3scale-operator
       installPlanApproval: Automatic
       # csv: 3scale-operator
@@ -164,5 +164,5 @@ operator:
     enabled: false
     target: "all-ns"
     name: "startx-3scale"
-    namespace: "rh3scale-operator"
+    namespace: "openshift-operators"
     providedAPIs: "APIManager.v1alpha1.apps.3scale.net,APIManagerBackup.v1alpha1.apps.3scale.net,APIManagerRestore.v1alpha1.apps.3scale.net,ActiveDoc.v1beta1.capabilities.3scale.net,Backend.v1beta1.capabilities.3scale.net,CustomPolicyDefinition.v1beta1.capabilities.3scale.net,DeveloperAccount.v1beta1.capabilities.3scale.net,DeveloperUser.v1beta1.capabilities.3scale.net,OpenAPI.v1beta1.capabilities.3scale.net,Product.v1beta1.capabilities.3scale.net,ProxyConfigPromote.v1beta1.capabilities.3scale.net"

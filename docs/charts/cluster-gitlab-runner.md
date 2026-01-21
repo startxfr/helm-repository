@@ -1,7 +1,10 @@
 # ![cluster-gitlab-runner](https://helm-repository.readthedocs.io/en/latest/img/cluster-gitlab-runner.svg "Cluster Chart : Gitlab runner") Cluster Chart : Gitlab Runners
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--gitlab--runner-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+gitlab+runner+startx)
 
-This helm chart is used to deploy Gitlab instances managed by a dedicated operator.
+!!! warning
+    This chart is now DEPRECATED and replaced by a native implementation via gitlab server.
+
+This helm chart is used to deploy Gitlab runner managed by a dedicated operator.
 
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
@@ -328,3 +331,7 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1
 | 17.14.11 | 2025-03-05 | Adjust doc to material layout
 | 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release
+| 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version
+| 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
+| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
+| 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release

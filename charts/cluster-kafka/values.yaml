@@ -1,0 +1,149 @@
+# Default values for cluster-kafka.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-kafka
+  # Version name of this application (default use Chart appVersion)
+  version: "2.9.0"
+
+# Deploy kafka clusters
+clusters:
+  # Enable creation of certificates
+  enabled: false
+  # List of kafka cluster resource to deploy
+  list:
+      # name of the cluster
+    - name: example-cluster
+      # namespace of the cluster (default is project namespace)
+      namespace: startx-kafka
+      # spec of the certificate
+      spec: |-
+        kafka:
+          version: 3.9.0
+          replicas: 3
+          listeners:
+            - name: plain
+              port: 9092
+              type: internal
+              tls: false
+            - name: tls
+              port: 9093
+              type: internal
+              tls: true
+          config:
+            offsets.topic.replication.factor: 3
+            transaction.state.log.replication.factor: 3
+            transaction.state.log.min.isr: 2
+            default.replication.factor: 3
+            min.insync.replicas: 2
+            inter.broker.protocol.version: '3.9'
+          storage:
+            type: ephemeral
+        zookeeper:
+          replicas: 3
+          storage:
+            type: ephemeral
+        entityOperator:
+          topicOperator: {}
+          userOperator: {}
+# Configure kafka topics in clusters
+topics: 
+  # Enable creation of clusterIssuers
+  enabled: false
+  # List of clusterIssuer resource to deploy
+  list:
+      # name of the topic
+    - name: example-topic
+      # namespace of the topic (default is project namespace)
+      namespace: startx-kafka
+      # The kafka cluster to use for this topic (default is my-cluster)
+      cluster: example-cluster
+      # spec of the topic
+      spec: |-
+        topicName: example
+        partitions: 10
+        replicas: 3
+        config:
+          retention.ms: 604800000
+          segment.bytes: 1073741824
+
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "startx-kafka"
+    display_name: Instance Kafka
+    description: Kafka configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "amq-streams"
+    namespace: "openshift-operators"
+    version: "v2.9.0-1"
+    operator: 
+      channel: "stable"
+      name: "amq-streams"
+      installPlanApproval: Automatic
+      csv: amqstreams
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "kafka-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "Kafka.v1beta2.kafka.strimzi.io,KafkaBridge.v1beta2.kafka.strimzi.io,KafkaConnect.v1beta2.kafka.strimzi.io,KafkaConnector.v1beta2.kafka.strimzi.io,KafkaMirrorMaker.v1beta2.kafka.strimzi.io,KafkaMirrorMaker2.v1beta2.kafka.strimzi.io,KafkaNodePool.v1beta2.kafka.strimzi.io,KafkaRebalance.v1beta2.kafka.strimzi.io,KafkaTopic.v1beta2.kafka.strimzi.io,KafkaUser.v1beta2.kafka.strimzi.io,StrimziPodSet.v1beta2.core.strimzi.io"
+
+# Configuration of the console operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorConsole:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "amq-streams-console"
+    namespace: "openshift-operators"
+    version: "v2.9.0-5"
+    operator: 
+      channel: "alpha"
+      name: "amq-streams-console"
+      installPlanApproval: Automatic
+      # csv: amq-streams-console
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "kafka-console-operator"
+    namespace: "openshift-operators"
+    providedAPIs: "Console.v1alpha1.console.streamshub.github.com"

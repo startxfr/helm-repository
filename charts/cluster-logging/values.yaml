@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-logging
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "6.2.1"
 
 # configuration of the logging service
 logging:
@@ -23,6 +23,9 @@ logging:
   infra_enabled: false
   # Activate the manager as a helm hook
   hooked: false
+  # The ApiVersion of the logging
+  # apiVersion: "observability.openshift.io/v1"
+  apiVersion: "logging.openshift.io/v1"
   # set the management state to use
   managementState: "Managed"
   # Section for external exposition of elasticsearch
@@ -114,6 +117,9 @@ eventrouter:
 logforwarder:
   # Enable the deployment of the logforwarder service
   enabled: false
+  # The ApiVersion of the forwarder
+  # apiVersion: "observability.openshift.io/v1"
+  apiVersion: "logging.openshift.io/v1"
   # spec of the og forwarder
   spec: |
     pipelines: 
@@ -194,9 +200,9 @@ operator:
     enabled: true
     name: "cluster-logging"
     namespace: "openshift-logging"
-    version: "6.0.1"
+    version: "6.2.1"
     operator: 
-      channel: "stable"
+      channel: "stable-6.2"
       name: cluster-logging
       installPlanApproval: Automatic
       # csv: cluster-logging
@@ -238,7 +244,7 @@ operatorElastic:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "elasticsearch-operator"
+    name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io,LogFileMetricExporter.v1alpha1.logging.openshift.io"
 
@@ -252,9 +258,9 @@ operatorLoki:
     hooked: false
     name: "loki-operator"
     namespace: "openshift-operators-redhat"
-    version: "6.0.1"
+    version: "6.2.1"
     operator: 
-      channel: "stable-6.0"
+      channel: "stable-6.2"
       name: loki-operator
       installPlanApproval: Automatic
       # csv: loki-operator
@@ -267,6 +273,6 @@ operatorLoki:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "loki-operator"
+    name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"

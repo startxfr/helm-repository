@@ -1,0 +1,33 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: default
+  environment: infra
+  component: workspaces
+  app: startx-workspaces
+  version: "0.33.0"
+enabled: true
+subscription:
+  enabled: true
+  hooked: false
+  name: "devworkspace-operator-fast-redhat-operators-openshift-marketplace"
+  namespace: "openshift-operators"
+  version: "v0.33.0"
+  operator: 
+    channel: "fast"
+    name: devworkspace-operator
+    installPlanApproval: Automatic
+    csv: devworkspace-operator
+    source: 
+      name: redhat-operators
+      namespace: openshift-marketplace
+    config: 
+      infra: false
+operatorGroup:
+  enabled: false
+  hooked: false
+  name: "openshift-devworkspace"
+  namespace: "openshift-operators"
+  providedAPIs: "DevWorkspace.v1alpha1.workspace.devfile.io,DevWorkspace.v1alpha2.workspace.devfile.io,DevWorkspaceOperatorConfig.v1alpha1.controller.devfile.io,DevWorkspaceRouting.v1alpha1.controller.devfile.io,DevWorkspaceTemplate.v1alpha1.workspace.devfile.io,DevWorkspaceTemplate.v1alpha2.workspace.devfile.io"
+

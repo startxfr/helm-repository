@@ -1,0 +1,78 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: acs
+  app: startx-acs
+  version: "4.7.2"
+acs:
+  enabled: true
+  infra: false ## set this to true if infra node available
+  central:
+    enabled: true
+    hooked: false
+    name: "startx"
+  scanner:
+    enabled: true
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: "rhacs-operator"
+    display_name: Startx ACS
+    description: ACS operators configured by startx
+  rbac: 
+    enabled: true
+    groups: 
+    - id: devops-view
+      name: devops
+      role: view
+    - id: ops-admin
+      name: ops
+      role: admin
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: false
+  quotas: 
+    enabled: false
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    infra: false ## set this to true if infra node available
+    name: "rhacs-operator"
+    namespace: "openshift-operators"
+    version: "v4.7.2"
+    operator: 
+      channel: "rhacs-4.7"
+      name: rhacs-operator
+      installPlanApproval: Automatic
+      # csv: rhacs-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: false
+    target: "all-ns"
+    name: "startx-rhacs"
+    namespace: "openshift-operators"
+    providedAPIs: " Central.v1alpha1.platform.stackrox.io,SecuredCluster.v1alpha1.platform.stackrox.io"

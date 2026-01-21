@@ -1,0 +1,58 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: acm
+  app: startx-acm
+  version: "2.13.2"
+acm:
+  enabled: true
+  infra: false ## set this to true if infra node available
+  mch:
+    enabled: true
+    hooked: false
+    name: "multiclusterhub"
+    availabilityConfig: High
+    hive:
+        enabled: true
+        spec: |
+          backup:
+              velero: {}
+          failedProvisionConfig: {}
+    ingress:
+        enabled: true
+        spec: |
+          sslCiphers:
+            - ECDHE-ECDSA-AES256-GCM-SHA384
+            - ECDHE-RSA-AES256-GCM-SHA384
+            - ECDHE-ECDSA-AES128-GCM-SHA256
+            - ECDHE-RSA-AES128-GCM-SHA256
+import:
+  enabled: false
+  hooked: false
+create:
+  enabled: false
+  hooked: false
+observability:
+  enabled: false
+  hooked: false
+projectObservability: 
+  enabled: false
+  project: 
+    enabled: false
+    hooked: false
+    name: "open-cluster-management-observability"
+project: 
+  enabled: false
+  project: 
+    enabled: false
+    hooked: false
+    name: "open-cluster-management"
+operator:
+  enabled: false
+  subscription:
+    enabled: false
+  config:
+    infra: false

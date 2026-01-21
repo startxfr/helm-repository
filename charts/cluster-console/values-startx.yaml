@@ -6,6 +6,7 @@ context: &context
   environment: sf
   component: console
   app: startx-console
+  version: "4.18.11"
 console:
   enabled: true
   namespace: openshift-config
@@ -16,7 +17,7 @@ console:
       name: startx-logo
       format: svg
       mode: file
-      tplFile: webtpl/startx-logo.svg
+      tplFile: webtpl/devoteam-logo.svg
       manageSubresource: true
   links:
   - name: startx-link-all-namespaces-dashboard
@@ -91,3 +92,29 @@ console:
       # location: BannerTopBottom
       location: BannerBottom
       text: En cas de probleme sur ce cluster, vous pouvez
+webTerminal:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "web-terminal"
+    namespace: "openshift-operators"
+    version: "v1.13.0"
+    operator: 
+      channel: fast
+      name: web-terminal
+      installPlanApproval: Automatic
+      # csv: web-terminal
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: ""

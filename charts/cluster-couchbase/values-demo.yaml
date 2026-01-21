@@ -6,7 +6,7 @@ context: &context
   environment: infra
   component: couchbase
   app: demo-couchbase
-
+  version: "2.8.0"
 couchbaseConfig:
   enabled: false
   saPods: 
@@ -79,7 +79,7 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "demo-couchbase"
     display_name: "Demo COUCHBASE"
     requester: startx
@@ -108,7 +108,7 @@ operator:
     hooked: false
     name: "couchbase-enterprise-certified"
     namespace: "openshift-startx-couchbase"
-    version: "v2.7.0-0"
+    version: "v2.8.0-2"
     operator: 
       channel: stable
       name: couchbase-enterprise-certified

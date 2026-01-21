@@ -12,7 +12,7 @@ enabled: true
 project: 
   enabled: true
   hooked: false
-  type: project
+  type: namespace
   name: demo-kubevirt
   display_name: Demo KUBEVIRT
   description: Various deployment examples deployed using kubevirt
@@ -54,7 +54,7 @@ limits:
     limits:
       - type: "Pod"
         min:
-          cpu: "20m"
+          cpu: "10m"
           memory: "32Mi"
         max:
           cpu: 6
@@ -64,10 +64,10 @@ limits:
           cpu: 1
           memory: "1Gi"
         defaultRequest:
-          cpu: "20m"
+          cpu: "10m"
           memory: "32Mi"
         min:
-          cpu: "20m"
+          cpu: "10m"
           memory: "32Mi"
         max:
           cpu: 4

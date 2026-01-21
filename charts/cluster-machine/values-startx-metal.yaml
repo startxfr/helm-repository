@@ -6,12 +6,13 @@ context:
   environment: infra
   component: config
   app: startx-machine
+  version: "4.18.11"
 
 cluster:
   id: startx-xyzab
   region: eu-west-3
   autoscaler: 
-    enabled: true
+    enabled: false
     spec: |
       podPriorityThreshold: -10 
       resourceLimits:
@@ -45,7 +46,6 @@ machineConfigPool:
     paused: false
 machineConfig: 
   enabled: false
-
 machineHealthCheck:
   enabled: false
   list: 
@@ -163,7 +163,7 @@ machineSet:
     az: a
     type: infra
     group: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -171,7 +171,7 @@ machineSet:
     az: b
     type: infra
     group: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -179,7 +179,7 @@ machineSet:
     az: c
     type: infra
     group: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -187,7 +187,7 @@ machineSet:
     az: a
     type: storage
     group: storage
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -195,7 +195,7 @@ machineSet:
     az: b
     type: storage
     group: storage
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -203,7 +203,7 @@ machineSet:
     az: c
     type: storage
     group: storage
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "r5a.2xlarge"
     volumeSize: 250
     replicas: 1
@@ -211,7 +211,7 @@ machineSet:
     az: a
     type: app
     group: app-small
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.large"
     volumeSize: 150
     replicas: 1
@@ -219,7 +219,7 @@ machineSet:
     az: b
     type: app
     group: app-small
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.large"
     volumeSize: 150
     replicas: 0
@@ -227,7 +227,7 @@ machineSet:
     az: c
     type: app
     group: app-small
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.large"
     volumeSize: 150
     replicas: 0
@@ -235,7 +235,7 @@ machineSet:
     az: a
     type: app
     group: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.xlarge"
     volumeSize: 150
     replicas: 1
@@ -243,7 +243,7 @@ machineSet:
     az: b
     type: app
     group: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.xlarge"
     volumeSize: 150
     replicas: 1
@@ -251,7 +251,7 @@ machineSet:
     az: c
     type: app
     group: app
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.xlarge"
     volumeSize: 150
     replicas: 1
@@ -259,7 +259,7 @@ machineSet:
     az: a
     type: app
     group: app-big
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.2xlarge"
     volumeSize: 150
     replicas: 0
@@ -267,7 +267,7 @@ machineSet:
     az: b
     type: app
     group: app-big
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.2xlarge"
     volumeSize: 150
     replicas: 1
@@ -275,7 +275,7 @@ machineSet:
     az: c
     type: app
     group: app-big
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "t3a.2xlarge"
     volumeSize: 150
     replicas: 0
@@ -283,7 +283,7 @@ machineSet:
     az: a
     type: virt
     group: app-virt
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5.metal"
     volumeSize: 150
     replicas: 1
@@ -291,7 +291,7 @@ machineSet:
     az: b
     type: virt
     group: app-virt
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5.metal"
     volumeSize: 150
     replicas: 0
@@ -299,7 +299,7 @@ machineSet:
     az: c
     type: virt
     group: app-virt
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5.metal"
     volumeSize: 150
     replicas: 0
@@ -307,7 +307,7 @@ machineSet:
     az: a
     type: gpu
     group: app-gpu
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "g4dn.xlarge"
     volumeSize: 150
     replicas: 0
@@ -315,7 +315,7 @@ machineSet:
     az: b
     type: gpu
     group: app-gpu
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "g4dn.xlarge"
     volumeSize: 150
     replicas: 0
@@ -323,7 +323,7 @@ machineSet:
     az: c
     type: gpu
     group: app-gpu
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "g4dn.xlarge"
     volumeSize: 150
     replicas: 0

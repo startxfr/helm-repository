@@ -1,0 +1,316 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: istio
+  app: default
+  version: "2.6.7"
+istio:
+  enabled: true
+  hooked: false
+  name: startx
+  members:
+    enabled: false
+    list: 
+    - namespace: default
+      controlePlane: startx
+      controlePlaneNS: startx-istio
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "startx-istio"
+    display_name: "Startx ISTIO"
+    requester: startx
+    description: Service mesh using ISTIO System running tracing, monitoring, management and routing tools configured by STARTX
+  rbac: 
+    enabled: true
+    groups: 
+    - id: dev-view
+      name: dev
+      role: view
+    - id: devops-edit
+      name: devops
+      role: edit
+    - id: ops-admin
+      name: ops
+      role: admin
+  serviceAccounts:
+    enabled: true
+    list: 
+      - name: default
+        imagePullSecrets: 
+          - name: startx-registrycreds-quay
+          - name: startx-registrycreds-docker
+      - name: deployer
+        imagePullSecrets:
+          - name: startx-registrycreds-quay
+          - name: startx-registrycreds-docker
+  dockercfg:
+    enabled: true
+    list: 
+      - name: startx-registrycreds-quay
+        registry: quay.io
+        username: startx
+        password: xxxx
+        email: "dev@startx.fr"
+      - name: startx-registrycreds-docker
+        registry: docker.io
+        username: startxfr
+        password: xxxx
+        email: "dev@startx.fr"
+  networkpolicy: 
+    enabled: false
+  limits: 
+    enabled: true
+    rules:  |
+      limits:
+        - type: "Pod"
+          min:
+            cpu: "10m"
+            memory: "32Mi"
+          max:
+            cpu: "6800m"
+            memory: "10Gi"
+        - type: "Container"
+          default:
+            cpu: "200m"
+            memory: "256Mi"
+          defaultRequest:
+            cpu: "50m"
+            memory: "64Mi"
+          min:
+            cpu: "10m"
+            memory: "32Mi"
+          max:
+            cpu: "4800m"
+            memory: "6Gi"
+  quotas: 
+    enabled: true
+    rules:  |
+      hard:
+        limits.cpu: "15"
+        limits.memory: "18Gi"
+        requests.cpu: "6"
+        requests.memory: "7Gi"
+        requests.storage: "2Gi"
+        persistentvolumeclaims: "0"
+        ephemeral-storage: "2Gi" 
+        gp2.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp3.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp2-csi.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp2-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        gp3-csi.storageclass.storage.k8s.io/requests.storage: "0Gi"
+        gp3-csi.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-fast-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-fast-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-slow-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-aws-slow-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-odf-generic-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-odf-generic-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-odf-generic-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-odf-generic-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-odf-fs-delete.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-odf-fs-delete.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        startx-odf-fs-retain.storageclass.storage.k8s.io/requests.storage: "0"
+        startx-odf-fs-retain.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/requests.storage: "0"
+        ocs-storagecluster-ceph-rbd.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/requests.storage: "0"
+        openshift-storage.noobaa.io.storageclass.storage.k8s.io/persistentvolumeclaims: "0"
+        pods: "20"
+        services: "20"
+        secrets: "80"
+        configmaps: "25"
+        replicationcontrollers: "0"
+        openshift.io/imagestreams: "0"
+projectOperator: 
+  enabled: false
+
+# Configuration of the elasticSearch operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorElastic:
+  enabled: false
+  context: 
+    <<: *context
+    version: "5.8.19"
+  subscription:
+    enabled: true
+    hooked: false
+    name: "elasticsearch-operator"
+    namespace: "openshift-operators-redhat"
+    version: "5.8.19"
+    operator: 
+      channel: "stable"
+      name: elasticsearch-operator
+      # csv: elasticsearch-operator
+      installPlanApproval: Automatic
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "openshift-operators-redhat"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
+
+# Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorLoki:
+  enabled: false
+  context: 
+    <<: *context
+    version: "6.2.1"
+  subscription:
+    enabled: true
+    hooked: false
+    name: "loki-operator"
+    namespace: "openshift-operators-redhat"
+    version: "6.2.1"
+    operator: 
+      channel: "stable-6.2"
+      name: loki-operator
+      installPlanApproval: Automatic
+      # csv: loki-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "openshift-operators-redhat"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"
+
+# Configuration of the kiali operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorKiali:
+  enabled: false
+  context: 
+    <<: *context
+    version: "2.4.4"
+  subscription:
+    enabled: true
+    hooked: false
+    name: "kiali-ossm"
+    namespace: "openshift-operators"
+    version: "v2.4.4"
+    operator: 
+      channel: "stable"
+      name: kiali-ossm
+      installPlanApproval: Automatic
+      # csv: kiali-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "kiali-ossm"
+    namespace: "openshift-operators"
+    providedAPIs: "Kiali.v1alpha1.kiali.io,MonitoringDashboard.v1alpha1.monitoring.kiali.io"
+
+# Configuration of the jaeger operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorJaeger:
+  enabled: false
+  context: 
+    <<: *context
+    version: "1.65.0"
+  subscription:
+    enabled: true
+    hooked: false
+    name: "jaeger-product"
+    namespace: "openshift-distributed-tracing"
+    version: "v1.65.0-1"
+    operator: 
+      channel: "stable"
+      name: jaeger-product
+      installPlanApproval: Automatic
+      csv: jaeger-operator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "jaeger-operator"
+    namespace: "openshift-distributed-tracing"
+    providedAPIs: "Jaeger.v1.jaegertracing.io"
+
+# Configuration of the istio operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorIstio:
+  enabled: false
+  context: 
+    <<: *context
+    version: "2.6.7"
+  subscription:
+    enabled: true
+    hooked: false
+    name: "servicemeshoperator"
+    namespace: "openshift-operators"
+    version: "v2.6.7-0"
+    operator: 
+      channel: "stable"
+      name: servicemeshoperator
+      installPlanApproval: Automatic
+      # csv: servicemeshoperator
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns"
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "ServiceMeshControlPlane.v2.maistra.io,ServiceMeshMember.v2.maistra.io,ServiceMeshMemberRoll.v2.maistra.io"

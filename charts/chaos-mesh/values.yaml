@@ -18,7 +18,7 @@ context:  &context
 # Application name (functionnal tenant, default use Chart name)
  app: chaos-mesh
 # Version name of this application (default use Chart appVersion)
- version: "0.0.1"
+ version: "2.7.1"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -27,7 +27,7 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: chaos-mesh
     display_name: Chaos - Mesh
     description: chaos-mesh orchestrator in STARTX Chaos test suite
@@ -36,9 +36,6 @@ project:
 mesh: 
   enabled: false
   expose: true
-  chaosDaemon:
-    runtime: crio
-    socketPath: /var/run/crio/crio.sock
   nameOverride: ""
   fullnameOverride: ""
   customLabels: {}

@@ -1,0 +1,24 @@
+{{- if .Values.topics -}}{{- if .Values.topics.enabled -}}
+{{- $defaultns := .Values.project.project.name | default "openshift-kafka" -}}
+{{ range .Values.topics.list }}
+{{- $name := .name | default "my-topic" -}}
+{{- $kafkaCluster := .cluster | default "my-cluster" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $spec := .spec | default "{}" -}}
+---
+kind: KafkaTopic
+apiVersion: kafka.strimzi.io/v1beta2
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-kafka.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-kafkatopic"
+    strimzi.io/cluster: {{ $kafkaCluster | quote }}
+  annotations:
+    {{- include "cluster-kafka.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "50"
+spec:
+  {{- $spec | nindent 2 }}
+{{ end }}
+{{- end -}}{{- end -}}

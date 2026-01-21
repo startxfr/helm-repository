@@ -13,7 +13,7 @@ context: &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-pipeline
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "1.18.0"
 
 # Configuration of the projectOperator (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 projectOperator: 
@@ -22,7 +22,7 @@ projectOperator:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: "pipeline-operator"
     display_name: Operator PIPELINE
     description: tekton operators configured by startx
@@ -44,7 +44,7 @@ operator:
     enabled: true
     name: "openshift-pipelines-operator-rh"
     namespace: "openshift-operators"
-    version: "v1.16.1"
+    version: "v1.18.0"
     operator: 
       channel: latest
       name: openshift-pipelines-operator-rh
@@ -69,6 +69,15 @@ operator:
       displayName: Pipelines Console Plugin
       i18n:
         loadType: Preload
+      proxy:
+        - alias: tekton-results-api-service
+          authorization: None
+          endpoint:
+            service:
+              name: tekton-results-api-service
+              namespace: openshift-pipeline
+              port: 8080
+            type: Service
   operatorGroup:
     enabled: false
     target: "all-ns"

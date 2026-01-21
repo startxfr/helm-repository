@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-crunchy
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "5.8.1"
 
 # Configure the loaders pod
 loader:
@@ -79,7 +79,7 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "demo-crunchy"
     display_name: "Demo CrunchyDB"
     description: Demo CrunchyDB configured by STARTX
@@ -94,7 +94,7 @@ operator:
     hooked: false
     name: "crunchy-postgres-operator"
     namespace: "demo-crunchy"
-    version: "v5.7.0"
+    version: "v5.8.1"
     operator: 
       channel: v5
       name: crunchy-postgres-operator

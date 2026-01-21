@@ -6,9 +6,11 @@ context: &context
   environment: infra
   component: kubecost
   app: startx-kubecost
+  version: "2.7.1"
 kubecost:
   enabled: false
   hooked: false
+  enabledRoute: true
   name: default
   spec: |
     pricingCsv:
@@ -1134,7 +1136,7 @@ project:
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "kubecost"
@@ -1151,7 +1153,7 @@ operator:
     hooked: false
     name: "kubecost-operator"
     namespace: "kubecost"
-    version: "v2.5.3"
+    version: "v2.7.1"
     operator: 
       channel: "alpha"
       name: kubecost-operator
@@ -1163,7 +1165,7 @@ operator:
       config: 
         infra: false
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "kubecost"
     namespace: "kubecost"

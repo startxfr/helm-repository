@@ -1,0 +1,29 @@
+---
+# TODO remove after check
+- name: Récupérer les métriques mensuelles du controller AAP
+  hosts: localhost
+  gather_facts: no
+  vars:
+    controller_host: "demo-demo-aap.apps.demo-snobm.startx.fr/api/controller" 
+    metrics_date: "2025-05-01"              # Idem
+    controller_username: "admin"            # ou via vault / vars_prompt
+    controller_password: "Mi1sU0IYsvTGkvJgv9DpUpeHCr7kS18hs"    # stock sécurisé recommandé
+    api_endpoint: "/v2/host_metric_summary_monthly/"
+
+  tasks:
+    - name: Preparer l'authentification vers AAP
+      set_fact:
+        auth_string: "{{ controller_username }}:{{ controller_password }}"
+
+    - name: Récupérer les données de métriques mensuelles
+      uri:
+        url: "https://{{ controller_host }}{{ api_endpoint }}?date={{ metrics_date }}&format=json"
+        method: GET
+        headers:
+          Authorization: "Basic {{ auth_string | b64encode }}"
+        validate_certs: no
+      register: metrics_response
+
+    - name: Afficher les métriques
+      debug:
+        var: metrics_response.json.results[0]

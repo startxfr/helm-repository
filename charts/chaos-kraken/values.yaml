@@ -7,18 +7,18 @@
 
 # Application chaos context
 context:  &context
-# Name of the global scope for this application (organisational tenant)
- scope: companyname
-# Name of the cluster running this application (plateform tenant)
- cluster: clustername
-# Name of the environement for this application (ex: dev, factory, preprod or prod)
- environment: dev
-# Component name of this application (logical tenant)
- component: chaos
-# Application name (functionnal tenant, default use Chart name)
- app: kraken
-# Version name of this application (default use Chart appVersion)
- version: "0.0.1"
+  # Name of the global scope for this application (organisational tenant)
+  scope: companyname
+  # Name of the cluster running this application (plateform tenant)
+  cluster: clustername
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: chaos
+  # Application name (functionnal tenant, default use Chart name)
+  app: kraken
+  # Version name of this application (default use Chart appVersion)
+  version: "3.0.6"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -27,7 +27,7 @@ project:
     <<: *context
   project: 
     enabled: true
-    type: project
+    type: namespace
     name: chaos-kraken
     display_name: Chaos - Kraken
     description: Kraken chaos orchestrator in STARTX Chaos test suite
@@ -36,6 +36,8 @@ project:
 kraken: 
   # Unleash the kraken ;)
   enabled: false
+  # version of the kraken image
+  version: "v3.0.6"
   # Enable exposition for this application (route based)
   expose: true
   # Fill the cerberus server url. (internal is better)

@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: quaysecvuln
   app: startx-quaysecvuln
+  version: "3.14.0"
 rhn:
   enabled: false
 route:
@@ -20,7 +21,7 @@ project:
   project: 
     hooked: false
     enabled: false
-    type: project
+    type: namespace
     name: "openshift-startx-quaysecvuln"
     display_name: "Startx QUAYSEC"
     requester: startx
@@ -38,9 +39,9 @@ operatorsec:
     hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
-    version: "v3.13.0"
+    version: "v3.14.0"
     operator: 
-      channel: stable-3.13
+      channel: stable-3.14
       name: container-security-operator
       installPlanApproval: Automatic
       # csv: container-security-operator

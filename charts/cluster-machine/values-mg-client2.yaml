@@ -6,6 +6,7 @@ context:
   environment: client
   component: machine
   app: mccm-machine
+  version: "4.18.11"
 
 cluster:
   id: startx-6jhzk
@@ -32,6 +33,7 @@ cluster:
 machineConfigPool:
   enabled: false
   infra: true
+  virt: false
   storage: false
   list: 
   - name: app
@@ -119,21 +121,21 @@ machineSet:
   - name: client2-infra-a
     az: a
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge" # 8cpu, 32Gi
     volumeSize: 120
     replicas: 1
   - name: client2-infra-b
     az: b
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 120
     replicas: 1
   - name: client2-infra-c
     az: c
     type: infra
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 120
     replicas: 1
@@ -141,7 +143,7 @@ machineSet:
     az: a
     type: app
     group: app-small
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5a.xlarge" # 4cpu, 8Gi
     volumeSize: 100
     replicas: 0
@@ -149,7 +151,7 @@ machineSet:
     az: b
     type: app
     group: app-small
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5a.xlarge"
     volumeSize: 100
     replicas: 0
@@ -157,7 +159,7 @@ machineSet:
     az: c
     type: app
     group: app-small
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "c5a.xlarge"
     volumeSize: 100
     replicas: 0
@@ -165,7 +167,7 @@ machineSet:
     az: a
     type: app
     group: app-big
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 100
     replicas: 0
@@ -173,7 +175,7 @@ machineSet:
     az: b
     type: app
     group: app-big
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 100
     replicas: 0
@@ -181,7 +183,7 @@ machineSet:
     az: c
     type: app
     group: app-big
-    ami: ami-0add59eb238c299d5
+    ami: ami-073ea4e4624cedfa0
     instanceType: "m5a.2xlarge"
     volumeSize: 100
     replicas: 0

@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: istio
   app: default
+  version: "2.6.7"
 istio:
   enabled: true
   hooked: false
@@ -25,7 +26,7 @@ project:
   project:
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "monaco-istio"
     display_name: "Monaco ISTIO"
     requester: startx
@@ -139,12 +140,13 @@ operatorElastic:
   enabled: false
   context:
     <<: *context
+    version: "5.8.19"
   subscription:
     enabled: true
     hooked: false
     name: "elasticsearch-operator"
     namespace: "openshift-operators-redhat"
-    version: "5.8.14"
+    version: "5.8.19"
     operator: 
       channel: "stable"
       name: elasticsearch-operator
@@ -157,23 +159,24 @@ operatorElastic:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "elasticsearch-operator"
+    name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "Elasticsearch.v1.logging.openshift.io,Kibana.v1.logging.openshift.io"
 
 # Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorLoki:
-  enabled: true
+  enabled: false
   context: 
     <<: *context
+    version: "6.2.1"
   subscription:
     enabled: true
     hooked: false
     name: "loki-operator"
     namespace: "openshift-operators-redhat"
-    version: "6.0.1"
+    version: "6.2.1"
     operator: 
-      channel: "stable-6.0"
+      channel: "stable-6.2"
       name: loki-operator
       installPlanApproval: Automatic
       # csv: loki-operator
@@ -186,7 +189,7 @@ operatorLoki:
     enabled: true
     hooked: false
     target: "all-ns"
-    name: "loki-operator"
+    name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"
 
@@ -195,12 +198,13 @@ operatorKiali:
   enabled: false
   context:
     <<: *context
+    version: "2.4.4"
   subscription:
     enabled: true
     hooked: false
     name: "kiali-ossm"
     namespace: "openshift-operators"
-    version: "v1.89.6"
+    version: "v2.4.4"
     operator:
       channel: "stable"
       name: kiali-ossm
@@ -222,12 +226,13 @@ operatorJaeger:
   enabled: false
   context:
     <<: *context
+    version: "1.65.0"
   subscription:
     enabled: true
     hooked: false
     name: "jaeger-product"
     namespace: "openshift-distributed-tracing"
-    version: "v1.57.0-10-0.1730817420.p"
+    version: "v1.65.0-1"
     operator: 
       channel: "stable"
       name: jaeger-product
@@ -249,12 +254,13 @@ operatorIstio:
   enabled: false
   context:
     <<: *context
+    version: "2.6.7"
   subscription:
     enabled: true
     hooked: false
     name: "servicemeshoperator"
     namespace: "openshift-operators"
-    version: "v2.6.2"
+    version: "v2.6.7-0"
     operator:
       channel: "stable"
       name: servicemeshoperator

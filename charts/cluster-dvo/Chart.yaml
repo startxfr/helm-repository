@@ -39,23 +39,23 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.19"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.19"
     alias: operator
     condition: operator.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.19"
     alias: graphanaProject
     condition: graphana.project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable/
-    version: "17.14.1"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+    version: "18.11.19"
     alias: graphanaOperator
     condition: graphana.operator.enabled
 
@@ -78,10 +78,11 @@ annotations:
       url: https://helm-repository.readthedocs.io/en/latest/charts/project
     - name: Startx basic chart - Operator
       url: https://helm-repository.readthedocs.io/en/latest/charts/operator
-  # Artifacthub changes logs
+  # Artifacthub signing keys
   artifacthub.io/signKey: |
     fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
       description: "Align all chart to the 17.14.21-noschema release"

@@ -1,0 +1,42 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: default
+  environment: infra
+  component: auth
+  app: startx-auth
+  version: "4.18.11"
+auth:
+  enabled: true
+  tokenMaxAge: 86400
+  namespace: openshift-config
+  templates:
+    login: 
+      name: startx-login
+      tplFile: webtpl/devoteam-login.html
+      manageSubresource: true
+    errors: 
+      name: startx-errors
+      tplFile: webtpl/devoteam-errors.html
+      manageSubresource: true
+    providers: 
+      name: startx-providers
+      tplFile: webtpl/devoteam-providers.html
+      manageSubresource: true
+  authBackend:
+  - name: startx-htpasswd
+    type: htpasswd
+    manageSubresource: true
+    htpasswdComment: |
+      htpasswd -c -b _console/ocp.passwd admin secretdemerde
+      htpasswd -b _console/ocp.passwd dev dev
+      htpasswd -b _console/ocp.passwd devops devops
+      htpasswd -b _console/ocp.passwd ops ops
+      oc create secret generic htpass-secret --from-file=htpasswd=_console/ocp.passwd -n openshift-config
+      oc export secret ${SCOPE}-htpass-secret -n openshift-config
+    htpasswdContent: |
+      admin:$apr1$NF6RwJ2m$LZptFKgY.K.h7WKPG1X4w.
+      dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
+      devops:$apr1$V.QRjS8L$qsecQFnwOyaZ/coTqDZ9h/
+      ops:$apr1$LHdhpqJk$3qNVW4uqTR7sSnlZBP.9d/

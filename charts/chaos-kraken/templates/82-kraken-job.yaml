@@ -1,6 +1,7 @@
 {{- if .Values.kraken.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
+{{- $version := .Values.kraken.version | default "latest" -}}
 {{- if eq .Values.kraken.mode "job" -}}{{- if .Values.kraken.job -}}
 {{- with .Values.kraken.job }}
 ---
@@ -28,7 +29,7 @@ spec:
     spec:
       containers:
       - name: kraken
-        image: quay.io/redhat-chaos/krkn
+        image: "quay.io/redhat-chaos/krkn:{{- $version -}}"
         imagePullPolicy: Always
         args:
           - python3.9 run_kraken.py -c config/config.yaml

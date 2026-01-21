@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-kepler
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: "0.4.0"
 
 # Deploy an API manager
 kepler:
@@ -22,7 +22,7 @@ kepler:
   # Activate the manager as a helm hook
   hooked: false
   # Name of the deployed instance of KeplerConfig
-  name: default
+  name: kepler
   # The applyed Kepler config specifications
   spec: |
     exporter:
@@ -46,7 +46,7 @@ project:
     name: "openshift-power-monitoring"
     display_name: Kepler console
     description: Kepler configured by STARTX
-    additionalLabels:
+    additionalLabels: |-
       openshift.io/cluster-monitoring: "true"
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
@@ -59,7 +59,7 @@ operator:
     hooked: false
     name: "power-monitoring-operator"
     namespace: "openshift-operators"
-    version: "v0.3.0"
+    version: "v0.4.0"
     operator: 
       channel: "tech-preview"
       name: power-monitoring-operator

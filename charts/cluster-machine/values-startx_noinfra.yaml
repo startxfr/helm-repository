@@ -1,0 +1,120 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: default
+  environment: infra
+  component: config
+  app: startx-machine
+  version: "4.18.11"
+
+cluster:
+  id: startx-xyzab
+  region: eu-west-1
+  autoscaler: 
+    enabled: false
+    spec: |
+      podPriorityThreshold: -10 
+      resourceLimits:
+        maxNodesTotal: 6
+        cores:
+          min: 6
+          max: 24
+        memory:
+          min: 12
+          max: 48 
+        # gpus:
+        #   - type: nvidia.com/gpu 
+        #     min: 0 
+        #     max: 0
+        #   - type: amd.com/gpu 
+        #     min: 0 
+        #     max: 0
+      scaleDown: 
+        enabled: true 
+        delayAfterAdd: 5m 
+        delayAfterDelete: 3m 
+        delayAfterFailure: 40s 
+        unneededTime: 60s 
+
+machineConfigPool: 
+  enabled: false
+  infra: false
+  virt: false
+  storage: false
+  list: 
+  - name: app
+    machineConfigSelector: |-
+      matchExpressions:
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,app]}
+    nodeSelector: |-
+      matchLabels:
+        node-role.kubernetes.io/app: ""
+    paused: false
+machineConfig: 
+  enabled: false
+  kubelet_gc_enabled: false
+  kubelet_connectiontimeout_enabled: false
+  kubelet_protectkerneldefaults: false
+  infra_specialconfig: false
+  add_scc_netraw: false
+  add_clusterimageconfig: false
+
+machineHealthCheck:
+  enabled: false
+  list:
+  - name: master
+    type: master
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-a
+    type: app
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-b
+    type: app
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-c
+    type: app
+    maxUnhealthy: 40%
+    timeouts: 300s
+
+machineAutoscaler: 
+  enabled: false
+  list: 
+  - name: app-a
+    minReplicas: 1
+    maxReplicas: 2
+  - name: app-b
+    minReplicas: 1
+    maxReplicas: 2
+  - name: app-c
+    minReplicas: 1
+    maxReplicas: 2
+
+machineSet: 
+  enabled: false
+  list:
+  - name: app-a
+    az: a
+    type: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "m6i.xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: app-b
+    az: b
+    type: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "m6i.xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: app-c
+    az: c
+    type: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "m6i.xlarge"
+    volumeSize: 150
+    replicas: 1
+

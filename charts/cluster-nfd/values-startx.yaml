@@ -6,24 +6,29 @@ context: &context
   environment: infra
   component: nfd
   app: startx-nfd
+  version: "4.18.0"
 nfd:
   enabled: false
   list:
     - name: nfd-instance
       spec: |-
-        customConfig:
-          configData: |
-            #    - name: "more.kernel.features"
-            #      matchOn:
-            #      - loadedKMod: ["example_kmod3"]
-            #    - name: "more.features.by.nodename"
-            #      value: customValue
-            #      matchOn:
-            #      - nodename: ["special-.*-node-.*"]
+        # customConfig:
+        #   configData: |
+        #     - name: "more.kernel.features"
+        #       matchOn:
+        #       - loadedKMod: ["example_kmod3"]
+        #     - name: "more.features.by.nodename"
+        #       value: customValue
+        #       matchOn:
+        #       - nodename: ["special-.*-node-.*"]
+        enableTaints: false
+        instance: ''
         operand:
-          image: >-
-            registry.redhat.io/openshift4/ose-node-feature-discovery
+          # image: 'registry.redhat.io/openshift4/ose-node-feature-discovery-rhel9'
+          imagePullPolicy: IfNotPresent
           servicePort: 12000
+        prunerOnDelete: false
+        topologyUpdater: false
         workerConfig:
           configData: |
             core:
@@ -136,15 +141,15 @@ nfr:
   enabled: false
   list: []
 project: 
-  enabled: false
+  enabled: true
   context: 
     <<: *context
   project: 
-    enabled: false
+    enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "openshift-nfd"
-    display_name: Operator NFD
+    display_name: Startx - Operator NFD
     description: NFD configured by STARTX
 operator:
   enabled: false
@@ -155,7 +160,7 @@ operator:
     hooked: false
     name: "nfd"
     namespace: "openshift-nfd"
-    version: "4.16.0-202410251436"
+    version: "4.18.0-202504232132"
     operator: 
       channel: "stable"
       name: nfd
@@ -172,7 +177,7 @@ operator:
         #   requests:
         #     cpu: 400m
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
     name: "nfd"
     namespace: "openshift-nfd"

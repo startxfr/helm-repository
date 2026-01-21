@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: mtc
   app: startx-mtc
+  version: "1.8.6"
 mtc:
   enabled: false
   hooked: false
@@ -24,7 +25,7 @@ mtc:
       restic_timeout: 1h
       migration_velero: true
       mig_pv_limit: '100'
-      version: 1.8.4
+      version: 1.8.6
       azure_resource_group: ''
   clusters:
     enabled: false
@@ -85,7 +86,7 @@ project:
     hooked: false
     type: namespace
     name: "openshift-migration"
-    display_name: Operator MTC
+    display_name: Startx - Operator MTC
     description: Migration Toolkit for Containers configured by STARTX
 operator:
   enabled: false
@@ -96,7 +97,7 @@ operator:
     hooked: false
     name: "mtc-operator"
     namespace: "openshift-migration"
-    version: "v1.8.4"
+    version: "v1.8.6"
     operator: 
       channel: "release-v1.8"
       name: mtc-operator

@@ -1,0 +1,66 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: pipelines
+  app: startx-pipelines
+  version: "1.18.0"
+projectOperator: 
+  enabled: false
+operator:
+  enabled: true
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "openshift-pipelines-operator-rh"
+    namespace: "openshift-operators"
+    version: "v1.18.0"
+    operator: 
+      channel: latest
+      name: openshift-pipelines-operator-rh
+      installPlanApproval: Automatic
+      # csv: openshift-pipelines-operator-rh
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  consolePlugin:
+    enabled: true
+    name: "pipelines-console-plugin"
+    spec: |
+      backend:
+        service:
+          basePath: /
+          name: pipelines-console-plugin
+          namespace: openshift-pipelines
+          port: 8443
+        type: Service
+      displayName: Pipelines Console Plugin
+      i18n:
+        loadType: Preload
+      proxy:
+        - alias: tekton-results-api-service
+          authorization: None
+          endpoint:
+            service:
+              name: tekton-results-api-service
+              namespace: openshift-pipeline
+              port: 8080
+            type: Service
+  operatorGroup:
+    enabled: false
+    hooked: false
+    target: "all-ns" 
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "Config.v1alpha1.operator.tekton.dev"

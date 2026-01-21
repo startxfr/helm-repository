@@ -6,6 +6,7 @@ context: &context
   environment: infra
   component: gitops
   app: startx-gitops
+  version: "1.16.0"
 
 argocd:
   enabled: false
@@ -94,7 +95,7 @@ project:
     <<: *context
   project: 
     enabled: false
-    type: project
+    type: namespace
     name: openshift-operators
     # display_name: "Startx GITOPS"
     # requester: startx
@@ -224,9 +225,9 @@ operator:
     hooked: false
     name: "openshift-gitops-operator"
     namespace: "openshift-operators"
-    version: "v1.14.1"
+    version: "v1.16.0"
     operator: 
-      channel: "gitops-1.14"
+      channel: "gitops-1.16"
       name: openshift-gitops-operator
       # csv: openshift-gitops-operator
       installPlanApproval: Automatic

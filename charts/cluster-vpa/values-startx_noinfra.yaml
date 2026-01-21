@@ -1,0 +1,92 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: vpa
+  app: startx-vpa
+  version: "4.18.0"
+vpaController:
+  enabled: false
+  name: default
+  spec: |
+    deploymentOverrides:
+      admission:
+        container:
+          resources: {}
+      recommender:
+        container:
+          resources: {}
+      updater:
+        container:
+          resources: {}
+    minReplicas: 2
+    podMinCPUMillicores: 25
+    podMinMemoryMb: 250
+    recommendationOnly: false
+    safetyMarginFraction: 0.15
+vpa:
+  enabled: false
+  list: 
+  - name: demo
+    spec: |
+      targetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: manpage
+      resourcePolicy:
+        containerPolicies:
+          - containerName: '*'
+            controlledResources:
+              - cpu
+              - memory
+            maxAllowed:
+              cpu: 1
+              memory: 500Mi
+            minAllowed:
+              cpu: 10m
+              memory: 50Mi
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-vertical-pod-autoscaler"
+    display_name: "Startx VPA"
+    requester: startx
+    description: VerticalPodAutoscaler configured by STARTX
+operator:
+  enabled: false
+  context: 
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "vertical-pod-autoscaler"
+    namespace: "openshift-vertical-pod-autoscaler"
+    version: "4.18.0-202504151633"
+    operator: 
+      channel: "stable"
+      name: vertical-pod-autoscaler
+      installPlanApproval: Automatic
+      # csv: verticalpodautoscaler
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+        # resources: 
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "startx-vpa"
+    namespace: "openshift-vertical-pod-autoscaler"
+    providedAPIs: "VerticalPodAutoscaler.v1.autoscaling.k8s.io,VerticalPodAutoscalerCheckpoint.v1.autoscaling.k8s.io,VerticalPodAutoscalerController.v1.autoscaling.openshift.io"

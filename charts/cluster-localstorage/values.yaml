@@ -13,7 +13,7 @@ context:  &context
   # Application name (functionnal tenant, default use Chart name)
   app: default-localstorage
   # Version name of this application (default use Chart appVersion)
-  # version: "0.0.3"
+  version: 4.18.0
 
 # configuration of the LocalVolume service
 localstorage:
@@ -76,7 +76,7 @@ project:
   project: 
     enabled: true
     hooked: false
-    type: project
+    type: namespace
     name: "openshift-local-storage"
     display_name: "Startx Local Storage"
     requester: startx
@@ -110,7 +110,7 @@ operator:
     hooked: false
     name: "local-storage-operator"
     namespace: "openshift-local-storage"
-    version: "v4.16.0-202410242205"
+    version: "v4.18.0-202504151633"
     operator: 
       channel: "stable"
       name: local-storage-operator

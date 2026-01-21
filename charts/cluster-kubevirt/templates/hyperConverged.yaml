@@ -19,9 +19,16 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
     argocd.argoproj.io/sync-wave: "10"
+    deployOVS: 'false'
 spec:
+  virtualMachineOptions:
+    disableFreePageReporting: false
+    disableSerialConsoleLog: true
+  higherWorkloadDensity:
+    memoryOvercommitPercentage: 100
   liveMigrationConfig:
-    bandwidthPerMigration: 64Mi
+    allowAutoConverge: false
+    allowPostCopy: false
     completionTimeoutPerGiB: 800
     parallelMigrationsPerCluster: 5
     parallelOutboundMigrationsPerNode: 2
@@ -33,21 +40,39 @@ spec:
     server:
       duration: 24h0m0s
       renewBefore: 12h0m0s
+  infra: {}
+  applicationAwareConfig:
+    allowApplicationAwareClusterResourceQuota: false
+    vmiCalcConfigName: DedicatedVirtualResources
+  evictionStrategy: None
   featureGates:
-    deployTektonTaskResources: true
+    deployTektonTaskResources: false
     enableCommonBootImageImport: true
     withHostPassthroughCPU: false
+    downwardMetrics: false
     disableMDevConfiguration: false
+    enableApplicationAwareQuota: false
     deployKubeSecondaryDNS: false
     nonRoot: true
+    alignCPUs: false
     enableManagedTenantQuota: false
-    deployVmConsoleProxy: true
+    primaryUserDefinedNetworkBinding: false
+    deployVmConsoleProxy: false
     persistentReservation: false
+    autoResourceLimits: false
+    deployKubevirtIpamController: false
+  workloadUpdateStrategy:
+    batchEvictionInterval: 1m0s
+    batchEvictionSize: 10
+    workloadUpdateMethods:
+      - LiveMigrate
+  uninstallStrategy: BlockUninstallIfWorkloadsExist
+  workloads: {}
+  resourceRequirements:
+    vmiCPUAllocationRatio: 10
   # bareMetalPlatform: true
-  # infra: {}
   # localStorageClassName: {{ .Values.hyperconvergedCluster.storageClass | default "gp3-csi" | quote }}
   # version: {{ .Values.operator.subscription.version | default "v4.11.0" | quote }}
-  # workloads: {}
 {{- end }}{{- end }}
 
 
