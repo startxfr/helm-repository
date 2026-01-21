@@ -3,7 +3,7 @@
 {{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
 # complete avec https://docs.openshift.com/container-platform/4.11/logging/cluster-logging-external.html
 ---
-apiVersion: logging.openshift.io/v1
+apiVersion: "{{- .Values.logforwarder.apiVersion | default "logging.openshift.io/v1" -}}"
 kind: ClusterLogForwarder
 metadata:
   name: {{ $name | quote }}

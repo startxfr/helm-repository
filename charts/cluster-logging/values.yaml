@@ -23,6 +23,9 @@ logging:
   infra_enabled: false
   # Activate the manager as a helm hook
   hooked: false
+  # The ApiVersion of the logging
+  # apiVersion: "observability.openshift.io/v1"
+  apiVersion: "logging.openshift.io/v1"
   # set the management state to use
   managementState: "Managed"
   # Section for external exposition of elasticsearch
@@ -114,6 +117,9 @@ eventrouter:
 logforwarder:
   # Enable the deployment of the logforwarder service
   enabled: false
+  # The ApiVersion of the forwarder
+  # apiVersion: "observability.openshift.io/v1"
+  apiVersion: "logging.openshift.io/v1"
   # spec of the og forwarder
   spec: |
     pipelines: 
