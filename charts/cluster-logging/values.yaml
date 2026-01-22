@@ -117,6 +117,12 @@ eventrouter:
 logforwarder:
   # Enable the deployment of the logforwarder service
   enabled: false
+  # configure the service account for the forwarder
+  sa: 
+    # Enable the deployment of the service account
+    enabled: false
+    # name of the service account
+    name: "logging-admin"
   # The ApiVersion of the forwarder
   # apiVersion: "observability.openshift.io/v1"
   apiVersion: "logging.openshift.io/v1"

@@ -1,0 +1,73 @@
+{{- if .Values.logforwarder.sa.enabled }}
+{{- $name := .Values.logforwarder.sa.name | default "logging-admin" -}}
+{{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-sa"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ $name }}-collect-application-logs-clusterrolebinding"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-collect-application-logs-clusterrolebinding"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+subjects:
+- kind: ServiceAccount
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: collect-application-logs
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ $name }}-collect-infrastructure-logs-clusterrolebinding"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-collect-infrastructure-logs-clusterrolebinding"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+subjects:
+- kind: ServiceAccount
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: collect-infrastructure-logs
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ $name }}-collect-audit-logs-clusterrolebinding"
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-collect-audit-logs-clusterrolebinding"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "2"
+subjects:
+- kind: ServiceAccount
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: collect-audit-logs
+{{- end }}
