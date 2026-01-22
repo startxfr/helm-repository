@@ -369,3 +369,4 @@ xxxx to do xxxxxx
 | 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
 | 18.11.73 | 2026-01-21 | add apiVersion parameter
+| 18.11.75 | 2026-01-22 | Adding creation of the logging-admin service account
