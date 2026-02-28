@@ -398,3 +398,4 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 18.11.63 | 2025-11-27 | adddevoteam brand name
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
 | 18.11.72 | 2025-11-27 | improve with devoteam logo
+| 18.23.0 | 2026-02-28 | Start 4.19 branch
