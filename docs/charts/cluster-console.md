@@ -370,3 +370,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 18.11.73 | 2026-01-21 | Change in devo logo
 | 18.23.0 | 2026-02-28 | Start 4.19 branch
 | 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release
+| 19.23.0 | 2026-02-28 | publish stable update for the full repository
