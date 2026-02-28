@@ -368,3 +368,4 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 | 18.11.65 | 2025-11-27 | add devoteam brand name
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
 | 18.11.73 | 2026-01-21 | Change in devo logo
+| 18.23.0 | 2026-02-28 | Start 4.19 branch
