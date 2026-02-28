@@ -361,3 +361,4 @@ helm install cluster-couchbase startx/cluster-couchbase -f https://raw.githubuse
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
 | 18.23.0 | 2026-02-28 | Start 4.19 branch
 | 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release
+| 19.23.0 | 2026-02-28 | publish stable update for the full repository
