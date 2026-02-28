@@ -382,3 +382,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
 | 18.23.0 | 2026-02-28 | Start 4.19 branch
 | 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release
+| 19.23.3 | 2026-02-28 | releases first 19.23.x packages
