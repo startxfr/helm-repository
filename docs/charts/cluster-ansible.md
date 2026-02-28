@@ -313,3 +313,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 18.11.61 | 2025-05-19 | Adding creation of the redhat-operators-pull-secret
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
 | 18.23.0 | 2026-02-28 | Start 4.19 branch
+| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release
