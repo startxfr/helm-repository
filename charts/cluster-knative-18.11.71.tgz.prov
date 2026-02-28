@@ -1,0 +1,90 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.35.1
+dependencies:
+- - alias: projectOperator
+  condition: projectOperator.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: projectKServing
+  condition: projectKServing.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: projectKEventing
+  condition: projectKEventing.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Knative at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-knative.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - knative
+- - serverless
+- - saas
+- - idle
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-knative
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-knative
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-knative
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-knative-18.11.71.tgz: sha256:85a8922cf4231cbf8cfc07c2ef5e68e23bfc7c89dd01c274e660f2643d6e42ab
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpoubpCRAPNrJQFdOjTQAAhMUQADoSUyZPMaemlsS5YMFjaP3j
+Qgck3JBnFfsi5XKP8FmEWFIr6s5R32LxlUu7RebOYhRCVfI2kN94ffVld2woXb7P
+QNfAzteC3jSnPhjlGrgh5xkW+ZbRDx7z43gaL6iMjmpWwavUqgXICSvPjXRiBY9w
+N9ueuSJApQR0PlETxIUt/ZAxx9vUirX9Vudu9D2oYFXTThrkXBKOCPheTEJ4Yk6q
+dBX7dvtxszU7CkmjZOfPMfO/vBraGmVnh9aIptl2x/h96i9mRqT7Svg+KqQLKZqi
+vB54PeFdrwz6R+Uwd/FgD475bAR7EYi4Sd2R5kXvNcCePkNJS5n/jjMHLy/rZ1Kd
+I9miO6YjWE2+6kSPZ0tAT5QUlAh9hVryWpsdnHVdbqtO0Xuw8U3yOndFKf2EM+GM
+aQCfidx+vDf3hbfz4wLa6o/tnWLa0uyyjWLZ5icpgricI5PvRS/2w3wO/5fY65gA
+7FY0iDbVbeITbz9AB9Sg1yEQ6amjMzM7fjVI4YITccKysR2go6r+qIvDZrXcMjve
+aigr8XCvrNJYtFTSbKzekGg1q7/vv+HX4x7H9sRaVsLLB3R7hWrPhZsV83XVByJJ
+8Q/01+OmxVuWb4rRD3Kpcn3R/L3lbOf94p3m8D3vMJ6Uy1ok34NBHqrD5yZcig6b
+q9zD9ReyLEMBM6Xagywu
+=3rsV
+-----END PGP SIGNATURE-----

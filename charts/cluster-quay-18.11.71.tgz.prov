@@ -1,0 +1,87 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 3.14.0
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operatorsec
+  condition: operatorsec.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Quay.io private registry at the cluster
+  level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-quay.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - security
+- - registry
+- - container registry
+- - docker registry
+- - quay
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-quay
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-quay
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-quay
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-quay-18.11.71.tgz: sha256:6ffcfc500fbf4a3a6ae53e059bbba223294802298cb009a17e4291b36277e7e7
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpoueGCRAPNrJQFdOjTQAA9EYQAK5Swhme4sd3cVar95s08gK0
+Kqt9Rz+1dymaMFGeR1coyepf5CeSAosYuDJfZN2PxgnFFLy9SXCappNo34LueZP5
+D/aobicxbRPfBayk0GZdWOGSHk6EZjSNh41tQw/qrIB+cKfZRqnBLmJRfMAeCJR9
+I59SqMlklCMSjqB2uH7BDxHO7xp3af65pKo7P7h+aGI4X/1dTUULoIIm/FS73erU
+HXd5aXMyT7E94CZ6l+GrVv3Zk9ZqVEOPIGp7umwUSwvo0ItxqpaWmUzj4MPatHjP
+zZqX1OQNmuh6FxlWkiX4mfM4f1xsuynUhSUCoRemrq530qOgu2Q22sEhaUmFHFOU
+QtN/Nd/ZSFgk0SUcaPeHXs8uy9ojORahhlYx8V0wBhIG/Vr+VvqIYsQ7fOegy9Gk
+lQ+mnvn1ZBlAEPewYEsTUV5c7mvet1Jy9yF+a2tCj5Hpl9OOrt4d3jsbvUpxBYot
+VLfFBczlBYnBeoMSw8lJVIRkiWL4sojZkpn1elsOi1GOs2xM7XENRU24IaFmXW+A
+kGWLMa4o+XAcAn1v4oT2DwDIRQBfAm4GYSx6Q1krxRSgvXQ/TTpiXBqT7l6MLSv7
+JYeAPB7lPQ6xXHWWBLC0SxCZCjWW9P/CVxxqqZP36C04Lm0dPeeWuUnmn2s+k27+
+LwYKVPcl4iCezco63Cie
+=+ysq
+-----END PGP SIGNATURE-----

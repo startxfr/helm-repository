@@ -1,0 +1,102 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: chaos
+  startx.io/recommendations: |
+    - name: Startx Chaos chart - Cerberus
+      url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus
+    - name: Startx Chaos chart - Kraken
+      url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken
+    - name: Startx Chaos chart - Litmus
+      url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus
+    - name: Startx Chaos chart - ChaosMesh
+      url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh
+    - name: Startx Chaos chart - ChaosMonkey
+      url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey
+apiVersion: v2
+appVersion: 4.18.11
+dependencies:
+- - alias: cerberus
+  condition: cerberus.enabled
+  name: chaos-cerberus
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: kraken
+  condition: kraken.enabled
+  name: chaos-kraken
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: litmus
+  condition: litmus.enabled
+  name: chaos-litmus
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: mesh
+  condition: mesh.enabled
+  name: chaos-mesh
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: monkey
+  condition: monkey.enabled
+  name: chaos-monkey
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to deploy a full chaos-testing toolkit composed kraken,
+  cerberus, litmus, chaos-mesh and kube-monkey configured for Openshift clusters.
+  This chart is part of the startx chaos helm chart suite.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/chaos.svg
+keywords:
+- - helm
+- - startx
+- - chaos testing
+- - test
+- - cerberus
+- - kraken
+- - chaos-mesh
+- - litmus
+- - kube-monkey
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: chaos
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/chaos
+- - https://github.com/startxfr/helm-repository/tree/master/charts/chaos
+type: application
+version: 18.11.71
+
+...
+files:
+  chaos-18.11.71.tgz: sha256:ce8b1f889f705fffcbbad8d3c2301d1677b1607d1c830e31995087998cde10ad
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpouYHCRAPNrJQFdOjTQAAcFUQAJdhFcaa4Ep5O1wtEGe6QMSk
+oBBQlBSDBXBYr1fRhAfJLSO3/VuZxJNtmNh95AZcAOoKCA4XcALK2SOA91+HwpgX
+OkOxeMg76E5uXqrrogopVuFZccUmJjf/8Dm5GGwbN7TDk7dM9E324qJpzDKDOYXw
+bIf+BK0zwk613ctOaiDA0IshUOLV1WYUGvagFoox+rmcxyoc1FaqYkRDCcHFeWdG
+yAYtZMhYbCo2t3w8ZILSUr2PCnPJlUwnd2Re+qmMAOwNW2Ywk00T4U09y67svtfI
+HDKeMCDLX4aVXqwaE9bY/6e9q5Ss5BpsVZ3Zn1tePEZ5lu+3U6drs7ZLoXv/gOhk
+bop2ZFJdKGbjQy6wd2ISsg5i0l2WPF8HSmLYtw0PfiYzqEtI5Wgw9G96oNGFsSBo
+SMa5e04MTaKgniI4iqLDIf3Q8cd5yF6hPPBO/bp6rs/MZLTl8581zpwpzIYFTggp
+tcQ5doKAgVVXUdXrxJKZb3phNVVVvgOryzJB1uSrWv7ofzK+nIHdlz4R4jsSkIHy
+Na8PrPgbAEeICLgH07EnBLwbmOoFApBHMLeQKRcCRZFUGX4X4wai30sfDc6GrDnM
+MZjBJWQLjmWFw2Q7UjpDO6Wc40kmNf1o15UVy4LpPQ7X82+CKYxjbVcVkmnIU54u
+vkeCdo2ZnM6nD5zpfYGG
+=HuQD
+-----END PGP SIGNATURE-----

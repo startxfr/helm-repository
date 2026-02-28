@@ -1,0 +1,79 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 2.7.1
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Kubecost at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-kubecost.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - NTP
+- - Kubecost
+- - time
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-kubecost
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-kubecost
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubecost
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-kubecost-18.11.71.tgz: sha256:6d4f96d8bc4271d7ff6f2e65f94c9976ca94d431dee636a12bd628bfda674e80
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpoubyCRAPNrJQFdOjTQAADS0QAKtwm6ZblXvn6BIehq919MIS
+59QqL3r51GKkWPWKK+F+6vx4Tg7fpR5a9OyL1wmeIngKwsKJRAzAmvmSas1H/YxE
+RAbCuq4EAgUCYkZWaD57fWUxCaVVtv06wrJVB2W+QBNtpPVuMqZ6UGkChrpfA1gn
+VFKUMMawKFyskMWiv6ht1mLmTd5nSVAYRgM5UAbAmx/k8a0kBTqfcm+X2OEd0ATr
+Gu/TvzsiLKB4HTG6PIO+MSHwPFxUfxaor8oeF5QMnt0hDKuV2AG53v7fiDckTm4q
+CphlGAOR1SvzpRdFEhxqSqpV0/PCXhd9J2F0uU7zeLelXQlzkY62LOsPHVDZXlvQ
+6T6MeEe5ABIEvSdiGBTHE/PE4bJeWpNa9W3mpktNPi33/Ul4ezCdhcyJCPXcjfyg
+/wNf6o4vnZ27MP03Urio5BA6DKlvWDiKXcWtntglwbnF0H+BaTusbKgzvqcckOSD
+6lDlnK8o+1xsZ/Wu2ENxImp5xkanhHAXlxTa7fVCZ2D1vDDs7sHFydLYXrypfubD
+oHtyvy9Da5clOhx/Mvxk7vRh626FDexCh8QzgFYPpTLLIVcD1/waVBklJ1DSv7sy
+tczOZ3asER4VF4LHMExeJI+93dMiF7nDiOyJvBZ8fYq/IuLE57qLVF05l5y6LM9U
+OUFp8/Z0Hxgav1EruygK
+=EZ9O
+-----END PGP SIGNATURE-----

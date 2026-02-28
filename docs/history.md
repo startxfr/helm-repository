@@ -1,8 +1,27 @@
 # Release history
 
+## version 20.x (camoulox)
+
+_The objectif of this release is to stabilize the full repository content and offer a stable release of the helm charts for the Openshift Container platform version 4.20.x version._
+
 ## version 19.x (champroux)
 
-_The objectif of this release is to stabilize the full repository content and offer a stable release of the helm charts for the Openshift Container platform version 4.19.x version._
+!!! info
+    This version is designed and stabilized for the [Openshift](https://docs.openshift.com) **[4.19 release](https://docs.openshift.com/container-platform/4.19)**.
+
+### Objectives of this release
+
+- Stable support for cluster service running under an Openshift 4.19.x cluster
+- Adding new operators to the catalog (see roadmap)
+
+### Install for this release
+
+To obtain charts stabilized for OCP 4.19.x version, you can add the ([19 helm repository](https://helm-repository.readthedocs.io/en/latest/repos/19/index.yaml)) dedicated for 19.x releases.
+
+```bash
+helm repo add startx-19 https://helm-repository.readthedocs.io/en/latest/repos/19
+helm search repo startx
+```
 
 ## version 18.x (chanteix)
 

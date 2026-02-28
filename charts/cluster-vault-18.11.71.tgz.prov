@@ -1,0 +1,79 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Hashicorp : Vault
+      url: https://helm.releases.hashicorp.com
+apiVersion: v2
+appVersion: 0.30.0
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: vault
+  condition: vault.enabled
+  name: vault
+  repository: https://helm.releases.hashicorp.com
+  version: 0.30.0
+description: Helm chart used to configure vault at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-vault.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - security
+- - vault
+- - secret management
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-vault
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-vault
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vault
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-vault-18.11.71.tgz: sha256:3a2fab85c464dcd07e7ea2a55832c1ab013107d0eec2ebfcfda67f7d79b1e771
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpouevCRAPNrJQFdOjTQAAyNwQAIc61iNgvqw8nioiZS7Lmiud
+m50GsScg5Lw/LMoFI2SRiKD/Hx9RX6GM6Zg32sdSpKdNanz1zR4gkHMxB8ol4kvB
+nqd20Aa5CNqUU9w2FcnkghUx/IH8MOWviEN9q/c+p+1/6rgL0TMthaJHDyseSpGa
+cR1nwD19e384FdpfetrD/EPg2Lpkc/9EjFYjMjA9mHn8GYGQ6FeIZmhYo98s5Cvu
+z8ShdFj8XvvKEd52Z4HPMv+cRU0un1DINRcnAv4SDXMykMB3eEXP48prLNEQVfLT
+3/uuN5HrAvDrMPcIxGQcaTnxNc1XmDa4qcUpMGB34VqCWsIzWH3grj+A8CrYWqWP
+VeAV/91SrDR6mf3Qh+t3WxAqK78XpMtBfq5Gl9WBEOFa9O5S3BykGy+1odeyAjCl
+5m7m6dt6K363WnVK8lURkVyFZ6zu8nJVpnj63cXMDr/vBQR1vAtUt1KlNU2DK+N0
+YBy6Xes/Yj/uOT+ObD+sB4S6+6Mp0bzV/auRV6Xd0toVMYPZR5ttO4G/nT4KobjA
+qb9Cbc2xXv5aalyWGYBMcg8MV6BgzIY7clAq3nVRZ0TESMrB4IBPdUHkace7KStX
+79r9ki5X42jLXaRY81HtLEIyo8IvbWKIja+bNBQsukSFqUlDTA9gRo4e+uRkOHMy
+ScpRUyJQp8nPQ1Uh+lOg
+=2aKA
+-----END PGP SIGNATURE-----

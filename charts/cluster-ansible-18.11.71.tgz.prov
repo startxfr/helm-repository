@@ -1,0 +1,86 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Adding creation of the redhat-operators-pull-secret"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 2.5.0
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: projectOperator
+  condition: projectOperator.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Ansible Automation Platform (AAP) at the
+  cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-ansible.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - security
+- - automation
+- - tower
+- - ansible
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-ansible
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-ansible
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ansible
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-ansible-18.11.71.tgz: sha256:0c68f32216e0626f66227df6e4507316551a6e2bea708790aaef993a2622b007
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpouZPCRAPNrJQFdOjTQAApJgQAJVwGEVmjG5gW1QiLYLy2HBA
+QTScez3HjrYk0TGWtAXe62+G+fV6dwxaROIPRDyA70GflT6rtknrMkZ6OJmw6x9o
+sVHwoNh3kDTFSe8rze072AWfGN42MVo0H4vxozuZNzrYPnfpFunhLjHpTT+IFZq3
+hDU+/Gr/5xXUFRQOob6w1jBabkOW/CKC5/cdYUybLb2GzrAm0ncSATnagkSdTPUM
+bYnW6X7sGQOdyIIQUCaS2mK8yWMX7CCANvedgjBaDrwVGZZ35IglzNJy438cxORU
+G/PhJn4cKwvinj0QAjOy4ic++2hNtWP0hQ0QKe/8+Rk+wZGGxqB9NO4tuH73qGeu
+g3OH5dMReOIHs7S0S70ORUR+mmhfuzHn85lb7Gq2OeFkYTebWTZ9CjeoZec4EQXi
+GdsGb/ZyHEckfwBQqwqpLMe5TK+FGDGxtr+iZ2TGyBduXGcj9urccOETHKMkQK3X
+H6voS6wnEcMnEppIuyMojW8D3GK38F7USrDmAG13ogd8wfysqG4+xwQSN/3MO481
+GhSedygtqe53/u1LOLxW8YGdxkiu280XGigmDdLTq10I7tJQkoLsHswVVmaBwSz0
+PxopKvrlXDzl23RaYUHpwIkfzh1ss/uA7/yHDFHUCROiw+96Ix/6I2giT1b8qas2
+CsHfduyMCg25Y2paWadc
+=0hUr
+-----END PGP SIGNATURE-----

@@ -1,0 +1,68 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: example
+apiVersion: v2
+appVersion: 4.18.11
+dependencies:
+- - alias: demoAnsible
+  condition: demoAnsible.enabled
+  name: cluster-ansible
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to deploy various example of application used in Startx
+  demo.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/example-catalog.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - example-chart
+- - example
+- - caas
+- - demo
+- - catalog
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: example-catalog
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/example-catalog
+- - https://github.com/startxfr/helm-repository/tree/master/charts/example-catalog
+type: application
+version: 18.11.71
+
+...
+files:
+  example-catalog-18.11.71.tgz: sha256:f9af6ed08468c370db15735e2e4e1b0aad5db7d8a4d508e8a6fa1aa6f5204e2e
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpoufGCRAPNrJQFdOjTQAApogQACM0knaNxnGKSh3nlkERuG4O
+nLMAEu/vFcAdNxdMF/jY1I3gtaPCXeA0H+auWTeFmE8nOY7cR7Y2RAJiE3x9vDkF
+5a3MRddSYiqUjwmDdBVBIqP5OkzgPmBPw+HYmeFUF/FekbgNyYa8+ZU5artu3xz6
+2sOwDNTrftJ6/+yY+gqRO0X6VZtxzSQb3AMgtgU1R+WDpfbbER11rXwgw9Jk1ydP
+GLUcG1h+RxjqnCkSHfqdfdieCKygigdL5tYVEH6cNJB7Cqi5J/46W8Z/vp2PZWz1
+V5fJdgRstT+WN3CP41oJLI85DORVd589gAbVW3J82hZ/GXgHs9GbiXYZ5GCBOnbe
+tSSAR0trC8PVkOX9Le2TawovimLJujzwJ1bcB+OAu27qi9ewH61Frz6QZhajeq2A
+9kw6SO1207caKLwbH7LUxatLBb+wRrFDdkIclB8gSwU147HSJmuFa5CSeBFda4HC
+190NdcMeYNwiE+McgB3z1/QHIF8sGKowQGXfV8FMP4i6E+aHg+eS7kqmHkL+Qfgp
+JusodgYQ/ORG31L4A12JhCkPO9pYUzjx3t2MPKZYJvGla+l39h8syKXj/QhmJxn6
+dM34AdpPrkooW2sspQ++w+ca0h+zZX4MpNH4DIU8H31UHnEQm00s6q6i2oM7DgEp
+0Yh2446Bcy6n9fDnjcOj
+=y5fe
+-----END PGP SIGNATURE-----

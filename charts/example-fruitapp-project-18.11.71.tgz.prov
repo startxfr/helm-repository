@@ -1,0 +1,90 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: example
+apiVersion: v2
+appVersion: 0.0.2
+dependencies:
+- - alias: project_devel
+  condition: project_devel.activated
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: project_integration
+  condition: project_integration.activated
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: project_preprod
+  condition: project_preprod.activated
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: project_prod
+  condition: project_prod.activated
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: imagestreams
+  condition: imagestreams.activated
+  name: example-imagestreams
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to deploy all project required to deploy a full CI/CD
+  chain for the fruitapp demo application.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/example-fruitapp-project.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - example-chart
+- - example
+- - caas
+- - deployment
+- - nodejs
+- - microservice
+- - cicd
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: example-fruitapp-project
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/example-sxapi
+- - https://github.com/startxfr/helm-repository/tree/master/charts/example-sxapi
+type: application
+version: 18.11.71
+
+...
+files:
+  example-fruitapp-project-18.11.71.tgz: sha256:26f9666346509c597b3164ddff1bad1e78aa84983d75b452d0f9c363a97ac9ae
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpoufqCRAPNrJQFdOjTQAA350QAG+6cvYHRkrQtxKwoVVXL6iG
+TpYr3vjAr/3tmv8LVq0xbXQgjCFnrMhvEUa7uBlI5j5DnQMRJ1XyifZv9aSpy9u5
+YrZRkwmPbfLhwOQ5tMNzfLxhFMUFvljlKmWhb1Z/s31XVVavrCyRrbpilsVeL2CC
+vxejUTkYmT18YyZ1GXNZjBFq0I5dPbleWd/zJJmTWCAuGhahfmzrjwuVmLCjNcqE
+aTrQFS7GFtNUr0eLs5U6xsJRUwc298W5LoPCSxOk6hiVD6LB+7bJel7fyjXKUDfT
+uzYTWSbhGTzmnN57mBDQPnF9FkvlqCbEIkNK5PUxZE9sIeR/UkHZx9j6onJ+Dcsz
+X/fU/x+4oNxZ15sB/H5/FN1/dSYBtjcBvXzr105fcaZ+UUh8bx5aajBT2kWapx9F
+0bdlHPdWThEt5Ae3MhuCtBJOUP3t8FwBQ/1kZkpzva5ds4afH7VgQrYS+SWEcrQ7
+lp9MqdJgU1d1sNF+pxpIXcex0ajBW68+HNxB7/aSs4xE3ti84f4SvPifSS0V7SWS
+L3ethD0dsgfpmEyQ4LaWUrFSyQiBcqb2YhjLJgM4VYXaJuZdUS9dJ2bPG0y1VQmJ
+3Ayyz/6CWbqFtSDxL15AcJoP9hvYZPjzQ7CxA9XhjT3dh/yNJdzmdbRgqr+b17qu
+sNKrDfVRkgS6Wd8OlqS2
+=FOIQ
+-----END PGP SIGNATURE-----

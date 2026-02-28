@@ -1,0 +1,80 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.33.0
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure MongoDB cluster using Mongo operator
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-mongo.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - mongo
+- - database
+- - nosql
+- - mongodb
+- - document
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-mongo
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-mongo
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mongo
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-mongo-18.11.71.tgz: sha256:2cd3663835b433f6db8d27fc61ed65c3e64fde5a973ce9bf967e7bf4d44283b2
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpoucfCRAPNrJQFdOjTQAArgwQAAcPQ4v/3RUo9HSRxasDsLzo
+YKSTIvP1XrO6eaKGuJnNeEXJhkkMGjbREpkJlpi19iyHnuAB0Zqg8oUDmODRfQt5
+5jvuVKiQ/W6aWYneHOdPOkfol0Dcq9WJqY9SacfaHdOITWg4Pzap0Z0uWlCKSv3s
+qJwXRUa7YP9wZMvDafEax4ms/EJgkc/tj31a2JZcaicw/uRaJ7FcFaFJF4YOv87L
+UPAXW+lqBB0gi+8tR/xmPhXZFMZh6K5BBstRU8fHeshJoWsJSRER1oKga+xuGReX
+cZFlq0KtUDgpK/ZKqsr/blwBtmHNWyun49TAIOlMGTu5NbtJf9TNdj+aZ5Sbwomt
+XmxhfOFkn2hTvjr9BEQTi5G2MnF6ope9GA9iQDF61qOVP+7g16C6Pqm0VLBxz7EC
+yLIQKGDJ27rCOa31eHhe+DaE81PM278Jd0Wgx1/Fy55VjC470Bo7N3g0uDVd5RxB
+77952ezXVDypu9DZPv0OHtnANYrmd95fDBd4BsOvOiarCLNbeTL4lnCrb3er3TRv
+j0BizUOISzF9R90hwqxYKqLZ+vkvzXxOGQyjgoE6Kb22ed4/kU8mglAOnJdP0mfn
+tMn8AxSl1lfFYDEIcBQoW2Q+R2WrowemvQo4mC0sR320xW91TMUBOox+jpWOMKIC
+LMHhACDUfMZ2uR0sIVAz
+=Md8A
+-----END PGP SIGNATURE-----

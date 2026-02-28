@@ -1,0 +1,80 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 7.6.11
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Redhat-SSO at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-sso.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - security
+- - single sign on
+- - SSO
+- - keycloak
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-sso
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-sso
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-sso
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-sso-18.11.71.tgz: sha256:3d5faee0299c4ec71cdc5fd0062a32aa4a55d744e5bd09237e6f4b9df0e44e0c
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpouefCRAPNrJQFdOjTQAAZ/AQAHOizyYAsBOvhKJ3eJHe7H2b
+XpH3TQCWuyJiNemx8Sbp2XgE5MPYBWJe/zIt+Zs5fDpVtYXV3emTwWDdlJlgB6p8
+n1M/cmOYm31RGw791TzkBwb25IafvFpw82KjrXynTwwb4CyMS3Cjl7mttR+Ony+c
+mclp1aeZY7eqf+1SmObu1cIRR9NoBS3HkvGew9lpOTVE80Svg8aSi4Mf2FB+NqBp
+rjeLo499T12JSSk2QqmmuXevZDSxjGFZWmdUdyyIOe9JN6MzvjI9NLoHn41YxPAA
+bv4OnWdbM2/WTIh6icJcd5fNMrnHD8dfHIxeZEatzUbOE+whZtNLrjlfH2JIHnBU
+57pz83Y51st12sN7lprG27uF/j1nMqnoSlp1HA47KFDLjFQkzZs6M+occJTC5LA0
+NR4I4a2btwg3AsL8DK5CmqHRtWuqk0EfGNBHq1vn+rvwmyomsAhWCC/0RGXfahxi
+NTlT8bQ19aT9IOH0uXMVV+8yNlHA/Wu639alJYHEIrHM/vHg64cs6eO2bQZkuaWH
+tQkMD/97x96gA2kBSpie5URSbZcrZvtYK8cxCFVj412G1xtAsVJde048BQAnbE+e
+CwycRcZyNKTZxIe7K5NCAvmDe3yNH8ygvqrcF3QfoX0xuxZUuRVd1JaXWyAOrjsy
+XnCl3gb8iNqsjnrwJd/j
+=suCm
+-----END PGP SIGNATURE-----

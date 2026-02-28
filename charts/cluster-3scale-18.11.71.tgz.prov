@@ -1,0 +1,78 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 0.12.3
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure 3scale at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-3scale.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - 3scale
+- - api management
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-3scale
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-3scale
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-3scale-18.11.71.tgz: sha256:ab33f9176a316ea60bd503d44da1a7fc1a6544c1d2c66a3de51365c4431e0ad9
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpouY0CRAPNrJQFdOjTQAAO2kQAEiii743d2vWacgek6xu8bwa
+s+EtF52Ql0PM7NgZyZOGG/jobgwHQpW9Jhae84qk9xXeSfe1pY7RS1eB2Jfxp99E
+G4TFJVjDlevEKKVUtpA9GicyFVpQXT/BqBBBxsoV/pFq4gtvmFp4VNPR1lMGCUVM
+W5EyhHOj5ftWwg2sNLoNvEDGr7W+27uVfc58oyI6yZLUI+1aSy1lnnLKn8hee1tZ
+t2/rRgIW62SwGXkYX3Sq5rkOy3PgT56XWGOcxVyi9prJ8r7DgrUaKVFhh47rnkYP
+C21PWUpAkZ697u13B4Gs0uGObVI81I+/Nz2l+oVzhN2xcY/IK9KxXlhndXcKdEDT
+IQhSLyWwM1Q15rXr3+MeqgYiR+XmIf0hM5EukbN5fmiRIwMJ9Ztu+FLVBMZyaQLG
+84ugVlpZ0nigwlwapqcpnaT6jW8OBLYgLd055eOS7KD5Pon75HvTcnISgMJXiAvv
+ShwFkcpUM+M22o2OOPFG8knEZ59kQeVinB92TeNSSZehm2vAX8+fCSkJhUvSm11W
+vO5GbPTaL9CpK+w0H4NCOoGipuMxOEwVPdoL9Qk5xgnxCqh0Vyf3d5rxakv7Kz7e
+tn7P8Ba3rvmEUkjfROtyB1fKCQmpUqOp9g9s37DWioNs8QlUvRsEIPq00DS51MXE
+l+jSRMy1d18UkzSwI+Is
+=pkzO
+-----END PGP SIGNATURE-----

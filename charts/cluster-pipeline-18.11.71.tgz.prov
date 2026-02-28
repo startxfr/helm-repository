@@ -1,0 +1,80 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.18.0
+dependencies:
+- - alias: projectOperator
+  condition: projectOperator.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure tekton at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-pipeline.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - pipeline
+- - tekton
+- - continous integration
+- - CI
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-pipeline
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-pipeline
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-pipeline
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-pipeline-18.11.71.tgz: sha256:fd4fdb7459be7bf4f2a1be87a0b275ff6e1bd4c40798a3d73c1c0d0451b565bc
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpoud0CRAPNrJQFdOjTQAAKwUQAHbf8tGCl9uVZBAwURIknD6b
+naKmK5zG4NtJNRDC/d7bRRuwaM+GxmhsovBuc0qrFln7PT8+7kvbAUV9t7cGXA3D
+s/0CeMo36fb+zpF26GD+tbWyVzuug6DHVipe+BCw4kGwIFFIzY/M43zNbZUd+miv
+qHxLSamkmpxGYmZNVRCUUVoanH5leiSoITEIBn0Kn+nslQHgooH4JY9VfoAkVTCA
+BC0NzfjBomHDWy7nv+92/Mh8WeW/JFn6+85Rq1bS4t+5xzghTU2MWFRyQSMJN88I
+TsP8vKnH/mQzYwKj8dIWxtIb9IP0OJplWgi50Non8cvOri5hcnLIjVjWCi7U7HFJ
+El3oPl8ch2dn99WNWzo/B9cbqG6ehtdl49lrJwxcx5gZOo9J95VshZPKky/Y+qhw
+SoHYYkKPsR7A6Kd/wCuMASFxQcYZIWqmLix6CQUPeBSt2c8rTLeDX6SznpL0SgMh
+RGlDDnXbBW9ogyFTudl/hs7YAJOxu9LtMBpRRFW7Bxa0vVd2JeLHPYh5UjFeUMpN
+Pzajt2Jhvdw20iR1m1ZQtsR59WeGZmI6fkEGZihHSgz/piOgFhaQ5wHGw0F3wYQ2
+kLDkBuOYZOuKQXRjdmGf0QjmlbSzLRN+H3f/iN1B2SmPiWsUUodV+aZXNj8qcvsd
+tfkN1rWMRSoTInGb9g0q
+=hAVU
+-----END PGP SIGNATURE-----
