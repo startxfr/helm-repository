@@ -1,0 +1,79 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 4.18.0
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Node Feature Discovery at the cluster level.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-nfd.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - Node Feature Discovery
+- - Node
+- - Labels
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-nfd
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-nfd
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nfd
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-nfd-18.11.71.tgz: sha256:d325e14fc090adea4cead89ff63032c9a92ac28476b0d34380c9c3baa6631053
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpotrECRAPNrJQFdOjTQAAjksQAGQIJnVyZTYO/Dx1NredcqQM
+bbijB4UvuxN4FA0ejXT3w39CT3IjLgi8VSU0yyO2kyofhDEqQcBoXjhu36MeIgUE
+xndgnKbqQzskVpWZhj7L5ZP2f1IADfjkR0IMeTYV19gH0gjY2/PhTrmZZSWIrzZx
+KWoGWwl2gropDuClCkNv+9Ak9RHrtkZok+qmCvdndsTnWx4PuTKQvfgb/yA+8yt6
+x/bOcizLTk9LQmqFgtN/JIFfXVhfrqTuKiHNajjmwhRlqhMweItNQ8iHJLoMpu6Q
+gLijZ/dmxHHssIPrJBqYyZbsLMBwB3VApCNEbPUDTDJmYiTz/MDJhLbuPFX20KUt
+pKQ8Q9S700kUAGAsQd8p87iMmBT+RMqXi2ontCeCczSRVpPsiet1gZ8Epl7neBAq
+AJRFW/sOGYWOZCPmbjm2zvm0C4UskdfFKRPh9ZfpfHkg93XhCoDN39z4/Ink4XCZ
+GxABAsDYu5CuJSemGcCGY3uda9FRhd5bFqeGoMsh1GxVxmKc2AnBSzxv5vfhvUOp
+pkk5h5KNWVhP+fkdwDkTNs9XFjrfRBF2w2ibqtMAs2FpiC9ekuw2pyVvQVqA43DJ
+LH/l8vOec62olXhjXa/LJNw2s6033M3EA7FAl0FWrHsNJn1ya74bl/jzHuutRVHE
+HBbGgBIvEhzKrGgMIB3R
+=8R+s
+-----END PGP SIGNATURE-----

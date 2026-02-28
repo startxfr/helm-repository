@@ -1,0 +1,85 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.15.1
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operatorConsole
+  condition: operatorConsole.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Kafka at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-kafka.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - message-bus
+- - kafka
+- - message
+- - broker
+- - stream
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-kafka
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-kafka
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kafka
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-kafka-18.11.71.tgz: sha256:c1b8287ae36a66d4555521777c998bbe927320a5135e54c39be0c662640d89d2
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpotpLCRAPNrJQFdOjTQAAPqcQAC52puB7Jkun7jQlaPYLAv9g
+jTb+ugg11B/z0Esf/iKduPRuyv0uPeEN6xQ4z6C1ZSNn6YC73vUxCxSx+OoZoxi2
+oqywOVlpiM24ucQD4Imq7+d8q05fr/GuR2CPXLpHrDNacvfKHc6YiGdvK0uRo4rN
+gNsM+eDB0W/TGYNXmBXSrJsw6bSEg4zF0O1bOEbcrEcfqkTBc4XKbSz+o6a3Cssf
+XuHrBLPgYBZNu9Pp/1WxzoDn/BhHOx6tqfpH+nQJQXqpgXyjExJR+A6DNiGxrT+h
++7J3skL9DqIblvXvoVgUSbbxc3m9KZL+0A9ySDRwLu7muNO6ZHySUdfMKWuR54cc
+B6o1wszD6aSygKUvLzMi+v+EihmLBsPyHhYEEoXk0YWVLaEWZPFwgdsWmtZbU/l6
+r1sOaWcQ2Ef7onJPw8SpRYu3uSZAdf6eF3e7n9NcJHT+XHySJUsTAR5rvxraYhn5
+DBsBEzsHbvLdkr2/arkWk2gR/BVOf1Zi1s0b8cJUbW/OiZQ1fBIR+04Wi3ccN2EC
+pOJKuY6YsioqfvYkbHYPVbhmTj0NiNBLonWi3kt+UxXj3lo6Pyp21vRLxo+BcQCo
+iLNx7oC95seSPRciWtASc/mC2nYf7QPBKLQWZGPJJVue8DIcLliocDPnryf1jy6K
+4oYv+AgRNwlixt9PvG2X
+=Ffvq
+-----END PGP SIGNATURE-----

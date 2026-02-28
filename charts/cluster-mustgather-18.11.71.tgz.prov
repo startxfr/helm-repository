@@ -1,0 +1,81 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.1.2
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure MustGather at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-mustgather.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - mustgather
+- - support
+- - log collection
+- - helpdesk
+- - reporting
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-mustgather
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-mustgather
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mustgather
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-mustgather-18.11.71.tgz: sha256:1d66ba4295f1300c84dcd8e8a110e246fd7f210bac514c2afde166af84ec770c
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpotqzCRAPNrJQFdOjTQAAg5IQACi+GJNyCCdViFoGUBxoS6RX
+Fi8qvXkcwbEQdXzrGLkp88zeQfX1D42GMvnOhYJGyLbpV/ZIrJouD97FOj2w7Ve8
+JoNUdULADRMnKjsID8HJc4HfGQbM8CkEtPqsyQQ9fjDQU9Z4lQ5KKn4zaqSl27Pr
+APEJVq36QcTy2mmU40oAAvA93ucOU8S5GxqSskf1vp18enRbKhs0NNj4HTOn+s9Y
+/YsMIeOpLRCYs+ytCIkFa8F+mfBFFcBxc2bdTBMPxs4rHLbvjG0i5MEHseQiLax3
+BHF5E5RTO5ilSKY4CykHwjIGlstuVh7aYNCbRdW3DYPKWQz8MlthfefsdAMSBOTl
+LRMyHVmfUnAo7QsrsX6nqM4eZ3Yop5j83RTGvxX/ve5Bz0oyOrlWA2GIWuxtESmW
+WxU56WdQn+7X3uEUDSaiXrMtZ0BQWmLwWZqUw6iK5PK3CSXNCoY9cmMb4LofxlAc
+ZIFTozJl5TqbT2xe4n21Q9V6gqOaSIP9nC1zyfC53J1j8H1d6Sc170CXLyqYdgqu
+XDNUm0MlhwDqpg3X69Sz5jauE37OfakLnHxfAC6vULon09d73wKXxpqBX58fX9LK
+2JKV/aM/6I94ofMfla4aGczgdls9gOp+KD+Yf6uGKfalcMLBm4un1NCsH4J370Ex
++w7JwIHqEDa730TXH6qo
+=lR9r
+-----END PGP SIGNATURE-----
