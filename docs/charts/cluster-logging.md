@@ -367,3 +367,4 @@ xxxx to do xxxxxx
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
 | 18.11.73 | 2026-01-21 | add apiVersion parameter
 | 18.11.75 | 2026-01-22 | Adding creation of the logging-admin service account
+| 18.23.0 | 2026-02-28 | Start 4.19 branch

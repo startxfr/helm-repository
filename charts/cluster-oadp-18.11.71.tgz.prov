@@ -1,0 +1,85 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.4.4
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Openshift Application Data Protection at
+  the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-oadp.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - OADP
+- - ADP
+- - Data Protection
+- - Application Data Protection
+- - Backup
+- - Restore
+- - Velero
+- - Restic
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-oadp
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-oadp
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-oadp
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-oadp-18.11.71.tgz: sha256:e592a08187250c9c704c7bd1010bf121ea78dab39c3e5d97d851d63743bd16ba
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpotrMCRAPNrJQFdOjTQAA3XUQAJEiRQxUZ3qcIlyYVGvmeu+Y
+TwqkO55JrVXMCyntFy1jnkpmRvBmgT93wI2GwcnRB3q1gKfUkfurLzbGOVGa2wGR
+1Naq2inAfQMLPPVPU3IEJqgmRCfqE2R7AiJ00HyE22uYxLU6V880EMndmSgjQJMZ
+61eNonDxUswgvwNs4jxWZzPEXGQe7qK6GW07g+A4fcdYvTpIPvbE5GsN/eUKfl4Y
+q/yirxpcIKZlTI+AnYP5/25c1z7QiIozjTrp/BcPjYoCTOGPJD0qtoTme/AKRtPb
+IJ8kVIPo38TqSGZUrbnCBtLQnDejN27yUNyWB/EXF6olY52ZoteZdXiDspHGZH8u
+whvnKfhrXeFtMzal5klvC2ueWp5kuh5pgDI9m85SXa1m7blf8FVwIDBs5CA44Vei
+0vRPiVyHOfBuw8HqQxmxhimAX9AtAk1CEoy/qSuFLT5WSgbHubE3VWnOZIgHlghA
+m2/pIKFzecTPx4MbcOMq4RTrg29PkkjLUBgK3TbggxFRKA8xnT3Vb4H3NyY7aiwF
+ly9phjEa+Pu6q5nMguk763MiCvlHq632L9NqWjINbIcnrH7gaN5hXdK5WdeRuUWR
+RwI9Ox+h8pC5kdo03r/FcrNuEcoDDRenJWGFPttnPCZkM6od4c3TjXdhZ2ahkWxo
+f/aKV5CHK3YQ7aAONC2O
+=2TNH
+-----END PGP SIGNATURE-----

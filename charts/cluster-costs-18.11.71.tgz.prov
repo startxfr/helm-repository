@@ -1,0 +1,85 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 3.3.1
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: projectOperator
+  condition: projectOperator.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure CostManagement at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-costs.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - kubernetes
+- - costs
+- - metering
+- - billing
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-costs
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-costs
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-costs
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-costs-18.11.71.tgz: sha256:6f48c944bfe13be2aa0876004fe4ad0fb4f35a88ff289a06df00f8b963074165
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpotn5CRAPNrJQFdOjTQAAkJAQAJDFspPvPyNEwD3VsCEJsN8h
+42bR5MtllNSNvMtRTOY9cNNBKDZmFi4onRhEbujd/T9zwE300huHIUZKcig8B16Z
+HJ6BX4LzngVYIc4S4W47l6OQYoyFWFWnI5c9R1bHk/g0lmWWFC8b+Knfy2/XzGyC
+AakTCoW5xWwmbPRl0lYeJoCLlt/47RtEVU02oO/+un0xgsYpFSXoDqJlwa7U0gye
+NT7TgCDfc9JLeDixgy7/5ac0Jxxnu9tuqoIhshUMFeuhRVlrqmuYH5b6H3qnjebW
+FsbccPxRDRTP8CTqdxKMW/lhaz9gu0/oA6t7cJR8rCKzej1h9IOujMmNrFQ+msle
+TOrT+JWZHOk8puQAuFjzjhk5v5YfRZCrezVOgJztcoEnYJnq1huIKeZLTWED2gTe
+BiIDHE/fnWAbQXQtycxJB2Ze8DDPsoJ8MCsGJVn1UW2jcjODjKqtjnCIcYmx4mJF
+4h79NvCffZ4NfB5fptmRGK99w7CbrhV38BXDZOdFc7plpRkDgci5TPdQXYq6uN+b
+yOlFqZVRN2ZeOQJm5t+1OWdDBR3rYawJfP1/VMd+3W1wVLmH/W5cEFLjb3fRKhiI
+A5UNiq4zxaJm6VAIU7E4ItO7sd7hikHHanQwjdHLsMka4mUgeTPNghD20CSfn0IA
+5dVKPbAcvVQEo+wHEf5Q
+=/DAm
+-----END PGP SIGNATURE-----

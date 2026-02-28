@@ -377,3 +377,4 @@ helm install example-html startx/example-html -f https://raw.githubusercontent.c
 | 18.11.55 | 2025-05-14 | Update all manpage layout using picocss and fontawsome
 | 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
+| 18.23.0 | 2026-02-28 | Start 4.19 branch

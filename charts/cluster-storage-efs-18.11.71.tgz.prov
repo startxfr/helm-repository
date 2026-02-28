@@ -1,0 +1,78 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 0.0.8
+dependencies:
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Openshift Container Storage at the cluster
+  level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-storage-efs.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - storage
+- - AWS
+- - EFS
+- - NFS
+- - Filesystem
+- - Read write many
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-storage-efs
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-storage-efs
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-storage-efs
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-storage-efs-18.11.71.tgz: sha256:e79b0f373777a9478e2c3307995e381a4f1726b6bb0dde637b69fea51aad3881
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpotsZCRAPNrJQFdOjTQAALfcQAFNh3ahL7+iTeaZ5RtBHQgr7
+PE010MJ7J98ib6MzlkmE3TGEC2wRHKV2NcQhweYNMU/XOaheL0DAIjoUYomnADCN
+cOIstWCGxM0HJIi+sLOxMldC6TRQt9rvuoz+bQjOjRb6db62xjARHORVxQDZDgGv
+K4iSQiqdQ151fMyELROOSXwprWQpORRxsQ1YJOf53zZ3Xu53UkLagY/Q9ppjYyAU
+SpJdV4+ru4PTmXUgqpU0aqC/Wmoundw4580H1XkBfM+mzEUgTimkyA+y1vqMRPeR
+dcwgt0fCS/y3AKQwLkhxHM3+CEj29uxOhy6RNSYUgCd5CqdxJb+yVvD48R1a/nwy
+jqJFLlTDZkJlQ9Hg//bzw39cGPp3xKQbA/LD3e32FNZQmQwP8ZlVgDOrkjhhUab6
+g3dCwWEAZtUxuHsDGeA/shMvzPAdA4t7EaZiOAzKgC3eNtbXeJ3amZjNoTc6YLNW
+5LKhsmCzvjES7VJljIn/GvdSb83SNwvXpQP01mRRJwS41ChxIiB+J4oNYEmpHMf+
+70GFQuWHcKIiJFiyiR0lnuryZe0aMdlagjBpieEuO+BKe49CYq+ty8oR699BhwoA
+6v9AjKe95KW21H4CI2UNs5OOPI+PQmklnB8NAew4SCd0e137kwzoiABjqRP67IL1
+1s0ShmSPuGFqeKUNSHgW
+=fwR+
+-----END PGP SIGNATURE-----

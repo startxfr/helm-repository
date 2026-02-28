@@ -1,0 +1,80 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.18"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.8.6
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Migration Toolkit for Containers at the
+  cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-mtc.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - application
+- - Migration
+- - Containers
+- - serverless
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-mtc
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-mtc
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-mtc
+type: application
+version: 18.11.71
+
+...
+files:
+  cluster-mtc-18.11.71.tgz: sha256:7039d81d5179d67830e3b34c38f9d785f3b02e2e716c0a5fcbcf1411143a6eb7
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJpotqbCRAPNrJQFdOjTQAAmOcQAEFxylwK4NMN65/PscQQq3tP
+60SZzGQffAwOySZMdSVGq3vUyuByqolZDA9KlT+p+bYKpyFiZT4/laMAC5kzXfTa
+yNez0fe8siqhtgoYo5IDQxspeUtzwwAMXGfQxLN0NCUw8qacjdTJyRfM+mE3+PpA
+6nxJ1WTmUydDWgBu0ZSGJOaizfI6B6VgtlitQ7V0uUIw10TARaCYYC+Kn9bMekNl
+K0X2t0fWbVSrCQWnhIvaeRZA0D/f8a7FPxmexVHZWY7ihJMvunl4jBpz2NxYxi0N
+liWJtgPOIQInZGutZ/0RhVwyH8mMphFVkoRnE0G3T37JqOGA865AZ1UC3h3a347b
+6MS3Vgdf//zMGBLLgDbCP9/xqZ2rkpPdX3Xa89rsaLZqvIRDFKbj1HvE7VGJmLCF
+CqQ41WALX3B7H58AepCvmlZo5MPPzyO5CKsKbr5KZOU8t4nCFKKmsOmHvzLWZU64
+G5ZYYWhsAfxTB679lEvJKvJgVMwae1DBgNVMN9TW1KniE2Wu7p+0KvA/LW3yDiZ+
+g3PSLX6hclQJFTP5CS3jfUZ/METPw9Q+jXDptxPkcv6j1Lah77c6mvh7gi5cgHGk
+sqwYoDRrqx9VEfj2uyu9jAW8sYlU4Dhh8Y1TjhBjaiw7Q2556mAwcwB/214+q7Is
+cqVADp6IcsYkF5znOMPI
+=HdTc
+-----END PGP SIGNATURE-----
