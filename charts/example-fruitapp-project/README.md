@@ -283,3 +283,4 @@ helm install example-fruitapp-project startx/example-fruitapp-project
 | 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas
 | 18.23.0 | 2026-02-28 | Start 4.19 branch
+| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release
