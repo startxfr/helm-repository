@@ -1,0 +1,91 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.19"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 0.7.8
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: graphanaProject
+  condition: graphana.project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: graphanaOperator
+  condition: graphana.operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Deployment Validation Operator (DVO) at
+  the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-dvo.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - Deployment
+- - DVO
+- - best practices
+- - audit
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-dvo
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-dvo
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-dvo
+type: application
+version: 19.23.0
+
+...
+files:
+  cluster-dvo-19.23.0.tgz: sha256:833f16399b1c7352b066a0e4ce2bd59cde371a27719bf015dabef05459706b88
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJppBzSCRAPNrJQFdOjTQAAPwgQAGtckg4Sb3TI3xonyPKg7awK
+wSPSmuZ/YUuksXsVkAknIUvR3/p2b94aAwqvqr3g17GAziFztWquO8vyFNnuS6Wz
+6kKj/uLzr46n3IcnoUq8oBqQZY3uv/l0vfL5blHzqaQXca9SiIA+kL7A1JIp0Mn8
+WpoGDTued3SdXr9y9mNpa8RrX5Ux8TcNQnGXDkD4XcqblWGLNTJjqeoS2RAkSS2B
+zw9+VkCx9Mj2cBk/FBYAo6M8X3tS8oploeXXG8YGjtWAumDD1R1FEIZ+rcKRYL8A
+ej94GmfQjTN13THdCstg68cf4LmGlj1AWCd9QY0QHHvPVGLh+5UoERSYhUGuqDTW
+N5ttMOr+0f6I1tXZ30/4ZDWlUXd8DtmLuTCRncx1o4UnBuzPYxI0gsaioGBYyBOL
+7M90lsRj73z8URh3X+aExwawsiO5UljJTj+nyquy6myHQXU4s3GYcnhfBpJL/kY1
+QKZ9HYgPmRN7k8kiIxKrqgNxUqwiRQhY3cjsJyV0Vd2JzeBOV5aQ2XrgTgIRBb0h
+V5rYxJj4No4RIneaAncNd1e2k1KSsu+WAzISkwjht4aiWR/Bo7h7IGm+G/NuC1sz
+i4i0UsVa4pQlTkkMYomJFREpD3RyZMTw7SbVNWX33ouJl44AekritpN31e1eQn/0
+fF4bx27m54USxqPGkMg6
+=okEn
+-----END PGP SIGNATURE-----

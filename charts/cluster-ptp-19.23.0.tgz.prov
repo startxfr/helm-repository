@@ -1,0 +1,79 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.19"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 4.18.0
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Precision Time Protocol at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-ptp.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - NTP
+- - PTP
+- - time
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-ptp
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-ptp
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ptp
+type: application
+version: 19.23.0
+
+...
+files:
+  cluster-ptp-19.23.0.tgz: sha256:0d81130ad161a87594707c66f2e1610dfede2cd65b9b3285c0794678382caf2e
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJppB2fCRAPNrJQFdOjTQAA6gAQAK1/fuLJuk+DPD2V/7aIv6aA
+fcWhswr9KpQS6i9wuSmd3oDXhd2+YKEYwYCuWYpjHxiqI74OPvw1+Ke/Lo93J+Bp
+Q7SMgXLgAPyLqC/NLLFsLqRgcmnUohcZ8QGllnaxWoIXKhdjwqQkr1tr+VecKxpH
+XWaiB5oceOIYXuv7/IeWUIzms9Jl8qt8xRlV0RbADlClLMa2M1OBBag69UH1neCm
+2X3TMVTsv0sVE3ddjtAZ+DEFc0DKOGbwrPsrEFh57C7SK4ThNJaU61gnvzDPebP6
+ZoAfw7KMuVeffVNTVZxFDpKGw/HiUVf/+woQraaDlmXjJ+ToqiryK2kuf80WD98s
+yNH241ZglbAnRNFzYUfczHm2SGF5yfOACHKD7p2jo8rS46K4+SHPl8m9aPllSzjE
+KEyf35zVj73teMPUz1WoDZ7QfckkmaHDkIlHmeupam8M1bKgdTY0ggXcprLCHDX1
+ldgZf+f4pL3vF79QMv/4e6+MtA46l6m3Qq4DPmXWo10Hvrzqh8LaJJa1IvMv+kzz
+xFCyV9YXP+LD2UXkk+zag9LKdxmvnbnTzUjIMMKReiJe7xA4xx9tf/g4ui84f9Ff
+FB0jtwc/SNTQ3If/5l705wSNsMBYRJjlRpBsbQdNaY2vuLYELC5mpR1mNiOKBbl/
+7gxUULIWDmpWE86F4WZi
+=7B4U
+-----END PGP SIGNATURE-----

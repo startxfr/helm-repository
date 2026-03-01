@@ -1,0 +1,81 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.19"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Gitlab
+      url: https://charts.gitlab.io/
+apiVersion: v2
+appVersion: 8.11.1
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: gitlab
+  condition: gitlab.enabled
+  name: gitlab
+  repository: https://charts.gitlab.io/
+  version: 8.11.1
+description: Helm chart used to configure Gitlab at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-gitlab.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - gitlab
+- - git
+- - code repository
+- - SCM
+- - git repository
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-gitlab
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-gitlab
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-gitlab
+type: application
+version: 19.23.0
+
+...
+files:
+  cluster-gitlab-19.23.0.tgz: sha256:107afb72080d865fc17221ae70cfcf1cfd9b067904bf231f4b36c7293796c141
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJppBzcCRAPNrJQFdOjTQAAuQIQAFY2eTWP4p4z41A+a2h4Q1Vd
+JlXapDMN7rba6CmZndCrXonFB5neJzqjkpHUZ7+LOYzaYaSAkZeJTNxD0dB72AdS
+u79s+ZJfFnmGSWHUWZ45P4xSEmfaYrpi6K87SuhElviZQF1YmzLLc3QtzFYfeadN
+2CQnMT9MMNkv49jyT8mtT5BX3vRZP2u5UDPooybvs5gU4uat6gRNgL1e8LN4Ky0z
+Fwfk4UtnGB1nNBPO2AqkYWMdb0SNF/gf94BhqqO3wh7r4TVWZGs1wVFNdzChq+Js
+qjIFtWLoG2+KgYknlpFo+r2Hub64qAsI/AakZ0zCjzRJ6pYCWrIgnHfc/4vSGrQq
+5F9khORQvQ3vZm4N11IlnI5Kd+G5QZaqvi5Oqti/ylJ8kNfb4/PiH0sXSbpU0yzp
+IRuJKN4xX03+aWMhBIqsxu12mRIVIzTKHwgUkTc5lQY10QXpiBAdBNK5dLpQrpNb
+85zGkO/7KDoM/gsw2dh0yHPGnIzesnk5upFgxChVeKGbao8/s4Zg5asO2fnS9v2c
+46geN1N0Xj85Z628vHOM+lvMvf5KUNfiT4J+qyDetwm4VoeIetoDv+TFDeY06zv6
+3+8/bLaW9K8+nTK4d1PslRmEIpqiiSaGXAKHDveG5coQbfHibUyLQG1aQ6dqLMi2
+47231Rp65xbM8187zPcz
+=wtue
+-----END PGP SIGNATURE-----

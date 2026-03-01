@@ -1,0 +1,78 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.19"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "false"
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: chaos
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: ChaosMesh
+      url: https://charts.chaos-mesh.org
+apiVersion: v2
+appVersion: 2.7.1
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: mesh
+  condition: mesh.enabled
+  name: chaos-mesh
+  repository: https://charts.chaos-mesh.org
+  version: 2.7.1
+description: Helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster.  Chaos-mesh
+  is as a chaos engine with a gui to define and execute chaos scenarios for Kubernetes
+  clusters.  This chart is part of the startx chaos helm chart suite.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-mesh.svg
+keywords:
+- - kubernetes
+- - openshift
+- - helm
+- - startx
+- - chaos testing
+- - test
+- - mesh
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: chaos-mesh
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh
+- - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh
+type: application
+version: 19.23.0
+
+...
+files:
+  chaos-mesh-19.23.0.tgz: sha256:37c9c0699de5682f029cf157e2e023da02f3dacfdb9a1f28b58fff07f5fcd47f
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJppBwRCRAPNrJQFdOjTQAAQEUQAJZNgQ62WGpvGq3/mFXvFXkV
+AKaT2DMkq8DkCxrG39mP/7/PwRL92UuThG26EAYVOdmDC7BHJytRg9VIPY5trNlr
+tDJyUrx+w0014omPo5esCqW8UJ0+S/RnHDCPXS5W7DeZEAzoGp/7cu2WhNNChcen
+U+y1tahNWj8b1OF+ewyt0Q1WFbwItCe0or4tGMrCkP8SH526i3NhF8NPZm15aNiR
+13xZL/E0zftzB4og8J7HBgun5/QMZ1wgxl6aPfzEyqLuut0mHHf+JP1+rgHDxO54
+tICN5UYhNF01nDSvXLJ3tZ9YsrghZkkr2x+f5XfTGR839JUlm74TKyhdtzfv3nV2
+vmNDULbNtwJ81HhMxBnSlxLuszxAq/16YUQqz+EFpyY33BTR6sN/cRn8yS8zbW9c
++J6ocsJsOEoQj4rFNcKEZzxJRXQnzVKr47iCqgR3w5myJyo8AmffLtQr4656M8Wo
+WxXfBW7XmMfGoMyRIGWH0f9wzC2r2ujhWLmQCDnh9IcBK2QaurNDFG/xnrMSXmwE
+Dpaz24bqNKdCaIGz3OF/P3cekkANqaNgj3vxTPbY0NuDmkNL18l+QcRAJUNPpCyC
+kNnTn54rZcx38/yagXxNFOFQn41ghCdVIILzDIbOdz2fh7tq0Or6E2fw9UhinVYs
+HcoAwftbFIXUAUaE1p24
+=B+mM
+-----END PGP SIGNATURE-----
