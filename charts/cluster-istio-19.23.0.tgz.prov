@@ -1,0 +1,106 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.19"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 2.6.7
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: projectOperator
+  condition: projectOperator.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operatorElastic
+  condition: operatorElastic.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operatorLoki
+  condition: operatorLoki.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operatorKiali
+  condition: operatorKiali.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operatorJaeger
+  condition: operatorJaeger.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operatorIstio
+  condition: operatorIstio.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Istio at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-istio.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - istio
+- - kiali
+- - jaeger
+- - service mesh
+- - openshift service mesh
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-istio
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-istio
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-istio
+type: application
+version: 19.23.0
+
+...
+files:
+  cluster-istio-19.23.0.tgz: sha256:0cc34263a59762de1344e0054bdc0f4678ea3d0c9a4fb3a21adcc8b514332122
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJppBzwCRAPNrJQFdOjTQAAINcQAK3Sreg8GDh8K58B5L4tZ0sJ
+SRgjEGZ4/fHuf1ewkGNG28gbEWkYHWqdICN8OMAUlp3H8kPuvjRSVNdmcPUsEA4/
+Gjc1skL6eglJYFooldkwWHnAj+42I1nB3Ja6g8cOUlClarrHZ6I7gz3j9bmSNsAw
+JTOo6z/sjjMna2PgF3YckCZ44clqC1gLGQgKdCsdOpGEQuromwOa1U3dJIh+Jll3
+KxR+8vzvQYgbj+31ag50EL292bzySXdSu8l4mO0a9FCo5HWEe7s6JqFsZ1gk/aS1
+2MFMKoTdnioAEhckei+a6XB4Se+Oqn3VuugO8eJsEFaPBQFEyAij+w17qephaLmD
+3CKIGgfekW7v56hsUufRzaUjqXV5xS0MLVUCf7QIB1cO8l/WHSDwxhEM4ahds63n
+wvNJN/bk6TSsaglhYQYBxFFv2CIiLOzWs2A//mjnEOF8hzmT+n+Oq4nGfcQdDQfA
+LiEGqQmtS3o35snvp/1rc624lcHgjeMqJsxx8vVvkBZxSdOsswpepjIX4FWypZYR
+bJLYzqfDdrfLW6LkhB8VOhsV8EBmgy3oKeSakQ2Cl+qbH0Sf5kpp4DS4gHWiFONC
+Ih4XOY5Rn9roj8XO1IoVWJ/nPbIonznvGe59d8nLC12gFRXU/5Ne2h6AOWRpYkDw
+QYUCtd4p7P5m6ZnSnT2O
+=ce2E
+-----END PGP SIGNATURE-----

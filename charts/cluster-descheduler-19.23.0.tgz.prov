@@ -1,0 +1,78 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.19"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 5.1.2
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure KubeDescheduler at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-descheduler.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - kubernetes
+- - scheduler
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-descheduler
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-descheduler
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-descheduler
+type: application
+version: 19.23.0
+
+...
+files:
+  cluster-descheduler-19.23.0.tgz: sha256:479fc119458e82ddf52084ae6dfdc9da53c92e0b6c93af3d801fccf6c10f5953
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJppBy+CRAPNrJQFdOjTQAA8NoQACMoxLUmt0kYnR72eIkrI0fE
+HKFbl/k6tTvjUAzBH8fuiZzvIADiBfE9KO1KJpqsu5WhVepVwjTku0JeNe7Edjnj
+ynL4EYMbub8BOv4cXXKaRxHwXcLxXOFa0ctlPu/ZJ6Ycdp6LObrqR6KvjEg8eIGh
+SF1V6AOb2SbkkyGOrb0rWe5gei9hRoTMyzWmnY7sc5Vch7hIW4pBZG6w0AWsnQsf
+BNWDV1qzqKy7H15qUN1o3EGnLypHNOQLoU44MCo5rHM9QPNdxA7lcnlGOitRivOJ
+1FPDX+/F45G6+O1Lw1R6yo/48f00pFPc/t7jNkTt8Dp7GjBkQ5VjPVRuhy5VB/Td
+H/13RNG1ElbHQm2NdELPpmy0O8VRSdIqVE/vF8DuNHSmaXSm+E9lVogEolyPJR+g
+CavcVqU6b5/UnIJnnGu+71JzAE6jwpwetk3b/LMbJz/coISeeobrHaBaWTssbUTP
+wgC+ILbzn/ZlWNMbWRhRnFRPNmqZXs9dFrBBsTIs/CvG0DxFXZGBaKCCTyxtFXr7
+JmCMSZrIjgBNy+1735q2F/QiSZBTZn6cCnstyOAbOH9DcaPMgtzcCwzlPsgcznGr
+mgN6O0M+D2fx3qtCl6+wjX78WMLu3TeQr7Y2+lXFHPPT98zraNPSHjzVVnCwXu37
+l8eJKgdltsooLS0/UP8k
+=/ab5
+-----END PGP SIGNATURE-----

@@ -1,0 +1,78 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Align all chart to a stable release for OCP 4.19"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: cluster
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx basic chart - Operator
+      url: https://helm-repository.readthedocs.io/en/latest/charts/operator
+apiVersion: v2
+appVersion: 1.7.0
+dependencies:
+- - alias: project
+  condition: project.enabled
+  name: project
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+- - alias: operator
+  condition: operator.enabled
+  name: operator
+  repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+  version: 18.11.19
+description: Helm chart used to configure Compliance at the cluster level
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-compliance.svg
+keywords:
+- - kubernetes
+- - helm
+- - startx
+- - cluster-chart
+- - cluster
+- - infrastructure
+- - compliance
+- - openscap
+kubeVersion: '>=1.25.0-0'
+maintainers:
+- - email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: cluster-compliance
+sources:
+- - https://helm-repository.readthedocs.io/en/latest/charts/cluster-compliance
+- - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-compliance
+type: application
+version: 19.23.0
+
+...
+files:
+  cluster-compliance-19.23.0.tgz: sha256:6610b498cace7feee37f74b1162b77c3af42011fa00adc3c8f98e28bc10559fb
+-----BEGIN PGP SIGNATURE-----
+
+wsFcBAEBCgAQBQJppByHCRAPNrJQFdOjTQAAq+cQAAypRxEz4p+LIEDetZ3og4hM
+Xq5uIwToqWfu07Lku7ItW1mYnfHmqfi4rAs/ueYl2gfiDkTbHh3DT+y3LiH0G0V+
+jFr68L2lNk1Xj1a38iY4pxjbCuw1f0p/MI80mhmAt0CoA9Krnk4A7DoNit2/y+BP
+aKvFKwWxTmfe5sYT5cqbGvJtZR1m9rcaPq7SxRZp0YFcS9YGRuh0Mh0F4wQ15rkM
+ySyPcILm0o2RBOwrKSUF2HtJkoF1gQdO2nhI2TA0uJfvN8dgtgi265+9Fr0RvurD
+4Goy5myN//lFWoYnq120RMzGx3Dfbon9XffC/wEgWD7BB9mDl5MWyJRIxv+chlgH
+TMt6RSPJe6qQgvpdDMT6USzOhbpVVZ36HqB1G+fbvpA77RwGzlEUX65Q8yQTQ7q+
+St9ljKO2+x2ZOgKkRdRKVpYUpxlE1kBC3APbMtCtI2HATpj6DfP5QVuzMFbHwuAi
+zw9LojmW65IKnxJvdhFkGhnl1XErrwyWQrjEcosx9J4KuVtbMKUA8cKnETuB2vT6
+DMvMbRMq0uum1O/4MIYcejrVIxcoK7Uop9se0vAq6x1eLbgPU9iRhWCnlPaiitBo
+1+30lyvXBlPiJ5hBENV5aIwV48VXljnxiNAR9Nim7YbJ/3TGdZLz1vZhJPHDJTBD
+QTCf666rg6Tt+SOjo4W5
+=w24Z
+-----END PGP SIGNATURE-----

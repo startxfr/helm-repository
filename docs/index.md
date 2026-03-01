@@ -1,6 +1,6 @@
 # STARTX helm repository
 
-[![release](https://img.shields.io/badge/release-v17.14.19-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/17.14.19) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io) [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX-blue.svg)](https://artifacthub.io/packages/search?repo=startx)
+[![release](https://img.shields.io/badge/release-v19.23.1-blue.svg)](https://github.com/startxfr/helm-repository/releases/tag/19.23.1) [![last commit](https://img.shields.io/github/last-commit/startxfr/helm-repository.svg)](https://github.com/startxfr/helm-repository) [![Doc](https://readthedocs.org/projects/helm-repository/badge)](https://helm-repository.readthedocs.io) [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX-blue.svg)](https://artifacthub.io/packages/search?repo=startx)
 
 helm charts for various infrastructure configuration and services running under an Openshift Container Platform (or OKD).
 
@@ -128,7 +128,7 @@ List of the deprecated helm charts.
     |                 |                                                                                                |
     | --------------- | ---------------------------------------------------------------------------------------------- |
     | **Repository**  | **[stable](https://helm-repository.readthedocs.io/en/latest/repos/stable/index.yaml)**         |
-    | **Description** | The default repository  with latest stable release for 16,15,14,13,12,11,10,9,8 and 7 releases |
+    | **Description** | The default repository  with latest stable release for 18,17 and 16 releases |
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable`           |
 
 === "Noschema"
@@ -138,6 +138,22 @@ List of the deprecated helm charts.
     | **Repository**  | **[noschema](https://helm-repository.readthedocs.io/en/latest/repos/noschema/index.yaml)**      |
     | **Description** | Repository without schema definition                                                            |
     | **Command**     | `helm repo add startx-noschema https://helm-repository.readthedocs.io/en/latest/repos/noschema` |
+
+=== "19"
+
+    |                 |                                                                                  |
+    | --------------- | -------------------------------------------------------------------------------- |
+    | **Repository**  | **[19](https://helm-repository.readthedocs.io/en/latest/repos/19/index.yaml)**   |
+    | **Description** | Archive repository for the 19.x packages (Compatible with OCP 4.19.x)            |
+    | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/19` |
+
+=== "18"
+
+    |                 |                                                                                  |
+    | --------------- | -------------------------------------------------------------------------------- |
+    | **Repository**  | **[18](https://helm-repository.readthedocs.io/en/latest/repos/18/index.yaml)**   |
+    | **Description** | Archive repository for the 18.x packages (Compatible with OCP 4.18.x)            |
+    | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/18` |
 
 === "17"
 
@@ -285,26 +301,26 @@ EOF
 If you need to run your in an older version of Openshift, or access to archived version of helm chart, 
 you can load one of the archive repository. 
 
-This example show how to load charts from the v13 archive repository.
+This example show how to load charts from the v15 archive repository.
 
 ```bash
 cat <<EOF | oc apply -f -
 apiVersion: helm.openshift.io/v1beta1
 kind: HelmChartRepository
 metadata:
-  name: "startx-v13"
+  name: "startx-v15"
   labels:
-    app.kubernetes.io/name: "startx-v13-charts"
+    app.kubernetes.io/name: "startx-v15-charts"
 spec:
-  name: "startx-v13"
+  name: "startx-v15"
   connectionConfig:
-    url: "https://helm-repository.readthedocs.io/en/latest/repos/13"
+    url: "https://helm-repository.readthedocs.io/en/latest/repos/15"
 EOF
 ```
 
 #### 2.3. List all charts
 
-You can use the [Openshift developper perspective of your console](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html-single/web_console/#odc-about-developer-perspective)
+You can use the [Openshift developper perspective of your console](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.19/html-single/web_console/#odc-about-developer-perspective)
 
 ### 3. Install local helm
 
