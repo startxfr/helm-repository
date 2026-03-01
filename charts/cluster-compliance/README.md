@@ -43,7 +43,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **openshift-compliance** without constraints
 - 1 **operator:** named **compliance-operator** configured with
   - The **stable** channel for community release
-  - The **v1.7.0** version
+  - The **v1.8.2** version
   - Deployed under the **openshift-operators** project
 
 ```bash
