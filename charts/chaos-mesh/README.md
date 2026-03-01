@@ -308,3 +308,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 19.23.3 | 2026-02-28 | releases first 19.23.x packages
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository
 | 19.23.1 | 2026-03-01 | Unstable 19.23 repo
+| 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
