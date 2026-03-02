@@ -28,7 +28,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:40.87281536+01:00"
+    created: "2026-03-02T12:27:04.857027219+01:00"
     dependencies:
     - alias: cerberus
       condition: cerberus.enabled
@@ -111,7 +111,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:40.833960264+01:00"
+    created: "2026-03-02T12:27:04.813393031+01:00"
     dependencies:
     - alias: cerberus
       condition: cerberus.enabled
@@ -194,7 +194,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:40.797631695+01:00"
+    created: "2026-03-02T12:27:04.776581665+01:00"
     dependencies:
     - alias: cerberus
       condition: cerberus.enabled
@@ -255,6 +255,60 @@ entries:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
         - kind: changed
+          description: "New release of the cerberus chaos chart for 4.19"
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/license: GPL-3.0-or-later
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "true"
+      artifacthub.io/signKey: |
+        fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+        url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+      category: chaos
+      startx.io/recommendations: |
+        - name: Startx basic chart - Project
+          url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-03-02T12:27:04.862789217+01:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+      version: 18.11.19
+    description: Helm chart used to deploy cerberus on Openshift or Kubernetes cluster.  Cerberus
+      is as a watchdog who act as a cluster healthcheck.  This chart is part of the
+      startx chaos helm chart suite.
+    digest: 71e2490796c30815cd8afbf74c14f2503d669fb0b77784294151d42099b71054
+    home: https://helm-repository.readthedocs.io/en/latest
+    icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-cerberus.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - cerberus
+    - cluster
+    - healthcheck
+    kubeVersion: '>=1.30.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-cerberus
+    sources:
+    - https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-cerberus
+    type: application
+    urls:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/19/chaos-cerberus-19.23.11.tgz
+    version: 19.23.11
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align all chart to a stable release for OCP 4.19"
       artifacthub.io/containsSecurityUpdates: "false"
       artifacthub.io/license: GPL-3.0-or-later
@@ -269,7 +323,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/project
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-03-02T12:18:40.879034949+01:00"
+    created: "2026-03-02T12:27:04.865800167+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -323,7 +377,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/project
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-03-02T12:18:40.875970772+01:00"
+    created: "2026-03-02T12:27:04.859948531+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -364,6 +418,60 @@ entries:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
         - kind: changed
+          description: "Update chaos-kraken to v5.0.0"
+      artifacthub.io/containsSecurityUpdates: "true"
+      artifacthub.io/license: GPL-3.0-or-later
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "true"
+      artifacthub.io/signKey: |
+        fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+        url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+      category: chaos
+      startx.io/recommendations: |
+        - name: Startx basic chart - Project
+          url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    apiVersion: v2
+    appVersion: 5.0.0
+    created: "2026-03-02T12:27:04.873810946+01:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+      version: 18.11.19
+    description: Helm chart used to deploy kraken on Openshift or Kubernetes cluster.  Kraken
+      is as a chaos engine with chaos scenarios for Openshift clusters.  This chart
+      is part of the startx chaos helm chart suite.
+    digest: 1dfda9bf995777eb3d8f246fd8311cedb9d187b830148e634f8efd68e0e09481
+    home: https://helm-repository.readthedocs.io/en/latest
+    icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-kraken.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - kraken
+    - monkey
+    - pipeline
+    kubeVersion: '>=1.30.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-kraken
+    sources:
+    - https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-kraken
+    type: application
+    urls:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/19/chaos-kraken-19.23.11.tgz
+    version: 19.23.11
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align all chart to a stable release for OCP 4.19"
       artifacthub.io/containsSecurityUpdates: "false"
       artifacthub.io/license: GPL-3.0-or-later
@@ -378,7 +486,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/project
     apiVersion: v2
     appVersion: 3.0.6
-    created: "2026-03-02T12:18:40.888078309+01:00"
+    created: "2026-03-02T12:27:04.878399142+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -432,7 +540,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/project
     apiVersion: v2
     appVersion: 3.0.6
-    created: "2026-03-02T12:18:40.882956399+01:00"
+    created: "2026-03-02T12:27:04.869947794+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -473,6 +581,66 @@ entries:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
         - kind: changed
+          description: "Upgrade to litmus 3.26.0"
+      artifacthub.io/containsSecurityUpdates: "true"
+      artifacthub.io/license: GPL-3.0-or-later
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "true"
+      artifacthub.io/signKey: |
+        fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+        url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+      category: chaos
+      startx.io/recommendations: |
+        - name: Startx basic chart - Project
+          url: https://helm-repository.readthedocs.io/en/latest/charts/project
+        - name: Litmus
+          url: https://litmuschaos.github.io
+    apiVersion: v2
+    appVersion: 3.26.0
+    created: "2026-03-02T12:27:04.901372251+01:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+      version: 18.11.19
+    - alias: litmus
+      condition: litmus.enabled
+      name: litmus
+      repository: https://litmuschaos.github.io/litmus-helm
+      version: 3.26.0
+    description: Helm chart used to deploy litmus on Openshift or Kubernetes cluster.  Litmus
+      is as a chaos engine with chaos git or gui configuration backend.  This chart
+      is part of the startx chaos helm chart suite.
+    digest: d449f3c8628865b2341ae97f38dee05b5babed7e2b32178be1e23897060787b9
+    home: https://helm-repository.readthedocs.io/en/latest
+    icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-litmus.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - litmus
+    - monkey
+    kubeVersion: '>=1.30.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-litmus
+    sources:
+    - https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus
+    type: application
+    urls:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/19/chaos-litmus-19.23.11.tgz
+    version: 19.23.11
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align all chart to a stable release for OCP 4.19"
       artifacthub.io/containsSecurityUpdates: "false"
       artifacthub.io/license: GPL-3.0-or-later
@@ -489,7 +657,7 @@ entries:
           url: https://litmuschaos.github.io
     apiVersion: v2
     appVersion: 3.18.0
-    created: "2026-03-02T12:18:40.913322487+01:00"
+    created: "2026-03-02T12:27:04.91073896+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -549,7 +717,7 @@ entries:
           url: https://litmuschaos.github.io
     apiVersion: v2
     appVersion: 3.18.0
-    created: "2026-03-02T12:18:40.902476451+01:00"
+    created: "2026-03-02T12:27:04.891000587+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -594,6 +762,65 @@ entries:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
         - kind: changed
+          description: "Upgrade chaos-mesh to v2.8.1"
+      artifacthub.io/containsSecurityUpdates: "true"
+      artifacthub.io/license: GPL-3.0-or-later
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "true"
+      artifacthub.io/signKey: |
+        fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+        url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+      category: chaos
+      startx.io/recommendations: |
+        - name: Startx basic chart - Project
+          url: https://helm-repository.readthedocs.io/en/latest/charts/project
+        - name: ChaosMesh
+          url: https://charts.chaos-mesh.org
+    apiVersion: v2
+    appVersion: 2.8.1
+    created: "2026-03-02T12:27:04.945728728+01:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+      version: 18.11.19
+    - alias: mesh
+      condition: mesh.enabled
+      name: chaos-mesh
+      repository: https://charts.chaos-mesh.org
+      version: 2.8.1
+    description: Helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster.  Chaos-mesh
+      is as a chaos engine with a gui to define and execute chaos scenarios for Kubernetes
+      clusters.  This chart is part of the startx chaos helm chart suite.
+    digest: 132f7160a0f6d7150117859c7125e8e45c0a746e924b514b4b0cc020f5403d02
+    home: https://helm-repository.readthedocs.io/en/latest
+    icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-mesh.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - mesh
+    kubeVersion: '>=1.30.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-mesh
+    sources:
+    - https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh
+    type: application
+    urls:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/19/chaos-mesh-19.23.11.tgz
+    version: 19.23.11
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align all chart to a stable release for OCP 4.19"
       artifacthub.io/containsSecurityUpdates: "false"
       artifacthub.io/license: GPL-3.0-or-later
@@ -610,7 +837,7 @@ entries:
           url: https://charts.chaos-mesh.org
     apiVersion: v2
     appVersion: 2.7.1
-    created: "2026-03-02T12:18:40.944277746+01:00"
+    created: "2026-03-02T12:27:04.96525872+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -669,7 +896,7 @@ entries:
           url: https://charts.chaos-mesh.org
     apiVersion: v2
     appVersion: 2.7.1
-    created: "2026-03-02T12:18:40.929907188+01:00"
+    created: "2026-03-02T12:27:04.927603326+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -713,6 +940,68 @@ entries:
       artifacthub.io/category: integration-delivery
       artifacthub.io/changes: |
         - kind: changed
+          description: "New release of the monkey chaos chart for 4.19"
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/license: GPL-3.0-or-later
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "true"
+      artifacthub.io/signKey: |
+        fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+        url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+      category: chaos
+      startx.io/recommendations: |
+        - name: Startx basic chart - Project
+          url: https://helm-repository.readthedocs.io/en/latest/charts/project
+        - name: KubeMonkey
+          url: https://asobti.github.io/kube-monkey
+    apiVersion: v2
+    appVersion: 1.5.2
+    created: "2026-03-02T12:27:04.97169479+01:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
+      version: 18.11.19
+    - alias: monkey
+      condition: monkey.enabled
+      name: kube-monkey
+      repository: https://asobti.github.io/kube-monkey/charts/repo
+      version: 1.5.2
+    description: Helm chart used to deploy chaos monkey on Openshift or Kubernetes
+      cluster.  Chaos monkey are simple litle monkey released into your K8S cluster,
+      they could be evil or kind according to your need.  This chart is part of the
+      startx chaos helm chart suite.
+    digest: babf86663d89e9edae528bc5d6a79c3e11d899ed2a7fd5126993ae87155c5d7e
+    home: https://helm-repository.readthedocs.io/en/latest
+    icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-monkey.svg
+    keywords:
+    - kubernetes
+    - openshift
+    - helm
+    - startx
+    - chaos testing
+    - test
+    - chaos
+    - monkey
+    - chaos monkey
+    kubeVersion: '>=1.30.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: chaos-monkey
+    sources:
+    - https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey
+    - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-monkey
+    type: application
+    urls:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/19/chaos-monkey-19.23.11.tgz
+    version: 19.23.11
+  - annotations:
+      artifacthub.io/category: integration-delivery
+      artifacthub.io/changes: |
+        - kind: changed
           description: "Align all chart to a stable release for OCP 4.19"
       artifacthub.io/containsSecurityUpdates: "false"
       artifacthub.io/license: GPL-3.0-or-later
@@ -729,7 +1018,7 @@ entries:
           url: https://asobti.github.io/kube-monkey
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2026-03-02T12:18:40.950806552+01:00"
+    created: "2026-03-02T12:27:04.975416303+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -791,7 +1080,7 @@ entries:
           url: https://asobti.github.io/kube-monkey
     apiVersion: v2
     appVersion: 1.5.2
-    created: "2026-03-02T12:18:40.947421127+01:00"
+    created: "2026-03-02T12:27:04.968821649+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -855,7 +1144,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.12.3
-    created: "2026-03-02T12:18:40.959912718+01:00"
+    created: "2026-03-02T12:27:04.984027007+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -914,7 +1203,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.12.3
-    created: "2026-03-02T12:18:40.956179981+01:00"
+    created: "2026-03-02T12:27:04.980500848+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -974,7 +1263,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.13.2
-    created: "2026-03-02T12:18:40.969126826+01:00"
+    created: "2026-03-02T12:27:04.992928836+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1040,7 +1329,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.13.2
-    created: "2026-03-02T12:18:40.965087014+01:00"
+    created: "2026-03-02T12:27:04.988609882+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1107,7 +1396,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.7.2
-    created: "2026-03-02T12:18:40.976769364+01:00"
+    created: "2026-03-02T12:27:05.000820979+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1168,7 +1457,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.7.2
-    created: "2026-03-02T12:18:40.972982319+01:00"
+    created: "2026-03-02T12:27:04.997332881+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1230,7 +1519,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.5.0
-    created: "2026-03-02T12:18:40.98569208+01:00"
+    created: "2026-03-02T12:27:05.010161187+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1297,7 +1586,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.5.0
-    created: "2026-03-02T12:18:40.981785479+01:00"
+    created: "2026-03-02T12:27:05.005587447+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1365,7 +1654,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-03-02T12:18:40.994467507+01:00"
+    created: "2026-03-02T12:27:05.018836921+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1426,7 +1715,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.16.0
-    created: "2026-03-02T12:18:40.990773906+01:00"
+    created: "2026-03-02T12:27:05.015169323+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1482,7 +1771,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.172484059+01:00"
+    created: "2026-03-02T12:27:05.199979648+01:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 482ed1a7f7bb81aa040dfe28536b6572c8ac701d5335fc9fee34d5c5716e0673
     home: https://helm-repository.readthedocs.io/en/latest
@@ -1524,7 +1813,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.079922966+01:00"
+    created: "2026-03-02T12:27:05.110510998+01:00"
     description: Helm chart used to configure Auth at the cluster level
     digest: 48ef28a86fdc70badb0c3bb9fb2cb917a31b6c3cc80e89e82ae143e5e4de74b2
     home: https://helm-repository.readthedocs.io/en/latest
@@ -1573,7 +1862,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.15.1
-    created: "2026-03-02T12:18:41.181606768+01:00"
+    created: "2026-03-02T12:27:05.209077711+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1635,7 +1924,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.15.1
-    created: "2026-03-02T12:18:41.176666622+01:00"
+    created: "2026-03-02T12:27:05.204807421+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1698,7 +1987,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.7.0
-    created: "2026-03-02T12:18:41.191161228+01:00"
+    created: "2026-03-02T12:27:05.218904376+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1757,7 +2046,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.7.0
-    created: "2026-03-02T12:18:41.18593892+01:00"
+    created: "2026-03-02T12:27:05.213762422+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1817,7 +2106,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.205248546+01:00"
+    created: "2026-03-02T12:27:05.231148118+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1897,7 +2186,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.198995025+01:00"
+    created: "2026-03-02T12:27:05.226282108+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -1978,7 +2267,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.242977534+01:00"
+    created: "2026-03-02T12:27:05.27107541+01:00"
     dependencies:
     - alias: webTerminal
       condition: webTerminal.enabled
@@ -2032,7 +2321,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.223143426+01:00"
+    created: "2026-03-02T12:27:05.252741704+01:00"
     dependencies:
     - alias: webTerminal
       condition: webTerminal.enabled
@@ -2087,7 +2376,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 3.3.1
-    created: "2026-03-02T12:18:41.251226725+01:00"
+    created: "2026-03-02T12:27:05.280364136+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2153,7 +2442,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 3.3.1
-    created: "2026-03-02T12:18:41.246792752+01:00"
+    created: "2026-03-02T12:27:05.275956593+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2220,7 +2509,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.8.0
-    created: "2026-03-02T12:18:41.259597886+01:00"
+    created: "2026-03-02T12:27:05.290904915+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2283,7 +2572,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.8.0
-    created: "2026-03-02T12:18:41.255342548+01:00"
+    created: "2026-03-02T12:27:05.285154092+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2346,7 +2635,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 5.8.1
-    created: "2026-03-02T12:18:41.267710163+01:00"
+    created: "2026-03-02T12:27:05.299152026+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2407,7 +2696,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 5.8.1
-    created: "2026-03-02T12:18:41.263369498+01:00"
+    created: "2026-03-02T12:27:05.294526682+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2470,7 +2759,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 5.1.2
-    created: "2026-03-02T12:18:41.274735325+01:00"
+    created: "2026-03-02T12:27:05.306526921+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2529,7 +2818,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 5.1.2
-    created: "2026-03-02T12:18:41.270775385+01:00"
+    created: "2026-03-02T12:27:05.302705774+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2589,7 +2878,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.33.0
-    created: "2026-03-02T12:18:41.282086336+01:00"
+    created: "2026-03-02T12:27:05.315222796+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2655,7 +2944,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.33.0
-    created: "2026-03-02T12:18:41.278004047+01:00"
+    created: "2026-03-02T12:27:05.311179365+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2722,7 +3011,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.7.8
-    created: "2026-03-02T12:18:41.290689546+01:00"
+    created: "2026-03-02T12:27:05.324266951+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2794,7 +3083,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.7.8
-    created: "2026-03-02T12:18:41.286012739+01:00"
+    created: "2026-03-02T12:27:05.320469216+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2867,7 +3156,7 @@ entries:
           url: https://charts.gitlab.io/
     apiVersion: v2
     appVersion: 8.11.1
-    created: "2026-03-02T12:18:41.528126021+01:00"
+    created: "2026-03-02T12:27:05.444428316+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2929,7 +3218,7 @@ entries:
           url: https://charts.gitlab.io/
     apiVersion: v2
     appVersion: 8.11.1
-    created: "2026-03-02T12:18:41.396767024+01:00"
+    created: "2026-03-02T12:27:05.387158579+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -2992,7 +3281,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 25.3.0
-    created: "2026-03-02T12:18:41.538195992+01:00"
+    created: "2026-03-02T12:27:05.451718125+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3053,7 +3342,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 25.3.0
-    created: "2026-03-02T12:18:41.532684632+01:00"
+    created: "2026-03-02T12:27:05.448034439+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3115,7 +3404,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.6.7
-    created: "2026-03-02T12:18:41.550902961+01:00"
+    created: "2026-03-02T12:27:05.462093068+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3202,7 +3491,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.6.7
-    created: "2026-03-02T12:18:41.543670021+01:00"
+    created: "2026-03-02T12:27:05.456759702+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3290,7 +3579,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.15.1
-    created: "2026-03-02T12:18:41.55983564+01:00"
+    created: "2026-03-02T12:27:05.47094538+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3356,7 +3645,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.15.1
-    created: "2026-03-02T12:18:41.555945061+01:00"
+    created: "2026-03-02T12:27:05.466635669+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3423,7 +3712,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.4.0
-    created: "2026-03-02T12:18:41.571748422+01:00"
+    created: "2026-03-02T12:27:05.480188534+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3483,7 +3772,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.4.0
-    created: "2026-03-02T12:18:41.56594285+01:00"
+    created: "2026-03-02T12:27:05.475747626+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3544,7 +3833,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.35.1
-    created: "2026-03-02T12:18:41.581714562+01:00"
+    created: "2026-03-02T12:27:05.489319969+01:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -3615,7 +3904,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.35.1
-    created: "2026-03-02T12:18:41.577424401+01:00"
+    created: "2026-03-02T12:27:05.485289553+01:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -3687,7 +3976,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.7.1
-    created: "2026-03-02T12:18:41.595753151+01:00"
+    created: "2026-03-02T12:27:05.500651995+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3747,7 +4036,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.7.1
-    created: "2026-03-02T12:18:41.587979632+01:00"
+    created: "2026-03-02T12:27:05.495298513+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3808,7 +4097,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.2
-    created: "2026-03-02T12:18:41.611676496+01:00"
+    created: "2026-03-02T12:27:05.511012686+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3870,7 +4159,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.2
-    created: "2026-03-02T12:18:41.603501751+01:00"
+    created: "2026-03-02T12:27:05.506058856+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3933,7 +4222,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.0
-    created: "2026-03-02T12:18:41.621872233+01:00"
+    created: "2026-03-02T12:27:05.521421988+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -3994,7 +4283,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.0
-    created: "2026-03-02T12:18:41.615914298+01:00"
+    created: "2026-03-02T12:27:05.514652226+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4056,7 +4345,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 6.2.1
-    created: "2026-03-02T12:18:41.639614323+01:00"
+    created: "2026-03-02T12:27:05.53045108+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4128,7 +4417,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 6.2.1
-    created: "2026-03-02T12:18:41.630410851+01:00"
+    created: "2026-03-02T12:27:05.52585725+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4195,7 +4484,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.643786149+01:00"
+    created: "2026-03-02T12:27:05.533838776+01:00"
     description: Helm chart used to configure various state of the machine api
     digest: a73bb1ab1efe3ecdb94d2b8c610c10c9a88adc0620ec65f31008360c83bbb001
     home: https://helm-repository.readthedocs.io/en/latest
@@ -4238,7 +4527,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.641819715+01:00"
+    created: "2026-03-02T12:27:05.532319192+01:00"
     description: Helm chart used to configure various state of the machine api
     digest: debeb665153d2706aa8cfcb8f22bec4fef9f91f6b149d998c9995761f9b2a930
     home: https://helm-repository.readthedocs.io/en/latest
@@ -4288,7 +4577,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 5.4.0
-    created: "2026-03-02T12:18:41.654744674+01:00"
+    created: "2026-03-02T12:27:05.542091738+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4348,7 +4637,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 5.4.0
-    created: "2026-03-02T12:18:41.647988344+01:00"
+    created: "2026-03-02T12:27:05.537911133+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4408,7 +4697,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.33.0
-    created: "2026-03-02T12:18:41.665043897+01:00"
+    created: "2026-03-02T12:27:05.549352825+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4469,7 +4758,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.33.0
-    created: "2026-03-02T12:18:41.659711487+01:00"
+    created: "2026-03-02T12:27:05.545637257+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4532,7 +4821,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.8.6
-    created: "2026-03-02T12:18:41.677112345+01:00"
+    created: "2026-03-02T12:27:05.558560344+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4593,7 +4882,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.8.6
-    created: "2026-03-02T12:18:41.671225936+01:00"
+    created: "2026-03-02T12:27:05.554297316+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4655,7 +4944,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.2.7
-    created: "2026-03-02T12:18:41.687713816+01:00"
+    created: "2026-03-02T12:27:05.566368134+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4720,7 +5009,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.2.7
-    created: "2026-03-02T12:18:41.682164985+01:00"
+    created: "2026-03-02T12:27:05.563028055+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4786,7 +5075,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.8.2
-    created: "2026-03-02T12:18:41.702075224+01:00"
+    created: "2026-03-02T12:27:05.573950933+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4847,7 +5136,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.8.2
-    created: "2026-03-02T12:18:41.694160418+01:00"
+    created: "2026-03-02T12:27:05.569735022+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4909,7 +5198,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.1.2
-    created: "2026-03-02T12:18:41.711347355+01:00"
+    created: "2026-03-02T12:27:05.581940848+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -4971,7 +5260,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.1.2
-    created: "2026-03-02T12:18:41.706569143+01:00"
+    created: "2026-03-02T12:27:05.577586668+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5034,7 +5323,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 3.58.1
-    created: "2026-03-02T12:18:41.721234377+01:00"
+    created: "2026-03-02T12:27:05.589706708+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5094,7 +5383,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 3.58.1
-    created: "2026-03-02T12:18:41.715054609+01:00"
+    created: "2026-03-02T12:27:05.585544681+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5155,7 +5444,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.0
-    created: "2026-03-02T12:18:41.731321871+01:00"
+    created: "2026-03-02T12:27:05.598112967+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5216,7 +5505,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.0
-    created: "2026-03-02T12:18:41.726682754+01:00"
+    created: "2026-03-02T12:27:05.593663866+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5278,7 +5567,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.4.4
-    created: "2026-03-02T12:18:41.742156347+01:00"
+    created: "2026-03-02T12:27:05.606099077+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5344,7 +5633,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.4.4
-    created: "2026-03-02T12:18:41.737777003+01:00"
+    created: "2026-03-02T12:27:05.601955867+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5411,7 +5700,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.1
-    created: "2026-03-02T12:18:41.751230395+01:00"
+    created: "2026-03-02T12:27:05.61412282+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5477,7 +5766,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.1
-    created: "2026-03-02T12:18:41.746935339+01:00"
+    created: "2026-03-02T12:27:05.610762047+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5544,7 +5833,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.19.0
-    created: "2026-03-02T12:18:41.764052264+01:00"
+    created: "2026-03-02T12:27:05.621294938+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5605,7 +5894,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 2.19.0
-    created: "2026-03-02T12:18:41.757685737+01:00"
+    created: "2026-03-02T12:27:05.617858018+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5667,7 +5956,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.18.0
-    created: "2026-03-02T12:18:41.775074328+01:00"
+    created: "2026-03-02T12:27:05.629214473+01:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -5728,7 +6017,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 1.18.0
-    created: "2026-03-02T12:18:41.770979335+01:00"
+    created: "2026-03-02T12:27:05.625561376+01:00"
     dependencies:
     - alias: projectOperator
       condition: projectOperator.enabled
@@ -5790,7 +6079,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.0
-    created: "2026-03-02T12:18:41.786361285+01:00"
+    created: "2026-03-02T12:27:05.637036895+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5851,7 +6140,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.0
-    created: "2026-03-02T12:18:41.779901204+01:00"
+    created: "2026-03-02T12:27:05.632668831+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5913,7 +6202,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 3.14.0
-    created: "2026-03-02T12:18:41.803680573+01:00"
+    created: "2026-03-02T12:27:05.645114729+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -5981,7 +6270,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 3.14.0
-    created: "2026-03-02T12:18:41.793660288+01:00"
+    created: "2026-03-02T12:27:05.64075474+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6044,7 +6333,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.806445361+01:00"
+    created: "2026-03-02T12:27:05.646839366+01:00"
     description: Helm chart used to configure RBAC
     digest: adf3c62a1282c981b0f58c70dcacf436435fbcfe403494d1fea47e7f9f350436
     home: https://helm-repository.readthedocs.io/en/latest
@@ -6087,7 +6376,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.805330265+01:00"
+    created: "2026-03-02T12:27:05.645996786+01:00"
     description: Helm chart used to configure RBAC
     digest: ca548b1211fa2fcc0b8f8d0fc86a4f3d68ba4a815437e6b586ec9cad9d5b73d1
     home: https://helm-repository.readthedocs.io/en/latest
@@ -6137,7 +6426,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.15.1
-    created: "2026-03-02T12:18:41.820722564+01:00"
+    created: "2026-03-02T12:27:05.656700711+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6205,7 +6494,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.15.1
-    created: "2026-03-02T12:18:41.81237861+01:00"
+    created: "2026-03-02T12:27:05.651017555+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6268,7 +6557,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.823174868+01:00"
+    created: "2026-03-02T12:27:05.65877728+01:00"
     description: Helm chart used to configure cluster openshift router
     digest: 70c0f2b45a9d2b86206f81ba1ce38cd6ca264c102683da356dfec170939f09db
     home: https://helm-repository.readthedocs.io/en/latest
@@ -6311,7 +6600,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.821909352+01:00"
+    created: "2026-03-02T12:27:05.657960735+01:00"
     description: Helm chart used to configure cluster openshift router
     digest: 4e6bca6aaa98ef69e590dc15b3d311675ae4b2d425648b66d15add46c5ee4d5a
     home: https://helm-repository.readthedocs.io/en/latest
@@ -6361,7 +6650,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 7.6.11
-    created: "2026-03-02T12:18:41.832858832+01:00"
+    created: "2026-03-02T12:27:05.666135898+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6422,7 +6711,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 7.6.11
-    created: "2026-03-02T12:18:41.827419443+01:00"
+    created: "2026-03-02T12:27:05.662193797+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6478,7 +6767,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.836829034+01:00"
+    created: "2026-03-02T12:27:05.669167984+01:00"
     description: Helm chart used to configure various storageClass
     digest: 20fb99d4688e68ec95a4441ada763b097af6ea3e3a973ad54cdba73645527640
     home: https://helm-repository.readthedocs.io/en/latest
@@ -6520,7 +6809,7 @@ entries:
       category: cluster
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.834755853+01:00"
+    created: "2026-03-02T12:27:05.667577254+01:00"
     description: Helm chart used to configure various storageClass
     digest: 0d1e57c9a0ebd0ed8e49bf86c929c7540c376119a33f2bdb027f8a75ffcb575a
     home: https://helm-repository.readthedocs.io/en/latest
@@ -6569,7 +6858,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.0.8
-    created: "2026-03-02T12:18:41.842749251+01:00"
+    created: "2026-03-02T12:27:05.673603297+01:00"
     dependencies:
     - alias: operator
       condition: operator.enabled
@@ -6628,7 +6917,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.0.8
-    created: "2026-03-02T12:18:41.839856201+01:00"
+    created: "2026-03-02T12:27:05.671465918+01:00"
     dependencies:
     - alias: operator
       condition: operator.enabled
@@ -6688,7 +6977,7 @@ entries:
           url: https://helm.releases.hashicorp.com
     apiVersion: v2
     appVersion: 0.30.0
-    created: "2026-03-02T12:18:41.866435408+01:00"
+    created: "2026-03-02T12:27:05.685604382+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6748,7 +7037,7 @@ entries:
           url: https://helm.releases.hashicorp.com
     apiVersion: v2
     appVersion: 0.30.0
-    created: "2026-03-02T12:18:41.854351325+01:00"
+    created: "2026-03-02T12:27:05.679722714+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6809,7 +7098,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.8.32
-    created: "2026-03-02T12:18:41.876853454+01:00"
+    created: "2026-03-02T12:27:05.693816336+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6870,7 +7159,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 0.8.32
-    created: "2026-03-02T12:18:41.872144507+01:00"
+    created: "2026-03-02T12:27:05.690327889+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6932,7 +7221,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.0
-    created: "2026-03-02T12:18:41.889382672+01:00"
+    created: "2026-03-02T12:27:05.70173577+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -6992,7 +7281,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/operator
     apiVersion: v2
     appVersion: 4.18.0
-    created: "2026-03-02T12:18:41.882366584+01:00"
+    created: "2026-03-02T12:27:05.69811267+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7047,7 +7336,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.981967596+01:00"
+    created: "2026-03-02T12:27:05.781805914+01:00"
     dependencies:
     - alias: demoAnsible
       condition: demoAnsible.enabled
@@ -7096,7 +7385,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:41.934000393+01:00"
+    created: "2026-03-02T12:27:05.742932934+01:00"
     dependencies:
     - alias: demoAnsible
       condition: demoAnsible.enabled
@@ -7149,7 +7438,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/chaos
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.041137776+01:00"
+    created: "2026-03-02T12:27:05.817651733+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7243,7 +7532,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/chaos
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.010055598+01:00"
+    created: "2026-03-02T12:27:05.799658237+01:00"
     dependencies:
     - alias: project
       condition: project.enabled
@@ -7338,7 +7627,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/cluster-couchbase
     apiVersion: v2
     appVersion: 2.5.0
-    created: "2026-03-02T12:18:42.048009625+01:00"
+    created: "2026-03-02T12:27:05.822748916+01:00"
     dependencies:
     - alias: couchbase
       name: sxapi
@@ -7392,7 +7681,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/cluster-couchbase
     apiVersion: v2
     appVersion: 2.5.0
-    created: "2026-03-02T12:18:42.043506574+01:00"
+    created: "2026-03-02T12:27:05.820981857+01:00"
     dependencies:
     - alias: couchbase
       name: sxapi
@@ -7444,7 +7733,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.050117914+01:00"
+    created: "2026-03-02T12:27:05.824587461+01:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: de5d82af788b5e3cc339fab8a726469dfafc6be09df5e32003d12114dcfbb20e
@@ -7489,7 +7778,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.049028852+01:00"
+    created: "2026-03-02T12:27:05.823714135+01:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: c672949122319253d485a7b779dcd189decca357f30c5b91cad941be88164055
@@ -7535,7 +7824,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-03-02T12:18:42.05385354+01:00"
+    created: "2026-03-02T12:27:05.826178828+01:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: 6158650626843d1dd8daf1fc9e58b5c5172bf01dfce054aebf8338e98ce79120
@@ -7580,7 +7869,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-03-02T12:18:42.051805404+01:00"
+    created: "2026-03-02T12:27:05.825390742+01:00"
     description: Helm chart used to deploy and manage a scaled pod running a given
       container image.
     digest: e5c353e15cb61a25fe5b86cf93adf2bdfdcec340ecd81c264d72b2e59a0f144b
@@ -7626,7 +7915,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-03-02T12:18:42.066634884+01:00"
+    created: "2026-03-02T12:27:05.835994464+01:00"
     dependencies:
     - alias: project_devel
       condition: project_devel.activated
@@ -7697,7 +7986,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-03-02T12:18:42.061777788+01:00"
+    created: "2026-03-02T12:27:05.831379422+01:00"
     dependencies:
     - alias: project_devel
       condition: project_devel.activated
@@ -7769,7 +8058,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-03-02T12:18:42.069657595+01:00"
+    created: "2026-03-02T12:27:05.837823815+01:00"
     description: Helm chart used to deploy shared services for a given environment
       (preprod or prod).  Include deployment of database and shared secrets.
     digest: e24385387ee2ab647b8090fd552119a8de2e3e8365895d31a2d30271487395d9
@@ -7814,7 +8103,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-03-02T12:18:42.068220242+01:00"
+    created: "2026-03-02T12:27:05.836934128+01:00"
     description: Helm chart used to deploy shared services for a given environment
       (preprod or prod).  Include deployment of database and shared secrets.
     digest: cb938a5fdc43e3d60e9266040b7f7b7940dec41b57d2b1e57d4255eef15809f6
@@ -7860,7 +8149,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.07461166+01:00"
+    created: "2026-03-02T12:27:05.841514789+01:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 0ede2b54604e452085c9426999c8cdbf0aa3e4c4f0553e6d6b440a2fa01f5182
     home: https://helm-repository.readthedocs.io/en/latest
@@ -7903,7 +8192,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.072118284+01:00"
+    created: "2026-03-02T12:27:05.839269532+01:00"
     description: Helm chart used to deploy an example of a small webserver helm chart.
     digest: 6e7345d38487bdc35c7643145f622c5ed53bbe949b786dc96b2a43e7d19e1e0b
     home: https://helm-repository.readthedocs.io/en/latest
@@ -7947,7 +8236,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.079490976+01:00"
+    created: "2026-03-02T12:27:05.844323111+01:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 8bb4feb0bdd48a1536ef2744a6ea02a8d9727acb814183e60fd9031409153182
     home: https://helm-repository.readthedocs.io/en/latest
@@ -7988,7 +8277,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.077390497+01:00"
+    created: "2026-03-02T12:27:05.842940317+01:00"
     description: Helm chart used to load imagestreams into a given namespace.
     digest: 92cff3b66c9d0b6d4fd90a8c68cd61339e336395bcded2f259ab35d58062c9a6
     home: https://helm-repository.readthedocs.io/en/latest
@@ -8030,7 +8319,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.081618732+01:00"
+    created: "2026-03-02T12:27:05.845949987+01:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 5df557560f91eeb7ab0956364f6c836b0fd32bd1382577e884b9d451a3318b1e
@@ -8073,7 +8362,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.080578142+01:00"
+    created: "2026-03-02T12:27:05.845146255+01:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the knative application helm chart.
     digest: 28829608c4e17f1a4db12d82656ec3f1a2c8de7630f27591b145f7eab2827fcf
@@ -8117,7 +8406,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.084058911+01:00"
+    created: "2026-03-02T12:27:05.847667948+01:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: 550000a3a7fc57c5ee2dcfe189f169c0b73a77e0d245591a50e503172dac8107
@@ -8162,7 +8451,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.082786433+01:00"
+    created: "2026-03-02T12:27:05.846769262+01:00"
     description: Helm chart used to deploy an example of a small an simple micro-service
       based on the php application helm chart.
     digest: e43a9ba6852ba2e1f5cd18f2a08dce38109c6db561e54b477174ab5b399e2524
@@ -8208,7 +8497,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.087692152+01:00"
+    created: "2026-03-02T12:27:05.849221921+01:00"
     description: Helm chart used to place a pod running a given container image.
     digest: 57d99581d35400531cdab9ceeac58e25a9dcf5f30e1cb5c87530a7f0a559d00e
     home: https://helm-repository.readthedocs.io/en/latest
@@ -8249,7 +8538,7 @@ entries:
       category: example
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.085381975+01:00"
+    created: "2026-03-02T12:27:05.848469872+01:00"
     description: Helm chart used to place a pod running a given container image.
     digest: dcb2b694c950bf293d941e67ff727527e8597558eadf0f4f7a3af346fc9743ee
     home: https://helm-repository.readthedocs.io/en/latest
@@ -8294,7 +8583,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/sxapi
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.093764618+01:00"
+    created: "2026-03-02T12:27:05.854500974+01:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -8349,7 +8638,7 @@ entries:
           url: https://helm-repository.readthedocs.io/en/latest/charts/sxapi
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-03-02T12:18:42.091579967+01:00"
+    created: "2026-03-02T12:27:05.852360606+01:00"
     dependencies:
     - alias: sxapi
       name: sxapi
@@ -8403,7 +8692,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.096791554+01:00"
+    created: "2026-03-02T12:27:05.857094217+01:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 0e4ff0369576dbe0765e41fff6bbdbe4d310d78863f35fb67c6a53cdc91ea685
@@ -8448,7 +8737,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.09814771+01:00"
+    created: "2026-03-02T12:27:05.858753883+01:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: 86209be12e0b2a0668064ca0b70acaffa7bb30d920fb14995ca039e86c3c8fb6
@@ -8493,7 +8782,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.095402257+01:00"
+    created: "2026-03-02T12:27:05.855899026+01:00"
     description: Helm chart used to configure various operator using subscription
       (openshift) or CRD (k8s) ressources.
     digest: b717fd1ada0487f1187fe4fca3a9121c0eb7cd680cf1cebed29c778d68528b96
@@ -8538,7 +8827,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.106938402+01:00"
+    created: "2026-03-02T12:27:05.863569542+01:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 4d3a7c7e33de4334d2dc61e368b5c08ce5faa7026ffc241c8b78f0db3ad1d558
@@ -8583,7 +8872,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.109001298+01:00"
+    created: "2026-03-02T12:27:05.865748628+01:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: e3a850de34b02d5cd245b080465f116e50fece79995778f726f6a9e9d08a5a40
@@ -8628,7 +8917,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 4.19.23
-    created: "2026-03-02T12:18:42.101026983+01:00"
+    created: "2026-03-02T12:27:05.860575026+01:00"
     description: Helm chart used to create a project, or namespace, with various options
       constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
     digest: 8e49dcb9838354e4b61d6e3b616d386955f77b74b81f5adf8ed7d643b6091c2d
@@ -8684,7 +8973,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2026-03-02T12:18:42.111314543+01:00"
+    created: "2026-03-02T12:27:05.868432114+01:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: c1d25644a7b3886ee03357976797f53ba63e47b3853f78aadcaf1176f9aace25
@@ -8736,7 +9025,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2026-03-02T12:18:42.112556988+01:00"
+    created: "2026-03-02T12:27:05.869550155+01:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: ca1207914f3004c8b68dc78c44f3aa067cee842b62a739cd95c56c9991f76aa6
@@ -8788,7 +9077,7 @@ entries:
       category: basic
     apiVersion: v2
     appVersion: 0.3.63
-    created: "2026-03-02T12:18:42.110215781+01:00"
+    created: "2026-03-02T12:27:05.867372214+01:00"
     description: Helm chart used to deploy a small an simple micro-service based on
       the sxapi application running under nodejs engine.
     digest: 953663e8438ad287b0f99178d4d8e78d8598699a5a8e5cb1c095fe5a3e18a9d9
@@ -8815,4 +9104,4 @@ entries:
     urls:
     - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/19/sxapi-19.23.0.tgz
     version: 19.23.0
-generated: "2026-03-02T12:18:40.758732758+01:00"
+generated: "2026-03-02T12:27:04.73889884+01:00"
