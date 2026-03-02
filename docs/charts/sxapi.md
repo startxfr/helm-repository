@@ -614,3 +614,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3
+| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies
