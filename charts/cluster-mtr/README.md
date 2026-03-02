@@ -110,3 +110,4 @@ helm install cluster-mtr startx/cluster-mtr -f https://raw.githubusercontent.com
 | 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch
 | 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14
+| 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3

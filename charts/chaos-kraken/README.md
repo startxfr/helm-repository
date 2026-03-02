@@ -350,3 +350,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 20.14.3 | 2026-03-02 | Update dependencies to version 20.14.0
 | 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14
+| 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3
