@@ -344,3 +344,4 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
 | 19.23.11 | 2026-03-02 | Update chaos-kraken to v5.0.0
 | 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
+| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11
