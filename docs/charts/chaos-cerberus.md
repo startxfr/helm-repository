@@ -343,3 +343,4 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.7 | 2026-03-01 | unstable release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.11 | 2026-03-02 | New release of the cerberus chaos chart for 4.19
