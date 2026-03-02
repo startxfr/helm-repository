@@ -555,3 +555,4 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 19.23.11 | 2026-03-02 | New release of the project basic chart for 4.19
 | 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
 | 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11
+| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14
