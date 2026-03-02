@@ -495,3 +495,4 @@ chaos-monkey startx/chaos-monkey
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0
