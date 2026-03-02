@@ -290,3 +290,4 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11
 | 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14
 | 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch
+| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0
