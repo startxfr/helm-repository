@@ -489,3 +489,4 @@ chaos-monkey startx/chaos-monkey
 | 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch
 | 20.14.3 | 2026-03-02 | Update dependencies to version 20.14.0
 | 20.14.5 | 2026-03-02 | Update dependencies to version 20.14.0
+| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0
