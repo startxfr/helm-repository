@@ -123,6 +123,9 @@ List of the deprecated helm charts.
 
 ### Helm repositories
 
+#### Up-to-date
+
+
 === "Stable"
 
     |                 |                                                                                                |
@@ -138,6 +141,22 @@ List of the deprecated helm charts.
     | **Repository**  | **[noschema](https://helm-repository.readthedocs.io/en/latest/repos/noschema/index.yaml)**      |
     | **Description** | Repository without schema definition                                                            |
     | **Command**     | `helm repo add startx-noschema https://helm-repository.readthedocs.io/en/latest/repos/noschema` |
+
+=== "21"
+
+    |                 |                                                                                  |
+    | --------------- | -------------------------------------------------------------------------------- |
+    | **Repository**  | **[21](https://helm-repository.readthedocs.io/en/latest/repos/21/index.yaml)**   |
+    | **Description** | Archive repository for the 21.x packages (Compatible with OCP 4.21.x)            |
+    | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/21` |
+
+=== "20"
+
+    |                 |                                                                                  |
+    | --------------- | -------------------------------------------------------------------------------- |
+    | **Repository**  | **[20](https://helm-repository.readthedocs.io/en/latest/repos/20/index.yaml)**   |
+    | **Description** | Archive repository for the 20.x packages (Compatible with OCP 4.20.x)            |
+    | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/20` |
 
 === "19"
 
@@ -155,14 +174,6 @@ List of the deprecated helm charts.
     | **Description** | Archive repository for the 18.x packages (Compatible with OCP 4.18.x)            |
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/18` |
 
-=== "17"
-
-    |                 |                                                                                  |
-    | --------------- | -------------------------------------------------------------------------------- |
-    | **Repository**  | **[17](https://helm-repository.readthedocs.io/en/latest/repos/17/index.yaml)**   |
-    | **Description** | Archive repository for the 17.x packages (Compatible with OCP 4.17.x)            |
-    | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/17` |
-
 === "16"
 
     |                 |                                                                                  |
@@ -170,6 +181,17 @@ List of the deprecated helm charts.
     | **Repository**  | **[16](https://helm-repository.readthedocs.io/en/latest/repos/16/index.yaml)**   |
     | **Description** | Archive repository for the 16.x packages (Compatible with OCP 4.16.x)            |
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/16` |
+
+
+#### Archives
+
+=== "17"
+
+    |                 |                                                                                  |
+    | --------------- | -------------------------------------------------------------------------------- |
+    | **Repository**  | **[17](https://helm-repository.readthedocs.io/en/latest/repos/17/index.yaml)**   |
+    | **Description** | Archive repository for the 17.x packages (Compatible with OCP 4.17.x)            |
+    | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/17` |
 
 === "15"
 
