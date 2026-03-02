@@ -39,7 +39,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **nvidia-gpu-operator** without constraints
 - 1 **operator:** named **gpu-operator-certified** configured with
   - The **stable** channel for community release
-  - The **v25.3.0** version
+  - The **v25.10.1** version
   - Deployed under the **nvidia-gpu-operator** project
   
 ```bash
