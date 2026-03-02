@@ -43,7 +43,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **deployment-validation-operator** without constraints
 - 1 **operator:** named **deployment-validation-operator** configured with
   - The **alpha** channel for community release
-  - The **v0.7.8** version
+  - The **v0.7.14** version
   - Deployed under the **deployment-validation-operator** project
 
 ```bash
@@ -89,3 +89,4 @@ helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
