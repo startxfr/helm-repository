@@ -42,7 +42,7 @@ Complete deployment of a project with the following characteristics :
 
 - 1 **operator:** named **power-monitoring-operator** configured with
   - The **tech-preview** channel for community release
-  - The **v0.4.0** version
+  - The **v0.5.0** version
   - Deployed under the **openshift-operators** project
 
 ## Others values availables
