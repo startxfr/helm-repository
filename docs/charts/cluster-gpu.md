@@ -39,7 +39,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **nvidia-gpu-operator** without constraints
 - 1 **operator:** named **gpu-operator-certified** configured with
   - The **stable** channel for community release
-  - The **v25.3.0** version
+  - The **v25.10.1** version
   - Deployed under the **nvidia-gpu-operator** project
   
 ```bash
@@ -139,3 +139,4 @@ helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11

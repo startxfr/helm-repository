@@ -128,7 +128,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **demo-crunchy** without constraints
 - 1 **operator:** named **crunchy-postgres-operator** configured with
   - The **v5** channel for community release
-  - The **v5.8.1** version
+  - The **v5.8.6** version
   - Deployed under the **demo-crunchy** project
 
 ```bash
@@ -296,3 +296,4 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11

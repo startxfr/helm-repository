@@ -42,7 +42,7 @@ Complete deployment of a project with the following characteristics :
 
 - 1 **operator:** named **power-monitoring-operator** configured with
   - The **tech-preview** channel for community release
-  - The **v0.4.0** version
+  - The **v0.5.0** version
   - Deployed under the **openshift-operators** project
 
 ## Others values availables
@@ -84,3 +84,4 @@ helm install cluster-kepler startx/cluster-kepler -f https://raw.githubuserconte
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11

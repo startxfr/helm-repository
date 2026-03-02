@@ -43,7 +43,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **openshift-distributed-tracing** without constraints
 - 1 **operator:** named **servicemeshoperator** configured with
   - The **stable** channel for community release
-  - The **v2.6.7** version
+  - The **v2.6.13** version
   - Deployed under the **openshift-operators** project
 - 1 **operator:** named **jaeger-product** configured with
   - The **stable** channel for community release
@@ -51,7 +51,7 @@ Complete deployment of a project with the following characteristics :
   - Deployed under the **openshift-distributed-tracing** project
 - 1 **operator:** named **kiali-ossm** configured with
   - The **stable** channel for community release
-  - The **v2.4.4** version
+  - The **v2.17.4** version
   - Deployed under the **openshift-operators** project
 - 1 **operator:** named **loki-operator** configured with
   - The **stable-6.2** channel for community release
@@ -414,3 +414,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11

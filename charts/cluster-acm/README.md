@@ -377,3 +377,4 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 | 19.23.1 | 2026-03-01 | Unstable 19.23 repo
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
