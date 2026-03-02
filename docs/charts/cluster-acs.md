@@ -30,8 +30,8 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **rhacs-operator** configured with
-  - The **rhacs-4.7** channel
-  - The **4.7.2** version
+  - The **rhacs-4.9** channel
+  - The **4.9.3** version
   - Deployed under the **openshift-operators** project
 - 1 **acs:** enabled
   - **central** enabled
@@ -321,3 +321,4 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 | 19.23.1 | 2026-03-01 | Unstable 19.23 repo
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
