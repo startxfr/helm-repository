@@ -404,3 +404,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
 | 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
 | 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11
+| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14
