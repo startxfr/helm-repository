@@ -45,8 +45,8 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **3scale-operator** configured with
-  - The **threescale-2.15** channel
-  - The **0.12.3** version
+  - The **threescale-2.16** channel
+  - The **0.13.2** version
   - Deployed under the **openshift-operators** project
   - The **manager** deployed
 - 1 **Secret:** named **startx-3scale-rhn** that hold rhn credentials used fo image pulling
@@ -387,3 +387,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 19.23.1 | 2026-03-01 | Unstable 19.23 repo
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
