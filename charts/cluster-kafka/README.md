@@ -38,7 +38,7 @@ Complete deployment of a project with the following characteristics :
 
 - 1 **operator:** named **amq-streams-console** configured with
   - The **alpha** channel for community release
-  - The **v2.9.0** version
+  - The **v3.1.0** version
   - Deployed under the **openshift-operators** project
 
 ```bash
