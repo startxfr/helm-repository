@@ -484,3 +484,4 @@ chaos-monkey startx/chaos-monkey
 | 19.23.4 | 2026-03-01 | debug yq go version
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
 | 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
+| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11

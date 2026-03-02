@@ -480,3 +480,4 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
 | 19.23.11 | 2026-03-02 | New release of the operator basic chart for 4.19
 | 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
+| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11

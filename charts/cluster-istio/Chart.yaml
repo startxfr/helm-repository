@@ -6,7 +6,7 @@ description: Helm chart used to configure Istio at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 19.23.15
+version: 19.23.17
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 2.6.13
 # Icon of this helm-chart
@@ -40,38 +40,38 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: project
     condition: project.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: projectOperator
     condition: projectOperator.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorLoki
     condition: operatorLoki.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorKiali
     condition: operatorKiali.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorJaeger
     condition: operatorJaeger.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorIstio
     condition: operatorIstio.enabled
 
@@ -101,9 +101,5 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade Loki operator to v6.4.2"
-    - kind: changed
-      description: "Upgrade Kiali operator to v2.17.4"
-    - kind: changed
-      description: "Upgrade Istio operator to v2.6.13"
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: "Align all dependencies to chart v19.23.11"
+  artifacthub.io/containsSecurityUpdates: "false"

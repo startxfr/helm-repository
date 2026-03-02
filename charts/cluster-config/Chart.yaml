@@ -6,7 +6,7 @@ description: Helm chart used to configure cluster generic behaviours like image 
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 19.23.15
+version: 19.23.17
 # Version of Openshift (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.19.23"
 # Icon of this helm-chart
@@ -37,33 +37,33 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorElastic
     condition: operatorElastic.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorLoki
     condition: operatorLoki.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorGlobal
     condition: operatorGlobal.enabled
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: projectSosReport
     condition: projectSosReport.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operatorSosReport
     condition: operatorSosReport.enabled
 
@@ -93,5 +93,5 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade Loki operator to v6.4.2"
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: "Align all dependencies to chart v19.23.11"
+  artifacthub.io/containsSecurityUpdates: "false"

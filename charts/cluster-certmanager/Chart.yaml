@@ -6,7 +6,7 @@ description: Helm chart used to configure CertManager at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 19.23.15
+version: 19.23.17
 # Version name of the certmanager operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "1.18.1"
 # Icon of this helm-chart
@@ -40,13 +40,13 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/19/
+    version: "19.23.11"
     alias: operator
     condition: operator.enabled
 
@@ -76,5 +76,5 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade to certmanager v1.18.1"
-  artifacthub.io/containsSecurityUpdates: "true"
+      description: "Align all dependencies to chart v19.23.11"
+  artifacthub.io/containsSecurityUpdates: "false"
