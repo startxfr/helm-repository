@@ -313,3 +313,4 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 19.23.11 | 2026-03-02 | Upgrade chaos-mesh to v2.8.1
 | 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
 | 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11
+| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14
