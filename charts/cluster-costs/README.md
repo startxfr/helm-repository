@@ -43,7 +43,7 @@ Complete deployment of a project with the following characteristics :
 - 2 **namespace:** named **rhcstm-operator** and **default-costs** without constraints
 - 1 **operator:** named **costs-operator** configured with
   - The **stable** channel for community release
-  - The **v3.3.1** version
+  - The **v4.3.1** version
   - Deployed under the **rhcstm-operator** project
 - 1 **CostManagementMetricsConfig** named **startx-cost** in **default-costs** namespace
 - 1 **sxcollector** in **default-costs** namespace with **sxcollector-ns-state-hourly** job

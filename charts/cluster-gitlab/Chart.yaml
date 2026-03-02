@@ -8,11 +8,11 @@ type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
 version: 19.23.8
 # Version name of the gitlab operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "8.11.1"
+appVersion: "9.9.1"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-gitlab.svg
 # Kube minimum version
-kubeVersion: ">=1.25.0-0"
+kubeVersion: ">=1.30.0-0"
 # Keyword list for this chart
 keywords: 
   - kubernetes
@@ -41,12 +41,12 @@ maintainers:
 dependencies:
   - name: project
     repository: https://helm-repository.readthedocs.io/en/latest/repos/18/
-    version: "18.11.19"
+    version: "19.9.19"
     alias: project
     condition: project.enabled
   - name: gitlab
     repository: https://charts.gitlab.io/
-    version: "8.11.1"
+    version: "9.9.1"
     alias: gitlab
     condition: gitlab.enabled
 
@@ -76,5 +76,5 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all chart to a stable release for OCP 4.19"
-  artifacthub.io/containsSecurityUpdates: "false"
+      description: "Upgrade to gitlab v9.9.1"
+  artifacthub.io/containsSecurityUpdates: "true"
