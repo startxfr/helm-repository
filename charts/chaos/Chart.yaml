@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.1
+version: 21.3.3
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.21.3"
 # Icon of this helm-chart
@@ -41,28 +41,28 @@ maintainers:
 
 dependencies:
   - name: "chaos-cerberus"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/20/
-    version: "20.14.0"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    version: "21.3.0"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/20/
-    version: "20.14.0"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    version: "21.3.0"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/20/
-    version: "20.14.0"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    version: "21.3.0"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/20/
-    version: "20.14.0"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    version: "21.3.0"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/20/
-    version: "20.14.0"
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    version: "21.3.0"
     alias: monkey
     condition: monkey.enabled
 
@@ -98,5 +98,5 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Prepare release 21.3.x with 21.x dependencies"
+      description: "Upgrade dependencies to v21.3.0"
   artifacthub.io/containsSecurityUpdates: "false"
