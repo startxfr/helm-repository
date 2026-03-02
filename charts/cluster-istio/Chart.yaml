@@ -8,7 +8,7 @@ type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
 version: 19.23.8
 # Version name of the istio operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: 2.6.7
+appVersion: 2.6.13
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-istio.svg
 # Kube minimum version
@@ -101,5 +101,9 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Align all chart to a stable release for OCP 4.19"
-  artifacthub.io/containsSecurityUpdates: "false"
+      description: "Upgrade Loki operator to v6.4.2"
+    - kind: changed
+      description: "Upgrade Kiali operator to v2.17.4"
+    - kind: changed
+      description: "Upgrade Istio operator to v2.6.13"
+  artifacthub.io/containsSecurityUpdates: "true"
