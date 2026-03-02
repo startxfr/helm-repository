@@ -38,8 +38,8 @@ Complete deployment of a project with the following characteristics :
 
 - 1 **namespace:** named **startx-certmanager** without constraints
 - 1 **operator:** named **cert-manager-operator** configured with
-  - The **stable-v1.15** channel for community release
-  - The **v1.15.1** version
+  - The **stable-v1.18** channel for community release
+  - The **v1.18.1** version
   - Deployed under the **openshift-operators** project
 
 ```bash
@@ -237,3 +237,4 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 19.23.1 | 2026-03-01 | Unstable 19.23 repo
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
 | 19.23.8 | 2026-03-01 | publish stable update for the full repository
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
