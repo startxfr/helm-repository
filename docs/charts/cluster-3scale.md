@@ -45,8 +45,8 @@ Complete deployment of a project with the following characteristics :
   - 1 **Quotas:** defined for this projet
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **3scale-operator** configured with
-  - The **threescale-2.16** channel
-  - The **0.13.2** version
+  - The **threescale-2.13** channel
+  - The **0.10.5** version
   - Deployed under the **openshift-operators** project
   - The **manager** deployed
 - 1 **Secret:** named **startx-3scale-rhn** that hold rhn credentials used fo image pulling
@@ -396,3 +396,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0
+| 21.3.4 | 2026-03-03 | Upgrade to operator v0.10.5
