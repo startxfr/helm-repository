@@ -1,0 +1,38 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: kargo
+  app: startx-kargo
+  version: "4.20.0"
+kargo:
+  enabled: false
+  hooked: false
+  name: default
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+    # profile:
+    # - name: "profile1"
+    #   interface: "enp134s0f0"
+    #   kargo4lOpts: "-s -2"
+    #   phc2sysOpts: "-a -r"
+    # recommend:
+    # - profile: "profile1"
+    #   priority: 4
+    #   match:
+    #   - nodeLabel: "node-role.kubernetes.io/worker"
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-kargo"
+    display_name: "Startx Kargo"
+    requester: startx
+    description: Kargo configured by STARTX

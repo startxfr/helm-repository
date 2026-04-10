@@ -1,0 +1,43 @@
+# Default values for cluster-kargo.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-kargo
+  # Version name of this application (default use Chart appVersion)
+  version: "4.20.0"
+
+# Deploy an API manager
+kargo:
+  # Enable the configuration of the API manager
+  enabled: true
+  # Activate the manager as a helm hook
+  hooked: false
+  # Name of the deployed instance of kargoConfig
+  name: default
+  # The applyed kargo config specifications
+  spec: |
+    daemonNodeSelector:
+      node-role.kubernetes.io/worker: ""
+
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: false
+    hooked: false
+    type: namespace
+    name: "kargo"
+    display_name: Kargo
+    description: Kargo configured by STARTX

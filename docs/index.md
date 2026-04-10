@@ -76,6 +76,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-kubecost](charts/cluster-kubecost.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kubecost)      | enable Kubecost cost dashboard                                                                                                        |
 | **[cluster-kepler](charts/cluster-kepler.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kepler)        | enable Kepler power consumption observability                                                                                         |
 | **[cluster-dvo](charts/cluster-dvo.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-dvo)           | enable Deployment Validation Operator (DVO)  to checks deployments and other resources against a curated collection of best practices |
+| **[cluster-kargo](charts/cluster-kargo.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kargo)           | enable Kargo builds upon GitOps principles to manage and automate the promotion of stage lifecycle  |
 
 
 ### Chaos Charts
