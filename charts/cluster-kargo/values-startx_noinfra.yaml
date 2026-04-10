@@ -1,0 +1,86 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: kargo
+  app: startx-kargo
+  version: "1.9.5"
+
+# Deploy a Kargo stack
+kargo:
+  enabled: true
+  global:
+    clusterSecretsNamespace: kargo-system
+    createClusterSecretsNamespace: false
+    systemResources:
+      namespace: kargo-system
+      createNamespace: false
+    sharedResources:
+      namespace: kargo-system
+      createNamespace: false
+    labels:
+      <<: *context
+  crds:
+    install: true
+    keep: true
+  rbac:
+    installClusterRoles: true
+    installClusterRoleBindings: true
+  webhooks:
+    register: true
+  api:
+    enabled: true
+    adminAccount:
+      enabled: true
+      ## for dev purpose only (password: secretdemerde)
+      passwordHash: "$2y$10$3o4nbpSvz9ydP6r/tww2beeh/mt96wqwdZ.2Itgo9asQfc6L1IB8a"
+      ## used signing_key=$(openssl rand -base64 48 | tr -d "=+/" | head -c 32) for this token generation
+      tokenSigningKey: "eH9f8DQaBieoI5IQ3JIS3RfjUoAvCiag"
+      tokenTTL: 24h
+    oidc:
+      enabled: false
+    argocd:
+      urls:
+        # "": https://argocd.example.com
+        # "shard2": https://argocd2.example.com
+    rollouts:
+      integrationEnabled: true
+    ingress:
+      enabled: true
+  controller:
+    enabled: true
+    isDefault: true
+    gitClient:
+      name: "Kargo Controller"
+      email: "kargo@startx.fr"
+    argocd:
+      integrationEnabled: true
+      namespace: openshift-gitops
+    rollouts:
+      integrationEnabled: true
+  garbageCollector:
+    enabled: true
+  externalWebhooksServer:
+    enabled: true
+    ingress:
+      enabled: true
+  managementController:
+    enabled: true
+  webhooksServer:
+    enabled: true
+
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "kargo-system"
+    display_name: Kargo
+    description: Kargo configured by STARTX

@@ -1,0 +1,131 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: startx-giga
+  environment: infra
+  component: config
+  app: startx-machine
+  version: "4.18.11"
+
+cluster:
+  id: startx-xyzab
+  region: eu-west-3
+  autoscaler: 
+    enabled: false
+    spec: |
+      podPriorityThreshold: -10 
+      resourceLimits:
+        maxNodesTotal: 6
+        cores:
+          min: 24
+          max: 48
+        memory:
+          min: 192
+          max: 384
+      scaleDown: 
+        enabled: true 
+        delayAfterAdd: 5m 
+        delayAfterDelete: 3m 
+        delayAfterFailure: 40s 
+        unneededTime: 60s 
+
+machineConfigPool: 
+  enabled: false
+  infra: false
+  list: 
+  - name: app
+    machineConfigSelector: |-
+      matchExpressions:
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,app]}
+    nodeSelector: |-
+      matchLabels:
+        node-role.kubernetes.io/app: ""
+    paused: false
+machineConfig: 
+  enabled: false
+
+machineHealthCheck:
+  enabled: false
+  list: 
+  - name: master
+    type: master
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-a
+    type: app
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-b
+    type: app
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-c
+    type: app
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-gpu
+    type: gpu
+    group: app-gpu
+    maxUnhealthy: 40%
+    timeouts: 300s
+
+machineAutoscaler: 
+  enabled: false
+  list: 
+  - name: app-a
+    minReplicas: 1
+    maxReplicas: 3
+  - name: app-b
+    minReplicas: 1
+    maxReplicas: 3
+  - name: app-c
+    minReplicas: 1
+    maxReplicas: 3
+  - name: app-gpu-a
+    minReplicas: 0
+    maxReplicas: 2
+  - name: app-gpu-b
+    minReplicas: 0
+    maxReplicas: 2
+
+machineSet: 
+  enabled: false
+  list:
+  - name: app-a
+    az: a
+    type: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "r5a.2xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: app-b
+    az: b
+    type: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "r5a.2xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: app-c
+    az: c
+    type: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "r5a.2xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: app-gpu-a
+    az: a
+    type: gpu
+    group: app-gpu
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "g4dn.xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: app-gpu-b
+    az: b
+    type: gpu
+    group: app-gpu
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "g4dn.xlarge"
+    volumeSize: 150
+    replicas: 0

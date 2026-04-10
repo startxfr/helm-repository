@@ -1,0 +1,176 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: startx-default
+  environment: infra
+  component: config
+  app: startx-machine
+  version: "4.18.11"
+
+cluster:
+  id: startx-xyzab
+  region: eu-west-3
+  autoscaler: 
+    enabled: false
+    spec: |
+      podPriorityThreshold: -10 
+      resourceLimits:
+        maxNodesTotal: 12
+        cores:
+          min: 36
+          max: 66
+        memory:
+          min: 240
+          max: 360
+      scaleDown: 
+        enabled: true 
+        delayAfterAdd: 8m 
+        delayAfterDelete: 2m 
+        delayAfterFailure: 40s 
+        unneededTime: 60s 
+
+machineConfigPool: 
+  enabled: false
+  infra: false
+  list: 
+  - name: app
+    machineConfigSelector: |-
+      matchExpressions:
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,app]}
+    nodeSelector: |-
+      matchLabels:
+        node-role.kubernetes.io/app: ""
+    paused: false
+machineConfig: 
+  enabled: false
+
+machineHealthCheck:
+  enabled: false
+  list: 
+  - name: master
+    type: master
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-small
+    type: app
+    group: app-small
+    maxUnhealthy: 0%
+    timeouts: 300s
+  - name: app
+    type: app
+    group: app
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: app-big
+    type: app
+    group: app-big
+    maxUnhealthy: 0%
+    timeouts: 300s
+
+machineAutoscaler: 
+  enabled: false
+  list: 
+  - name: app-small-a
+    minReplicas: 0
+    maxReplicas: 2
+  - name: app-small-b
+    minReplicas: 0
+    maxReplicas: 2
+  - name: app-small-c
+    minReplicas: 0
+    maxReplicas: 2
+  - name: app-a
+    minReplicas: 1
+    maxReplicas: 2
+  - name: app-b
+    minReplicas: 1
+    maxReplicas: 2
+  - name: app-c
+    minReplicas: 1
+    maxReplicas: 2
+  - name: app-big-a
+    minReplicas: 0
+    maxReplicas: 2
+  - name: app-big-b
+    minReplicas: 0
+    maxReplicas: 2
+  - name: app-big-c
+    minReplicas: 0
+    maxReplicas: 2
+
+machineSet: 
+  enabled: false
+  list:
+  - name: app-small-a
+    az: a
+    type: app
+    group: app-small
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.large"
+    volumeSize: 150
+    replicas: 0
+  - name: app-small-b
+    az: b
+    type: app
+    group: app-small
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.large"
+    volumeSize: 150
+    replicas: 0
+  - name: app-small-c
+    az: c
+    type: app
+    group: app-small
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.large"
+    volumeSize: 150
+    replicas: 0
+  - name: app-a
+    az: a
+    type: app
+    group: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: app-b
+    az: b
+    type: app
+    group: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: app-c
+    az: c
+    type: app
+    group: app
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: app-big-a
+    az: a
+    type: app
+    group: app-big
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.2xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: app-big-b
+    az: b
+    type: app
+    group: app-big
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.2xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: app-big-c
+    az: c
+    type: app
+    group: app-big
+    ami: ami-073ea4e4624cedfa0
+    instanceType: "t3a.2xlarge"
+    volumeSize: 150
+    replicas: 0
