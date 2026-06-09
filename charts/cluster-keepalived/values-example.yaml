@@ -1,0 +1,174 @@
+# Example values for cluster-keepalived chart
+# This example shows a complete deployment with:
+# - External VIP (10.99.10.237) for public ingress
+# - Keepalived managing the virtual IP on worker nodes
+# - Custom ingress controller on infrastructure nodes
+# - Public routes exposed via the external VIP
+
+# Context configuration
+context: &context
+  scope: myscope
+  cluster: default
+  environment: prod
+  component: infrastructure
+  app: public-ingress
+  version: "0.5.0"
+
+# Keepalived configuration
+# Manages the 10.99.10.237 VIP on worker nodes
+keepalived:
+  enabled: true
+  namespace: openshift-ingress
+  groups:
+    enabled: true
+    list:
+      - name: keepalivedgroup-workers
+        namespace: openshift-ingress
+        spec: |
+          blacklistRouterIDs:
+            - 165
+            - 168
+            - 169
+          image: registry.redhat.io/openshift4/ose-keepalived-ipfailover
+          interface: br-ex
+          nodeSelector:
+            node-role.kubernetes.io/infra: ''
+
+# Cluster network configuration
+# Allows 10.99.10.237/32 to be assigned to external IPs
+clusterNetwork:
+  enabled: true
+  externalIP:
+    autoAssignCIDRs:
+      - 10.99.10.237/32
+    policy:
+      allowedCIDRs:
+        - 10.99.10.237/32
+
+# Ingress controller for public routes
+# Runs on infrastructure nodes and serves routes with label "ingress: public"
+ingressController:
+  enabled: true
+  name: public
+  namespace: openshift-ingress-operator
+  domain: mydomain.example.com
+  replicas: 3
+  routeSelector:
+    matchLabels:
+      ingress: public
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/infra: ""
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/infra
+        operator: Exists
+  defaultCertificate:
+    name: public-ingress-cert
+  tuningOptions:
+    reloadInterval: 0s
+  endpointPublishingStrategy:
+    type: Private
+
+# Service exposing the ingress controller with the external VIP
+# This service binds the 10.99.10.237 external IP to the ingress controller pods
+ingressControllerService:
+  enabled: true
+  name: router-public-lb
+  namespace: openshift-ingress
+  type: ClusterIP
+  externalIPs:
+    - 10.99.10.237
+  clusterIP: 172.30.183.172
+  clusterIPs:
+    - 172.30.183.172
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+  sessionAffinity: None
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: https
+  selector:
+    ingresscontroller.operator.openshift.io/deployment-ingresscontroller: public
+
+# TLS Secret for IngressController certificate
+ingressControllerSecret:
+  enabled: true
+  name: public-ingress-cert
+  namespace: openshift-ingress
+  tls:
+    # Base64 encoded TLS certificate from manifest/secret.yaml
+    crt: LS0tLS1CRXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+    # Base64 encoded TLS private key from manifest/secret.yaml
+    key: LS0tLS1CRXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+
+# Operator configuration
+operator:
+  enabled: true
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "keepalived-operator"
+    namespace: "keepalived-operator"
+    version: "1.5.4"
+    operator:
+      channel: "alpha"
+      name: keepalived-operator
+      installPlanApproval: Automatic
+      startingCSV: "keepalived-operator.v1.5.4"
+      source:
+        name: community-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "keepalived-operator"
+    namespace: "keepalived-operator"
+    upgradeStrategy: "Default"
+    providedAPIs: "KeepalivedGroup.v1alpha1.redhatcop.redhat.io"
+
+# Project namespace for operator installation
+project:
+  enabled: true
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "keepalived-operator"
+    display_name: Keepalived Operator
+    description: Namespace for keepalived operator installation
+
+# ================================================================
+# How it works:
+# ================================================================
+#
+# 1. The clusterNetwork configuration allows 10.99.10.237 to be used
+#    as an external IP in the cluster.
+#
+# 2. The keepalivedgroup ensures the VIP is maintained using VRRP,
+#    managing it on worker nodes with the br-ex interface.
+#
+# 3. The ingressController runs on infra nodes and routes traffic
+#    from routes labeled with "ingress: public".
+#
+# 4. The ingressControllerService binds the external IP (10.99.10.237)
+#    to the ingress controller pods via the service's externalIPs field.
+#
+# 5. External traffic to 10.99.10.237:80/443 is routed to the ingress
+#    controller pods, which then route to application pods based on
+#    the route configuration (domain-based routing).
+#
+# ================================================================
