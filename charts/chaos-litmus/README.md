@@ -1,15 +1,15 @@
 # ![chaos-litmus](https://helm-repository.readthedocs.io/en/latest/img/chaos-litmus.svg "Chaos Chart : Litmus") Chaos Chart : Litmus
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--litmus-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+litmus+startx)
 
-This helm chart used to deploy litmus on Openshift or Kubernetes cluster. 
-Litmus is as a watchdog who act as a global cluster healthcheck. 
+This helm chart used to deploy litmus on Openshift or Kubernetes cluster.
+Litmus is a chaos engineering platform for designing, scheduling, and orchestrating chaos experiments on Kubernetes clusters.
 
 This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
 
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -60,7 +60,7 @@ helm install --set litmus.enabled=true -n chaos-litmus chaos-litmus-instance sta
 | project        | {...}   | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
 | project.enable | false   | Enable creation of the namespace                                                                                                                                                                                                                                                  |
 | litmus         | {...}   | Configuration of the litmus deployment. Inherit from the [official litmus chart](https://litmuschaos.github.io/litmus-helm) (see [chart options](https://litmuschaos.github.io/litmus-helm) for more options)                                                                     |
-| litmus.enable  | false   | Enable deploying the litmus watchdog                                                                                                                                                                                                                                              |
+| litmus.enable  | false   | Enable deploying the litmus chaos engine                                                                                                                                                                                                                                              |
 
 ## Values files
 
@@ -87,6 +87,69 @@ Same as the default configuration but with namespace prefixed with startx-
 # Configuration running demo example configuration
 helm install chaos-litmus-project startx/chaos-litmus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-project.yaml
 helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml
+```
+
+## Usage examples
+
+### Deploy litmus portal with web UI
+
+Enable the LitmusChaos control plane and expose it via an OpenShift route:
+
+```yaml
+# my-litmus-values.yaml
+context:
+  scope: myorg
+  cluster: prod-cluster
+  environment: chaos
+  component: litmus
+  app: litmus-chaos
+
+litmus:
+  enabled: true
+  portal:
+    enabled: true
+    server:
+      graphqlServer:
+        genericEnv:
+          CHAOS_CENTER_UI_ENDPOINT: https://litmus-frontend.chaos-litmus.apps.prod-cluster.example.com
+```
+
+```bash
+helm install chaos-litmus-instance startx/chaos-litmus -f my-litmus-values.yaml -n chaos-litmus
+```
+
+### Minimal deployment (backend only, no UI)
+
+Deploy the litmus backend without the frontend portal, useful for API-only usage:
+
+```yaml
+# my-litmus-minimal-values.yaml
+litmus:
+  enabled: true
+  portal:
+    enabled: true
+    frontend:
+      enabled: false
+    server:
+      enabled: true
+```
+
+```bash
+helm install chaos-litmus-minimal startx/chaos-litmus -f my-litmus-minimal-values.yaml -n chaos-litmus
+```
+
+### Full stack with namespace
+
+```bash
+# 1. Create the namespace
+helm install chaos-litmus-project startx/chaos-litmus \
+  --set project.enabled=true \
+  -n default
+
+# 2. Deploy litmus portal
+helm install chaos-litmus startx/chaos-litmus \
+  --set litmus.enabled=true \
+  -n chaos-litmus
 ```
 
 ## History
@@ -202,7 +265,7 @@ helm install chaos-litmus-deploy startx/chaos-litmus -f https://raw.githubuserco
 | 13.26.2 | 2023-12-09 | upgrade all dependencies charts to version 13.26.0 |
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository |
 | 14.6.0 | 2023-12-09 | First release for OCP 4.14 release. Aligned on 4.14.6 release. |
-| 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release |
+| 14.6.1 | 2023-12-09 | Initial release for OCP 4.14 release. Aligned on 4.14.6 release |
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2 |
 | 14.6.9 | 2023-12-10 | publish stable update for the full repository |
 | 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5 |

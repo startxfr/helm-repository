@@ -9,7 +9,7 @@ This chart is part of the [chaos startx helm chart series](https://helm-reposito
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -51,7 +51,7 @@ helm install --set kraken.enabled=true -n chaos-kraken chaos-kraken-instance sta
 | context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | kraken     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+| context.version     | 5.0.0     | Version name of this application (default use Chart appVersion)                   |
 
 ### chaos-kraken values dictionary
 
@@ -109,6 +109,88 @@ Same as the default configuration but with namespace prefixed with startx-
 # Configuration running demo example configuration
 helm install chaos-kraken-project startx/chaos-kraken -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-project.yaml
 helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy.yaml
+```
+
+## Usage examples
+
+### Run kraken in job mode (one-shot chaos run)
+
+Deploy kraken as a Kubernetes Job that runs a node failure scenario once:
+
+```yaml
+# my-kraken-job-values.yaml
+context:
+  scope: myorg
+  cluster: prod-cluster
+  environment: prod
+  component: chaos
+  app: kraken-prod
+
+kraken:
+  enabled: true
+  expose: false
+  cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+  mode: job
+  job:
+    prefix: kraken-node-failure
+  kubeconfig:
+    mode: token
+    token:
+      server: https://api.prod-cluster.example.com:6443
+      token: sha256~REPLACE_WITH_YOUR_TOKEN
+```
+
+```bash
+helm install chaos-kraken-job startx/chaos-kraken -f my-kraken-job-values.yaml -n chaos-kraken
+```
+
+### Run kraken in pipeline mode (Tekton)
+
+Deploy kraken using a Tekton PipelineRun for each scenario (requires OpenShift Pipelines):
+
+```yaml
+# my-kraken-pipeline-values.yaml
+kraken:
+  enabled: true
+  cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+  mode: pipeline
+  pipeline:
+    prefix: kraken-test
+  kubeconfig:
+    mode: token
+    token:
+      server: https://api.prod-cluster.example.com:6443
+      token: sha256~REPLACE_WITH_YOUR_TOKEN
+```
+
+```bash
+helm install chaos-kraken-pipeline startx/chaos-kraken -f my-kraken-pipeline-values.yaml -n chaos-kraken
+```
+
+### Run kraken with AWS integration (node stop/start)
+
+Enable AWS credentials to allow kraken to stop/start EC2 instances during node failure scenarios:
+
+```yaml
+# my-kraken-aws-values.yaml
+kraken:
+  enabled: true
+  mode: job
+  aws:
+    enabled: true
+    credentials:
+      region: eu-west-3
+      key_id: AKIAXXX_REPLACE_WITH_REAL_KEY
+      secret: "REPLACE_WITH_REAL_SECRET"
+  kubeconfig:
+    mode: token
+    token:
+      server: https://api.prod-cluster.example.com:6443
+      token: sha256~REPLACE_WITH_YOUR_TOKEN
+```
+
+```bash
+helm install chaos-kraken-aws startx/chaos-kraken -f my-kraken-aws-values.yaml -n chaos-kraken
 ```
 
 ## History
@@ -227,7 +309,7 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | 13.26.2 | 2023-12-09 | upgrade all dependencies charts to version 13.26.0 |
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository |
 | 14.6.0 | 2023-12-09 | First release for OCP 4.14 release. Aligned on 4.14.6 release. |
-| 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release |
+| 14.6.1 | 2023-12-09 | Initial release for OCP 4.14 release. Aligned on 4.14.6 release |
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2 |
 | 14.6.9 | 2023-12-10 | publish stable update for the full repository |
 | 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5 |

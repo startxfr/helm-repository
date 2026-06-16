@@ -1,15 +1,15 @@
 # ![chaos-monkey](https://helm-repository.readthedocs.io/en/latest/img/chaos-monkey.svg "Chaos Chart : Monkeys") Chaos Chart : ChaosMonkeys
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--monkey-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+monkey+startx)
 
-This helm chart used to deploy kube-monkey on Openshift or Kubernetes cluster. 
-Monkey is as a watchdog who act as a global cluster healthcheck. 
+This helm chart used to deploy kube-monkey on Openshift or Kubernetes cluster.
+Kube-monkey is a chaos injection tool that randomly terminates pods during business hours to test application resilience.
 
 This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
 
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -60,7 +60,7 @@ helm install --set monkey.enabled=true  chaos-monkey-instance startx/chaos-monke
 | project        | {...}   | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
 | project.enable | false   | Enable creation of the namespace                                                                                                                                                                                                                                                  |
 | monkey         | {...}   | Configuration of the kube-monkey deployment. Inherit from the [asobti kube-monkey chart](https://asobti.github.io/kube-monkey/charts/repo) (see [chart options](https://asobti.github.io/kube-monkey/charts/repo) for more options)                                               |
-| monkey.enable  | false   | Enable deploying the kube-monkey watchdog                                                                                                                                                                                                                                         |
+| monkey.enable  | false   | Enable deploying the kube-monkey chaos injector                                                                                                                                                                                                                                         |
 
 ## Values files
 
@@ -87,6 +87,74 @@ Same as the default configuration but with namespace prefixed with startx-
 # Configuration running demo example configuration
 helm install chaos-monkey-project startx/chaos-monkey -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-project.yaml
 helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-deploy.yaml
+```
+
+## Usage examples
+
+### Deploy kube-monkey with basic kill schedule
+
+Enable kube-monkey to run daily at 8am and terminate pods in opted-in namespaces:
+
+```yaml
+# my-monkey-values.yaml
+context:
+  scope: myorg
+  cluster: prod-cluster
+  environment: chaos
+  component: monkey
+  app: kube-monkey
+
+monkey:
+  enabled: true
+  config:
+    dryRun: false
+    timezone: America/New_York
+    startHour: 8
+    endHour: 17
+    gracePeriodSec: 5
+    killAllOnFail: false
+    debug:
+      enabled: false
+```
+
+```bash
+helm install chaos-monkey-instance startx/chaos-monkey -f my-monkey-values.yaml -n chaos-monkey
+```
+
+### Dry-run mode (simulate without killing)
+
+Test the configuration without actually terminating pods:
+
+```yaml
+# my-monkey-dryrun-values.yaml
+monkey:
+  enabled: true
+  config:
+    dryRun: true
+    timezone: Europe/Paris
+    startHour: 9
+    endHour: 18
+```
+
+```bash
+helm install chaos-monkey-dryrun startx/chaos-monkey -f my-monkey-dryrun-values.yaml -n chaos-monkey
+```
+
+### Opt in a deployment for kube-monkey
+
+Add annotations to your application's Deployment to opt in and set the kill probability:
+
+```yaml
+# In your application Deployment manifest
+metadata:
+  labels:
+    kube-monkey/enabled: "enabled"
+  annotations:
+    kube-monkey/enabled: "enabled"
+    kube-monkey/identifier: "myapp"
+    kube-monkey/mtbf: "3"           # mean time between failures (days)
+    kube-monkey/kill-mode: "fixed"  # or "random-max-percent"
+    kube-monkey/kill-value: "1"     # number of pods to kill
 ```
 
 ## History
@@ -198,7 +266,7 @@ helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubuserco
 | 13.26.1 | 2023-12-09 | Minimum requirements for kubernetes is 1.26.0 version and upgrade all cluster-xxx charts to latest release for OCP 4.13 |
 | 13.26.2 | 2023-12-09 | upgrade all dependencies charts to version 13.26.0 |
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository |
-| 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release |
+| 14.6.1 | 2023-12-09 | Initial release for OCP 4.14 release. Aligned on 4.14.6 release |
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2 |
 | 14.6.9 | 2023-12-10 | publish stable update for the full repository |
 | 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5 |

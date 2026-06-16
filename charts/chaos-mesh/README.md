@@ -1,15 +1,15 @@
 # ![chaos-mesh](https://helm-repository.readthedocs.io/en/latest/img/chaos-mesh.svg "Chaos Chart : ChaosMesh") Chaos Chart : Mesh
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--mesh-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+mesh+startx)
 
-This helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster. 
-Chaos-mesh is as a chaos engine with a gui to define and execute chaos scenarios for Kubernetes clusters. 
+This helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster.
+Chaos Mesh is a chaos engine with a GUI to define and execute chaos scenarios for Kubernetes clusters.
 
 This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
 
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -60,7 +60,7 @@ helm install --set mesh.enabled=true -n chaos-mesh chaos-mesh-instance startx/ch
 | project        | {...}   | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
 | project.enable | false   | Enable creation of the namespace                                                                                                                                                                                                                                                  |
 | mesh           | {...}   | Configuration of the chaos-mesh deployment. Inherit from the [official chaos-mesh chart](https://charts.chaos-mesh.org) (see [chart options](https://charts.chaos-mesh.org) for more options)                                                                                     |
-| mesh.enable    | false   | Enable deploying the chaos-mesh watchdog                                                                                                                                                                                                                                          |
+| mesh.enable    | false   | Enable deploying the chaos-mesh chaos engine                                                                                                                                                                                                                                          |
 
 ## Values files
 
@@ -87,6 +87,82 @@ Same as the default configuration but with namespace prefixed with startx-
 # Configuration running demo example configuration
 helm install chaos-mesh-project startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml
 helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml
+```
+
+## Usage examples
+
+### Deploy chaos-mesh with dashboard and route
+
+Enable chaos-mesh with its web dashboard exposed via an OpenShift route:
+
+```yaml
+# my-mesh-values.yaml
+context:
+  scope: myorg
+  cluster: prod-cluster
+  environment: chaos
+  component: mesh
+  app: chaos-mesh
+
+mesh:
+  enabled: true
+  dashboard:
+    create: true
+    securityMode: false
+  controllerManager:
+    replicaCount: 1
+  chaosDaemon:
+    runtime: containerd
+    socketPath: /run/containerd/containerd.sock
+```
+
+```bash
+helm install chaos-mesh-instance startx/chaos-mesh -f my-mesh-values.yaml -n chaos-mesh
+```
+
+### Minimal deployment (no dashboard)
+
+Deploy chaos-mesh engine only, without the web dashboard, for CLI/CR-driven chaos scenarios:
+
+```yaml
+# my-mesh-minimal-values.yaml
+mesh:
+  enabled: true
+  dashboard:
+    create: false
+  controllerManager:
+    replicaCount: 1
+```
+
+```bash
+helm install chaos-mesh-minimal startx/chaos-mesh -f my-mesh-minimal-values.yaml -n chaos-mesh
+```
+
+### Apply a PodChaos experiment after deployment
+
+Once chaos-mesh is deployed, apply a `PodChaos` CR directly to kill pods at random:
+
+```yaml
+# pod-chaos-example.yaml
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: pod-kill-myapp
+  namespace: chaos-mesh
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - myapp-namespace
+    labelSelectors:
+      "app.kubernetes.io/name": "myapp"
+  scheduler:
+    cron: "@every 10m"
+```
+
+```bash
+oc apply -f pod-chaos-example.yaml
 ```
 
 ## History
@@ -199,7 +275,7 @@ helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubuserconten
 | 13.26.1 | 2023-12-09 | Minimum requirements for kubernetes is 1.26.0 version and upgrade all cluster-xxx charts to latest release for OCP 4.13 |
 | 13.26.2 | 2023-12-09 | upgrade all dependencies charts to version 13.26.0 |
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository |
-| 14.6.1 | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release |
+| 14.6.1 | 2023-12-09 | Initial release for OCP 4.14 release. Aligned on 4.14.6 release |
 | 14.6.5 | 2023-12-10 | upgrade all dependencies charts to version 13.26.2 |
 | 14.6.9 | 2023-12-10 | publish stable update for the full repository |
 | 14.6.11 | 2023-12-10 | upgrade minimum kubeVersion to 1.27.x and startx helm-chart dependencies to version 14.6.5 |

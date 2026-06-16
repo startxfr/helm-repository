@@ -8,7 +8,7 @@ This chart is part of the [chaos startx helm chart series](https://helm-reposito
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -71,9 +71,9 @@ chaos-monkey-instance  startx/chaos-monkey
 
 ### 5. Manage with ArgoCD
 
-ArgoCD will allow you to deploy this helm chart in a gitops way of doying. [ArgoCD deployment](../../docs/install-argocd.md) must help you deploy the ArgoCD stack.
+ArgoCD will allow you to deploy this helm chart in a gitops way of doing. [ArgoCD deployment](../../docs/install-argocd.md) must help you deploy the ArgoCD stack.
 
- In order to manage this cluster resource using argoCD, you should deploy your service [using startx charts(#0.requirements)] :
+ In order to manage this cluster resource using argoCD, you should deploy your service [using startx charts](https://helm-repository.readthedocs.io) :
 - [project](../../docs/install-argocd.md#11-create-cluster-service-projects) to created required projects
 - [operator](../../docs/install-argocd.md#12-deploy-the-operator) to deploy required operators
 - [instance](../../docs/install-argocd.md#13-create-a-cluster-service-instance) to deploy this resource components 
@@ -221,6 +221,71 @@ helm install \
 chaos-monkey startx/chaos-monkey
 ```
 
+## Usage examples
+
+### Deploy the full chaos suite in sequence
+
+The recommended deployment order: namespaces first, then cerberus (healthcheck), then engines.
+
+```bash
+# 1. Create all chaos namespaces
+helm install chaos-namespaces startx/chaos \
+  --set cerberus.enabled=true --set cerberus.project.enabled=true \
+  --set kraken.enabled=true   --set kraken.project.enabled=true \
+  --set litmus.enabled=true   --set litmus.project.enabled=true \
+  --set mesh.enabled=true     --set mesh.project.enabled=true \
+  --set monkey.enabled=true   --set monkey.project.enabled=true
+
+# 2. Deploy cerberus (healthcheck watchdog) first
+helm install chaos-cerberus startx/chaos-cerberus \
+  --set cerberus.enabled=true \
+  --set cerberus.kubeconfig.mode=token \
+  --set cerberus.kubeconfig.token.server=https://api.prod.example.com:6443 \
+  --set cerberus.kubeconfig.token.token=sha256~REPLACE \
+  -n chaos-cerberus
+
+# 3. Deploy the kraken chaos engine (pipeline mode)
+helm install chaos-kraken startx/chaos-kraken \
+  --set kraken.enabled=true \
+  --set kraken.mode=pipeline \
+  --set kraken.cerberusUrl=http://cerberus.chaos-cerberus.svc.cluster.local:8080 \
+  --set kraken.kubeconfig.mode=token \
+  --set kraken.kubeconfig.token.server=https://api.prod.example.com:6443 \
+  --set kraken.kubeconfig.token.token=sha256~REPLACE \
+  -n chaos-kraken
+```
+
+### Deploy only cerberus + kraken (minimal chaos pair)
+
+```yaml
+# my-chaos-minimal-values.yaml
+cerberus:
+  enabled: true
+  cerberus:
+    enabled: true
+    kubeconfig:
+      mode: token
+      token:
+        server: https://api.prod.example.com:6443
+        token: sha256~REPLACE
+
+kraken:
+  enabled: true
+  kraken:
+    enabled: true
+    mode: job
+    cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+    kubeconfig:
+      mode: token
+      token:
+        server: https://api.prod.example.com:6443
+        token: sha256~REPLACE
+```
+
+```bash
+helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
+```
+
 ## History
 
 | Release   | Date       | Description                                                                                                             |
@@ -353,7 +418,7 @@ chaos-monkey startx/chaos-monkey
 | 13.26.2   | 2023-12-09 | upgrade all dependencies charts to version 13.26.0                                                                      |
 | 13.26.3   | 2023-12-09 | publish stable update for the full repository                                                                           |
 | 14.6.0    | 2023-12-09 | First release for OCP 4.14 release. Aligned on 4.14.6 release.                                                          |
-| 14.6.1    | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release                                                        |
+| 14.6.1    | 2023-12-09 | Initial release for OCP 4.14 release. Aligned on 4.14.6 release                                                        |
 | 14.6.2    | 2023-12-09 | debug app version                                                                                                       |
 | 14.6.3    | 2023-12-10 | Unstable version of the full repository                                                                                 |
 | 14.6.5    | 2023-12-10 | upgrade all dependencies charts to version 13.26.2                                                                      |
