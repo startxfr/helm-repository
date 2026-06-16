@@ -5,31 +5,34 @@ PROJECT_LIBPATH=$PROJECT_PATH/.tools
 
 # shellcheck source=/dev/null
 source "$PROJECT_LIBPATH/cli"
-source "${PROJECT_LIBPATH}/cli-s3"
+source "$PROJECT_LIBPATH/cli-s3"
 
-## Start prog switch
+## Command router
 
 if [[ "$1" != "" ]]; then
     case $1 in
-        list)                   routerList;;
-        publish)                routerPublish;;
-        release)                routerRelease "$@" ;;
-        archive)                routerArchive "$@" ;;
-        archiveLegacy)          routerArchiveLegacy "$@" ;;
-        syncfroms3)             routerSyncFromS3 "$@" ;;
-        synctos3)               routerSyncToS3 "$@" ;;
-        version)                routerVersion;;
+        list)           routerList;;
+        publish)        routerPublish;;
+        release)        routerRelease "$@";;
+        archive)        routerArchive "$@";;
+        archiveLegacy)  routerArchiveLegacy "$@";;
+        lint-all)       routerLintAll;;
+        test-all)       routerTestAll;;
+        package-all)    routerPackageAll;;
+        syncfroms3)     routerSyncFromS3 "$@";;
+        synctos3)       routerSyncToS3 "$@";;
+        version)        routerVersion;;
         *)
             case $2 in
-                info)           routerChartInfo "$1";;
-                create)         routerChartCreate "$1" "$3";;
-                schemagen)      routerChartSchemagen "$1" "$3";;
-                test)           routerChartTest "$1" "$3" "$4";;
-                package)        routerChartPackage "$1";;
-                release)        routerChartRelease "$1" "$3" "$4";;
-                delete)         routerChartDelete "$1" ;;
-                publish)        routerChartPublish "$@" ;;
-                *)              menuUsageChart "$@" ;;
+                info)       routerChartInfo "$1";;
+                create)     routerChartCreate "$1" "$3";;
+                schemagen)  routerChartSchemagen "$1" "$3";;
+                test)       routerChartTest "$1" "$3" "$4";;
+                package)    routerChartPackage "$1";;
+                release)    routerChartRelease "$1" "$3" "$4" "$5";;
+                delete)     routerChartDelete "$1" "$3";;
+                publish)    routerChartPublish "$@";;
+                *)          menuUsageChart "$@";;
             esac
         ;;
     esac

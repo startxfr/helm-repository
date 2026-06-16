@@ -1,193 +1,174 @@
 #!/bin/bash
 
-STABLE_MAINRELEASE="21"
-STABLE_SUBRELEASE="3"
-SXV4_CONSOLE_VERSION="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}.1"
+# Source portable configuration (bucket, branches, signing keys, etc.)
+# shellcheck source=/dev/null
+source "$PROJECT_LIBPATH/config"
+
+# Path-dependent variables — require PROJECT_PATH / PROJECT_LIBPATH set by the caller (sx-helm)
 SHARED_TEMPLATE_NAME=_startx.tpl
 SHARED_TEMPLATE=.tools/$SHARED_TEMPLATE_NAME
 SHARED_NAME=_sample_
 SHARED_SAMPLE=.tools/$SHARED_NAME
 export SHARED_SAMPLE_RESOURCE=.tools/sample/templates/example.yaml
-WORK_BRANCH=devel
-MASTER_BRANCH=master
-STABLE_BRANCH=stable
-# STABLE_RELEASE="${STABLE_MAINRELEASE}.${STABLE_SUBRELEASE}"
-# GITHUB_USER=startxfr
-GITHUB_REPOSITORY=helm-repository
-GITHUB_REPONAME="origin"
-# GITHUB_REPOURL="https://$GITHUB_USER.github.io/$GITHUB_REPOSITORY"
-GITLAB_REPONAME="gitlab"
-# GITLAB_REPOURL="https://gitlab.com/startx1/helm"
-# RTD_URL="https://$GITHUB_REPOSITORY.readthedocs.io/en/latest"
-HELM_REPO_AWSBUCKET="sx-helm-repository-prod"
-HELM_REPO_AWSDC="eu-west-3"
-HELM_REPO_BASEURL="http://${HELM_REPO_AWSBUCKET}.s3-website.${HELM_REPO_AWSDC}.amazonaws.com"
-HELM_REPO_SUBDEFAULT="stable"
 HELM_REPO_LOCALSYNC="${PROJECT_PATH}/.reposync"
 HELM_REPO_LOCALIDX="${PROJECT_PATH}/docs/repos"
-SXHELM_SIGN=enabled
-SXHELM_SIGN_KEY="dev@startx.fr"
-SXHELM_SIGN_KEYRING="$HOME/.gnupg/secring.gpg"
-SXHELM_SIGN_KEYPASSPHRASEFILE="$HOME/.ssh/pgp-dev_startx-private_key-passphrase.txt"
-DOC_ADD_HISTORY="true"
+
+# Interaction mode: set INTERACTIVE=false (or pass via Makefile) to skip all read prompts.
+# When false, VERSION / DESC / FORCE_DELETE env vars are used instead.
+INTERACTIVE="${INTERACTIVE:-true}"
+
 
 #####################
-## GENERICS FUNCTIONS
+## GENERIC FUNCTIONS
 
-# read chart version
+# Read chart version from Chart.yaml
 function chartReadVersion {
-    if [[ "" != "$1" ]]; then
-        yq .version "$PROJECT_CHARTPATH"/"$1"/Chart.yaml | tr -d \"
-    fi
+    [[ -n "$1" ]] && yq .version "$PROJECT_CHARTPATH/$1/Chart.yaml" | tr -d \"
 }
 
-# read chart description
+# Read chart description from Chart.yaml
 function chartReadDescription {
-    if [[ "" != "$1" ]]; then
-        yq .description "$PROJECT_CHARTPATH"/"$1"/Chart.yaml
-    fi
+    [[ -n "$1" ]] && yq .description "$PROJECT_CHARTPATH/$1/Chart.yaml"
 }
 
-# read chart name
+# Read chart name from Chart.yaml
 function chartReadName {
-    if [[ "" != "$1" ]]; then
-        yq .name "$PROJECT_CHARTPATH"/"$1"/Chart.yaml
-    fi
+    [[ -n "$1" ]] && yq .name "$PROJECT_CHARTPATH/$1/Chart.yaml"
 }
 
-# read chart appVersion
+# Read chart appVersion from Chart.yaml
 function chartReadAppVersion {
-    if [[ "" != "$1" ]]; then
-        yq .appVersion "$PROJECT_CHARTPATH/${1}/Chart.yaml" | tr -d \"
-    fi
+    [[ -n "$1" ]] && yq .appVersion "$PROJECT_CHARTPATH/$1/Chart.yaml" | tr -d \"
 }
 
-# get a list of all charts
+# Return the next patch version for a semver string (e.g. 21.3.3 → 21.3.4)
+function chartNextVersion {
+    echo "$1" | tr -d \" | \
+        awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}'
+}
+
+# List all charts (excludes _prefixed dirs and docs)
 function chartList {
-    cd "$PROJECT_CHARTPATH" || exit
-    local list=""
+    cd "$PROJECT_CHARTPATH" || exit 1
+    local list
     list=$(ls -d -I "_*" -I "docs" ./*)
-    cd - &>/dev/null || exit
+    cd - &>/dev/null || exit 1
     for chart in $list; do
         echo " $chart"
     done
 }
 
 
-
-
 ##########################
-## ROUTER GLOBALS COMMANDS
+## ROUTER — GLOBAL COMMANDS
 
-# router for delete sub-command
+# List all managed helm charts
 function routerList {
-    echo -e "\e[31mList\e[0m helm chart in $PROJECT_CHARTPATH"
-    local list=""
-    list=$(chartList)
-    for chart in $list; do
+    echo -e "\e[31mList\e[0m helm charts in $PROJECT_CHARTPATH"
+    for chart in $(chartList); do
         echo -e " - $chart"
     done
 }
 
-# router for publish command
+# Publish stable + noschema + current release repos to S3 and push to git
 function routerPublish {
-    doHelmrepositoryRefresh $HELM_REPO_SUBDEFAULT $HELM_REPO_SUBDEFAULT $HELM_REPO_BASEURL Publish 36
-    doHelmrepositoryRefresh noschema noschema $HELM_REPO_BASEURL Publish 36
-    doHelmrepositoryRefresh "release-$STABLE_MAINRELEASE" "$STABLE_MAINRELEASE" $HELM_REPO_BASEURL Publish 36
+    doHelmrepositoryRefresh "$HELM_REPO_SUBDEFAULT" "$HELM_REPO_SUBDEFAULT" "$HELM_REPO_BASEURL" Publish 36
+    doHelmrepositoryRefresh noschema                noschema                "$HELM_REPO_BASEURL" Publish 36
+    doHelmrepositoryRefresh "release-$STABLE_MAINRELEASE" "$STABLE_MAINRELEASE" "$HELM_REPO_BASEURL" Publish 36
 }
 
-# router for archive command
+# Archive recent (non-current) OCP release repos
 function routerArchive {
-    # doHelmrepositoryRefresh release-21 "21" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-20 "20" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-19 "19" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-18 "18" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-16 "16" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-14 "14" $HELM_REPO_BASEURL Archive 37
+    doHelmrepositoryRefresh release-20 "20" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-19 "19" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-18 "18" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-16 "16" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-14 "14" "$HELM_REPO_BASEURL" Archive 37
 }
 
-# router for archive legacy command
+# Archive legacy (OCP <4.14) release repos
 function routerArchiveLegacy {
-    doHelmrepositoryRefresh release-17 "17" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-15 "15" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-13 "13" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-12 "12" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-11 "11" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-10 "10" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-9 "9" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-8 "8" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-7 "7" $HELM_REPO_BASEURL Archive 37
-    doHelmrepositoryRefresh release-6x "6x" $HELM_REPO_BASEURL Archive 37
+    doHelmrepositoryRefresh release-17 "17" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-15 "15" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-13 "13" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-12 "12" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-11 "11" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-10 "10" "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-9  "9"  "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-8  "8"  "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-7  "7"  "$HELM_REPO_BASEURL" Archive 37
+    doHelmrepositoryRefresh release-6x "6x" "$HELM_REPO_BASEURL" Archive 37
 }
 
-# router for release command
+# Full repository release: bump all charts, commit, tag, merge to master+stable, push
+# $1 = "release" (verb from sx-helm $@, ignored)
+# $2 = "auto" to skip prompts, or empty for interactive
+# Env: VERSION (force version), DESC (force description), INTERACTIVE
 function routerRelease {
-    local auto_feature=$1
-    local next_description=${3:-"publish stable update for the full repository"}
-    local current_release=""
-    local next_date=""
-    local next_release=${2}
+    # $1 is always "release" when called via routerRelease "$@" — skip it
+    local auto_feature="${2:-}"
+    local current_release
+    local next_date
+    local next_release
+    local next_description="${DESC:-publish stable update for the full repository}"
     current_release=$(cat "$PROJECT_PATH/.tools/repo-release")
     next_date="$(date +%Y-%m-%d)"
-    next_release=$(cat "$PROJECT_PATH"/.tools/repo-release  | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
-    if [[ "auto" == "$auto_feature" ]]; then
+    next_release=$(chartNextVersion "$current_release")
+    [[ -n "${VERSION:-}" ]] && next_release="$VERSION"
+
+    if [[ "auto" == "$auto_feature" || "$INTERACTIVE" != "true" ]]; then
         echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m auto-version to $next_release"
-    # elif [[ "" != "$next_description" || "-a" == "$auto_feature" ]]; then
-    #     echo -e "\e[36mRelease\e[0m \e[1mrepository\e[0m global version to $next_release"
     else
-        echo -en "\e[36mRelease\e[0m \e[1mrepository\e[0m Set repository next version [$next_release] : "
+        echo -en "\e[36mRelease\e[0m \e[1mrepository\e[0m Set next version [$next_release] : "
         read -r nextRel
-        if [[ "$nextRel" != "" ]]; then
-            next_release=$nextRel
-        fi
-        echo -en "\e[36mRelease\e[0m \e[1mrepository\e[0m Set repository release description [$next_description] : "
+        [[ "$nextRel" != "" ]] && next_release=$nextRel
+        echo -en "\e[36mRelease\e[0m \e[1mrepository\e[0m Set release description [$next_description] : "
         read -r nextDesc
-        if [[ "$nextDesc" != "" ]]; then
-            next_description="$nextDesc"
-        fi
+        [[ "$nextDesc" != "" ]] && next_description="$nextDesc"
     fi
-    echo -e "\e[36mRelease\e[0m commit this release to all charts"
+
+    echo -e "\e[36mRelease\e[0m committing release to all charts"
     for chart in $(chartList); do
-        routerChartRelease "$chart" "$next_release" "$next_description"
+        routerChartRelease "$chart" "auto" "$next_release" "$next_description"
     done
-    echo -e "\e[36mRelease\e[0m - Update content in $WORK_BRANCH to $next_release"
+
+    echo -e "\e[36mRelease\e[0m update $WORK_BRANCH to $next_release"
     echo "$next_release" > "${PROJECT_PATH}/.tools/repo-release"
     sed -i "s/latest-v$current_release/latest-v$next_release/" "$PROJECT_PATH/README.md"
     sed -i "s/latest-v$current_release/latest-v$next_release/" "$PROJECT_PATH/docs/index.md"
     git add "$PROJECT_PATH" &>/dev/null
-    echo -e "\e[37mRelease\e[0m Commit all change to $GITHUB_REPOSITORY $WORK_BRANCH branch"
+    echo -e "\e[37mRelease\e[0m commit all changes to $GITHUB_REPOSITORY $WORK_BRANCH"
     git commit -m "[docs] update repository content to $next_release" "$PROJECT_PATH" &>/dev/null
-    echo -e "\e[37mRelease\e[0m Merge change to $MASTER_BRANCH branch"
+    echo -e "\e[37mRelease\e[0m merge to $MASTER_BRANCH"
     git checkout $MASTER_BRANCH &>/dev/null
     git merge $WORK_BRANCH --commit --no-edit
-    echo -e "\e[37mRelease\e[0m Merge change to $STABLE_BRANCH branch"
+    echo -e "\e[37mRelease\e[0m merge to $STABLE_BRANCH"
     git checkout $STABLE_BRANCH &>/dev/null
     git merge $MASTER_BRANCH --commit --no-edit
-    echo -e "\e[37mRelease\e[0m Jump into \e[1m$current_release\e[0m"
+    echo -e "\e[37mRelease\e[0m checkout $current_release branch"
     git checkout "$current_release" &>/dev/null
-    echo -e "\e[37mRelease\e[0m Merge \e[1m$STABLE_BRANCH\e[0m update to \e[1m$current_release\e[0m"
+    echo -e "\e[37mRelease\e[0m merge $STABLE_BRANCH into $current_release"
     git merge --commit --no-edit $STABLE_BRANCH &>/dev/null
-    echo -e "\e[37mRelease\e[0m Create \e[1m$next_release\e[0m tag"
+    echo -e "\e[37mRelease\e[0m create tag $next_release"
     git tag "$next_release" -m "[release/$next_release] $next_description"
-    echo -e "\e[37mRelease\e[0m push \e[1m$next_release\e[0m to remote repository"
+    echo -e "\e[37mRelease\e[0m push to $GITHUB_REPONAME and $GITLAB_REPONAME"
     git push $GITHUB_REPONAME "$next_release" $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
     git push $GITLAB_REPONAME "$next_release" $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
     git checkout $WORK_BRANCH
 }
 
-# router for archive command
+# Regenerate a helm repo index, commit to docs/repos/, merge to master, push to both remotes
 function doHelmrepositoryGenerate {
     local subrepo=${2:-$HELM_REPO_SUBDEFAULT}
     local path="$HELM_REPO_LOCALSYNC/${subrepo}"
     local helmrepourl="${3:-$HELM_REPO_BASEURL}"
-    echo -e "\e[36mGenerate\e[0m Generate helm index for ${helmrepourl}/${subrepo} from ${path} content"
-    helm repo index --url "${helmrepourl}"/"${subrepo}" "${path}"
-    echo -e "\e[36mCopy\e[0m Copy ${path}/index.yaml to ${HELM_REPO_LOCALIDX}/${subrepo}"
+    echo -e "\e[36mGenerate\e[0m helm index for ${helmrepourl}/${subrepo} from ${path}"
+    helm repo index --url "${helmrepourl}/${subrepo}" "${path}"
+    echo -e "\e[36mCopy\e[0m ${path}/index.yaml → ${HELM_REPO_LOCALIDX}/${subrepo}"
     cp "${path}/index.yaml" "${HELM_REPO_LOCALIDX}/${subrepo}/index.yaml"
     awsS3SyncUpload "${path}" "${subrepo}"
 }
 
-# router for archive command
 function doHelmrepositoryRefresh {
     local reponame=${1:-$HELM_REPO_SUBDEFAULT}
     local subrepo=${2:-$HELM_REPO_SUBDEFAULT}
@@ -195,10 +176,10 @@ function doHelmrepositoryRefresh {
     local action="${4:-Publish}"
     local color="${5:-36}"
     doHelmrepositoryGenerate "${reponame}" "${subrepo}" "${helmrepourl}" "${action}" "${color}"
-    echo -e "\e[${color}m${action}\e[0m Update repository \e[1m${reponame}\e[0m into \e[1m$HELM_REPO_LOCALIDX\e[0m"
+    echo -e "\e[${color}m${action}\e[0m update index for \e[1m${reponame}\e[0m in \e[1m$HELM_REPO_LOCALIDX\e[0m"
     git add "$HELM_REPO_LOCALIDX" &>/dev/null
     git commit -m "[docs] update repository ${reponame} index" "$HELM_REPO_LOCALIDX" &>/dev/null
-    echo -e "\e[${color}m${action}\e[0m merge \e[1m$WORK_BRANCH\e[0m into \e[1m$MASTER_BRANCH\e[0m"
+    echo -e "\e[${color}m${action}\e[0m merge \e[1m$WORK_BRANCH\e[0m → \e[1m$MASTER_BRANCH\e[0m"
     git checkout $MASTER_BRANCH &>/dev/null
     git merge --commit --no-edit $WORK_BRANCH
     echo -e "\e[${color}m${action}\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
@@ -207,33 +188,70 @@ function doHelmrepositoryRefresh {
     git checkout $WORK_BRANCH
 }
 
-# router for version sub-command
+# Print tool version + oc + helm versions
 function routerVersion {
     echo "sx console version : sx-helm $SXV4_CONSOLE_VERSION"
     echo -n "Openshift : "
-    oc version 
+    oc version
     echo -n "Helm : "
     helm version --short
 }
 
 
+#################################
+## ROUTER — BULK CHART COMMANDS
+
+# Lint all charts
+function routerLintAll {
+    echo -e "\e[33mLint\e[0m all charts in $PROJECT_CHARTPATH"
+    local failed=0
+    for chart in $(chartList); do
+        echo -e "\e[33mLint\e[0m \e[1m$chart\e[0m"
+        helm lint "$PROJECT_CHARTPATH/$chart" || failed=$((failed + 1))
+    done
+    if [[ $failed -gt 0 ]]; then
+        echo -e "\e[31mLint\e[0m \e[1m$failed chart(s) failed lint\e[0m"
+        return 1
+    fi
+    echo -e "\e[33mLint\e[0m all charts passed"
+}
+
+# Template + lint all charts
+function routerTestAll {
+    echo -e "\e[33mTest\e[0m all charts in $PROJECT_CHARTPATH"
+    local failed=0
+    for chart in $(chartList); do
+        routerChartTest "$chart" || failed=$((failed + 1))
+    done
+    if [[ $failed -gt 0 ]]; then
+        echo -e "\e[31mTest\e[0m \e[1m$failed chart(s) failed\e[0m"
+        return 1
+    fi
+    echo -e "\e[33mTest\e[0m all charts passed"
+}
+
+# Package all charts
+function routerPackageAll {
+    echo -e "\e[34mPackage\e[0m all charts in $PROJECT_CHARTPATH"
+    for chart in $(chartList); do
+        routerChartPackage "$chart"
+    done
+}
+
 
 #################################
-## ROUTER HELM-CHART SUB-COMMANDS
+## ROUTER — PER-CHART COMMANDS
 
-# router for chart info sub-command
+# Display chart metadata
 function routerChartInfo {
     local chart_name=$1
-    if [[ "" != "$chart_name" ]]; then
-        local current_name=""
-        local current_release=""
-        local current_desc=""
-        local current_apprelease=""
+    if [[ -n "$chart_name" ]]; then
+        local current_name current_release current_desc current_apprelease
         current_name=$(chartReadName "$chart_name")
         current_release=$(chartReadVersion "$chart_name")
         current_desc=$(chartReadDescription "$chart_name")
         current_apprelease=$(chartReadAppVersion "$chart_name")
-        echo -e "\e[32mInfo\e[0m about \e[1m$chart_name\e[0m helm chart"
+        echo -e "\e[32mInfo\e[0m about \e[1m$chart_name\e[0m"
         echo -e "- \e[1mPackage\e[0m     : $chart_name-$current_release"
         echo -e "- \e[1mVersion\e[0m     : $current_release"
         echo -e "- \e[1mName\e[0m        : $current_name"
@@ -242,27 +260,26 @@ function routerChartInfo {
     fi
 }
 
-# router for chart reate sub-command
+# Create a new chart from a source chart (or the _sample_ template)
 function routerChartCreate {
     local chart_name=$1
     local chart_template=$2
     local template_name=_sample_
     local template_dir=$PROJECT_CHARTPATH/$chart_template
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
-    local next_date=""
-    local chart_release=""
-    local message="Create chart"
+    local next_date chart_release message
     next_date="$(date +%Y-%m-%d)"
+    message="Create chart"
     if [[ -r $chart_dir ]]; then
-        echo -e "\e[32mCreate\e[0m \e[1m\e[31mERROR\e[0m \e[1m$chart_name\e[0m helm chart \e[1malready exist\e[0m in $PROJECT_CHARTPATH"
-        exit
+        echo -e "\e[32mCreate\e[0m \e[31mERROR\e[0m \e[1m$chart_name\e[0m already exists in $PROJECT_CHARTPATH"
+        exit 1
     fi
-    if [[ "" != "$chart_template" && -r $template_dir ]]; then
+    if [[ -n "$chart_template" && -r $template_dir ]]; then
         template_name=$chart_template
     else
         template_dir=$PROJECT_PATH/$SHARED_SAMPLE
     fi
-    echo -e "\e[32mCreate\e[0m \e[1m$chart_name\e[0m helm chart from \e[1m$template_name\e[0m"
+    echo -e "\e[32mCreate\e[0m \e[1m$chart_name\e[0m from \e[1m$template_name\e[0m"
     cp -R "$template_dir" "$chart_dir" &>/dev/null
     sed -i "s/$template_name/$chart_name/g" "$(find "$chart_dir" -type f)"
     rm "$chart_dir/templates/$SHARED_TEMPLATE_NAME" &>/dev/null
@@ -276,147 +293,145 @@ function routerChartCreate {
     git commit -m "[chart/$chart_name] $message" "$chart_dir" &>/dev/null
 }
 
-# router for chart test sub-command
+# Run helm template + helm lint for a chart
+# Args: chart_name [values-file] [--dep|--deps]
 function routerChartTest {
     local chart_name=$1
-    local enable_dep=$3
     local valuesExample=${2:-values.yaml}
+    local enable_dep=$3
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
-    local test_dir=$chart_dir/templates/tests
     if [[ -r $chart_dir ]]; then
-        echo -e "\e[33mTest\e[0m \e[1m$chart_name\e[0m helm chart"
-        if [[ ! -r $test_dir ]]; then
-            echo -e "\e[33mTest\e[0m \e[1m\e[31mWARN\e[0m \e[1m$chart_name\e[0m helm chart \e[1mdoesn't have a test\e[0m script in $test_dir"
+        echo -e "\e[33mTest\e[0m \e[1m$chart_name\e[0m"
+        if [[ ! -r "$chart_dir/templates/tests" ]]; then
+            echo -e "\e[33mTest\e[0m \e[33mWARN\e[0m no test/ directory in $chart_dir"
         fi
         if [[ $enable_dep == "--dep" || $enable_dep == "--deps" ]]; then
-            echo -e "\e[33mTest\e[0m \e[1mupdate dependencies\e[0m for chart \e[1m$chart_name\e[0m"
+            echo -e "\e[33mTest\e[0m update dependencies for \e[1m$chart_name\e[0m"
             helm dependency update "$chart_dir"
         fi
-        echo -e "\e[33mTest\e[0m \e[1mGenerate template\e[0m for chart \e[1m$chart_name\e[0m"
+        echo -e "\e[33mTest\e[0m template \e[1m$chart_name\e[0m"
         helm template "$chart_name" "$chart_dir" -f "$chart_dir/$valuesExample"
-        echo -e "\e[33mTest\e[0m \e[1mLint\e[0m for chart \e[1m$chart_name\e[0m"
+        echo -e "\e[33mTest\e[0m lint \e[1m$chart_name\e[0m"
         helm lint "$chart_dir"
     else
-        echo -e "\e[33mTest\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        echo -e "\e[33mTest\e[0m \e[31mERROR\e[0m chart \e[1m$chart_name\e[0m not found in $chart_dir"
         routerList
+        return 1
     fi
 }
 
-# router for chart test sub-command
+# Generate values.schema.json from a values file using helm-schema-gen
 function routerChartSchemagen {
     local chart_name=$1
     local valuesExample=${2:-values.yaml}
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
-    local test_dir=$chart_dir/templates/tests
     if [[ -r $chart_dir ]]; then
-        echo -e "\e[33mSGen\e[0m \e[1m$chart_name\e[0m helm chart"
-        cd "$chart_dir" || exit
+        echo -e "\e[33mSGen\e[0m \e[1m$chart_name\e[0m from $valuesExample"
+        cd "$chart_dir" || exit 1
         helm schema-gen "$valuesExample" > values.schema.json
-        cd - || exit
+        cd - || exit 1
     else
-        echo -e "\e[33mSGen\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        echo -e "\e[33mSGen\e[0m \e[31mERROR\e[0m chart \e[1m$chart_name\e[0m not found in $chart_dir"
         routerList
+        return 1
     fi
 }
 
-# router for chart package sub-command
+# Commit, resolve dependencies, and package (sign if enabled)
 function routerChartPackage {
     local chart_name=$1
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
-    local current_release=""
+    local current_release
     if [[ -r $chart_dir ]]; then
-        echo -e "\e[34mPackage\e[0m \e[1m$chart_name\e[0m helm chart"
         current_release=$(chartReadVersion "$chart_name")
-        echo -e "\e[34mPackage\e[0m \e[1m$chart_name\e[0m helm chart version $current_release"
-        cd "$PROJECT_CHARTPATH" || exit
-        echo -e "\e[34mPackage\e[0m \e[1m$chart_name commit change\e[0m to git repository"
+        echo -e "\e[34mPackage\e[0m \e[1m$chart_name\e[0m v$current_release"
+        cd "$PROJECT_CHARTPATH" || exit 1
         git add "$chart_name"/* &>/dev/null
         git commit -m "[chart/$chart_name] package version $current_release" "$chart_name" &>/dev/null
-        echo -e "\e[34mPackage\e[0m \e[1mdownload dendencies\e[0m for chart \e[1m$chart_name\e[0m in $chart_dir/charts"
+        echo -e "\e[34mPackage\e[0m download dependencies for \e[1m$chart_name\e[0m"
         helm dependency update "$chart_dir"
         if [[ "$SXHELM_SIGN" == "enabled" ]]; then
-            echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH (signed by $SXHELM_SIGN_KEY)"
+            echo -e "\e[34mPackage\e[0m sign and package \e[1m$chart_name\e[0m v$current_release"
             helm package "$chart_name" --sign \
-            --key "$SXHELM_SIGN_KEY" \
-            --keyring "$SXHELM_SIGN_KEYRING" \
-            --passphrase-file "$SXHELM_SIGN_KEYPASSPHRASEFILE"
+                --key "$SXHELM_SIGN_KEY" \
+                --keyring "$SXHELM_SIGN_KEYRING" \
+                --passphrase-file "$SXHELM_SIGN_KEYPASSPHRASEFILE"
         else
-            echo -e "\e[34mPackage\e[0m \e[1m$chart_name generate v$current_release package\e[0m into $PROJECT_CHARTPATH"
+            echo -e "\e[34mPackage\e[0m package \e[1m$chart_name\e[0m v$current_release"
             helm package "$chart_name"
         fi
-        cd - &>/dev/null || exit
+        cd - &>/dev/null || exit 1
     else
-        echo -e "\e[34mPackage\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        echo -e "\e[34mPackage\e[0m \e[31mERROR\e[0m chart \e[1m$chart_name\e[0m not found in $chart_dir"
         routerList
+        return 1
     fi
 }
 
-# router for chart release sub-command
+# Bump version, add history row, commit, package, upload .tgz to S3
+# Args: chart_name [auto|-a] [force_version] [force_description]
+# Env:  VERSION (force version), DESC (force description), INTERACTIVE
 function routerChartRelease {
     local chart_name=$1
-    local auto_feature=$2
-    if [[ "auto" != "$auto_feature" && "-a" != "$auto_feature" ]]; then
-        local force_version=$2
-        local force_description=$3
+    # Resolve mode: "auto"/"-a" → non-interactive; anything else → version string or empty
+    local auto_feature=""
+    local force_version="${VERSION:-}"
+    local force_description="${DESC:-}"
+
+    if [[ "${2:-}" == "auto" || "${2:-}" == "-a" ]]; then
+        auto_feature="auto"
+    elif [[ -n "${2:-}" && -z "$force_version" ]]; then
+        force_version="${2}"
     fi
+    [[ -n "${3:-}" && -z "$force_description" ]] && force_description="${3}"
+
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
     local next_description="Improve $chart_name options"
-    local next_date=""
-    local current_release=""
-    local next_release=""
+    local next_date current_release next_release
     local subrepo=$HELM_REPO_SUBDEFAULT
     local pkgdestpath="$HELM_REPO_LOCALSYNC/${subrepo}"
     next_date="$(date +%Y-%m-%d)"
+
     if [[ -r $chart_dir ]]; then
-        echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m helm chart"
+        echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m"
         current_release=$(chartReadVersion "$chart_name")
-        next_release=$(yq .version "$chart_dir"/Chart.yaml | tr -d \" | awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}')
-        if [[ "" != "$force_version" ]]; then
-            next_release=$force_version
-        fi
-        if [[ "" != "$force_description" ]]; then
-            next_description=$force_description
-        fi
-        if [[ "auto" == "$auto_feature" || "-a" == "$auto_feature" ]]; then
+        next_release=$(chartNextVersion "$current_release")
+        [[ -n "$force_version" ]]     && next_release="$force_version"
+        [[ -n "$force_description" ]] && next_description="$force_description"
+
+        if [[ "auto" == "$auto_feature" || "$INTERACTIVE" != "true" ]]; then
             echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m auto-version $next_release"
         else
-            if [[ "" == "$force_version" ]]; then
-                echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Set $chart_name next version [$next_release] : "
+            if [[ -z "$force_version" ]]; then
+                echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m next version [$next_release] : "
                 read -r nextRel
-                if [[ "$nextRel" != "" ]]; then
-                    next_release=$nextRel
-                fi
-            else 
-                next_release=$force_version
-                echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Set $chart_name next version $next_release"
+                [[ "$nextRel" != "" ]] && next_release=$nextRel
+            else
+                echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m version set to $next_release"
             fi
-            if [[ "" == "$force_description" ]]; then
-                echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Set $chart_name release description [$next_description] : "
+            if [[ -z "$force_description" ]]; then
+                echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m description [$next_description] : "
                 read -r nextDesc
-                if [[ "$nextDesc" != "" ]]; then
-                    next_description="$nextDesc"
-                fi
-            else 
-                next_description=$force_description
-                echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Set description to $next_description"
+                [[ "$nextDesc" != "" ]] && next_description="$nextDesc"
+            else
+                echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m description set to $next_description"
             fi
         fi
+
         local packagename="${chart_name}-${next_release}.tgz"
         git checkout $WORK_BRANCH &>/dev/null
-        echo -e "\e[35mRelease\e[0m Update \e[1m$chart_name\e[0m release number $next_release in $chart_name/Chart.yaml"
+        echo -e "\e[35mRelease\e[0m bump \e[1m$chart_name\e[0m: $current_release → $next_release"
         sed -i "s/$current_release/$next_release/" "$chart_dir/Chart.yaml"
         if [[ $DOC_ADD_HISTORY == "true" ]]; then
             echo "| $next_release | $next_date | $next_description" >> "${chart_dir}/README.md"
-        fi
-        git add "$chart_dir"
-        if [[ $DOC_ADD_HISTORY == "true" ]]; then
             cp "$chart_dir/README.md" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
             git add "$PROJECT_PATH/docs/charts/${chart_name}.md"
         fi
-        git commit -m "[chart/$chart_name] Upgrade release number, from $current_release to $next_release : $next_description" "$chart_dir" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
-        echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m version $next_release"
+        git add "$chart_dir"
+        git commit -m "[chart/$chart_name] $current_release → $next_release : $next_description" \
+            "$chart_dir" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
         routerChartPackage "$chart_name"
-        echo -e "\e[35mRelease\e[0m \e[1mmove $packagename\e[0m to \e[1m$subrepo\e[0m in ${pkgdestpath}"
+        echo -e "\e[35mRelease\e[0m move \e[1m$packagename\e[0m → $pkgdestpath"
         mv "${PROJECT_CHARTPATH}/${packagename}" "${pkgdestpath}/${packagename}"
         awsS3FileUpload "${pkgdestpath}/${packagename}" "${subrepo}" $HELM_REPO_AWSBUCKET
         if [[ "$SXHELM_SIGN" == "enabled" ]]; then
@@ -424,64 +439,59 @@ function routerChartRelease {
             awsS3FileUpload "${pkgdestpath}/${packagename}.prov" "${subrepo}" $HELM_REPO_AWSBUCKET
         fi
     else
-        echo -e "\e[35mRelease\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        echo -e "\e[35mRelease\e[0m \e[31mERROR\e[0m chart \e[1m$chart_name\e[0m not found in $chart_dir"
         routerList
+        return 1
     fi
 }
 
-# router for chart publish sub-command
+# Release a single chart then publish all repos
 function routerChartPublish {
     local chart_name=$1
     local chart_dir="$PROJECT_CHARTPATH/$chart_name"
-    local branch_current="$MASTER_BRANCH"
-    # local branch_target=$STABLE_BRANCH
-    local current_release=""
-    current_release=$(chartReadVersion "$chart_name")
-    if [[ "$branch_current" != "$BRANCH_NAME" ]]; then
-        branch_current="$BRANCH_NAME"
-    fi
     if [[ -r $chart_dir ]]; then
         routerChartRelease "$chart_name"
-        echo -e "\e[36mPublish\e[0m \e[1m$chart_name\e[0m helm chart"
+        echo -e "\e[36mPublish\e[0m \e[1m$chart_name\e[0m"
         routerPublish
     else
-        echo -e "\e[36mPublish\e[0m \e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        echo -e "\e[36mPublish\e[0m \e[31mERROR\e[0m chart \e[1m$chart_name\e[0m not found in $chart_dir"
         routerList
+        return 1
     fi
 }
 
-# router for chart delete sub-command
+# Delete a chart from disk, git, and optionally S3
+# Env: FORCE_DELETE=yes to skip confirmation prompts, INTERACTIVE
 function routerChartDelete {
     local chart_name=$1
     local chart_dir=$PROJECT_CHARTPATH/$chart_name
-    local remove_repository=$2
+    local remove_repository="${FORCE_DELETE:-}"
     local publish_repository=yes
-    if [[ "" != "$chart_name" && -w $chart_dir ]]; then
-        echo -e "\e[31mDelete\e[0m \e[1m$chart_name\e[0m helm chart"
-        if [[ "--with-repository" == "$remove_repository" || "-r" == "$remove_repository" ]]; then
-            echo -e "\e[35mRelease\e[0m \e[1m$chart_name\e[0m with repository delete"
+
+    if [[ -n "$chart_name" && -w $chart_dir ]]; then
+        echo -e "\e[31mDelete\e[0m \e[1m$chart_name\e[0m"
+        if [[ "--with-repository" == "${2:-}" || "-r" == "${2:-}" || "$remove_repository" == "yes" ]]; then
+            echo -e "\e[31mDelete\e[0m including repository packages"
             remove_repository=yes
-        else
-            echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m With repository delete [y/N] : "
+        elif [[ "$INTERACTIVE" == "true" ]]; then
+            echo -en "\e[31mDelete\e[0m also delete from repository? [y/N] : "
             read -r delRep
-            if [[ "$delRep" == "y"  || "$delRep" == "Y" ]]; then
-                remove_repository=yes
-            fi
+            [[ "$delRep" == "y" || "$delRep" == "Y" ]] && remove_repository=yes
         fi
 
-        if [[ "$remove_repository" == "yes" ]]; then
-            echo -en "\e[35mRelease\e[0m \e[1m$chart_name\e[0m Publish change to repository  [Y/n] : "
-            read -r delRep
-            if [[ "$delRep" == "n"  || "$delRep" == "N" ]]; then
-                publish_repository=no
-            fi
+        if [[ "$remove_repository" == "yes" && "$INTERACTIVE" == "true" ]]; then
+            echo -en "\e[31mDelete\e[0m publish repository after delete? [Y/n] : "
+            read -r pubRep
+            [[ "$pubRep" == "n" || "$pubRep" == "N" ]] && publish_repository=no
         fi
+
         rm -f "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
         git add "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
         rm -rf "$chart_dir" &>/dev/null
         git add "$chart_dir" &>/dev/null
-        echo -e "\e[37mDelete\e[0m Delete chart \e[1m${chart_name}\e[0m from \e[1m$chart_dir\e[0m"
+        echo -e "\e[31mDelete\e[0m commit deletion of \e[1m$chart_name\e[0m"
         git commit -m "[chart/$chart_name] deleted chart $chart_name" "$chart_dir" "$PROJECT_PATH" &>/dev/null
+
         if [[ "$remove_repository" == "yes" ]]; then
             rm -rf "${HELM_REPO_LOCALSYNC}"/*/"${chart_name}"-*.tg* &>/dev/null
             awsS3SyncUploadDelete "${HELM_REPO_LOCALSYNC}" ""
@@ -491,75 +501,93 @@ function routerChartDelete {
             fi
         fi
     else
-        echo -e "\e[1m\e[31mERROR\e[0m \e[1mCould not find\e[0m (or write) \e[1m$chart_name\e[0m helm chart in $chart_dir"
+        echo -e "\e[31mDelete\e[0m \e[31mERROR\e[0m chart \e[1m$chart_name\e[0m not found (or not writable) in $chart_dir"
         routerList
+        return 1
     fi
 }
 
-# menu switch for usage command
+
+#####################
+## USAGE / HELP
+
 function menuUsage {
     menuHeadArt
 cat <<EOF
 
-This client helps you develop, test, package and publish a bunch of helm-charts 
-hosted into the same helm repository.
+Develop, test, package and publish helm charts in a shared repository.
 
 Usage:
   ./sx-helm <action> [flags]
 
-- Actions  :
-  - list                           list all helm-chart managed
-  - release                        Upgrade all charts, publish all change into repository and tag this release
-  - publish                        Publish all change into repository
-  - archive                        Generate and publish all charts into the archive (prior to 4.19) directory 
-  - archiveLegacy                  Generate and publish all legacy charts (prior to 4.14) into the archive directory 
-  - syncfroms3                     Download all content from the S3 repo backend into local repocopy
-  - synctos3                       Upload all content from the local repocopy into the S3 repo backend
-  - version                        Get version of this tools
-  - <chart-name>                   Use chart-named sub-command (see ./sx-helm <chart-name> help for more details)
+Global actions:
+  list                 List all managed helm charts
+  release              Bump all charts, tag, merge and push  (INTERACTIVE=false VERSION=x DESC="...")
+  publish              Publish stable+noschema+current repos to S3
+  archive              Regenerate and push archive repos (OCP 14–20)
+  archiveLegacy        Regenerate and push legacy repos (OCP 6–17)
+  lint-all             Lint all charts with helm lint
+  test-all             Template + lint all charts
+  package-all          Package all charts
+  syncfroms3           Download full S3 repo to local .reposync/
+  synctos3             Upload local .reposync/ to S3 (with delete)
+  version              Print tool, oc and helm versions
 
-- Examples  :
-  ./sx-helm list                   list all helm-chart managed
-  ./sx-helm publish                Publish all change into repository
-  ./sx-helm version                Get version of this tools
-  ./sx-helm <chart-name> info      Get info on a managed helm-chart (see ./sx-helm chart-name help for more commands)
+Chart actions:
+  <chart> info         Show chart metadata
+  <chart> create       Create a new chart (from optional source chart)
+  <chart> test         Run helm template + helm lint
+  <chart> schemagen    Generate values.schema.json from values file
+  <chart> package      Commit, resolve deps, package (signed)
+  <chart> release      Bump version, history row, package, upload to S3
+  <chart> publish      Release + publish all repos
+  <chart> delete       Delete chart from disk, git, and optionally S3
+
+Environment variables:
+  INTERACTIVE=false    Skip all interactive prompts (default: true)
+  VERSION=x.y.z        Force version in release commands
+  DESC="..."           Force description in release commands
+  FORCE_DELETE=yes     Skip delete confirmation
+
+Examples:
+  ./sx-helm list
+  ./sx-helm cluster-nmstate info
+  ./sx-helm cluster-nmstate test
+  INTERACTIVE=false VERSION=21.3.4 DESC="fix typo" ./sx-helm cluster-nmstate release
+  ./sx-helm release auto
 
 EOF
 }
 
-# menu switch for usage of chart sub-command
 function menuUsageChart {
     menuHeadArt
 cat <<EOF
 
-This client helps you develop, test, package and publish an helm-chart.
+Develop, test, package and publish a single helm chart.
 
 Usage:
   ./sx-helm <chart-name> <action> [flags]
 
-- Actions  :
-  - create                         Create an new helm chart
-  - info                           Get information about a given helm-chart
-  - test                           Test an helm chart
-  - schemagen                      Generate the schema according to the given value filename (default is values.yaml)
-  - package                        Package an helm chart
-  - release                        Release an helm chart
-  - publish                        Release and publish an helm chart into repository
-  - delete                         Delete an helm chart
+Actions:
+  info                 Show chart metadata
+  create [source]      Create chart (copy from source, or use _sample_)
+  test [values] [--dep] Run helm template + lint (--dep updates deps first)
+  schemagen [values]   Generate values.schema.json
+  package              Commit, resolve deps, sign and package
+  release [v] [desc]   Bump version, add history, package, upload to S3
+  publish              Release + publish all repos
+  delete [-r]          Delete chart; -r also removes from S3
 
-- Examples  :
-  ./sx-helm my-example create      Create an new helm chart named my-example
-  ./sx-helm my-example info        Read info about helm chart named my-example
-  ./sx-helm my-example test        Test my-example chart
-  ./sx-helm my-example package     Package my-example chart
-  ./sx-helm my-example release     Release my-example chart
-  ./sx-helm my-example publish     Publish an helm chart into repository
-  ./sx-helm my-example delete      Delete my-example chart
+Examples:
+  ./sx-helm cluster-nmstate info
+  ./sx-helm cluster-nmstate test values-startx.yaml --dep
+  ./sx-helm cluster-nmstate release 21.3.5 "fix schema"
+  INTERACTIVE=false VERSION=21.3.5 ./sx-helm cluster-nmstate release
+  ./sx-helm cluster-nmstate delete -r
 
 EOF
 }
 
-# menu display AsciiArt
 function menuHeadArt {
-cat "$PROJECT_LIBPATH"/header.txt
+    cat "$PROJECT_LIBPATH/header.txt"
 }

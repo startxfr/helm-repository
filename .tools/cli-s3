@@ -6,7 +6,7 @@ SXH_AWS_CMD=aws
 
 
 #####################
-## GENERICS S3 FUNCTIONS
+## GENERIC S3 FUNCTIONS
 
 # list all buckets
 function awsS3LsBuckets {
@@ -19,66 +19,76 @@ function awsS3LsBucket {
     ${SXH_AWS_CMD} s3 ls s3://${bucket} --recursive
 }
 
-# Upload the content of a file into the target path
+# Upload a single file to the S3 bucket
 function awsS3UploadFile {
     local file=${1:-"/tmp/default.txt"}
     local path=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    local filename="$(basename -- $file)"
-    ${SXH_AWS_CMD} s3 cp ${file} s3://${bucket}/${path}/${filename}
+    local filename
+    filename="$(basename -- "$file")"
+    ${SXH_AWS_CMD} s3 cp "${file}" s3://${bucket}/${path}/${filename}
 }
 
-# Upload the content of a directory into the S3 target path
+# Upload a local directory to the S3 target path
 function awsS3UploadDir {
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
     local options=${4:-""}
-    ${SXH_AWS_CMD} s3 sync ${localpath} s3://${bucket}/${remotepath} ${options}
+    # shellcheck disable=SC2086
+    ${SXH_AWS_CMD} s3 sync "${localpath}" s3://${bucket}/${remotepath} ${options}
 }
 
-# Download the content of a file into from target path
+# Download a single file from the S3 bucket
 function awsS3DownloadFile {
     local file=${1:-"/tmp/default.txt"}
     local path=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    local filename="$(basename -- $file)"
-    ${SXH_AWS_CMD} s3 cp s3://${bucket}/${path}/${filename} ${file}
+    local filename
+    filename="$(basename -- "$file")"
+    ${SXH_AWS_CMD} s3 cp s3://${bucket}/${path}/${filename} "${file}"
 }
 
-# Download the content of a  S3 source path into the directory
+# Download an S3 path into a local directory
 function awsS3DownloadDir {
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    ${SXH_AWS_CMD} s3 sync s3://${bucket}/${remotepath} ${localpath}
+    local options=${4:-""}
+    # shellcheck disable=SC2086
+    ${SXH_AWS_CMD} s3 sync s3://${bucket}/${remotepath} "${localpath}" ${options}
 }
 
-# Test if aws config is defined
+# Test whether AWS CLI credentials are configured and reachable
 function awsTestAPIAccess {
     ${SXH_AWS_CMD} s3 ls &>/dev/null
     echo $?
 }
 
-#####################
-## DISPLAY S3 FUNCTIONS
 
-# Block if aws API access is not provided
+#####################
+## ACCESS GUARD
+
+# Exit with an error if AWS credentials are not configured
 function awsAccessMandatory {
     if [[ $(awsTestAPIAccess) != "0" ]]; then
         echo -e "\e[31mError\e[0m aws cli must be configured using 'aws configure' command"
-        exit;
+        exit 1
     fi
 }
+
+
+#####################
+## DISPLAY / WRAPPER FUNCTIONS
 
 # Display all buckets
 function awsS3BucketsList {
     awsAccessMandatory
-    echo -e "\e[33mList\e[0m bucket for default AWS config"
+    echo -e "\e[33mList\e[0m buckets for default AWS config"
     awsS3LsBuckets
 }
 
-# Display content of a bucket
+# Display the content of a bucket
 # shellcheck disable=SC2120
 function awsS3BucketList {
     awsAccessMandatory
@@ -93,68 +103,70 @@ function awsS3FileUpload {
     local file=${1:-"default.txt"}
     local path=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[33mUpload\e[0m Upload $file file in the $bucket bucket, path $path"
+    echo -e "\e[33mUpload\e[0m $file → s3://$bucket/$path"
     awsS3UploadFile "$file" "$path" "$bucket"
 }
 
-# Upload one local directory into the s3 storage
+# Sync a local directory to S3 (no delete)
 function awsS3SyncUpload {
     awsAccessMandatory
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[33mUpload\e[0m Upload local path $localpath into S3 $remotepath path in $bucket bucket"
+    echo -e "\e[33mUpload\e[0m $localpath → s3://$bucket/$remotepath"
     awsS3UploadDir "$localpath" "$remotepath" "$bucket"
 }
 
-# Upload one local directory into the s3 storage with remote delete
+# Sync a local directory to S3 (with remote delete for removed files)
 function awsS3SyncUploadDelete {
     awsAccessMandatory
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[33mUpload\e[0m Start uploading local path $localpath into S3 $remotepath path in $bucket bucket"
+    echo -e "\e[33mUpload\e[0m $localpath → s3://$bucket/$remotepath (--delete)"
     awsS3UploadDir "$localpath" "$remotepath" "$bucket" "--delete"
-    echo -e "\e[33mUpload\e[0m End uploading local path $localpath"
 }
 
-# Download one file from the S3 bucket
+# Download one file from S3
 function awsS3FileDownload {
     awsAccessMandatory
     local file=${1:-"default.txt"}
     local path=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[93mDownload\e[0m Download $file file in the $bucket bucket to path $path"
+    echo -e "\e[93mDownload\e[0m s3://$bucket/$path → $file"
     awsS3DownloadFile "$file" "$path" "$bucket"
 }
 
-# Download one s3 directory into the local storage
+# Sync an S3 path into a local directory (no delete)
 function awsS3SyncDownload {
     awsAccessMandatory
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[93mDownload\e[0m Download S3 $remotepath path in $bucket bucket into the local path $localpath"
+    echo -e "\e[93mDownload\e[0m s3://$bucket/$remotepath → $localpath"
     awsS3DownloadDir "$localpath" "$remotepath" "$bucket"
 }
 
-# Download one S3 directory into the local storage with local delete
-function awsS3SynDownloadDelete {
+# Sync an S3 path into a local directory (with local delete for removed files)
+function awsS3SyncDownloadDelete {
     awsAccessMandatory
     local localpath=${1:-".reposync"}
     local remotepath=${2:-""}
     local bucket=${3:-$HELM_REPO_AWSBUCKET}
-    echo -e "\e[93mUpload\e[0m Start uploading local path $localpath into S3 $remotepath path in $bucket bucket"
-    awsS3UploadDir "$localpath" "$remotepath" "$bucket" "--delete"
-    echo -e "\e[93mUpload\e[0m End uploading local path $localpath"
+    echo -e "\e[93mDownload\e[0m s3://$bucket/$remotepath → $localpath (--delete)"
+    awsS3DownloadDir "$localpath" "$remotepath" "$bucket" "--delete"
 }
 
-# router for synchronize s3 to local
+
+#####################
+## ROUTER FUNCTIONS
+
+# Download full S3 repo into local .reposync
 function routerSyncFromS3 {
     awsS3SyncDownload "${HELM_REPO_LOCALSYNC}" ""
 }
 
-# router for synchronize local to s3
+# Upload full local .reposync to S3 (with remote delete)
 function routerSyncToS3 {
     awsS3SyncUploadDelete "${HELM_REPO_LOCALSYNC}" ""
 }

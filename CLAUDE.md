@@ -274,6 +274,164 @@ Source: charts/<source>  →  charts/<family>-<short-name>/
 
 Do **not** run `git add` or `git commit`.
 
+## Tooling architecture
+
+The repository ships a CLI (`sx-helm`) and a Makefile that wraps it for CI/CD and developer convenience.
+
+```
+sx-helm              ← main entrypoint, bash script, routes to functions in .tools/
+.tools/config        ← shared configuration (sourced by cli AND included by Makefile)
+.tools/cli           ← chart operations (lint, test, package, release, publish, delete …)
+.tools/cli-s3        ← AWS S3 sync helpers (upload/download/delete)
+```
+
+**Never edit hardcoded values inside `.tools/cli` or `sx-helm` directly.** All tunables live in `.tools/config`.
+
+### .tools/config
+
+Sourced by `.tools/cli` at startup and included by the `Makefile` via `include .tools/config`. Contains:
+
+| Variable | Purpose |
+| -------- | ------- |
+| `STABLE_MAINRELEASE` / `STABLE_SUBRELEASE` | Current OCP release cycle numbers |
+| `WORK_BRANCH` / `MASTER_BRANCH` / `STABLE_BRANCH` | Git branch names |
+| `GITHUB_REPONAME` / `GITLAB_REPONAME` | Remote names (`origin` / `gitlab`) |
+| `HELM_REPO_AWSBUCKET` / `HELM_REPO_AWSDC` | S3 bucket and region |
+| `HELM_REPO_BASEURL` | Public S3 website URL |
+| `SXHELM_SIGN` / `SXHELM_SIGN_KEY` / `SXHELM_SIGN_KEYRING` | GPG signing settings |
+| `SXHELM_SIGN_KEYPASSPHRASEFILE` | Path to GPG passphrase file |
+| `DOC_ADD_HISTORY` | `"true"` to auto-append history rows on release |
+
+### sx-helm command routing
+
+```
+sx-helm list                          routerList
+sx-helm version                       routerVersion
+sx-helm publish                       routerPublish
+sx-helm release [auto|-a]             routerRelease
+sx-helm archive                       routerArchive
+sx-helm archiveLegacy                 routerArchiveLegacy
+sx-helm lint-all                      routerLintAll
+sx-helm test-all                      routerTestAll
+sx-helm package-all                   routerPackageAll
+sx-helm syncfroms3                    routerSyncFromS3
+sx-helm synctos3                      routerSyncToS3
+
+sx-helm <chart> info                  routerChartInfo
+sx-helm <chart> create [version]      routerChartCreate
+sx-helm <chart> schemagen             routerChartSchemagen
+sx-helm <chart> test                  routerChartTest
+sx-helm <chart> package               routerChartPackage
+sx-helm <chart> release [ver] [desc]  routerChartRelease
+sx-helm <chart> delete                routerChartDelete
+sx-helm <chart> publish               routerChartPublish
+```
+
+### Environment variables (cli)
+
+| Variable | Default | Purpose |
+| -------- | ------- | ------- |
+| `INTERACTIVE` | `true` | Set to `false` to skip all `read -r` prompts (mandatory in CI) |
+| `VERSION` | `""` | Force a specific version instead of auto-increment |
+| `DESC` | `""` | Force a release description instead of prompting |
+| `FORCE_DELETE` | `""` | Set to `yes` to skip delete confirmation |
+
+The `INTERACTIVE` guard pattern used throughout `.tools/cli`:
+```bash
+if [[ "$INTERACTIVE" != "true" ]]; then
+    # use $VERSION / $DESC / defaults directly
+else
+    read -r ...
+fi
+```
+
+### Makefile usage
+
+The `Makefile` wraps `sx-helm` for CI/CD. It sets `INTERACTIVE=false` by default and translates `make <action> CHART=<name>` → `$(SX) <name> <action>`.
+
+```bash
+make help
+make list
+make version
+make info        CHART=cluster-nmstate
+make lint        CHART=cluster-nmstate
+make lint-all
+make test        CHART=cluster-nmstate
+make test-all
+make schema      CHART=cluster-nmstate
+make package     CHART=cluster-nmstate
+make package-all
+make release     CHART=cluster-nmstate [VERSION=21.3.5] [DESC="fix schema"]
+make release-all                       [VERSION=21.3.5] [DESC="stable update"]
+make publish
+make publish-chart CHART=cluster-nmstate
+make archive
+make archive-legacy
+make sync-pull                         # S3 → local .reposync
+make sync-push                         # local .reposync → S3 (with --delete)
+make delete      CHART=cluster-nmstate [FORCE_DELETE=yes]
+```
+
+Targets that require `CHART=` are protected by the `_require-chart` guard, which prints a usage hint and exits 1.
+
+### Release workflow (single chart)
+
+1. `make release CHART=<name> VERSION=<x.y.z> DESC="<one line>"`  
+   — bumps `Chart.yaml` version, appends a history row, signs and packages, uploads to S3.
+2. `make publish` — regenerates the Helm index for stable/noschema/current repos and syncs to S3.
+3. Commit and push (`devel` → `master` → `stable` → tag).
+
+Auto-increment (no `VERSION=`): patch number is incremented via `chartNextVersion` (awk semver bump in `.tools/cli`).
+
+### S3 sync (cli-s3)
+
+Two safe operations available via the Makefile:
+
+| Target | Function | Direction | `--delete`? |
+| ------ | -------- | --------- | ----------- |
+| `sync-pull` | `awsS3SyncDownload` | S3 → local | No |
+| `sync-push` | `awsS3SyncUploadDelete` | local → S3 | **Yes** |
+
+`sync-push` deletes remote files not present locally — use with care. Always `sync-pull` first.
+
+The low-level `awsS3SyncDownloadDelete` function (local delete on pull) exists but is **not exposed** via any router — it would delete local files not on S3.
+
+---
+
+## Chaos chart specifics
+
+### Tool identity (do not mix up)
+
+| Chart | Tool | Role |
+| ----- | ---- | ---- |
+| `chaos-cerberus` | Cerberus | Watchdog — global cluster health check via API |
+| `chaos-kraken` | Kraken | Chaos engine — injects scenarios (node stop, pod kill, network partition…) |
+| `chaos-litmus` | Litmus | Chaos engineering platform — portal + workflows + scheduler |
+| `chaos-mesh` | Chaos Mesh | GUI-driven chaos engine — PodChaos, NetworkChaos, TimeChaos CRs |
+| `chaos-monkey` | Kube-monkey | Random pod terminator — opt-in via Deployment labels during business hours |
+
+Descriptions that have appeared wrongly as "watchdog who act as a global cluster healthcheck" for litmus, mesh, and monkey — fix on sight.
+
+### README ## Usage examples section
+
+Every chaos chart README must have a `## Usage examples` section after the values dictionary and before `## History`. Each example block uses:
+
+```markdown
+### Example title
+
+Short sentence of what this deploys.
+
+\```bash
+helm install <release> startx/<chart> \
+  --set context.scope=myscope \
+  --set <key>=<value>
+\```
+```
+
+Minimum three examples per chaos chart: (1) default / full stack, (2) minimal, (3) integration or advanced scenario.
+
+---
+
 ## Commit convention
 
 No mandatory signature for this project. Use conventional commits:
