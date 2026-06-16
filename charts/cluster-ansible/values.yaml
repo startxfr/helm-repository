@@ -4,13 +4,13 @@
 context:  &context
   # Name of the global scope for this application (organisational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: infra
   # Component name of this application (logical tenant)
   component: ansible
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: default-ansible
   # Version name of this application (default use Chart appVersion)
   version: "2.6.0"
@@ -56,8 +56,8 @@ ansibleHub:
   storageSize: "20Gi"
   # the persistant storage class (default is efs-sc)
   storageClass: "efs-sc"
-  # the persistant storage access mode (default is ReadWriteMany)
-  storageAccessMode: "ReadWriteMany"
+  # the persistant storage accesss mode (default is ReadWriteMany)
+  storageAccesssMode: "ReadWriteMany"
   # the number of replicas for default components (default is 1)
   replicas: 1
   # the number of replicas for HA components (default is 2)
@@ -78,7 +78,7 @@ ansibleController:
     admin_user: admin
     replicas: 1
     projects_storage_size: 8Gi
-    projects_storage_access_mode: ReadWriteMany
+    projects_storage_accesss_mode: ReadWriteMany
     projects_persistence: true
     postgres_keepalives: true
     postgres_keepalives_count: 5
@@ -150,10 +150,10 @@ ansibleSecrets:
       password: "mypassword"
     - name: my-s3
       type: s3
-      # If type is s3, define the access-key-id (mandatory)
-      accessId: "_PLACE_YOUR_ID_HERE_"
-      # If type is s3, define the secret-access-key (mandatory)
-      accessSecret: "_________place_your_secret_here_________"
+      # If type is s3, define the accesss-key-id (mandatory)
+      accesssId: "_PLACE_YOUR_ID_HERE_"
+      # If type is s3, define the secret-accesss-key (mandatory)
+      accesssSecret: "_________place_your_secret_here_________"
       # If type is s3, define the bucket name (mandatory)
       bucket: "mydefaultbucket"
       # If type is s3, define the region to use (default is eu-west-3)
@@ -185,10 +185,10 @@ aapConfigs:
           # type: "OpenShift or Kubernetes API Bearer Token"
           # kubernetes_api: https://api-miniocp-startx-fr:6443
           # kubernetes_bearer_token_secret: dev-admin-bearer
-          # #Example for a SCM Personal Access Token
-          # type: "GitHub Personal Access Token"
+          # #Example for a SCM Personal Accesss Token
+          # type: "GitHub Personal Accesss Token"
           # token_secret: dev-admin-git-token
-          # #Example for a SCM User access
+          # #Example for a SCM User accesss
           # type: "Source Control"
           # username_secret: dev-admin-git-user
           # password_secret: dev-admin-git-user

@@ -4,20 +4,20 @@
 context:  &context
   # Name of the global scope for this application (organisational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
   # Component name of this application (logical tenant)
   component: mycomponent
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: default-kubecost
   # Version name of this application (default use Chart appVersion)
   version: "3.1.3"
 
-# Deploy an API manager
+# Configure the kubecost cost monitoring stack
 kubecost:
-  # Enable the configuration of the API manager
+  # Enable the configuration of kubecost
   enabled: true
   # Activate the manager as a helm hook
   hooked: false
@@ -31,7 +31,7 @@ kubecost:
       enabled: false
       location:
         URI: 's3://kc-csv-test/pricing_schema.csv'
-        csvAccessCredentials: pricing-schema-access-secret
+        csvAccesssCredentials: pricing-schema-accesss-secret
         provider: AWS
         region: us-east-1
     nodeSelector: {}
@@ -460,7 +460,7 @@ kubecost:
         sidecarContainers: null
         configMapOverrideName: ''
         persistentVolume:
-          accessModes:
+          accesssModes:
             - ReadWriteOnce
           annotations: {}
           enabled: true
@@ -603,7 +603,7 @@ kubecost:
           runAsUser: 1001
         configMapOverrideName: ''
         persistentVolume:
-          accessModes:
+          accesssModes:
             - ReadWriteOnce
           annotations: {}
           enabled: true

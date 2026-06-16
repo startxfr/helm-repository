@@ -4,13 +4,13 @@
 context:  &context
   # Name of the global scope for this application (organisational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
   # Component name of this application (logical tenant)
   component: mycomponent
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: default-sso
   # Version name of this application (default use Chart appVersion)
   version: "7.6.12"
@@ -25,7 +25,7 @@ sso:
   name: default
   # The applyed Redhat-SSO config specifications
   spec: |
-    externalAccess:
+    externalAccesss:
       enabled: true
     instances: 1
     keycloakDeploymentSpec:
@@ -42,7 +42,7 @@ sso_realms:
   - name: "myrealm"
     # The spec of the myrealm
     spec: |
-      externalAccess:
+      externalAccesss:
         enabled: true
       instances: 1
       keycloakDeploymentSpec:
@@ -78,7 +78,7 @@ sso_clients:
           - 'https://myapp.example.com/*'
         protocolMappers: []
         id: bfb396f5-f14b-4759-b2fe-34a9e797223c
-        directAccessGrantsEnabled: true
+        directAccesssGrantsEnabled: true
       realmSelector:
         matchLabels:
           realm: my-realm

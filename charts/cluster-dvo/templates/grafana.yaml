@@ -1,6 +1,6 @@
-{{- if .Values.graphana.enabled -}}
-{{- $name := .Values.graphana.name | default "deployment-validation" -}}
-{{- $namespace := .Values.graphanaProject.project.name | default "deployment-validation-monitoring" -}}
+{{- if .Values.grafana.enabled -}}
+{{- $name := .Values.grafana.name | default "deployment-validation" -}}
+{{- $namespace := .Values.grafanaProject.project.name | default "deployment-validation-monitoring" -}}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor

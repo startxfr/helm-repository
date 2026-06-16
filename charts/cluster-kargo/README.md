@@ -60,4 +60,4 @@ helm install cluster-kargo startx/cluster-kargo -f https://raw.githubusercontent
 
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
-| 21.3.5  | 2026-04-10 | Create chart cluster-kargo from cluster-ptp                                                     || 21.3.5 | 2026-04-10 | Initialize kargo deployment
+| 21.3.5  | 2026-04-10 | Create chart cluster-kargo from cluster-ptp                                                     || 21.3.5 | 2026-04-10 | Initialize kargo deployment |

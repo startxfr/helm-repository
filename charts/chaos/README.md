@@ -136,10 +136,10 @@ syncPolicy:
 | Key                 | Default   | Description                                                                                                                                                                                                                                                                                               |
 | ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)                                                                                                                                                                                                                                     |
-| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)                                                                                                                                                                                                                                           |
-| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod)                                                                                                                                                                                                                         |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                                                                                                                                                                                                                                           |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod)                                                                                                                                                                                                                         |
 | context.component   | demo      | Component name of this application (logical tenant)                                                                                                                                                                                                                                                       |
-| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                                                                                                                                                                                                                                             |
+| context.app         | generic     | Application name (functional tenant, default use Chart name)                                                                                                                                                                                                                                             |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                                                                                                                                                                                                                                           |
 | cerberus            | {...}     | Configuration of the cerberus component. Inherit from the [chaos-cerberus chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus/#chaos-cerberus-values-dictionary) for more options) |
 | kraken              | {...}     | Configuration of the kraken component. Inherit from the [chaos-kraken chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken/#chaos-kraken-values-dictionary) for more options)           |
@@ -458,41 +458,41 @@ chaos-monkey startx/chaos-monkey
 | 17.14.13  | 2025-03-06 | Debug icon in doc                                                                                                       |
 | 17.14.19  | 2025-03-12 | Align all chart to the 17.14.19 release                                                                                 |
 | 17.14.90  | 2025-04-30 | Publish stable release for 4.17 version                                                                                 |
-| 18.11.1 | 2025-04-30 | first release of the basic operators
-| 18.11.3 | 2025-04-30 | intermediate release to move dependencies to 18.x release
-| 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
-| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
-| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
-| 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
-| 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
-| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
-| 18.11.22 | 2025-05-02 | Add noinfra values in all charts
-| 18.11.24 | 2025-05-02 | Align all to stable version
-| 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
-| 18.11.39 | 2025-05-05 | Update icon with startx new theme
-| 18.11.51 | 2025-05-06 | publish stable update for the full repository
-| 18.11.52 | 2025-05-07 | publish stable update for the full repository
-| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
-| 18.11.71 | 2025-11-27 | Align all charts to the same releas
-| 18.23.0 | 2026-02-28 | Start 4.19 branch
-| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release
-| 19.23.3 | 2026-02-28 | releases first 19.23.x packages
-| 19.23.0 | 2026-02-28 | publish stable update for the full repository
-| 19.23.1 | 2026-03-01 | Unstable 19.23 repo
-| 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
-| 19.23.7 | 2026-03-01 | unstable release
-| 19.23.4 | 2026-03-01 | debug yq go version
-| 19.23.8 | 2026-03-01 | publish stable update for the full repository
-| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
-| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11
-| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14
-| 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch
-| 20.14.3 | 2026-03-02 | Update dependencies to version 20.14.0
-| 20.14.5 | 2026-03-02 | Update dependencies to version 20.14.0
-| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0
-| 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14
-| 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3
-| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies
-| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0
+| 18.11.1 | 2025-04-30 | first release of the basic operators |
+| 18.11.3 | 2025-04-30 | intermediate release to move dependencies to 18.x release |
+| 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x |
+| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1 |
+| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1 |
+| 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release |
+| 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts |
+| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15 |
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts |
+| 18.11.24 | 2025-05-02 | Align all to stable version |
+| 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19 |
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme |
+| 18.11.51 | 2025-05-06 | publish stable update for the full repository |
+| 18.11.52 | 2025-05-07 | publish stable update for the full repository |
+| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18 |
+| 18.11.71 | 2025-11-27 | Align all charts to the same releas |
+| 18.23.0 | 2026-02-28 | Start 4.19 branch |
+| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release |
+| 19.23.3 | 2026-02-28 | releases first 19.23.x packages |
+| 19.23.0 | 2026-02-28 | publish stable update for the full repository |
+| 19.23.1 | 2026-03-01 | Unstable 19.23 repo |
+| 19.23.5 | 2026-03-01 | Unstable full 19.23.x release |
+| 19.23.7 | 2026-03-01 | unstable release |
+| 19.23.4 | 2026-03-01 | debug yq go version |
+| 19.23.8 | 2026-03-01 | publish stable update for the full repository |
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11 |
+| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11 |
+| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14 |
+| 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch |
+| 20.14.3 | 2026-03-02 | Update dependencies to version 20.14.0 |
+| 20.14.5 | 2026-03-02 | Update dependencies to version 20.14.0 |
+| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0 |
+| 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
+| 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
+| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
+| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |

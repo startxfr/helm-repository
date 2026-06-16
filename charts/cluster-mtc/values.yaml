@@ -4,13 +4,13 @@
 context:  &context
   # Name of the global scope for this application (organisational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
   # Component name of this application (logical tenant)
   component: mycomponent
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: default-mtc
   # Version name of this application (default use Chart appVersion)
   version: "1.8.13"
@@ -21,7 +21,7 @@ mtc:
   enabled: false
   # Activate the manager as a helm hook
   hooked: false
-  # Default namespace for all ressources (if not set, use project)
+  # Default namespace for all resources (if not set, use project)
   namespace: openshift-migration
   # The controller configuration
   controller:
@@ -61,9 +61,9 @@ mtc:
     - name: source
       # Enable the fact that this cluster is the host (default is false)
       insecure: true
-      # The registry access for this cluster
+      # The registry accesss for this cluster
       registry: "https://registry.apps.mycluster.example.com"
-      # The serviceAccount that allow acces to registry as well as cluster rrequired resources
+      # The serviceAccount that allow access to registry as well as cluster rrequired resources
       saToken: "mytoken"
       # The url of this cluster (mandatory if isHost=flase)
       url: "https://api.mycluster.example.com:6443"
@@ -79,8 +79,8 @@ mtc:
       namespace: openshift-migration
       # The storage provider (mandatory, could be aws, gcp, azure)
       provider: aws
-      # Tha AWS access key (mandatory for the provider aws)
-      accessKey: AIAXXXXXX
+      # Tha AWS accesss key (mandatory for the provider aws)
+      accesssKey: AIAXXXXXX
       # Tha AWS secret key (mandatory for the provider aws)
       secretKey: xxxxxxxxxxxxxxxxx
       # Tha AWS secret key (mandatory for the provider aws)

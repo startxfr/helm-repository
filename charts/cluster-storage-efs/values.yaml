@@ -4,13 +4,13 @@
 context:  &context
   # Name of the global scope for this application (organisational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
   # Component name of this application (logical tenant)
   component: mycomponent
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: default-efs
   # Version name of this application (default use Chart appVersion)
   version: "0.0.8"
@@ -27,8 +27,8 @@ sharedVolumes:
   - name: default-efs
     # Namespace where to place the SharedVolume (and PVC). Default is the default project
     namespace: "default"
-    # Configure the EFS access point ID (default is fsap-xxxxxxxxxxxxxxxxx)
-    accessPointID: "fsap-xxxxxxxxxxxxxxxxx"
+    # Configure the EFS accesss point ID (default is fsap-xxxxxxxxxxxxxxxxx)
+    accesssPointID: "fsap-xxxxxxxxxxxxxxxxx"
     # Configure the EFS Filesystem ID (default is fs-xxxxxxxxxxxxxxxxx)
     fileSystemID: "fs-xxxxxxxxxxxxxxxxx"
 

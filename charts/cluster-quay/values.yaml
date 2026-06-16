@@ -4,24 +4,24 @@
 context:  &context
   # Name of the global scope for this application (organisational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
   # Component name of this application (logical tenant)
   component: mycomponent
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: default-quay
   # Version name of this application (default use Chart appVersion)
   version: "3.16.2"
 
-# RHN informations for the container catalog
+# RHN information for the container catalog
 rhn:
   # Enable the configuration of the rhn account for image pull
   enabled: true
-  # Redhat Network access user to the RH container catalog
+  # Redhat Network accesss user to the RH container catalog
   user: rhnuser
-  # Redhat Network access password to the Rh container catalog
+  # Redhat Network accesss password to the Rh container catalog
   pwd: rhnpwd
 # Deploy aroute to the quay registry
 route:
@@ -41,8 +41,8 @@ quay:
   size: '10Gi'
   # The storage class used for images persistance
   storageClass: 'startx-aws-generic-retain'
-  # The storage access mode used for registry recording
-  storageAccess: 'ReadWriteOnce'
+  # The storage accesss mode used for registry recording
+  storageAccesss: 'ReadWriteOnce'
   # Enable pull secret using rhn credentials
   pullSecretEnabled: true
   # Configuration of the admin user
