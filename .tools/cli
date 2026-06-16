@@ -77,27 +77,20 @@ function routerPublish {
     doHelmrepositoryRefresh "release-$STABLE_MAINRELEASE" "$STABLE_MAINRELEASE" "$HELM_REPO_BASEURL" Publish 36
 }
 
-# Archive recent (non-current) OCP release repos
+# Archive recent (non-current) OCP release repos.
+# The list of release numbers is driven by HELM_REPO_ARCHIVE_RELEASES in .tools/config.
 function routerArchive {
-    doHelmrepositoryRefresh release-20 "20" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-19 "19" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-18 "18" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-16 "16" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-14 "14" "$HELM_REPO_BASEURL" Archive 37
+    for release in $HELM_REPO_ARCHIVE_RELEASES; do
+        doHelmrepositoryRefresh "release-${release}" "${release}" "$HELM_REPO_BASEURL" Archive 37
+    done
 }
 
-# Archive legacy (OCP <4.14) release repos
+# Archive legacy (OCP <4.14) release repos.
+# The list of release numbers is driven by HELM_REPO_LEGACY_RELEASES in .tools/config.
 function routerArchiveLegacy {
-    doHelmrepositoryRefresh release-17 "17" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-15 "15" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-13 "13" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-12 "12" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-11 "11" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-10 "10" "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-9  "9"  "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-8  "8"  "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-7  "7"  "$HELM_REPO_BASEURL" Archive 37
-    doHelmrepositoryRefresh release-6x "6x" "$HELM_REPO_BASEURL" Archive 37
+    for release in $HELM_REPO_LEGACY_RELEASES; do
+        doHelmrepositoryRefresh "release-${release}" "${release}" "$HELM_REPO_BASEURL" Archive 37
+    done
 }
 
 # Full repository release: bump all charts, commit, tag, merge to master+stable, push
@@ -524,8 +517,8 @@ Global actions:
   list                 List all managed helm charts
   release              Bump all charts, tag, merge and push  (INTERACTIVE=false VERSION=x DESC="...")
   publish              Publish stable+noschema+current repos to S3
-  archive              Regenerate and push archive repos (OCP 14–20)
-  archiveLegacy        Regenerate and push legacy repos (OCP 6–17)
+  archive              Regenerate and push active archive repos  (see HELM_REPO_ARCHIVE_RELEASES in .tools/config)
+  archiveLegacy        Regenerate and push legacy archive repos  (see HELM_REPO_LEGACY_RELEASES in .tools/config)
   lint-all             Lint all charts with helm lint
   test-all             Template + lint all charts
   package-all          Package all charts

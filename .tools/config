@@ -32,3 +32,14 @@ SXHELM_SIGN_KEYPASSPHRASEFILE="${HOME}/.ssh/pgp-dev_startx-private_key-passphras
 # -- Documentation behaviour ---------------------------------------------------
 # Set to "true" to auto-append history rows and sync README to docs/charts/
 DOC_ADD_HISTORY="true"
+
+# -- Repository archive lists --------------------------------------------------
+# Space-separated OCP minor release numbers for "active archive" repos.
+# These are published by: sx-helm archive / make archive
+# Add a new number here when an OCP release enters archive status.
+HELM_REPO_ARCHIVE_RELEASES="20 19 18 16 14"
+
+# Space-separated OCP minor release numbers for "legacy archive" repos.
+# These are published by: sx-helm archiveLegacy / make archive-legacy
+# Move numbers here from HELM_REPO_ARCHIVE_RELEASES when a release becomes legacy.
+HELM_REPO_LEGACY_RELEASES="17 15 13 12 11 10 9 8 7 6x"

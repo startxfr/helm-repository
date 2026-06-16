@@ -1,0 +1,214 @@
+# ------------------------------------------------------------------------------
+# helm-repository — GitLab CI/CD pipeline
+#
+# Branch behaviour:
+#   devel          → validate (test-all: helm template + lint on every chart)
+#   master/stable  → release-all (version bump, commit [skip ci], S3 upload)
+#                    publish (Helm index regeneration + S3 sync)
+#                    propagate (auto-merge to master-4.x / stable-4.x branches;
+#                               creates a MR on conflict instead of failing)
+#
+# Required CI/CD variables (Settings → CI/CD → Variables):
+#   SSH_PRIVATE_KEY      — SSH private key with push access to origin and gitlab
+#   GPG_PRIVATE_KEY      — GPG secret key, base64-encoded (ascii-armored export)
+#   GPG_PASSPHRASE       — Passphrase for the GPG key above
+#   AWS_ACCESS_KEY_ID    — AWS credentials for S3 publish
+#   AWS_SECRET_ACCESS_KEY
+#   GITLAB_API_TOKEN     — Project access token with api scope (for MR creation)
+# ------------------------------------------------------------------------------
+
+stages:
+  - validate
+  - release
+  - publish
+  - propagate
+
+variables:
+  INTERACTIVE: "false"
+  GIT_STRATEGY: clone
+  GIT_DEPTH: "0"           # Full history required for branch merges
+
+# ------------------------------------------------------------------------------
+# Shared setup — installed on every job
+# ------------------------------------------------------------------------------
+
+default:
+  image: debian:bookworm-slim
+  before_script:
+    # System dependencies
+    - apt-get update -qq
+    - apt-get install -y -qq git curl gnupg awscli openssh-client ca-certificates
+
+    # Helm (latest stable)
+    - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+    # Git identity for commits created by make release-all
+    - git config --global user.name "GitLab CI"
+    - git config --global user.email "ci@startx.fr"
+
+    # SSH key for git push to origin (GitHub) and gitlab
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - printf '%s\n' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    - ssh-keyscan -H gitlab.com >> ~/.ssh/known_hosts
+
+    # GPG key for helm package signing (SXHELM_SIGN_KEY = dev@startx.fr)
+    - echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --batch --import
+    # Passphrase file path comes from .tools/config (SXHELM_SIGN_KEYPASSPHRASEFILE)
+    - source .tools/config
+    - mkdir -p "$(dirname "$SXHELM_SIGN_KEYPASSPHRASEFILE")"
+    - echo "$GPG_PASSPHRASE" > "$SXHELM_SIGN_KEYPASSPHRASEFILE"
+    - chmod 600 "$SXHELM_SIGN_KEYPASSPHRASEFILE"
+
+
+# ------------------------------------------------------------------------------
+# VALIDATE — devel only
+# Runs helm template + helm lint on every chart.
+# ------------------------------------------------------------------------------
+
+validate:
+  stage: validate
+  script:
+    - make test-all
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "devel"'
+      when: always
+
+
+# ------------------------------------------------------------------------------
+# RELEASE — master and stable
+# Bumps chart versions, commits with [skip ci] to prevent pipeline loop,
+# and uploads packages to S3.
+# ------------------------------------------------------------------------------
+
+release:
+  stage: release
+  script:
+    # Inject [skip ci] into every commit created by make release-all so the
+    # pushed commit does not trigger a new CI pipeline.
+    - |
+      cat > .git/hooks/prepare-commit-msg << 'ENDHOOK'
+      #!/bin/sh
+      # Append [skip ci] to the first line of every commit message.
+      sed -i "1s/$/ [skip ci]/" "$1"
+      ENDHOOK
+      chmod +x .git/hooks/prepare-commit-msg
+    - make release-all
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "stable"'
+      when: manual
+
+
+# ------------------------------------------------------------------------------
+# PUBLISH — master and stable
+# Regenerates Helm index for stable/noschema/current repos and syncs to S3.
+# Runs after release succeeds.
+# ------------------------------------------------------------------------------
+
+publish:
+  stage: publish
+  needs: [release]
+  script:
+    - make publish
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "stable"'
+      when: on_success
+
+
+# ------------------------------------------------------------------------------
+# PROPAGATE — master and stable
+# Auto-merges the source branch into every matching version branch:
+#   master → master-4.x
+#   stable → stable-4.x
+#
+# On success: commits and pushes directly.
+# On conflict: aborts merge, creates a GitLab MR for manual resolution.
+# Pipeline warning (allow_failure: true) if any branch had conflicts.
+# ------------------------------------------------------------------------------
+
+propagate:
+  stage: propagate
+  needs: [publish]
+  allow_failure: true
+  script:
+    - |
+      SOURCE="$CI_COMMIT_BRANCH"
+
+      case "$SOURCE" in
+        master) PATTERN="^  origin/master-4\." ;;
+        stable) PATTERN="^  origin/stable-4\." ;;
+        *)
+          echo "No propagation configured for branch: $SOURCE"
+          exit 0
+          ;;
+      esac
+
+      git fetch --all --prune
+
+      CONFLICTS=""
+
+      while IFS= read -r remote_ref; do
+        remote_branch="${remote_ref#  origin/}"
+        local_branch="$remote_branch"
+
+        echo ""
+        echo "=== Merging $SOURCE → $local_branch"
+
+        # Checkout the target branch from its remote tracking ref
+        git checkout -B "$local_branch" "origin/$local_branch"
+
+        if git merge "origin/$SOURCE" \
+            --no-edit \
+            -m "chore: auto-merge $SOURCE into $local_branch [skip ci]"; then
+          git push origin "$local_branch"
+          echo "✓  $local_branch merged and pushed"
+        else
+          git merge --abort 2>/dev/null || true
+          CONFLICTS="$CONFLICTS $local_branch"
+          echo "✗  $local_branch: conflict — MR will be created"
+        fi
+
+      done < <(git branch -r | grep -E "$PATTERN")
+
+      # Open a GitLab MR for each branch that had a conflict
+      if [ -n "$CONFLICTS" ]; then
+        echo ""
+        echo "=== Creating MRs for conflicting branches"
+        for branch in $CONFLICTS; do
+          PAYLOAD=$(printf \
+            '{"source_branch":"%s","target_branch":"%s","title":"chore: auto-merge %s into %s","description":"Automatic merge triggered by CI pipeline [#%s](%s/-/pipelines/%s).\\n\\nPlease resolve conflicts and complete the merge manually.","remove_source_branch":false,"labels":"auto-merge,conflict"}' \
+            "$SOURCE" "$branch" \
+            "$SOURCE" "$branch" \
+            "$CI_PIPELINE_ID" "$CI_PROJECT_URL" "$CI_PIPELINE_ID")
+
+          HTTP_CODE=$(curl --silent --write-out "%{http_code}" --output /tmp/mr_response.json \
+            --request POST \
+            --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "$PAYLOAD" \
+            "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests")
+
+          if [ "$HTTP_CODE" = "201" ]; then
+            MR_URL=$(grep -o '"web_url":"[^"]*"' /tmp/mr_response.json | cut -d'"' -f4)
+            echo "✓  MR created for $branch: $MR_URL"
+          elif [ "$HTTP_CODE" = "409" ]; then
+            echo "⚠  MR already exists for $branch (HTTP 409)"
+          else
+            echo "✗  MR creation failed for $branch (HTTP $HTTP_CODE)"
+            cat /tmp/mr_response.json
+          fi
+        done
+
+        # Exit 1 so the job shows as warning (allow_failure: true)
+        exit 1
+      fi
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "stable"'
+      when: on_success

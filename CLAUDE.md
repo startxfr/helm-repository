@@ -301,6 +301,8 @@ Sourced by `.tools/cli` at startup and included by the `Makefile` via `include .
 | `SXHELM_SIGN` / `SXHELM_SIGN_KEY` / `SXHELM_SIGN_KEYRING` | GPG signing settings |
 | `SXHELM_SIGN_KEYPASSPHRASEFILE` | Path to GPG passphrase file |
 | `DOC_ADD_HISTORY` | `"true"` to auto-append history rows on release |
+| `HELM_REPO_ARCHIVE_RELEASES` | Space-separated OCP minor release numbers for `sx-helm archive` / `make archive` |
+| `HELM_REPO_LEGACY_RELEASES` | Space-separated OCP minor release numbers for `sx-helm archiveLegacy` / `make archive-legacy` |
 
 ### sx-helm command routing
 
