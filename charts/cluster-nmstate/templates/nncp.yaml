@@ -1,0 +1,27 @@
+{{- if .Values.nncp.enabled -}}
+{{- $desiredState := .Values.nncp.desiredState | default "interfaces: []" -}}
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: {{ .Values.nncp.name | default "default-network-policy" | quote }}
+  labels:
+    {{- include "cluster-nmstate.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.nncp.name | default "default-network-policy" -}}-nncp"
+  annotations:
+    {{- include "cluster-nmstate.annotations" . | nindent 4 }}
+    {{- if .Values.nncp.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "20"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  {{- if .Values.nncp.nodeSelector }}
+  nodeSelector:
+    {{- toYaml .Values.nncp.nodeSelector | nindent 4 }}
+  {{- end }}
+  desiredState:
+    {{- $desiredState | nindent 4 }}
+{{- end -}}

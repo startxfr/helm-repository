@@ -153,6 +153,152 @@ Charts with duplicate release rows (same release number and date twice):
 - `cluster-crunchy` (11.28.68 twice)
 - `project` (0.3.155, 0.3.189, 0.3.217, 7.22.27 each appear twice)
 
+## New chart creation procedure
+
+When the user asks to create a new chart, follow these steps in order.
+
+### Step 1 — Gather inputs (ask if not provided)
+
+Ask the user for the following three pieces of information before doing anything:
+
+| # | Question | Example answer |
+|---|----------|---------------|
+| 1 | **Chart family** — `example`, `cluster`, or `chaos`? | `cluster` |
+| 2 | **Short name** — lowercase, no prefix | `nmstate` |
+| 3 | **Description** — one English sentence describing what the chart does | `"configure NMState network operator for node-level network configuration"` |
+
+The full chart name is `<family>-<short-name>` (e.g. `cluster-nmstate`).
+
+### Step 2 — Find the closest existing chart
+
+Search `charts/` for an existing chart from the same family that deploys a similar kind of resource (operator subscription, CRD, console plugin, etc.). Inspect its `Chart.yaml`, `values.yaml`, and `templates/` to judge similarity. Present 2–3 candidates ranked by relevance and ask the user to confirm which one to use as the source.
+
+Criteria by family:
+- `cluster-*` that installs an operator → prefer `cluster-nfd`, `cluster-certmanager`, or `cluster-pipeline` as sources.
+- `cluster-*` with a Console Plugin → prefer a chart that already has a `consoleplugin` template.
+- `example-*` → prefer the closest `example-*` by resource type.
+- `chaos-*` → prefer an existing `chaos-*` chart.
+
+### Step 3 — Copy and rename
+
+```bash
+cp -r charts/<source> charts/<family>-<short-name>
+```
+
+Do not git-add yet.
+
+### Step 4 — Search-and-replace (Chart.yaml and README.md)
+
+Replace every occurrence of the source chart's name with the new chart name. At minimum:
+
+- `Chart.yaml`:
+  - `name:` → `<family>-<short-name>`
+  - `description:` → the user-provided description (single sentence, no trailing period)
+  - `appVersion:` → upstream component version (look it up or leave a `TODO:` placeholder)
+  - `annotations.artifacthub.io/changes:` → `"[<family>-<short-name>] Initial chart creation"`
+  - `annotations.artifacthub.io/prerelease:` → `"true"`
+  - `version:` → keep the same version number as the source (it will be bumped on first release)
+
+- `README.md`:
+  - Title line: update chart name and family
+  - ArtifactHub badge URL: replace source chart name with new chart name
+  - Description paragraph: replace with the user-provided description
+  - `helm install` commands: update release name and chart reference
+  - `## History` table: **delete all existing rows**, keep only the header row and a single initial entry:
+    ```
+    | <version> | <today-date> | Initial chart creation |
+    ```
+  - Fix any `context.app` default value in value tables: must equal `<family>-<short-name>`.
+
+### Step 5 — Clean up templates
+
+Remove templates that do not apply to the new chart. Use the source chart as a starting point but evaluate each file:
+
+- Keep: `_helpers.tpl`, `_startx.tpl`, `NOTES.txt`
+- For `cluster-*` operator charts, keep: `subscription.yaml`, `operatorgroup.yaml`; add `consoleplugin.yaml` if the operator ships one
+- Remove: any template that references a resource type not relevant to the new chart (e.g. `networkpolicy.yaml` for a pure operator chart)
+- If a needed template does not exist in the source, copy it from the most similar chart that has it
+
+### Step 6 — Adjust values.yaml
+
+Keep the `context:` block structure from the source. Update operator-specific sections:
+
+- `operatorGroup.targetNamespaces` — set appropriate namespace scope
+- `subscription.channel` — set the current stable channel for the operator (research if unknown, leave `TODO:` if uncertain)
+- `subscription.source` — usually `redhat-operators` for Red Hat operators, `certified-operators` otherwise
+- `subscription.name` — the exact package name in the OperatorHub catalog
+- `subscription.installPlanApproval` — default `Automatic`
+- Remove keys from the source that have no equivalent in the new chart
+- Add keys for CRDs or config resources specific to the new chart, documented with inline comments
+
+### Step 7 — Publish to docs
+
+After the chart directory is ready, propagate it to the documentation tree.
+
+#### 7a — Copy the logo
+
+Copy the SVG icon from the source chart and rename it for the new chart:
+
+```bash
+cp docs/img/<source>.svg docs/img/<family>-<short-name>.svg
+```
+
+All logos live in `docs/img/` and are SVG files (not PNG). The icon path in `Chart.yaml` must match:
+```yaml
+icon: https://helm-repository.readthedocs.io/en/latest/img/<family>-<short-name>.svg
+```
+
+#### 7b — Copy the README to docs
+
+```bash
+cp charts/<family>-<short-name>/README.md docs/charts/<family>-<short-name>.md
+```
+
+The file in `docs/charts/` is the rendered documentation page. It must be identical to the chart `README.md`.
+
+#### 7c — Add the chart to docs/index.md
+
+Open `docs/index.md` and insert a new row in the table of the appropriate chart family. Insert it **after** the alphabetically closest existing entry in the same family block. The row format is:
+
+```markdown
+| **[<family>-<short-name>](charts/<family>-<short-name>.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/<family>-<short-name>) | <one-line description matching Chart.yaml description> |
+```
+
+Use consistent column padding to match surrounding rows.
+
+### Step 8 — Report (no commit)
+
+After all changes are made, output a structured summary:
+
+```
+## New chart: <family>-<short-name>
+
+**Source chart used**: <source>
+**Directory created**: charts/<family>-<short-name>/
+
+### Files modified
+- Chart.yaml — name, description, appVersion, annotations updated
+- README.md — title, description, history table reset
+- values.yaml — channel, source, name, namespace scope updated
+- docs/img/<family>-<short-name>.svg — logo copied from source
+- docs/charts/<family>-<short-name>.md — README published to docs
+- docs/index.md — new row added in <family> table
+
+### Templates
+- Kept: <list>
+- Removed: <list>
+- Added: <list>
+
+### TODOs before first release
+- [ ] Verify appVersion matches actual upstream release
+- [ ] Confirm subscription.channel is the current stable channel
+- [ ] Test `helm install` with the generated values
+- [ ] Update values.schema.json to reflect new keys
+- [ ] Replace docs/img/<family>-<short-name>.svg with a dedicated icon
+```
+
+Do **not** run `git add` or `git commit`.
+
 ## Commit convention
 
 No mandatory signature defined for this project (unlike go-libs). Use conventional commits:

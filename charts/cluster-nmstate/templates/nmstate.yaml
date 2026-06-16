@@ -1,0 +1,21 @@
+{{- if .Values.nmstate.enabled -}}
+{{- $namespace := .Values.project.project.name | default "openshift-nmstate" -}}
+apiVersion: nmstate.io/v1
+kind: NMState
+metadata:
+  name: {{ .Values.nmstate.name | default "nmstate" | quote }}
+  labels:
+    {{- include "cluster-nmstate.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- .Values.nmstate.name | default "nmstate" -}}-instance"
+  annotations:
+    {{- include "cluster-nmstate.annotations" . | nindent 4 }}
+    {{- if .Values.nmstate.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "10"
+spec: {}
+{{- end -}}
