@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -48,13 +48,85 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-nexus startx/cluster-nexus
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Nexus operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml))
 
 ```bash
 helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+Create an ArgoCD `Application` resource to deploy `cluster-nexus` from the STARTX S3 Helm repository.
+This example enables the project namespace, the operator subscription, and the OperatorGroup:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-nexus
+  namespace: openshift-gitops
+spec:
+  description: Deploy the Nexus Repository operator on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: startx-nexus
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: operators.coreos.com
+      kind: OperatorGroup
+    - group: operators.coreos.com
+      kind: Subscription
+    - group: sonatype.com
+      kind: NexusRepo
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-nexus
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: startx-nexus
+    server: https://kubernetes.default.svc
+  project: cluster-nexus
+  source:
+    chart: cluster-nexus
+    helm:
+      values: |
+        project:
+          enabled: true
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+Apply with:
+
+```bash
+kubectl apply -f cluster-nexus-argocd.yaml -n openshift-gitops
+```
+
+The automated sync policy ensures ArgoCD reconciles the Nexus Repository operator whenever the chart or values drift from the desired state.
 
 ## History
 
@@ -349,5 +421,6 @@ helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
-| 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.4 | 2026-06-17 | Improve cluster-nexus options |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-17 | Improve cluster-nexus options |
