@@ -1,63 +1,63 @@
-# ![cluster-nexus](https://helm-repository.readthedocs.io/en/latest/img/cluster-nexus.svg "Cluster Chart : Nexus") Cluster Chart : nexus |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--nexus-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+nexus+startx) |
- |
-This helm chart is used to deploy Nexus instances managed by a dedicated operator. |
- |
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use theses resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/cluster-nexus |
-``` |
- |
-### 4. Install this chart |
- |
-```bash |
-helm install cluster-nexus startx/cluster-nexus |
-``` |
- |
-## Default values |
- |
-Complete deployment of a project with the following characteristics : |
- |
-!!! todo |
-    Complete this section |
- |
-```bash |
-# base configuration running default configuration |
-helm install cluster-nexus startx/cluster-nexus |
-``` |
- |
-## Others values availables |
- |
-- **startx** : Nexus operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml)) |
- |
-```bash |
-helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml |
-``` |
- |
-## History |
- |
+# ![cluster-nexus](https://helm-repository.readthedocs.io/en/latest/img/cluster-nexus.svg "Cluster Chart : Nexus") Cluster Chart : nexus
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--nexus-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+nexus+startx)
+
+This helm chart is used to deploy Nexus instances managed by a dedicated operator.
+
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/cluster-nexus
+```
+
+### 4. Install this chart
+
+```bash
+helm install cluster-nexus startx/cluster-nexus
+```
+
+## Default values
+
+Complete deployment of a project with the following characteristics :
+
+!!! todo
+    Complete this section
+
+```bash
+# base configuration running default configuration
+helm install cluster-nexus startx/cluster-nexus
+```
+
+## Others values availables
+
+- **startx** : Nexus operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml))
+
+```bash
+helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml
+```
+
+## History
+
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 0.3.179  | 2021-02-10 | Create chart cluster-nexus from cluster-ptp                                                    |
