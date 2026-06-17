@@ -6,7 +6,7 @@ description: Helm chart used to configure Redhat-SSO at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.3
+version: 21.3.4
 # Version name of the redhat-sso operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: 7.6.12
 # Icon of this helm-chart
@@ -39,12 +39,12 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     version: "21.3.0"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     version: "21.3.0"
     alias: operator
     condition: operator.enabled

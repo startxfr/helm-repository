@@ -46,7 +46,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-kafka-project startx/cluster-kafka --set project.enabled=true,operator.enabled=false,kafka.enabled=false
 # Deploy the kafka operator
 helm install cluster-kafka-operator startx/cluster-kafka --set project.enabled=false,operator.enabled=true,kafka.enabled=false && sleep 10
-# Configure default kafka ressources
+# Configure default kafka resources
 helm install cluster-kafka-instance startx/cluster-kafka --set project.enabled=false,operator.enabled=false,kafka.enabled=true
 ```
 
@@ -62,24 +62,24 @@ helm install cluster-kafka startx/cluster-kafka -f https://raw.githubusercontent
 
 | Release | Date       | Description                                       |
 | ------- | ---------- | ------------------------------------------------- |
-| 18.11.31 | 2025-05-03 | Create chart cluster-kafka from cluster-certmanager
-| 18.11.33 | 2025-05-03 | Support for the kafka console operator
-| 18.11.39 | 2025-05-05 | Update icon with startx new theme
-| 18.11.51 | 2025-05-06 | publish stable update for the full repository
-| 18.11.52 | 2025-05-07 | publish stable update for the full repository
-| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
-| 18.11.71 | 2025-11-27 | Align all charts to the same releas
-| 18.23.0 | 2026-02-28 | Start 4.19 branch
-| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release
-| 19.23.0 | 2026-02-28 | publish stable update for the full repository
-| 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
-| 19.23.8 | 2026-03-01 | publish stable update for the full repository
-| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
-| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11
-| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14
-| 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch
-| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0
-| 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14
-| 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3
-| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0
+| 18.11.31 | 2025-05-03 | Create chart cluster-kafka from cluster-certmanager |
+| 18.11.33 | 2025-05-03 | Support for the kafka console operator |
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme |
+| 18.11.51 | 2025-05-06 | publish stable update for the full repository |
+| 18.11.52 | 2025-05-07 | publish stable update for the full repository |
+| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18 |
+| 18.11.71 | 2025-11-27 | Align all charts to the same releas |
+| 18.23.0 | 2026-02-28 | Start 4.19 branch |
+| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release |
+| 19.23.0 | 2026-02-28 | publish stable update for the full repository |
+| 19.23.5 | 2026-03-01 | Unstable full 19.23.x release |
+| 19.23.8 | 2026-03-01 | publish stable update for the full repository |
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11 |
+| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11 |
+| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14 |
+| 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch |
+| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0 |
+| 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
+| 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
+| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
