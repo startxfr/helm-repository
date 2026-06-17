@@ -27,8 +27,94 @@ nexus:
   namespace: startx-nexus
   # The applied Nexus config specifications
   spec: |
-    daemonNodeSelector:
-      node-role.kubernetes.io/worker: ""
+    ingress:
+      enabled: true
+      dockerSubdomain: false
+      annotations: null
+      host: default-nexus.apps.demo219.startx.fr
+      name: nexus-default
+      additionalRules: null
+      dockerIngress:
+        annotations: null
+        enabled: false
+        host: default-nexus-docker.apps.demo219.startx.fr
+        name: nexus-docker-default
+      tls:
+        enabled: false
+        secretName: tlsSecretName
+      defaultRule: false
+    license:
+      fileContentsBase64: your_license_file_contents_in_base_64
+      secretName: nexus-repo-license
+    nexusData:
+      pvc:
+        accessMode: ReadWriteOnce
+        size: 2Gi
+      storageClass:
+        enabled: false
+        name: nexusrepo-storage
+        parameters: {}
+        provisioner: provisioner
+        reclaimPolicy: Retain
+        volumeBindingMode: WaitForFirstConsumer
+      volumeClaimTemplate:
+        enabled: false
+    secret:
+      nexusSecret:
+        enabled: false
+        mountPath: /var/nexus-repo-secrets
+        name: nexus-secret.json
+        nexusSecretsKeyId: super_secret_key_id
+        secretKeyfileContentsBase64: secretKeyfileContentsBase64
+    service:
+      docker:
+        enabled: true
+        name: nexus-repo-docker-service
+        port: 9090
+        protocol: TCP
+        targetPort: 9090
+        type: NodePort
+      nexus:
+        enabled: true
+        name: nexus-repo-service
+        port: 80
+        protocol: TCP
+        targetPort: 8081
+        type: NodePort
+    statefulset:
+      container:
+        containerPort: 8081
+        env:
+          clustered: false
+          install4jAddVmParams: '-Xms2703m -Xmx2703m'
+          jdbcUrl: null
+          nexusInitialPassword: nexusabc
+          password: nexus
+          user: nexus
+          zeroDowntimeEnabled: false
+        imageName: 'registry.connect.redhat.com/sonatype/nexus-repository-manager@sha256:5188576b552e811ef4fb78d82fd3a57dbfee8f785c2983f1ded96025d4a98197'
+        pullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 4
+            memory: 8Gi
+          requests:
+            cpu: 4
+            memory: 8Gi
+        terminationGracePeriod: 90
+      imagePullSecrets: {}
+      livenessProbe:
+        failureThreshold: 6
+        initialDelaySeconds: 240
+        path: /
+        periodSeconds: 60
+      name: nexusrepo-statefulset
+      readinessProbe:
+        failureThreshold: 6
+        initialDelaySeconds: 240
+        path: /
+        periodSeconds: 60
+      replicaCount: 1
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
