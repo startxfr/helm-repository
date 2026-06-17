@@ -1,51 +1,51 @@
-# ![cluster-kubevirt](https://helm-repository.readthedocs.io/en/latest/img/cluster-kubevirt.svg "Cluster Chart : KubeVirt") Cluster Chart : KubeVirt |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--kubevirt-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+kubevirt+startx) |
- |
-This helm chart is used to configure code ready kubevirt via it's operator and deploy a VM into Openshift. |
- |
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use theses resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/cluster-kubevirt |
-``` |
- |
-### 4. Install this chart |
- |
-```bash |
-helm install cluster-kubevirt startx/cluster-kubevirt |
-``` |
- |
-## Default values |
- |
-Complete deployment of a KubeVirt configuration with the following characteristics : |
- |
-- 1 **operator** named **kubevirt-hyperconverged** deployed under **openshift-cnv** |
-- 1 **HyperConverged** cluster instance enabling OpenShift Virtualization |
-- Optional **VirtualMachine** instances configurable via the vms list |
- |
-## History |
- |
+# ![cluster-kubevirt](https://helm-repository.readthedocs.io/en/latest/img/cluster-kubevirt.svg "Cluster Chart : KubeVirt") Cluster Chart : KubeVirt
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--kubevirt-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+kubevirt+startx)
+
+This helm chart is used to configure code ready kubevirt via it's operator and deploy a VM into Openshift.
+
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/cluster-kubevirt
+```
+
+### 4. Install this chart
+
+```bash
+helm install cluster-kubevirt startx/cluster-kubevirt
+```
+
+## Default values
+
+Complete deployment of a KubeVirt configuration with the following characteristics :
+
+- 1 **operator** named **kubevirt-hyperconverged** deployed under **openshift-cnv**
+- 1 **HyperConverged** cluster instance enabling OpenShift Virtualization
+- Optional **VirtualMachine** instances configurable via the vms list
+
+## History
+
 | Release  | Date       | Description                                                                                                |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
 | 0.3.59   | 2020-11-09 | Create chart cluster-kubevirt from cluster-kubevirt                                                        |

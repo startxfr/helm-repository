@@ -1,45 +1,45 @@
-# ![example-html](https://helm-repository.readthedocs.io/en/latest/img/example-html.svg "Example Chart : Static web") Example Chart : HTML |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--html-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+html+startx) |
- |
-This helm chart is used to create a deployment of a small webserver based on [startx apache image](https://quay.io/startx/apache). |
- |
-This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts). |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use theses resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/example-html |
-``` |
- |
-### 4. Install this chart |
- |
-```bash |
-helm install example-html startx/example-html |
-``` |
- |
-## Values dictionary |
- |
-### context values dictionary |
- |
+# ![example-html](https://helm-repository.readthedocs.io/en/latest/img/example-html.svg "Example Chart : Static web") Example Chart : HTML
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--html-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+html+startx)
+
+This helm chart is used to create a deployment of a small webserver based on [startx apache image](https://quay.io/startx/apache).
+
+This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/example-html
+```
+
+### 4. Install this chart
+
+```bash
+helm install example-html startx/example-html
+```
+
+## Values dictionary
+
+### context values dictionary
+
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
@@ -48,9 +48,9 @@ helm install example-html startx/example-html |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | html      | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
- |
-### example-html values dictionary |
- |
+
+### example-html values dictionary
+
 | Key                  | Default    | Description                                          |
 | -------------------- | ---------- | ---------------------------------------------------- |
 | html.service.enabled | false      | Enable service for this application                  |
@@ -59,37 +59,37 @@ helm install example-html startx/example-html |
 | html.debug           | true       | Enable debuging of the container                     |
 | html.replicas        | 1          | Define the number of replicas for this html instance |
 | html.data            | string     | Files to load into the application                   |
- |
-## Values files |
- |
-### Default values file (values.yaml) |
- |
-Complete deployment of an html application with the following characteristics : |
- |
-- 1 **service** named **example-html** load balancing to pod deployed |
-- 1 **deployment** named **example-html** deploying **1 pod** from version **0.3.63** html image running the **prod:start** command with debug disabled |
-- 2 **configMap** holding html configuration and pod environment variable context |
- |
-```bash |
-# base configuration running default configuration |
-helm install example-html startx/example-html |
-``` |
- |
-### Development values file (values-demo-hpa.yaml) |
- |
-Complete deployment of a html demo application for stress test (used in HPA test) with the following characteristics : |
- |
-- 1 **service** named **hpa-app** load balancing to pod deployed |
-- 1 **deployment** named **hpa-app** deploying **2 pod** from version **alpine3** html image running with debug disabled |
-- 2 **configMap** holding html configuration and pod environment variable context |
- |
-```bash |
-# base configuration running tekton v1.0.1 configuration |
-helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-hpa.yaml |
-``` |
- |
-## History |
- |
+
+## Values files
+
+### Default values file (values.yaml)
+
+Complete deployment of an html application with the following characteristics :
+
+- 1 **service** named **example-html** load balancing to pod deployed
+- 1 **deployment** named **example-html** deploying **1 pod** from version **0.3.63** html image running the **prod:start** command with debug disabled
+- 2 **configMap** holding html configuration and pod environment variable context
+
+```bash
+# base configuration running default configuration
+helm install example-html startx/example-html
+```
+
+### Development values file (values-demo-hpa.yaml)
+
+Complete deployment of a html demo application for stress test (used in HPA test) with the following characteristics :
+
+- 1 **service** named **hpa-app** load balancing to pod deployed
+- 1 **deployment** named **hpa-app** deploying **2 pod** from version **alpine3** html image running with debug disabled
+- 2 **configMap** holding html configuration and pod environment variable context
+
+```bash
+# base configuration running tekton v1.0.1 configuration
+helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-hpa.yaml
+```
+
+## History
+
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 0.3.117  | 2020-11-13 | Create chart example-html from example-html                                                    |

@@ -1,49 +1,49 @@
-# ![chaos-cerberus](https://helm-repository.readthedocs.io/en/latest/img/chaos-cerberus.svg "Chaos Chart : Cerberus") Chaos Chart : Cerberus |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--cerberus-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+cerberus+startx) |
- |
-This helm chart used to deploy cerberus on Openshift or Kubernetes cluster. |
-Cerberus is as a watchdog who act as a global cluster healthcheck. |
- |
-This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts). |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use these resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/chaos-cerberus |
-``` |
- |
-### 4. Install this component |
- |
-```bash |
-# Install the cerberus project |
-helm install --set project.enabled=true chaos-cerberus-project  startx/chaos-cerberus |
-# Deploy the cerberus instance |
-helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-cerberus |
-``` |
- |
-## Values dictionary |
- |
-### context values dictionary |
- |
+# ![chaos-cerberus](https://helm-repository.readthedocs.io/en/latest/img/chaos-cerberus.svg "Chaos Chart : Cerberus") Chaos Chart : Cerberus
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--cerberus-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+cerberus+startx)
+
+This helm chart used to deploy cerberus on Openshift or Kubernetes cluster.
+Cerberus is as a watchdog who act as a global cluster healthcheck.
+
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use these resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/chaos-cerberus
+```
+
+### 4. Install this component
+
+```bash
+# Install the cerberus project
+helm install --set project.enabled=true chaos-cerberus-project  startx/chaos-cerberus
+# Deploy the cerberus instance
+helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-cerberus
+```
+
+## Values dictionary
+
+### context values dictionary
+
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
@@ -52,9 +52,9 @@ helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-c
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | cerberus     | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 1.0.0     | Version name of this application (default use Chart appVersion)                   |
- |
-### chaos-cerberus values dictionary |
- |
+
+### chaos-cerberus values dictionary
+
 | Key                              | Default                | Description                                                                                                                                                                                                                                                                       |
 | -------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | project                          | {...}                  | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
@@ -71,125 +71,125 @@ helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-c
 | cerberus.kubeconfig.token.server | https://localhost:6443 | The server URL to the target cluster API                                                                                                                                                                                                                                          |
 | cerberus.kubeconfig.token.token  | sha256~XXX             | The token to use to get accesss. This token must have full cluster admin accesss to perform some chaos scenarios                                                                                                                                                                    |
 | cerberus.kubeconfig.file         | ""                     | If mode is token, this property must be set with a full kubeconfig content                                                                                                                                                                                                        |
- |
-## Values files |
- |
-### Default values file (values.yaml) |
- |
-Simple cerberus with default configuration : |
- |
-- 1 **project** named **chaos-cerberus** |
-- 1 **scc** with privileged context for **cerberus** deployment |
-- 1 **configmap** with cerberus server configuration |
-- 1 **configmap** with kubeconfig of the targeted cluster |
-- 2 **networkpolicy** allowing route and kraken pods in chaos-kraken namespace, to get cerberus signal |
-- 1 **deployment** named **cerberus** |
-  - watching the cluster https://localhost:6443 |
-  - using token sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX |
-  - watching no particular routes (as part of the watchdog) |
-- 1 **service** to the **cerberus** pods |
-- 1 **route** to the **cerberus** service |
- |
-```bash |
-# Install the cerberus project |
-helm install --set project.enable=true chaos-cerberus-project startx/chaos-cerberus |
-# Deploy the cerberus instance |
-helm install --set cerberus.enable=true -n chaos-cerberus chaos-cerberus-instance startx/chaos-cerberus |
-``` |
- |
-### STARTX values file (values-startx-xxx.yaml) |
- |
-Same as the default configuration but with namespace prefixed with startx- |
- |
-```bash |
-# Configuration running demo example configuration |
-helm install chaos-cerberus-project startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml |
-helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml |
-``` |
- |
-## Usage examples |
- |
-### Monitor a cluster using token authentication |
- |
-Deploy cerberus to monitor a remote cluster and expose its healthcheck endpoint: |
- |
-```yaml |
-# my-cerberus-values.yaml |
-context: |
-  scope: myorg |
-  cluster: prod-cluster |
-  environment: prod |
-  component: chaos |
-  app: cerberus-prod |
- |
-cerberus: |
-  enabled: true |
-  expose: true |
-  kraken_allowed: true |
-  kraken_ns: chaos-kraken |
-  watch_url_routes: |
-    - - http://myapp.prod.svc.cluster.local/healthz |
-      - "200" |
-  kubeconfig: |
-    mode: token |
-    token: |
-      server: https://api.prod-cluster.example.com:6443 |
-      token: sha256~REPLACE_WITH_YOUR_TOKEN |
-``` |
- |
-```bash |
-helm install chaos-cerberus startx/chaos-cerberus -f my-cerberus-values.yaml -n chaos-cerberus |
-``` |
- |
-### Monitor a cluster using a kubeconfig file |
- |
-```yaml |
-# my-cerberus-file-values.yaml |
-cerberus: |
-  enabled: true |
-  kubeconfig: |
-    mode: file |
-    file: |
-      apiVersion: v1 |
-      kind: Config |
-      clusters: |
-      - cluster: |
-          server: https://api.prod-cluster.example.com:6443 |
-          certificate-authority-data: <base64-encoded-ca> |
-        name: prod-cluster |
-      users: |
-      - name: chaos-user |
-        user: |
-          token: sha256~REPLACE_WITH_YOUR_TOKEN |
-      contexts: |
-      - context: |
-          cluster: prod-cluster |
-          user: chaos-user |
-        name: prod |
-      current-context: prod |
-``` |
- |
-```bash |
-helm install chaos-cerberus startx/chaos-cerberus -f my-cerberus-file-values.yaml -n chaos-cerberus |
-``` |
- |
-### Full stack with project namespace |
- |
-```bash |
-# 1. Create the namespace |
-helm install chaos-cerberus-project startx/chaos-cerberus \ |
-  --set project.enabled=true \ |
-  --set project.project.name=chaos-cerberus \ |
-  -n default |
- |
-# 2. Deploy cerberus |
-helm install chaos-cerberus startx/chaos-cerberus \ |
-  -f my-cerberus-values.yaml \ |
-  -n chaos-cerberus |
-``` |
- |
-## History |
- |
+
+## Values files
+
+### Default values file (values.yaml)
+
+Simple cerberus with default configuration :
+
+- 1 **project** named **chaos-cerberus**
+- 1 **scc** with privileged context for **cerberus** deployment
+- 1 **configmap** with cerberus server configuration
+- 1 **configmap** with kubeconfig of the targeted cluster
+- 2 **networkpolicy** allowing route and kraken pods in chaos-kraken namespace, to get cerberus signal
+- 1 **deployment** named **cerberus**
+  - watching the cluster https://localhost:6443
+  - using token sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
+  - watching no particular routes (as part of the watchdog)
+- 1 **service** to the **cerberus** pods
+- 1 **route** to the **cerberus** service
+
+```bash
+# Install the cerberus project
+helm install --set project.enable=true chaos-cerberus-project startx/chaos-cerberus
+# Deploy the cerberus instance
+helm install --set cerberus.enable=true -n chaos-cerberus chaos-cerberus-instance startx/chaos-cerberus
+```
+
+### STARTX values file (values-startx-xxx.yaml)
+
+Same as the default configuration but with namespace prefixed with startx-
+
+```bash
+# Configuration running demo example configuration
+helm install chaos-cerberus-project startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml
+helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml
+```
+
+## Usage examples
+
+### Monitor a cluster using token authentication
+
+Deploy cerberus to monitor a remote cluster and expose its healthcheck endpoint:
+
+```yaml
+# my-cerberus-values.yaml
+context:
+  scope: myorg
+  cluster: prod-cluster
+  environment: prod
+  component: chaos
+  app: cerberus-prod
+
+cerberus:
+  enabled: true
+  expose: true
+  kraken_allowed: true
+  kraken_ns: chaos-kraken
+  watch_url_routes:
+    - - http://myapp.prod.svc.cluster.local/healthz
+      - "200"
+  kubeconfig:
+    mode: token
+    token:
+      server: https://api.prod-cluster.example.com:6443
+      token: sha256~REPLACE_WITH_YOUR_TOKEN
+```
+
+```bash
+helm install chaos-cerberus startx/chaos-cerberus -f my-cerberus-values.yaml -n chaos-cerberus
+```
+
+### Monitor a cluster using a kubeconfig file
+
+```yaml
+# my-cerberus-file-values.yaml
+cerberus:
+  enabled: true
+  kubeconfig:
+    mode: file
+    file:
+      apiVersion: v1
+      kind: Config
+      clusters:
+      - cluster:
+          server: https://api.prod-cluster.example.com:6443
+          certificate-authority-data: <base64-encoded-ca>
+        name: prod-cluster
+      users:
+      - name: chaos-user
+        user:
+          token: sha256~REPLACE_WITH_YOUR_TOKEN
+      contexts:
+      - context:
+          cluster: prod-cluster
+          user: chaos-user
+        name: prod
+      current-context: prod
+```
+
+```bash
+helm install chaos-cerberus startx/chaos-cerberus -f my-cerberus-file-values.yaml -n chaos-cerberus
+```
+
+### Full stack with project namespace
+
+```bash
+# 1. Create the namespace
+helm install chaos-cerberus-project startx/chaos-cerberus \
+  --set project.enabled=true \
+  --set project.project.name=chaos-cerberus \
+  -n default
+
+# 2. Deploy cerberus
+helm install chaos-cerberus startx/chaos-cerberus \
+  -f my-cerberus-values.yaml \
+  -n chaos-cerberus
+```
+
+## History
+
 | Release  | Date       | Description                                                                                                                        |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | 10.12.5  | 2022-06-03 | Initial commit of the example and poc chart example-chaos                                                                          |

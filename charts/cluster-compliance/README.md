@@ -1,70 +1,70 @@
-# ![cluster-compliance](https://helm-repository.readthedocs.io/en/latest/img/cluster-compliance.svg "Cluster Chart : Compliance") Cluster Chart : Compliance |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--compliance-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+compliance+startx) |
- |
-This helm chart is used to deploy Compliance instances managed by a dedicated operator. |
- |
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use theses resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/cluster-compliance |
-``` |
- |
-### 4. Install this chart |
- |
-```bash |
-helm install cluster-compliance startx/cluster-compliance |
-``` |
- |
-## Default values |
- |
-Complete deployment of a project with the following characteristics : |
- |
-- 1 **namespace:** named **openshift-compliance** without constraints |
-- 1 **operator:** named **compliance-operator** configured with |
-  - The **stable** channel for community release |
-  - The **v1.8.2** version |
-  - Deployed under the **openshift-operators** project |
- |
-```bash |
-# Create the project |
-helm install cluster-compliance-project startx/cluster-compliance --set project.enabled=true,operator.enabled=false,compliance.enabled=false |
-# Deploy the compliance operator |
-helm install cluster-compliance-operator startx/cluster-compliance --set project.enabled=false,operator.enabled=true,compliance.enabled=false && sleep 10 |
-# Configure default compliance resources |
-helm install cluster-compliance-instance startx/cluster-compliance --set project.enabled=false,operator.enabled=false,compliance.enabled=true |
-``` |
- |
-## Others values availables |
- |
-- **startx** : Compliance operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml)) |
- |
-```bash |
-helm install cluster-compliance startx/cluster-compliance -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml |
-``` |
- |
-## History |
- |
+# ![cluster-compliance](https://helm-repository.readthedocs.io/en/latest/img/cluster-compliance.svg "Cluster Chart : Compliance") Cluster Chart : Compliance
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--compliance-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+compliance+startx)
+
+This helm chart is used to deploy Compliance instances managed by a dedicated operator.
+
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/cluster-compliance
+```
+
+### 4. Install this chart
+
+```bash
+helm install cluster-compliance startx/cluster-compliance
+```
+
+## Default values
+
+Complete deployment of a project with the following characteristics :
+
+- 1 **namespace:** named **openshift-compliance** without constraints
+- 1 **operator:** named **compliance-operator** configured with
+  - The **stable** channel for community release
+  - The **v1.8.2** version
+  - Deployed under the **openshift-operators** project
+
+```bash
+# Create the project
+helm install cluster-compliance-project startx/cluster-compliance --set project.enabled=true,operator.enabled=false,compliance.enabled=false
+# Deploy the compliance operator
+helm install cluster-compliance-operator startx/cluster-compliance --set project.enabled=false,operator.enabled=true,compliance.enabled=false && sleep 10
+# Configure default compliance resources
+helm install cluster-compliance-instance startx/cluster-compliance --set project.enabled=false,operator.enabled=false,compliance.enabled=true
+```
+
+## Others values availables
+
+- **startx** : Compliance operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml))
+
+```bash
+helm install cluster-compliance startx/cluster-compliance -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml
+```
+
+## History
+
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 0.3.179  | 2021-02-10 | Create chart cluster-compliance from cluster-ptp                                               |

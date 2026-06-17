@@ -1,66 +1,66 @@
-# ![cluster-certmanager](https://helm-repository.readthedocs.io/en/latest/img/cluster-certmanager.svg "Cluster Chart : CertManager") Cluster Chart : CertManager |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--certmanager-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+certmanager+startx) |
- |
-This helm chart is used to deploy Cert-Manager handled by an operator to configure Certificate management at the cluster level. |
- |
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use theses resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/cluster-certmanager |
-``` |
- |
-### 4. Install this chart |
- |
-#### Default values |
- |
-Complete deployment of a project with the following characteristics : |
- |
-- 1 **namespace:** named **startx-certmanager** without constraints |
-- 1 **operator:** named **cert-manager-operator** configured with |
-  - The **stable-v1.18** channel for community release |
-  - The **v1.18.1** version |
-  - Deployed under the **openshift-operators** project |
- |
-```bash |
-# Create the project |
-helm install cluster-certmanager-project startx/cluster-certmanager --set project.enabled=true,operator.enabled=false,certmanager.enabled=false |
-# Deploy the certmanager operator |
-helm install cluster-certmanager-operator startx/cluster-certmanager --set project.enabled=false,operator.enabled=true,certmanager.enabled=false && sleep 10 |
-# Configure default certmanager resources |
-helm install cluster-certmanager-instance startx/cluster-certmanager --set project.enabled=false,operator.enabled=false,certmanager.enabled=true |
-``` |
- |
-#### Others values availables |
- |
-- **startx** : CertManager operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml)) |
- |
-```bash |
-helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml |
-``` |
- |
-## History |
- |
+# ![cluster-certmanager](https://helm-repository.readthedocs.io/en/latest/img/cluster-certmanager.svg "Cluster Chart : CertManager") Cluster Chart : CertManager
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--certmanager-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+certmanager+startx)
+
+This helm chart is used to deploy Cert-Manager handled by an operator to configure Certificate management at the cluster level.
+
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/cluster-certmanager
+```
+
+### 4. Install this chart
+
+#### Default values
+
+Complete deployment of a project with the following characteristics :
+
+- 1 **namespace:** named **startx-certmanager** without constraints
+- 1 **operator:** named **cert-manager-operator** configured with
+  - The **stable-v1.18** channel for community release
+  - The **v1.18.1** version
+  - Deployed under the **openshift-operators** project
+
+```bash
+# Create the project
+helm install cluster-certmanager-project startx/cluster-certmanager --set project.enabled=true,operator.enabled=false,certmanager.enabled=false
+# Deploy the certmanager operator
+helm install cluster-certmanager-operator startx/cluster-certmanager --set project.enabled=false,operator.enabled=true,certmanager.enabled=false && sleep 10
+# Configure default certmanager resources
+helm install cluster-certmanager-instance startx/cluster-certmanager --set project.enabled=false,operator.enabled=false,certmanager.enabled=true
+```
+
+#### Others values availables
+
+- **startx** : CertManager operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml))
+
+```bash
+helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml
+```
+
+## History
+
 | Release | Date       | Description                                       |
 | ------- | ---------- | ------------------------------------------------- |
 | 11.7.18 | 2022-10-28 | Create chart cluster-certmanager from cluster-ptp |

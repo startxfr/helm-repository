@@ -1,63 +1,63 @@
-# ![cluster-ptp](https://helm-repository.readthedocs.io/en/latest/img/cluster-ptp.svg "Cluster Chart : PTP") Cluster Chart : PTP |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ptp-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ptp+startx) |
- |
-This helm chart is used to deploy Precision Time Protocol handled by an operator to configure node NTP configuration. |
- |
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use theses resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/cluster-ptp |
-``` |
- |
-### 4. Install this chart |
- |
-```bash |
-helm install cluster-ptp startx/cluster-ptp |
-``` |
- |
-## Default values |
- |
-Complete deployment of a project with the following characteristics : |
- |
-!!! todo |
-    Complete this section |
- |
-```bash |
-# base configuration running default configuration |
-helm install cluster-ptp startx/cluster-ptp |
-``` |
- |
-## Others values availables |
- |
-- **startx** : PTP operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml)) |
- |
-```bash |
-helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml |
-``` |
- |
-## History |
- |
+# ![cluster-ptp](https://helm-repository.readthedocs.io/en/latest/img/cluster-ptp.svg "Cluster Chart : PTP") Cluster Chart : PTP
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ptp-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ptp+startx)
+
+This helm chart is used to deploy Precision Time Protocol handled by an operator to configure node NTP configuration.
+
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/cluster-ptp
+```
+
+### 4. Install this chart
+
+```bash
+helm install cluster-ptp startx/cluster-ptp
+```
+
+## Default values
+
+Complete deployment of a project with the following characteristics :
+
+!!! todo
+    Complete this section
+
+```bash
+# base configuration running default configuration
+helm install cluster-ptp startx/cluster-ptp
+```
+
+## Others values availables
+
+- **startx** : PTP operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml))
+
+```bash
+helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml
+```
+
+## History
+
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 0.3.179  | 2021-02-09 | Create chart cluster-ptp from cluster-quay                                                     |

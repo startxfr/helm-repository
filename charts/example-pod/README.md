@@ -1,45 +1,45 @@
-# ![pod](https://helm-repository.readthedocs.io/en/latest/img/example-pod.svg "Example Chart : Pod") Example Chart : Pod |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--pod-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+pod+startx) |
- |
-This helm chart is used to create a simple pod with various application images according to the values file. |
- |
-This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts). |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use theses resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/example-pod |
-``` |
- |
-### 4. Install this chart |
- |
-```bash |
-helm install example-pod startx/example-pod |
-``` |
- |
-## Values dictionary |
- |
-### context values dictionary |
- |
+# ![pod](https://helm-repository.readthedocs.io/en/latest/img/example-pod.svg "Example Chart : Pod") Example Chart : Pod
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--pod-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+pod+startx)
+
+This helm chart is used to create a simple pod with various application images according to the values file.
+
+This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/example-pod
+```
+
+### 4. Install this chart
+
+```bash
+helm install example-pod startx/example-pod
+```
+
+## Values dictionary
+
+### context values dictionary
+
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
@@ -48,42 +48,42 @@ helm install example-pod startx/example-pod |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | example-pod     | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
- |
-### example-pod values dictionary |
- |
+
+### example-pod values dictionary
+
 | Key     | Default       | Description                                                      |
 | ------- | ------------- | ---------------------------------------------------------------- |
 | image   | fedora:latest | Image to run into the pod                                        |
 | command | /bin/sx       | Command to run inside the container                              |
 | args    | run           | argunments to pass to the command exectuted inside the container |
 | debug   | true          | Enable debuging of the container                                 |
- |
-## Values files |
- |
-### Default values file (values.yaml) |
- |
-Simple pod deployment of a container image with the following characteristics : |
- |
-- 1 **pod** named **example-pod** running **quay.io/startx/fedora:latest** image |
- |
-```bash |
-# base configuration running default configuration |
-helm install example-pod startx/example-pod |
-``` |
- |
-### Development values file (values-demo.yaml) |
- |
-Demo pod deployment of a container image with the following characteristics : |
- |
-- 1 **pod** named **demo-helm-pod** running **quay.io/startx/fedora:latest** image |
- |
-```bash |
-# base configuration running demo configuration |
-helm install example-pod startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml |
-``` |
- |
-## History |
- |
+
+## Values files
+
+### Default values file (values.yaml)
+
+Simple pod deployment of a container image with the following characteristics :
+
+- 1 **pod** named **example-pod** running **quay.io/startx/fedora:latest** image
+
+```bash
+# base configuration running default configuration
+helm install example-pod startx/example-pod
+```
+
+### Development values file (values-demo.yaml)
+
+Demo pod deployment of a container image with the following characteristics :
+
+- 1 **pod** named **demo-helm-pod** running **quay.io/startx/fedora:latest** image
+
+```bash
+# base configuration running demo configuration
+helm install example-pod startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
+```
+
+## History
+
 | Release  | Date       | Description                                                                                            |
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 0.1.0    | 2020-10-07 | Initial commit for this helm chart with default value example (removed)                                |

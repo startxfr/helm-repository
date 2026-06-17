@@ -1,68 +1,68 @@
-# ![cluster-ansible](https://helm-repository.readthedocs.io/en/latest/img/cluster-ansible.svg "Cluster Chart : Ansible") Cluster Chart : Ansible |
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ansible-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ansible+startx) |
- |
-This helm chart is used to create an operator based deployment of Ansible Automation. |
- |
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
- |
-## Requirements and guidelines |
- |
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
-more information on how to use theses resources. |
- |
-## Deploy this helm chart on openshift |
- |
-### 1. Connect to your Openshift cluster |
- |
-```bash |
-oc login -t <token> <cluster-url> |
-``` |
- |
-### 2. Install the repository |
- |
-```bash |
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
-``` |
- |
-### 3. Get information about this chart |
- |
-```bash |
-helm show chart startx/cluster-ansible |
-``` |
- |
-### 4. Install this chart |
- |
-```bash |
-helm install cluster-ansible startx/cluster-ansible |
-``` |
- |
-## Default values |
- |
-Complete deployment of a project with the following characteristics : |
- |
-- 1 **project:** named **rhaap-operator** with the following properties |
-- 1 **operator:** named **rhaap-operator** configured with |
-  - The **stable-2.5-cluster-scoped** channel |
-  - The **2.5.0** version |
-  - Deployed under the **rhaap-operator** project |
-- 1 **ansible** deployed |
-- 1 **ansibleHub:** enabled |
- |
-```bash |
-# base configuration running default configuration |
-helm install cluster-ansible startx/cluster-ansible |
-``` |
- |
-## Others values availables |
- |
-- **startx** : Startx ansible cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml)) |
- |
-```bash |
-helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml |
-``` |
- |
-## History |
- |
+# ![cluster-ansible](https://helm-repository.readthedocs.io/en/latest/img/cluster-ansible.svg "Cluster Chart : Ansible") Cluster Chart : Ansible
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--ansible-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+ansible+startx)
+
+This helm chart is used to create an operator based deployment of Ansible Automation.
+
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use theses resources.
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/cluster-ansible
+```
+
+### 4. Install this chart
+
+```bash
+helm install cluster-ansible startx/cluster-ansible
+```
+
+## Default values
+
+Complete deployment of a project with the following characteristics :
+
+- 1 **project:** named **rhaap-operator** with the following properties
+- 1 **operator:** named **rhaap-operator** configured with
+  - The **stable-2.5-cluster-scoped** channel
+  - The **2.5.0** version
+  - Deployed under the **rhaap-operator** project
+- 1 **ansible** deployed
+- 1 **ansibleHub:** enabled
+
+```bash
+# base configuration running default configuration
+helm install cluster-ansible startx/cluster-ansible
+```
+
+## Others values availables
+
+- **startx** : Startx ansible cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml))
+
+```bash
+helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml
+```
+
+## History
+
 | Release  | Date       | Description                                                                                 |
 | -------- | ---------- | ------------------------------------------------------------------------------------------- |
 | 9.8.19   | 2021-11-20 | Create chart cluster-ansible from cluster-quay                                              |
