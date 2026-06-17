@@ -13,61 +13,60 @@ context:  &context
   # Application name (functional tenant, default use Chart name)
   app: default-nexus
   # Version name of this application (default use Chart appVersion)
-  version: "3.84.0"
+  version: "3.90.3"
 
-# Deploy an Nexus server
+# Deploy a Nexus server instance
 nexus:
   # Enable the configuration of the Nexus server
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
   hooked: false
-  # Name of the deployed instance of NexusConfig
+  # Name of the deployed instance of NexusRepo
   name: default
-  # The applyed Nexus config specifications
+  # The applied Nexus config specifications
   spec: |
     daemonNodeSelector:
       node-role.kubernetes.io/worker: ""
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
-project: 
+# openshift-operators already exists as a system namespace — keep disabled
+project:
   enabled: false
-  context: 
+  context:
     <<: *context
-  project: 
+  project:
     enabled: true
     hooked: false
     type: namespace
-    name: "startx-nexus"
+    name: "openshift-operators"
     display_name: Operator NEXUS
-    description: Nexus configured by STARTX
+    description: Nexus HA configured by STARTX
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
     hooked: false
-    name: "nxrm-operator-certified"
-    namespace: "startx-nexus"
-    version: "v3.84.0-1"
-    operator: 
+    name: "nexus-repository-ha-operator-certified"
+    namespace: "openshift-operators"
+    version: "v3.90.3-1"
+    operator:
       channel: stable
-      name: nxrm-operator-certified
+      name: nexus-repository-ha-operator-certified
       installPlanApproval: Automatic
-      # csv: nxrm-operator-certified
-      source: 
+      # csv: nexus-repository-ha-operator-certified.v3.90.3-1
+      source:
         name: certified-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
-    # target: "all-ns"
-    name: "startx-nexus"
-    namespace: "startx-nexus" 
+    name: "global-operators"
+    namespace: "openshift-operators"
     providedAPIs: "NexusRepo.v1alpha1.sonatype.com"
-
