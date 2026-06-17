@@ -1,14 +1,14 @@
 {{- if .Values.nexus.enabled -}}
-{{- $namespace := .Values.project.project.name | default "openshift-nexus" -}}
+{{- $namespace := .Values.nexus.namespace | default .Values.project.project.name -}}
 {{- $spec := .Values.nexus.spec | default "{}" -}}
-apiVersion: nexus.openshift.io/v1
-kind: PtpConfig
+apiVersion: sonatype.com/v1alpha1
+kind: NexusRepo
 metadata:
-  name: {{ .Values.nexus.name | default "quote" | quote }}
+  name: {{ .Values.nexus.name | default "default" | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-nexus.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- .Values.nexus.name | default "quote" -}}-nexusconfig"
+    app.kubernetes.io/name: "{{- .Values.nexus.name | default "default" -}}-nexusrepo"
   annotations:
     {{- include "cluster-nexus.annotations" . | nindent 4 }}
     {{- if .Values.nexus.hooked }}
