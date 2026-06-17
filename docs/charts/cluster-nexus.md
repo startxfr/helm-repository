@@ -38,10 +38,11 @@ helm install cluster-nexus startx/cluster-nexus
 
 ## Default values
 
-Complete deployment of a project with the following characteristics :
+Complete deployment with the following characteristics:
 
-!!! todo
-    Complete this section
+- Deploy a **Subscription** named `nexus-repository-ha-operator-certified` in `openshift-operators`
+- Deploy an **OperatorGroup** named `global-operators` in `openshift-operators` (all-namespaces scope)
+- The `project` sub-chart is disabled — `openshift-operators` is a pre-existing system namespace
 
 ```bash
 # base configuration running default configuration
@@ -61,7 +62,8 @@ helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent
 ### Deploy via ArgoCD Application
 
 Create an ArgoCD `Application` resource to deploy `cluster-nexus` from the STARTX S3 Helm repository.
-This example enables the project namespace, the operator subscription, and the OperatorGroup:
+This example deploys the Nexus HA operator in `openshift-operators` (all-namespaces scope).
+The `project` sub-chart is disabled since `openshift-operators` is a pre-existing system namespace:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -70,12 +72,12 @@ metadata:
   name: cluster-nexus
   namespace: openshift-gitops
 spec:
-  description: Deploy the Nexus Repository operator on OpenShift
+  description: Deploy the Nexus Repository HA operator on OpenShift
   sourceRepos:
     - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
   destinations:
     - server: https://kubernetes.default.svc
-      namespace: startx-nexus
+      namespace: openshift-operators
     - server: https://kubernetes.default.svc
       namespace: '*'
   clusterResourceWhitelist:
@@ -97,19 +99,34 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: startx-nexus
+    namespace: openshift-operators
     server: https://kubernetes.default.svc
   project: cluster-nexus
   source:
     chart: cluster-nexus
     helm:
       values: |
+        nexus:
+          enabled: false
         project:
-          enabled: true
+          enabled: false
         operator:
           enabled: true
+          subscription:
+            name: "nexus-repository-ha-operator-certified"
+            namespace: "openshift-operators"
+            version: "v3.90.3-1"
+            operator:
+              channel: stable
+              name: nexus-repository-ha-operator-certified
+              source:
+                name: certified-operators
+                namespace: openshift-marketplace
           operatorGroup:
             enabled: true
+            name: "global-operators"
+            namespace: "openshift-operators"
+            providedAPIs: "NexusRepo.v1alpha1.sonatype.com"
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.11
   syncPolicy:
