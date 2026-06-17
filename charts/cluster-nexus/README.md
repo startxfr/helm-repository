@@ -93,7 +93,59 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-nexus
+  name: cluster-nexus-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-operators
+    server: https://kubernetes.default.svc
+  project: cluster-nexus
+  source:
+    chart: cluster-nexus
+    helm:
+      values: |
+        project:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-nexus-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-operators
+    server: https://kubernetes.default.svc
+  project: cluster-nexus
+  source:
+    chart: cluster-nexus
+    helm:
+      values: |
+        operator:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-nexus-app
   namespace: openshift-gitops
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -107,34 +159,13 @@ spec:
     helm:
       values: |
         nexus:
-          enabled: false
-        project:
-          enabled: false
-        operator:
           enabled: true
-          subscription:
-            name: "nexus-repository-ha-operator-certified"
-            namespace: "openshift-operators"
-            version: "v3.90.3-1"
-            operator:
-              channel: stable
-              name: nexus-repository-ha-operator-certified
-              source:
-                name: certified-operators
-                namespace: openshift-marketplace
-          operatorGroup:
-            enabled: true
-            name: "global-operators"
-            namespace: "openshift-operators"
-            providedAPIs: "NexusRepo.v1alpha1.sonatype.com"
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.11
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
 ```
 
 Apply with:
@@ -441,3 +472,4 @@ The automated sync policy ensures ArgoCD reconciles the Nexus Repository operato
 | 21.3.4 | 2026-06-17 | Improve cluster-nexus options |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-17 | Improve cluster-nexus options |
+| 21.3.13 | 2026-06-17 | Improve cluster-nexus options |
