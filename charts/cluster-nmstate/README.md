@@ -94,3 +94,4 @@ helm install cluster-nmstate startx/cluster-nmstate -f https://raw.githubusercon
 | 21.3.3  | 2026-06-16 | Initial chart creation for NMState operator on OCP 4.21 |
 | 21.3.3 | 2026-06-17 | Initialise nmstate chart
 | 21.3.3 | 2026-06-17 | New chart nmstate
+| 21.3.3 | 2026-06-17 | Release nmstate chart
