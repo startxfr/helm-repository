@@ -1,82 +1,82 @@
-# ![cluster-auth](https://helm-repository.readthedocs.io/en/latest/img/cluster-auth.svg "Cluster Chart : Auth") Cluster Chart : Auth
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--auth-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+auth+startx)
-
-This helm chart is used to configure Auth at the cluster level.
-
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like auth.
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/cluster-auth
-```
-
-### 4. Install this chart
-
-```bash
-helm install cluster-auth startx/cluster-auth
-```
-
-## Default values
-
-Complete configuration of the OCP authentification with the following characteristics :
-
-- 3 auth templates in **openshift-config**
-  - 1 template login set to **default-login**
-  - 1 template errors set to **default-errors**
-  - 1 template providers set to **default-providers**
-- 1 auth backend set to **htpasswd** named **default-htpasswd** with
-  - 1 user **dev**
-
-```bash
-# base configuration running default configuration
-helm install cluster-auth startx/cluster-auth
-```
-
-## Others values availables
-
-- **startx** : Startx auth cluster wide service configuration using startx group (dev, devops and ops) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml))
-  - 3 auth templates in **openshift-config**
-    - 1 template login set to **startx-login**
-    - 1 template errors set to **startx-errors**
-    - 1 template providers set to **startx-providers**
-  - 1 auth backend set to **htpasswd** named **default-htpasswd** with
-    - 1 user **dev**
-    - 1 user **devops**
-    - 1 user **ops**
-    - 1 user **admin**
-
-```bash
-helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml
-```
-
-- **startx-mg** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml))
-
-```bash
-helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml
-```
-
-## History
-
+# ![cluster-auth](https://helm-repository.readthedocs.io/en/latest/img/cluster-auth.svg "Cluster Chart : Auth") Cluster Chart : Auth |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--auth-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+auth+startx) |
+ |
+This helm chart is used to configure Auth at the cluster level. |
+ |
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like auth. |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use theses resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/cluster-auth |
+``` |
+ |
+### 4. Install this chart |
+ |
+```bash |
+helm install cluster-auth startx/cluster-auth |
+``` |
+ |
+## Default values |
+ |
+Complete configuration of the OCP authentification with the following characteristics : |
+ |
+- 3 auth templates in **openshift-config** |
+  - 1 template login set to **default-login** |
+  - 1 template errors set to **default-errors** |
+  - 1 template providers set to **default-providers** |
+- 1 auth backend set to **htpasswd** named **default-htpasswd** with |
+  - 1 user **dev** |
+ |
+```bash |
+# base configuration running default configuration |
+helm install cluster-auth startx/cluster-auth |
+``` |
+ |
+## Others values availables |
+ |
+- **startx** : Startx auth cluster wide service configuration using startx group (dev, devops and ops) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml)) |
+  - 3 auth templates in **openshift-config** |
+    - 1 template login set to **startx-login** |
+    - 1 template errors set to **startx-errors** |
+    - 1 template providers set to **startx-providers** |
+  - 1 auth backend set to **htpasswd** named **default-htpasswd** with |
+    - 1 user **dev** |
+    - 1 user **devops** |
+    - 1 user **ops** |
+    - 1 user **admin** |
+ |
+```bash |
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml |
+``` |
+ |
+- **startx-mg** : Startx gitops cluster wide service configuration using startx group (dev, devops and ops) (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml)) |
+ |
+```bash |
+helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml |
+``` |
+ |
+## History |
+ |
 | Release  | Date       | Description                                                                                                                                             |
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 0.3.21   | 2020-11-07 | Create chart cluster-auth from cluster-auth and add support for default and startx console oauth templates and enable htpasswd identity backend support |
@@ -412,4 +412,6 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |

@@ -1,49 +1,49 @@
-# ![chaos-monkey](https://helm-repository.readthedocs.io/en/latest/img/chaos-monkey.svg "Chaos Chart : Monkeys") Chaos Chart : ChaosMonkeys
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--monkey-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+monkey+startx)
-
-This helm chart used to deploy kube-monkey on Openshift or Kubernetes cluster.
-Kube-monkey is a chaos injection tool that randomly terminates pods during business hours to test application resilience.
-
-This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use these resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/chaos-monkey
-```
-
-### 4. Install this component
-
-```bash
-# Install the monkey project
-helm install --set project.enabled=true chaos-monkey-project  startx/chaos-monkey
-# Deploy the monkey instance
-helm install --set monkey.enabled=true  chaos-monkey-instance startx/chaos-monkey
-```
-
-## Values dictionary
-
-### context values dictionary
-
+# ![chaos-monkey](https://helm-repository.readthedocs.io/en/latest/img/chaos-monkey.svg "Chaos Chart : Monkeys") Chaos Chart : ChaosMonkeys |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--monkey-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+monkey+startx) |
+ |
+This helm chart used to deploy kube-monkey on Openshift or Kubernetes cluster. |
+Kube-monkey is a chaos injection tool that randomly terminates pods during business hours to test application resilience. |
+ |
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts). |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use these resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/chaos-monkey |
+``` |
+ |
+### 4. Install this component |
+ |
+```bash |
+# Install the monkey project |
+helm install --set project.enabled=true chaos-monkey-project  startx/chaos-monkey |
+# Deploy the monkey instance |
+helm install --set monkey.enabled=true  chaos-monkey-instance startx/chaos-monkey |
+``` |
+ |
+## Values dictionary |
+ |
+### context values dictionary |
+ |
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
@@ -52,113 +52,113 @@ helm install --set monkey.enabled=true  chaos-monkey-instance startx/chaos-monke
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | kube-monkey     | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### chaos-monkey values dictionary
-
+ |
+### chaos-monkey values dictionary |
+ |
 | Key            | Default | Description                                                                                                                                                                                                                                                                       |
 | -------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | project        | {...}   | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
 | project.enable | false   | Enable creation of the namespace                                                                                                                                                                                                                                                  |
 | monkey         | {...}   | Configuration of the kube-monkey deployment. Inherit from the [asobti kube-monkey chart](https://asobti.github.io/kube-monkey/charts/repo) (see [chart options](https://asobti.github.io/kube-monkey/charts/repo) for more options)                                               |
 | monkey.enable  | false   | Enable deploying the kube-monkey chaos injector                                                                                                                                                                                                                                         |
-
-## Values files
-
-### Default values file (values.yaml)
-
-Simple monkey with default configuration :
-
-- 1 **project** named **chaos-monkey**
-- 1 **scc** with privileged context for **monkey** deployment
-- 1 **kube-monkey** deployment using asobti helm chart
-
-```bash
-# Install the kube-monkey project
-helm install --set project.enable=true chaos-monkey-project startx/chaos-monkey
-# Deploy the kube-monkey instance
-helm install --set monkey.enable=true -n chaos-monkey chaos-monkey-instance startx/chaos-monkey
-```
-
-### STARTX values file (values-startx-xxx.yaml)
-
-Same as the default configuration but with namespace prefixed with startx-
-
-```bash
-# Configuration running demo example configuration
-helm install chaos-monkey-project startx/chaos-monkey -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-project.yaml
-helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-deploy.yaml
-```
-
-## Usage examples
-
-### Deploy kube-monkey with basic kill schedule
-
-Enable kube-monkey to run daily at 8am and terminate pods in opted-in namespaces:
-
-```yaml
-# my-monkey-values.yaml
-context:
-  scope: myorg
-  cluster: prod-cluster
-  environment: chaos
-  component: monkey
-  app: kube-monkey
-
-monkey:
-  enabled: true
-  config:
-    dryRun: false
-    timezone: America/New_York
-    startHour: 8
-    endHour: 17
-    gracePeriodSec: 5
-    killAllOnFail: false
-    debug:
-      enabled: false
-```
-
-```bash
-helm install chaos-monkey-instance startx/chaos-monkey -f my-monkey-values.yaml -n chaos-monkey
-```
-
-### Dry-run mode (simulate without killing)
-
-Test the configuration without actually terminating pods:
-
-```yaml
-# my-monkey-dryrun-values.yaml
-monkey:
-  enabled: true
-  config:
-    dryRun: true
-    timezone: Europe/Paris
-    startHour: 9
-    endHour: 18
-```
-
-```bash
-helm install chaos-monkey-dryrun startx/chaos-monkey -f my-monkey-dryrun-values.yaml -n chaos-monkey
-```
-
-### Opt in a deployment for kube-monkey
-
-Add annotations to your application's Deployment to opt in and set the kill probability:
-
-```yaml
-# In your application Deployment manifest
-metadata:
-  labels:
-    kube-monkey/enabled: "enabled"
-  annotations:
-    kube-monkey/enabled: "enabled"
-    kube-monkey/identifier: "myapp"
-    kube-monkey/mtbf: "3"           # mean time between failures (days)
-    kube-monkey/kill-mode: "fixed"  # or "random-max-percent"
-    kube-monkey/kill-value: "1"     # number of pods to kill
-```
-
-## History
-
+ |
+## Values files |
+ |
+### Default values file (values.yaml) |
+ |
+Simple monkey with default configuration : |
+ |
+- 1 **project** named **chaos-monkey** |
+- 1 **scc** with privileged context for **monkey** deployment |
+- 1 **kube-monkey** deployment using asobti helm chart |
+ |
+```bash |
+# Install the kube-monkey project |
+helm install --set project.enable=true chaos-monkey-project startx/chaos-monkey |
+# Deploy the kube-monkey instance |
+helm install --set monkey.enable=true -n chaos-monkey chaos-monkey-instance startx/chaos-monkey |
+``` |
+ |
+### STARTX values file (values-startx-xxx.yaml) |
+ |
+Same as the default configuration but with namespace prefixed with startx- |
+ |
+```bash |
+# Configuration running demo example configuration |
+helm install chaos-monkey-project startx/chaos-monkey -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-project.yaml |
+helm install chaos-monkey-deploy startx/chaos-monkey -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-deploy.yaml |
+``` |
+ |
+## Usage examples |
+ |
+### Deploy kube-monkey with basic kill schedule |
+ |
+Enable kube-monkey to run daily at 8am and terminate pods in opted-in namespaces: |
+ |
+```yaml |
+# my-monkey-values.yaml |
+context: |
+  scope: myorg |
+  cluster: prod-cluster |
+  environment: chaos |
+  component: monkey |
+  app: kube-monkey |
+ |
+monkey: |
+  enabled: true |
+  config: |
+    dryRun: false |
+    timezone: America/New_York |
+    startHour: 8 |
+    endHour: 17 |
+    gracePeriodSec: 5 |
+    killAllOnFail: false |
+    debug: |
+      enabled: false |
+``` |
+ |
+```bash |
+helm install chaos-monkey-instance startx/chaos-monkey -f my-monkey-values.yaml -n chaos-monkey |
+``` |
+ |
+### Dry-run mode (simulate without killing) |
+ |
+Test the configuration without actually terminating pods: |
+ |
+```yaml |
+# my-monkey-dryrun-values.yaml |
+monkey: |
+  enabled: true |
+  config: |
+    dryRun: true |
+    timezone: Europe/Paris |
+    startHour: 9 |
+    endHour: 18 |
+``` |
+ |
+```bash |
+helm install chaos-monkey-dryrun startx/chaos-monkey -f my-monkey-dryrun-values.yaml -n chaos-monkey |
+``` |
+ |
+### Opt in a deployment for kube-monkey |
+ |
+Add annotations to your application's Deployment to opt in and set the kill probability: |
+ |
+```yaml |
+# In your application Deployment manifest |
+metadata: |
+  labels: |
+    kube-monkey/enabled: "enabled" |
+  annotations: |
+    kube-monkey/enabled: "enabled" |
+    kube-monkey/identifier: "myapp" |
+    kube-monkey/mtbf: "3"           # mean time between failures (days) |
+    kube-monkey/kill-mode: "fixed"  # or "random-max-percent" |
+    kube-monkey/kill-value: "1"     # number of pods to kill |
+``` |
+ |
+## History |
+ |
 | Release  | Date       | Description                                                                                                                                                 |
 | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 10.12.5  | 2022-06-03 | Initial commit of the example and poc chart example-chaos                                                                                                   |
@@ -384,4 +384,6 @@ metadata:
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |

@@ -1,45 +1,45 @@
-# ![project](https://helm-repository.readthedocs.io/en/latest/img/project.svg "Basic Chart : Project") Basic Chart : Project
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_project-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=project+startx)
-
-This helm chart is used to create a project, or namespace, with various options constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas.
-
-This chart is part of the [basic-xxx startx helm chart series](https://helm-repository.readthedocs.io#basic-helm-charts) used by [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts) and [example-xxx charts](https://helm-repository.readthedocs.io#examples-helm-charts).
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/project
-```
-
-### 4. Install this chart
-
-```bash
-helm install project startx/project
-```
-
-## Values dictionary
-
-### context values dictionary
-
+# ![project](https://helm-repository.readthedocs.io/en/latest/img/project.svg "Basic Chart : Project") Basic Chart : Project |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_project-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=project+startx) |
+ |
+This helm chart is used to create a project, or namespace, with various options constraint resources like networkPolicy, RoleBinding, LimitRange and Quotas. |
+ |
+This chart is part of the [basic-xxx startx helm chart series](https://helm-repository.readthedocs.io#basic-helm-charts) used by [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts) and [example-xxx charts](https://helm-repository.readthedocs.io#examples-helm-charts). |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use theses resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/project |
+``` |
+ |
+### 4. Install this chart |
+ |
+```bash |
+helm install project startx/project |
+``` |
+ |
+## Values dictionary |
+ |
+### context values dictionary |
+ |
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
@@ -48,9 +48,9 @@ helm install project startx/project
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | project   | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### project values dictionary
-
+ |
+### project values dictionary |
+ |
 | Key                         | Default         | Description                                                |
 | --------------------------- | --------------- | ---------------------------------------------------------- |
 | project.type                | project         | Define the type of tenant to create (project or namespace) |
@@ -74,121 +74,121 @@ helm install project startx/project
 | limits.rules                | string          | Specifications of the limitRange resource                 |
 | quotas.enabled              | false           | Enable quotas for this project                             |
 | quotas.rules                | string          | Specifications of the quotas resource                     |
-
-## Values files
-
-### Default values file (values.yaml)
-
-Complete deployment of a project with the following characteristics :
-
-- 1 **project** named **example-project**
-
-```bash
-# base configuration running default configuration
-helm install project startx/project
-```
-
-### Demo kustomize values file (values-demo-kustomize.yaml)
-
-Complete deployment of a demo kustomize project with the following characteristics :
-
-- 1 **project** named **demo-kustomize**
-- 4 **RBAC** rules enabled
-  - 1 **group RBAC** named **dev** binding group **dev** to role **view**
-  - 1 **group RBAC** named **devops** binding group **devops** to role **edit**
-  - 1 **group RBAC** named **ops** binding group **ops** to role **admin**
-  - 1 **user RBAC** named **argocd-controller-sa** binding user **sa argocd-application-controller** to role **edit**
-- 1 **networkpolicy** rules disabled
-- 1 **limitRange** rules enabled
-- 1 **quotas** rules enabled
-
-```bash
-# base configuration running demo kustomize configuration
-helm install project-demo-kustomize startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml
-```
-
-### Demo helm values file (values-demo-helm.yaml)
-
-Complete deployment of a demo helm project with the following characteristics :
-
-- 1 **project** named **demo-helm**
-- 4 **RBAC** rules enabled
-  - 1 **group RBAC** named **dev** binding group **dev** to role **basic-user**
-  - 1 **group RBAC** named **devops** binding group **devops** to role **edit**
-  - 1 **group RBAC** named **ops** binding group **ops** to role **admin**
-  - 1 **user RBAC** named **argocd-controller-sa** binding user **sa argocd-application-controller** to role **edit**
-- 2 **networkpolicy** rules enabled
-  - 1 networkpolicy named **allow-from-openshift-ingress**
-  - 1 networkpolicy named **allow-from-same-namespace**
-- 1 **limitRange** rules enabled
-- 1 **quotas** rules enabled
-
-```bash
-# base configuration running demo helm configuration
-helm install project-demo-helm startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml
-```
-
-### Demo argocd values file (values-demo-argocd.yaml)
-
-Complete deployment of a demo argocd project with the following characteristics :
-
-- 1 **project** named **demo-argocd**
-- 4 **RBAC** rules enabled
-  - 1 **group RBAC** named **dev** binding group **dev** to role **view**
-  - 1 **group RBAC** named **devops** binding group **devops** to role **edit**
-  - 1 **group RBAC** named **ops** binding group **ops** to role **admin**
-  - 1 **user RBAC** named **argocd-controller-sa** binding user **sa argocd-application-controller** to role **edit**
-- 2 **networkpolicy** rules disabled
-- 1 **limitRange** rules enabled
-- 1 **quotas** rules enabled
-
-```bash
-# base configuration running demo argocd configuration
-helm install project-demo-argocd startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml
-```
-
-### Demo example values file (values-demo-example.yaml)
-
-Complete deployment of a demo example project with the following characteristics :
-
-- 1 **namespace** named **example-project**
-- 2 **RBAC** rules enabled
-  - 1 **group RBAC** named **mygroup** binding group **mygroup_example** to role **basic-user**
-  - 1 **user RBAC** named **myuser** binding user **myuser_example** to role **basic-user**
-- 2 **networkpolicy** rules enabled
-  - 1 networkpolicy named **allow-from-openshift-ingress**
-  - 1 networkpolicy named **allow-from-same-namespace**
-- 1 **limitRange** rules enabled
-- 1 **quotas** rules enabled
-
-```bash
-# base configuration running demo example configuration
-helm install project-example-project startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-example.yaml
-```
-
-### Startx values file (values-startx.yaml)
-
-Complete deployment of a startx project with the following characteristics :
-
-- 1 **project** named **startx-project**
-- 4 **RBAC** rules enabled
-  - 1 **group RBAC** named **dev** binding group **dev** to role **basic-user**
-  - 1 **group RBAC** named **devops** binding group **devops** to role **edit**
-  - 1 **group RBAC** named **ops** binding group **ops** to role **admin**
-  - 1 **user RBAC** named **dev** binding user **dev** to role **basic-user**
-- 2 **networkpolicy** rules enabled
-  - 1 networkpolicy named **allow-from-openshift-ingress**
-  - 1 networkpolicy named **allow-from-same-namespace**
-- 1 **limitRange** rules enabled
-- 1 **quotas** rules enabled
-
-```bash
-# base configuration running startx configuration
-helm install project-startx startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
-```
-
-## History
-
+ |
+## Values files |
+ |
+### Default values file (values.yaml) |
+ |
+Complete deployment of a project with the following characteristics : |
+ |
+- 1 **project** named **example-project** |
+ |
+```bash |
+# base configuration running default configuration |
+helm install project startx/project |
+``` |
+ |
+### Demo kustomize values file (values-demo-kustomize.yaml) |
+ |
+Complete deployment of a demo kustomize project with the following characteristics : |
+ |
+- 1 **project** named **demo-kustomize** |
+- 4 **RBAC** rules enabled |
+  - 1 **group RBAC** named **dev** binding group **dev** to role **view** |
+  - 1 **group RBAC** named **devops** binding group **devops** to role **edit** |
+  - 1 **group RBAC** named **ops** binding group **ops** to role **admin** |
+  - 1 **user RBAC** named **argocd-controller-sa** binding user **sa argocd-application-controller** to role **edit** |
+- 1 **networkpolicy** rules disabled |
+- 1 **limitRange** rules enabled |
+- 1 **quotas** rules enabled |
+ |
+```bash |
+# base configuration running demo kustomize configuration |
+helm install project-demo-kustomize startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-kustomize.yaml |
+``` |
+ |
+### Demo helm values file (values-demo-helm.yaml) |
+ |
+Complete deployment of a demo helm project with the following characteristics : |
+ |
+- 1 **project** named **demo-helm** |
+- 4 **RBAC** rules enabled |
+  - 1 **group RBAC** named **dev** binding group **dev** to role **basic-user** |
+  - 1 **group RBAC** named **devops** binding group **devops** to role **edit** |
+  - 1 **group RBAC** named **ops** binding group **ops** to role **admin** |
+  - 1 **user RBAC** named **argocd-controller-sa** binding user **sa argocd-application-controller** to role **edit** |
+- 2 **networkpolicy** rules enabled |
+  - 1 networkpolicy named **allow-from-openshift-ingress** |
+  - 1 networkpolicy named **allow-from-same-namespace** |
+- 1 **limitRange** rules enabled |
+- 1 **quotas** rules enabled |
+ |
+```bash |
+# base configuration running demo helm configuration |
+helm install project-demo-helm startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-helm.yaml |
+``` |
+ |
+### Demo argocd values file (values-demo-argocd.yaml) |
+ |
+Complete deployment of a demo argocd project with the following characteristics : |
+ |
+- 1 **project** named **demo-argocd** |
+- 4 **RBAC** rules enabled |
+  - 1 **group RBAC** named **dev** binding group **dev** to role **view** |
+  - 1 **group RBAC** named **devops** binding group **devops** to role **edit** |
+  - 1 **group RBAC** named **ops** binding group **ops** to role **admin** |
+  - 1 **user RBAC** named **argocd-controller-sa** binding user **sa argocd-application-controller** to role **edit** |
+- 2 **networkpolicy** rules disabled |
+- 1 **limitRange** rules enabled |
+- 1 **quotas** rules enabled |
+ |
+```bash |
+# base configuration running demo argocd configuration |
+helm install project-demo-argocd startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml |
+``` |
+ |
+### Demo example values file (values-demo-example.yaml) |
+ |
+Complete deployment of a demo example project with the following characteristics : |
+ |
+- 1 **namespace** named **example-project** |
+- 2 **RBAC** rules enabled |
+  - 1 **group RBAC** named **mygroup** binding group **mygroup_example** to role **basic-user** |
+  - 1 **user RBAC** named **myuser** binding user **myuser_example** to role **basic-user** |
+- 2 **networkpolicy** rules enabled |
+  - 1 networkpolicy named **allow-from-openshift-ingress** |
+  - 1 networkpolicy named **allow-from-same-namespace** |
+- 1 **limitRange** rules enabled |
+- 1 **quotas** rules enabled |
+ |
+```bash |
+# base configuration running demo example configuration |
+helm install project-example-project startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-example.yaml |
+``` |
+ |
+### Startx values file (values-startx.yaml) |
+ |
+Complete deployment of a startx project with the following characteristics : |
+ |
+- 1 **project** named **startx-project** |
+- 4 **RBAC** rules enabled |
+  - 1 **group RBAC** named **dev** binding group **dev** to role **basic-user** |
+  - 1 **group RBAC** named **devops** binding group **devops** to role **edit** |
+  - 1 **group RBAC** named **ops** binding group **ops** to role **admin** |
+  - 1 **user RBAC** named **dev** binding user **dev** to role **basic-user** |
+- 2 **networkpolicy** rules enabled |
+  - 1 networkpolicy named **allow-from-openshift-ingress** |
+  - 1 networkpolicy named **allow-from-same-namespace** |
+- 1 **limitRange** rules enabled |
+- 1 **quotas** rules enabled |
+ |
+```bash |
+# base configuration running startx configuration |
+helm install project-startx startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml |
+``` |
+ |
+## History |
+ |
 | Release  | Date       | Description                                                                                            |
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 0.2.51   | 2020-10-31 | Initial commit for this chart with default and dev value examples                                      |
@@ -559,4 +559,6 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
