@@ -71,15 +71,41 @@ This example enables the project namespace, the operator subscription, and the O
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: AppProject
 metadata:
   name: cluster-nmstate
   namespace: openshift-gitops
 spec:
+  description: Deploy the NMState network operator on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: openshift-nmstate
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: operators.coreos.com
+      kind: OperatorGroup
+    - group: operators.coreos.com
+      kind: Subscription
+    - group: nmstate.io
+      kind: NMState
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-nmstate
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
   destination:
     namespace: openshift-nmstate
     server: https://kubernetes.default.svc
-  project: cluster-operators
+  project: cluster-nmstate
   source:
     chart: cluster-nmstate
     helm:
