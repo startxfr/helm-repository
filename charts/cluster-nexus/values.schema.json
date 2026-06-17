@@ -102,10 +102,36 @@
                     "type": "boolean"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Repository name",
+                    "description": "Name of the nexus instance.",
+                    "default": "default",
+                    "examples": [
+                        "default",
+                        "my-repo",
+                        "nexus-repo"
+                    ]
+                },
+                "namespace": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Repository namespace",
+                    "description": "Namespace fo the NexusRepo instance.",
+                    "default": "default",
+                    "examples": [
+                        "default",
+                        "my-repo",
+                        "nexus-repo"
+                    ]
                 },
                 "spec": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 5,
+                    "title": "Nexus specs",
+                    "description": "Spec of the NexusRepo instance."
                 }
             }
         },

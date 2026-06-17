@@ -23,6 +23,8 @@ nexus:
   hooked: false
   # Name of the deployed instance of NexusRepo
   name: default
+  # Namespace of the deployed instance of NexusRepo
+  namespace: startx-nexus
   # The applied Nexus config specifications
   spec: |
     daemonNodeSelector:
@@ -39,9 +41,9 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "openshift-operators"
-    display_name: Operator NEXUS
-    description: Nexus HA configured by STARTX
+    name: "startx-nexus"
+    display_name: Instance NEXUS
+    description: Nexus repository server configured by STARTX
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
