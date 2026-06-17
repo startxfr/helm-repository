@@ -1,74 +1,74 @@
-# ![sxapi](https://helm-repository.readthedocs.io/en/latest/img/sxapi.svg "Basic Chart : SXAPI") Basic Chart : SXAPI
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_sxapi-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=sxapi+startx)
-
-This helm chart is used to deploy a lightweight micro-service based on
-the [sxapi engine](https://sxapi-core.readthedocs.io). The deployment is exposed into the cluster
-and could be exposed outside by using various exposition method (ingress, route or nodePort).
-
-You can configure the behavior of you micro-service directly into your values.yaml file and versionning
-it will allow you to keep track of your application states.
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use STARTX helm chart.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/sxapi
-```
-
-### 4. Install this chart
-
-```bash
-helm install sxapi startx/sxapi
-```
-
-## Deploy this helm chart on kubernetes
-
-### 1. Connect to your kubernetes cluster
-
-```bash
-kubectl login -t <token> <cluster-url>
-```
-
-### 2. Install the STARTX helm repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Information about this chart
-
-```bash
-helm show chart startx/sxapi
-```
-
-### 4. Install sxapi chart
-
-```bash
-helm install sxapi startx/sxapi
-```
-
-## Values dictionary
-
-### context values dictionary
-
+# ![sxapi](https://helm-repository.readthedocs.io/en/latest/img/sxapi.svg "Basic Chart : SXAPI") Basic Chart : SXAPI |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_sxapi-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=sxapi+startx) |
+ |
+This helm chart is used to deploy a lightweight micro-service based on |
+the [sxapi engine](https://sxapi-core.readthedocs.io). The deployment is exposed into the cluster |
+and could be exposed outside by using various exposition method (ingress, route or nodePort). |
+ |
+You can configure the behavior of you micro-service directly into your values.yaml file and versionning |
+it will allow you to keep track of your application states. |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use STARTX helm chart. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/sxapi |
+``` |
+ |
+### 4. Install this chart |
+ |
+```bash |
+helm install sxapi startx/sxapi |
+``` |
+ |
+## Deploy this helm chart on kubernetes |
+ |
+### 1. Connect to your kubernetes cluster |
+ |
+```bash |
+kubectl login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the STARTX helm repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Information about this chart |
+ |
+```bash |
+helm show chart startx/sxapi |
+``` |
+ |
+### 4. Install sxapi chart |
+ |
+```bash |
+helm install sxapi startx/sxapi |
+``` |
+ |
+## Values dictionary |
+ |
+### context values dictionary |
+ |
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
@@ -77,9 +77,9 @@ helm install sxapi startx/sxapi
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | sxapi     | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### sxapi values dictionary
-
+ |
+### sxapi values dictionary |
+ |
 | Key                   | Default    | Description                                           |
 | --------------------- | ---------- | ----------------------------------------------------- |
 | sxapi.service.enabled | false      | Enable service for this application                   |
@@ -88,131 +88,131 @@ helm install sxapi startx/sxapi
 | sxapi.debug           | true       | Enable debuging of the container                      |
 | sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
 | sxapi.data            | string     | Files to load into the application                    |
-
-## Values files
-
-### Default values file
-
-The [values.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values.yaml) define a deployment with the following characteristics :
-
-- 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.63** sxapi image running the **prod:start** command with :
-  - debug disabled
-  - **/** : homepage with html content
-  - **/health** : health page
-  - **/info** : description of the micro-service
-  - **/ping** : return a pong message
-- 2 **configMap** for application instance configuration
-  - **lib** : Versionned content of the sxapi configuration file and related content
-  - **app** : Environment variable describing the application deployed in version _0.0.1_
-
-```bash
-# base configuration running default configuration
-helm install sxapi startx/sxapi
-```
-
-### Dev values file (values-dev.yaml)
-
-The [values-dev.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml) define a deployment with the following characteristics :
-
-- 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **latest** sxapi image running the **dev:start** command with :
-  - debug enabled
-  - **/** : homepage with html content
-  - **/health** : health page
-  - **/info** : description of the micro-service
-  - **/ping** : return a pong message
-- 2 **configMap** for application instance configuration
-  - **lib** : Versionned content of the sxapi configuration file and related content
-  - **app** : Environment variable describing the application deployed in version _0.0.2-devel_
-
-```bash
-# base configuration running dev configuration
-helm install sxapi-dev startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml
-```
-
-### Test values file (values-test.yaml)
-
-The [values-test.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml) define a deployment with the following characteristics :
-
-- 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **testing** sxapi image running the **prod:start** command with :
-  - debug enabled
-  - **/** : homepage with html content
-  - **/health** : health page
-  - **/info** : description of the micro-service
-  - **/ping** : return a pong message
-- 2 **configMap** for application instance configuration
-  - **lib** : Versionned content of the sxapi configuration file and related content
-  - **app** : Environment variable describing the application deployed in version _0.0.1-testing_
-
-```bash
-# base configuration running dev configuration
-helm install sxapi-test startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml
-```
-
-### Pre-prod-v1 values file (values-pprod-v1.yaml)
-
-The [values-pprod-v1.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml) define a deployment with the following characteristics :
-
-- 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with :
-  - debug disabled
-  - **/** : homepage with html content
-  - **/health** : health page
-  - **/info** : description of the micro-service
-- 2 **configMap** for application instance configuration
-  - **lib** : Versionned content of the sxapi configuration file and related content
-  - **app** : Environment variable describing the application deployed in version _0.0.1_
-
-```bash
-# base configuration running dev configuration
-helm install sxapi-pprod-v1 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml
-```
-
-### Prod-v1 values file (values-prod-v1.yaml)
-
-The [values-prod-v1.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml) define a deployment with the following characteristics :
-
-- 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with :
-  - debug disabled
-  - **/** : homepage with html content
-  - **/health** : health page
-  - **/info** : description of the micro-service
-- 2 **configMap** for application instance configuration
-  - **lib** : Versionned content of the sxapi configuration file and related content
-  - **app** : Environment variable describing the application deployed in version _0.0.1_
-
-```bash
-# base configuration running dev configuration
-helm install sxapi-prod-v1 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml
-```
-
-### Pre-prod-v2 values file (values-pprod-v2.yaml)
-
-The [values-pprod-v2.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml) define a deployment with the following characteristics :
-
-- 1 **service** named **sxapi** load balancing to pod deployed
-- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.63** sxapi image running the **prod:start** command with :
-  - debug disabled
-  - **/** : homepage with html content
-  - **/health** : health page
-  - **/info** : description of the micro-service
-  - **/ping** : return a pong message
-- 2 **configMap** for application instance configuration
-  - **lib** : Versionned content of the sxapi configuration file and related content
-  - **app** : Environment variable describing the application deployed in version _0.0.2_
-
-```bash
-# base configuration running dev configuration
-helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml
-```
-
-## History
-
-### Version 6.x
-
+ |
+## Values files |
+ |
+### Default values file |
+ |
+The [values.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values.yaml) define a deployment with the following characteristics : |
+ |
+- 1 **service** named **sxapi** load balancing to pod deployed |
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.63** sxapi image running the **prod:start** command with : |
+  - debug disabled |
+  - **/** : homepage with html content |
+  - **/health** : health page |
+  - **/info** : description of the micro-service |
+  - **/ping** : return a pong message |
+- 2 **configMap** for application instance configuration |
+  - **lib** : Versionned content of the sxapi configuration file and related content |
+  - **app** : Environment variable describing the application deployed in version _0.0.1_ |
+ |
+```bash |
+# base configuration running default configuration |
+helm install sxapi startx/sxapi |
+``` |
+ |
+### Dev values file (values-dev.yaml) |
+ |
+The [values-dev.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml) define a deployment with the following characteristics : |
+ |
+- 1 **service** named **sxapi** load balancing to pod deployed |
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **latest** sxapi image running the **dev:start** command with : |
+  - debug enabled |
+  - **/** : homepage with html content |
+  - **/health** : health page |
+  - **/info** : description of the micro-service |
+  - **/ping** : return a pong message |
+- 2 **configMap** for application instance configuration |
+  - **lib** : Versionned content of the sxapi configuration file and related content |
+  - **app** : Environment variable describing the application deployed in version _0.0.2-devel_ |
+ |
+```bash |
+# base configuration running dev configuration |
+helm install sxapi-dev startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml |
+``` |
+ |
+### Test values file (values-test.yaml) |
+ |
+The [values-test.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml) define a deployment with the following characteristics : |
+ |
+- 1 **service** named **sxapi** load balancing to pod deployed |
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **testing** sxapi image running the **prod:start** command with : |
+  - debug enabled |
+  - **/** : homepage with html content |
+  - **/health** : health page |
+  - **/info** : description of the micro-service |
+  - **/ping** : return a pong message |
+- 2 **configMap** for application instance configuration |
+  - **lib** : Versionned content of the sxapi configuration file and related content |
+  - **app** : Environment variable describing the application deployed in version _0.0.1-testing_ |
+ |
+```bash |
+# base configuration running dev configuration |
+helm install sxapi-test startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml |
+``` |
+ |
+### Pre-prod-v1 values file (values-pprod-v1.yaml) |
+ |
+The [values-pprod-v1.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml) define a deployment with the following characteristics : |
+ |
+- 1 **service** named **sxapi** load balancing to pod deployed |
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with : |
+  - debug disabled |
+  - **/** : homepage with html content |
+  - **/health** : health page |
+  - **/info** : description of the micro-service |
+- 2 **configMap** for application instance configuration |
+  - **lib** : Versionned content of the sxapi configuration file and related content |
+  - **app** : Environment variable describing the application deployed in version _0.0.1_ |
+ |
+```bash |
+# base configuration running dev configuration |
+helm install sxapi-pprod-v1 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml |
+``` |
+ |
+### Prod-v1 values file (values-prod-v1.yaml) |
+ |
+The [values-prod-v1.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml) define a deployment with the following characteristics : |
+ |
+- 1 **service** named **sxapi** load balancing to pod deployed |
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.58** sxapi image running the **prod:start** command with : |
+  - debug disabled |
+  - **/** : homepage with html content |
+  - **/health** : health page |
+  - **/info** : description of the micro-service |
+- 2 **configMap** for application instance configuration |
+  - **lib** : Versionned content of the sxapi configuration file and related content |
+  - **app** : Environment variable describing the application deployed in version _0.0.1_ |
+ |
+```bash |
+# base configuration running dev configuration |
+helm install sxapi-prod-v1 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml |
+``` |
+ |
+### Pre-prod-v2 values file (values-pprod-v2.yaml) |
+ |
+The [values-pprod-v2.yaml example file](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml) define a deployment with the following characteristics : |
+ |
+- 1 **service** named **sxapi** load balancing to pod deployed |
+- 1 **deployment** named **sxapi** deploying **1 pod** from version **0.3.63** sxapi image running the **prod:start** command with : |
+  - debug disabled |
+  - **/** : homepage with html content |
+  - **/health** : health page |
+  - **/info** : description of the micro-service |
+  - **/ping** : return a pong message |
+- 2 **configMap** for application instance configuration |
+  - **lib** : Versionned content of the sxapi configuration file and related content |
+  - **app** : Environment variable describing the application deployed in version _0.0.2_ |
+ |
+```bash |
+# base configuration running dev configuration |
+helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml |
+``` |
+ |
+## History |
+ |
+### Version 6.x |
+ |
 | Release | Date       | Description                                                                                            |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 0.2.51  | 2020-10-31 | Initial commit for this chart with default and dev value examples                                      |
@@ -260,8 +260,8 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 0.3.480 | 2021-08-03 | publish stable update for the full repository                                                          |
 | 0.3.998 | 2021-08-04 | publish stable update for the full repository                                                          |
 | 0.3.999 | 2021-08-04 | Release stable version 0.3.999 align with ocp 4.7.13                                                   | |
-### Version 7.x
-
+### Version 7.x |
+ |
 | Release | Date       | Description                                                        |
 | ------- | ---------- | ------------------------------------------------------------------ |
 | 7.22.1  | 2021-08-04 | Move to release 7.22.1 to align versionning with ocp release cycle |
@@ -276,8 +276,8 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 7.22.23 | 2021-10-06 | Align basic charts to version 7.22.23                              |
 | 7.22.25 | 2021-10-06 | publish stable update for the full repository                      |
 | 7.22.27 | 2021-10-06 | publish stable update for the full repository                      | |
-### Version 8.x
-
+### Version 8.x |
+ |
 | Release | Date       | Description                                                                                    |
 | ------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 8.13.1  | 2021-10-06 | Stable release for OCP 4.8.13 version                                                          |
@@ -312,8 +312,8 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 8.20.66 | 2021-11-20 | Updating limits for context vars in values schema                                              |
 | 8.20.70 | 2021-11-20 | publish stable update for the full repository                                                  |
 | 8.20.71 | 2021-11-20 | Align all charts to Openshift version 4.8.21                                                   | |
-### Version 9.x
-
+### Version 9.x |
+ |
 | Release | Date       | Description                                                                   |
 | ------- | ---------- | ----------------------------------------------------------------------------- |
 | 9.8.1   | 2021-11-20 | Upgrade to Openshift version 4.9.8                                            |
@@ -363,8 +363,8 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 9.15.1  | 2022-06-01 | Align all chart for Openshift 4.9.15                                          |
 | 9.15.2  | 2022-06-01 | Align all charts to release 9.15.1                                            |
 | 9.15.3  | 2022-06-01 | Align all charts to release 9.15.3                                            | |
-### Version 10.x
-
+### Version 10.x |
+ |
 | Release  | Date       | Description                                         |
 | -------- | ---------- | --------------------------------------------------- |
 | 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                 |
@@ -388,8 +388,8 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 10.12.81 | 2022-07-02 | publish stable update for the full repository       |
 | 10.12.97 | 2022-07-03 | publish stable update for the full repository       |
 | 10.12.99 | 2022-09-16 | Initialize OCP 4.11 upgrade on all chart            | |
-### Version 11.x
-
+### Version 11.x |
+ |
 | Release   | Date       | Description                                                      |
 | --------- | ---------- | ---------------------------------------------------------------- |
 | 11.5.3    | 2022-09-17 | Align all STARTX charts to release 11.5.3                        |
@@ -449,8 +449,8 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 11.40.0   | 2023-08-18 | Align all helm chart to release 11.40.0 stable for OCP 4.11.40   |
 | 11.47.0   | 2023-08-18 | Align all helm chart to release 11.47.0 stable for OCP 4.11.47   |
 | 11.47.1   | 2023-08-18 | Update appVersion in Chart.yml                                   | |
-### Version 12.x
-
+### Version 12.x |
+ |
 | Release  | Date       | Description                                                                           |
 | -------- | ---------- | ------------------------------------------------------------------------------------- |
 | 12.0.0   | 2023-08-18 | Align all helm chart to release 12.0.0 transitionnal for OCP 4.12.0 target (unstable) |
@@ -471,16 +471,16 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 12.36.66 | 2023-11-14 | Update trunc to 255 for helper                                                        |
 | 12.36.69 | 2023-11-14 | move dependencies to version 12.36.65                                                 |
 | 12.45.0  | 2023-12-08 | Stable version aligned to Openshift version 4.12.45                                   | |
-### Version 13.x
-
+### Version 13.x |
+ |
 | Release | Date       | Description                                                                                                             |
 | ------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
 | 13.26.0 | 2023-12-08 | Unstable version aligned to Openshift version 4.13.26 to prepare the 13.26.x stable release (short lived)               |
 | 13.26.1 | 2023-12-09 | Minimum requirements for kubernetes is 1.26.0 version and upgrade all cluster-xxx charts to latest release for OCP 4.13 |
 | 13.26.2 | 2023-12-09 | upgrade all dependencies charts to version 13.26.0                                                                      |
 | 13.26.3 | 2023-12-09 | publish stable update for the full repository                                                                           | |
-### Version 14.x
-
+### Version 14.x |
+ |
 | Release  | Date       | Description                                                                                |
 | -------- | ---------- | ------------------------------------------------------------------------------------------ |
 | 14.6.1   | 2023-12-09 | iniFirst release for OCP 4.14 release. Aligned on 4.14.6 release                           |
@@ -601,4 +601,6 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
