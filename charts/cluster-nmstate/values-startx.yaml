@@ -1,0 +1,80 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: nmstate
+  app: startx-nmstate
+  version: "4.21.0"
+
+nmstate:
+  enabled: true
+  hooked: false
+  name: nmstate
+
+nncp:
+  enabled: false
+  hooked: false
+  name: default-network-policy
+  nodeSelector: {}
+  desiredState: |
+    interfaces: []
+    # interfaces:
+    # - name: br-ex
+    #   type: linux-bridge
+    #   state: up
+    #   ipv4:
+    #     enabled: true
+    #     dhcp: true
+    #   bridge:
+    #     options:
+    #       stp:
+    #         enabled: false
+    #     port:
+    #     - name: enp1s0
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-nmstate"
+    display_name: "Startx NMState"
+    requester: startx
+    description: NMState network operator configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "kubernetes-nmstate-operator"
+    namespace: "openshift-nmstate"
+    version: "4.21.0"
+    operator:
+      channel: "stable"
+      name: kubernetes-nmstate-operator
+      installPlanApproval: Automatic
+      # csv: kubernetes-nmstate-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+        # resources:
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-nmstate"
+    namespace: "openshift-nmstate"
+    providedAPIs: "NMState.v1.nmstate.io,NodeNetworkConfigurationEnactment.v1.nmstate.io,NodeNetworkConfigurationPolicy.v1.nmstate.io,NodeNetworkState.v1.nmstate.io"

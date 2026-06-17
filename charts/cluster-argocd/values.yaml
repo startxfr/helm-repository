@@ -4,13 +4,13 @@
 context: &context
   # Name of the global scope for this application (organisational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
   # Component name of this application (logical tenant)
   component: mycomponent
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: default-argocd
   # Version name of this application (default use Chart appVersion)
   version: "1.19.1"
@@ -59,9 +59,9 @@ argocd:
   #   repo:
   #     mountsatoken: true
 
-# Configuration of secrets to access various private repository used in argocd applications
+# Configuration of secrets to accesss various private repository used in argocd applications
 # Read https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ for more 
-# informations on how to setup theses resources
+# information on how to setup theses resources
 argocd_repocreds:
   # enable deployment of repository credentials
   enabled: false

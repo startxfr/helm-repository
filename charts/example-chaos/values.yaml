@@ -9,13 +9,13 @@
 context:  &context
 # Name of the global scope for this application (organisational tenant)
  scope: myscope
-# Name of the cluster running this application (plateform tenant)
+# Name of the cluster running this application (platform tenant)
  cluster: localhost
-# Name of the environement for this application (ex: dev, factory, preprod or prod)
+# Name of the environment for this application (ex: dev, factory, preprod or prod)
  environment: myenv
 # Component name of this application (logical tenant)
  component: helm
-# Application name (functionnal tenant, default use Chart name)
+# Application name (functional tenant, default use Chart name)
  app: example-chaos
 # Version name of this application (default use Chart appVersion)
  version: "0.0.1"
@@ -60,8 +60,8 @@ cerberus:
     token: 
       # The server URL to the target cluster API
       server: https://localhost:6443
-      # The token to use to get access. This token must have full 
-      # cluster admin access to perform some chaos scenarios
+      # The token to use to get accesss. This token must have full 
+      # cluster admin accesss to perform some chaos scenarios
       token: sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
     # # If mode is token, this property must be set with a full kubeconfig content
     # file: |
@@ -122,9 +122,9 @@ kraken:
     credentials: 
       # used region
       region: eu-west-3
-      # AWS access key ID
+      # AWS accesss key ID
       key_id: AKIAXXXXXXXXXXXXXXXX
-      # AWS secret access key
+      # AWS secret accesss key
       secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   # Kubeconfig of the chaos tested cluster (mandatory)
   kubeconfig:
@@ -134,8 +134,8 @@ kraken:
     token: 
       # The server URL to the target cluster API
       server: https://localhost:6443
-      # The token to use to get access. This token must have full 
-      # cluster admin access to perform some chaos scenarios
+      # The token to use to get accesss. This token must have full 
+      # cluster admin accesss to perform some chaos scenarios
       token: sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
     # # If mode is token, this property must be set with a full kubeconfig content
     # file: |
@@ -613,7 +613,7 @@ litmus:
       timeoutSeconds: 1
     persistence:
       size: 20Gi
-      accessMode: ReadWriteOnce
+      accesssMode: ReadWriteOnce
       # storageClass: ""
     service:
       type: ClusterIP

@@ -1,0 +1,241 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Deployment context",
+            "description": "Properties of the deployment context.",
+            "required": [
+                "scope",
+                "cluster",
+                "environment",
+                "component",
+                "app"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organizational tenant.",
+                    "default": "myscope",
+                    "examples": [
+                        "myscope",
+                        "mycustomer"
+                    ]
+                },
+                "cluster": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "localhost",
+                    "examples": [
+                        "mycluster",
+                        "localhost"
+                    ]
+                },
+                "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Environment name",
+                    "description": "Name of the environment for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "nmstate",
+                    "examples": [
+                        "mycomp",
+                        "myservice"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application. Define a functional tenant.",
+                    "default": "default-nmstate",
+                    "examples": [
+                        "myapp",
+                        "default-nmstate"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Version name",
+                    "description": "Name of the application version. Default use Chart appVersion.",
+                    "default": "4.21.0",
+                    "examples": [
+                        "4.21.0",
+                        "4.20.0"
+                    ]
+                }
+            }
+        },
+        "nmstate": {
+            "type": "object",
+            "title": "NMState instance",
+            "description": "Configuration of the NMState CR that activates the operator.",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable NMState CR",
+                    "description": "Enable the creation of the NMState CR to activate the operator daemonset.",
+                    "default": true
+                },
+                "hooked": {
+                    "type": "boolean",
+                    "title": "Deploy as hook",
+                    "description": "Activate the resource as a Helm/ArgoCD post-sync hook.",
+                    "default": false
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Instance name",
+                    "description": "Name of the NMState instance. Must be 'nmstate' for the operator to reconcile.",
+                    "default": "nmstate"
+                }
+            }
+        },
+        "nncp": {
+            "type": "object",
+            "title": "NodeNetworkConfigurationPolicy",
+            "description": "Configuration of a NodeNetworkConfigurationPolicy to define desired node network state.",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable NNCP",
+                    "description": "Enable the deployment of a NodeNetworkConfigurationPolicy.",
+                    "default": false
+                },
+                "hooked": {
+                    "type": "boolean",
+                    "title": "Deploy as hook",
+                    "description": "Activate the policy as a Helm/ArgoCD post-sync hook.",
+                    "default": false
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Policy name",
+                    "description": "Name of the NodeNetworkConfigurationPolicy.",
+                    "default": "default-network-policy"
+                },
+                "nodeSelector": {
+                    "type": "object",
+                    "title": "Node selector",
+                    "description": "Label selector to target specific nodes. Empty applies to all nodes.",
+                    "default": {}
+                },
+                "desiredState": {
+                    "type": "string",
+                    "title": "Desired network state",
+                    "description": "Desired network state expressed as NMState YAML (interfaces, routes, etc.).",
+                    "default": "interfaces: []"
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": { "type": "string" },
+                        "cluster": { "type": "string" },
+                        "component": { "type": "string" },
+                        "environment": { "type": "string" },
+                        "scope": { "type": "string" }
+                    }
+                },
+                "enabled": { "type": "boolean" },
+                "operatorGroup": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": { "type": "boolean" },
+                        "hooked": { "type": "boolean" },
+                        "name": { "type": "string" },
+                        "namespace": { "type": "string" },
+                        "providedAPIs": { "type": "string" }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": { "type": "boolean" },
+                        "hooked": { "type": "boolean" },
+                        "name": { "type": "string" },
+                        "namespace": { "type": "string" },
+                        "version": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 30,
+                            "title": "Version name",
+                            "description": "Version of the operator being subscribed.",
+                            "default": "4.21.0"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "properties": {
+                                "channel": { "type": "string" },
+                                "csv": { "type": "string" },
+                                "name": { "type": "string" },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": { "type": "string" },
+                                        "namespace": { "type": "string" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": { "type": "string" },
+                        "cluster": { "type": "string" },
+                        "component": { "type": "string" },
+                        "environment": { "type": "string" },
+                        "scope": { "type": "string" }
+                    }
+                },
+                "enabled": { "type": "boolean" },
+                "project": {
+                    "type": "object",
+                    "properties": {
+                        "description": { "type": "string" },
+                        "display_name": { "type": "string" },
+                        "enabled": { "type": "boolean" },
+                        "hooked": { "type": "boolean" },
+                        "name": { "type": "string" },
+                        "type": { "type": "string" }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -4,13 +4,13 @@
 context:
   &context # Name of the global scope for this application (organisational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
   # Component name of this application (logical tenant)
   component: mycomponent
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: default-mtv
   # # Version name of this application (default use Chart appVersion)
   version: "2.10.5"
@@ -18,10 +18,10 @@ context:
 # Deploy an API manager
 mtv:
   # Enable the configuration of the MTV
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
   hooked: false
-  # Default namespace for all ressources (if not set, use project)
+  # Default namespace for all resources (if not set, use project)
   namespace: openshift-mtv
   # The Forklift configuration
   forklift:
@@ -87,7 +87,7 @@ project:
   context:
     <<: *context
   project:
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "openshift-mtv"
