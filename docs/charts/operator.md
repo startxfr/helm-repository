@@ -1,45 +1,45 @@
-# ![operator](https://helm-repository.readthedocs.io/en/latest/img/operator.svg "Basic Chart : Operator") Basic Chart : Operator
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_operator-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=operator+startx)
-
-This helm chart is used to configure various operator using subscription (openshift) or CRD (k8s) resources.
-
-This chart is part of the [basic-xxx startx helm chart series](https://helm-repository.readthedocs.io#basic-helm-charts) used by [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts) and [example-xxx charts](https://helm-repository.readthedocs.io#examples-helm-charts).
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/operator
-```
-
-### 4. Install this chart
-
-```bash
-helm install operator startx/operator
-```
-
-## Values dictionary
-
-### context values dictionary
-
+# ![operator](https://helm-repository.readthedocs.io/en/latest/img/operator.svg "Basic Chart : Operator") Basic Chart : Operator |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_operator-83E22B.svg)](https://artifacthub.io/packages/search?ts_query_web=operator+startx) |
+ |
+This helm chart is used to configure various operator using subscription (openshift) or CRD (k8s) resources. |
+ |
+This chart is part of the [basic-xxx startx helm chart series](https://helm-repository.readthedocs.io#basic-helm-charts) used by [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts) and [example-xxx charts](https://helm-repository.readthedocs.io#examples-helm-charts). |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use theses resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/operator |
+``` |
+ |
+### 4. Install this chart |
+ |
+```bash |
+helm install operator startx/operator |
+``` |
+ |
+## Values dictionary |
+ |
+### context values dictionary |
+ |
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
@@ -48,9 +48,9 @@ helm install operator startx/operator
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | operator  | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### operator values dictionary
-
+ |
+### operator values dictionary |
+ |
 | Key                                    | Default               | Description                                                                 |
 | -------------------------------------- | --------------------- | --------------------------------------------------------------------------- |
 | subscription.enabled                   | true                  | Enable deployment of the subscription                                       |
@@ -67,70 +67,70 @@ helm install operator startx/operator
 | operatorGroup.name                     | default               | name of the operatorGroup (if not set, use the subscription name)           |
 | operatorGroup.namespace                | default               | namespace of the operatorGroup (if not set, use the subscription namespace) |
 | operatorGroup.providedAPIs             | default.local         | ist of the provided APIs (mandatory if enabled)                             |
-
-## Values files
-
-### Default values file (values.yaml)
-
-Complete deployment of an operator with the following characteristics :
-
-- 1 **subscription** named **codeready-workspaces** in namespace **openshift-workspaces**
-  - operator named **codeready-workspaces**
-  - version **2.3.0** of **crwoperator** CSV
-  - source is **redhat-operators** from **openshift-marketplace** namespace
-- 1 **operatorGroup** named **codeready-workspaces** in namespace **openshift-workspaces**
-
-```bash
-# base configuration running default configuration
-helm install operator-workspaces startx/operator
-```
-
-### Tekton v1.0.1 values file (values-tekton-1.0.1.yaml)
-
-Complete deployment of a tekton v1.0.1 operator with the following characteristics :
-
-- 1 **subscription** named **openshift-pipelines-operator-rh** in namespace **openshift-workspaces**
-  - operator named **openshift-pipelines-operator-rh**
-  - version **1.0.1** of **openshift-pipelines-operator** CSV
-  - source is **redhat-operators** from **openshift-marketplace** namespace
-
-```bash
-# base configuration running tekton v1.0.1 configuration
-helm install operator-pipelines startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.0.1.yaml
-```
-
-### CRW v2.3.0 values file (values-crw-2.3.0.yaml)
-
-Complete deployment of a CRW v2.3.0 operator with the following characteristics :
-
-- 1 **subscription** named **codeready-workspaces** in namespace **openshift-workspaces**
-  - operator named **codeready-workspaces**
-  - version **2.3.0** of **crwoperator** CSV
-  - source is **redhat-operators** from **openshift-marketplace** namespace
-- 1 **operatorGroup** named **codeready-workspaces** in namespace **openshift-workspaces**
-
-```bash
-# base configuration running CRW v2.3.0 configuration
-helm install operator-workspaces startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.3.0.yaml
-```
-
-### 3scale v0.6.0 values file (values-3scale-0.6.0.yaml)
-
-Complete deployment of a 3scale v0.6.0 operator with the following characteristics :
-
-- 1 **subscription** named **3scale-operator** in namespace **startx-3scale**
-  - operator named **3scale-operator**
-  - version **0.6.0** of **3scale-operator** CSV
-  - source is **redhat-operators** from **openshift-marketplace** namespace
-- 1 **operatorGroup** named **3scale-operator** in namespace **startx-3scale**
-
-```bash
-# base configuration running 3scale v0.6.0 configuration
-helm install operator-3scale startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml
-```
-
-## History
-
+ |
+## Values files |
+ |
+### Default values file (values.yaml) |
+ |
+Complete deployment of an operator with the following characteristics : |
+ |
+- 1 **subscription** named **codeready-workspaces** in namespace **openshift-workspaces** |
+  - operator named **codeready-workspaces** |
+  - version **2.3.0** of **crwoperator** CSV |
+  - source is **redhat-operators** from **openshift-marketplace** namespace |
+- 1 **operatorGroup** named **codeready-workspaces** in namespace **openshift-workspaces** |
+ |
+```bash |
+# base configuration running default configuration |
+helm install operator-workspaces startx/operator |
+``` |
+ |
+### Tekton v1.0.1 values file (values-tekton-1.0.1.yaml) |
+ |
+Complete deployment of a tekton v1.0.1 operator with the following characteristics : |
+ |
+- 1 **subscription** named **openshift-pipelines-operator-rh** in namespace **openshift-workspaces** |
+  - operator named **openshift-pipelines-operator-rh** |
+  - version **1.0.1** of **openshift-pipelines-operator** CSV |
+  - source is **redhat-operators** from **openshift-marketplace** namespace |
+ |
+```bash |
+# base configuration running tekton v1.0.1 configuration |
+helm install operator-pipelines startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-tekton-1.0.1.yaml |
+``` |
+ |
+### CRW v2.3.0 values file (values-crw-2.3.0.yaml) |
+ |
+Complete deployment of a CRW v2.3.0 operator with the following characteristics : |
+ |
+- 1 **subscription** named **codeready-workspaces** in namespace **openshift-workspaces** |
+  - operator named **codeready-workspaces** |
+  - version **2.3.0** of **crwoperator** CSV |
+  - source is **redhat-operators** from **openshift-marketplace** namespace |
+- 1 **operatorGroup** named **codeready-workspaces** in namespace **openshift-workspaces** |
+ |
+```bash |
+# base configuration running CRW v2.3.0 configuration |
+helm install operator-workspaces startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.3.0.yaml |
+``` |
+ |
+### 3scale v0.6.0 values file (values-3scale-0.6.0.yaml) |
+ |
+Complete deployment of a 3scale v0.6.0 operator with the following characteristics : |
+ |
+- 1 **subscription** named **3scale-operator** in namespace **startx-3scale** |
+  - operator named **3scale-operator** |
+  - version **0.6.0** of **3scale-operator** CSV |
+  - source is **redhat-operators** from **openshift-marketplace** namespace |
+- 1 **operatorGroup** named **3scale-operator** in namespace **startx-3scale** |
+ |
+```bash |
+# base configuration running 3scale v0.6.0 configuration |
+helm install operator-3scale startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml |
+``` |
+ |
+## History |
+ |
 | Release  | Date       | Description                                                                                                                   |
 | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | 0.2.36   | 2020-10-31 | Initial commit for this helm chart with default value example                                                                 |
@@ -487,4 +487,6 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
