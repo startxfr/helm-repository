@@ -99,3 +99,4 @@ helm install cluster-nmstate startx/cluster-nmstate -f https://raw.githubusercon
 | 21.3.4 | 2026-06-17 | Improve cluster-nmstate options |
 | 21.3.4 | 2026-06-17 | Improve cluster-nmstate options |
 | 21.3.5 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
