@@ -65,8 +65,7 @@ helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com
 
 ### Deploy via ArgoCD Application
 
-Create an ArgoCD `Application` resource to deploy `cluster-nfd` from the STARTX S3 Helm repository.
-This example enables the project namespace and the operator subscription with its OperatorGroup:
+Deploy `cluster-nfd` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -98,7 +97,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-nfd
+  name: cluster-nfd-project
   namespace: openshift-gitops
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -113,8 +112,6 @@ spec:
       values: |
         project:
           enabled: true
-        operator:
-          enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.11
   syncPolicy:
@@ -123,6 +120,56 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-nfd-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-nfd
+    server: https://kubernetes.default.svc
+  project: cluster-nfd
+  source:
+    chart: cluster-nfd
+    helm:
+      values: |
+        operator:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-nfd-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-nfd
+    server: https://kubernetes.default.svc
+  project: cluster-nfd
+  source:
+    chart: cluster-nfd
+    helm:
+      values: |
+        nfd:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
 Apply with:
@@ -131,7 +178,7 @@ Apply with:
 kubectl apply -f cluster-nfd-argocd.yaml -n openshift-gitops
 ```
 
-The automated sync policy ensures ArgoCD reconciles the NFD operator whenever the chart or values drift from the desired state.
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
 
 ## History
 
