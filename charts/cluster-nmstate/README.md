@@ -95,3 +95,4 @@ helm install cluster-nmstate startx/cluster-nmstate -f https://raw.githubusercon
 | 21.3.3 | 2026-06-17 | Initialise nmstate chart
 | 21.3.3 | 2026-06-17 | New chart nmstate
 | 21.3.3 | 2026-06-17 | Release nmstate chart
+| 21.3.3 | 2026-06-17 | Release nmstate chart
