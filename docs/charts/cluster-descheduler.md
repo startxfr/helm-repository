@@ -51,7 +51,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-descheduler-project startx/cluster-descheduler --set project.enabled=true,operator.enabled=false,descheduler.enabled=false
 # Deploy the descheduler operator
 helm install cluster-descheduler-operator startx/cluster-descheduler --set project.enabled=false,operator.enabled=true,descheduler.enabled=false && sleep 10
-# Configure default descheduler ressources
+# Configure default descheduler resources
 helm install cluster-descheduler-instance startx/cluster-descheduler --set project.enabled=false,operator.enabled=false,descheduler.enabled=true
 ```
 
@@ -71,66 +71,66 @@ helm install cluster-descheduler startx/cluster-descheduler -f https://raw.githu
 | 14.6.283 | 2024-05-29 | Creation of the cluster-descheduler chart                         |
 | 14.6.285 | 2024-05-29 | Move descheduler name to cluster by default                       |
 | 14.6.287 | 2024-05-29 | Move descheduler namespace to openshift-kube-descheduler-operator |
-| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293
-| 14.6.301 | 2024-05-30 | Helm package are now signed
-| 14.6.321 | 2024-06-25 | publish stable update for the full repository
-| 14.6.323 | 2024-06-25 | Align all chart to latest release
-| 14.6.325 | 2024-06-25 | Adding chart logo in README header
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository
-| 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323
-| 14.6.335 | 2024-06-26 | publish stable update for the full repository
-| 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339
-| 14.6.343 | 2024-06-26 | publish stable update for the full repository
-| 14.6.345 | 2024-06-26 | publish stable update for the full repository
-| 14.6.351 | 2024-06-26 | Update all dependencies
-| 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release
-| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367
-| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381
-| 15.27.3 | 2024-11-06 | create init release for version 15.x
-| 15.27.5 | 2024-11-06 | publish stable update for the full repository
-| 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3
-| 15.27.9 | 2024-11-09 | Upgrade the Descheduler operator version to v5.0.1
-| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27
-| 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37
-| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19
-| 16.19.7 | 2024-11-10 | Update all dependencies to version 16.19.4
-| 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4
-| 16.19.15 | 2024-11-10 | publish stable update for the full repository
-| 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release
-| 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release
-| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31
-| 16.19.43 | 2025-02-27 | publish stable update for the full repository
-| 17.14.1 | 2025-02-28 | Initial release for v17.x version
-| 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes
-| 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1
-| 17.14.11 | 2025-03-05 | Adjust doc to material layout
-| 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release
-| 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version
-| 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x
-| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1
-| 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release
-| 18.11.9 | 2025-05-01 | Update kubedescheduler to version 5.1.2
-| 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts
-| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15
-| 18.11.22 | 2025-05-02 | Add noinfra values in all charts
-| 18.11.24 | 2025-05-02 | Align all to stable version
-| 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19
-| 18.11.39 | 2025-05-05 | Update icon with startx new theme
-| 18.11.51 | 2025-05-06 | publish stable update for the full repository
-| 18.11.52 | 2025-05-07 | publish stable update for the full repository
-| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18
-| 18.11.71 | 2025-11-27 | Align all charts to the same releas
-| 18.23.0 | 2026-02-28 | Start 4.19 branch
-| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release
-| 19.23.0 | 2026-02-28 | publish stable update for the full repository
-| 19.23.5 | 2026-03-01 | Unstable full 19.23.x release
-| 19.23.8 | 2026-03-01 | publish stable update for the full repository
-| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11
-| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11
-| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14
-| 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch
-| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0
-| 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14
-| 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3
-| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0
+| 14.6.293 | 2024-05-29 | Align all charts to release 14.6.293 |
+| 14.6.301 | 2024-05-30 | Helm package are now signed |
+| 14.6.321 | 2024-06-25 | publish stable update for the full repository |
+| 14.6.323 | 2024-06-25 | Align all chart to latest release |
+| 14.6.325 | 2024-06-25 | Adding chart logo in README header |
+| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
+| 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
+| 14.6.335 | 2024-06-26 | publish stable update for the full repository |
+| 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339 |
+| 14.6.343 | 2024-06-26 | publish stable update for the full repository |
+| 14.6.345 | 2024-06-26 | publish stable update for the full repository |
+| 14.6.351 | 2024-06-26 | Update all dependencies |
+| 14.6.353 | 2024-06-26 | Fixed missed dependencies in previous release |
+| 14.6.367 | 2024-06-29 | Align all startx charts to release 14.6.367 |
+| 14.6.381 | 2024-06-30 | Align all startx charts to release 14.6.381 |
+| 15.27.3 | 2024-11-06 | create init release for version 15.x |
+| 15.27.5 | 2024-11-06 | publish stable update for the full repository |
+| 15.27.7 | 2024-11-06 | Align all startx charts dependencies to release 15.27.3 |
+| 15.27.9 | 2024-11-09 | Upgrade the Descheduler operator version to v5.0.1 |
+| 15.27.17 | 2024-11-10 | Release aligned for OCP 4.15.27 |
+| 15.27.21 | 2024-11-10 | Release aligned for OCP 4.15.37 |
+| 16.19.3 | 2024-11-10 | Init release 16.19.1 aligned for OCP 4.16.19 |
+| 16.19.7 | 2024-11-10 | Update all dependencies to version 16.19.4 |
+| 16.19.11 | 2024-11-10 | Update all dependencies to version 16.19.4 |
+| 16.19.15 | 2024-11-10 | publish stable update for the full repository |
+| 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release |
+| 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release |
+| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31 |
+| 16.19.43 | 2025-02-27 | publish stable update for the full repository |
+| 17.14.1 | 2025-02-28 | Initial release for v17.x version |
+| 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes |
+| 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1 |
+| 17.14.11 | 2025-03-05 | Adjust doc to material layout |
+| 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release |
+| 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version |
+| 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x |
+| 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1 |
+| 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release |
+| 18.11.9 | 2025-05-01 | Update kubedescheduler to version 5.1.2 |
+| 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts |
+| 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15 |
+| 18.11.22 | 2025-05-02 | Add noinfra values in all charts |
+| 18.11.24 | 2025-05-02 | Align all to stable version |
+| 18.11.31 | 2025-05-03 | update all dependencies to version 18.11.19 |
+| 18.11.39 | 2025-05-05 | Update icon with startx new theme |
+| 18.11.51 | 2025-05-06 | publish stable update for the full repository |
+| 18.11.52 | 2025-05-07 | publish stable update for the full repository |
+| 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18 |
+| 18.11.71 | 2025-11-27 | Align all charts to the same releas |
+| 18.23.0 | 2026-02-28 | Start 4.19 branch |
+| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release |
+| 19.23.0 | 2026-02-28 | publish stable update for the full repository |
+| 19.23.5 | 2026-03-01 | Unstable full 19.23.x release |
+| 19.23.8 | 2026-03-01 | publish stable update for the full repository |
+| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11 |
+| 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11 |
+| 20.14.0 | 2026-03-02 | Create initial version for 20.x branch linked to OCP 4.20.x release. Tested on OCP 4.20.14 |
+| 20.14.1 | 2026-03-02 | Create second version for 20.14.x branch |
+| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0 |
+| 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
+| 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
+| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
