@@ -18,7 +18,7 @@ context:
 # Deploy an API manager
 mtv:
   # Enable the configuration of the MTV
-  enabled: true
+  enabled: false
   # Activate the manager as a helm hook
   hooked: false
   # Default namespace for all resources (if not set, use project)
@@ -87,7 +87,7 @@ project:
   context:
     <<: *context
   project:
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "openshift-mtv"

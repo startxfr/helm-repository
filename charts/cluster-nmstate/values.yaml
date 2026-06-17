@@ -18,7 +18,7 @@ context:  &context
 # Deploy and activate the NMState operator instance
 nmstate:
   # Enable the creation of the NMState CR (activates the operator daemonset)
-  enabled: true
+  enabled: false
   # Activate the resource as a helm hook
   hooked: false
   # Name of the NMState instance (must be "nmstate" for the operator to reconcile)
@@ -60,7 +60,7 @@ project:
   context:
     <<: *context
   project:
-    enabled: false
+    enabled: true
     hooked: false
     type: namespace
     name: "openshift-nmstate"
