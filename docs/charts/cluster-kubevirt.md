@@ -1,51 +1,51 @@
-# ![cluster-kubevirt](https://helm-repository.readthedocs.io/en/latest/img/cluster-kubevirt.svg "Cluster Chart : KubeVirt") Cluster Chart : KubeVirt
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--kubevirt-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+kubevirt+startx)
-
-This helm chart is used to configure code ready kubevirt via it's operator and deploy a VM into Openshift.
-
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/cluster-kubevirt
-```
-
-### 4. Install this chart
-
-```bash
-helm install cluster-kubevirt startx/cluster-kubevirt
-```
-
-## Default values
-
-Complete deployment of a KubeVirt configuration with the following characteristics :
-
-- 1 **operator** named **kubevirt-hyperconverged** deployed under **openshift-cnv**
-- 1 **HyperConverged** cluster instance enabling OpenShift Virtualization
-- Optional **VirtualMachine** instances configurable via the vms list
-
-## History
-
+# ![cluster-kubevirt](https://helm-repository.readthedocs.io/en/latest/img/cluster-kubevirt.svg "Cluster Chart : KubeVirt") Cluster Chart : KubeVirt |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--kubevirt-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+kubevirt+startx) |
+ |
+This helm chart is used to configure code ready kubevirt via it's operator and deploy a VM into Openshift. |
+ |
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use theses resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/cluster-kubevirt |
+``` |
+ |
+### 4. Install this chart |
+ |
+```bash |
+helm install cluster-kubevirt startx/cluster-kubevirt |
+``` |
+ |
+## Default values |
+ |
+Complete deployment of a KubeVirt configuration with the following characteristics : |
+ |
+- 1 **operator** named **kubevirt-hyperconverged** deployed under **openshift-cnv** |
+- 1 **HyperConverged** cluster instance enabling OpenShift Virtualization |
+- Optional **VirtualMachine** instances configurable via the vms list |
+ |
+## History |
+ |
 | Release  | Date       | Description                                                                                                |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------------------- |
 | 0.3.59   | 2020-11-09 | Create chart cluster-kubevirt from cluster-kubevirt                                                        |
@@ -361,4 +361,6 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
