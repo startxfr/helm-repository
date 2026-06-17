@@ -11,17 +11,19 @@ source "$PROJECT_LIBPATH/cli-s3"
 
 if [[ "$1" != "" ]]; then
     case $1 in
-        list)           routerList;;
-        publish)        routerPublish;;
-        release)        routerRelease "$@";;
-        archive)        routerArchive "$@";;
-        archiveLegacy)  routerArchiveLegacy "$@";;
-        lint-all)       routerLintAll;;
-        test-all)       routerTestAll;;
-        package-all)    routerPackageAll;;
-        syncfroms3)     routerSyncFromS3 "$@";;
-        synctos3)       routerSyncToS3 "$@";;
-        version)        routerVersion;;
+        list)            routerList;;
+        publish)         routerPublish;;
+        publish-devel)   routerPublishDevel;;
+        release)         routerRelease "$@";;
+        release-charts)  routerReleaseChartsOnly;;
+        archive)         routerArchive "$@";;
+        archiveLegacy)   routerArchiveLegacy "$@";;
+        lint-all)        routerLintAll;;
+        test-all)        routerTestAll;;
+        package-all)     routerPackageAll;;
+        syncfroms3)      routerSyncFromS3 "$@";;
+        synctos3)        routerSyncToS3 "$@";;
+        version)         routerVersion;;
         *)
             case $2 in
                 info)       routerChartInfo "$1";;

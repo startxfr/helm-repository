@@ -27,7 +27,8 @@ SX          := ./sx-helm
         list version \
         info test lint lint-all test-all schema \
         package package-all \
-        release release-all publish publish-chart \
+        release release-all release-charts \
+        publish publish-devel publish-chart \
         archive archive-legacy \
         sync-pull sync-push \
         delete \
@@ -59,13 +60,16 @@ help:
 	@echo "    make package-all                    Package every chart"
 	@echo ""
 	@echo "  Release"
-	@echo "    make release     CHART=<name>       Bump version, history row, upload to S3"
-	@echo "                     [VERSION=x.y.z]"
-	@echo "                     [DESC='...']"
-	@echo "    make release-all [VERSION=x.y.z]    Release every chart + tag repo"
-	@echo "                     [DESC='...']"
-	@echo "    make publish                        Regenerate and push stable/noschema/current repos"
-	@echo "    make publish-chart CHART=<name>     Release chart + publish all repos"
+	@echo "    make release        CHART=<name>    Bump version, history row, upload to S3"
+	@echo "                        [VERSION=x.y.z]"
+	@echo "                        [DESC='...']"
+	@echo "    make release-charts [VERSION=x.y.z] Bump+package all charts, no merge/tag/push"
+	@echo "                        [DESC='...']     (use before publish-devel on devel branch)"
+	@echo "    make release-all    [VERSION=x.y.z] Release every chart + tag + merge + push"
+	@echo "                        [DESC='...']"
+	@echo "    make publish                         Regenerate and push stable/noschema/current repos"
+	@echo "    make publish-devel                   Regenerate and push devel sub-repo (pre-release)"
+	@echo "    make publish-chart  CHART=<name>     Release chart + publish all repos"
 	@echo ""
 	@echo "  Repository"
 	@echo "    make archive                        Push active archive repos  (HELM_REPO_ARCHIVE_RELEASES in .tools/config)"
@@ -139,11 +143,18 @@ release: _require-chart
 	  $(SX) $(CHART) release $(VERSION) "$(DESC)"
 
 release-all:
-	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC=$(DESC) \
+	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC="$(DESC)" \
 	  $(SX) release auto
+
+release-charts:
+	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC="$(DESC)" \
+	  $(SX) release-charts
 
 publish:
 	$(SX) publish
+
+publish-devel:
+	$(SX) publish-devel
 
 publish-chart: _require-chart
 	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC=$(DESC) \

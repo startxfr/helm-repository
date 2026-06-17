@@ -115,164 +115,13 @@ more information on how to use these resources.
 | `helm_reposistory`         | `helm_repository`        |
 | `Others values availables` | `Other available values` |
 
-## Known issues — fix when touching a chart
+## Known issues
 
-### Wrong `context.app` default in README value tables
+See [`.claude/KNOWN_ISSUES.md`](.claude/KNOWN_ISSUES.md) for the full list of recurring bugs to fix when touching a chart.
 
-Must match the chart name, not `sxapi`. Charts affected: `chaos-*`, `cluster-vault`, `cluster-vault-config`, `example-deployment`, `example-chaos`, `example-imagestreams`, `example-catalog`, `example-pod`, `example-fruitapp-*`.
+## New chart creation
 
-### Stale copy-paste in Chart.yaml descriptions
-
-| Chart              | Wrong description                    | Correct description                                  |
-| ------------------ | ------------------------------------ | ---------------------------------------------------- |
-| `cluster-acs`      | "configure Advanced Cluster Manager" | "configure Advanced Cluster Security (ACS/Stackrox)" |
-| `cluster-kubevirt` | "configure Code Ready Workspace"     | "configure KubeVirt and OpenShift Virtualization"    |
-| `cluster-logging`  | "configure Metering"                 | "configure Logging (cluster-logging operator)"       |
-
-### README placeholders not yet filled
-
-- `description` still `"This helm chart must have a description"`: `cluster-acm`, `cluster-acs`
-- `## Default values` body still `"xxxx to do xxxxxx"`: `cluster-console`, `cluster-knative`, `cluster-kubevirt`, `cluster-localstorage`, `cluster-logging`, `cluster-mustgather`, `cluster-oadp` *(partial)*, `cluster-odf`, `cluster-ods`, `cluster-storage-efs`
-
-### Duplicate history rows (same release and date twice)
-
-- `cluster-certmanager` (11.7.18), `cluster-nfd` (11.7.18), `cluster-crunchy` (11.28.68)
-- `project` (0.3.155, 0.3.189, 0.3.217, 7.22.27)
-
-## New chart creation procedure
-
-When asked to create a new chart, follow these steps in order.
-
-### Step 1 — Gather inputs
-
-Ask for these three pieces of information before doing anything:
-
-| #   | Question                                                              | Example                                                                     |
-| --- | --------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| 1   | **Chart family** — `example`, `cluster`, or `chaos`?                  | `cluster`                                                                   |
-| 2   | **Short name** — lowercase, no prefix                                 | `nmstate`                                                                   |
-| 3   | **Description** — one English sentence describing what the chart does | `"configure NMState network operator for node-level network configuration"` |
-
-The full chart name is `<family>-<short-name>` (e.g. `cluster-nmstate`).
-
-### Step 2 — Find the closest existing chart
-
-Search `charts/` for a chart from the same family that deploys a similar resource type (operator subscription, CRD, console plugin, etc.). Present 2–3 candidates ranked by relevance and ask the user to confirm the source.
-
-Guidance by family:
-- `cluster-*` operator → prefer `cluster-nfd`, `cluster-certmanager`, or `cluster-pipeline`
-- `cluster-*` with Console Plugin → prefer a chart that already has a `consoleplugin.yaml` template
-- `example-*` → prefer the closest `example-*` by resource type
-- `chaos-*` → prefer an existing `chaos-*` chart
-
-### Step 3 — Copy and rename
-
-```bash
-cp -r charts/<source> charts/<family>-<short-name>
-```
-
-### Step 4 — Update Chart.yaml and README.md
-
-**Chart.yaml** — replace every reference to the source chart:
-
-- `name` → `<family>-<short-name>`
-- `description` → user-provided sentence (no trailing period)
-- `appVersion` → upstream version (or `TODO:` placeholder)
-- `icon` → `https://helm-repository.readthedocs.io/en/latest/img/<family>-<short-name>.svg`
-- `sources` → update both URLs to the new chart name
-- `annotations.artifacthub.io/changes` → `"[<family>-<short-name>] Initial chart creation"`
-- `annotations.artifacthub.io/prerelease` → `"true"`
-- `version` → keep the source version (bumped on first release)
-
-**README.md** — replace every reference to the source chart:
-
-- Title line, badge URL, description paragraph, `helm install` commands
-- `## History` table: delete all rows, add one initial entry:
-  ```
-  | <version> | <today-date> | Initial chart creation |
-  ```
-- Fix `context.app` default in value tables: must equal `<family>-<short-name>`
-
-### Step 5 — Clean up templates
-
-- Always keep: `_helpers.tpl`, `_startx.tpl`, `NOTES.txt`
-- Update all template `define` names from `<source>.*` to `<family>-<short-name>.*`
-- For `cluster-*` operator charts: keep `subscription.yaml`, `operatorgroup.yaml`; add `consoleplugin.yaml` if the operator ships one
-- Remove any template referencing a resource type irrelevant to the new chart
-- Copy missing templates from the most similar chart that has them
-
-### Step 6 — Adjust values.yaml
-
-Keep the `context:` block. Update all operator-specific fields:
-
-- `context.app` → `default-<short-name>`
-- `subscription.name` → exact OperatorHub package name
-- `subscription.namespace` → operator's target namespace (e.g. `openshift-<short-name>`)
-- `subscription.operator.channel` → current stable channel (`stable` unless documented otherwise)
-- `subscription.operator.source.name` → `redhat-operators` for Red Hat operators, `certified-operators` otherwise
-- `operatorGroup.name` and `operatorGroup.namespace` → match subscription namespace
-- `operatorGroup.providedAPIs` → list of CRDs shipped by the operator
-- Remove source-chart keys with no equivalent; add CRD-specific keys with inline comments
-- Mirror changes in `values-startx.yaml`
-
-### Step 7 — Publish to docs
-
-#### 7a — Copy the logo
-
-```bash
-cp docs/img/<source>.svg docs/img/<family>-<short-name>.svg
-```
-
-All logos are SVG files in `docs/img/`. The `icon:` path in `Chart.yaml` must reference this file.
-
-#### 7b — Publish README to docs
-
-```bash
-cp charts/<family>-<short-name>/README.md docs/charts/<family>-<short-name>.md
-```
-
-The file in `docs/charts/` must be identical to the chart `README.md`.
-
-#### 7c — Register in docs/index.md
-
-Insert a new row in the appropriate family table, after the alphabetically closest existing entry:
-
-```markdown
-| **[<family>-<short-name>](charts/<family>-<short-name>.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/<family>-<short-name>) | <description matching Chart.yaml> |
-```
-
-Match the column padding of surrounding rows.
-
-### Step 8 — Report (no commit)
-
-Output a structured summary:
-
-```
-## New chart: <family>-<short-name>
-
-Source: charts/<source>  →  charts/<family>-<short-name>/
-
-### Files changed
-- Chart.yaml              — name, description, appVersion, icon, sources, annotations
-- README.md               — title, badge, description, commands, history reset
-- values.yaml             — context.app, subscription, operatorGroup updated
-- values-startx.yaml      — mirrors values.yaml changes
-- templates/_helpers.tpl  — define names updated
-- templates/<old>.yaml    — removed
-- templates/<new>.yaml    — added
-- docs/img/<family>-<short-name>.svg   — logo (placeholder from source)
-- docs/charts/<family>-<short-name>.md — README published
-- docs/index.md           — row added in <family> table
-
-### TODOs before first release
-- [ ] Confirm appVersion against the actual upstream release
-- [ ] Confirm subscription.operator.channel is the current stable channel
-- [ ] Run: helm template <family>-<short-name> charts/<family>-<short-name>/
-- [ ] Run: helm dependency update charts/<family>-<short-name>/
-- [ ] Replace docs/img/<family>-<short-name>.svg with a dedicated icon
-```
-
-Do **not** run `git add` or `git commit`.
+Use the `/new-chart <family>-<short-name>` skill — it guides through all 8 steps (gather inputs, find source, copy, update Chart.yaml + README, clean templates, adjust values, publish to docs, report).
 
 ## Tooling architecture
 
@@ -301,16 +150,32 @@ Sourced by `.tools/cli` at startup and included by the `Makefile` via `include .
 | `SXHELM_SIGN` / `SXHELM_SIGN_KEY` / `SXHELM_SIGN_KEYRING` | GPG signing settings |
 | `SXHELM_SIGN_KEYPASSPHRASEFILE` | Path to GPG passphrase file |
 | `DOC_ADD_HISTORY` | `"true"` to auto-append history rows on release |
+| `HELM_REPO_SUBDEV` | S3 sub-path for the pre-release devel repo (default: `"devel"`) |
 | `HELM_REPO_ARCHIVE_RELEASES` | Space-separated OCP minor release numbers for `sx-helm archive` / `make archive` |
 | `HELM_REPO_LEGACY_RELEASES` | Space-separated OCP minor release numbers for `sx-helm archiveLegacy` / `make archive-legacy` |
+
+### S3 sub-repos
+
+| Sub-repo path | Purpose | Populated by |
+|---|---|---|
+| `devel` | Pre-release charts from `devel` branch | `make publish-devel` / `/release-chart` / `/release-devel` |
+| `stable` | Production stable charts | `make publish` |
+| `noschema` | Same as stable, no schema validation | `make publish` |
+| `release-<N>` | Charts for OCP minor release N (current = `STABLE_MAINRELEASE`) | `make publish` |
+| `release-<N>` (archive) | Archived OCP releases from `HELM_REPO_ARCHIVE_RELEASES` | `make archive` |
+| `release-<N>` (legacy) | Legacy OCP releases from `HELM_REPO_LEGACY_RELEASES` | `make archive-legacy` |
+
+Each sub-repo has a matching `docs/repos/<path>/index.yaml` committed in git.
 
 ### sx-helm command routing
 
 ```
 sx-helm list                          routerList
 sx-helm version                       routerVersion
-sx-helm publish                       routerPublish
-sx-helm release [auto|-a]             routerRelease
+sx-helm publish                       routerPublish          — stable+noschema+release-XX
+sx-helm publish-devel                 routerPublishDevel     — devel sub-repo only
+sx-helm release [auto|-a]             routerRelease          — full flow: bump+merge+tag+push
+sx-helm release-charts                routerReleaseChartsOnly— bump+package only, no git merge
 sx-helm archive                       routerArchive
 sx-helm archiveLegacy                 routerArchiveLegacy
 sx-helm lint-all                      routerLintAll
@@ -397,6 +262,43 @@ Two safe operations available via the Makefile:
 `sync-push` deletes remote files not present locally — use with care. Always `sync-pull` first.
 
 The low-level `awsS3SyncDownloadDelete` function (local delete on pull) exists but is **not exposed** via any router — it would delete local files not on S3.
+
+---
+
+## Slash commands (skills)
+
+Slash commands are defined in `.claude/commands/`. Invoke them with `/command-name [args]`.
+
+### Release workflow — staged pipeline
+
+The recommended release flow runs in 4 ordered stages, each a separate skill:
+
+```
+devel (version bump)
+  │
+  ├─ /release-chart <name>    — single chart: bump + S3 upload + publish-devel
+  │
+  └─ /release-devel           — all charts: bump + S3 upload + publish-devel
+       │
+       └─ /release-master     — merge devel→master + publish + propagate master-4.x
+            │
+            └─ /release-stable — merge master→stable + publish + propagate stable-4.x + tag
+```
+
+| Skill | Command | What it does |
+|-------|---------|--------------|
+| `/release-chart` | `/release-chart <name> [version] [desc]` | Single chart: bump, package, upload to S3, publish devel repo, push devel |
+| `/release-devel` | `/release-devel [version] [desc]` | All charts on devel: bump all, package all, publish devel repo, push devel |
+| `/release-master` | `/release-master` | Merge devel→master, publish stable repos, propagate to master-4.x, push |
+| `/release-stable` | `/release-stable` | Merge master→stable, publish stable repos, propagate to stable-4.x, tag, push |
+| `/new-major-release` | `/new-major-release <N>` | Init OCP major release N: update config, create docs/repos/N/, merge to master |
+
+### Key distinctions
+
+- `release-charts` (make target / `routerReleaseChartsOnly`) bumps all chart versions **without** merging branches or creating tags — safe to run on devel multiple times
+- `release-all` (make target / `routerRelease`) does the **full** flow: bumps + merges devel→master→stable + tags + pushes — use only for direct one-shot releases
+- `publish` regenerates `stable`, `noschema`, `release-<N>` S3 repos
+- `publish-devel` regenerates only the `devel` S3 pre-release repo
 
 ---
 

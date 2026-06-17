@@ -93,6 +93,44 @@ function routerArchiveLegacy {
     done
 }
 
+# Publish the devel sub-repo only (S3 devel path + docs/repos/devel/index.yaml).
+# Called from devel branch; does not touch stable/noschema/release-XX repos.
+function routerPublishDevel {
+    doHelmrepositoryRefresh "$HELM_REPO_SUBDEV" "$HELM_REPO_SUBDEV" "$HELM_REPO_BASEURL" Publish 36
+}
+
+# Release all charts on the current branch without the full repository flow.
+# Bumps every chart version, packages, uploads .tgz to S3, commits repo-release.
+# Does NOT merge to master/stable, does NOT create a tag, does NOT push.
+# Follow with routerPublishDevel (devel) or routerPublish (master/stable).
+# Env: VERSION (force version), DESC (force description), INTERACTIVE
+function routerReleaseChartsOnly {
+    local next_release="${VERSION:-}"
+    local next_description="${DESC:-publish stable update for the full repository}"
+    local current_release
+    current_release=$(cat "$PROJECT_PATH/.tools/repo-release")
+    [[ -z "$next_release" ]] && next_release=$(chartNextVersion "$current_release")
+
+    if [[ "$INTERACTIVE" != "true" ]]; then
+        echo -e "\e[36mRelease\e[0m all charts (charts-only) to $next_release"
+    else
+        echo -en "\e[36mRelease\e[0m all charts — next version [$next_release] : "
+        read -r nextRel
+        [[ "$nextRel" != "" ]] && next_release=$nextRel
+        echo -en "\e[36mRelease\e[0m all charts — description [$next_description] : "
+        read -r nextDesc
+        [[ "$nextDesc" != "" ]] && next_description=$nextDesc
+    fi
+
+    for chart in $(chartList); do
+        routerChartRelease "$chart" "auto" "$next_release" "$next_description"
+    done
+
+    echo "$next_release" > "${PROJECT_PATH}/.tools/repo-release"
+    git add "${PROJECT_PATH}/.tools/repo-release" &>/dev/null
+    git commit -m "[release] bump all charts to $next_release" "${PROJECT_PATH}/.tools/repo-release" &>/dev/null
+}
+
 # Full repository release: bump all charts, commit, tag, merge to master+stable, push
 # $1 = "release" (verb from sx-helm $@, ignored)
 # $2 = "auto" to skip prompts, or empty for interactive
@@ -517,6 +555,8 @@ Global actions:
   list                 List all managed helm charts
   release              Bump all charts, tag, merge and push  (INTERACTIVE=false VERSION=x DESC="...")
   publish              Publish stable+noschema+current repos to S3
+  publish-devel        Publish devel sub-repo to S3  (pre-release, from devel branch)
+  release-charts       Bump+package all charts, no git merge/tag/push  (use before publish-devel)
   archive              Regenerate and push active archive repos  (see HELM_REPO_ARCHIVE_RELEASES in .tools/config)
   archiveLegacy        Regenerate and push legacy archive repos  (see HELM_REPO_LEGACY_RELEASES in .tools/config)
   lint-all             Lint all charts with helm lint
