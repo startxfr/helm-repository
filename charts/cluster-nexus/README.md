@@ -475,3 +475,4 @@ The automated sync policy ensures ArgoCD reconciles the Nexus Repository operato
 | 21.3.13 | 2026-06-17 | Improve cluster-nexus options |
 | 21.3.14 | 2026-06-17 | Improve schema for nexus |
 | 21.3.15 | 2026-06-17 | Improve cluster-nexus options |
+| 21.3.16 | 2026-06-17 | Improve cluster-nexus options |
