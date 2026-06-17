@@ -1,138 +1,138 @@
-# ![chaos](https://helm-repository.readthedocs.io/en/latest/img/chaos.svg "Chaos Chart : Umbrella") Chaos Chart : Main
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+startx)
-
-This helm chart is used to deploy a chaos test suite composed of cerberus, kraken, litmus, chaos mesh and kube-monkey.
-
-This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use these resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/chaos
-```
-
-### 4. Install this suite
-
-```bash
-# Install the projects
-helm install \
---set cerberus.enabled=true --set cerberus.project.enabled=true  \
---set kraken.enabled=true --set kraken.project.enabled=true  \
---set litmus.enabled=true --set litmus.project.enabled=true  \
---set mesh.enabled=true --set mesh.project.enabled=true  \
---set monkey.enabled=true --set monkey.project.enabled=true  \
-chaos-projects  startx/chaos
-# Deploy the cerberus instance
-helm install \
---set cerberus.enabled=true --set cerberus.cerberus.enabled=true  \
-chaos-cerberus-instance  startx/chaos-cerberus
-# Deploy the kraken instance in a job mode
-helm install \
---set kraken.enabled=true --set kraken.kraken.enabled=true  \
---set kraken.kraken.mode=job  \
-chaos-kraken-instance-job  startx/chaos-kraken
-# Deploy the kraken instance with tekton pipeline (require pipeline been installed)
-helm install \
---set kraken.enabled=true --set kraken.kraken.enabled=true  \
---set kraken.kraken.mode=pipeline \
-chaos-kraken-instance-pipeline  startx/chaos-kraken
-# Deploy the litmus instance
-helm install \
---set litmus.enabled=true --set litmus.litmus.enabled=true  \
-chaos-litmus-instance  startx/chaos-litmus
-# Deploy the mesh instance
-helm install \
---set mesh.enabled=true --set mesh.mesh.enabled=true  \
-chaos-mesh-instance  startx/chaos-mesh
-# Deploy the monkey instance
-helm install \
---set monkey.enabled=true --set monkey.monkey.enabled=true  \
-chaos-monkey-instance  startx/chaos-monkey
-```
-
-### 5. Manage with ArgoCD
-
-ArgoCD will allow you to deploy this helm chart in a gitops way of doing. [ArgoCD deployment](../../docs/install-argocd.md) must help you deploy the ArgoCD stack.
-
- In order to manage this cluster resource using argoCD, you should deploy your service [using startx charts](https://helm-repository.readthedocs.io) :
-- [project](../../docs/install-argocd.md#11-create-cluster-service-projects) to created required projects
-- [operator](../../docs/install-argocd.md#12-deploy-the-operator) to deploy required operators
-- [instance](../../docs/install-argocd.md#13-create-a-cluster-service-instance) to deploy this resource components 
-
-#### 5.1 Create project
-
-```yaml
-kind: Application
-apiVersion: argoproj.io/v1alpha1
-metadata:
-name: chaos
-namespace: "chaos"
-spec:
-destination:
-  namespace: "default"
-  server: 'https://kubernetes.default.svc'
-project: default
-source:
-  repoURL: 'https://helm-repository.readthedocs.io/en/latest/repos/stable'
-  targetRevision: "18.11.31"
-  chart: chaos
-  helm:
+# ![chaos](https://helm-repository.readthedocs.io/en/latest/img/chaos.svg "Chaos Chart : Umbrella") Chaos Chart : Main |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+startx) |
+ |
+This helm chart is used to deploy a chaos test suite composed of cerberus, kraken, litmus, chaos mesh and kube-monkey. |
+ |
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts). |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use these resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/chaos |
+``` |
+ |
+### 4. Install this suite |
+ |
+```bash |
+# Install the projects |
+helm install \ |
+--set cerberus.enabled=true --set cerberus.project.enabled=true  \ |
+--set kraken.enabled=true --set kraken.project.enabled=true  \ |
+--set litmus.enabled=true --set litmus.project.enabled=true  \ |
+--set mesh.enabled=true --set mesh.project.enabled=true  \ |
+--set monkey.enabled=true --set monkey.project.enabled=true  \ |
+chaos-projects  startx/chaos |
+# Deploy the cerberus instance |
+helm install \ |
+--set cerberus.enabled=true --set cerberus.cerberus.enabled=true  \ |
+chaos-cerberus-instance  startx/chaos-cerberus |
+# Deploy the kraken instance in a job mode |
+helm install \ |
+--set kraken.enabled=true --set kraken.kraken.enabled=true  \ |
+--set kraken.kraken.mode=job  \ |
+chaos-kraken-instance-job  startx/chaos-kraken |
+# Deploy the kraken instance with tekton pipeline (require pipeline been installed) |
+helm install \ |
+--set kraken.enabled=true --set kraken.kraken.enabled=true  \ |
+--set kraken.kraken.mode=pipeline \ |
+chaos-kraken-instance-pipeline  startx/chaos-kraken |
+# Deploy the litmus instance |
+helm install \ |
+--set litmus.enabled=true --set litmus.litmus.enabled=true  \ |
+chaos-litmus-instance  startx/chaos-litmus |
+# Deploy the mesh instance |
+helm install \ |
+--set mesh.enabled=true --set mesh.mesh.enabled=true  \ |
+chaos-mesh-instance  startx/chaos-mesh |
+# Deploy the monkey instance |
+helm install \ |
+--set monkey.enabled=true --set monkey.monkey.enabled=true  \ |
+chaos-monkey-instance  startx/chaos-monkey |
+``` |
+ |
+### 5. Manage with ArgoCD |
+ |
+ArgoCD will allow you to deploy this helm chart in a gitops way of doing. [ArgoCD deployment](../../docs/install-argocd.md) must help you deploy the ArgoCD stack. |
+ |
+ In order to manage this cluster resource using argoCD, you should deploy your service [using startx charts](https://helm-repository.readthedocs.io) : |
+- [project](../../docs/install-argocd.md#11-create-cluster-service-projects) to created required projects |
+- [operator](../../docs/install-argocd.md#12-deploy-the-operator) to deploy required operators |
+- [instance](../../docs/install-argocd.md#13-create-a-cluster-service-instance) to deploy this resource components |
+ |
+#### 5.1 Create project |
+ |
+```yaml |
+kind: Application |
+apiVersion: argoproj.io/v1alpha1 |
+metadata: |
+name: chaos |
+namespace: "chaos" |
+spec: |
+destination: |
+  namespace: "default" |
+  server: 'https://kubernetes.default.svc' |
+project: default |
+source: |
+  repoURL: 'https://helm-repository.readthedocs.io/en/latest/repos/stable' |
+  targetRevision: "18.11.31" |
+  chart: chaos |
+  helm: |
     values: |
-      ingress:
-        enabled: true
-        path: /
-        hosts:
-          - mydomain.example.com
-        annotations:
-          kubernetes.io/ingress.class: nginx
-          kubernetes.io/tls-acme: "true"
-        labels: {}
-    parameters:
-      - name: sxapi.service.enabled
-      value: "true"
-      - name: sxapi.service.expose
-      value: "true"
-destination:
-  server: 'https://kubernetes.default.svc'
-  namespace: demo-chaos
-syncPolicy:
-  automated:
-    prune: true
-  syncOptions:
-    - CreateNamespace=true
-  retry:
-    limit: 3
-```
-
-#### 5.2 Enable operator
-
-#### 5.3 Deploy cluster-service instance
-
-
-
-## Values dictionary
-
-### context values dictionary
-
+      ingress: |
+        enabled: true |
+        path: / |
+        hosts: |
+          - mydomain.example.com |
+        annotations: |
+          kubernetes.io/ingress.class: nginx |
+          kubernetes.io/tls-acme: "true" |
+        labels: {} |
+    parameters: |
+      - name: sxapi.service.enabled |
+      value: "true" |
+      - name: sxapi.service.expose |
+      value: "true" |
+destination: |
+  server: 'https://kubernetes.default.svc' |
+  namespace: demo-chaos |
+syncPolicy: |
+  automated: |
+    prune: true |
+  syncOptions: |
+    - CreateNamespace=true |
+  retry: |
+    limit: 3 |
+``` |
+ |
+#### 5.2 Enable operator |
+ |
+#### 5.3 Deploy cluster-service instance |
+ |
+ |
+ |
+## Values dictionary |
+ |
+### context values dictionary |
+ |
 | Key                 | Default   | Description                                                                                                                                                                                                                                                                                               |
 | ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)                                                                                                                                                                                                                                     |
@@ -146,148 +146,148 @@ syncPolicy:
 | litmus              | {...}     | Configuration of the litmus component. Inherit from the [chaos-litmus chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus/#chaos-litmus-values-dictionary) for more options)           |
 | mesh                | {...}     | Configuration of the chaos-mesh component. Inherit from the [chaos-mesh chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh/#chaos-mesh-values-dictionary) for more options)               |
 | monkey              | {...}     | Configuration of the kube-monkey component. Inherit from the [chaos-monkey chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey/#chaos-monkey-values-dictionary) for more options)      |
-
-## Values files
-
-### Default values file (values.yaml)
-
-#### Deploy chaos namespaces
-
-Deploy the chaos test suite environment :
-
-- 1 **project** named **chaos-cerberus**
-- 1 **project** named **chaos-kraken**
-- 1 **project** named **chaos-litmus**
-- 1 **project** named **chaos-mesh**
-- 1 **project** named **chaos-monkey**
-
-```bash
-helm install \
- --set cerberus.enable=true --set cerberus.project.enable=true \
- --set kraken.enable=true   --set kraken.project.enable=true \
- --set litmus.enable=true   --set litmus.project.enable=true \
- --set mesh.enable=true     --set mesh.project.enable=true \
- --set monkey.enable=true   --set monkey.project.enable=true \
- chaos startx/chaos
-```
-
-#### Deploy cerberus
-
-Deploy the cerberus component
-
-```bash
-helm install \
---set cerberus.enable=true --set cerberus.cerberus.enable=true \
-chaos-cerberus startx/chaos-cerberus
-```
-
-#### Deploy kraken
-
-Deploy the kraken component
-
-```bash
-helm install \
---set kraken.enable=true --set kraken.kraken.enable=true \
-chaos-kraken startx/chaos-kraken
-```
-
-#### Deploy litmus
-
-Deploy the litmus component
-
-```bash
-helm install \
---set litmus.enable=true --set litmus.litmus.enable=true \
-chaos-litmus startx/chaos-litmus
-```
-
-#### Deploy Chaos-mesh
-
-Deploy the chaos-mesh component
-
-```bash
-helm install \
---set mesh.enable=true --set mesh.mesh.enable=true \
-chaos-mesh startx/chaos-mesh
-```
-
-#### Deploy Kube-monkey
-
-Deploy the kube-monkey component
-
-```bash
-helm install \
---set monkey.enable=true --set monkey.monkey.enable=true \
-chaos-monkey startx/chaos-monkey
-```
-
-## Usage examples
-
-### Deploy the full chaos suite in sequence
-
-The recommended deployment order: namespaces first, then cerberus (healthcheck), then engines.
-
-```bash
-# 1. Create all chaos namespaces
-helm install chaos-namespaces startx/chaos \
-  --set cerberus.enabled=true --set cerberus.project.enabled=true \
-  --set kraken.enabled=true   --set kraken.project.enabled=true \
-  --set litmus.enabled=true   --set litmus.project.enabled=true \
-  --set mesh.enabled=true     --set mesh.project.enabled=true \
-  --set monkey.enabled=true   --set monkey.project.enabled=true
-
-# 2. Deploy cerberus (healthcheck watchdog) first
-helm install chaos-cerberus startx/chaos-cerberus \
-  --set cerberus.enabled=true \
-  --set cerberus.kubeconfig.mode=token \
-  --set cerberus.kubeconfig.token.server=https://api.prod.example.com:6443 \
-  --set cerberus.kubeconfig.token.token=sha256~REPLACE \
-  -n chaos-cerberus
-
-# 3. Deploy the kraken chaos engine (pipeline mode)
-helm install chaos-kraken startx/chaos-kraken \
-  --set kraken.enabled=true \
-  --set kraken.mode=pipeline \
-  --set kraken.cerberusUrl=http://cerberus.chaos-cerberus.svc.cluster.local:8080 \
-  --set kraken.kubeconfig.mode=token \
-  --set kraken.kubeconfig.token.server=https://api.prod.example.com:6443 \
-  --set kraken.kubeconfig.token.token=sha256~REPLACE \
-  -n chaos-kraken
-```
-
-### Deploy only cerberus + kraken (minimal chaos pair)
-
-```yaml
-# my-chaos-minimal-values.yaml
-cerberus:
-  enabled: true
-  cerberus:
-    enabled: true
-    kubeconfig:
-      mode: token
-      token:
-        server: https://api.prod.example.com:6443
-        token: sha256~REPLACE
-
-kraken:
-  enabled: true
-  kraken:
-    enabled: true
-    mode: job
-    cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
-    kubeconfig:
-      mode: token
-      token:
-        server: https://api.prod.example.com:6443
-        token: sha256~REPLACE
-```
-
-```bash
-helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
-```
-
-## History
-
+ |
+## Values files |
+ |
+### Default values file (values.yaml) |
+ |
+#### Deploy chaos namespaces |
+ |
+Deploy the chaos test suite environment : |
+ |
+- 1 **project** named **chaos-cerberus** |
+- 1 **project** named **chaos-kraken** |
+- 1 **project** named **chaos-litmus** |
+- 1 **project** named **chaos-mesh** |
+- 1 **project** named **chaos-monkey** |
+ |
+```bash |
+helm install \ |
+ --set cerberus.enable=true --set cerberus.project.enable=true \ |
+ --set kraken.enable=true   --set kraken.project.enable=true \ |
+ --set litmus.enable=true   --set litmus.project.enable=true \ |
+ --set mesh.enable=true     --set mesh.project.enable=true \ |
+ --set monkey.enable=true   --set monkey.project.enable=true \ |
+ chaos startx/chaos |
+``` |
+ |
+#### Deploy cerberus |
+ |
+Deploy the cerberus component |
+ |
+```bash |
+helm install \ |
+--set cerberus.enable=true --set cerberus.cerberus.enable=true \ |
+chaos-cerberus startx/chaos-cerberus |
+``` |
+ |
+#### Deploy kraken |
+ |
+Deploy the kraken component |
+ |
+```bash |
+helm install \ |
+--set kraken.enable=true --set kraken.kraken.enable=true \ |
+chaos-kraken startx/chaos-kraken |
+``` |
+ |
+#### Deploy litmus |
+ |
+Deploy the litmus component |
+ |
+```bash |
+helm install \ |
+--set litmus.enable=true --set litmus.litmus.enable=true \ |
+chaos-litmus startx/chaos-litmus |
+``` |
+ |
+#### Deploy Chaos-mesh |
+ |
+Deploy the chaos-mesh component |
+ |
+```bash |
+helm install \ |
+--set mesh.enable=true --set mesh.mesh.enable=true \ |
+chaos-mesh startx/chaos-mesh |
+``` |
+ |
+#### Deploy Kube-monkey |
+ |
+Deploy the kube-monkey component |
+ |
+```bash |
+helm install \ |
+--set monkey.enable=true --set monkey.monkey.enable=true \ |
+chaos-monkey startx/chaos-monkey |
+``` |
+ |
+## Usage examples |
+ |
+### Deploy the full chaos suite in sequence |
+ |
+The recommended deployment order: namespaces first, then cerberus (healthcheck), then engines. |
+ |
+```bash |
+# 1. Create all chaos namespaces |
+helm install chaos-namespaces startx/chaos \ |
+  --set cerberus.enabled=true --set cerberus.project.enabled=true \ |
+  --set kraken.enabled=true   --set kraken.project.enabled=true \ |
+  --set litmus.enabled=true   --set litmus.project.enabled=true \ |
+  --set mesh.enabled=true     --set mesh.project.enabled=true \ |
+  --set monkey.enabled=true   --set monkey.project.enabled=true |
+ |
+# 2. Deploy cerberus (healthcheck watchdog) first |
+helm install chaos-cerberus startx/chaos-cerberus \ |
+  --set cerberus.enabled=true \ |
+  --set cerberus.kubeconfig.mode=token \ |
+  --set cerberus.kubeconfig.token.server=https://api.prod.example.com:6443 \ |
+  --set cerberus.kubeconfig.token.token=sha256~REPLACE \ |
+  -n chaos-cerberus |
+ |
+# 3. Deploy the kraken chaos engine (pipeline mode) |
+helm install chaos-kraken startx/chaos-kraken \ |
+  --set kraken.enabled=true \ |
+  --set kraken.mode=pipeline \ |
+  --set kraken.cerberusUrl=http://cerberus.chaos-cerberus.svc.cluster.local:8080 \ |
+  --set kraken.kubeconfig.mode=token \ |
+  --set kraken.kubeconfig.token.server=https://api.prod.example.com:6443 \ |
+  --set kraken.kubeconfig.token.token=sha256~REPLACE \ |
+  -n chaos-kraken |
+``` |
+ |
+### Deploy only cerberus + kraken (minimal chaos pair) |
+ |
+```yaml |
+# my-chaos-minimal-values.yaml |
+cerberus: |
+  enabled: true |
+  cerberus: |
+    enabled: true |
+    kubeconfig: |
+      mode: token |
+      token: |
+        server: https://api.prod.example.com:6443 |
+        token: sha256~REPLACE |
+ |
+kraken: |
+  enabled: true |
+  kraken: |
+    enabled: true |
+    mode: job |
+    cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080 |
+    kubeconfig: |
+      mode: token |
+      token: |
+        server: https://api.prod.example.com:6443 |
+        token: sha256~REPLACE |
+``` |
+ |
+```bash |
+helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml |
+``` |
+ |
+## History |
+ |
 | Release   | Date       | Description                                                                                                             |
 | --------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
 | 10.12.5   | 2022-06-03 | Initial commit of the example and poc chart example-chaos                                                               |
@@ -560,4 +560,5 @@ helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |

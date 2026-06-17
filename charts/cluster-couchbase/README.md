@@ -1,70 +1,70 @@
-# ![cluster-couchbase](https://helm-repository.readthedocs.io/en/latest/img/cluster-couchbase.svg "Cluster Chart : Couchbase") Cluster Chart : Couchbase
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--couchbase-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+couchbase+startx)
-
-This helm chart is used to deploy Couchbase instances managed by a dedicated operator.
-
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/cluster-couchbase
-```
-
-### 4. Install this chart
-
-```bash
-helm install cluster-couchbase startx/cluster-couchbase
-```
-
-## Default values
-
-Complete deployment of a project with the following characteristics :
-
-- 1 **namespace:** named **openshift-startx-couchbase** without constraints
-- 1 **operator:** named **couchbase-enterprise-certified** configured with
-  - The **stable** channel for community release
-  - The **v2.8.0** version
-  - Deployed under the **openshift-startx-couchbase** project
-
-```bash
-# Create the project
-helm install cluster-couchbase-project startx/cluster-couchbase --set project.enabled=true,operator.enabled=false,couchbase.enabled=false
-# Deploy the couchbase operator
-helm install cluster-couchbase-operator startx/cluster-couchbase --set project.enabled=false,operator.enabled=true,couchbase.enabled=false && sleep 10
-# Configure default couchbase resources
-helm install cluster-couchbase-instance startx/cluster-couchbase --set project.enabled=false,operator.enabled=false,couchbase.enabled=true
-```
-
-## Others values availables
-
-- **startx** : Couchbase operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml))
-
-```bash
-helm install cluster-couchbase startx/cluster-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml
-```
-
-## History
-
+# ![cluster-couchbase](https://helm-repository.readthedocs.io/en/latest/img/cluster-couchbase.svg "Cluster Chart : Couchbase") Cluster Chart : Couchbase |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--couchbase-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+couchbase+startx) |
+ |
+This helm chart is used to deploy Couchbase instances managed by a dedicated operator. |
+ |
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use theses resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/cluster-couchbase |
+``` |
+ |
+### 4. Install this chart |
+ |
+```bash |
+helm install cluster-couchbase startx/cluster-couchbase |
+``` |
+ |
+## Default values |
+ |
+Complete deployment of a project with the following characteristics : |
+ |
+- 1 **namespace:** named **openshift-startx-couchbase** without constraints |
+- 1 **operator:** named **couchbase-enterprise-certified** configured with |
+  - The **stable** channel for community release |
+  - The **v2.8.0** version |
+  - Deployed under the **openshift-startx-couchbase** project |
+ |
+```bash |
+# Create the project |
+helm install cluster-couchbase-project startx/cluster-couchbase --set project.enabled=true,operator.enabled=false,couchbase.enabled=false |
+# Deploy the couchbase operator |
+helm install cluster-couchbase-operator startx/cluster-couchbase --set project.enabled=false,operator.enabled=true,couchbase.enabled=false && sleep 10 |
+# Configure default couchbase resources |
+helm install cluster-couchbase-instance startx/cluster-couchbase --set project.enabled=false,operator.enabled=false,couchbase.enabled=true |
+``` |
+ |
+## Others values availables |
+ |
+- **startx** : Couchbase operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml)) |
+ |
+```bash |
+helm install cluster-couchbase startx/cluster-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml |
+``` |
+ |
+## History |
+ |
 | Release  | Date       | Description                                                                                    |
 | -------- | ---------- | ---------------------------------------------------------------------------------------------- |
 | 0.3.187  | 2021-02-13 | Create cluster-couchbase skeleton from cluster-vault                                           |
@@ -372,4 +372,5 @@ helm install cluster-couchbase startx/cluster-couchbase -f https://raw.githubuse
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |

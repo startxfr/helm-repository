@@ -1,47 +1,47 @@
-# ![example-fruitapp-app](https://helm-repository.readthedocs.io/en/latest/img/example-fruitapp-app.svg "Example Chart : Fruitapp - App") Example Chart : Fruitapp - App
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--fruitapp--app-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+fruitapp+startx)
-
-This helm chart is used to deploy the fruitapp application into a namespace created using the
-`example-fruitapp-project` helm chart. Furthemore, your project should have a runing database and
-related shared services as the one deployed with `example-fruitapp-shared` helm chart.
-
-This chart is part of the [example-fruitapp-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/example-fruitapp-app
-```
-
-### 4. Install this chart
-
-```bash
-helm install example-fruitapp-app startx/example-fruitapp-app
-```
-
-## Values dictionary
-
-### context values dictionary
-
+# ![example-fruitapp-app](https://helm-repository.readthedocs.io/en/latest/img/example-fruitapp-app.svg "Example Chart : Fruitapp - App") Example Chart : Fruitapp - App |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--fruitapp--app-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+fruitapp+startx) |
+ |
+This helm chart is used to deploy the fruitapp application into a namespace created using the |
+`example-fruitapp-project` helm chart. Furthemore, your project should have a runing database and |
+related shared services as the one deployed with `example-fruitapp-shared` helm chart. |
+ |
+This chart is part of the [example-fruitapp-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts). |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use theses resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/example-fruitapp-app |
+``` |
+ |
+### 4. Install this chart |
+ |
+```bash |
+helm install example-fruitapp-app startx/example-fruitapp-app |
+``` |
+ |
+## Values dictionary |
+ |
+### context values dictionary |
+ |
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
 | context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
@@ -50,9 +50,9 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 | context.component   | demo      | Component name of this application (logical tenant)                               |
 | context.app         | fruitapp     | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-fruitapp-app values dictionary
-
+ |
+### example-fruitapp-app values dictionary |
+ |
 | Key                   | Default          | Description                                                                                 |
 | --------------------- | ---------------- | ------------------------------------------------------------------------------------------- |
 | namespace             | fruitapp-preprod | Project used fot theses resources                                                           |
@@ -62,26 +62,26 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 | frontend.memory_limit | 128Mi            | Microservice memory limit                                                                   |
 | frontend.replicas     | 2                | The number of replicas to apply                                                             |
 | frontend.version      | v3.2.11          | The appication version (should be one of latest, v3.2.8, v3.2.11 or any existing image tag) |
-
-## Values files
-
-### Default values file (values.yaml)
-
-Deploy all app services for a given namespace with the following characteristics :
-
-- 1 **deployment** named **fruitapp-v3-2-11** with
-  - **2** replicas
-  - **128Mi** max memory
-- 1 **service** named **fruitapp-v3-2-11** load-balancing to pod from this release
-- 1 **route** named **frontend** routing to the **fruitapp-v3-2-11 service**. This route could be shared among multiple version of the application
-
-```bash
-# base configuration running default configuration
-helm install example-fruitapp-app startx/example-fruitapp-app
-```
-
-## History
-
+ |
+## Values files |
+ |
+### Default values file (values.yaml) |
+ |
+Deploy all app services for a given namespace with the following characteristics : |
+ |
+- 1 **deployment** named **fruitapp-v3-2-11** with |
+  - **2** replicas |
+  - **128Mi** max memory |
+- 1 **service** named **fruitapp-v3-2-11** load-balancing to pod from this release |
+- 1 **route** named **frontend** routing to the **fruitapp-v3-2-11 service**. This route could be shared among multiple version of the application |
+ |
+```bash |
+# base configuration running default configuration |
+helm install example-fruitapp-app startx/example-fruitapp-app |
+``` |
+ |
+## History |
+ |
 | Release  | Date       | Description                                                      |
 | -------- | ---------- | ---------------------------------------------------------------- |
 | 9.8.239  | 2022-05-28 | Initial commit for this helm chart with default value example    |
@@ -289,4 +289,5 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |

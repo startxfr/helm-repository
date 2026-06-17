@@ -1,70 +1,70 @@
-# ![cluster-dvo](https://helm-repository.readthedocs.io/en/latest/img/cluster-dvo.svg "Cluster Chart : DVO") Cluster Chart : DVO
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--dvo-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+dvo+startx)
-
-This helm chart is used to deploy the Deployment Validation Operator (DVO). This operator checks deployments and other resources against a curated collection of best practices.
-
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/cluster-dvo
-```
-
-### 4. Install this chart
-
-```bash
-helm install cluster-dvo startx/cluster-dvo
-```
-
-## Default values
-
-Complete deployment of a project with the following characteristics :
-
-- 1 **namespace:** named **deployment-validation-operator** without constraints
-- 1 **operator:** named **deployment-validation-operator** configured with
-  - The **alpha** channel for community release
-  - The **v0.7.14** version
-  - Deployed under the **deployment-validation-operator** project
-
-```bash
-# Create the project
-helm install cluster-dvo-project startx/cluster-dvo --set project.enabled=true,operator.enabled=false,dvo.enabled=false
-# Deploy the DVO operator
-helm install cluster-dvo-operator startx/cluster-dvo --set project.enabled=false,operator.enabled=true,dvo.enabled=false && sleep 10
-# Configure default DVO resources
-helm install cluster-dvo-instance startx/cluster-dvo --set project.enabled=false,operator.enabled=false,dvo.enabled=true
-```
-
-## Others values availables
-
-- **startx** : DVO operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx.yaml))
-
-```bash
-helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx.yaml
-```
-
-## History
-
+# ![cluster-dvo](https://helm-repository.readthedocs.io/en/latest/img/cluster-dvo.svg "Cluster Chart : DVO") Cluster Chart : DVO |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--dvo-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+dvo+startx) |
+ |
+This helm chart is used to deploy the Deployment Validation Operator (DVO). This operator checks deployments and other resources against a curated collection of best practices. |
+ |
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use theses resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/cluster-dvo |
+``` |
+ |
+### 4. Install this chart |
+ |
+```bash |
+helm install cluster-dvo startx/cluster-dvo |
+``` |
+ |
+## Default values |
+ |
+Complete deployment of a project with the following characteristics : |
+ |
+- 1 **namespace:** named **deployment-validation-operator** without constraints |
+- 1 **operator:** named **deployment-validation-operator** configured with |
+  - The **alpha** channel for community release |
+  - The **v0.7.14** version |
+  - Deployed under the **deployment-validation-operator** project |
+ |
+```bash |
+# Create the project |
+helm install cluster-dvo-project startx/cluster-dvo --set project.enabled=true,operator.enabled=false,dvo.enabled=false |
+# Deploy the DVO operator |
+helm install cluster-dvo-operator startx/cluster-dvo --set project.enabled=false,operator.enabled=true,dvo.enabled=false && sleep 10 |
+# Configure default DVO resources |
+helm install cluster-dvo-instance startx/cluster-dvo --set project.enabled=false,operator.enabled=false,dvo.enabled=true |
+``` |
+ |
+## Others values availables |
+ |
+- **startx** : DVO operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx.yaml)) |
+ |
+```bash |
+helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx.yaml |
+``` |
+ |
+## History |
+ |
 | Release  | Date       | Description                                  |
 | -------- | ---------- | -------------------------------------------- |
 | 17.14.11 | 2025-03-05 | Create chart cluster-dvo from cluster-kepler |
@@ -97,4 +97,5 @@ helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |

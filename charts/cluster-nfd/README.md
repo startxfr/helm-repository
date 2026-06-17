@@ -1,68 +1,68 @@
-# ![cluster-nfd](https://helm-repository.readthedocs.io/en/latest/img/cluster-nfd.svg "Cluster Chart : NFD") Cluster Chart : NFD
-[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--nfd-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+nfd+startx)
-
-This helm chart is used to deploy Node Feature Discovery handled by an operator for discovery of hardware profile and feature and Label nodes with a representation of theses features.
-
-This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
-
-## Requirements and guidelines
-
-Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
-
-## Deploy this helm chart on openshift
-
-### 1. Connect to your Openshift cluster
-
-```bash
-oc login -t <token> <cluster-url>
-```
-
-### 2. Install the repository
-
-```bash
-helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
-```
-
-### 3. Get information about this chart
-
-```bash
-helm show chart startx/cluster-nfd
-```
-
-### 4. Install this chart
-
-#### Default values
-
-Complete deployment of a project with the following characteristics :
-
-- 1 **project:** named **openshift-nfd** without constraints
-- 1 **operator:** named **nfd** configured with
-  - The **stable** channel for community release
-  - The **4.11.0** version
-  - Deployed under the **openshift-nfd** project
-- 1 **NodeFeatureDiscovery:** named **nfd-instance** configured with default example config
-- 1 **NodeFeatureRule:** named **my-sample-rule** configured with default example config
-
-```bash
-# Create the project
-helm install cluster-nfd-project startx/cluster-nfd --set project.enabled=true,operator.enabled=false,nfd.enabled=false
-# Deploy the OADP operator
-helm install cluster-nfd-operator startx/cluster-nfd --set project.enabled=false,operator.enabled=true,nfd.enabled=false && sleep 10
-# Configure default OADP resources
-helm install cluster-nfd-instance startx/cluster-nfd --set project.enabled=false,operator.enabled=false,nfd.enabled=true,nfr.enabled=true
-```
-
-#### Others values availables
-
-- **startx** : NFD operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx.yaml))
-
-```bash
-helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx.yaml
-```
-
-## History
-
+# ![cluster-nfd](https://helm-repository.readthedocs.io/en/latest/img/cluster-nfd.svg "Cluster Chart : NFD") Cluster Chart : NFD |
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--nfd-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+nfd+startx) |
+ |
+This helm chart is used to deploy Node Feature Discovery handled by an operator for discovery of hardware profile and feature and Label nodes with a representation of theses features. |
+ |
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD. |
+ |
+## Requirements and guidelines |
+ |
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for |
+more information on how to use theses resources. |
+ |
+## Deploy this helm chart on openshift |
+ |
+### 1. Connect to your Openshift cluster |
+ |
+```bash |
+oc login -t <token> <cluster-url> |
+``` |
+ |
+### 2. Install the repository |
+ |
+```bash |
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/ |
+``` |
+ |
+### 3. Get information about this chart |
+ |
+```bash |
+helm show chart startx/cluster-nfd |
+``` |
+ |
+### 4. Install this chart |
+ |
+#### Default values |
+ |
+Complete deployment of a project with the following characteristics : |
+ |
+- 1 **project:** named **openshift-nfd** without constraints |
+- 1 **operator:** named **nfd** configured with |
+  - The **stable** channel for community release |
+  - The **4.11.0** version |
+  - Deployed under the **openshift-nfd** project |
+- 1 **NodeFeatureDiscovery:** named **nfd-instance** configured with default example config |
+- 1 **NodeFeatureRule:** named **my-sample-rule** configured with default example config |
+ |
+```bash |
+# Create the project |
+helm install cluster-nfd-project startx/cluster-nfd --set project.enabled=true,operator.enabled=false,nfd.enabled=false |
+# Deploy the OADP operator |
+helm install cluster-nfd-operator startx/cluster-nfd --set project.enabled=false,operator.enabled=true,nfd.enabled=false && sleep 10 |
+# Configure default OADP resources |
+helm install cluster-nfd-instance startx/cluster-nfd --set project.enabled=false,operator.enabled=false,nfd.enabled=true,nfr.enabled=true |
+``` |
+ |
+#### Others values availables |
+ |
+- **startx** : NFD operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx.yaml)) |
+ |
+```bash |
+helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx.yaml |
+``` |
+ |
+## History |
+ |
 | Release | Date       | Description                                       |
 | ------- | ---------- | ------------------------------------------------- |
 | 11.7.18 | 2022-10-28 | Create chart cluster-nfd from cluster-ptp |
@@ -245,4 +245,5 @@ helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 || 21.3.4 | 2026-06-17 | 21.3.9
+| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
+| 21.3.4 | 2026-06-17 | 21.3.9 |
