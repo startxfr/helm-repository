@@ -562,3 +562,4 @@ helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml |
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
