@@ -66,8 +66,7 @@ helm install cluster-nmstate startx/cluster-nmstate -f https://raw.githubusercon
 
 ### Deploy via ArgoCD Application
 
-Create an ArgoCD `Application` resource to deploy `cluster-nmstate` from the STARTX S3 Helm repository.
-This example enables the project namespace, the operator subscription, and the OperatorGroup:
+Deploy `cluster-nmstate` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -97,7 +96,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-nmstate
+  name: cluster-nmstate-project
   namespace: openshift-gitops
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -109,10 +108,8 @@ spec:
   source:
     chart: cluster-nmstate
     helm:
-      values:
+      values: |
         project:
-          enabled: true
-        operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.11
@@ -122,6 +119,56 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-nmstate-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-nmstate
+    server: https://kubernetes.default.svc
+  project: cluster-nmstate
+  source:
+    chart: cluster-nmstate
+    helm:
+      values: |
+        operator:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-nmstate-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-nmstate
+    server: https://kubernetes.default.svc
+  project: cluster-nmstate
+  source:
+    chart: cluster-nmstate
+    helm:
+      values: |
+        nmstate:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
 Apply with:
@@ -130,7 +177,7 @@ Apply with:
 kubectl apply -f cluster-nmstate-argocd.yaml -n openshift-gitops
 ```
 
-The automated sync policy ensures ArgoCD reconciles the NMState operator whenever the chart or values drift from the desired state.
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
 
 ## Values dictionary
 
