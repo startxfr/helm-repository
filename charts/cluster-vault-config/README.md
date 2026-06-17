@@ -380,3 +380,4 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 | 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
+| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
