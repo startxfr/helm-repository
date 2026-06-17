@@ -25,6 +25,8 @@ kubecost:
   enabledRoute: true
   # Name of the deployed instance of KubecostConfig
   name: default
+  # Namespace for the CostAnalyzer instance (default falls back to project.project.name)
+  namespace: "startx-kubecost"
   # The applyed Kubecost config specifications
   spec: |
     pricingCsv:
@@ -1148,44 +1150,44 @@ kubecost:
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
-project: 
+project:
   enabled: false
-  context: 
+  context:
     <<: *context
-  project: 
+  project:
     enabled: true
     hooked: false
     type: namespace
-    name: "kubecost"
-    display_name: Kubecost console
-    description: Kubecost configured by STARTX
+    name: "openshift-kubecost-operator"
+    display_name: Kubecost Operator
+    description: Kubecost operator configured by STARTX
     additionalLabels:
       openshift.io/cluster-monitoring: "true"
 
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
     hooked: false
     name: "kubecost-operator"
-    namespace: "kubecost"
+    namespace: "openshift-kubecost-operator"
     version: "v3.1.3"
-    operator: 
+    operator:
       channel: "stable"
       name: kubecost-operator
       installPlanApproval: Automatic
       # csv: kubecost-operator
-      source: 
+      source:
         name: certified-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
   operatorGroup:
     enabled: true
     hooked: false
-    name: "kubecost"
-    namespace: "kubecost"
+    name: "kubecost-operators"
+    namespace: "openshift-kubecost-operator"
     providedAPIs: "CostAnalyzer.v1alpha1.charts.kubecost.com"

@@ -11,7 +11,7 @@ context: &context
 redhatCreds:
   enabled: false
   name: "startx-rhsupport-creds"
-  namespace: "openshift-startx-mustgather"
+  namespace: "startx-mustgather"
   username: startx_info_mco
   password: mypassword
 
@@ -35,7 +35,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "openshift-startx-mustgather"
+    name: "openshift-mustgather-operator"
     display_name: "Startx MustGather"
     requester: startx
     description: Startx Must Gather area
@@ -66,7 +66,7 @@ operator:
     enabled: true
     hooked: false
     name: "must-gather-operator"
-    namespace: "openshift-startx-mustgather"
+    namespace: "openshift-mustgather-operator"
     version: "v1.1.2"
     operator:
       channel: "alpha"
@@ -88,5 +88,5 @@ operator:
     hooked: false
     target: "all-ns"
     name: "must-gather-operator"
-    namespace: "openshift-startx-mustgather"
+    namespace: "openshift-mustgather-operator"
     providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"

@@ -1,5 +1,5 @@
 {{- if .Values.kubecost.enabled -}}
-{{- $namespace := .Values.project.project.name | default "kubecost" -}}
+{{- $namespace := .Values.kubecost.namespace | default .Values.project.project.name | default "kubecost" -}}
 {{- $name := .Values.kubecost.name | default "kubecost" -}}
 {{- $spec := .Values.kubecost.spec | default "{}" -}}
 ---

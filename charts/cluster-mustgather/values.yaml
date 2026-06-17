@@ -21,8 +21,8 @@ redhatCreds:
   enabled: true
   # Prefix of the mustgather report
   name: "my-rhsupport-creds"
-  # Namespace used for the mustgather (default is the project)
-  namespace: "openshift-startx-mustgather"
+  # Namespace used for the mustgather instances (default is startx-mustgather)
+  namespace: "startx-mustgather"
   # Username of the redhat account
   username: myredhatusername
   # Password of the redhat account
@@ -34,8 +34,8 @@ report:
   enabled: false
   # The case ID (used as part of the name)
   caseID: "00000009"
-  # Namespace used for the mustgather (default is the project)
-  namespace: "openshift-startx-mustgather"
+  # Namespace used for the mustgather instances (default is startx-mustgather)
+  namespace: "startx-mustgather"
   # The redhat credentials for case association
   rhnCreds: "startx-rhsupport-creds"
   # The Service account used to run the mustgather pod
@@ -61,8 +61,8 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "openshift-startx-mustgather"
-    display_name: "Startx MustGather"
+    name: "openshift-mustgather-operator"
+    display_name: "Startx MustGather Operator"
     requester: startx
     description: Startx Must Gather area
   rbac: 
@@ -93,7 +93,7 @@ operator:
     enabled: true
     hooked: false
     name: "must-gather-operator"
-    namespace: "openshift-startx-mustgather"
+    namespace: "openshift-mustgather-operator"
     version: "v1.1.2"
     operator: 
       channel: "alpha"
@@ -110,5 +110,5 @@ operator:
     hooked: false
     target: "all-ns"
     name: "must-gather-operator"
-    namespace: "openshift-startx-mustgather"
+    namespace: "openshift-mustgather-operator"
     providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"
