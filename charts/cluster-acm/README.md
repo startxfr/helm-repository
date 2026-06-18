@@ -112,6 +112,8 @@ spec:
     chart: cluster-acm
     helm:
       values: |
+        acm:
+          enabled: false
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
@@ -139,6 +141,8 @@ spec:
     chart: cluster-acm
     helm:
       values: |
+        acm:
+          enabled: false
         operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
