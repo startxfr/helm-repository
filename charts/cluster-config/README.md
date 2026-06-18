@@ -123,7 +123,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         project:
@@ -147,7 +147,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         operatorElastic:
@@ -175,7 +175,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         operatorLoki:
@@ -204,7 +204,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         operatorGlobal:
@@ -230,7 +230,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         monitoring:
@@ -260,7 +260,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         imageprunner:
@@ -291,7 +291,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         api:
@@ -320,7 +320,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         autoscaling:
@@ -693,5 +693,6 @@ spec:
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
-| 21.3.14 | 2026-06-18 | Update context version to 4.21.3, loki operator to v6.5.1, add multi-app ArgoCD deployment examples |
+| 21.3.12 | 2026-06-18 | Update context version to 4.21.3, loki operator to v6.5.1, add multi-app ArgoCD deployment examples |
 | 21.3.12 | 2026-06-18 | Improve cluster-config options |
+| 21.3.13 | 2026-06-18 | Improve cluster-config options |
