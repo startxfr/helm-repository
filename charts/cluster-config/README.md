@@ -140,6 +140,10 @@ spec:
       values: |
         project:
           enabled: true
+        redhat:
+          operators: true
+        tracing:
+          operators: true
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
@@ -223,6 +227,10 @@ spec:
           enabled: true
           operatorGroup:
             enabled: false
+        redhat:
+          operators: true
+        tracing:
+          operators: true
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
@@ -235,7 +243,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-config-app-monitoring
+  name: cluster-config-monitoring
   namespace: openshift-gitops
 spec:
   project: cluster-config
@@ -265,7 +273,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-config-app-registry
+  name: cluster-config-registry
   namespace: openshift-gitops
 spec:
   project: cluster-config
@@ -296,7 +304,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-config-app-network
+  name: cluster-config-network
   namespace: openshift-gitops
 spec:
   project: cluster-config
@@ -313,6 +321,8 @@ spec:
           list:
             - name: default
               infra_enabled: true
+        proxy:
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-config
@@ -325,7 +335,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-config-app-policy
+  name: cluster-config-projecttemplate
   namespace: openshift-gitops
 spec:
   project: cluster-config
@@ -346,12 +356,6 @@ spec:
           networkpolicy:
             enabled: true
         priorityClass:
-          enabled: false
-        redhat:
-          operators: false
-        tracing:
-          operators: false
-        proxy:
           enabled: false
   destination:
     server: https://kubernetes.default.svc
