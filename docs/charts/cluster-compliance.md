@@ -410,6 +410,8 @@ spec:
     targetRevision: 21.3.13
     helm:
       values: |
+        compliance:
+          enabled: false
         project:
           enabled: true
           project:
@@ -439,6 +441,8 @@ spec:
           enabled: false
         operator:
           enabled: true
+          subscription:
+            enabled: true
           operatorGroup:
             enabled: true
   destination:
@@ -464,6 +468,9 @@ spec:
       values: |
         compliance:
           enabled: true
+        project:
+          project:
+            name: "openshift-compliance"
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-compliance
@@ -472,5 +479,3 @@ spec:
       prune: true
       selfHeal: true
 ```
-| 21.3.12 | 2026-06-18 | Improve cluster-compliance options |
-| 21.3.13 | 2026-06-18 | Improve cluster-compliance options |
