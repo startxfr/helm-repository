@@ -3,14 +3,14 @@
 {{- $name := .Values.kubecost.name | default "kubecost" -}}
 {{- $spec := .Values.kubecost.spec | default "{}" -}}
 ---
-apiVersion: charts.kubecost.com/v1alpha1
-kind: CostAnalyzer
+apiVersion: charts.kubecost.com/v1
+kind: Kubecost
 metadata:
   name: {{ $name | quote }}
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-kubecost.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- $name -}}-costanalyzer"
+    app.kubernetes.io/name: "{{- $name -}}-kubecost"
   annotations:
     {{- include "cluster-kubecost.annotations" . | nindent 4 }}
     {{- if .Values.kubecost.hooked }}
