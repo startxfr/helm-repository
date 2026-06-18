@@ -44,6 +44,124 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 - 1 **HyperConverged** cluster instance enabling OpenShift Virtualization
 - Optional **VirtualMachine** instances configurable via the vms list
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-kubevirt
+  namespace: openshift-gitops
+spec:
+  description: Deploy OpenShift Virtualization (KubeVirt) operator and HyperConverged instance
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-cnv
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace openshift-cnv
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kubevirt-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-kubevirt
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kubevirt
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        hyperconvergedCluster:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys kubevirt-hyperconverged operator in openshift-cnv (dedicated namespace, own OperatorGroup)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kubevirt-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-kubevirt
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kubevirt
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: true
+        hyperconvergedCluster:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-cnv
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures the HyperConverged cluster instance
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kubevirt-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-kubevirt
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kubevirt
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        hyperconvergedCluster:
+          enabled: true
+        vms:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-cnv
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                                |
@@ -55,7 +173,6 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                                   |
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts                                                              |
 | 0.3.141  | 2020-11-24 | publish stable update for the full repository                                                              |
-| 0.3.151  | 2021-01-23 | Upgrade to OCP version 4.6.0                                                                               |
 | 0.3.151  | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                        |
 | 0.3.153  | 2021-01-23 | publish stable update for the full repository                                                              |
 | 0.3.165  | 2021-01-23 | Upgrade all chart dependencies                                                                             |
@@ -99,7 +216,6 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 | 8.13.5   | 2021-10-21 | publish stable update for the full repository                                                              |
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                              |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                                          |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                                 |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                                 |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23             |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                              |
@@ -156,7 +272,6 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                                |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                                        |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                       |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                              |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                     |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                              |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                  |
@@ -303,7 +418,6 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository |
@@ -364,3 +478,5 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Add ArgoCD examples for cluster-kubevirt |
+| 21.3.12 | 2026-06-18 | Improve cluster-kubevirt options |
