@@ -58,11 +58,123 @@ helm install cluster-ods startx/cluster-ods
 helm install cluster-ods startx/cluster-ods -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ods/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-ods
+  namespace: openshift-gitops
+spec:
+  description: Configure OpenShift Data Science operator
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: rhods-operator
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ods-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-ods
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-ods
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ods-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-ods
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-ods
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ods-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-ods
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-ods
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        DataScienceCluster:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                           |
 | -------- | ---------- | ----------------------------------------------------------------------------------------------------- |
-| 14.6.61  | 2023-12-22 | create                                                                                                |
 | 14.6.61  | 2023-12-22 | Create cluster-ods chart                                                                              |
 | 14.6.63  | 2023-12-22 | Align all startx helm-chart to version 14.6.63                                                        |
 | 14.6.65  | 2023-12-27 | test with repo stored in s3 public bucket                                                             |
@@ -101,7 +213,6 @@ helm install cluster-ods startx/cluster-ods -f https://raw.githubusercontent.com
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository                                                         |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release                                                                     |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header                                                                    |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository                                                         |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323                                                           |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository                                                         |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository                                                         |
@@ -160,3 +271,4 @@ helm install cluster-ods startx/cluster-ods -f https://raw.githubusercontent.com
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-19 | Improve cluster-ods options |
