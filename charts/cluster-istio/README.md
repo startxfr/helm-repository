@@ -125,6 +125,8 @@ kind: Application
 metadata:
   name: cluster-istio-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-istio
   source:
@@ -155,6 +157,8 @@ kind: Application
 metadata:
   name: cluster-istio-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-istio
   source:
@@ -191,6 +195,8 @@ kind: Application
 metadata:
   name: cluster-istio-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-istio
   source:

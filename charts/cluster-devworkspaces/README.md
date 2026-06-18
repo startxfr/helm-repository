@@ -101,6 +101,8 @@ kind: Application
 metadata:
   name: cluster-devworkspaces-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-devworkspaces
   source:
@@ -127,6 +129,8 @@ kind: Application
 metadata:
   name: cluster-devworkspaces-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-devworkspaces
   source:
@@ -157,6 +161,8 @@ kind: Application
 metadata:
   name: cluster-devworkspaces-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-devworkspaces
   source:

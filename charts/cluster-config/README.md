@@ -130,6 +130,8 @@ kind: Application
 metadata:
   name: cluster-config-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-config
   source:
@@ -160,6 +162,8 @@ kind: Application
 metadata:
   name: cluster-config-operator-elastic
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-config
   source:
@@ -190,6 +194,8 @@ kind: Application
 metadata:
   name: cluster-config-operator-loki
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-config
   source:
@@ -221,6 +227,8 @@ kind: Application
 metadata:
   name: cluster-config-operator-global
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-config
   source:
@@ -253,6 +261,8 @@ kind: Application
 metadata:
   name: cluster-config-monitoring
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-config
   source:
@@ -285,6 +295,8 @@ kind: Application
 metadata:
   name: cluster-config-registry
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-config
   source:
@@ -318,6 +330,8 @@ kind: Application
 metadata:
   name: cluster-config-network
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-config
   source:
@@ -351,6 +365,8 @@ kind: Application
 metadata:
   name: cluster-config-projecttemplate
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-config
   source:

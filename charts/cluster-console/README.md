@@ -99,6 +99,8 @@ kind: Application
 metadata:
   name: cluster-console-webterminal
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-console
   source:
@@ -131,6 +133,8 @@ kind: Application
 metadata:
   name: cluster-console-personalize
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-console
   source:

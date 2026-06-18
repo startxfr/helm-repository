@@ -113,6 +113,8 @@ kind: Application
 metadata:
   name: cluster-machine-config
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-machine
   source:
@@ -142,6 +144,8 @@ kind: Application
 metadata:
   name: cluster-machine-healthcheck
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-machine
   source:
@@ -171,6 +175,8 @@ kind: Application
 metadata:
   name: cluster-machine-autoscaler
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-machine
   source:
@@ -218,6 +224,8 @@ kind: Application
 metadata:
   name: cluster-machine-machineset
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-machine
   source:

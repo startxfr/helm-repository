@@ -93,6 +93,8 @@ kind: Application
 metadata:
   name: cluster-gitlab-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-gitlab
   source:
@@ -119,6 +121,8 @@ kind: Application
 metadata:
   name: cluster-gitlab-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-gitlab
   source:

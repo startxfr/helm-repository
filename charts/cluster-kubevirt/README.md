@@ -81,6 +81,8 @@ kind: Application
 metadata:
   name: cluster-kubevirt-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kubevirt
   source:
@@ -109,6 +111,8 @@ kind: Application
 metadata:
   name: cluster-kubevirt-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kubevirt
   source:
@@ -139,6 +143,8 @@ kind: Application
 metadata:
   name: cluster-kubevirt-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kubevirt
   source:

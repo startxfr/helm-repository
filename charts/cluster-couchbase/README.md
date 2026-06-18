@@ -100,6 +100,8 @@ kind: Application
 metadata:
   name: cluster-couchbase-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-couchbase
   source:
@@ -128,6 +130,8 @@ kind: Application
 metadata:
   name: cluster-couchbase-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-couchbase
   source:
@@ -156,6 +160,8 @@ kind: Application
 metadata:
   name: cluster-couchbase-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-couchbase
   source:

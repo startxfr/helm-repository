@@ -101,6 +101,8 @@ kind: Application
 metadata:
   name: cluster-knative-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-knative
   source:
@@ -137,6 +139,8 @@ kind: Application
 metadata:
   name: cluster-knative-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-knative
   source:
@@ -169,6 +173,8 @@ kind: Application
 metadata:
   name: cluster-knative-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-knative
   source:

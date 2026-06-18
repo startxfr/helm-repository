@@ -86,6 +86,8 @@ kind: Application
 metadata:
   name: cluster-logging-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-logging
   source:
@@ -113,6 +115,8 @@ kind: Application
 metadata:
   name: cluster-logging-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-logging
   source:
@@ -143,6 +147,8 @@ kind: Application
 metadata:
   name: cluster-logging-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-logging
   source:

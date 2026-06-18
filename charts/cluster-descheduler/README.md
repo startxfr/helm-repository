@@ -100,6 +100,8 @@ kind: Application
 metadata:
   name: cluster-descheduler-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-descheduler
   source:
@@ -126,6 +128,8 @@ kind: Application
 metadata:
   name: cluster-descheduler-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-descheduler
   source:
@@ -152,6 +156,8 @@ kind: Application
 metadata:
   name: cluster-descheduler-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-descheduler
   source:
