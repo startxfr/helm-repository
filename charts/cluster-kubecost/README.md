@@ -110,7 +110,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.11
+    targetRevision: 21.3.15
   syncPolicy:
     automated:
       prune: true
@@ -137,7 +137,7 @@ spec:
         operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.11
+    targetRevision: 21.3.15
   syncPolicy:
     automated:
       prune: true
@@ -163,7 +163,7 @@ spec:
           enabled: true
           namespace: startx-kubecost
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.11
+    targetRevision: 21.3.15
   syncPolicy:
     automated:
       prune: true

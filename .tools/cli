@@ -456,6 +456,7 @@ function routerChartRelease {
         git checkout $WORK_BRANCH &>/dev/null
         echo -e "\e[35mRelease\e[0m bump \e[1m$chart_name\e[0m: $current_release → $next_release"
         sed -i "s/$current_release/$next_release/" "$chart_dir/Chart.yaml"
+        sed -i "s/targetRevision: .*/targetRevision: $next_release/" "$chart_dir/README.md"
         if [[ $DOC_ADD_HISTORY == "true" ]]; then
             [[ -n "$(tail -c1 "${chart_dir}/README.md")" ]] && echo "" >> "${chart_dir}/README.md"
             echo "| $next_release | $(date +%Y-%m-%d) | $next_description |" >> "${chart_dir}/README.md"
