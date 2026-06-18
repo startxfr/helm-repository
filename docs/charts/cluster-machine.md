@@ -76,6 +76,97 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 helm install cluster-machine startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml
 ``` -->
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-machine
+  namespace: openshift-gitops
+spec:
+  description: Configure Machine API resources (MachineConfig, MachineSet, autoscaling)
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Configures MachineConfigPool and MachineConfig resources
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-machine-config
+  namespace: openshift-gitops
+spec:
+  project: cluster-machine
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-machine
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        machineConfigPool:
+          enabled: false
+        machineConfig:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures MachineHealthCheck, MachineAutoscaler and MachineSet resources
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-machine-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-machine
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-machine
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        cluster:
+          autoscaler:
+            enabled: false
+        machineHealthCheck:
+          enabled: false
+        machineAutoscaler:
+          enabled: false
+        machineSet:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                    |
@@ -113,7 +204,6 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 8.13.5   | 2021-10-21 | publish stable update for the full repository                                                  |
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                  |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                              |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23 |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                  |
@@ -179,7 +269,6 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                    |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                            |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                           |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
@@ -329,7 +418,6 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository |
@@ -390,3 +478,5 @@ helm install cluster-machine startx/cluster-machine -f https://raw.githubusercon
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Add ArgoCD examples for cluster-machine |
+| 21.3.12 | 2026-06-18 | Improve cluster-machine options |
