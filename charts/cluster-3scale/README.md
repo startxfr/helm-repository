@@ -56,12 +56,144 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-3scale startx/cluster-3scale
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Startx 3scale cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml))
 
 ```bash
 helm install cluster-3scale startx/cluster-3scale -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-3scale/values-startx.yaml
+```
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-3scale` using three dedicated ArgoCD Applications sharing the same AppProject.
+The 3scale operator runs in `openshift-operators` (all-namespaces scope); APIManager instances are deployed in `startx-3scale`:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-3scale
+  namespace: openshift-gitops
+spec:
+  description: Deploy the 3scale API Management operator on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: openshift-operators
+    - server: https://kubernetes.default.svc
+      namespace: startx-3scale
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: operators.coreos.com
+      kind: OperatorGroup
+    - group: operators.coreos.com
+      kind: Subscription
+    - group: apps.3scale.net
+      kind: APIManager
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-3scale-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: startx-3scale
+    server: https://kubernetes.default.svc
+  project: cluster-3scale
+  source:
+    chart: cluster-3scale
+    helm:
+      values: |
+        project:
+          enabled: true
+        operator:
+          enabled: false
+        manager:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-3scale-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-operators
+    server: https://kubernetes.default.svc
+  project: cluster-3scale
+  source:
+    chart: cluster-3scale
+    helm:
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: true
+        manager:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-3scale-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: startx-3scale
+    server: https://kubernetes.default.svc
+  project: cluster-3scale
+  source:
+    chart: cluster-3scale
+    helm:
+      values: |
+        project:
+          enabled: false
+          project:
+            name: "startx-3scale"
+        operator:
+          enabled: false
+        manager:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+Apply with:
+
+```bash
+kubectl apply -f cluster-3scale-argocd.yaml -n openshift-gitops
 ```
 
 ## History
@@ -399,3 +531,4 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 | 21.3.4 | 2026-03-03 | Upgrade to operator v0.10.5 |
 | 21.3.5 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-3scale options |

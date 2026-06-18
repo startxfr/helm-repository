@@ -13,7 +13,7 @@ context: &context
   # Application name (functional tenant, default use Chart name)
   app: default-3scale
   # Version name of this application (default use Chart appVersion)
-  version: "0.10.5"
+  version: "0.13.3"
 
 # Deploy an API manager
 manager:
@@ -31,8 +31,8 @@ project:
   project: 
     enabled: true
     type: namespace
-    name: example-3scale
-    display_name: 3SCALE Example
+    name: startx-3scale
+    display_name: 3SCALE API Manager
     description: 3Scale enterprise api-management & control plane example from STARTX
   rbac: 
     enabled: false
@@ -66,9 +66,9 @@ operator:
     enabled: true
     name: "3scale-operator"
     namespace: "openshift-operators"
-    version: "v0.10.5"
+    version: "v0.13.3"
     operator: 
-      channel: threescale-2.13
+      channel: threescale-2.16
       name: 3scale-operator
       installPlanApproval: Automatic
       # csv: 3scale-operator
