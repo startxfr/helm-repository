@@ -43,7 +43,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **openshift-distributed-tracing** without constraints
 - 1 **operator:** named **servicemeshoperator** configured with
   - The **stable** channel for community release
-  - The **v2.6.13** version
+  - The **v2.6.17** version
   - Deployed under the **openshift-operators** project
 - 1 **operator:** named **jaeger-product** configured with
   - The **stable** channel for community release
@@ -51,7 +51,7 @@ Complete deployment of a project with the following characteristics :
   - Deployed under the **openshift-distributed-tracing** project
 - 1 **operator:** named **kiali-ossm** configured with
   - The **stable** channel for community release
-  - The **v2.17.4** version
+  - The **v2.22.5** version
   - Deployed under the **openshift-operators** project
 - 1 **operator:** named **loki-operator** configured with
   - The **stable-6.2** channel for community release
@@ -72,12 +72,140 @@ helm install cluster-gpu-operator startx/cluster-gpu --set project.enabled=false
 helm install cluster-gpu-instance startx/cluster-gpu --set project.enabled=false,operator.enabled=false,gpu.enabled=true
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Startx Istio service configuration using service-mesh operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-istio/values-startx.yaml))
 
 ```bash
 helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-istio/values-startx.yaml
+```
+
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-istio
+  namespace: openshift-gitops
+spec:
+  description: Deploy OpenShift Service Mesh (Istio) and its dependency operators
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: startx-istio
+      server: https://kubernetes.default.svc
+    - namespace: istio-operators
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators-redhat
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators
+      server: https://kubernetes.default.svc
+    - namespace: openshift-distributed-tracing
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespaces startx-istio and istio-operators
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-istio-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-istio
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-istio
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        projectOperator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys Elastic, Loki, Kiali, Jaeger and Service Mesh operators
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-istio-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-istio
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-istio
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operatorElastic:
+          enabled: true
+        operatorLoki:
+          enabled: true
+        operatorKiali:
+          enabled: true
+        operatorJaeger:
+          enabled: true
+        operatorIstio:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-operators
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures Service Mesh control plane (disabled by default)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-istio-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-istio
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-istio
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        istio:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-istio
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
 ## History
@@ -92,10 +220,8 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 0.3.105  | 2020-11-11 | Update cluster-xxx charts dependencies to 0.3.103 release                                                                    |
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                                                     |
 | 0.3.126  | 2020-11-14 | Move to a servie mesh usage                                                                                                  |
-| 0.3.135  | 2020-11-15 | Add multiple value (istio member only) and enable ServiceMeshMember only for this chart                                      |
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts                                                                                |
 | 0.3.141  | 2020-11-24 | publish stable update for the full repository                                                                                |
-| 0.3.151  | 2021-01-23 | Upgrade istio to version 2.0.0.2                                                                                             |
 | 0.3.151  | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                                          |
 | 0.3.153  | 2021-01-23 | publish stable update for the full repository                                                                                |
 | 0.3.165  | 2021-01-23 | Upgrade all chart dependencies                                                                                               |
@@ -143,11 +269,9 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                                                |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                                                            |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                                                   |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                                                   |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23                               |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                                                |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                                                 |
-| 8.20.3   | 2021-11-11 | stable release for all chart for openshift version 4.8.20                                                                    |
 | 8.20.5   | 2021-11-12 | Upgrade all appVersion and align chart release                                                                               |
 | 8.20.9   | 2021-11-12 | Align all startx chart to version 8.20.9                                                                                     |
 | 0.20.11  | 2021-11-12 | Move chart dependencies to version 8.20.5                                                                                    |
@@ -176,7 +300,6 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 9.8.52   | 2021-12-07 | Improve quotas management in demo-project                                                                                    |
 | 9.8.53   | 2021-12-07 | Debug quotas                                                                                                                 |
 | 9.8.67   | 2021-12-18 | Align all charts to release 9.8.67                                                                                           |
-| 9.8.68   | 2021-12-18 | Update elasticsearch operator to version 5.3.1-12                                                                            |
 | 9.8.68   | 2021-12-18 | Improve cluster-istio options                                                                                                |
 | 9.8.71   | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                                             |
 | 9.8.75   | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                                                   |
@@ -208,7 +331,6 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                                                  |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                                                          |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                                         |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                                                |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                                       |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                                                |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                                    |
@@ -364,7 +486,6 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository |
@@ -425,3 +546,4 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-istio options |

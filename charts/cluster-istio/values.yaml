@@ -13,7 +13,7 @@ context:  &context
   # Application name (functional tenant, default use Chart name)
   app: default-istio
   # Version name of this application (default use Chart appVersion)
-  version: "2.6.13"
+  version: "2.6.17"
 
 # configuration of the istio service
 istio:
@@ -145,12 +145,12 @@ operatorKiali:
   enabled: false
   context: 
     <<: *context
-    version: "2.17.4"
+    version: "2.22.5"
   subscription:
     enabled: true
     name: "kiali-ossm"
     namespace: "openshift-operators"
-    version: "v2.17.4"
+    version: "v2.22.5"
     operator: 
       channel: "stable"
       name: kiali-ossm
@@ -193,12 +193,12 @@ operatorIstio:
   enabled: false
   context: 
     <<: *context
-    version: "2.6.13"
+    version: "2.6.17"
   subscription: 
     enabled: true
     name: "servicemeshoperator"
     namespace: "istio-operators"
-    version: "v2.6.13-0"
+    version: "v2.6.17-0"
     operator: 
       channel: "stable"
       name: servicemeshoperator
