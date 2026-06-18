@@ -367,13 +367,14 @@ All other `cluster-*` charts: `cluster-crunchy` · `cluster-mongo`, `cluster-ans
 
 For each chart to update, do these steps in order:
 1. Update `appVersion` in `Chart.yaml` to current upstream operator version
-2. Update namespace names in `values.yaml` (and all `values-startx*.yaml`) to follow the naming rules above
-3. Add `## Deploy via ArgoCD` section to `README.md` with AppProject + 3 Applications, then `cp README.md docs/charts/<name>.md`
-4. Run `./sx-helm <chart-name> release` from `/home/cl/ClaudeCode/helm-repository/`
-5. Run `./sx-helm publish` from `/home/cl/ClaudeCode/helm-repository/`
-6. Deploy the 3 ArgoCD Applications on the test cluster (`https://api.demo219.startx.fr:6443`)
-7. Verify sync succeeds; adjust values/templates if needed
-8. Update CLAUDE.md in `/home/cl/ClaudeCode/helm-repository/` with this change (section Charts with ArgoCD examples)
+2. Update version, channel, namespace names in `values.yaml` (and all `values-startx*.yaml`)
+3. Add `## ArgoCD deployment` section to `README.md` with AppProject + 3 Applications, then `cp README.md docs/charts/<name>.md`
+4. Ask for approval, then run `./sx-helm <chart-name> release && ./sx-helm publish` — **this publishes the chart to S3 and updates the index**
+5. Deploy the 3 ArgoCD Applications on the test cluster using the **newly published version** (`targetRevision` set by auto-update in release)
+6. Verify sync succeeds; adjust values/templates if needed, then re-release if needed
+7. Update CLAUDE.md charts-done list
+
+**IMPORTANT:** Never test on the cluster with an old indexed version (e.g. 21.3.0). Always release first so the actual updated chart is available in the S3 index.
 
 ---
 
