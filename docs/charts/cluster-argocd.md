@@ -72,6 +72,134 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 helm install cluster-argocd startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx-gitops.yaml
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-argocd` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+The GitOps operator installs in the shared `openshift-operators` namespace. The `ArgoCD` CR deploys in `openshift-gitops`:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-argocd
+  namespace: openshift-gitops
+spec:
+  description: Deploy OpenShift GitOps (ArgoCD) operator on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: openshift-operators
+    - server: https://kubernetes.default.svc
+      namespace: openshift-gitops
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: operators.coreos.com
+      kind: OperatorGroup
+    - group: operators.coreos.com
+      kind: Subscription
+    - group: argoproj.io
+      kind: ArgoCD
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-argocd-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-gitops
+    server: https://kubernetes.default.svc
+  project: cluster-argocd
+  source:
+    chart: cluster-argocd
+    helm:
+      values: |
+        argocd:
+          enabled: false
+        project:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-argocd-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-operators
+    server: https://kubernetes.default.svc
+  project: cluster-argocd
+  source:
+    chart: cluster-argocd
+    helm:
+      values: |
+        argocd:
+          enabled: false
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-argocd-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-gitops
+    server: https://kubernetes.default.svc
+  project: cluster-argocd
+  source:
+    chart: cluster-argocd
+    helm:
+      values: |
+        argocd:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+Apply with:
+
+```bash
+kubectl apply -f cluster-argocd-argocd.yaml -n openshift-gitops
+```
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
+
 ## History
 
 | Release  | Date       | Description                                                                                                |
@@ -395,3 +523,4 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-argocd options |
