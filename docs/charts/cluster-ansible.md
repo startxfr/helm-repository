@@ -61,6 +61,136 @@ helm install cluster-ansible startx/cluster-ansible
 helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-ansible` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+The AAP operator installs in the dedicated `rhaap-operator` namespace (with its own OperatorGroup). The `AnsibleAutomationPlatform` CR deploys in `startx-ansible`:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-ansible
+  namespace: openshift-gitops
+spec:
+  description: Deploy Ansible Automation Platform (AAP) on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: rhaap-operator
+    - server: https://kubernetes.default.svc
+      namespace: startx-ansible
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: operators.coreos.com
+      kind: OperatorGroup
+    - group: operators.coreos.com
+      kind: Subscription
+    - group: aap.ansible.com
+      kind: AnsibleAutomationPlatform
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ansible-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: startx-ansible
+    server: https://kubernetes.default.svc
+  project: cluster-ansible
+  source:
+    chart: cluster-ansible
+    helm:
+      values: |
+        project:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ansible-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: rhaap-operator
+    server: https://kubernetes.default.svc
+  project: cluster-ansible
+  source:
+    chart: cluster-ansible
+    helm:
+      values: |
+        projectOperator:
+          enabled: true
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: true
+          subscription:
+            enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ansible-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: startx-ansible
+    server: https://kubernetes.default.svc
+  project: cluster-ansible
+  source:
+    chart: cluster-ansible
+    helm:
+      values: |
+        ansibleAAP:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+Apply with:
+
+```bash
+kubectl apply -f cluster-ansible-argocd.yaml -n openshift-gitops
+```
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
+
 ## History
 
 | Release  | Date       | Description                                                                                 |
@@ -329,3 +459,4 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-ansible options |
