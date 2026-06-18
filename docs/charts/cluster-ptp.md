@@ -56,6 +56,123 @@ helm install cluster-ptp startx/cluster-ptp
 helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-ptp
+  namespace: openshift-gitops
+spec:
+  description: Configure Precision Time Protocol operator
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: openshift-ptp
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ptp-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-ptp
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-ptp
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ptp-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-ptp
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-ptp
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-ptp-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-ptp
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-ptp
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        ptp:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                    |
@@ -97,7 +214,6 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 8.13.5   | 2021-10-21 | publish stable update for the full repository                                                  |
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                  |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                              |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23 |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                  |
@@ -153,7 +269,6 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                    |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                            |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                           |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
@@ -191,7 +306,6 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 11.7.91 | 2023-02-16 | publish stable update for the full repository |
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89 |
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository |
-| 11.28.3 | 2023-02-19 | Upgrade to 4.11.0-202302061916 ptp operator release |
 | 11.28.3 | 2023-02-19 | Upgrade to 4.11.0-202302061916 ptp operator release |
 | 11.28.5 | 2023-02-19 | Improve cluster-ptp options |
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository |
@@ -356,3 +470,4 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-19 | Add ArgoCD deployment examples |
