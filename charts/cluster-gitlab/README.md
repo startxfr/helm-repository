@@ -130,7 +130,7 @@ spec:
         - values-startx_noinfra.yaml
       values: |
         gitlab:
-          enabled: false
+          enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-gitlab

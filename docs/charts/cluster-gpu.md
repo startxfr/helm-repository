@@ -39,7 +39,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **nvidia-gpu-operator** without constraints
 - 1 **operator:** named **gpu-operator-certified** configured with
   - The **stable** channel for community release
-  - The **v25.10.1** version
+  - The **v26.3.2** version
   - Deployed under the **nvidia-gpu-operator** project
 
 ```bash
@@ -51,7 +51,7 @@ helm install cluster-gpu-operator startx/cluster-gpu --set project.enabled=false
 helm install cluster-gpu-instance startx/cluster-gpu --set project.enabled=false,operator.enabled=false,gpu.enabled=true
 ```
 
-#### Others values availables
+#### Other available values
 
 - **startx** : GPU operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx.yaml))
 
@@ -59,11 +59,122 @@ helm install cluster-gpu-instance startx/cluster-gpu --set project.enabled=false
 helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-gpu
+  namespace: openshift-gitops
+spec:
+  description: Deploy NVidia GPU operator and configure GPU at cluster level
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: nvidia-gpu-operator
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace nvidia-gpu-operator
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-gpu-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-gpu
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-gpu
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys NVidia GPU operator in nvidia-gpu-operator namespace
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-gpu-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-gpu
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-gpu
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nvidia-gpu-operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures GPU ClusterPolicy (disabled by default — requires GPU nodes)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-gpu-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-gpu
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-gpu
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        gpu:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nvidia-gpu-operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release | Date       | Description                                       |
 | ------- | ---------- | ------------------------------------------------- |
-| 14.6.111 | 2024-01-17 | Create chart cluster-gpu from cluster-certmanager |
 | 14.6.111 | 2024-01-18 | New version of the NVidia Operator packaged into the cluster-gpu chart |
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository |
 | 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge |
@@ -91,7 +202,6 @@ helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository |
@@ -150,3 +260,4 @@ helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-gpu options |
