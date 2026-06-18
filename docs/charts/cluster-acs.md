@@ -116,7 +116,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
   syncPolicy:
     automated:
       prune: true
@@ -144,8 +144,10 @@ spec:
           enabled: false
         operator:
           enabled: true
+          operatorGroup:
+            enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
   syncPolicy:
     automated:
       prune: true
@@ -170,7 +172,7 @@ spec:
         acs:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
   syncPolicy:
     automated:
       prune: true
@@ -470,3 +472,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Improve cluster-acs options |
+| 21.3.13 | 2026-06-18 | Improve cluster-acs options |
