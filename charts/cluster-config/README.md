@@ -92,6 +92,18 @@ spec:
   destinations:
     - namespace: startx-config
       server: https://kubernetes.default.svc
+    - namespace: openshift-config
+      server: https://kubernetes.default.svc
+    - namespace: openshift-image-registry
+      server: https://kubernetes.default.svc
+    - namespace: openshift-ingress
+      server: https://kubernetes.default.svc
+    - namespace: openshift-ingress-operator
+      server: https://kubernetes.default.svc
+    - namespace: openshift-monitoring
+      server: https://kubernetes.default.svc
+    - namespace: openshift-distributed-tracing
+      server: https://kubernetes.default.svc
     - namespace: openshift-operators
       server: https://kubernetes.default.svc
     - namespace: openshift-operators-redhat
@@ -123,7 +135,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       values: |
         project:
@@ -147,7 +159,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       values: |
         operatorElastic:
@@ -175,7 +187,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       values: |
         operatorLoki:
@@ -204,7 +216,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       values: |
         operatorGlobal:
@@ -230,7 +242,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       values: |
         monitoring:
@@ -260,7 +272,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       values: |
         imageprunner:
@@ -291,7 +303,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       values: |
         api:
@@ -320,7 +332,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       values: |
         autoscaling:
@@ -696,3 +708,4 @@ spec:
 | 21.3.12 | 2026-06-18 | Update context version to 4.21.3, loki operator to v6.5.1, add multi-app ArgoCD deployment examples |
 | 21.3.12 | 2026-06-18 | Improve cluster-config options |
 | 21.3.13 | 2026-06-18 | Improve cluster-config options |
+| 21.3.14 | 2026-06-18 | Improve cluster-config options |
