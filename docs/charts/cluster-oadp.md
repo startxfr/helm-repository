@@ -104,7 +104,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-oadp
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -131,7 +131,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-oadp
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -158,7 +158,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-oadp
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -475,3 +475,4 @@ spec:
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-19 | Improve cluster-oadp options |
+| 21.3.13 | 2026-06-19 | Improve cluster-oadp options |
