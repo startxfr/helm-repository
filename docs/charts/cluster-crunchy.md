@@ -55,7 +55,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "stable"
+    targetRevision: 21.3.12
     helm:
     valueFiles:
     - values-demo.yaml
@@ -82,7 +82,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "stable"
+    targetRevision: 21.3.12
     helm:
     valueFiles:
     - values-demo.yaml
@@ -109,7 +109,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "stable"
+    targetRevision: 21.3.12
     helm:
     valueFiles:
     - values-demo.yaml
@@ -146,6 +146,114 @@ helm install cluster-crunchy-instance startx/cluster-crunchy --set project.enabl
 
 ```bash
 helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-crunchy/values-startx.yaml
+```
+
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-crunchy
+  namespace: openshift-gitops
+spec:
+  description: Deploy Crunchy Postgres operator and configure PostgreSQL clusters
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: demo-crunchy
+      server: https://kubernetes.default.svc
+    - namespace: default-crunchy
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace demo-crunchy
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-crunchy-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-crunchy
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-crunchy
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys Crunchy Postgres operator in demo-crunchy (dedicated namespace, own OperatorGroup)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-crunchy-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-crunchy
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-crunchy
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo-crunchy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys PostgresCluster instances in demo-crunchy
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-crunchy-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-crunchy
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-crunchy
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        cluster:
+          enabled: false
+        loader:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo-crunchy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
 ## History
@@ -306,3 +414,5 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Update crunchy-postgres-operator to 5.8.7, add ArgoCD deployment examples |
+| 21.3.12 | 2026-06-18 | Improve cluster-crunchy options |
