@@ -11,9 +11,9 @@ context:  &context
   # Component name of this application (logical tenant)
   component: ansible
   # Application name (functional tenant, default use Chart name)
-  app: default-ansible
+  app: startx-ansible
   # Version name of this application (default use Chart appVersion)
-  version: "2.6.0"
+  version: "2.7.0"
 
 # Deploy an AAP manager
 ansibleAAP:
@@ -24,7 +24,7 @@ ansibleAAP:
   # Name of the AAP instance (default is app name)
   name: demo
   # Namespace of the AAP instance (default is project name)
-  namespace: default-ansible
+  namespace: startx-ansible
   # The applyed AAP specifications
   spec: |
     eda:
@@ -51,7 +51,7 @@ ansibleHub:
   # Name of the AutomationHub instance (default is app name)
   name: ansible-hub
   # Namespace of the AutomationHub instance (default is project name)
-  namespace: default-ansible
+  namespace: startx-ansible
   # the persistant storage size (default is 20Gi)
   storageSize: "20Gi"
   # the persistant storage class (default is efs-sc)
@@ -72,7 +72,7 @@ ansibleController:
   # Name of the AutomationController instance (default is app name)
   name: ansible-controller
   # Namespace of the AutomationController instance (default is project name)
-  namespace: default-ansible
+  namespace: startx-ansible
   # The applyed AutomationController specifications
   spec: |
     admin_user: admin
@@ -129,7 +129,7 @@ ansibleSecrets:
       # Name of the secret to create (mandatory)
     - name: default-aap-token
       # Namespace for the secret (default is project name)
-      namespace: default-ansible
+      namespace: startx-ansible
       # The type of secret, could be aaptoken, s3, password or sshkey (default is aaptoken)
       type: aaptoken
       # If type is aaptoken, define the ansible AAP token (mandatory)
@@ -229,7 +229,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "default-ansible"
+    name: "startx-ansible"
     display_name: Instance ANSIBLE
     description: Ansible automation configured by STARTX
 
@@ -256,9 +256,9 @@ operator:
     hooked: false
     name: "ansible-automation-platform-operator"
     namespace: "rhaap-operator"
-    version: "v2.6.0-0.1768951397"
+    version: "v2.7.0+0.1781122780"
     operator: 
-      channel: stable-2.6-cluster-scoped
+      channel: stable-2.7-cluster-scoped
       name: ansible-automation-platform-operator
       installPlanApproval: Automatic
       csv: aap-operator
