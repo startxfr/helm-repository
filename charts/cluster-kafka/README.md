@@ -37,8 +37,8 @@ helm show chart startx/cluster-kafka
 Complete deployment of a project with the following characteristics :
 
 - 1 **operator:** named **amq-streams-console** configured with
-  - The **alpha** channel for community release
-  - The **v3.1.0** version
+  - The **stable** channel for community release
+  - The **v3.2.0** version
   - Deployed under the **openshift-operators** project
 
 ```bash
@@ -50,12 +50,128 @@ helm install cluster-kafka-operator startx/cluster-kafka --set project.enabled=f
 helm install cluster-kafka-instance startx/cluster-kafka --set project.enabled=false,operator.enabled=false,kafka.enabled=true
 ```
 
-#### Others values availables
+#### Other available values
 
 - **startx** : Kafka operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx.yaml))
 
 ```bash
 helm install cluster-kafka startx/cluster-kafka -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx.yaml
+```
+
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-kafka
+  namespace: openshift-gitops
+spec:
+  description: Deploy AMQ Streams (Kafka) operator and configure Kafka clusters
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: startx-kafka
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace startx-kafka
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kafka-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-kafka
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kafka
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys AMQ Streams and console operators in openshift-operators (shared namespace, global-operators OG exists)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kafka-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-kafka
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kafka
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+        operatorConsole:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-operators
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures Kafka clusters and topics (disabled by default)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kafka-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-kafka
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kafka
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        clusters:
+          enabled: false
+        topics:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-kafka
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
 ## History
@@ -85,3 +201,4 @@ helm install cluster-kafka startx/cluster-kafka -f https://raw.githubusercontent
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-kafka options |

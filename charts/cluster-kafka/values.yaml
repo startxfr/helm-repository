@@ -13,7 +13,7 @@ context:  &context
   # Application name (functional tenant, default use Chart name)
   app: default-kafka
   # Version name of this application (default use Chart appVersion)
-  version: "3.1.0"
+  version: "3.2.0"
 
 # Deploy kafka clusters
 clusters:
@@ -100,7 +100,7 @@ operator:
     hooked: false
     name: "amq-streams"
     namespace: "openshift-operators"
-    version: "v3.1.0-11"
+    version: "v3.2.0-16"
     operator: 
       channel: "stable"
       name: "amq-streams"
@@ -129,9 +129,9 @@ operatorConsole:
     hooked: false
     name: "amq-streams-console"
     namespace: "openshift-operators"
-    version: "v3.1.0-11"
-    operator: 
-      channel: "alpha"
+    version: "v3.2.0-12"
+    operator:
+      channel: "stable"
       name: "amq-streams-console"
       installPlanApproval: Automatic
       # csv: amq-streams-console
