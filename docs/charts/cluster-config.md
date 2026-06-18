@@ -73,6 +73,283 @@ helm install cluster-config startx/cluster-config
 helm install cluster-config startx/cluster-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+This chart configures multiple cluster domains. Deploy one ArgoCD Application per domain.
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-config
+  namespace: openshift-gitops
+spec:
+  description: Configure core OpenShift cluster services and logging operators
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: startx-config
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators-redhat
+      server: https://kubernetes.default.svc
+    - namespace: openshift-startx-sosreport
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates the startx-config namespace
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys Elasticsearch operator in openshift-operators-redhat (all-namespace scope)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-operator-elastic
+  namespace: openshift-gitops
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        operatorElastic:
+          enabled: true
+          subscription:
+            enabled: true
+          operatorGroup:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys Loki operator in openshift-operators-redhat (all-namespace scope)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-operator-loki
+  namespace: openshift-gitops
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        operatorLoki:
+          enabled: true
+          subscription:
+            enabled: true
+          operatorGroup:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Ensures global-operators OperatorGroup exists in openshift-operators
+# Note: operatorGroup.enabled: false because global-operators OG already exists on OCP clusters
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-operator-global
+  namespace: openshift-gitops
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        operatorGlobal:
+          enabled: true
+          operatorGroup:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Monitoring and alertmanager configuration
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-app-monitoring
+  namespace: openshift-gitops
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        monitoring:
+          enabled: true
+          infra_enabled: true
+          storageClass: gp3-csi
+          storageSize: "30Gi"
+          enableUserWorkload: true
+        alertmanager:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-config
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Registry configuration: image pruner, registry route and storage
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-app-registry
+  namespace: openshift-gitops
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        imageprunner:
+          enabled: true
+          schedule: "15 * * * *"
+          suspend: false
+        registryroute:
+          enabled: true
+        registryconfig:
+          enabled: true
+          infra_enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-config
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Network configuration: API TLS and ingress controllers
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-app-network
+  namespace: openshift-gitops
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        api:
+          enabled: false
+        ingresscontroller:
+          enabled: true
+          list:
+            - name: default
+              infra_enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-config
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Cluster policy: autoscaling, version channel, project template, priority classes
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-app-policy
+  namespace: openshift-gitops
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        autoscaling:
+          enabled: false
+        clusterversion:
+          enabled: false
+        projecttemplate:
+          enabled: true
+          rbac:
+            enabled: true
+          networkpolicy:
+            enabled: true
+        priorityClass:
+          enabled: false
+        redhat:
+          operators: false
+        tracing:
+          operators: false
+        proxy:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-config
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                            |
@@ -416,3 +693,5 @@ helm install cluster-config startx/cluster-config -f https://raw.githubuserconte
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.14 | 2026-06-18 | Update context version to 4.21.3, loki operator to v6.5.1, add multi-app ArgoCD deployment examples |
+| 21.3.12 | 2026-06-18 | Improve cluster-config options |
