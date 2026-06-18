@@ -56,6 +56,94 @@ helm install cluster-kargo startx/cluster-kargo
 helm install cluster-kargo startx/cluster-kargo -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kargo/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-kargo
+  namespace: openshift-gitops
+spec:
+  description: Deploy Kargo GitOps promotion platform
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: kargo-system
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace kargo-system
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kargo-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-kargo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kargo
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        kargo:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys Kargo promotion platform in kargo-system
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kargo-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-kargo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kargo
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        kargo:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kargo-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                    |
@@ -63,3 +151,5 @@ helm install cluster-kargo startx/cluster-kargo -f https://raw.githubusercontent
 | 21.3.5  | 2026-04-10 | Create chart cluster-kargo from cluster-ptp                                                     |
 | 21.3.6 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Upgrade Kargo to v1.10.7 and add ArgoCD examples |
+| 21.3.13 | 2026-06-18 | Improve cluster-kargo options |
