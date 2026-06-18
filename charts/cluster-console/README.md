@@ -97,7 +97,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-console-operator
+  name: cluster-console-webterminal
   namespace: openshift-gitops
 spec:
   project: cluster-console
@@ -127,7 +127,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-console-app
+  name: cluster-console-personalize
   namespace: openshift-gitops
 spec:
   project: cluster-console
