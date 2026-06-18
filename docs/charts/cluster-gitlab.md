@@ -48,12 +48,96 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-gitlab startx/cluster-gitlab
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Gitlab operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml))
 
 ```bash
 helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml
+```
+
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-gitlab
+  namespace: openshift-gitops
+spec:
+  description: Deploy GitLab instance at cluster level
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: startx-gitlab
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace startx-gitlab
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-gitlab-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-gitlab
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-gitlab
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys GitLab instance in startx-gitlab namespace (disabled by default — requires storage and domain config)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-gitlab-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-gitlab
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-gitlab
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        gitlab:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-gitlab
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
 ## History
@@ -86,7 +170,6 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                      |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5              |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                             |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                    |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                           |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                    |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                        |
@@ -229,7 +312,6 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository |
@@ -290,3 +372,4 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-gitlab options |
