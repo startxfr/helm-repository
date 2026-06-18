@@ -47,6 +47,127 @@ Complete deployment of a Logging configuration with the following characteristic
 - Optional **ClusterLogForwarder** for external log routing
 - Optional **EventRouter** for Kubernetes event collection
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-logging
+  namespace: openshift-gitops
+spec:
+  description: Deploy OpenShift Logging operator (cluster-logging + loki) and configure log forwarding
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-logging
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators-redhat
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace openshift-logging
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-logging-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-logging
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-logging
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys cluster-logging operator in openshift-logging (dedicated namespace, own OperatorGroup)
+# and loki-operator in openshift-operators-redhat (shared namespace, no OperatorGroup)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-logging-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-logging
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-logging
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: true
+        operatorLoki:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures ClusterLogging and ClusterLogForwarder (disabled by default)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-logging-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-logging
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-logging
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        logging:
+          enabled: false
+        logforwarder:
+          enabled: false
+        eventrouter:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                                      |
@@ -382,3 +503,5 @@ Complete deployment of a Logging configuration with the following characteristic
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Upgrade cluster-logging to 6.5.1 and add ArgoCD examples |
+| 21.3.12 | 2026-06-18 | Improve cluster-logging options |

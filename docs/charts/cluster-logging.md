@@ -47,6 +47,127 @@ Complete deployment of a Logging configuration with the following characteristic
 - Optional **ClusterLogForwarder** for external log routing
 - Optional **EventRouter** for Kubernetes event collection
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-logging
+  namespace: openshift-gitops
+spec:
+  description: Deploy OpenShift Logging operator (cluster-logging + loki) and configure log forwarding
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-logging
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators-redhat
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace openshift-logging
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-logging-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-logging
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-logging
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys cluster-logging operator in openshift-logging (dedicated namespace, own OperatorGroup)
+# and loki-operator in openshift-operators-redhat (shared namespace, no OperatorGroup)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-logging-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-logging
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-logging
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: true
+        operatorLoki:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures ClusterLogging and ClusterLogForwarder (disabled by default)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-logging-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-logging
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-logging
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        logging:
+          enabled: false
+        logforwarder:
+          enabled: false
+        eventrouter:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-logging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                                      |
@@ -59,7 +180,6 @@ Complete deployment of a Logging configuration with the following characteristic
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                                         |
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts                                                                    |
 | 0.3.141  | 2020-11-24 | publish stable update for the full repository                                                                    |
-| 0.3.151  | 2021-01-23 | Upgrade lo Logging verison 4.6.0                                                                                 |
 | 0.3.151  | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                              |
 | 0.3.153  | 2021-01-23 | publish stable update for the full repository                                                                    |
 | 0.3.165  | 2021-01-23 | Upgrade all chart dependencies                                                                                   |
@@ -107,7 +227,6 @@ Complete deployment of a Logging configuration with the following characteristic
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                                    |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                                                |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                                       |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                                       |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23                   |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                                    |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                                     |
@@ -137,7 +256,6 @@ Complete deployment of a Logging configuration with the following characteristic
 | 9.8.47   | 2021-11-21 | Improve version management for chart                                                                             |
 | 9.8.51   | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                               |
 | 9.8.67   | 2021-12-18 | Align all charts to release 9.8.67                                                                               |
-| 9.8.68   | 2021-12-18 | Update elasticsearch operator to version 5.3.1-12                                                                |
 | 9.8.68   | 2021-12-18 | Update logging operator to version 5.3.1-12                                                                      |
 | 9.8.69   | 2021-12-18 | Improve cluster-logging options                                                                                  |
 | 9.8.71   | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                                 |
@@ -161,7 +279,6 @@ Complete deployment of a Logging configuration with the following characteristic
 | 9.8.253  | 2022-05-29 | Align all charts dependencies to release 9.8.251                                                                 |
 | 9.8.254  | 2022-05-30 | Add the infra node placement                                                                                     |
 | 9.8.255  | 2022-05-30 | test                                                                                                             |
-| 9.8.256  | 2022-05-30 | Change for test                                                                                                  |
 | 9.8.256  | 2022-05-30 | Debug the logging config with infra nodes                                                                        |
 | 9.8.277  | 2022-05-31 | publish stable update for the full repository                                                                    |
 | 9.15.1   | 2022-06-01 | Align all chart for Openshift 4.9.15                                                                             |
@@ -174,7 +291,6 @@ Complete deployment of a Logging configuration with the following characteristic
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                                      |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                                              |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                             |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                                    |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                           |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                                    |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                        |
@@ -325,7 +441,6 @@ Complete deployment of a Logging configuration with the following characteristic
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository |
@@ -388,3 +503,5 @@ Complete deployment of a Logging configuration with the following characteristic
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Upgrade cluster-logging to 6.5.1 and add ArgoCD examples |
+| 21.3.12 | 2026-06-18 | Improve cluster-logging options |
