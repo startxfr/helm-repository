@@ -244,7 +244,7 @@ spec:
     helm:
       values: |
         cluster:
-          enabled: false
+          enabled: true
         loader:
           enabled: false
   destination:
