@@ -44,6 +44,124 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 - 1 **HyperConverged** cluster instance enabling OpenShift Virtualization
 - Optional **VirtualMachine** instances configurable via the vms list
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-kubevirt
+  namespace: openshift-gitops
+spec:
+  description: Deploy OpenShift Virtualization (KubeVirt) operator and HyperConverged instance
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-cnv
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace openshift-cnv
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kubevirt-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-kubevirt
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kubevirt
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        hyperconvergedCluster:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys kubevirt-hyperconverged operator in openshift-cnv (dedicated namespace, own OperatorGroup)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kubevirt-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-kubevirt
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kubevirt
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: true
+        hyperconvergedCluster:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-cnv
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures the HyperConverged cluster instance
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-kubevirt-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-kubevirt
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-kubevirt
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        hyperconvergedCluster:
+          enabled: true
+        vms:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-cnv
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                                |
@@ -360,3 +478,5 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Add ArgoCD examples for cluster-kubevirt |
+| 21.3.12 | 2026-06-18 | Improve cluster-kubevirt options |
