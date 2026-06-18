@@ -1139,34 +1139,34 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "kubecost"
-    display_name: Kubecost console
-    description: Kubecost configured by STARTX
+    name: "openshift-kubecost-operator"
+    display_name: Kubecost Operator
+    description: Kubecost operator configured by STARTX
     additionalLabels:
       openshift.io/cluster-monitoring: "true"
 operator:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
     hooked: false
     name: "kubecost-operator"
-    namespace: "kubecost"
+    namespace: "openshift-kubecost-operator"
     version: "v3.1.3"
-    operator: 
+    operator:
       channel: "stable"
       name: kubecost-operator
       installPlanApproval: Automatic
       # csv: kubecost-operator
-      source: 
+      source:
         name: certified-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
   operatorGroup:
     enabled: true
     hooked: false
-    name: "kubecost"
-    namespace: "kubecost"
-    providedAPIs: "CostAnalyzer.v1alpha1.charts.kubecost.com"
+    name: "kubecost-operators"
+    namespace: "openshift-kubecost-operator"
+    providedAPIs: "Kubecost.v1alpha1.charts.kubecost.com"

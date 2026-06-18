@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -53,13 +53,134 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-acm startx/cluster-acm
 ```
 
-#### Others values availables
+#### Other available values
 
 - **startx** : Startx ACM cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx.yaml))
 
 ```bash
 helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx.yaml
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+Deploy `cluster-acm` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+The ACM operator and the MultiClusterHub CR both install in `openshift-acm-operator` (ACM requires the MCH in the same namespace as the operator).
+Observability resources deploy in `startx-acm-observability`:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-acm
+  namespace: openshift-gitops
+spec:
+  description: Deploy Advanced Cluster Management on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: openshift-acm-operator
+    - server: https://kubernetes.default.svc
+      namespace: startx-acm-observability
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: operators.coreos.com
+      kind: OperatorGroup
+    - group: operators.coreos.com
+      kind: Subscription
+    - group: operator.open-cluster-management.io
+      kind: MultiClusterHub
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-acm-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-acm-operator
+    server: https://kubernetes.default.svc
+  project: cluster-acm
+  source:
+    chart: cluster-acm
+    helm:
+      values: |
+        project:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-acm-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-acm-operator
+    server: https://kubernetes.default.svc
+  project: cluster-acm
+  source:
+    chart: cluster-acm
+    helm:
+      values: |
+        operator:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-acm-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-acm-operator
+    server: https://kubernetes.default.svc
+  project: cluster-acm
+  source:
+    chart: cluster-acm
+    helm:
+      values: |
+        acm:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.11
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Apply with:
+
+```bash
+kubectl apply -f cluster-acm-argocd.yaml -n openshift-gitops
+```
+
+The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
 
 ## History
 
