@@ -344,7 +344,9 @@ spec:
     helm:
       values: |
         certmanager:
-          enabled: true
+          enabled: false
+        clusterIssuer:
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: rhcertmanager-operator
