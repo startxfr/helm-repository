@@ -6,7 +6,7 @@ context: &context
   environment: infra
   component: istio
   app: default
-  version: "2.6.13"
+  version: "2.6.17"
 istio:
   enabled: true
   hooked: false
@@ -215,13 +215,13 @@ operatorKiali:
   enabled: false
   context: 
     <<: *context
-    version: "2.17.4"
+    version: "2.22.5"
   subscription:
     enabled: true
     hooked: false
     name: "kiali-ossm"
     namespace: "openshift-operators"
-    version: "v2.17.4"
+    version: "v2.22.5"
     operator: 
       channel: "stable"
       name: kiali-ossm
@@ -285,13 +285,13 @@ operatorIstio:
   enabled: false
   context: 
     <<: *context
-    version: "2.6.13"
+    version: "2.6.17"
   subscription:
     enabled: true
     hooked: false
     name: "servicemeshoperator"
     namespace: "openshift-operators"
-    version: "v2.6.13-0"
+    version: "v2.6.17-0"
     operator: 
       channel: "stable"
       name: servicemeshoperator
