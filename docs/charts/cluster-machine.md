@@ -93,6 +93,8 @@ spec:
   destinations:
     - namespace: openshift-gitops
       server: https://kubernetes.default.svc
+    - namespace: openshift-machine-api
+      server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
@@ -116,15 +118,45 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-machine
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
       values: |
         machineConfigPool:
-          enabled: false
+          enabled: true
         machineConfig:
-          enabled: false
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+---
+# Configures MachineHealthCheck, MachineAutoscaler and MachineSet resources
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-machine-healthcheck
+  namespace: openshift-gitops
+spec:
+  project: cluster-machine
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-machine
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        cluster:
+          id: demo219-g866v
+          region: eu-west-2
+        machineHealthCheck:
+          enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
@@ -137,27 +169,101 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-machine-app
+  name: cluster-machine-autoscaler
   namespace: openshift-gitops
 spec:
   project: cluster-machine
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-machine
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
       values: |
         cluster:
+          id: demo219-g866v
+          region: eu-west-2
           autoscaler:
-            enabled: false
-        machineHealthCheck:
-          enabled: false
+            enabled: true
+            spec: |
+              podPriorityThreshold: -10
+              resourceLimits:
+                maxNodesTotal: 9
+                cores:
+                  min: 6
+                  max: 12
+                memory:
+                  min: 12
+                  max: 48
+              scaleDown:
+                enabled: true
+                delayAfterAdd: 5m
+                delayAfterDelete: 3m
+                delayAfterFailure: 40s
+                unneededTime: 60s
         machineAutoscaler:
-          enabled: false
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures MachineHealthCheck, MachineAutoscaler and MachineSet resources
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-machine-machineset
+  namespace: openshift-gitops
+spec:
+  project: cluster-machine
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-machine
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        cluster:
+          id: demo219-g866v
+          region: eu-west-2
         machineSet:
-          enabled: false
+          enabled: true
+          list:
+          - name: app-a
+            az: a
+            type: app
+            ami: ami-0e079f8742280b034
+            instanceType: "t3a.large"
+            volumeSize: 75
+            volumeType: "gp3"
+            replicas: 1
+            securityGroupName: "demo219-g866v-node"
+            subnet_name: "demo219-g866v-subnet-private-eu-west-2a"
+          - name: app-b
+            az: b
+            type: app
+            ami: ami-0e079f8742280b034
+            instanceType: "t3a.large"
+            volumeSize: 75
+            volumeType: "gp3"
+            replicas: 1
+            securityGroupName: "demo219-g866v-node"
+            subnet_name: "demo219-g866v-subnet-private-eu-west-2b"
+          - name: app-c
+            az: c
+            type: app
+            ami: ami-0e079f8742280b034
+            instanceType: "t3a.large"
+            volumeSize: 75
+            volumeType: "gp3"
+            replicas: 1
+            securityGroupName: "demo219-g866v-node"
+            subnet_name: "demo219-g866v-subnet-private-eu-west-2c"
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
@@ -479,4 +585,6 @@ spec:
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Add ArgoCD examples for cluster-machine |
+| 21.3.13 | 2026-06-19 | Add securityGroupName override to machineSet template |
 | 21.3.12 | 2026-06-18 | Improve cluster-machine options |
+| 21.3.13 | 2026-06-19 | Improve cluster-machine options |

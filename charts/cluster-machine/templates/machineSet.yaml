@@ -144,7 +144,7 @@ spec:
             - filters:
                 - name: tag:Name
                   values:
-                    - "{{ $.Values.cluster.id }}-worker-sg"
+                    - "{{ .securityGroupName | default (printf "%s-worker-sg" $.Values.cluster.id) }}"
           subnet:
           {{- if .subnet_name }}
             filters:
