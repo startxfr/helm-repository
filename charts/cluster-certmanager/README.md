@@ -38,8 +38,8 @@ Complete deployment of a project with the following characteristics :
 
 - 1 **namespace:** named **startx-certmanager** without constraints
 - 1 **operator:** named **cert-manager-operator** configured with
-  - The **stable-v1.18** channel for community release
-  - The **v1.18.1** version
+  - The **stable-v1.19** channel for community release
+  - The **v1.19.0** version
   - Deployed under the **openshift-operators** project
 
 ```bash
@@ -247,3 +247,110 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Update cert-manager operator to v1.19.0, add ArgoCD deployment examples |
+
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-certmanager
+  namespace: openshift-gitops
+spec:
+  description: Deploy and configure CertManager operator on the cluster
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: rhcertmanager-operator
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-certmanager-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-certmanager
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-certmanager
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-certmanager-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-certmanager
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-certmanager
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        certmanager:
+          enabled: false
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-certmanager-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-certmanager
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-certmanager
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        certmanager:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rhcertmanager-operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+| 21.3.12 | 2026-06-18 | Improve cluster-certmanager options |

@@ -75,6 +75,69 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`cluster-auth` is a configuration-only chart (no operator, no dedicated namespace). It configures the cluster `OAuth` CR and related secrets in `openshift-config`. A single Application is sufficient:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-auth
+  namespace: openshift-gitops
+spec:
+  description: Configure OpenShift OAuth and authentication on the cluster
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: openshift-config
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: config.openshift.io
+      kind: OAuth
+    - group: ''
+      kind: Secret
+    - group: ''
+      kind: ConfigMap
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-auth-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-config
+    server: https://kubernetes.default.svc
+  project: cluster-auth
+  source:
+    chart: cluster-auth
+    helm:
+      values: |
+        auth:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.12
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Apply with:
+
+```bash
+kubectl apply -f cluster-auth-argocd.yaml -n openshift-gitops
+```
+
+The automated sync policy ensures ArgoCD reconciles the OAuth configuration whenever the chart or values drift from the desired state.
+
 ## History
 
 | Release  | Date       | Description                                                                                                                                             |
@@ -415,3 +478,4 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-auth options |
