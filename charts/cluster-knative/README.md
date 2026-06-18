@@ -60,6 +60,140 @@ helm install cluster-knative startx/cluster-knative
 helm install cluster-knative startx/cluster-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-knative/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-knative
+  namespace: openshift-gitops
+spec:
+  description: Deploy OpenShift Serverless (Knative) operator and configure serving/eventing
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-serverless
+      server: https://kubernetes.default.svc
+    - namespace: knative-serving
+      server: https://kubernetes.default.svc
+    - namespace: knative-eventing
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespaces openshift-serverless, knative-serving, knative-eventing
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-knative-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-knative
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-knative
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        projectOperator:
+          enabled: true
+        projectKServing:
+          enabled: true
+        projectKEventing:
+          enabled: true
+        kServing:
+          enabled: false
+        kEventing:
+          enabled: false
+        kKafka:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys serverless-operator in openshift-serverless (dedicated namespace, own OperatorGroup)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-knative-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-knative
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-knative
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+        kServing:
+          enabled: false
+        kEventing:
+          enabled: false
+        kKafka:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-serverless
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures KnativeServing, KnativeEventing and KnativeKafka instances
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-knative-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-knative
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-knative
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        kServing:
+          enabled: true
+        kEventing:
+          enabled: true
+        kKafka:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: knative-serving
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                            |
@@ -374,3 +508,5 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Add ArgoCD examples for cluster-knative |
+| 21.3.12 | 2026-06-18 | Improve cluster-knative options |
