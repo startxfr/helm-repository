@@ -199,11 +199,9 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                  |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                              |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23 |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                  |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                   |
-| 8.20.3   | 2021-11-11 | stable release for all chart for openshift version 4.8.20                                      |
 | 8.20.5   | 2021-11-12 | Upgrade all appVersion and align chart release                                                 |
 | 8.20.7   | 2021-11-12 | Upgrade all schema for context subtree                                                         |
 | 8.20.9   | 2021-11-12 | Align all startx chart to version 8.20.9                                                       |
@@ -238,7 +236,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 9.8.91   | 2022-03-06 | publish stable update for the full repository                                                  |
 | 9.8.93   | 2022-03-07 | Enable conditionnal loading of charts dependencies                                             |
 | 9.8.109  | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                            |
-| 9.8.109  | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                            |
 | 9.8.110  | 2022-04-27 | Stable release for all charts                                                                  |
 | 9.8.111  | 2022-04-27 | publish stable update for the full repository                                                  |
 | 9.8.114  | 2022-04-27 | publish stable update for the full repository                                                  |
@@ -253,15 +250,12 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 9.15.2   | 2022-06-01 | Align all charts to release 9.15.1                                                             |
 | 9.15.3   | 2022-06-01 | Align all charts to release 9.15.3                                                             |
 | 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                            |
-| 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                            |
 | 10.12.3  | 2022-06-01 | Align all charts to release 10.12.3                                                            |
-| 10.12.3  | 2022-06-01 | publish stable update for the full repository                                                  |
 | 10.12.4  | 2022-06-01 | Align all charts to release 10.12.4                                                            |
 | 10.12.5  | 2022-06-01 | publish stable update for the full repository                                                  |
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                    |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                            |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                           |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
@@ -328,7 +322,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 11.30.0 | 2023-08-18 | Align all helm chart to release 11.30.0 stable for OCP 4.11.30 |
 | 11.40.0 | 2023-08-18 | Align all helm chart to release 11.40.0 stable for OCP 4.11.40 |
 | 11.47.0 | 2023-08-18 | Align all helm chart to release 11.47.0 stable for OCP 4.11.47 |
-| 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml |
 | 11.47.1 | 2023-08-18 | Update appVersion in Chart.yml |
 | 12.0.0 | 2023-08-18 | Align all helm chart to release 12.0.0 transitionnal for OCP 4.12.0 target (unstable) |
 | 12.0.1 | 2023-08-18 | Align all helm chart to release 12.0.1 transitionnal for OCP 4.12.0 target (unstable) |
@@ -408,7 +401,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339 |
@@ -455,7 +447,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 18.11.60 | 2025-05-14 | Align all chart to a stable release for OCP 4.18 |
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas |
 | 18.23.0 | 2026-02-28 | Start 4.19 branch |
-| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release |
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository |
 | 19.23.1 | 2026-03-01 | Unstable 19.23 repo |
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release |

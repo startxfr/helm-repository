@@ -222,7 +222,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 9.8.93   | 2022-03-07 | Enable conditionnal loading of charts dependencies                                          |
 | 9.8.94   | 2022-04-21 | Update to ansible automation operator version 2.1.2-0.1650395354                            |
 | 9.8.109  | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                         |
-| 9.8.109  | 2022-04-26 | Update startx chart dependencies to version 9.8.107                                         |
 | 9.8.110  | 2022-04-27 | Stable release for all charts                                                               |
 | 9.8.111  | 2022-04-27 | publish stable update for the full repository                                               |
 | 9.8.114  | 2022-04-27 | publish stable update for the full repository                                               |
@@ -237,14 +236,12 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 9.15.2   | 2022-06-01 | Align all charts to release 9.15.1                                                          |
 | 9.15.3   | 2022-06-01 | Align all charts to release 9.15.3                                                          |
 | 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                         |
-| 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                         |
 | 10.12.3  | 2022-06-01 | publish stable update for the full repository                                               |
 | 10.12.4  | 2022-06-01 | Align all charts to release 10.12.4                                                         |
 | 10.12.5  | 2022-06-01 | publish stable update for the full repository                                               |
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                 |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                         |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                        |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                               |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                      |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                               |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                   |
@@ -388,7 +385,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339 |
@@ -414,7 +410,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 16.19.35 | 2024-12-02 | Enable projects creation if global is enabled |
 | 16.19.36 | 2024-12-02 | Improve cluster-ansible options |
 | 16.19.37 | 2024-12-02 | Improve cluster-ansible options |
-| 16.19.38 | 2024-12-02 | Upgrade to version 2.5.0-0.1731456854 |
 | 16.19.38 | 2024-12-02 | Upgrade to version 2.5.0-0.1731456854 v2 |
 | 16.19.39 | 2024-12-02 | Update all CRD generation |
 | 16.19.41 | 2024-12-02 | Default values disbale controller and hub |
@@ -427,8 +422,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 16.19.49 | 2024-12-08 | Add support for AnsibleProject, JobTemplate, WorkflowTemplate, InstanceGroup as well as Workflow, Job and Schedule execution |
 | 16.19.51 | 2024-12-09 | Stable support for AnsibleProject, JobTemplate, WorkflowTemplate, Workflow, Job, InstanceGroup and Schedule |
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release |
-| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31 |
-| 16.19.43 | 2025-02-27 | publish stable update for the full repository |
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version |
 | 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes |
 | 17.14.5 | 2025-02-28 | Align all startx helm dependencies to release 17.14.1 |
@@ -451,7 +444,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 18.11.61 | 2025-05-19 | Adding creation of the redhat-operators-pull-secret |
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas |
 | 18.23.0 | 2026-02-28 | Start 4.19 branch |
-| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release |
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository |
 | 19.23.1 | 2026-03-01 | Unstable 19.23 repo |
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release |

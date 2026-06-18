@@ -152,7 +152,6 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                    |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                            |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                           |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
@@ -317,7 +316,6 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 16.19.33 | 2024-11-13 | Add nodeSelector to infra node for values-startx example |
 | 16.19.35 | 2024-11-13 | Add the VerticalPodAutoscaler resource |
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release |
-| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31 |
 | 16.19.43 | 2025-02-27 | publish stable update for the full repository |
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version |
 | 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes |

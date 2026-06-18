@@ -152,7 +152,6 @@ The automated sync policy ensures ArgoCD reconciles the OAuth configuration when
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                                                                                |
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts                                                                                                           |
 | 0.3.141  | 2020-11-24 | publish stable update for the full repository                                                                                                           |
-| 0.3.151  | 2021-01-23 | Upgrade to OCP version 4.6.13                                                                                                                           |
 | 0.3.151  | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                                                                     |
 | 0.3.153  | 2021-01-23 | publish stable update for the full repository                                                                                                           |
 | 0.3.165  | 2021-01-23 | Upgrade all chart dependencies                                                                                                                          |
@@ -197,7 +196,6 @@ The automated sync policy ensures ArgoCD reconciles the OAuth configuration when
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23                                                          |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                                                                           |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                                                                            |
-| 8.20.3   | 2021-11-11 | stable release for all chart for openshift version 4.8.20                                                                                               |
 | 8.20.5   | 2021-11-12 | Upgrade all appVersion and align chart release                                                                                                          |
 | 8.20.7   | 2021-11-12 | Upgrade all schema for context subtree                                                                                                                  |
 | 8.20.9   | 2021-11-12 | Align all startx chart to version 8.20.9                                                                                                                |
@@ -247,14 +245,12 @@ The automated sync policy ensures ArgoCD reconciles the OAuth configuration when
 | 9.15.2   | 2022-06-01 | Align all charts to release 9.15.1                                                                                                                      |
 | 9.15.3   | 2022-06-01 | Align all charts to release 9.15.3                                                                                                                      |
 | 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                                                                                     |
-| 10.12.1  | 2022-06-01 | Align all charts to release 10.12.1                                                                                                                     |
 | 10.12.3  | 2022-06-01 | publish stable update for the full repository                                                                                                           |
 | 10.12.4  | 2022-06-01 | Align all charts to release 10.12.4                                                                                                                     |
 | 10.12.5  | 2022-06-01 | publish stable update for the full repository                                                                                                           |
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                                                                             |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                                                                                     |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                                                                    |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                                                                           |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                                                                  |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                                                                           |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                                                                               |
@@ -412,7 +408,6 @@ The automated sync policy ensures ArgoCD reconciles the OAuth configuration when
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339 |
@@ -462,7 +457,6 @@ The automated sync policy ensures ArgoCD reconciles the OAuth configuration when
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas |
 | 18.11.72 | 2025-11-27 | improve with devoteam logo |
 | 18.23.0 | 2026-02-28 | Start 4.19 branch |
-| 19.23.1 | 2026-02-28 | unstable build of the 19.23.x release |
 | 19.23.0 | 2026-02-28 | publish stable update for the full repository |
 | 19.23.1 | 2026-03-01 | Unstable 19.23 repo |
 | 19.23.5 | 2026-03-01 | Unstable full 19.23.x release |

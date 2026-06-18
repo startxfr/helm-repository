@@ -107,6 +107,8 @@ spec:
     chart: cluster-couchbase
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -133,6 +135,8 @@ spec:
     chart: cluster-couchbase
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         operator:
           enabled: true
@@ -159,6 +163,8 @@ spec:
     chart: cluster-couchbase
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         cluster:
           enabled: true
@@ -220,7 +226,6 @@ spec:
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23 |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                  |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                   |
-| 8.20.3   | 2021-11-11 | stable release for all chart for openshift version 4.8.20                                      |
 | 8.20.5   | 2021-11-12 | Upgrade all appVersion and align chart release                                                 |
 | 8.20.7   | 2021-11-12 | Upgrade all schema for context subtree                                                         |
 | 8.20.9   | 2021-11-12 | Align all startx chart to version 8.20.9                                                       |
@@ -278,7 +283,6 @@ spec:
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                    |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                            |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                           |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
@@ -425,7 +429,6 @@ spec:
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339 |
@@ -486,4 +489,3 @@ spec:
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Update couchbase-enterprise-certified operator to 2.9.2, add ArgoCD deployment examples |
-| 21.3.12 | 2026-06-18 | Improve cluster-couchbase options |

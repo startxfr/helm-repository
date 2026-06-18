@@ -133,7 +133,6 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository |
@@ -157,7 +156,6 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 | 16.19.29 | 2024-11-11 | Align all chart to the 16.19.29 release |
 | 16.19.31 | 2024-12-02 | Upgrade the MTV operator version to v2.7.4 |
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release |
-| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31 |
 | 16.19.43 | 2025-02-27 | publish stable update for the full repository |
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version |
 | 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes |
