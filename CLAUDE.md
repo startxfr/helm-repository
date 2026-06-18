@@ -244,11 +244,13 @@ Targets that require `CHART=` are protected by the `_require-chart` guard, which
 ### Release workflow (single chart)
 
 1. `make release CHART=<name> VERSION=<x.y.z> DESC="<one line>"`  
-   — bumps `Chart.yaml` version, appends a history row, signs and packages, uploads to S3.
+   — bumps `Chart.yaml` version, replaces all `targetRevision: *` in `README.md`, appends a history row, syncs README to `docs/charts/<name>.md`, signs and packages, uploads `.tgz`+`.prov` to **both** `.reposync/stable/` and `.reposync/<STABLE_MAINRELEASE>/`, and uploads both to S3.
 2. `make publish` — regenerates the Helm index for stable/noschema/current repos and syncs to S3.
 3. Commit and push (`devel` → `master` → `stable` → tag).
 
 Auto-increment (no `VERSION=`): patch number is incremented via `chartNextVersion` (awk semver bump in `.tools/cli`).
+
+**Dual S3 copy**: `routerChartRelease` places every new package into `.reposync/stable/` (primary) **and** `.reposync/$STABLE_MAINRELEASE/` (current release sub-repo). Both are uploaded to S3 immediately. This keeps the `stable` and `release-N` Helm repos in sync after each individual chart release without waiting for `make publish`.
 
 ### S3 sync (cli-s3)
 
@@ -299,6 +301,78 @@ devel (version bump)
 - `release-all` (make target / `routerRelease`) does the **full** flow: bumps + merges devel→master→stable + tags + pushes — use only for direct one-shot releases
 - `publish` regenerates `stable`, `noschema`, `release-<N>` S3 repos
 - `publish-devel` regenerates only the `devel` S3 pre-release repo
+
+---
+
+## ArgoCD deployment pattern (cluster-* charts)
+
+Every `cluster-*` chart README must include a `## Deploy via ArgoCD` section with **one AppProject + three Applications**: `cluster-xxx-project`, `cluster-xxx-operator`, `cluster-xxx-app`.
+
+### Namespace naming rules
+
+| Situation | Operator namespace | Instance namespace |
+|---|---|---|
+| Operator gets its own namespace | `openshift-xxx-operator` | `startx-xxx` |
+| Operator runs in `openshift-operators` (no dedicated NS) | `startx-xxx-operator` | `startx-xxx` |
+
+### Application split
+
+| Application | `helm.values` enabled flags | Destination namespace | syncPolicy |
+|---|---|---|---|
+| `cluster-xxx-project` | `project.enabled: true` + all others `false` | `openshift-xxx-operator` | `CreateNamespace=true` |
+| `cluster-xxx-operator` | `operator.enabled: true` + all others `false` | `openshift-xxx-operator` | — |
+| `cluster-xxx-app` | `<feature>.enabled: true` + all others `false` | `startx-xxx` | `CreateNamespace=true` |
+
+**Critical**: explicitly set all non-relevant sub-chart enabled flags to `false` in every Application's `helm.values`. Omitting them causes ArgoCD `SharedResourceWarning` when the default values.yaml enables multiple sub-charts.
+
+### ArgoCD AppProject clusterResourceWhitelist
+
+Minimum required cluster-scoped resources: `Namespace`, `OperatorGroup`, `Subscription`, and the operator's CRD kind (e.g. `MustGather.redhatcop.redhat.io`, `Kubecost.charts.kubecost.com`, `MultiClusterHub.operator.open-cluster-management.io`).
+
+### Cascade-delete finalizer
+
+All Applications must carry:
+```yaml
+finalizers:
+  - resources-finalizer.argocd.argoproj.io
+```
+
+### SharedResourceWarning fix
+
+When multiple Applications claim the same resource (e.g. a Namespace created by project sub-chart but also referenced by operator sub-chart), add explicit `enabled: false` for each sub-chart that should not deploy it:
+```yaml
+helm:
+  values: |
+    project:
+      enabled: false
+    operator:
+      enabled: true
+```
+
+### known issues / OLM drift
+
+- OperatorGroup gets extra annotations from OLM after creation → ArgoCD shows OutOfSync on OperatorGroup — this is **expected/normal**, do not try to fix it.
+- `additionalLabels` defined as a YAML map in values.yaml causes `wrong type for value; expected string; got map` in namespace templates — override with `additionalLabels: ""` in the Application helm values.
+
+### Charts with ArgoCD examples (done)
+
+ `cluster-nexus` · `cluster-nfd` · `cluster-nmstate` ·`cluster-3scale` · `cluster-kubecost` · `cluster-mustgather` 
+
+### Charts pending ArgoCD examples
+
+All other `cluster-*` charts: `cluster-acm` · `cluster-crunchy` · `cluster-mongo` , `cluster-acs`, `cluster-ansible`, `cluster-argocd`, `cluster-auth`, `cluster-certmanager`, `cluster-compliance`, `cluster-config`, `cluster-console`, `cluster-costs`, `cluster-couchbase`, `cluster-descheduler`, `cluster-devworkspaces`, `cluster-dvo`, `cluster-gitlab`, `cluster-gpu`, `cluster-istio`, `cluster-kafka`, `cluster-kargo`, `cluster-kepler`, `cluster-knative`, `cluster-kubevirt`, `cluster-localstorage`, `cluster-logging`, `cluster-machine`, `cluster-maintenance`, `cluster-mtc`, `cluster-mtr`, `cluster-mtv`, `cluster-oadp`, `cluster-odf`, `cluster-ods`, `cluster-pipeline`, `cluster-ptp`, `cluster-quay`, `cluster-rbac`, `cluster-redis`, `cluster-router`, `cluster-sso`, `cluster-storage`, `cluster-storage-efs`, `cluster-vault`, `cluster-vault-config`, `cluster-vpa`
+
+### Atomic update process per chart
+
+For each chart to update, do these steps in order:
+1. Update `appVersion` in `Chart.yaml` to current upstream operator version
+2. Update namespace names in `values.yaml` (and all `values-startx*.yaml`) to follow the naming rules above
+3. Add `## Deploy via ArgoCD` section to `README.md` with AppProject + 3 Applications, then `cp README.md docs/charts/<name>.md`
+4. Run `./sx-helm <chart-name> release` from `/home/cl/ClaudeCode/helm-repository/`
+5. Run `./sx-helm publish` from `/home/cl/ClaudeCode/helm-repository/`
+6. Deploy the 3 ArgoCD Applications on the test cluster (`https://api.demo219.startx.fr:6443`)
+7. Verify sync succeeds; adjust values/templates if needed
+8. Update CLAUDE.md in `/home/cl/ClaudeCode/helm-repository/` with this change (section Charts with ArgoCD examples)
 
 ---
 

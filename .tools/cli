@@ -474,6 +474,14 @@ function routerChartRelease {
             mv "${PROJECT_CHARTPATH}/${packagename}.prov" "${pkgdestpath}/${packagename}.prov"
             awsS3FileUpload "${pkgdestpath}/${packagename}.prov" "${subrepo}" $HELM_REPO_AWSBUCKET
         fi
+        local majorpath="$HELM_REPO_LOCALSYNC/$STABLE_MAINRELEASE"
+        echo -e "\e[35mRelease\e[0m copy \e[1m$packagename\e[0m → $majorpath"
+        cp "${pkgdestpath}/${packagename}" "${majorpath}/${packagename}"
+        awsS3FileUpload "${majorpath}/${packagename}" "$STABLE_MAINRELEASE" $HELM_REPO_AWSBUCKET
+        if [[ "$SXHELM_SIGN" == "enabled" ]]; then
+            cp "${pkgdestpath}/${packagename}.prov" "${majorpath}/${packagename}.prov"
+            awsS3FileUpload "${majorpath}/${packagename}.prov" "$STABLE_MAINRELEASE" $HELM_REPO_AWSBUCKET
+        fi
     else
         echo -e "\e[35mRelease\e[0m \e[31mERROR\e[0m chart \e[1m$chart_name\e[0m not found in $chart_dir"
         routerList
