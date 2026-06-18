@@ -283,6 +283,8 @@ kind: Application
 metadata:
   name: cluster-certmanager-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-certmanager
   source:
@@ -308,6 +310,8 @@ kind: Application
 metadata:
   name: cluster-certmanager-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-certmanager
   source:
@@ -337,6 +341,8 @@ kind: Application
 metadata:
   name: cluster-certmanager-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-certmanager
   source:

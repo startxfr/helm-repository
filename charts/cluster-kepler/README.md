@@ -92,6 +92,8 @@ kind: Application
 metadata:
   name: cluster-kepler-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kepler
   source:
@@ -118,6 +120,8 @@ kind: Application
 metadata:
   name: cluster-kepler-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kepler
   source:

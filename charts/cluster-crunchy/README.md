@@ -187,6 +187,8 @@ kind: Application
 metadata:
   name: cluster-crunchy-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-crunchy
   source:
@@ -213,6 +215,8 @@ kind: Application
 metadata:
   name: cluster-crunchy-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-crunchy
   source:
@@ -239,6 +243,8 @@ kind: Application
 metadata:
   name: cluster-crunchy-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-crunchy
   source:

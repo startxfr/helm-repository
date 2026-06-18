@@ -104,6 +104,8 @@ kind: Application
 metadata:
   name: cluster-costs-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-costs
   source:
@@ -132,6 +134,8 @@ kind: Application
 metadata:
   name: cluster-costs-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-costs
   source:
@@ -158,6 +162,8 @@ kind: Application
 metadata:
   name: cluster-costs-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-costs
   source:

@@ -97,6 +97,8 @@ kind: Application
 metadata:
   name: cluster-localstorage-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-localstorage
   source:
@@ -125,6 +127,8 @@ kind: Application
 metadata:
   name: cluster-localstorage-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-localstorage
   source:
@@ -153,6 +157,8 @@ kind: Application
 metadata:
   name: cluster-localstorage-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-localstorage
   source:

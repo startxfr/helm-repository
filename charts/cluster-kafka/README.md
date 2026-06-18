@@ -97,6 +97,8 @@ kind: Application
 metadata:
   name: cluster-kafka-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kafka
   source:
@@ -123,6 +125,8 @@ kind: Application
 metadata:
   name: cluster-kafka-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kafka
   source:
@@ -151,6 +155,8 @@ kind: Application
 metadata:
   name: cluster-kafka-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kafka
   source:

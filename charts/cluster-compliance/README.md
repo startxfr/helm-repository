@@ -99,6 +99,8 @@ kind: Application
 metadata:
   name: cluster-compliance-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-compliance
   source:
@@ -128,6 +130,8 @@ kind: Application
 metadata:
   name: cluster-compliance-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-compliance
   source:
@@ -159,6 +163,8 @@ kind: Application
 metadata:
   name: cluster-compliance-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-compliance
   source:

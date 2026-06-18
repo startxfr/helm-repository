@@ -93,6 +93,8 @@ kind: Application
 metadata:
   name: cluster-kargo-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kargo
   source:
@@ -121,6 +123,8 @@ kind: Application
 metadata:
   name: cluster-kargo-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-kargo
   source:

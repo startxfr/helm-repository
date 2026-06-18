@@ -96,6 +96,8 @@ kind: Application
 metadata:
   name: cluster-gpu-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-gpu
   source:
@@ -122,6 +124,8 @@ kind: Application
 metadata:
   name: cluster-gpu-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-gpu
   source:
@@ -150,6 +154,8 @@ kind: Application
 metadata:
   name: cluster-gpu-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-gpu
   source:

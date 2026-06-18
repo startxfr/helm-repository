@@ -100,6 +100,8 @@ kind: Application
 metadata:
   name: cluster-dvo-project
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-dvo
   source:
@@ -126,6 +128,8 @@ kind: Application
 metadata:
   name: cluster-dvo-operator
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-dvo
   source:
@@ -152,6 +156,8 @@ kind: Application
 metadata:
   name: cluster-dvo-app
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster-dvo
   source:
