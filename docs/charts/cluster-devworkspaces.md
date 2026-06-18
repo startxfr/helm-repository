@@ -62,6 +62,116 @@ helm install cluster-devworkspaces-instance startx/cluster-devworkspaces --set p
 helm install cluster-devworkspaces startx/cluster-devworkspaces -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-devworkspaces/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-devworkspaces
+  namespace: openshift-gitops
+spec:
+  description: Deploy DevWorkspace operator and configure development workspaces
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: startx-devworkspaces
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace startx-devworkspaces
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-devworkspaces-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-devworkspaces
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-devworkspaces
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys DevWorkspace operator in openshift-operators (shared namespace, global-operators OG already exists)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-devworkspaces-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-devworkspaces
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-devworkspaces
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        operator:
+          enabled: true
+          subscription:
+            enabled: true
+          operatorGroup:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-operators
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures DevWorkspace instances in startx-devworkspaces
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-devworkspaces-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-devworkspaces
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-devworkspaces
+    targetRevision: 21.3.12
+    helm:
+      values: |
+        devworkspaces:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-devworkspaces
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                              |
@@ -119,3 +229,5 @@ helm install cluster-devworkspaces startx/cluster-devworkspaces -f https://raw.g
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Update devworkspace-operator to 0.41.0, add ArgoCD deployment examples |
+| 21.3.12 | 2026-06-18 | Improve cluster-devworkspaces options |
