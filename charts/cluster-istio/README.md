@@ -139,6 +139,8 @@ spec:
           enabled: true
         projectOperator:
           enabled: true
+        istio:
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
@@ -173,6 +175,8 @@ spec:
           enabled: true
         operatorIstio:
           enabled: true
+        istio:
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-operators
