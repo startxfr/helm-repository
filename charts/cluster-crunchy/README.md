@@ -194,6 +194,8 @@ spec:
     chart: cluster-crunchy
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -218,6 +220,8 @@ spec:
     chart: cluster-crunchy
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         operator:
           enabled: true
@@ -242,9 +246,11 @@ spec:
     chart: cluster-crunchy
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         cluster:
-          enabled: false
+          enabled: true
         loader:
           enabled: false
   destination:
@@ -354,7 +360,6 @@ spec:
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339 |
@@ -415,4 +420,3 @@ spec:
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Update crunchy-postgres-operator to 5.8.7, add ArgoCD deployment examples |
-| 21.3.12 | 2026-06-18 | Improve cluster-crunchy options |

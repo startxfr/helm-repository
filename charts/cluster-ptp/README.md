@@ -98,7 +98,6 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                  |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                              |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23 |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                  |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                   |
@@ -153,7 +152,6 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                    |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                            |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                           |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
@@ -191,7 +189,6 @@ helm install cluster-ptp startx/cluster-ptp -f https://raw.githubusercontent.com
 | 11.7.91 | 2023-02-16 | publish stable update for the full repository |
 | 11.7.93 | 2023-02-16 | align dependencies to version 11.7.89 |
 | 11.7.97 | 2023-02-19 | publish stable update for the full repository |
-| 11.28.3 | 2023-02-19 | Upgrade to 4.11.0-202302061916 ptp operator release |
 | 11.28.3 | 2023-02-19 | Upgrade to 4.11.0-202302061916 ptp operator release |
 | 11.28.5 | 2023-02-19 | Improve cluster-ptp options |
 | 11.28.11 | 2023-02-19 | publish stable update for the full repository |

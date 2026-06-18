@@ -63,7 +63,6 @@ helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com
 
 | Release | Date       | Description                                       |
 | ------- | ---------- | ------------------------------------------------- |
-| 14.6.111 | 2024-01-17 | Create chart cluster-gpu from cluster-certmanager |
 | 14.6.111 | 2024-01-18 | New version of the NVidia Operator packaged into the cluster-gpu chart |
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository |
 | 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge |
@@ -91,7 +90,6 @@ helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.343 | 2024-06-26 | publish stable update for the full repository |

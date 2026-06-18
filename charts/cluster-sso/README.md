@@ -96,7 +96,6 @@ helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                  |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                              |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                     |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23 |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                  |
 | 8.20.3   | 2021-11-11 | Align all charts to Openshift version 4.8.20                                                   |
@@ -149,7 +148,6 @@ helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                    |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                            |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                           |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
@@ -178,7 +176,6 @@ helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com
 | 11.7.62 | 2022-11-30 | Debug console links and notifications |
 | 11.7.63 | 2022-11-30 | publish stable update for the full repository |
 | 11.7.67 | 2022-11-30 | Debug depedencies on sub charts |
-| 11.7.67 | 2022-11-30 | debug chart syntax |
 | 11.7.69 | 2022-11-30 | Finished dependencies stabilization |
 | 11.7.73 | 2022-12-04 | Align all packages to release 11.7.73 |
 | 11.7.75 | 2022-12-04 | publish stable update for the full repository |
@@ -323,7 +320,6 @@ helm install cluster-sso startx/cluster-sso -f https://raw.githubusercontent.com
 | 18.11.3 | 2025-04-30 | Prepare dependencies move to version 18.x |
 | 18.11.5 | 2025-04-30 | move dependencies to version 18.11.1 |
 | 18.11.7 | 2025-04-30 | All dependencies linked to 18.x release |
-| 18.11.9 | 2025-05-02 | Update the sso operator to version 7.6.11 opr 6 |
 | 18.11.9 | 2025-05-02 | Update the sso operator to version 7.6.11 opr 6 |
 | 18.11.19 | 2025-05-02 | Intermediate alignement of all helm charts |
 | 18.11.21 | 2025-05-02 | Update all basic chart dependencies to version 18.11.15 |

@@ -107,6 +107,8 @@ spec:
     chart: cluster-descheduler
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -131,6 +133,8 @@ spec:
     chart: cluster-descheduler
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         operator:
           enabled: true
@@ -155,6 +159,8 @@ spec:
     chart: cluster-descheduler
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         descheduler:
           enabled: true
@@ -171,7 +177,6 @@ spec:
 
 | Release  | Date       | Description                                                       |
 | -------- | ---------- | ----------------------------------------------------------------- |
-| 14.6.283 | 2024-05-29 | Initialize the descheduler cluster-service chart                  |
 | 14.6.283 | 2024-05-29 | Creation of the cluster-descheduler chart                         |
 | 14.6.285 | 2024-05-29 | Move descheduler name to cluster by default                       |
 | 14.6.287 | 2024-05-29 | Move descheduler namespace to openshift-kube-descheduler-operator |
@@ -180,7 +185,6 @@ spec:
 | 14.6.321 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.323 | 2024-06-25 | Align all chart to latest release |
 | 14.6.325 | 2024-06-25 | Adding chart logo in README header |
-| 14.6.325 | 2024-06-25 | publish stable update for the full repository |
 | 14.6.331 | 2024-06-25 | update all dependencies to version 14.6.323 |
 | 14.6.335 | 2024-06-26 | publish stable update for the full repository |
 | 14.6.341 | 2024-06-26 | Update startx dependencies chart to release 14.6.339 |
@@ -240,5 +244,4 @@ spec:
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
-| 21.3.12 | 2026-06-18 | Add ArgoCD deployment examples |
 | 21.3.12 | 2026-06-18 | Improve cluster-descheduler options |

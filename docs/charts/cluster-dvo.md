@@ -55,12 +55,122 @@ helm install cluster-dvo-operator startx/cluster-dvo --set project.enabled=false
 helm install cluster-dvo-instance startx/cluster-dvo --set project.enabled=false,operator.enabled=false,dvo.enabled=true
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : DVO operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx.yaml))
 
 ```bash
 helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx.yaml
+```
+
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-dvo
+  namespace: openshift-gitops
+spec:
+  description: Deploy Deployment Validation Operator and configure DVO at cluster level
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: deployment-validation-operator
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+# Creates namespace deployment-validation-operator
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-dvo-project
+  namespace: openshift-gitops
+spec:
+  project: cluster-dvo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-dvo
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Deploys DVO operator in dedicated namespace with its own OperatorGroup (all-namespaces)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-dvo-operator
+  namespace: openshift-gitops
+spec:
+  project: cluster-dvo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-dvo
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: deployment-validation-operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Configures DVO grafana dashboard (disabled by default)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-dvo-app
+  namespace: openshift-gitops
+spec:
+  project: cluster-dvo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-dvo
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        grafana:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: deployment-validation-operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
 ## History
@@ -100,3 +210,4 @@ helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-18 | Improve cluster-dvo options |

@@ -111,6 +111,8 @@ spec:
     chart: cluster-costs
     targetRevision: 21.3.14
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -137,6 +139,8 @@ spec:
     chart: cluster-costs
     targetRevision: 21.3.14
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         operator:
           enabled: true
@@ -161,6 +165,8 @@ spec:
     chart: cluster-costs
     targetRevision: 21.3.14
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         CostManagementMetricsConfig:
           enabled: true
@@ -227,5 +233,4 @@ spec:
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Update costmanagement-metrics-operator to 4.4.0, add ArgoCD deployment examples |
 | 21.3.13 | 2026-06-18 | Fix costManagementMetricsConfig template: use CostManagementMetricsConfig values key |
-| 21.3.12 | 2026-06-18 | Improve cluster-costs options |
 | 21.3.14 | 2026-06-18 | Fix costManagementMetricsConfig template: use CostManagementMetricsConfig values key (21.3.13) |

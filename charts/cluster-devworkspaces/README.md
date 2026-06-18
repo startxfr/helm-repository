@@ -108,6 +108,8 @@ spec:
     chart: cluster-devworkspaces
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -132,6 +134,8 @@ spec:
     chart: cluster-devworkspaces
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         operator:
           enabled: true
@@ -160,6 +164,8 @@ spec:
     chart: cluster-devworkspaces
     targetRevision: 21.3.12
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         devworkspaces:
           enabled: false
@@ -230,4 +236,3 @@ spec:
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Update devworkspace-operator to 0.41.0, add ArgoCD deployment examples |
-| 21.3.12 | 2026-06-18 | Improve cluster-devworkspaces options |
