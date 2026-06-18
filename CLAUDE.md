@@ -357,11 +357,11 @@ helm:
 
 ### Charts with ArgoCD examples (done)
 
- `cluster-nexus` · `cluster-nfd` · `cluster-nmstate` · `cluster-3scale` · `cluster-kubecost` · `cluster-mustgather` · `cluster-acm` · `cluster-acs`
+ `cluster-nexus` · `cluster-nfd` · `cluster-nmstate` · `cluster-3scale` · `cluster-kubecost` · `cluster-mustgather` · `cluster-acm` · `cluster-acs` · `cluster-ansible` · `cluster-argocd` · `cluster-auth` · `cluster-certmanager`
 
 ### Charts pending ArgoCD examples
 
-All other `cluster-*` charts: `cluster-crunchy` · `cluster-mongo`, `cluster-ansible`, `cluster-argocd`, `cluster-auth`, `cluster-certmanager`, `cluster-compliance`, `cluster-config`, `cluster-console`, `cluster-costs`, `cluster-couchbase`, `cluster-descheduler`, `cluster-devworkspaces`, `cluster-dvo`, `cluster-gitlab`, `cluster-gpu`, `cluster-istio`, `cluster-kafka`, `cluster-kargo`, `cluster-kepler`, `cluster-knative`, `cluster-kubevirt`, `cluster-localstorage`, `cluster-logging`, `cluster-machine`, `cluster-maintenance`, `cluster-mtc`, `cluster-mtr`, `cluster-mtv`, `cluster-oadp`, `cluster-odf`, `cluster-ods`, `cluster-pipeline`, `cluster-ptp`, `cluster-quay`, `cluster-rbac`, `cluster-redis`, `cluster-router`, `cluster-sso`, `cluster-storage`, `cluster-storage-efs`, `cluster-vault`, `cluster-vault-config`, `cluster-vpa`
+All other `cluster-*` charts: `cluster-crunchy` · `cluster-mongo`, `cluster-compliance`, `cluster-config`, `cluster-console`, `cluster-costs`, `cluster-couchbase`, `cluster-descheduler`, `cluster-devworkspaces`, `cluster-dvo`, `cluster-gitlab`, `cluster-gpu`, `cluster-istio`, `cluster-kafka`, `cluster-kargo`, `cluster-kepler`, `cluster-knative`, `cluster-kubevirt`, `cluster-localstorage`, `cluster-logging`, `cluster-machine`, `cluster-maintenance`, `cluster-mtc`, `cluster-mtr`, `cluster-mtv`, `cluster-oadp`, `cluster-odf`, `cluster-ods`, `cluster-pipeline`, `cluster-ptp`, `cluster-quay`, `cluster-rbac`, `cluster-redis`, `cluster-router`, `cluster-sso`, `cluster-storage`, `cluster-storage-efs`, `cluster-vault`, `cluster-vault-config`, `cluster-vpa`
 
 ### Atomic update process per chart
 
