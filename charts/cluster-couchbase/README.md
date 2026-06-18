@@ -137,7 +137,7 @@ spec:
         operator:
           enabled: true
         couchbaseConfig:
-          enabled: false
+          enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-startx-couchbase
@@ -160,7 +160,9 @@ spec:
     targetRevision: 21.3.12
     helm:
       values: |
-        couchbaseConfig:
+        cluster:
+          enabled: true
+        clusterRbac:
           enabled: true
   destination:
     server: https://kubernetes.default.svc
