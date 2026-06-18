@@ -356,11 +356,11 @@ helm:
 
 ### Charts with ArgoCD examples (done)
 
-`cluster-acm` · `cluster-crunchy` · `cluster-kubecost` · `cluster-mongo` · `cluster-mustgather` · `cluster-nexus` · `cluster-nfd` · `cluster-nmstate`
+ `cluster-nexus` · `cluster-nfd` · `cluster-nmstate` ·`cluster-3scale` · `cluster-kubecost` 
 
 ### Charts pending ArgoCD examples
 
-All other `cluster-*` charts: `cluster-3scale`, `cluster-acs`, `cluster-ansible`, `cluster-argocd`, `cluster-auth`, `cluster-certmanager`, `cluster-compliance`, `cluster-config`, `cluster-console`, `cluster-costs`, `cluster-couchbase`, `cluster-descheduler`, `cluster-devworkspaces`, `cluster-dvo`, `cluster-gitlab`, `cluster-gpu`, `cluster-istio`, `cluster-kafka`, `cluster-kargo`, `cluster-kepler`, `cluster-knative`, `cluster-kubevirt`, `cluster-localstorage`, `cluster-logging`, `cluster-machine`, `cluster-maintenance`, `cluster-mtc`, `cluster-mtr`, `cluster-mtv`, `cluster-oadp`, `cluster-odf`, `cluster-ods`, `cluster-pipeline`, `cluster-ptp`, `cluster-quay`, `cluster-rbac`, `cluster-redis`, `cluster-router`, `cluster-sso`, `cluster-storage`, `cluster-storage-efs`, `cluster-vault`, `cluster-vault-config`, `cluster-vpa`
+All other `cluster-*` charts: `cluster-acm` · `cluster-crunchy` · `cluster-mongo` · `cluster-mustgather` , `cluster-acs`, `cluster-ansible`, `cluster-argocd`, `cluster-auth`, `cluster-certmanager`, `cluster-compliance`, `cluster-config`, `cluster-console`, `cluster-costs`, `cluster-couchbase`, `cluster-descheduler`, `cluster-devworkspaces`, `cluster-dvo`, `cluster-gitlab`, `cluster-gpu`, `cluster-istio`, `cluster-kafka`, `cluster-kargo`, `cluster-kepler`, `cluster-knative`, `cluster-kubevirt`, `cluster-localstorage`, `cluster-logging`, `cluster-machine`, `cluster-maintenance`, `cluster-mtc`, `cluster-mtr`, `cluster-mtv`, `cluster-oadp`, `cluster-odf`, `cluster-ods`, `cluster-pipeline`, `cluster-ptp`, `cluster-quay`, `cluster-rbac`, `cluster-redis`, `cluster-router`, `cluster-sso`, `cluster-storage`, `cluster-storage-efs`, `cluster-vault`, `cluster-vault-config`, `cluster-vpa`
 
 ### Atomic update process per chart
 
@@ -368,10 +368,11 @@ For each chart to update, do these steps in order:
 1. Update `appVersion` in `Chart.yaml` to current upstream operator version
 2. Update namespace names in `values.yaml` (and all `values-startx*.yaml`) to follow the naming rules above
 3. Add `## Deploy via ArgoCD` section to `README.md` with AppProject + 3 Applications, then `cp README.md docs/charts/<name>.md`
-4. Deploy the 3 ArgoCD Applications on the test cluster (`https://api.demo219.startx.fr:6443`)
-5. Verify sync succeeds; adjust values/templates if needed
-6. Ask user for approval
-7. Run `./sx-helm <chart-name> release` from `/home/cl/ClaudeCode/helm-repository/`
+4. Run `./sx-helm <chart-name> release` from `/home/cl/ClaudeCode/helm-repository/`
+5. Run `./sx-helm publish` from `/home/cl/ClaudeCode/helm-repository/`
+6. Deploy the 3 ArgoCD Applications on the test cluster (`https://api.demo219.startx.fr:6443`)
+7. Verify sync succeeds; adjust values/templates if needed
+8. Update CLAUDE.md in `/home/cl/ClaudeCode/helm-repository/` with this change (section Charts with ArgoCD examples)
 
 ---
 
