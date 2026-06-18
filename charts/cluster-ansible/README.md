@@ -66,7 +66,7 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 ### Deploy via ArgoCD Application
 
 Deploy `cluster-ansible` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
-The AAP operator installs in the dedicated `rhaap-operator` namespace (with its own OperatorGroup). The `AnsibleAutomationPlatform` CR deploys in `startx-ansible`:
+The AAP operator installs in the dedicated `aap` namespace (with its own OperatorGroup). The `AnsibleAutomationPlatform` CR deploys in `startx-ansible`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -80,7 +80,7 @@ spec:
     - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
   destinations:
     - server: https://kubernetes.default.svc
-      namespace: rhaap-operator
+      namespace: aap
     - server: https://kubernetes.default.svc
       namespace: startx-ansible
     - server: https://kubernetes.default.svc
@@ -114,7 +114,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
   syncPolicy:
     automated:
       prune: true
@@ -131,7 +131,7 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: rhaap-operator
+    namespace: aap
     server: https://kubernetes.default.svc
   project: cluster-ansible
   source:
@@ -140,14 +140,22 @@ spec:
       values: |
         projectOperator:
           enabled: true
+          project:
+            name: "aap"
         operator:
           enabled: true
           operatorGroup:
             enabled: true
+            name: "aap"
+            namespace: "aap"
           subscription:
             enabled: true
+            namespace: "aap"
+            operator:
+              channel: stable-2.7
+              installPlanApproval: Manual
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
   syncPolicy:
     automated:
       prune: true
@@ -174,7 +182,7 @@ spec:
         ansibleAAP:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
   syncPolicy:
     automated:
       prune: true
@@ -460,3 +468,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Improve cluster-ansible options |
+| 21.3.13 | 2026-06-18 | Improve cluster-ansible options |
