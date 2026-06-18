@@ -6,9 +6,9 @@ description: Helm chart used to configure Kargo builds upon GitOps principles to
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.11
+version: 21.3.13
 # Version name of the kargo helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "1.9.5"
+appVersion: "1.10.7"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-kargo.svg
 # Kube minimum version
@@ -44,7 +44,7 @@ dependencies:
     condition: project.enabled
   - name: kargo
     repository: oci://ghcr.io/akuity/kargo-charts
-    version: "1.9.5"
+    version: "1.10.7"
     alias: kargo
     condition: kargo.enabled
 
