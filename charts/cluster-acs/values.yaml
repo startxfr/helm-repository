@@ -13,7 +13,7 @@ context:  &context
   # Application name (functional tenant, default use Chart name)
   app: default-acs
   # Version name of this application (default use Chart appVersion)
-  version: "4.9.3"
+  version: "4.11.0"
 
 # configuration of the acs service
 acs:
@@ -40,7 +40,7 @@ project:
   project: 
     enabled: true
     type: namespace
-    name: "rhacs-operator"
+    name: "startx-acs"
     display_name: Operator ACS
     description: ACS operators configured by startx
   rbac: 
@@ -68,9 +68,9 @@ operator:
     enabled: true
     name: "rhacs-operator"
     namespace: "openshift-operators"
-    version: "v4.9.3"
+    version: "v4.11.0"
     operator: 
-      channel: "rhacs-4.9"
+      channel: "stable"
       name: rhacs-operator
       installPlanApproval: Automatic
       # csv: rhacs-operator
@@ -84,4 +84,4 @@ operator:
     target: "all-ns"
     name: "startx-rhacs"
     namespace: "openshift-operators"
-    providedAPIs: " Central.v1alpha1.platform.stackrox.io,SecuredCluster.v1alpha1.platform.stackrox.io"
+    providedAPIs: "Central.v1alpha1.platform.stackrox.io,SecuredCluster.v1alpha1.platform.stackrox.io"
