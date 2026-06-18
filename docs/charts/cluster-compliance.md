@@ -363,7 +363,8 @@ helm install cluster-compliance startx/cluster-compliance -f https://raw.githubu
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
-| 21.3.13 | 2026-06-18 | Update compliance operator to v1.9.1, add ArgoCD deployment examples |
+| 21.3.12 | 2026-06-18 | Update compliance operator to v1.9.1, add ArgoCD deployment examples |
+| 21.3.13 | 2026-06-18 | Fix ScanSetting template (was incorrectly using PtpConfig kind) |
 
 ## Deploy with ArgoCD
 
@@ -406,7 +407,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-compliance
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         project:
@@ -431,7 +432,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-compliance
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         compliance:
@@ -458,7 +459,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-compliance
-    targetRevision: 21.3.12
+    targetRevision: 21.3.13
     helm:
       values: |
         compliance:
@@ -472,3 +473,4 @@ spec:
       selfHeal: true
 ```
 | 21.3.12 | 2026-06-18 | Improve cluster-compliance options |
+| 21.3.13 | 2026-06-18 | Improve cluster-compliance options |

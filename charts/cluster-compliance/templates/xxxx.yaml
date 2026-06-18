@@ -1,8 +1,8 @@
 {{- if .Values.compliance.enabled -}}
 {{- $namespace := .Values.project.project.name | default "openshift-compliance" -}}
 {{- $spec := .Values.compliance.spec | default "{}" -}}
-apiVersion: compliance.openshift.io/v1
-kind: PtpConfig
+apiVersion: compliance.openshift.io/v1alpha1
+kind: ScanSetting
 metadata:
   name: {{ .Values.compliance.name | default "quote" | quote }}
   namespace: "{{- $namespace -}}"
