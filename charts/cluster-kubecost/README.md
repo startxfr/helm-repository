@@ -110,7 +110,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.17
+    targetRevision: 21.3.27
   syncPolicy:
     automated:
       prune: true
@@ -137,7 +137,7 @@ spec:
         operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.17
+    targetRevision: 21.3.27
   syncPolicy:
     automated:
       prune: true
@@ -163,7 +163,7 @@ spec:
           enabled: true
           namespace: startx-kubecost
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.17
+    targetRevision: 21.3.27
   syncPolicy:
     automated:
       prune: true
@@ -201,3 +201,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.15 | 2026-06-18 | Update kubecost and add argocd example |
 | 21.3.16 | 2026-06-18 | Improve cluster-kubecost options |
 | 21.3.17 | 2026-06-18 | Improve cluster-kubecost options |
+| 21.3.27 | 2026-06-19 | publish stable update for the full repository |

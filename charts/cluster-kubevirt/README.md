@@ -88,7 +88,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-kubevirt
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -118,7 +118,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-kubevirt
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -150,7 +150,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-kubevirt
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -188,3 +188,4 @@ spec:
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Add ArgoCD examples for cluster-kubevirt |
 | 21.3.12 | 2026-06-18 | Improve cluster-kubevirt options |
+| 21.3.27 | 2026-06-19 | publish stable update for the full repository |

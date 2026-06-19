@@ -98,3 +98,4 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.27 | 2026-06-19 | publish stable update for the full repository |

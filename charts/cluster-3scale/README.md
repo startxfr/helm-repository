@@ -119,7 +119,7 @@ spec:
         manager:
           enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
   syncPolicy:
     automated:
       prune: true
@@ -150,7 +150,7 @@ spec:
         manager:
           enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
   syncPolicy:
     automated:
       prune: true
@@ -181,7 +181,7 @@ spec:
         manager:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
   syncPolicy:
     automated:
       prune: true
@@ -216,3 +216,4 @@ kubectl apply -f cluster-3scale-argocd.yaml -n openshift-gitops
 | 21.3.5 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Improve cluster-3scale options |
+| 21.3.27 | 2026-06-19 | publish stable update for the full repository |
