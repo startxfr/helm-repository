@@ -325,17 +325,102 @@ Every `cluster-*` chart README must include a `## Deploy via ArgoCD` section wit
 
 **Critical**: explicitly set all non-relevant sub-chart enabled flags to `false` in every Application's `helm.values`. Omitting them causes ArgoCD `SharedResourceWarning` when the default values.yaml enables multiple sub-charts.
 
-### ArgoCD AppProject clusterResourceWhitelist
+### Sync-wave ordering (mandatory)
 
-Minimum required cluster-scoped resources: `Namespace`, `OperatorGroup`, `Subscription`, and the operator's CRD kind (e.g. `MustGather.redhatcop.redhat.io`, `Kubecost.charts.kubecost.com`, `MultiClusterHub.operator.open-cluster-management.io`).
+Every Application metadata block **must** carry a `sync-wave` annotation so that ArgoCD respects the creation and deletion order in App-of-Apps patterns:
+
+| Application | Wave | Rationale |
+|---|---|---|
+| `cluster-xxx-project` | `"1"` | Created first (namespace must exist before operator); deleted **last** |
+| `cluster-xxx-operator` | `"2"` | Created after namespace; deleted after app CRs are gone |
+| `cluster-xxx-app` | `"3"` | Created last; deleted **first** so the operator is still alive to process CR finalizers |
+
+```yaml
+metadata:
+  name: cluster-xxx-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  # no finalizer on project: namespace cleans up naturally once contents are deleted
+```
+
+```yaml
+metadata:
+  name: cluster-xxx-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+```
+
+```yaml
+metadata:
+  name: cluster-xxx-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+```
+
+**Deletion order**: `cluster-xxx-app` first → wait for CR cleanup → `cluster-xxx-operator` → `cluster-xxx-project`. Never delete the operator before its CRs — the CR finalizer handler disappears and the namespace is stuck Terminating indefinitely.
 
 ### Cascade-delete finalizer
 
-All Applications must carry:
+`resources-finalizer.argocd.argoproj.io` must be present on `-operator` and `-app` Applications. It must **not** be present on `-project`: the namespace cleans up naturally once managed resources are removed by the other two Applications, and keeping the finalizer on `-project` creates a deadlock when the namespace is slow to terminate.
+
+### ignoreDifferences for operator-managed finalizers
+
+Operators add their own finalizers to CRs after creation (e.g. `storagecluster.odf.openshift.io`, `forklift.konveyor.io/finalizer`). These finalizers are not in the Helm chart and cause permanent OutOfSync. Add `ignoreDifferences` in the `-app` Application spec, **before** `syncPolicy`:
+
 ```yaml
-finalizers:
-  - resources-finalizer.argocd.argoproj.io
+spec:
+  ...
+  ignoreDifferences:
+    - group: <operator-api-group>
+      kind: <CR-kind>
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
+
+Common mappings already applied in all chart READMEs:
+
+| Chart | group | kind |
+|---|---|---|
+| cluster-odf | `ocs.openshift.io` | `StorageCluster` |
+| cluster-mtv | `forklift.konveyor.io` | `ForkliftController` |
+| cluster-acm | `operator.open-cluster-management.io` | `MultiClusterHub` |
+| cluster-kafka | `kafka.strimzi.io` | `Kafka` |
+| cluster-istio | `maistra.io` | `ServiceMeshControlPlane` |
+| cluster-logging | `logging.openshift.io` | `ClusterLogging` |
+| cluster-sso | `keycloak.org` | `Keycloak` |
+| cluster-quay | `quay.redhat.com` | `QuayRegistry` |
+
+### CR template sync-wave
+
+Inside chart templates, the main CR object (what the operator reconciles) must be at wave `"15"` — **above** the `consolePlugin` wave (`"10"` in the `operator` chart) — so that if operator and app are deployed in the same Application, the CR is never created before the operator's console plugin:
+
+| Resource type | Wave |
+|---|---|
+| Namespace / Project | `-10` |
+| OperatorGroup | `-6` |
+| Subscription / CSV | `-5` |
+| Secrets, RBAC, ServiceAccount | `1` |
+| Jobs (e.g. node labeler) | `5` |
+| ConsolePlugin | `10` |
+| Main CR (StorageCluster, ForkliftController, Kafka…) | `15` |
+| Secondary CRs (topics, realms, clients…) | `30`–`50` |
+
+Do **not** declare `finalizers` in CR templates (e.g. `storageCluster.yaml`). Finalizers are managed by the operator controller — pre-setting them in Helm means they persist if the operator is deleted first, blocking namespace cleanup forever.
+
+### ArgoCD AppProject clusterResourceWhitelist
+
+Minimum required cluster-scoped resources: `Namespace`, `OperatorGroup`, `Subscription`, and the operator's CRD kind (e.g. `MustGather.redhatcop.redhat.io`, `Kubecost.charts.kubecost.com`, `MultiClusterHub.operator.open-cluster-management.io`).
 
 ### SharedResourceWarning fix
 
@@ -349,7 +434,28 @@ helm:
       enabled: true
 ```
 
-### known issues / OLM drift
+### Emergency cleanup: stuck Applications or Terminating namespaces
+
+When operators are deleted before their CRs (e.g. mass-delete scenario), CR finalizers become orphaned and namespaces get stuck Terminating. Fix in order:
+
+```bash
+# 1. Remove finalizer from the stuck CR
+oc patch <cr-kind> <cr-name> -n <namespace> \
+  --type=json -p '[{"op":"remove","path":"/metadata/finalizers"}]'
+
+# 2. Remove resources-finalizer from stuck Applications
+oc get applications.argoproj.io -n openshift-gitops -o json | \
+  python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+for item in d['items']:
+    if item['metadata'].get('deletionTimestamp') and item['metadata'].get('finalizers'):
+        print(item['metadata']['name'])
+" | xargs -I{} oc patch application.argoproj.io {} -n openshift-gitops \
+  --type=json -p '[{"op":"remove","path":"/metadata/finalizers"}]'
+```
+
+### Known issues / OLM drift
 
 - OperatorGroup gets extra annotations from OLM after creation → ArgoCD shows OutOfSync on OperatorGroup - this is **expected/normal**, do not try to fix it.
 - `additionalLabels` defined as a YAML map in values.yaml causes `wrong type for value; expected string; got map` in namespace templates - override with `additionalLabels: ""` in the Application helm values.

@@ -1,16 +1,16 @@
-# install via ArgoCD
+# Install via ArgoCD
 
-To leverage the gitops feature of ArgoCD to deploy your targeted  chart, you should follow the following procedure.
+To leverage the GitOps features of ArgoCD to deploy a chart, follow the procedure below.
 
 ## 0. Requirements
 
-- Having an running openshift cluster with appropriate permissions
-- Install openshift client with `sudo yum install openshift-client`
-- Been connected to your cluster with `oc login <mycluster_api_url>`
+- A running OpenShift cluster with appropriate permissions
+- OpenShift client installed: `sudo yum install openshift-client`
+- Connected to your cluster: `oc login <cluster_api_url>`
 
 ## 1. Deploy ArgoCD project
 
-If gitops is not enabled in your cluster, you could perform it with :
+If GitOps is not enabled in your cluster, deploy it with:
 
 ```bash
 echo "begin deploying argocd project"
@@ -36,7 +36,7 @@ echo "end deploying argocd project"
 
 ## 2. Deploy ArgoCD control-plane
 
-If gitops is not enabled in your cluster, you must perform the following procedure ater the previous deployment (project) :
+If GitOps is not enabled in your cluster, run the following after the previous step:
 
 ```bash
 echo "begin deploying argocd control-plane"
@@ -48,7 +48,7 @@ echo "end deploying argocd control-plane"
 
 ## 3. Check ArgoCD deployments
 
-Wait for all pod in your gitops namespace to be ready :
+Wait for all pods in the gitops namespace to be ready:
 
 ```bash
 oc get pod -n openshift-gitops -w
@@ -56,136 +56,190 @@ oc get pod -n openshift-gitops -w
 
 ## 4. Deploy cluster-services
 
-We will use the crunchy-database operator as an example for a cluster-service deployment.
+We use the Crunchy PostgreSQL operator (`cluster-crunchy`) as a complete example of the standard pattern.
 
-## 4.1. Create cluster-service project
+Every `cluster-*` chart is split into three Applications with explicit **sync-waves** to enforce a safe creation and deletion order:
 
-First we need to create a project for our postgresql instance.
+| Application | Wave | Role |
+|---|---|---|
+| `cluster-crunchy-project` | `1` | Creates the namespace — created first, deleted last |
+| `cluster-crunchy-operator` | `2` | Installs the operator — deleted after the database instance is gone |
+| `cluster-crunchy-app` | `3` | Deploys the PostgresCluster CR — deleted first so the operator is still alive to process finalizers |
 
-```bash
-cat <<EOF | oc apply -f -
-kind: Application
-apiVersion: argoproj.io/v1alpha1
-metadata:
-name: crunchy-project
-namespace: "openshift-gitops"
-spec:
-  destination:
-    namespace: "demo-crunchy"
-    server: 'https://kubernetes.default.svc'
-  project: cluster-admin
-  source:
-    path: charts/cluster-crunchy/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "devel"
-    helm:
-      valueFiles:
-      - values-demo.yaml
-      parameters:
-      - name: project.enabled
-        value: "true"
-  syncPolicy:
-    automated: 
-      prune: false
-      selfHeal: false
-    syncOptions:
-      - ApplyOutOfSyncOnly=true
-      - CreateNamespace=false
-      - Validate=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 5m
-EOF
-```
+> **Deletion order matters.** Always delete `-app` first and wait for completion before deleting `-operator`, then `-project`. Deleting the operator before its CRs orphans the CR finalizers and leaves the namespace stuck in `Terminating` indefinitely.
 
-## 4.2. Deploy the operator
+### 4.0. Create the AppProject
 
-Then we deploy the operator. Differences are the name `crunchy-operator` and the `operator.enabled` parameter.
+An AppProject scopes the Applications to specific source repos and destination namespaces.
 
 ```bash
 cat <<EOF | oc apply -f -
-kind: Application
 apiVersion: argoproj.io/v1alpha1
+kind: AppProject
 metadata:
-name: crunchy-operator
-namespace: "openshift-gitops"
+  name: cluster-crunchy
+  namespace: openshift-gitops
 spec:
-  destination:
-    namespace: "demo-crunchy"
-    server: 'https://kubernetes.default.svc'
-  project: cluster-admin
-  source:
-    path: charts/cluster-crunchy/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "devel"
-    helm:
-      valueFiles:
-      - values-demo.yaml
-      parameters:
-      - name: operator.enabled
-        value: "true"
-  syncPolicy:
-    automated: 
-      prune: false
-      selfHeal: false
-    syncOptions:
-      - ApplyOutOfSyncOnly=true
-      - CreateNamespace=false
-      - Validate=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 5m
+  description: Configure Crunchy PostgreSQL operator
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: openshift-crunchy-pgo
+      server: https://kubernetes.default.svc
+    - namespace: startx-crunchy
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
 EOF
 ```
 
-## 4.3. Create a cluster-service instance
+### 4.1. Create the namespace (project)
 
-Finally we create a crunchy databas instance. Differences are the name `crunchy-instance`, the `cluster.enabled` and `loader.enabled` parameters.
+Wave `1` — no `resources-finalizer`: the namespace cleans up naturally once its contents are removed by the other two Applications.
 
 ```bash
 cat <<EOF | oc apply -f -
-kind: Application
 apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-name: crunchy-instance
-namespace: "openshift-gitops"
+  name: cluster-crunchy-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
-  destination:
-    namespace: "demo-crunchy"
-    server: 'https://kubernetes.default.svc'
-  project: cluster-admin
+  project: cluster-crunchy
   source:
-    path: charts/cluster-crunchy/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "devel"
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-crunchy
+    targetRevision: 21.3.27
     helm:
       valueFiles:
-      - values-demo.yaml
-      parameters:
-      - name: cluster.enabled
-        value: "true"
-      - name: loader.enabled
-        value: "true"
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        operator:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
   syncPolicy:
-    automated: 
-      prune: false
-      selfHeal: false
-    syncOptions:
-      - ApplyOutOfSyncOnly=true
-      - CreateNamespace=false
-      - Validate=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 5m
+    automated:
+      prune: true
+      selfHeal: true
 EOF
 ```
 
+### 4.2. Deploy the operator
+
+Wave `2` — with `resources-finalizer` so ArgoCD cascade-deletes the operator subscription and CSV on removal.
+
+```bash
+cat <<EOF | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-crunchy-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-crunchy
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-crunchy
+    targetRevision: 21.3.27
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+EOF
+```
+
+### 4.3. Deploy the PostgresCluster instance
+
+Wave `3` — with `resources-finalizer` and `ignoreDifferences` on `metadata.finalizers`. The Crunchy operator adds its own finalizers to the `PostgresCluster` CR after creation; ignoring that field prevents permanent OutOfSync.
+
+```bash
+cat <<EOF | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-crunchy-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-crunchy
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-crunchy
+    targetRevision: 21.3.27
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        crunchy:
+          enabled: true
+        operator:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  ignoreDifferences:
+    - group: postgres-operator.crunchydata.com
+      kind: PostgresCluster
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+EOF
+```
+
+## 5. Verify sync
+
+```bash
+oc get applications -n openshift-gitops | grep cluster-crunchy
+```
+
+All three Applications should reach `Synced / Healthy`.
+
+## 6. Safe teardown
+
+Delete in reverse wave order and wait between each step:
+
+```bash
+# Delete app first (operator is still running — can process PostgresCluster finalizers)
+oc delete application cluster-crunchy-app -n openshift-gitops
+oc wait --for=delete application/cluster-crunchy-app -n openshift-gitops --timeout=300s
+
+# Then operator
+oc delete application cluster-crunchy-operator -n openshift-gitops
+oc wait --for=delete application/cluster-crunchy-operator -n openshift-gitops --timeout=120s
+
+# Finally project (namespace empties naturally)
+oc delete application cluster-crunchy-project -n openshift-gitops
+```
+
+> **If a namespace gets stuck Terminating** (operator deleted before its CR): patch the CR to remove the orphaned finalizer, then patch the Application to remove `resources-finalizer.argocd.argoproj.io`. See the [CLAUDE.md emergency cleanup section](../../CLAUDE.md) for the exact commands.
