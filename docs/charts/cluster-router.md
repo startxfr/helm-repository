@@ -73,6 +73,67 @@ helm install cluster-router startx/cluster-router
 helm install cluster-router startx/cluster-router -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-router/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-router
+  namespace: openshift-gitops
+spec:
+  description: Configure OpenShift cluster router and image registry routes
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: openshift-image-registry
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-router-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-router
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-router
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        registryroute:
+          enabled: true
+          name: external
+          namespace: openshift-image-registry
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                            |
@@ -133,7 +194,6 @@ helm install cluster-router startx/cluster-router -f https://raw.githubuserconte
 | 9.8.1    | 2021-11-20 | Upgrade to Openshift version 4.9.8                                                                     |
 | 9.8.4    | 2021-11-20 | Stable release of chart for Openshift 4.9.8 version                                                    |
 | 9.8.5    | 2021-11-20 | Update to openshift 4.9 channel for cluster management                                                 |
-| 9.8.5    | 2021-11-20 | Update to openshift 4.9 channel for cluster management                                                 |
 | 9.8.7    | 2021-11-20 | Debug dependencies problem                                                                             |
 | 9.8.9    | 2021-11-20 | Update startx chart dependencies version to 9.8.8 and schema update                                    |
 | 9.8.15   | 2021-11-20 | Update startx chart dependencies version to 9.8.11                                                     |
@@ -145,7 +205,6 @@ helm install cluster-router startx/cluster-router -f https://raw.githubuserconte
 | 9.8.47   | 2021-11-21 | Improve version management for chart                                                                   |
 | 9.8.51   | 2021-11-22 | Update startx chart dependencies to version 9.8.48                                                     |
 | 9.8.67   | 2021-12-18 | Align all charts to release 9.8.67                                                                     |
-| 9.8.68   | 2021-12-18 | Update elasticsearch operator to version 5.3.1-12                                                      |
 | 9.8.68   | 2021-12-18 | Improve cluster-router options                                                                         |
 | 9.8.71   | 2021-12-18 | Update helm-chart dependencies to version 9.8.59                                                       |
 | 9.8.75   | 2021-12-19 | Align with all other startx chart version to number 9.8.75                                             |
@@ -180,7 +239,6 @@ helm install cluster-router startx/cluster-router -f https://raw.githubuserconte
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                                    |
 | 10.12.24 | 2022-06-05 | Add sosreport and mustgather operator support                                                          |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                   |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                          |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                 |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                          |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                              |
@@ -379,3 +437,4 @@ helm install cluster-router startx/cluster-router -f https://raw.githubuserconte
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-19 | Add ArgoCD deployment examples |
