@@ -60,11 +60,11 @@ We use the Crunchy PostgreSQL operator (`cluster-crunchy`) as a complete example
 
 Every `cluster-*` chart is split into three Applications with explicit **sync-waves** to enforce a safe creation and deletion order:
 
-| Application | Wave | Role |
-|---|---|---|
-| `cluster-crunchy-project` | `1` | Creates the namespace — created first, deleted last |
-| `cluster-crunchy-operator` | `2` | Installs the operator — deleted after the database instance is gone |
-| `cluster-crunchy-app` | `3` | Deploys the PostgresCluster CR — deleted first so the operator is still alive to process finalizers |
+| Application                | Wave | Role                                                                                                |
+| -------------------------- | ---- | --------------------------------------------------------------------------------------------------- |
+| `cluster-crunchy-project`  | `1`  | Creates the namespace — created first, deleted last                                                 |
+| `cluster-crunchy-operator` | `2`  | Installs the operator — deleted after the database instance is gone                                 |
+| `cluster-crunchy-app`      | `3`  | Deploys the PostgresCluster CR — deleted first so the operator is still alive to process finalizers |
 
 > **Deletion order matters.** Always delete `-app` first and wait for completion before deleting `-operator`, then `-project`. Deleting the operator before its CRs orphans the CR finalizers and leaves the namespace stuck in `Terminating` indefinitely.
 
@@ -148,7 +148,7 @@ metadata:
   name: cluster-crunchy-operator
   namespace: openshift-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -185,7 +185,7 @@ metadata:
   name: cluster-crunchy-app
   namespace: openshift-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
