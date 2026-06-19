@@ -297,3 +297,4 @@ oc apply -f cluster-3scale-argocd.yaml -n openshift-gitops
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.56 | 2026-06-19 | Add cluster-redis/cluster-crunchy sub-charts and externalComponents support for 3scale 2.16+ |
 | 21.3.56 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.56 | 2026-06-19 | publish stable update for the full repository |
