@@ -214,3 +214,4 @@ helm install chaos-kraken-aws startx/chaos-kraken -f my-kraken-aws-values.yaml -
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.56 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.56 | 2026-06-19 | publish stable update for the full repository |
