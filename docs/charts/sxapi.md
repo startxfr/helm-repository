@@ -262,3 +262,4 @@ helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/st
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.21 | 2026-06-19 | release basic version |
+| 21.3.27 | 2026-06-19 | publish stable update for the full repository |
