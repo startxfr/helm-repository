@@ -38,87 +38,105 @@ helm install cluster-mongo startx/cluster-mongo
 
 ## Deploy this helm chart with ArgoCD
 
-### 1. Create the project
+### Applications
 
-```bash
-cat <<EOF | oc apply -f -
-kind: Application
+```yaml
+---
 apiVersion: argoproj.io/v1alpha1
-metadata:
-name: mongo-project
-namespace: "openshift-gitops"
-spec:
-  destination:
-    namespace: "mongo-demo"
-    server: 'https://kubernetes.default.svc'
-project: default
-source:
-    path: charts/cluster-mongo/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: 21.3.27
-    helm:
-    valueFiles:
-    - values-demo.yaml
-    parameters:
-    - name: project.enabled
-      value: "true"
-EOF
-```
-
-## 2. Deploy the operator
-
-```bash
-cat <<EOF | oc apply -f -
 kind: Application
-apiVersion: argoproj.io/v1alpha1
 metadata:
-name: mongo-operator
-namespace: "openshift-gitops"
+  name: cluster-mongo-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
-  destination:
-    namespace: "openshift-operators"
-    server: 'https://kubernetes.default.svc'
-project: default
-source:
-    path: charts/cluster-mongo/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: 21.3.27
+  project: cluster-mongo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-mongo
+    targetRevision: 21.3.55
     helm:
-    valueFiles:
-    - values-demo.yaml
-    parameters:
-    - name: operator.enabled
-      value: "true"
-EOF
-```
-
-## 2. Deploy a mongo instance
-
-```bash
-cat <<EOF | oc apply -f -
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        operator:
+          enabled: false
+        cluster:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
 kind: Application
-apiVersion: argoproj.io/v1alpha1
 metadata:
-name: mongo-instance
-namespace: "openshift-gitops"
+  name: cluster-mongo-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    namespace: "mongo-demo"
-    server: 'https://kubernetes.default.svc'
-project: default
-source:
-    path: charts/cluster-mongo/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: 21.3.27
+  project: cluster-mongo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-mongo
+    targetRevision: 21.3.55
     helm:
-    valueFiles:
-    - values-demo.yaml
-    parameters:
-    - name: cluster.enabled
-      value: "true"
-    - name: loader.enabled
-      value: "true"
-EOF
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+        cluster:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-operators
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-mongo-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-mongo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-mongo
+    targetRevision: 21.3.55
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        cluster:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-mongo
+  ignoreDifferences:
+    - group: mongodbcommunity.mongodb.com
+      kind: MongoDBCommunity
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
 ## Default values
@@ -160,3 +178,4 @@ helm install cluster-mongo startx/cluster-mongo -f https://raw.githubusercontent
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |
