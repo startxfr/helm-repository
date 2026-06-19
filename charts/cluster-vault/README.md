@@ -220,6 +220,8 @@ spec:
           enabled: false
         vault:
           enabled: true
+          global:
+            enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-vault
