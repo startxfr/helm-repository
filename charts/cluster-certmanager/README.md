@@ -122,7 +122,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-certmanager
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -149,7 +149,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-certmanager
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -180,7 +180,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-certmanager
-    targetRevision: 21.3.12
+    targetRevision: 21.3.27
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -197,3 +197,4 @@ spec:
       prune: true
       selfHeal: true
 ```
+| 21.3.27 | 2026-06-19 | publish stable update for the full repository |
