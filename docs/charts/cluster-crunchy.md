@@ -55,7 +55,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
     valueFiles:
     - values-demo.yaml
@@ -82,7 +82,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
     valueFiles:
     - values-demo.yaml
@@ -109,7 +109,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
     valueFiles:
     - values-demo.yaml
@@ -187,14 +187,14 @@ kind: Application
 metadata:
   name: cluster-crunchy-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-crunchy
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-crunchy
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -215,6 +215,8 @@ kind: Application
 metadata:
   name: cluster-crunchy-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -222,7 +224,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-crunchy
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -243,6 +245,8 @@ kind: Application
 metadata:
   name: cluster-crunchy-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -250,7 +254,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-crunchy
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -262,6 +266,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: demo-crunchy
+  ignoreDifferences:
+    - group: postgres-operator.crunchydata.com
+      kind: PostgresCluster
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true
@@ -288,3 +297,4 @@ spec:
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Update crunchy-postgres-operator to 5.8.7, add ArgoCD deployment examples |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |
