@@ -97,8 +97,8 @@ kind: Application
 metadata:
   name: cluster-oadp-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-oadp
   source:
@@ -124,6 +124,8 @@ kind: Application
 metadata:
   name: cluster-oadp-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -151,6 +153,8 @@ kind: Application
 metadata:
   name: cluster-oadp-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -168,6 +172,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: oadp.openshift.io
+      kind: DataProtectionApplication
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

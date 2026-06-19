@@ -64,7 +64,7 @@ metadata:
   annotations:
     {{- include "cluster-costs.annotations" . | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"{{ .Values.sxcollector.imageStream.name | default "sxcollector" }}:{{ .Values.sxcollector.version | default "latest" }}","namespace":"{{- $namespace -}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"sxcollector\")].image","paused":"false"}]'
-    argocd.argoproj.io/sync-wave: "50"
+    argocd.argoproj.io/sync-wave: "60"
 spec:
   replicas: 1
   selector:
@@ -126,7 +126,7 @@ metadata:
   annotations:
     {{- include "cluster-costs.annotations" $root | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"{{ $root.Values.sxcollector.imageStream.name | default "sxcollector" }}:{{ $root.Values.sxcollector.version | default "latest" }}","namespace":"{{- $namespace -}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"sxcollector\")].image","paused":"false"}]'
-    argocd.argoproj.io/sync-wave: "45"
+    argocd.argoproj.io/sync-wave: "55"
 spec:
   schedule: {{ .schedule | default "@hourly" | quote }}
   concurrencyPolicy: Replace

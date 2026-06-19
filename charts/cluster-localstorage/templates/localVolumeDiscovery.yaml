@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/name: "{{ .name | default "default" }}-localvolumediscovery"
   annotations:
     {{- include "cluster-localstorage.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   nodeSelector:
     nodeSelectorTerms:

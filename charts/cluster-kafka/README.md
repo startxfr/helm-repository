@@ -97,8 +97,8 @@ kind: Application
 metadata:
   name: cluster-kafka-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-kafka
   source:
@@ -125,6 +125,8 @@ kind: Application
 metadata:
   name: cluster-kafka-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -155,6 +157,8 @@ kind: Application
 metadata:
   name: cluster-kafka-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -174,6 +178,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-kafka
+  ignoreDifferences:
+    - group: kafka.strimzi.io
+      kind: Kafka
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

@@ -10,7 +10,7 @@ metadata:
     kube-monkey/identifier: {{ include "startx.appName" . | default "cluster" | quote }}
   annotations:
     {{- include "example-pod.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   containers:
     - name: service

@@ -17,7 +17,7 @@ metadata:
   annotations:
     {{- include "example-fruitapp-app.annotations" $ | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:{{- .Values.frontend.version }}","namespace":"{{- .Values.namespace }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"frontend\")].image","pause":"false"}]'
-    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-wave: "40"
     alpha.image.policy.openshift.io/resolve-names: '*'
     app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
     app.openshift.io/vcs-ref: "{{- .Values.frontend.version }}"

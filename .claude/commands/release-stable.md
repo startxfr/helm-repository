@@ -14,7 +14,7 @@ No arguments. The version is inherited from the master branch state (already pro
 
 1. Verifies `master` is clean, committed, and pushed
 2. Merges `master` → `stable`
-3. Runs `make publish` — regenerates stable + noschema + release-XX repos and uploads to S3
+3. Runs `make publish` - regenerates stable + noschema + release-XX repos and uploads to S3
 4. Discovers all `stable-4.x` remote branches dynamically
 5. Merges `stable` into each `stable-4.x` branch and pushes
 6. Pushes `stable` to `origin` and `gitlab`
@@ -28,7 +28,7 @@ No arguments. The version is inherited from the master branch state (already pro
 
 You are executing the release-stable command. No arguments expected.
 
-**Step 1 — Check master is ready**
+**Step 1 - Check master is ready**
 
 Run: `git checkout master`
 
@@ -45,11 +45,11 @@ If there are unpushed commits on master, ask:
 ```
 If confirmed: `git push origin master && git push gitlab master`
 
-**Step 2 — Read current version**
+**Step 2 - Read current version**
 
 Read `.tools/repo-release` for the version being promoted.
 
-**Step 3 — Confirm**
+**Step 3 - Confirm**
 
 ```
 Merging master → stable
@@ -62,20 +62,20 @@ Tag       : <version>
 ```
 Stop if not confirmed.
 
-**Step 4 — Merge master → stable**
+**Step 4 - Merge master → stable**
 
 ```bash
 git checkout stable
 git merge master --no-edit -m "chore: merge master into stable for release <version>"
 ```
 
-**Step 5 — Publish stable+noschema+current repos**
+**Step 5 - Publish stable+noschema+current repos**
 
 ```bash
 make publish
 ```
 
-**Step 6 — Propagate to stable-4.x branches**
+**Step 6 - Propagate to stable-4.x branches**
 
 Discover branches:
 ```bash
@@ -93,13 +93,13 @@ git push gitlab stable-4.X
 
 If a merge fails (conflict):
 ```
-⚠ Conflict on stable-4.X — skipped. Resolve manually:
+⚠ Conflict on stable-4.X - skipped. Resolve manually:
   git checkout stable-4.X
   git merge stable
 ```
 Continue with remaining branches (do not stop).
 
-**Step 7 — Create release tag**
+**Step 7 - Create release tag**
 
 ```bash
 git tag "<version>" -m "[release/<version>] stable release"
@@ -107,7 +107,7 @@ git push origin "<version>"
 git push gitlab "<version>"
 ```
 
-**Step 8 — Push stable and return to devel**
+**Step 8 - Push stable and return to devel**
 
 ```bash
 git push origin stable
@@ -115,10 +115,10 @@ git push gitlab stable
 git checkout devel
 ```
 
-**Step 9 — Report**
+**Step 9 - Report**
 
 ```
-✓ stable released — version <version>
+✓ stable released - version <version>
 
 Tag             : <version>
 Published repos : stable, noschema, release-<STABLE_MAINRELEASE>

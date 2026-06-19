@@ -115,7 +115,7 @@ spec:
       prune: true
       selfHeal: true
 ---
-# Deploys GitLab instance in startx-gitlab namespace (disabled by default — requires storage and domain config)
+# Deploys GitLab instance in startx-gitlab namespace (disabled by default - requires storage and domain config)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

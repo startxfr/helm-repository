@@ -18,12 +18,12 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
     uninstall.odf.openshift.io/cleanup-policy: delete
     uninstall.odf.openshift.io/mode: graceful
-  finalizers:
-    - storagecluster.odf.openshift.io
-    - storagecluster.ocs.openshift.io
+  # finalizers:
+  #   - storagecluster.odf.openshift.io
+  #   - storagecluster.ocs.openshift.io
 spec:
   version: {{ .Values.odf.version | default "4.7.0" | quote }}
   arbiter: {}

@@ -66,7 +66,7 @@ helm install cluster-nmstate startx/cluster-nmstate -f https://raw.githubusercon
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-nmstate` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject:
+Deploy `cluster-nmstate` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1

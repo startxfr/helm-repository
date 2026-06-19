@@ -65,7 +65,7 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-acm` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+Deploy `cluster-acm` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The ACM operator and the MultiClusterHub CR both install in `openshift-acm-operator` (ACM requires the MCH in the same namespace as the operator).
 Observability resources deploy in `startx-acm-observability`:
 
@@ -101,8 +101,8 @@ kind: Application
 metadata:
   name: cluster-acm-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: openshift-acm-operator
@@ -130,6 +130,8 @@ kind: Application
 metadata:
   name: cluster-acm-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -157,6 +159,8 @@ kind: Application
 metadata:
   name: cluster-acm-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -172,6 +176,11 @@ spec:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.27
+  ignoreDifferences:
+    - group: operator.open-cluster-management.io
+      kind: MultiClusterHub
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

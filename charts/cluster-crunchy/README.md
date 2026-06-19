@@ -187,8 +187,8 @@ kind: Application
 metadata:
   name: cluster-crunchy-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-crunchy
   source:
@@ -215,6 +215,8 @@ kind: Application
 metadata:
   name: cluster-crunchy-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -243,6 +245,8 @@ kind: Application
 metadata:
   name: cluster-crunchy-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -262,6 +266,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: demo-crunchy
+  ignoreDifferences:
+    - group: postgres-operator.crunchydata.com
+      kind: PostgresCluster
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

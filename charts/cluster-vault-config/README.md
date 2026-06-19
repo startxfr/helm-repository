@@ -174,8 +174,8 @@ kind: Application
 metadata:
   name: cluster-vault-config-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-vault-config
   source:
@@ -203,6 +203,8 @@ kind: Application
 metadata:
   name: cluster-vault-config-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -236,6 +238,8 @@ kind: Application
 metadata:
   name: cluster-vault-config-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -257,6 +261,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-vault-config
+  ignoreDifferences:
+    - group: secretsmanager.hashicorp.com
+      kind: SecretEngineMount
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

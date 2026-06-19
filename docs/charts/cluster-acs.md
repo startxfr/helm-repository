@@ -65,7 +65,7 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-acs` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+Deploy `cluster-acs` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The ACS operator installs in the shared `openshift-operators` namespace. The `Central` CR deploys in `startx-acs`:
 
 ```yaml

@@ -20,8 +20,8 @@ Examples:
 1. Verifies the current branch is `devel` (warns and asks confirmation otherwise)
 2. Shows the chart's current version and proposes the next patch version
 3. Asks for confirmation (version + description) before making any change
-4. Runs `make release CHART=<name>` — bumps Chart.yaml, adds README history row, packages, uploads .tgz to S3
-5. Runs `make publish-devel` — regenerates and uploads `docs/repos/devel/index.yaml`
+4. Runs `make release CHART=<name>` - bumps Chart.yaml, adds README history row, packages, uploads .tgz to S3
+5. Runs `make publish-devel` - regenerates and uploads `docs/repos/devel/index.yaml`
 6. Pushes `devel` to `origin` and `gitlab`
 7. Reports what changed and the new chart version
 
@@ -29,7 +29,7 @@ Examples:
 
 You are executing the release-chart command. Arguments: $ARGUMENTS
 
-**Step 0 — Parse arguments**
+**Step 0 - Parse arguments**
 
 Split `$ARGUMENTS` by spaces:
 - Arg 1 = chart name (required). If missing, stop and ask: "Quel chart voulez-vous releaser ?"
@@ -38,7 +38,7 @@ Split `$ARGUMENTS` by spaces:
 
 Set `CHART_NAME`, `FORCE_VERSION` (empty if not given), `FORCE_DESC` (empty if not given).
 
-**Step 1 — Check branch**
+**Step 1 - Check branch**
 
 Run: `git branch --show-current`
 
@@ -50,11 +50,11 @@ Continue anyway? [y/N]
 ```
 Stop if not confirmed.
 
-**Step 2 — Check chart exists**
+**Step 2 - Check chart exists**
 
 Check that `charts/$CHART_NAME/` exists. If not, list available charts with `./sx-helm list` and stop.
 
-**Step 3 — Show current state and ask confirmation**
+**Step 3 - Show current state and ask confirmation**
 
 Run: `grep '^version:' charts/$CHART_NAME/Chart.yaml`
 
@@ -74,21 +74,21 @@ Proceed? [y/N]
 ```
 Stop if not confirmed.
 
-**Step 4 — Release the chart**
+**Step 4 - Release the chart**
 
 Run:
 ```bash
 INTERACTIVE=false VERSION=<new_version> DESC="<desc>" make release CHART=$CHART_NAME
 ```
 
-**Step 5 — Publish devel repo**
+**Step 5 - Publish devel repo**
 
 Run:
 ```bash
 make publish-devel
 ```
 
-**Step 6 — Push**
+**Step 6 - Push**
 
 Run:
 ```bash
@@ -96,7 +96,7 @@ git push origin devel
 git push gitlab devel
 ```
 
-**Step 7 — Report**
+**Step 7 - Report**
 
 ```
 ✓ $CHART_NAME released to <new_version>

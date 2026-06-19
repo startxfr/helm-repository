@@ -92,8 +92,8 @@ kind: Application
 metadata:
   name: cluster-ptp-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-ptp
   source:
@@ -121,6 +121,8 @@ kind: Application
 metadata:
   name: cluster-ptp-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -148,6 +150,8 @@ kind: Application
 metadata:
   name: cluster-ptp-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -165,6 +169,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: ptp.openshift.io
+      kind: PtpConfig
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

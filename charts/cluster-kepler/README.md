@@ -92,8 +92,8 @@ kind: Application
 metadata:
   name: cluster-kepler-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-kepler
   source:
@@ -120,6 +120,8 @@ kind: Application
 metadata:
   name: cluster-kepler-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

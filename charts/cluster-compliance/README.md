@@ -99,8 +99,8 @@ kind: Application
 metadata:
   name: cluster-compliance-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-compliance
   source:
@@ -130,6 +130,8 @@ kind: Application
 metadata:
   name: cluster-compliance-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -163,6 +165,8 @@ kind: Application
 metadata:
   name: cluster-compliance-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -183,6 +187,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-compliance
+  ignoreDifferences:
+    - group: compliance.openshift.io
+      kind: ScanSetting
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

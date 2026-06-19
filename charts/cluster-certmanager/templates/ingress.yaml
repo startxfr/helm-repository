@@ -15,7 +15,7 @@ metadata:
     app.kubernetes.io/name: "{{- .name | default "default-ingress" -}}-ingress"
   annotations:
     {{- include "cluster-certmanager.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   rules:
   - host: {{ .ingress.host | default "default.example.com" | quote }}

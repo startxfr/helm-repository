@@ -1,4 +1,4 @@
-# Known issues — fix when touching a chart
+# Known issues - fix when touching a chart
 
 ## Wrong `context.app` default in README value tables
 

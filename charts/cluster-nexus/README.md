@@ -42,7 +42,7 @@ Complete deployment with the following characteristics:
 
 - Deploy a **Subscription** named `nexus-repository-ha-operator-certified` in `openshift-operators`
 - Deploy an **OperatorGroup** named `global-operators` in `openshift-operators` (all-namespaces scope)
-- The `project` sub-chart is disabled — `openshift-operators` is a pre-existing system namespace
+- The `project` sub-chart is disabled - `openshift-operators` is a pre-existing system namespace
 
 ```bash
 # base configuration running default configuration
@@ -95,8 +95,8 @@ kind: Application
 metadata:
   name: cluster-nexus-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: openshift-operators
@@ -122,6 +122,8 @@ kind: Application
 metadata:
   name: cluster-nexus-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -147,6 +149,8 @@ kind: Application
 metadata:
   name: cluster-nexus-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -162,6 +166,11 @@ spec:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.27
+  ignoreDifferences:
+    - group: sonatype.com
+      kind: NexusRepo
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

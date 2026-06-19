@@ -1,10 +1,10 @@
-# helm-repository — CLAUDE.md
+# helm-repository - CLAUDE.md
 
 **Language**: English only. Never French or any other language in code, comments, commits, or docs.
 
 ## Overview
 
-`github.com/startxfr/helm-repository` — Helm chart repository for Openshift/Kubernetes, published on GitHub Pages, ReadTheDocs (helm-repository.readthedocs.io) and ArtifactHub.
+`github.com/startxfr/helm-repository` - Helm chart repository for Openshift/Kubernetes, published on GitHub Pages, ReadTheDocs (helm-repository.readthedocs.io) and ArtifactHub.
 
 Three remotes: `origin` (GitHub), `gitlab` (GitLab), `monaco` (AWS CodeCommit).
 
@@ -52,7 +52,7 @@ charts/<name>/
 # ![<name>](<svg-url> "<Family> Chart : <Title>") <Family> Chart : <Title>
 [![Artifacthub](<badge>)](<search-url>)
 
-<One-paragraph description — must match Chart.yaml description>
+<One-paragraph description - must match Chart.yaml description>
 
 This chart is part of the [<family> startx helm chart series](<rtd-url>#<family>-helm-charts)...
 
@@ -83,7 +83,7 @@ more information on how to use these resources.
 | x.y.z   | YYYY-MM-DD | Description |
 ```
 
-**All history table rows must end with a trailing `|`** — rows without it break Markdown table rendering.
+**All history table rows must end with a trailing `|`** - rows without it break Markdown table rendering.
 
 ## values.yaml rules
 
@@ -96,7 +96,7 @@ more information on how to use these resources.
 - `nameOverride` and `versionOverride` appear commented at the top in `chaos-*` and `example-*` charts only
 - **No French words** in comments
 
-## Recurring misspellings — fix on sight
+## Recurring misspellings - fix on sight
 
 | Wrong                      | Correct                  |
 | -------------------------- | ------------------------ |
@@ -121,7 +121,7 @@ See [`.claude/KNOWN_ISSUES.md`](.claude/KNOWN_ISSUES.md) for the full list of re
 
 ## New chart creation
 
-Use the `/new-chart <family>-<short-name>` skill — it guides through all 8 steps (gather inputs, find source, copy, update Chart.yaml + README, clean templates, adjust values, publish to docs, report).
+Use the `/new-chart <family>-<short-name>` skill - it guides through all 8 steps (gather inputs, find source, copy, update Chart.yaml + README, clean templates, adjust values, publish to docs, report).
 
 ## Tooling architecture
 
@@ -172,10 +172,10 @@ Each sub-repo has a matching `docs/repos/<path>/index.yaml` committed in git.
 ```
 sx-helm list                          routerList
 sx-helm version                       routerVersion
-sx-helm publish                       routerPublish          — stable+noschema+release-XX
-sx-helm publish-devel                 routerPublishDevel     — devel sub-repo only
-sx-helm release [auto|-a]             routerRelease          — full flow: bump+merge+tag+push
-sx-helm release-charts                routerReleaseChartsOnly— bump+package only, no git merge
+sx-helm publish                       routerPublish          - stable+noschema+release-XX
+sx-helm publish-devel                 routerPublishDevel     - devel sub-repo only
+sx-helm release [auto|-a]             routerRelease          - full flow: bump+merge+tag+push
+sx-helm release-charts                routerReleaseChartsOnly- bump+package only, no git merge
 sx-helm archive                       routerArchive
 sx-helm archiveLegacy                 routerArchiveLegacy
 sx-helm lint-all                      routerLintAll
@@ -244,8 +244,8 @@ Targets that require `CHART=` are protected by the `_require-chart` guard, which
 ### Release workflow (single chart)
 
 1. `make release CHART=<name> VERSION=<x.y.z> DESC="<one line>"`  
-   — bumps `Chart.yaml` version, replaces all `targetRevision: *` in `README.md`, appends a history row, syncs README to `docs/charts/<name>.md`, signs and packages, uploads `.tgz`+`.prov` to **both** `.reposync/stable/` and `.reposync/<STABLE_MAINRELEASE>/`, and uploads both to S3.
-2. `make publish` — regenerates the Helm index for stable/noschema/current repos and syncs to S3.
+   - bumps `Chart.yaml` version, replaces all `targetRevision: *` in `README.md`, appends a history row, syncs README to `docs/charts/<name>.md`, signs and packages, uploads `.tgz`+`.prov` to **both** `.reposync/stable/` and `.reposync/<STABLE_MAINRELEASE>/`, and uploads both to S3.
+2. `make publish` - regenerates the Helm index for stable/noschema/current repos and syncs to S3.
 3. Commit and push (`devel` → `master` → `stable` → tag).
 
 Auto-increment (no `VERSION=`): patch number is incremented via `chartNextVersion` (awk semver bump in `.tools/cli`).
@@ -261,9 +261,9 @@ Two safe operations available via the Makefile:
 | `sync-pull` | `awsS3SyncDownload` | S3 → local | No |
 | `sync-push` | `awsS3SyncUploadDelete` | local → S3 | **Yes** |
 
-`sync-push` deletes remote files not present locally — use with care. Always `sync-pull` first.
+`sync-push` deletes remote files not present locally - use with care. Always `sync-pull` first.
 
-The low-level `awsS3SyncDownloadDelete` function (local delete on pull) exists but is **not exposed** via any router — it would delete local files not on S3.
+The low-level `awsS3SyncDownloadDelete` function (local delete on pull) exists but is **not exposed** via any router - it would delete local files not on S3.
 
 ---
 
@@ -271,20 +271,20 @@ The low-level `awsS3SyncDownloadDelete` function (local delete on pull) exists b
 
 Slash commands are defined in `.claude/commands/`. Invoke them with `/command-name [args]`.
 
-### Release workflow — staged pipeline
+### Release workflow - staged pipeline
 
 The recommended release flow runs in 4 ordered stages, each a separate skill:
 
 ```
 devel (version bump)
   │
-  ├─ /release-chart <name>    — single chart: bump + S3 upload + publish-devel
+  ├─ /release-chart <name>    - single chart: bump + S3 upload + publish-devel
   │
-  └─ /release-devel           — all charts: bump + S3 upload + publish-devel
+  └─ /release-devel           - all charts: bump + S3 upload + publish-devel
        │
-       └─ /release-master     — merge devel→master + publish + propagate master-4.x
+       └─ /release-master     - merge devel→master + publish + propagate master-4.x
             │
-            └─ /release-stable — merge master→stable + publish + propagate stable-4.x + tag
+            └─ /release-stable - merge master→stable + publish + propagate stable-4.x + tag
 ```
 
 | Skill | Command | What it does |
@@ -297,8 +297,8 @@ devel (version bump)
 
 ### Key distinctions
 
-- `release-charts` (make target / `routerReleaseChartsOnly`) bumps all chart versions **without** merging branches or creating tags — safe to run on devel multiple times
-- `release-all` (make target / `routerRelease`) does the **full** flow: bumps + merges devel→master→stable + tags + pushes — use only for direct one-shot releases
+- `release-charts` (make target / `routerReleaseChartsOnly`) bumps all chart versions **without** merging branches or creating tags - safe to run on devel multiple times
+- `release-all` (make target / `routerRelease`) does the **full** flow: bumps + merges devel→master→stable + tags + pushes - use only for direct one-shot releases
 - `publish` regenerates `stable`, `noschema`, `release-<N>` S3 repos
 - `publish-devel` regenerates only the `devel` S3 pre-release repo
 
@@ -320,22 +320,107 @@ Every `cluster-*` chart README must include a `## Deploy via ArgoCD` section wit
 | Application | `helm.values` enabled flags | Destination namespace | syncPolicy |
 |---|---|---|---|
 | `cluster-xxx-project` | `project.enabled: true` + all others `false` | `openshift-xxx-operator` | `CreateNamespace=true` |
-| `cluster-xxx-operator` | `operator.enabled: true` + all others `false` | `openshift-xxx-operator` | — |
+| `cluster-xxx-operator` | `operator.enabled: true` + all others `false` | `openshift-xxx-operator` | - |
 | `cluster-xxx-app` | `<feature>.enabled: true` + all others `false` | `startx-xxx` | `CreateNamespace=true` |
 
 **Critical**: explicitly set all non-relevant sub-chart enabled flags to `false` in every Application's `helm.values`. Omitting them causes ArgoCD `SharedResourceWarning` when the default values.yaml enables multiple sub-charts.
 
-### ArgoCD AppProject clusterResourceWhitelist
+### Sync-wave ordering (mandatory)
 
-Minimum required cluster-scoped resources: `Namespace`, `OperatorGroup`, `Subscription`, and the operator's CRD kind (e.g. `MustGather.redhatcop.redhat.io`, `Kubecost.charts.kubecost.com`, `MultiClusterHub.operator.open-cluster-management.io`).
+Every Application metadata block **must** carry a `sync-wave` annotation so that ArgoCD respects the creation and deletion order in App-of-Apps patterns:
+
+| Application | Wave | Rationale |
+|---|---|---|
+| `cluster-xxx-project` | `"1"` | Created first (namespace must exist before operator); deleted **last** |
+| `cluster-xxx-operator` | `"2"` | Created after namespace; deleted after app CRs are gone |
+| `cluster-xxx-app` | `"3"` | Created last; deleted **first** so the operator is still alive to process CR finalizers |
+
+```yaml
+metadata:
+  name: cluster-xxx-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  # no finalizer on project: namespace cleans up naturally once contents are deleted
+```
+
+```yaml
+metadata:
+  name: cluster-xxx-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+```
+
+```yaml
+metadata:
+  name: cluster-xxx-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+```
+
+**Deletion order**: `cluster-xxx-app` first → wait for CR cleanup → `cluster-xxx-operator` → `cluster-xxx-project`. Never delete the operator before its CRs — the CR finalizer handler disappears and the namespace is stuck Terminating indefinitely.
 
 ### Cascade-delete finalizer
 
-All Applications must carry:
+`resources-finalizer.argocd.argoproj.io` must be present on `-operator` and `-app` Applications. It must **not** be present on `-project`: the namespace cleans up naturally once managed resources are removed by the other two Applications, and keeping the finalizer on `-project` creates a deadlock when the namespace is slow to terminate.
+
+### ignoreDifferences for operator-managed finalizers
+
+Operators add their own finalizers to CRs after creation (e.g. `storagecluster.odf.openshift.io`, `forklift.konveyor.io/finalizer`). These finalizers are not in the Helm chart and cause permanent OutOfSync. Add `ignoreDifferences` in the `-app` Application spec, **before** `syncPolicy`:
+
 ```yaml
-finalizers:
-  - resources-finalizer.argocd.argoproj.io
+spec:
+  ...
+  ignoreDifferences:
+    - group: <operator-api-group>
+      kind: <CR-kind>
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
+
+Common mappings already applied in all chart READMEs:
+
+| Chart | group | kind |
+|---|---|---|
+| cluster-odf | `ocs.openshift.io` | `StorageCluster` |
+| cluster-mtv | `forklift.konveyor.io` | `ForkliftController` |
+| cluster-acm | `operator.open-cluster-management.io` | `MultiClusterHub` |
+| cluster-kafka | `kafka.strimzi.io` | `Kafka` |
+| cluster-istio | `maistra.io` | `ServiceMeshControlPlane` |
+| cluster-logging | `logging.openshift.io` | `ClusterLogging` |
+| cluster-sso | `keycloak.org` | `Keycloak` |
+| cluster-quay | `quay.redhat.com` | `QuayRegistry` |
+
+### CR template sync-wave
+
+Inside chart templates, the main CR object (what the operator reconciles) must be at wave `"15"` — **above** the `consolePlugin` wave (`"10"` in the `operator` chart) — so that if operator and app are deployed in the same Application, the CR is never created before the operator's console plugin:
+
+| Resource type | Wave |
+|---|---|
+| Namespace / Project | `-10` |
+| OperatorGroup | `-6` |
+| Subscription / CSV | `-5` |
+| Secrets, RBAC, ServiceAccount | `1` |
+| Jobs (e.g. node labeler) | `5` |
+| ConsolePlugin | `10` |
+| Main CR (StorageCluster, ForkliftController, Kafka…) | `15` |
+| Secondary CRs (topics, realms, clients…) | `30`–`50` |
+
+Do **not** declare `finalizers` in CR templates (e.g. `storageCluster.yaml`). Finalizers are managed by the operator controller — pre-setting them in Helm means they persist if the operator is deleted first, blocking namespace cleanup forever.
+
+### ArgoCD AppProject clusterResourceWhitelist
+
+Minimum required cluster-scoped resources: `Namespace`, `OperatorGroup`, `Subscription`, and the operator's CRD kind (e.g. `MustGather.redhatcop.redhat.io`, `Kubecost.charts.kubecost.com`, `MultiClusterHub.operator.open-cluster-management.io`).
 
 ### SharedResourceWarning fix
 
@@ -349,13 +434,34 @@ helm:
       enabled: true
 ```
 
-### known issues / OLM drift
+### Emergency cleanup: stuck Applications or Terminating namespaces
 
-- OperatorGroup gets extra annotations from OLM after creation → ArgoCD shows OutOfSync on OperatorGroup — this is **expected/normal**, do not try to fix it.
-- `additionalLabels` defined as a YAML map in values.yaml causes `wrong type for value; expected string; got map` in namespace templates — override with `additionalLabels: ""` in the Application helm values.
-- For operators deploying in `openshift-operators` (shared namespace): `global-operators` OperatorGroup already exists — set `operator.operatorGroup.enabled: false` in the `cluster-xxx-operator` Application to avoid OLM conflict (two OGs block CSV resolution entirely).
+When operators are deleted before their CRs (e.g. mass-delete scenario), CR finalizers become orphaned and namespaces get stuck Terminating. Fix in order:
+
+```bash
+# 1. Remove finalizer from the stuck CR
+oc patch <cr-kind> <cr-name> -n <namespace> \
+  --type=json -p '[{"op":"remove","path":"/metadata/finalizers"}]'
+
+# 2. Remove resources-finalizer from stuck Applications
+oc get applications.argoproj.io -n openshift-gitops -o json | \
+  python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+for item in d['items']:
+    if item['metadata'].get('deletionTimestamp') and item['metadata'].get('finalizers'):
+        print(item['metadata']['name'])
+" | xargs -I{} oc patch application.argoproj.io {} -n openshift-gitops \
+  --type=json -p '[{"op":"remove","path":"/metadata/finalizers"}]'
+```
+
+### Known issues / OLM drift
+
+- OperatorGroup gets extra annotations from OLM after creation → ArgoCD shows OutOfSync on OperatorGroup - this is **expected/normal**, do not try to fix it.
+- `additionalLabels` defined as a YAML map in values.yaml causes `wrong type for value; expected string; got map` in namespace templates - override with `additionalLabels: ""` in the Application helm values.
+- For operators deploying in `openshift-operators` (shared namespace): `global-operators` OperatorGroup already exists - set `operator.operatorGroup.enabled: false` in the `cluster-xxx-operator` Application to avoid OLM conflict (two OGs block CSV resolution entirely).
 - `cluster-vault` (HashiCorp Vault chart): noinfra sets `vault.global.enabled: false` which disables ALL vault components. Must override with `vault.global.enabled: true` in the vault-app inline values, otherwise ArgoCD renders 0 resources.
-- `vault-config-operator` only supports `AllNamespaces` install mode — must use `openshift-operators` namespace with `operator.operatorGroup.enabled: false` and override `operator.subscription.namespace: "openshift-operators"` in inline values. Dedicated OG causes `UnsupportedOperatorGroup` CSV failure.
+- `vault-config-operator` only supports `AllNamespaces` install mode - must use `openshift-operators` namespace with `operator.operatorGroup.enabled: false` and override `operator.subscription.namespace: "openshift-operators"` in inline values. Dedicated OG causes `UnsupportedOperatorGroup` CSV failure.
 - AppProjects manually applied to `openshift-gitops` can be pruned by background processes (app-of-apps or ArgoCD itself). If Applications report `InvalidSpecError: project does not exist`, re-apply the AppProject and force-refresh the Application.
 
 ### Charts with ArgoCD examples (done)
@@ -364,7 +470,7 @@ helm:
 
 ### Charts pending ArgoCD examples
 
-`cluster-mongo` (excluded — legacy non-standard README format)
+`cluster-mongo` (excluded - legacy non-standard README format)
 
 ### Atomic update process per chart
 
@@ -372,7 +478,7 @@ For each chart to update, do these steps in order:
 1. Update `appVersion` in `Chart.yaml` to current upstream operator version
 2. Update version, channel, namespace names in `values.yaml` (and all `values-startx*.yaml`)
 3. Add `## ArgoCD deployment` section to `README.md` with AppProject + 3 Applications, then `cp README.md docs/charts/<name>.md`
-4. Ask for approval, then run `./sx-helm <chart-name> release && ./sx-helm publish` — **this publishes the chart to S3 and updates the index**
+4. Ask for approval, then run `./sx-helm <chart-name> release && ./sx-helm publish` - **this publishes the chart to S3 and updates the index**
 5. Deploy the 3 ArgoCD Applications on the test cluster using the **newly published version** (`targetRevision` set by auto-update in release)
 6. Verify sync succeeds; adjust values/templates if needed, then re-release if needed
 7. Update CLAUDE.md charts-done list
@@ -387,13 +493,13 @@ For each chart to update, do these steps in order:
 
 | Chart | Tool | Role |
 | ----- | ---- | ---- |
-| `chaos-cerberus` | Cerberus | Watchdog — global cluster health check via API |
-| `chaos-kraken` | Kraken | Chaos engine — injects scenarios (node stop, pod kill, network partition…) |
-| `chaos-litmus` | Litmus | Chaos engineering platform — portal + workflows + scheduler |
-| `chaos-mesh` | Chaos Mesh | GUI-driven chaos engine — PodChaos, NetworkChaos, TimeChaos CRs |
-| `chaos-monkey` | Kube-monkey | Random pod terminator — opt-in via Deployment labels during business hours |
+| `chaos-cerberus` | Cerberus | Watchdog - global cluster health check via API |
+| `chaos-kraken` | Kraken | Chaos engine - injects scenarios (node stop, pod kill, network partition…) |
+| `chaos-litmus` | Litmus | Chaos engineering platform - portal + workflows + scheduler |
+| `chaos-mesh` | Chaos Mesh | GUI-driven chaos engine - PodChaos, NetworkChaos, TimeChaos CRs |
+| `chaos-monkey` | Kube-monkey | Random pod terminator - opt-in via Deployment labels during business hours |
 
-Descriptions that have appeared wrongly as "watchdog who act as a global cluster healthcheck" for litmus, mesh, and monkey — fix on sight.
+Descriptions that have appeared wrongly as "watchdog who act as a global cluster healthcheck" for litmus, mesh, and monkey - fix on sight.
 
 ### README ## Usage examples section
 

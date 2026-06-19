@@ -76,7 +76,7 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-argocd` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+Deploy `cluster-argocd` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The GitOps operator installs in the shared `openshift-operators` namespace. The `ArgoCD` CR deploys in `openshift-gitops`:
 
 ```yaml
@@ -111,8 +111,8 @@ kind: Application
 metadata:
   name: cluster-argocd-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: openshift-gitops
@@ -140,6 +140,8 @@ kind: Application
 metadata:
   name: cluster-argocd-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -169,6 +171,8 @@ kind: Application
 metadata:
   name: cluster-argocd-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -184,6 +188,11 @@ spec:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.27
+  ignoreDifferences:
+    - group: argoproj.io
+      kind: ArgoCD
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

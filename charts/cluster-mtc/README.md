@@ -92,8 +92,8 @@ kind: Application
 metadata:
   name: cluster-mtc-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-mtc
   source:
@@ -119,6 +119,8 @@ kind: Application
 metadata:
   name: cluster-mtc-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -146,6 +148,8 @@ kind: Application
 metadata:
   name: cluster-mtc-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -163,6 +167,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: migration.openshift.io
+      kind: MigrationController
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

@@ -175,8 +175,8 @@ kind: Application
 metadata:
   name: cluster-vault-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-vault
   source:
@@ -204,6 +204,8 @@ kind: Application
 metadata:
   name: cluster-vault-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -225,6 +227,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-vault
+  ignoreDifferences:
+    - group: vault.banzaicloud.com
+      kind: Vault
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

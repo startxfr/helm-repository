@@ -22,7 +22,7 @@ metadata:
     postgresql: "{{- $name -}}"
   annotations:
     {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "15"
 data:
   ada_hba.conf: |-
     host all all 0.0.0.0/0 trust
@@ -47,7 +47,7 @@ metadata:
     postgresql: "{{- $name -}}"
   annotations:
     {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-wave: "25"
 spec:
   {{- if .istioSidecarEnabled }}
   metadata:
@@ -180,7 +180,7 @@ metadata:
     postgresql: "{{- $name -}}"
   annotations:
     {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "15"
 data:
   init.sql: |-
     {{- .initScript | nindent 4 }}

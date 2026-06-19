@@ -92,8 +92,8 @@ kind: Application
 metadata:
   name: cluster-maintenance-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-maintenance
   source:
@@ -119,6 +119,8 @@ kind: Application
 metadata:
   name: cluster-maintenance-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -146,6 +148,8 @@ kind: Application
 metadata:
   name: cluster-maintenance-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -163,6 +167,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: nodemaintenance.medik8s.io
+      kind: NodeMaintenance
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true
