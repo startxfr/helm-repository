@@ -67,7 +67,9 @@ helm install cluster-3scale startx/cluster-3scale -f https://raw.githubuserconte
 ### Deploy via ArgoCD Application
 
 Deploy `cluster-3scale` using three dedicated ArgoCD Applications sharing the same AppProject.
-The 3scale operator runs in `openshift-operators` (all-namespaces scope); APIManager instances are deployed in `startx-3scale`:
+The 3scale operator runs in `openshift-operators` (all-namespaces scope); APIManager instances are deployed in `startx-3scale`.
+
+> **3scale 2.16+ requires external databases.** The optional `clusterRedis` and `clusterCrunchy` sub-chart dependencies deploy a Redis cluster and a CrunchyDB PostgreSQL cluster, and `externalComponents` wires them into the APIManager via secrets (`system-redis`, `backend-redis`, `system-database`, `zync`).
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -83,19 +85,19 @@ spec:
     - server: https://kubernetes.default.svc
       namespace: openshift-operators
     - server: https://kubernetes.default.svc
+      namespace: openshift-crunchy-pgo
+    - server: https://kubernetes.default.svc
       namespace: startx-3scale
     - server: https://kubernetes.default.svc
-      namespace: '*'
+      namespace: startx-crunchy
   clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-    - group: operators.coreos.com
-      kind: OperatorGroup
-    - group: operators.coreos.com
-      kind: Subscription
-    - group: apps.3scale.net
-      kind: APIManager
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
 ---
+# Wave 1 — namespaces: startx-3scale (3scale), startx-crunchy (postgres)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -104,13 +106,14 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
-  destination:
-    namespace: startx-3scale
-    server: https://kubernetes.default.svc
   project: cluster-3scale
   source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-3scale
+    targetRevision: 21.3.56
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -118,15 +121,35 @@ spec:
           enabled: false
         manager:
           enabled: false
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
+        externalComponents:
+          enabled: false
+        clusterRedis:
+          enabled: false
+        clusterCrunchy:
+          enabled: true
+          project:
+            enabled: true
+          operator:
+            enabled: false
+          cluster:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-3scale
+  ignoreDifferences:
+    - group: ""
+      kind: ServiceAccount
+      name: default
+      namespace: startx-3scale
+      jsonPointers:
+        - /imagePullSecrets
+        - /secrets
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
 ---
+# Wave 5 — operators: 3scale (openshift-operators) + redis + crunchy
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -137,13 +160,14 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    namespace: openshift-operators
-    server: https://kubernetes.default.svc
   project: cluster-3scale
   source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-3scale
+    targetRevision: 21.3.56
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: false
@@ -151,13 +175,33 @@ spec:
           enabled: true
         manager:
           enabled: false
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
+        externalComponents:
+          enabled: false
+        clusterRedis:
+          enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: true
+          cluster:
+            enabled: false
+        clusterCrunchy:
+          enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: true
+          cluster:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-operators
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
 ---
+# Wave 10 — apps: Redis cluster + PostgreSQL cluster + 3scale APIManager + secrets
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -168,24 +212,46 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    namespace: startx-3scale
-    server: https://kubernetes.default.svc
   project: cluster-3scale
   source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-3scale
+    targetRevision: 21.3.56
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: false
-          project:
-            name: "startx-3scale"
         operator:
           enabled: false
         manager:
           enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
+        externalComponents:
+          enabled: true
+          redis:
+            enabled: true
+          database:
+            enabled: true
+        clusterRedis:
+          enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          cluster:
+            enabled: true
+        clusterCrunchy:
+          enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          cluster:
+            enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-3scale
   ignoreDifferences:
     - group: apps.3scale.net
       kind: APIManager
@@ -195,15 +261,17 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
 ```
 
 Apply with:
 
 ```bash
-kubectl apply -f cluster-3scale-argocd.yaml -n openshift-gitops
+oc apply -f cluster-3scale-argocd.yaml -n openshift-gitops
 ```
+
+> **Passwords**: update `externalComponents.database.password`, `externalComponents.zync.password`, and `externalComponents.zync.secretKeyBase` in your ArgoCD Application values (or use a Sealed Secret / ExternalSecret). The `initScript` in `clusterCrunchy.cluster.list[0]` must use the **same passwords**.
+
+> **Node selector**: the 3scale operator deployment requests `node-role.kubernetes.io/infra` nodes. On clusters without dedicated infra nodes, set `operator.subscription.operator.config.infra: false` in the `-operator` Application values.
 
 ## History
 
@@ -227,3 +295,5 @@ kubectl apply -f cluster-3scale-argocd.yaml -n openshift-gitops
 | 21.3.12 | 2026-06-18 | Improve cluster-3scale options |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.56 | 2026-06-19 | Add cluster-redis/cluster-crunchy sub-charts and externalComponents support for 3scale 2.16+ |
+| 21.3.56 | 2026-06-19 | publish stable update for the full repository |

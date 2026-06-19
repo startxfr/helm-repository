@@ -23,24 +23,27 @@ spec:
   appLabel: 3scale-api-management
   imageStreamTagImportInsecure: false
   resourceRequirementsEnabled: true
+{{- if .Values.externalComponents.enabled }}
+  externalComponents:
+    system:
+      database: {{ .Values.externalComponents.database.enabled }}
+      redis: {{ .Values.externalComponents.redis.enabled }}
+    backend:
+      redis: {{ .Values.externalComponents.redis.enabled }}
+{{- end }}
   system:
     appSpec:
       replicas: 1
     sidekiqSpec:
       replicas: 1
-    # sphinxSpec: 
-    #   replicas: 1
     fileStorage:
       persistentVolumeClaim:
-        storageClassName: startx-odf-fs-retain
+        storageClassName: {{ .Values.manager.fileStorageClass | default "startx-odf-cephfs" | quote }}
   zync:
     appSpec:
       replicas: 1
     queSpec:
       replicas: 1
-    # fileStorage:
-    #   persistentVolumeClaim:
-    #     storageClassName: gp3-csi
   backend:
     cronSpec:
       replicas: 1
@@ -48,9 +51,6 @@ spec:
       replicas: 1
     workerSpec:
       replicas: 1
-    # fileStorage:
-    #   persistentVolumeClaim:
-    #     storageClassName: gp3-csi
   apicast:
     managementAPI: status
     openSSLVerify: false
@@ -60,7 +60,4 @@ spec:
       replicas: 1
     productionSpec:
       replicas: 1
-    # fileStorage:
-    #   persistentVolumeClaim:
-    #     storageClassName: gp3-csi
 {{- end -}}

@@ -21,6 +21,79 @@ manager:
   enabled: true
   # Activate the manager as a helm hook
   hooked: false
+  # StorageClass for system fileStorage PVC (must be a RWX / CephFS class)
+  fileStorageClass: "startx-odf-cephfs"
+
+# External components for 3scale APIManager (required for threescale-2.16+)
+# Enable this when deploying clusterRedis and/or clusterCrunchy dependencies
+externalComponents:
+  # Master switch — sets spec.externalComponents in APIManager and creates connection secrets
+  enabled: false
+  redis:
+    # Set true to use an external Redis (backend-redis + system-redis secrets)
+    enabled: false
+    # FQDN of the Redis leader service
+    host: "default-redis-leader.default.svc.cluster.local"
+    port: "6379"
+    password: ""
+    # Redis DB indexes (0=backend-storage, 1=system, 2=backend-queues)
+    backendStorageDb: "0"
+    systemDb: "1"
+    backendQueuesDb: "2"
+  database:
+    # Set true to use an external PostgreSQL for system-database secret
+    enabled: false
+    host: "default-db-primary.default.svc.cluster.local"
+    port: "5432"
+    name: "3scale"
+    user: "3scale"
+    password: "changeme"
+  zync:
+    # PostgreSQL for zync secret (defaults to same host as database if not overridden)
+    host: ""
+    port: "5432"
+    name: "zync"
+    user: "zync"
+    password: "changeme"
+    secretKeyBase: "changeme_zync_secret_key_base_min_30_chars"
+
+# Optional: deploy a Redis cluster as a sub-dependency (Opstree operator required)
+clusterRedis:
+  enabled: false
+  context:
+    scope: myscope
+    cluster: default
+    environment: myenv
+    component: redis
+    app: default-redis
+    version: "0.15.1"
+  project:
+    enabled: false
+  operator:
+    enabled: false
+  cluster:
+    enabled: false
+    list: []
+
+# Optional: deploy a CrunchyDB PostgreSQL cluster as a sub-dependency
+clusterCrunchy:
+  enabled: false
+  context:
+    scope: myscope
+    cluster: default
+    environment: myenv
+    component: crunchy
+    app: default-crunchy
+    version: "5.8.7"
+  project:
+    enabled: false
+    project:
+      name: "startx-crunchy"
+  operator:
+    enabled: false
+  cluster:
+    enabled: false
+    list: []
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
@@ -76,7 +149,7 @@ operator:
         name: redhat-operators
         namespace: openshift-marketplace
       config: 
-        infra: true
+        infra: false
   operatorGroup:
     enabled: false
     target: "all-ns"
