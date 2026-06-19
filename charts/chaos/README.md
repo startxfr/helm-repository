@@ -93,7 +93,7 @@ destination:
 project: default
 source:
   repoURL: 'https://helm-repository.readthedocs.io/en/latest/repos/stable'
-  targetRevision: 21.3.27
+  targetRevision: 21.3.55
   chart: chaos
   helm:
     values:
@@ -307,3 +307,4 @@ helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |
