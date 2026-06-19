@@ -2,7 +2,7 @@
 {{- $namespace := .Values.project.project.name | default "openshift-storage" -}}
 ---
 kind: StorageCluster
-apiVersion: odf.openshift.io/v1
+apiVersion: ocs.openshift.io/v1
 metadata:
   name: {{ .Values.odf.name | default "default" | quote }}
   namespace: "{{- $namespace -}}"

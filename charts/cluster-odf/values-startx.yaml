@@ -78,7 +78,7 @@ operator:
     spec: |
       backend:
         service:
-          basePath: /
+          basePath: /compatibility/
           name: odf-console-service
           namespace: openshift-storage
           port: 9001
@@ -95,9 +95,25 @@ operator:
               namespace: openshift-storage
               port: 8888
             type: Service
+        - alias: rosa-prometheus
+          authorization: UserToken
+          endpoint:
+            service:
+              name: prometheus
+              namespace: openshift-storage
+              port: 9339
+            type: Service
+        - alias: s3
+          authorization: None
+          endpoint:
+            service:
+              name: s3
+              namespace: openshift-storage
+              port: 443
+            type: Service
   operatorGroup:
     enabled: true
     hooked: false
     name: "openshift-storage"
     namespace: "openshift-storage"
-    providedAPIs: "BackingStore.v1alpha1.noobaa.io,BucketClass.v1alpha1.noobaa.io,CephBlockPool.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephFilesystem.v1.ceph.rook.io,CephFilesystemMirror.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectRealm.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,CephObjectZone.v1.ceph.rook.io,CephObjectZoneGroup.v1.ceph.rook.io,CephRBDMirror.v1.ceph.rook.io,NamespaceStore.v1alpha1.noobaa.io,NooBaa.v1alpha1.noobaa.io,ODFInitialization.v1.odf.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,StorageCluster.v1.odf.openshift.io,StorageSystem.v1alpha1.odf.openshift.io,VolumeReplication.v1alpha1.replication.storage.openshift.io,VolumeReplicationClass.v1alpha1.replication.storage.openshift.io"
+    providedAPIs: "BackingStore.v1alpha1.noobaa.io,Backup.v1.postgresql.cnpg.noobaa.io,BucketClass.v1alpha1.noobaa.io,CSIAddonsNode.v1alpha1.csiaddons.openshift.io,CephBlockPool.v1.ceph.rook.io,CephBlockPoolRadosNamespace.v1.ceph.rook.io,CephBucketNotification.v1.ceph.rook.io,CephBucketTopic.v1.ceph.rook.io,CephCOSIDriver.v1.ceph.rook.io,CephClient.v1.ceph.rook.io,CephCluster.v1.ceph.rook.io,CephConnection.v1alpha1.csi.ceph.io,CephFilesystem.v1.ceph.rook.io,CephFilesystemMirror.v1.ceph.rook.io,CephFilesystemSubVolumeGroup.v1.ceph.rook.io,CephNFS.v1.ceph.rook.io,CephObjectRealm.v1.ceph.rook.io,CephObjectStore.v1.ceph.rook.io,CephObjectStoreUser.v1.ceph.rook.io,CephObjectZone.v1.ceph.rook.io,CephObjectZoneGroup.v1.ceph.rook.io,CephRBDMirror.v1.ceph.rook.io,ClientProfile.v1alpha1.csi.ceph.io,ClientProfileMapping.v1alpha1.csi.ceph.io,Cluster.v1.postgresql.cnpg.noobaa.io,ClusterImageCatalog.v1.postgresql.cnpg.noobaa.io,Database.v1.postgresql.cnpg.noobaa.io,Driver.v1alpha1.csi.ceph.io,EncryptionKeyRotationCronJob.v1alpha1.csiaddons.openshift.io,EncryptionKeyRotationJob.v1alpha1.csiaddons.openshift.io,FailoverQuorum.v1.postgresql.cnpg.noobaa.io,ImageCatalog.v1.postgresql.cnpg.noobaa.io,NamespaceStore.v1alpha1.noobaa.io,NetworkFence.v1alpha1.csiaddons.openshift.io,NetworkFenceClass.v1alpha1.csiaddons.openshift.io,NooBaa.v1alpha1.noobaa.io,NooBaaAccount.v1alpha1.noobaa.io,OCSInitialization.v1.ocs.openshift.io,ObjectBucket.v1alpha1.objectbucket.io,ObjectBucketClaim.v1alpha1.objectbucket.io,OperatorConfig.v1alpha1.csi.ceph.io,Pooler.v1.postgresql.cnpg.noobaa.io,Publication.v1.postgresql.cnpg.noobaa.io,Recipe.v1alpha1.ramendr.openshift.io,ReclaimSpaceCronJob.v1alpha1.csiaddons.openshift.io,ReclaimSpaceJob.v1alpha1.csiaddons.openshift.io,ScheduledBackup.v1.postgresql.cnpg.noobaa.io,StorageAutoScaler.v1.ocs.openshift.io,StorageClient.v1alpha1.ocs.openshift.io,StorageCluster.v1.ocs.openshift.io,StorageClusterPeer.v1.ocs.openshift.io,StorageConsumer.v1alpha1.ocs.openshift.io,Subscription.v1.postgresql.cnpg.noobaa.io,VolumeGroupReplication.v1alpha1.replication.storage.openshift.io,VolumeGroupReplicationClass.v1alpha1.replication.storage.openshift.io,VolumeGroupReplicationContent.v1alpha1.replication.storage.openshift.io,VolumeReplication.v1alpha1.replication.storage.openshift.io,VolumeReplicationClass.v1alpha1.replication.storage.openshift.io"
