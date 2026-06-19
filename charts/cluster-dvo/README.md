@@ -100,8 +100,8 @@ kind: Application
 metadata:
   name: cluster-dvo-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-dvo
   source:
@@ -128,6 +128,8 @@ kind: Application
 metadata:
   name: cluster-dvo-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -156,6 +158,8 @@ kind: Application
 metadata:
   name: cluster-dvo-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -173,6 +177,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: deployment-validation-operator
+  ignoreDifferences:
+    - group: grafana.integreatly.org
+      kind: Grafana
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

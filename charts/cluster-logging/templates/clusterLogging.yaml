@@ -17,7 +17,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "15"
 spec:
   managementState: {{ .Values.logging.managementState | default "Managed" | quote }}
   {{- if .Values.logging.elasticsearch }}

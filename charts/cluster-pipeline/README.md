@@ -98,8 +98,8 @@ kind: Application
 metadata:
   name: cluster-pipeline-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-pipeline
   source:
@@ -127,6 +127,8 @@ kind: Application
 metadata:
   name: cluster-pipeline-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

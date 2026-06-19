@@ -115,8 +115,8 @@ kind: Application
 metadata:
   name: cluster-certmanager-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-certmanager
   source:
@@ -142,6 +142,8 @@ kind: Application
 metadata:
   name: cluster-certmanager-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -173,6 +175,8 @@ kind: Application
 metadata:
   name: cluster-certmanager-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -192,6 +196,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: rhcertmanager-operator
+  ignoreDifferences:
+    - group: cert-manager.io
+      kind: Certificate
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

@@ -125,8 +125,8 @@ kind: Application
 metadata:
   name: cluster-istio-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-istio
   source:
@@ -157,6 +157,8 @@ kind: Application
 metadata:
   name: cluster-istio-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -195,6 +197,8 @@ kind: Application
 metadata:
   name: cluster-istio-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -212,6 +216,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-istio
+  ignoreDifferences:
+    - group: maistra.io
+      kind: ServiceMeshControlPlane
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

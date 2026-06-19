@@ -93,8 +93,8 @@ kind: Application
 metadata:
   name: cluster-mtr-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-mtr
   source:
@@ -120,6 +120,8 @@ kind: Application
 metadata:
   name: cluster-mtr-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -147,6 +149,8 @@ kind: Application
 metadata:
   name: cluster-mtr-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -164,6 +168,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: windup.jboss.org
+      kind: Windup
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

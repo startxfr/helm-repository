@@ -93,8 +93,8 @@ kind: Application
 metadata:
   name: cluster-gitlab-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-gitlab
   source:
@@ -121,6 +121,8 @@ kind: Application
 metadata:
   name: cluster-gitlab-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -138,6 +140,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-gitlab
+  ignoreDifferences:
+    - group: apps.gitlab.com
+      kind: GitLab
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

@@ -97,8 +97,8 @@ kind: Application
 metadata:
   name: cluster-mustgather-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: openshift-mustgather-operator
@@ -124,6 +124,8 @@ kind: Application
 metadata:
   name: cluster-mustgather-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -149,6 +151,8 @@ kind: Application
 metadata:
   name: cluster-mustgather-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -164,6 +168,11 @@ spec:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.27
+  ignoreDifferences:
+    - group: managed.openshift.io
+      kind: MustGather
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

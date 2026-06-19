@@ -92,8 +92,8 @@ kind: Application
 metadata:
   name: cluster-quay-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-quay
   source:
@@ -121,6 +121,8 @@ kind: Application
 metadata:
   name: cluster-quay-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -148,6 +150,8 @@ kind: Application
 metadata:
   name: cluster-quay-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -168,6 +172,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: quay.redhat.com
+      kind: QuayRegistry
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

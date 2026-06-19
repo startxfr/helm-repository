@@ -93,8 +93,8 @@ kind: Application
 metadata:
   name: cluster-kargo-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-kargo
   source:
@@ -123,6 +123,8 @@ kind: Application
 metadata:
   name: cluster-kargo-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -142,6 +144,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: kargo-system
+  ignoreDifferences:
+    - group: kargo.akuity.io
+      kind: Project
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

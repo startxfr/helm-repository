@@ -97,6 +97,8 @@ kind: Application
 metadata:
   name: cluster-storage-efs-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -128,6 +130,8 @@ kind: Application
 metadata:
   name: cluster-storage-efs-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

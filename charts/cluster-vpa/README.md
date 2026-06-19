@@ -92,8 +92,8 @@ kind: Application
 metadata:
   name: cluster-vpa-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-vpa
   source:
@@ -121,6 +121,8 @@ kind: Application
 metadata:
   name: cluster-vpa-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -150,6 +152,8 @@ kind: Application
 metadata:
   name: cluster-vpa-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -171,6 +175,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-vertical-pod-autoscaler
+  ignoreDifferences:
+    - group: autoscaling.k8s.io
+      kind: VerticalPodAutoscaler
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

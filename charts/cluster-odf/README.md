@@ -88,15 +88,18 @@ spec:
 
 ### Applications
 
+> **Deletion order**: always delete in reverse creation order — `cluster-odf-app` first (wait for StorageCluster cleanup), then `cluster-odf-operator`, then `cluster-odf-project`. The sync-waves below enforce this order automatically in an App-of-Apps pattern.
+
 ```yaml
 ---
+# Wave 1 — created first, deleted LAST (namespace cleanup happens naturally once contents are gone)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cluster-odf-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-odf
   source:
@@ -119,11 +122,14 @@ spec:
       prune: true
       selfHeal: true
 ---
+# Wave 2 — operator deployed after namespace exists, deleted after StorageCluster is gone
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cluster-odf-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -146,11 +152,14 @@ spec:
       prune: true
       selfHeal: true
 ---
+# Wave 3 — created last, deleted FIRST so the ODF operator is still alive to process StorageCluster finalizers
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cluster-odf-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -165,11 +174,18 @@ spec:
       values: |
         odf:
           enabled: true
+          nodeLabeler:
+            enabled: false
         operator:
           enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: ocs.openshift.io
+      kind: StorageCluster
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

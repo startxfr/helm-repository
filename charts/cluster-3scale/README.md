@@ -101,8 +101,8 @@ kind: Application
 metadata:
   name: cluster-3scale-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: startx-3scale
@@ -132,6 +132,8 @@ kind: Application
 metadata:
   name: cluster-3scale-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -161,6 +163,8 @@ kind: Application
 metadata:
   name: cluster-3scale-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -182,6 +186,11 @@ spec:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.27
+  ignoreDifferences:
+    - group: apps.3scale.net
+      kind: APIManager
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

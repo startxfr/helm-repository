@@ -100,8 +100,8 @@ kind: Application
 metadata:
   name: cluster-couchbase-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-couchbase
   source:
@@ -130,6 +130,8 @@ kind: Application
 metadata:
   name: cluster-couchbase-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -160,6 +162,8 @@ kind: Application
 metadata:
   name: cluster-couchbase-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -179,6 +183,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-startx-couchbase
+  ignoreDifferences:
+    - group: couchbase.com
+      kind: CouchbaseCluster
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

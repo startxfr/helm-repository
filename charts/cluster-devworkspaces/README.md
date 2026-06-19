@@ -101,8 +101,8 @@ kind: Application
 metadata:
   name: cluster-devworkspaces-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-devworkspaces
   source:
@@ -129,6 +129,8 @@ kind: Application
 metadata:
   name: cluster-devworkspaces-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -161,6 +163,8 @@ kind: Application
 metadata:
   name: cluster-devworkspaces-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -178,6 +182,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-devworkspaces
+  ignoreDifferences:
+    - group: workspace.devfile.io
+      kind: DevWorkspace
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true
