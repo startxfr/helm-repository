@@ -153,6 +153,8 @@ spec:
   destinations:
     - namespace: openshift-gitops
       server: https://kubernetes.default.svc
+    - namespace: openshift-operators
+      server: https://kubernetes.default.svc
     - namespace: startx-vault-config
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
@@ -179,7 +181,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-vault-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -208,7 +210,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-vault-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -217,9 +219,13 @@ spec:
           enabled: false
         operator:
           enabled: true
+          operatorGroup:
+            enabled: false
+          subscription:
+            namespace: "openshift-operators"
   destination:
     server: https://kubernetes.default.svc
-    namespace: startx-vault-config
+    namespace: openshift-operators
   syncPolicy:
     automated:
       prune: true
@@ -237,7 +243,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-vault-config
-    targetRevision: 21.3.13
+    targetRevision: 21.3.14
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -502,3 +508,4 @@ spec:
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.13 | 2026-06-19 | Improve cluster-vault-config options |
+| 21.3.14 | 2026-06-19 | Improve cluster-vault-config options |
