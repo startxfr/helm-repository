@@ -139,6 +139,96 @@ Configuration of startx properties with the following characteristics :
 helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-vault
+  namespace: openshift-gitops
+spec:
+  description: Deploy HashiCorp Vault in startx-vault namespace
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: startx-vault
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-vault-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-vault
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-vault
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        vault:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-vault-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-vault
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-vault
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        vault:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                            |
@@ -448,3 +538,4 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.13 | 2026-06-19 | Improve cluster-vault options |
