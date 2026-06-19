@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/name: "{{ $name }}-consolePlugin"
   annotations:
     {{- include "operator.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   {{- $spec | nindent 2 }}
 {{- end }}{{- end }}{{- end }}

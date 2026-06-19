@@ -20,7 +20,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   {{- $spec | nindent 2 }}
 {{- if .Values.kubecost.enabledRoute }}
@@ -35,7 +35,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-costanalyzer"
   annotations:
     {{- include "cluster-kubecost.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "40"
+    argocd.argoproj.io/sync-wave: "50"
 spec:
   path: /
   to:

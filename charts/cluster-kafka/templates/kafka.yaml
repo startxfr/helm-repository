@@ -14,7 +14,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-kafka"
   annotations:
     {{- include "cluster-kafka.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-wave: "25"
 spec:
   {{- .spec | default "{}" | nindent 2 }}
 {{ end }}

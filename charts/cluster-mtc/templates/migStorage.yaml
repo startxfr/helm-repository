@@ -17,7 +17,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}"
   annotations:
     {{- include "cluster-mtc.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   backupStorageConfig:
     awsBucketName: {{ .bucketName | default "my-bucket-name" | quote }}
@@ -41,7 +41,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}"
   annotations:
     {{- include "cluster-mtc.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
 type: Opaque
 stringData:
   aws-access-key-id: {{ .accessKey | default "AAAAAAAAAA" | quote }}

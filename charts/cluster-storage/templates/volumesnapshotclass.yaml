@@ -16,7 +16,7 @@ metadata:
     {{- if .isDefault }}
     snapshot.storage.kubernetes.io/is-default-class: 'true'
     {{- end }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
 driver: {{ .provisioner | default "kubernetes.io/aws-ebs" | quote }}
 {{- if .parameters }}
 parameters:

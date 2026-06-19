@@ -26,7 +26,7 @@ metadata:
     workload.template.kubevirt.io/server: 'true'
   annotations:
     {{- include "cluster-kubevirt.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "50"
+    argocd.argoproj.io/sync-wave: "60"
     kubevirt.io/latest-observed-api-version: v1
     kubevirt.io/storage-observed-api-version: v1alpha3
     name.os.template.kubevirt.io/{{ $os_signature }}: {{ $os_name | quote }}

@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/name: "observability-metrics-custom-allowlist-configmap"
   annotations:
     {{- include "cluster-acm.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-wave: "40"
 data:
   metrics_list.yaml: |
     {{- .Values.observability.custom_metrics.content | nindent 4 -}}

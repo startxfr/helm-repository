@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/name: "{{- .name | default "myrealm" -}}-keycloak"
   annotations:
     {{- include "cluster-sso.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   {{- $spec | nindent 2 }}
 {{- end -}}{{- end -}}

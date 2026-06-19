@@ -35,7 +35,7 @@ metadata:
   annotations:
     {{- include "example-fruitapp-project.annotations" $ | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"postgresql:{{- .Values.integration_chain.pg_version }}","namespace":"openshift"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
     alpha.image.policy.openshift.io/resolve-names: '*'
     openshift.io/generated-by: startx
 spec:
@@ -133,7 +133,7 @@ metadata:
   annotations:
     {{- include "example-fruitapp-project.annotations" $ | nindent 4 }}
     image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"frontend:r7t","namespace":"{{- .Values.project_integration.project.name }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"postgresql\")].image","pause":"false"}]'
-    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-wave: "25"
     alpha.image.policy.openshift.io/resolve-names: '*'
     app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"db"}]'
     app.openshift.io/vcs-ref: "devel"

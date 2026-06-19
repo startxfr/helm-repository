@@ -16,7 +16,7 @@ metadata:
     {{- if .isDefault }}
     storageclass.kubernetes.io/is-default-class: 'true'
     {{- end }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
 provisioner: {{ .provisioner | default "kubernetes.io/aws-ebs" | quote }}
 {{- if .parameters }}
 parameters:

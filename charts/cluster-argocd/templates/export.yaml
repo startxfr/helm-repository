@@ -18,7 +18,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-export"
   annotations:
     {{- include "cluster-argocd.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "50"
+    argocd.argoproj.io/sync-wave: "60"
 spec:
   argocd: {{ $argocd | quote }}
   schedule: {{ $schedule | quote }}

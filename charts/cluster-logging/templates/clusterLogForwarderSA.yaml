@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/name: "{{ $name }}-sa"
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "5"
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -23,7 +23,7 @@ metadata:
     app.kubernetes.io/name: "{{ $name }}-collect-application-logs-clusterrolebinding"
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "5"
 subjects:
 - kind: ServiceAccount
   name: {{ $name | quote }}
@@ -42,7 +42,7 @@ metadata:
     app.kubernetes.io/name: "{{ $name }}-collect-infrastructure-logs-clusterrolebinding"
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "5"
 subjects:
 - kind: ServiceAccount
   name: {{ $name | quote }}
@@ -61,7 +61,7 @@ metadata:
     app.kubernetes.io/name: "{{ $name }}-collect-audit-logs-clusterrolebinding"
   annotations:
     {{- include "cluster-logging.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "5"
 subjects:
 - kind: ServiceAccount
   name: {{ $name | quote }}

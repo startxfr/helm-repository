@@ -17,7 +17,7 @@ metadata:
     strimzi.io/cluster: {{ $kafkaCluster | quote }}
   annotations:
     {{- include "cluster-kafka.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "50"
+    argocd.argoproj.io/sync-wave: "60"
 spec:
   {{- $spec | nindent 2 }}
 {{ end }}

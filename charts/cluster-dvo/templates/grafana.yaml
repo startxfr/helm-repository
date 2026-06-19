@@ -13,7 +13,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-servicemonitor"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   endpoints:
   - interval: 5s
@@ -36,7 +36,7 @@ metadata:
     app.kubernetes.io/name: "grafana-config-cm"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "15"
 data:
   grafana.ini: |-
     [auth.anonymous]
@@ -53,7 +53,7 @@ metadata:
     app.kubernetes.io/name: "grafana-dashboard-dvo-cm"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "15"
 data:
   deployment-validation-operator.json: |-
     {
@@ -311,7 +311,7 @@ metadata:
     app.kubernetes.io/name: "grafana-dashboards-cm"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "15"
 data:
   dashboards.yaml: |-
     {
@@ -339,7 +339,7 @@ metadata:
     app.kubernetes.io/name: "grafana-datasources-cm"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "15"
 data:
   datasources.yaml: |-
     {
@@ -365,7 +365,7 @@ metadata:
     grafana: "{{- $name -}}"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-wave: "40"
 spec:
   port:
     targetPort: https
@@ -388,7 +388,7 @@ metadata:
     grafana: "{{- $name -}}"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   ports:
   - name: https
@@ -409,7 +409,7 @@ metadata:
     grafana: "{{- $name -}}"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "25"
+    argocd.argoproj.io/sync-wave: "35"
 spec:
   replicas: 1
   selector:
@@ -492,7 +492,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-prometheus"
   annotations:
     {{- include "cluster-dvo.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "6"
+    argocd.argoproj.io/sync-wave: "16"
 spec:
   replicas: 1
   serviceAccountName: prometheus-k8s
