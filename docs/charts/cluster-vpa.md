@@ -56,6 +56,127 @@ helm install cluster-vpa startx/cluster-vpa
 helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-vpa
+  namespace: openshift-gitops
+spec:
+  description: Deploy VPA operator in openshift-vertical-pod-autoscaler namespace
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: openshift-vertical-pod-autoscaler
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-vpa-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-vpa
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-vpa
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        operator:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-vpa-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-vpa
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-vpa
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-vertical-pod-autoscaler
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-vpa-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-vpa
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-vpa
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: false
+        vpaController:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-vertical-pod-autoscaler
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                    |
@@ -152,7 +273,6 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                    |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                            |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                           |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                         |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                  |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                      |
@@ -317,7 +437,6 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 16.19.33 | 2024-11-13 | Add nodeSelector to infra node for values-startx example |
 | 16.19.35 | 2024-11-13 | Add the VerticalPodAutoscaler resource |
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release |
-| 16.19.31 | 2024-12-10 | Align all charts to 19.19.31 |
 | 16.19.43 | 2025-02-27 | publish stable update for the full repository |
 | 17.14.1 | 2025-02-28 | Initial release for v17.x version |
 | 17.14.3 | 2025-02-28 | Temporary release used to prepare dependencies changes |
@@ -355,3 +474,4 @@ helm install cluster-vpa startx/cluster-vpa -f https://raw.githubusercontent.com
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.13 | 2026-06-19 | Improve cluster-vpa options |
