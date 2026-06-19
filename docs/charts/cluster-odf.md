@@ -88,21 +88,24 @@ spec:
 
 ### Applications
 
+> **Deletion order**: always delete in reverse creation order - `cluster-odf-app` first (wait for StorageCluster cleanup), then `cluster-odf-operator`, then `cluster-odf-project`. The sync-waves below enforce this order automatically in an App-of-Apps pattern.
+
 ```yaml
 ---
+# Wave 1 - created first, deleted LAST (namespace cleanup happens naturally once contents are gone)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cluster-odf-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-odf
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: 21.3.30
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -119,11 +122,14 @@ spec:
       prune: true
       selfHeal: true
 ---
+# Wave 2 - operator deployed after namespace exists, deleted after StorageCluster is gone
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cluster-odf-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -131,7 +137,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: 21.3.30
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -146,11 +152,14 @@ spec:
       prune: true
       selfHeal: true
 ---
+# Wave 3 - created last, deleted FIRST so the ODF operator is still alive to process StorageCluster finalizers
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cluster-odf-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -158,18 +167,25 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: 21.3.30
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
       values: |
         odf:
           enabled: true
+          nodeLabeler:
+            enabled: false
         operator:
           enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: ocs.openshift.io
+      kind: StorageCluster
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true
@@ -201,3 +217,4 @@ spec:
 | 21.3.28 | 2026-06-19 | fix-apiversion |
 | 21.3.29 | 2026-06-19 | Improve cluster-odf options |
 | 21.3.30 | 2026-06-19 | Improve cluster-odf options |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |

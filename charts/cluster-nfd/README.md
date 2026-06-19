@@ -113,7 +113,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
   syncPolicy:
     automated:
       prune: true
@@ -142,7 +142,7 @@ spec:
         operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
   syncPolicy:
     automated:
       prune: true
@@ -169,7 +169,7 @@ spec:
         nfd:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
   ignoreDifferences:
     - group: nfd.openshift.io
       kind: NodeFeatureDiscovery
@@ -208,3 +208,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.4 | 2026-06-17 | Improve cluster-nfd options |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |

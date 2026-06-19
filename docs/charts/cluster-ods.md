@@ -94,14 +94,14 @@ kind: Application
 metadata:
   name: cluster-ods-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-ods
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-ods
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -121,6 +121,8 @@ kind: Application
 metadata:
   name: cluster-ods-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -128,7 +130,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-ods
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -148,6 +150,8 @@ kind: Application
 metadata:
   name: cluster-ods-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -155,7 +159,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-ods
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -165,6 +169,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  ignoreDifferences:
+    - group: datasciencecluster.opendatahub.io
+      kind: DataScienceCluster
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true
@@ -191,3 +200,4 @@ spec:
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-19 | Improve cluster-ods options |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |

@@ -109,7 +109,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
   syncPolicy:
     automated:
       prune: true
@@ -138,7 +138,7 @@ spec:
         operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
   syncPolicy:
     automated:
       prune: true
@@ -165,7 +165,7 @@ spec:
         nexus:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
   ignoreDifferences:
     - group: sonatype.com
       kind: NexusRepo
@@ -209,3 +209,4 @@ The automated sync policy ensures ArgoCD reconciles the Nexus Repository operato
 | 21.3.15 | 2026-06-17 | Improve cluster-nexus options |
 | 21.3.16 | 2026-06-17 | Improve cluster-nexus options |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |

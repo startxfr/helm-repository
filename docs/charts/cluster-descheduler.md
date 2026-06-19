@@ -100,14 +100,14 @@ kind: Application
 metadata:
   name: cluster-descheduler-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   project: cluster-descheduler
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-descheduler
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -128,6 +128,8 @@ kind: Application
 metadata:
   name: cluster-descheduler-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -135,7 +137,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-descheduler
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -156,6 +158,8 @@ kind: Application
 metadata:
   name: cluster-descheduler-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -163,7 +167,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-descheduler
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -199,3 +203,4 @@ spec:
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Improve cluster-descheduler options |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |

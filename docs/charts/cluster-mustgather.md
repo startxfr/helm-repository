@@ -97,8 +97,8 @@ kind: Application
 metadata:
   name: cluster-mustgather-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
     namespace: openshift-mustgather-operator
@@ -111,7 +111,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
   syncPolicy:
     automated:
       prune: true
@@ -124,6 +124,8 @@ kind: Application
 metadata:
   name: cluster-mustgather-operator
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -138,7 +140,7 @@ spec:
         operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
   syncPolicy:
     automated:
       prune: true
@@ -149,6 +151,8 @@ kind: Application
 metadata:
   name: cluster-mustgather-app
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -163,7 +167,12 @@ spec:
         report:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.27
+    targetRevision: 21.3.55
+  ignoreDifferences:
+    - group: managed.openshift.io
+      kind: MustGather
+      jsonPointers:
+        - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true
@@ -199,3 +208,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.4 | 2026-06-17 | Improve cluster-mustgather options |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.55 | 2026-06-19 | publish stable update for the full repository |
