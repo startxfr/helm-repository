@@ -102,7 +102,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: Fix StorageCluster apiVersion
+    targetRevision: 21.3.28
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -131,7 +131,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: Fix StorageCluster apiVersion
+    targetRevision: 21.3.28
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -158,7 +158,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: Fix StorageCluster apiVersion
+    targetRevision: 21.3.28
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -197,4 +197,5 @@ spec:
 | 21.3.12 | 2026-06-19 | Improve cluster-odf options |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | fix-storagecluster-apiversion | 2026-06-19 | fix-storagecluster-apiversion |
-| Fix StorageCluster apiVersion | 2026-06-19 | Improve cluster-odf options |
+| 21.3.28 | 2026-06-19 | Improve cluster-odf options |
+| 21.3.28 | 2026-06-19 | fix-apiversion |
