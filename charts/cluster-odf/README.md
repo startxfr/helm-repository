@@ -88,11 +88,11 @@ spec:
 
 ### Applications
 
-> **Deletion order**: always delete in reverse creation order — `cluster-odf-app` first (wait for StorageCluster cleanup), then `cluster-odf-operator`, then `cluster-odf-project`. The sync-waves below enforce this order automatically in an App-of-Apps pattern.
+> **Deletion order**: always delete in reverse creation order - `cluster-odf-app` first (wait for StorageCluster cleanup), then `cluster-odf-operator`, then `cluster-odf-project`. The sync-waves below enforce this order automatically in an App-of-Apps pattern.
 
 ```yaml
 ---
-# Wave 1 — created first, deleted LAST (namespace cleanup happens naturally once contents are gone)
+# Wave 1 - created first, deleted LAST (namespace cleanup happens naturally once contents are gone)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -122,7 +122,7 @@ spec:
       prune: true
       selfHeal: true
 ---
-# Wave 2 — operator deployed after namespace exists, deleted after StorageCluster is gone
+# Wave 2 - operator deployed after namespace exists, deleted after StorageCluster is gone
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -152,7 +152,7 @@ spec:
       prune: true
       selfHeal: true
 ---
-# Wave 3 — created last, deleted FIRST so the ODF operator is still alive to process StorageCluster finalizers
+# Wave 3 - created last, deleted FIRST so the ODF operator is still alive to process StorageCluster finalizers
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

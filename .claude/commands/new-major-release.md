@@ -30,20 +30,20 @@ The argument `$ARGUMENTS` must be the new major release number (e.g. `22`).
 
 You are executing the new-major-release command. The argument is: $ARGUMENTS
 
-**Step 0 — Validate argument**
+**Step 0 - Validate argument**
 
 If `$ARGUMENTS` is empty or not a number, stop and ask the user: "Quel est le numéro de la nouvelle version majeure ? (ex: 22)"
 
 Set `NEW_MAJOR=$ARGUMENTS`.
 
-**Step 1 — Read current config**
+**Step 1 - Read current config**
 
 Read `.tools/config`. Extract:
 - `CURRENT_STABLE` = value of `STABLE_MAINRELEASE`
 - `ARCHIVE_LIST` = value of `HELM_REPO_ARCHIVE_RELEASES` (space-separated)
 - `LEGACY_LIST` = value of `HELM_REPO_LEGACY_RELEASES` (space-separated)
 
-**Step 2 — Compute new values**
+**Step 2 - Compute new values**
 
 - `OLDEST_ACTIVE` = last word of `ARCHIVE_LIST` (e.g. if list is "20 19 18 16 14", oldest = "14")
 - `NEW_ARCHIVE_LIST` = `"$CURRENT_STABLE"` + all words of `ARCHIVE_LIST` except the last one
@@ -72,7 +72,7 @@ Continuer ? [y/N]
 
 Wait for confirmation. If not confirmed, stop.
 
-**Step 3 — Update `.tools/config`**
+**Step 3 - Update `.tools/config`**
 
 Edit `.tools/config`:
 - Replace `STABLE_MAINRELEASE="..."` with `STABLE_MAINRELEASE="$NEW_MAJOR"`
@@ -81,7 +81,7 @@ Edit `.tools/config`:
 - Replace the `HELM_REPO_ARCHIVE_RELEASES="..."` line with the new value
 - Replace the `HELM_REPO_LEGACY_RELEASES="..."` line with the new value
 
-**Step 4 — Create `docs/repos/$NEW_MAJOR/index.yaml`**
+**Step 4 - Create `docs/repos/$NEW_MAJOR/index.yaml`**
 
 Create the directory `docs/repos/$NEW_MAJOR/` and write an empty Helm repo index:
 
@@ -93,16 +93,16 @@ generated: "YYYY-MM-DDT00:00:00.000000000Z"
 
 Use today's date for the `generated` field.
 
-**Step 5 — Commit on `devel`**
+**Step 5 - Commit on `devel`**
 
 Run these git commands:
 ```bash
 git checkout devel
 git add .tools/config docs/repos/$NEW_MAJOR/
-git commit -m "[release] init major release $NEW_MAJOR — archive: $NEW_ARCHIVE_LIST — legacy: $OLDEST_ACTIVE moved"
+git commit -m "[release] init major release $NEW_MAJOR - archive: $NEW_ARCHIVE_LIST - legacy: $OLDEST_ACTIVE moved"
 ```
 
-**Step 6 — Merge to `master` and push**
+**Step 6 - Merge to `master` and push**
 
 ```bash
 git checkout master
@@ -112,15 +112,15 @@ git push gitlab devel master
 git checkout devel
 ```
 
-**Step 7 — Report**
+**Step 7 - Report**
 
 Print a summary:
 ```
 ✓ Major release $NEW_MAJOR initialized
 
 Files changed:
-  .tools/config           — STABLE_MAINRELEASE, STABLE_SUBRELEASE, SXV4_CONSOLE_VERSION, archive/legacy lists
-  docs/repos/$NEW_MAJOR/  — empty Helm index created
+  .tools/config           - STABLE_MAINRELEASE, STABLE_SUBRELEASE, SXV4_CONSOLE_VERSION, archive/legacy lists
+  docs/repos/$NEW_MAJOR/  - empty Helm index created
 
 CI pipelines triggered:
   devel  → validate (make test-all)

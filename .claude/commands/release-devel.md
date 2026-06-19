@@ -20,8 +20,8 @@ Examples:
 1. Verifies the current branch is `devel`
 2. Shows the current repo version and proposes the next patch version
 3. Asks for confirmation before making any change
-4. Runs `make release-charts` — bumps every chart version, packages, uploads all .tgz to S3, commits `repo-release` file
-5. Runs `make publish-devel` — regenerates and uploads `docs/repos/devel/index.yaml`
+4. Runs `make release-charts` - bumps every chart version, packages, uploads all .tgz to S3, commits `repo-release` file
+5. Runs `make publish-devel` - regenerates and uploads `docs/repos/devel/index.yaml`
 6. Pushes `devel` to `origin` and `gitlab`
 7. Reports summary
 
@@ -32,7 +32,7 @@ Use `/release-master` to promote to master once satisfied with the devel state.
 
 You are executing the release-devel command. Arguments: $ARGUMENTS
 
-**Step 0 — Parse arguments**
+**Step 0 - Parse arguments**
 
 Split `$ARGUMENTS` by spaces:
 - Arg 1 = version (optional, e.g. `21.3.5`)
@@ -40,7 +40,7 @@ Split `$ARGUMENTS` by spaces:
 
 Set `FORCE_VERSION` and `FORCE_DESC` (empty if not given).
 
-**Step 1 — Check branch**
+**Step 1 - Check branch**
 
 Run: `git branch --show-current`
 
@@ -52,7 +52,7 @@ Switch to devel? [y/N]
 ```
 If confirmed: `git checkout devel`. If not, stop.
 
-**Step 2 — Check working tree**
+**Step 2 - Check working tree**
 
 Run: `git status --short`
 
@@ -64,7 +64,7 @@ Continue anyway? [y/N]
 ```
 Stop if not confirmed.
 
-**Step 3 — Show current state and ask confirmation**
+**Step 3 - Show current state and ask confirmation**
 
 Read current repo version from `.tools/repo-release`.
 Compute next patch version. If `FORCE_VERSION` is set, use it.
@@ -85,21 +85,21 @@ Proceed? [y/N]
 ```
 Stop if not confirmed.
 
-**Step 4 — Release all charts**
+**Step 4 - Release all charts**
 
 Run:
 ```bash
 INTERACTIVE=false VERSION=<new_version> DESC="<desc>" make release-charts
 ```
 
-**Step 5 — Publish devel repo**
+**Step 5 - Publish devel repo**
 
 Run:
 ```bash
 make publish-devel
 ```
 
-**Step 6 — Push**
+**Step 6 - Push**
 
 Run:
 ```bash
@@ -107,7 +107,7 @@ git push origin devel
 git push gitlab devel
 ```
 
-**Step 7 — Report**
+**Step 7 - Report**
 
 ```
 ✓ All charts released to <new_version> on devel

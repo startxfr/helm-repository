@@ -41,7 +41,7 @@ SX          := ./sx-helm
 
 help:
 	@echo ""
-	@echo "helm-repository — available make targets"
+	@echo "helm-repository - available make targets"
 	@echo ""
 	@echo "  Info / discovery"
 	@echo "    make list                           List all charts"
@@ -82,7 +82,7 @@ help:
 	@echo "                     [FORCE_DELETE=yes]"
 	@echo ""
 	@echo "  Variables"
-	@echo "    INTERACTIVE=true|false  (default: false — no prompts when called via make)"
+	@echo "    INTERACTIVE=true|false  (default: false - no prompts when called via make)"
 	@echo "    VERSION=x.y.z           Force version instead of auto-increment"
 	@echo "    DESC='...'              Force release description"
 	@echo "    FORCE_DELETE=yes        Skip delete confirmation"

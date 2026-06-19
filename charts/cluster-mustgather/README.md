@@ -62,7 +62,7 @@ helm install cluster-mustgather startx/cluster-mustgather -f https://raw.githubu
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-mustgather` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+Deploy `cluster-mustgather` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The must-gather operator installs in `openshift-mustgather-operator`; MustGather report instances run in `startx-mustgather`:
 
 ```yaml

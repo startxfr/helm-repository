@@ -76,7 +76,7 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-argocd` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+Deploy `cluster-argocd` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The GitOps operator installs in the shared `openshift-operators` namespace. The `ArgoCD` CR deploys in `openshift-gitops`:
 
 ```yaml

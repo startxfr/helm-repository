@@ -65,7 +65,7 @@ helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercon
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-ansible` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+Deploy `cluster-ansible` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The AAP operator installs in the dedicated `aap` namespace (with its own OperatorGroup). The `AnsibleAutomationPlatform` CR deploys in `startx-ansible`:
 
 ```yaml

@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# helm-repository — GitLab CI/CD pipeline
+# helm-repository - GitLab CI/CD pipeline
 #
 # Branch behaviour:
 #   devel          → validate (test-all: helm template + lint on every chart)
@@ -9,12 +9,12 @@
 #                               creates a MR on conflict instead of failing)
 #
 # Required CI/CD variables (Settings → CI/CD → Variables):
-#   SSH_PRIVATE_KEY      — SSH private key with push access to origin and gitlab
-#   GPG_PRIVATE_KEY      — GPG secret key, base64-encoded (ascii-armored export)
-#   GPG_PASSPHRASE       — Passphrase for the GPG key above
-#   AWS_ACCESS_KEY_ID    — AWS credentials for S3 publish
+#   SSH_PRIVATE_KEY      - SSH private key with push access to origin and gitlab
+#   GPG_PRIVATE_KEY      - GPG secret key, base64-encoded (ascii-armored export)
+#   GPG_PASSPHRASE       - Passphrase for the GPG key above
+#   AWS_ACCESS_KEY_ID    - AWS credentials for S3 publish
 #   AWS_SECRET_ACCESS_KEY
-#   GITLAB_API_TOKEN     — Project access token with api scope (for MR creation)
+#   GITLAB_API_TOKEN     - Project access token with api scope (for MR creation)
 # ------------------------------------------------------------------------------
 
 stages:
@@ -29,7 +29,7 @@ variables:
   GIT_DEPTH: "0"           # Full history required for branch merges
 
 # ------------------------------------------------------------------------------
-# Shared setup — installed on every job
+# Shared setup - installed on every job
 # ------------------------------------------------------------------------------
 
 default:
@@ -63,7 +63,7 @@ default:
 
 
 # ------------------------------------------------------------------------------
-# VALIDATE — devel only
+# VALIDATE - devel only
 # Runs helm template + helm lint on every chart.
 # ------------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ validate:
 
 
 # ------------------------------------------------------------------------------
-# RELEASE — master and stable
+# RELEASE - master and stable
 # Bumps chart versions, commits with [skip ci] to prevent pipeline loop,
 # and uploads packages to S3.
 # ------------------------------------------------------------------------------
@@ -103,7 +103,7 @@ release:
 
 
 # ------------------------------------------------------------------------------
-# PUBLISH — master and stable
+# PUBLISH - master and stable
 # Regenerates Helm index for stable/noschema/current repos and syncs to S3.
 # Runs after release succeeds.
 # ------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ publish:
 
 
 # ------------------------------------------------------------------------------
-# PROPAGATE — master and stable
+# PROPAGATE - master and stable
 # Auto-merges the source branch into every matching version branch:
 #   master → master-4.x
 #   stable → stable-4.x
@@ -170,7 +170,7 @@ propagate:
         else
           git merge --abort 2>/dev/null || true
           CONFLICTS="$CONFLICTS $local_branch"
-          echo "✗  $local_branch: conflict — MR will be created"
+          echo "✗  $local_branch: conflict - MR will be created"
         fi
 
       done < <(git branch -r | grep -E "$PATTERN")

@@ -65,7 +65,7 @@ helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-acm` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+Deploy `cluster-acm` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The ACM operator and the MultiClusterHub CR both install in `openshift-acm-operator` (ACM requires the MCH in the same namespace as the operator).
 Observability resources deploy in `startx-acm-observability`:
 

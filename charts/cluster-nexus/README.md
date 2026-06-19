@@ -42,7 +42,7 @@ Complete deployment with the following characteristics:
 
 - Deploy a **Subscription** named `nexus-repository-ha-operator-certified` in `openshift-operators`
 - Deploy an **OperatorGroup** named `global-operators` in `openshift-operators` (all-namespaces scope)
-- The `project` sub-chart is disabled — `openshift-operators` is a pre-existing system namespace
+- The `project` sub-chart is disabled - `openshift-operators` is a pre-existing system namespace
 
 ```bash
 # base configuration running default configuration

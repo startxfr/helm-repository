@@ -150,7 +150,7 @@ spec:
       prune: true
       selfHeal: true
 ---
-# Configures GPU ClusterPolicy (disabled by default — requires GPU nodes)
+# Configures GPU ClusterPolicy (disabled by default - requires GPU nodes)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

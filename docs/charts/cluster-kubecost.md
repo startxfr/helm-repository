@@ -61,7 +61,7 @@ helm install cluster-kubecost startx/cluster-kubecost -f https://raw.githubuserc
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-kubecost` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject.
+Deploy `cluster-kubecost` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The kubecost operator installs in `openshift-kubecost-operator`; the CostAnalyzer instance runs in `startx-kubecost`:
 
 ```yaml

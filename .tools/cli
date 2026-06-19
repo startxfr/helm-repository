@@ -4,7 +4,7 @@
 # shellcheck source=/dev/null
 source "$PROJECT_LIBPATH/config"
 
-# Path-dependent variables — require PROJECT_PATH / PROJECT_LIBPATH set by the caller (sx-helm)
+# Path-dependent variables - require PROJECT_PATH / PROJECT_LIBPATH set by the caller (sx-helm)
 SHARED_TEMPLATE_NAME=_startx.tpl
 SHARED_TEMPLATE=.tools/$SHARED_TEMPLATE_NAME
 SHARED_NAME=_sample_
@@ -60,7 +60,7 @@ function chartList {
 
 
 ##########################
-## ROUTER — GLOBAL COMMANDS
+## ROUTER - GLOBAL COMMANDS
 
 # List all managed helm charts
 function routerList {
@@ -114,10 +114,10 @@ function routerReleaseChartsOnly {
     if [[ "$INTERACTIVE" != "true" ]]; then
         echo -e "\e[36mRelease\e[0m all charts (charts-only) to $next_release"
     else
-        echo -en "\e[36mRelease\e[0m all charts — next version [$next_release] : "
+        echo -en "\e[36mRelease\e[0m all charts - next version [$next_release] : "
         read -r nextRel
         [[ "$nextRel" != "" ]] && next_release=$nextRel
-        echo -en "\e[36mRelease\e[0m all charts — description [$next_description] : "
+        echo -en "\e[36mRelease\e[0m all charts - description [$next_description] : "
         read -r nextDesc
         [[ "$nextDesc" != "" ]] && next_description=$nextDesc
     fi
@@ -136,7 +136,7 @@ function routerReleaseChartsOnly {
 # $2 = "auto" to skip prompts, or empty for interactive
 # Env: VERSION (force version), DESC (force description), INTERACTIVE
 function routerRelease {
-    # $1 is always "release" when called via routerRelease "$@" — skip it
+    # $1 is always "release" when called via routerRelease "$@" - skip it
     local auto_feature="${2:-}"
     local current_release
     local next_date
@@ -230,7 +230,7 @@ function routerVersion {
 
 
 #################################
-## ROUTER — BULK CHART COMMANDS
+## ROUTER - BULK CHART COMMANDS
 
 # Lint all charts
 function routerLintAll {
@@ -271,7 +271,7 @@ function routerPackageAll {
 
 
 #################################
-## ROUTER — PER-CHART COMMANDS
+## ROUTER - PER-CHART COMMANDS
 
 # Display chart metadata
 function routerChartInfo {

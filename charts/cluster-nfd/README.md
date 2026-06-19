@@ -65,7 +65,7 @@ helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-nfd` using three dedicated ArgoCD Applications — one per concern — all sharing the same AppProject:
+Deploy `cluster-nfd` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
