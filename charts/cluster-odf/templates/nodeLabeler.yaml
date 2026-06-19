@@ -1,0 +1,103 @@
+{{- if and .Values.odf.enabled .Values.odf.nodeLabeler.enabled -}}
+{{- $namespace := .Values.project.project.name | default "openshift-storage" -}}
+---
+# ServiceAccount used by the node-labeler Job
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: odf-node-labeler
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-odf.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-odf.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+---
+# ClusterRole: patch nodes to add the ODF storage label
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: odf-node-labeler
+  labels:
+    {{- include "cluster-odf.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-odf.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+rules:
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "patch"]
+---
+# ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: odf-node-labeler
+  labels:
+    {{- include "cluster-odf.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-odf.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: odf-node-labeler
+subjects:
+  - kind: ServiceAccount
+    name: odf-node-labeler
+    namespace: "{{- $namespace -}}"
+---
+# Job: labels all worker nodes before StorageCluster is created (wave 5 < wave 10)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: odf-node-labeler
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-odf.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-odf.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: odf-node-labeler
+    spec:
+      serviceAccountName: odf-node-labeler
+      restartPolicy: OnFailure
+      containers:
+        - name: labeler
+          image: registry.redhat.io/openshift4/ose-cli:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -euo pipefail
+              echo "Labeling worker nodes with cluster.ocs.openshift.io/openshift-storage..."
+              NODES=$(oc get nodes -l node-role.kubernetes.io/worker \
+                -o jsonpath='{.items[*].metadata.name}')
+              if [ -z "${NODES}" ]; then
+                echo "ERROR: no worker nodes found"; exit 1
+              fi
+              for NODE in ${NODES}; do
+                echo "  Labeling node: ${NODE}"
+                oc label node "${NODE}" \
+                  cluster.ocs.openshift.io/openshift-storage= \
+                  --overwrite
+              done
+              echo "Done. Labeled nodes:"
+              oc get nodes -l cluster.ocs.openshift.io/openshift-storage= \
+                -o custom-columns=NAME:.metadata.name,STATUS:.status.conditions[-1].type
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+{{- end -}}

@@ -12,11 +12,27 @@ odf:
   hooked: false
   name: startx-odf
   version: "4.19.11"
+  nodeLabeler:
+    enabled: false
   storage:
   - name: odf-deviceset
     replicas: 3
     size: 512Gi
     storageClass: startx-aws-generic-retain
+    placement:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/worker
+                  operator: Exists
+    preparePlacement:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/worker
+                  operator: Exists
 project: 
   enabled: false
   context: 
