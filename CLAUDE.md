@@ -354,14 +354,17 @@ helm:
 - OperatorGroup gets extra annotations from OLM after creation → ArgoCD shows OutOfSync on OperatorGroup — this is **expected/normal**, do not try to fix it.
 - `additionalLabels` defined as a YAML map in values.yaml causes `wrong type for value; expected string; got map` in namespace templates — override with `additionalLabels: ""` in the Application helm values.
 - For operators deploying in `openshift-operators` (shared namespace): `global-operators` OperatorGroup already exists — set `operator.operatorGroup.enabled: false` in the `cluster-xxx-operator` Application to avoid OLM conflict (two OGs block CSV resolution entirely).
+- `cluster-vault` (HashiCorp Vault chart): noinfra sets `vault.global.enabled: false` which disables ALL vault components. Must override with `vault.global.enabled: true` in the vault-app inline values, otherwise ArgoCD renders 0 resources.
+- `vault-config-operator` only supports `AllNamespaces` install mode — must use `openshift-operators` namespace with `operator.operatorGroup.enabled: false` and override `operator.subscription.namespace: "openshift-operators"` in inline values. Dedicated OG causes `UnsupportedOperatorGroup` CSV failure.
+- AppProjects manually applied to `openshift-gitops` can be pruned by background processes (app-of-apps or ArgoCD itself). If Applications report `InvalidSpecError: project does not exist`, re-apply the AppProject and force-refresh the Application.
 
 ### Charts with ArgoCD examples (done)
 
- `cluster-nexus` · `cluster-nfd` · `cluster-nmstate` · `cluster-3scale` · `cluster-kubecost` · `cluster-mustgather` · `cluster-acm` · `cluster-acs` · `cluster-ansible` · `cluster-argocd` · `cluster-auth` · `cluster-certmanager` · `cluster-compliance` · `cluster-config` · `cluster-console` · `cluster-costs` · `cluster-couchbase` · `cluster-crunchy` · `cluster-descheduler` · `cluster-devworkspaces` · `cluster-dvo` · `cluster-gitlab` · `cluster-gpu` · `cluster-istio` · `cluster-kafka` · `cluster-kargo` · `cluster-kepler` · `cluster-knative` · `cluster-kubevirt` · `cluster-localstorage` · `cluster-logging` · `cluster-machine` · `cluster-maintenance` · `cluster-mtc` · `cluster-mtr` · `cluster-mtv` · `cluster-oadp` · `cluster-odf` · `cluster-ods` · `cluster-pipeline` · `cluster-ptp` · `cluster-quay` · `cluster-rbac` · `cluster-redis` · `cluster-router` · `cluster-sso`
+ `cluster-nexus` · `cluster-nfd` · `cluster-nmstate` · `cluster-3scale` · `cluster-kubecost` · `cluster-mustgather` · `cluster-acm` · `cluster-acs` · `cluster-ansible` · `cluster-argocd` · `cluster-auth` · `cluster-certmanager` · `cluster-compliance` · `cluster-config` · `cluster-console` · `cluster-costs` · `cluster-couchbase` · `cluster-crunchy` · `cluster-descheduler` · `cluster-devworkspaces` · `cluster-dvo` · `cluster-gitlab` · `cluster-gpu` · `cluster-istio` · `cluster-kafka` · `cluster-kargo` · `cluster-kepler` · `cluster-knative` · `cluster-kubevirt` · `cluster-localstorage` · `cluster-logging` · `cluster-machine` · `cluster-maintenance` · `cluster-mtc` · `cluster-mtr` · `cluster-mtv` · `cluster-oadp` · `cluster-odf` · `cluster-ods` · `cluster-pipeline` · `cluster-ptp` · `cluster-quay` · `cluster-rbac` · `cluster-redis` · `cluster-router` · `cluster-sso` · `cluster-storage` · `cluster-storage-efs` · `cluster-vault` · `cluster-vault-config` · `cluster-vpa`
 
 ### Charts pending ArgoCD examples
 
-`cluster-mongo`, `cluster-storage`, `cluster-storage-efs`, `cluster-vault`, `cluster-vault-config`, `cluster-vpa`
+`cluster-mongo` (excluded — legacy non-standard README format)
 
 ### Atomic update process per chart
 
