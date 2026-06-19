@@ -56,6 +56,126 @@ helm install cluster-quay startx/cluster-quay
 helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-quay
+  namespace: openshift-gitops
+spec:
+  description: Configure Quay enterprise container registry operator
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: openshift-startx-quay
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-quay-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-quay
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-quay
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra-quay.yaml
+      values: |
+        project:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-quay-operator
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-quay
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-quay
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra-quay.yaml
+      values: |
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-quay-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-quay
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-quay
+    targetRevision: 21.3.12
+    helm:
+      valueFiles:
+        - values-startx_noinfra-quay.yaml
+      values: |
+        quay:
+          enabled: true
+        rhn:
+          user: "<your-rhn-username>"
+          pwd: "<your-rhn-password>"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                            |
@@ -71,7 +191,6 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                               |
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts                                                          |
 | 0.3.141  | 2020-11-24 | publish stable update for the full repository                                                          |
-| 0.3.151  | 2021-01-23 | Upgrade to Quay version 3.3.4                                                                          |
 | 0.3.151  | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                    |
 | 0.3.153  | 2021-01-23 | publish stable update for the full repository                                                          |
 | 0.3.165  | 2021-01-23 | Upgrade all chart dependencies                                                                         |
@@ -112,7 +231,6 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 | 8.13.5   | 2021-10-21 | publish stable update for the full repository                                                          |
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                          |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                                      |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                             |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                             |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23         |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                          |
@@ -169,7 +287,6 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                            |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                                    |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                   |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                          |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                 |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                          |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                              |
@@ -371,3 +488,4 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.12 | 2026-06-19 | Add ArgoCD deployment examples |
