@@ -16,19 +16,19 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{/* Common operator note */}}
 {{- define "cluster-router.notes" -}}
 -- Cluster router ------------------
-{{ if .autoscaling.enabled }}
+{{ if and .autoscaling .autoscaling.enabled }}
  - Cluster autoscaling enabled (up to {{ default 4 .autoscaling.max.nodes }} nodes, {{ default 32 .autoscaling.max.cores }} Cores and {{ default 1024 .autoscaling.max.memory }} RAM)
-  # oc describe ClusterAutoscaler default 
+  # oc describe ClusterAutoscaler default
 {{ else }}
  - Cluster autoscaling disabled
 {{ end }}
-{{ if .clusterversion.enabled }}
+{{ if and .clusterversion .clusterversion.enabled }}
  - Cluster version enabled (channel {{ default "candidate" .clusterversion.channel }}-{{ default "4.9" .clusterversion.version }})
-  # oc describe ClusterVersion version 
+  # oc describe ClusterVersion version
 {{ else }}
  - Cluster version disabled
 {{ end }}
-{{ if .alertmanager.enabled }}
+{{ if and .alertmanager .alertmanager.enabled }}
  - Cluster alert-manager enabled (receiver {{ default "receiverName" .alertmanager.receiverName }}  is of {{ default "api" .alertmanager.type }} type)
   # oc get secret alertmanager-main -n openshift-monitoring
 {{ else }}
