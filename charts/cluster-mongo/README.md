@@ -55,7 +55,7 @@ project: default
 source:
     path: charts/cluster-mongo/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "stable"
+    targetRevision: 21.3.27
     helm:
     valueFiles:
     - values-demo.yaml
@@ -82,7 +82,7 @@ project: default
 source:
     path: charts/cluster-mongo/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "stable"
+    targetRevision: 21.3.27
     helm:
     valueFiles:
     - values-demo.yaml
@@ -109,7 +109,7 @@ project: default
 source:
     path: charts/cluster-mongo/
     repoURL: 'https://github.com/startxfr/helm-repository.git'
-    targetRevision: "stable"
+    targetRevision: 21.3.27
     helm:
     valueFiles:
     - values-demo.yaml
@@ -159,3 +159,4 @@ helm install cluster-mongo startx/cluster-mongo -f https://raw.githubusercontent
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.27 | 2026-06-19 | publish stable update for the full repository |
