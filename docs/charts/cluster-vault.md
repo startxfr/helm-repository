@@ -139,6 +139,96 @@ Configuration of startx properties with the following characteristics :
 helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml
 ```
 
+## Deploy with ArgoCD
+
+### AppProject
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-vault
+  namespace: openshift-gitops
+spec:
+  description: Deploy HashiCorp Vault in startx-vault namespace
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: startx-vault
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+```
+
+### Applications
+
+```yaml
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-vault-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-vault
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-vault
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        vault:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-vault-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-vault
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-vault
+    targetRevision: 21.3.13
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        vault:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-vault
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                            |
@@ -154,7 +244,6 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 0.3.117  | 2020-11-12 | Move to 0.3.115 basic chart dependencies                                                               |
 | 0.3.135  | 2020-11-23 | Improve documentation for all examples charts                                                          |
 | 0.3.141  | 2020-11-24 | publish stable update for the full repository                                                          |
-| 0.3.151  | 2021-01-23 | Upgrade to vault version 0.9.0                                                                         |
 | 0.3.151  | 2021-01-23 | Upgrade chart to OCP version 4.3.13                                                                    |
 | 0.3.153  | 2021-01-23 | publish stable update for the full repository                                                          |
 | 0.3.165  | 2021-01-23 | Upgrade all chart dependencies                                                                         |
@@ -193,7 +282,6 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 8.13.5   | 2021-10-21 | publish stable update for the full repository                                                          |
 | 8.13.7   | 2021-10-21 | publish stable update for the full repository                                                          |
 | 8.13.8   | 2021-10-21 | Adding first draft of json schema                                                                      |
-| 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                             |
 | 8.13.9   | 2021-10-22 | Adding the schema in chart                                                                             |
 | 8.13.25  | 2021-11-10 | Solve helm issue in the kubeVersion for kube clusters and upgrade chart dep to version 8.13.23         |
 | 8.13.27  | 2021-11-10 | publish stable update for the full repository                                                          |
@@ -251,7 +339,6 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 10.12.22 | 2022-06-04 | Align all chart to release version 10.12.22                                                            |
 | 10.12.23 | 2022-06-04 | Basi chart dependencies upgraded to version 10.12.5                                                    |
 | 10.12.29 | 2022-06-17 | Align all charts to version 10.12.29                                                                   |
-| 10.12.29 | 2022-06-17 | publish stable update for the full repository                                                          |
 | 10.12.30 | 2022-06-17 | Improved logo and global documentation                                                                 |
 | 10.12.33 | 2022-06-17 | publish stable update for the full repository                                                          |
 | 10.12.34 | 2022-06-17 | Align all dependencies charts to 10.12.31                                                              |
@@ -280,7 +367,6 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 11.7.62 | 2022-11-30 | Debug console links and notifications |
 | 11.7.63 | 2022-11-30 | publish stable update for the full repository |
 | 11.7.67 | 2022-11-30 | Debug depedencies on sub charts |
-| 11.7.67 | 2022-11-30 | debug chart syntax |
 | 11.7.69 | 2022-11-30 | Finished dependencies stabilization |
 | 11.7.73 | 2022-12-04 | Align all packages to release 11.7.73 |
 | 11.7.75 | 2022-12-04 | publish stable update for the full repository |
@@ -452,3 +538,4 @@ helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
+| 21.3.13 | 2026-06-19 | Improve cluster-vault options |
