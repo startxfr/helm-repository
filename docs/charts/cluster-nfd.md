@@ -211,3 +211,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.67 | 2026-06-20 | publish stable update for the full repository |
 | 21.3.68 | 2026-06-20 | update basic dependencies to v21.3.70 |
+| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
