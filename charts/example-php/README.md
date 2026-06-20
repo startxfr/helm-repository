@@ -111,3 +111,4 @@ helm install example-php-hpa startx/example-php -f https://raw.githubusercontent
 | 21.3.67 | 2026-06-20 | publish stable update for the full repository |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
+| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
