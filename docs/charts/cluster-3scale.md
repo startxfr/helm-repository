@@ -89,7 +89,7 @@ spec:
     - server: https://kubernetes.default.svc
       namespace: startx-3scale
     - server: https://kubernetes.default.svc
-      namespace: startx-crunchy
+      namespace: default-crunchy
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
@@ -97,7 +97,7 @@ spec:
     - group: '*'
       kind: '*'
 ---
-# Wave 1 — namespaces: startx-3scale (3scale), startx-crunchy (postgres)
+# Wave 1 — namespaces: startx-3scale (3scale), default-crunchy (postgres)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -110,7 +110,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-3scale
-    targetRevision: 21.3.56
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -126,13 +126,7 @@ spec:
         clusterRedis:
           enabled: false
         clusterCrunchy:
-          enabled: true
-          project:
-            enabled: true
-          operator:
-            enabled: false
-          cluster:
-            enabled: false
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: startx-3scale
@@ -164,7 +158,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-3scale
-    targetRevision: 21.3.56
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -177,6 +171,10 @@ spec:
           enabled: false
         externalComponents:
           enabled: false
+          redis:
+            enabled: false
+          database:
+            enabled: false
         clusterRedis:
           enabled: true
           project:
@@ -216,7 +214,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-3scale
-    targetRevision: 21.3.56
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -296,5 +294,7 @@ oc apply -f cluster-3scale-argocd.yaml -n openshift-gitops
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.56 | 2026-06-19 | Add cluster-redis/cluster-crunchy sub-charts and externalComponents support for 3scale 2.16+ |
+| 21.3.57 | 2026-06-20 | Auto-create openshift-crunchy-pgo namespace in project wave; fix secrets leaking into operator wave |
 | 21.3.56 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.56 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.67 | 2026-06-20 | publish stable update for the full repository |
