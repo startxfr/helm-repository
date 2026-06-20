@@ -40,11 +40,11 @@ helm install cluster-couchbase startx/cluster-couchbase
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **namespace:** named **openshift-startx-couchbase** without constraints
+- 1 **namespace:** named **default-couchbase** without constraints
 - 1 **operator:** named **couchbase-enterprise-certified** configured with
   - The **stable** channel for community release
   - The **v2.8.0** version
-  - Deployed under the **openshift-startx-couchbase** project
+  - Deployed under the **default-couchbase** project
 
 ```bash
 # Create the project
@@ -78,7 +78,7 @@ spec:
   sourceRepos:
     - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
   destinations:
-    - namespace: openshift-startx-couchbase
+    - namespace: default-couchbase
       server: https://kubernetes.default.svc
     - namespace: openshift-gitops
       server: https://kubernetes.default.svc
@@ -94,7 +94,7 @@ spec:
 
 ```yaml
 ---
-# Creates namespace openshift-startx-couchbase
+# Creates namespace default-couchbase
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -107,7 +107,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-couchbase
-    targetRevision: 21.3.56
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -124,7 +124,7 @@ spec:
       prune: true
       selfHeal: true
 ---
-# Deploys Couchbase Autonomous operator in openshift-startx-couchbase (dedicated namespace, own OperatorGroup)
+# Deploys Couchbase Autonomous operator in default-couchbase (dedicated namespace, own OperatorGroup)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -139,7 +139,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-couchbase
-    targetRevision: 21.3.56
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -150,13 +150,13 @@ spec:
           enabled: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: openshift-startx-couchbase
+    namespace: default-couchbase
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
 ---
-# Configures Couchbase environment (ServiceAccounts, RBAC) in openshift-startx-couchbase
+# Configures Couchbase environment (ServiceAccounts, RBAC) in default-couchbase
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -171,7 +171,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-couchbase
-    targetRevision: 21.3.56
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -182,7 +182,7 @@ spec:
           enabled: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: openshift-startx-couchbase
+    namespace: default-couchbase
   ignoreDifferences:
     - group: couchbase.com
       kind: CouchbaseCluster
@@ -216,3 +216,4 @@ spec:
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.56 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.67 | 2026-06-20 | publish stable update for the full repository |
