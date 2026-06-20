@@ -186,3 +186,4 @@ spec:
 | 21.3.56 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.67 | 2026-06-20 | publish stable update for the full repository |
 | 21.3.68 | 2026-06-20 | update basic dependencies to v21.3.70 |
+| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
