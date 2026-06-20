@@ -107,7 +107,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-descheduler
-    targetRevision: 21.3.68
+    targetRevision: 21.3.102
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -137,7 +137,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-descheduler
-    targetRevision: 21.3.68
+    targetRevision: 21.3.102
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -167,7 +167,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-descheduler
-    targetRevision: 21.3.68
+    targetRevision: 21.3.102
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -209,3 +209,4 @@ spec:
 | 21.3.68 | 2026-06-20 | update basic dependencies to v21.3.70 |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
+| 21.3.102 | 2026-06-20 | publish stable update for the full repository |
