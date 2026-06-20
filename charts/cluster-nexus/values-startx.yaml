@@ -5,13 +5,13 @@ context: &context
   cluster: default
   environment: infra
   component: nexus
-  app: startx-nexus
+  app: default-nexus
   version: "3.84.0"
 nexus:
   enabled: false
   hooked: false
   name: default
-  namespace: startx-nexus
+  namespace: default-nexus
   spec: |
     ingress:
       enabled: true
@@ -126,7 +126,7 @@ operator:
     operator: 
       channel: stable
       name: nxrm-operator-certified
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: nxrm-operator-certified
       source: 
         name: certified-operators

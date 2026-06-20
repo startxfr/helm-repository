@@ -6,7 +6,7 @@ description: Helm chart used to configure 3scale at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.55
+version: 21.3.67
 # Version of 3scale operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "0.13.3"
 # Icon of this helm-chart
@@ -46,6 +46,16 @@ dependencies:
     version: "21.3.21"
     alias: operator
     condition: operator.enabled
+  - name: cluster-redis
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+    version: "21.3.55"
+    alias: clusterRedis
+    condition: clusterRedis.enabled
+  - name: cluster-crunchy
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+    version: "21.3.55"
+    alias: clusterCrunchy
+    condition: clusterCrunchy.enabled
 
 annotations:
   # category associated to this package
@@ -72,6 +82,12 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
+    - kind: added
+      description: "Add cluster-redis and cluster-crunchy optional sub-chart dependencies for external databases"
+    - kind: added
+      description: "Add externalComponents support: system-redis, backend-redis, system-database, zync secrets"
+    - kind: added
+      description: "Auto-create openshift-crunchy-pgo namespace in project wave to allow CrunchyDB operator deployment"
     - kind: changed
-      description: "Upgrade to operator v0.10.5"
+      description: "APIManager now supports externalComponents.enabled for 3scale 2.16+ external database requirement"
   artifacthub.io/containsSecurityUpdates: "false"

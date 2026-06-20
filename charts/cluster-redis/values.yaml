@@ -24,7 +24,7 @@ cluster:
     # name of the cluster
   - name: default-redis
     # the namespace used to deploy this cluster (default is the project name)
-    namespace: demo-redis
+    namespace: default-redis
     # Enable the creation and deployment of this cluster
     enabled: true
     # spec of the cluster configuration
@@ -92,7 +92,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "openshift-operators"
+    name: "default-redis"
     display_name: "Startx REDIS"
     description: Redis configured by STARTX
   serviceAccounts:
@@ -195,22 +195,21 @@ operator:
     enabled: true
     hooked: false
     name: "redis-operator"
-    namespace: "openshift-operators"
+    namespace: "default-redis"
     version: "v0.15.1"
-    operator: 
+    operator:
       channel: "stable"
       name: redis-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: redis-operator
-      source: 
+      source:
         name: community-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
-    target: "all-ns"
     name: "redis-operator"
-    namespace: "openshift-operators"
+    namespace: "default-redis"
     providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"

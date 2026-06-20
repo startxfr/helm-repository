@@ -5,14 +5,14 @@ context: &context
   cluster: default
   environment: infra
   component: crunchy
-  app: demo-crunchy
+  app: default-crunchy
   version: "5.8.6"
 
 loader:
   enabled: false
   list: 
   - name: demo
-    namespace: demo-crunchy
+    namespace: default-crunchy
     command: | 
       #!/bin/bash
       echo "write your workload generator script using psql ..." 
@@ -23,7 +23,7 @@ cluster:
   list: 
   - name: demo-db
     enabled: true
-    namespace: demo-crunchy
+    namespace: default-crunchy
     postgresVersion: 14
     storageClassName: gp3-csi
     storageInstanceSize: "2Gi"
@@ -53,7 +53,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "demo-crunchy"
+    name: "startx-crunchy"
     display_name: "Demo CrunchyDB"
     requester: startx
     description: Demo CrunchyDB configured by STARTX
@@ -67,12 +67,12 @@ operator:
     enabled: true
     hooked: false
     name: "crunchy-postgres-operator"
-    namespace: "demo-crunchy"
+    namespace: "startx-crunchy"
     version: "v5.8.6"
     operator: 
       channel: v5
       name: crunchy-postgres-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       csv: postgresoperator
       source: 
         name: certified-operators
@@ -81,6 +81,6 @@ operator:
     enabled: true
     hooked: false
     name: "crunchy-operator"
-    namespace: "demo-crunchy"
+    namespace: "startx-crunchy"
     providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"
 

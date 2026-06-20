@@ -16,7 +16,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "openshift-startx-redis"
+    name: "startx-redis-ee"
     display_name: "Startx REDIS"
     requester: startx
     description: Redis configured by STARTX
@@ -42,12 +42,12 @@ operator:
     enabled: true
     hooked: false
     name: "redis-enterprise-operator-cert"
-    namespace: "openshift-startx-redis"
+    namespace: "startx-redis-ee"
     version: "v7.2.4-12.0"
     operator: 
       channel: "7.2.4"
       name: redis-enterprise-operator-cert
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: redis-operator
       source: 
         name: certified-operators
@@ -63,5 +63,5 @@ operator:
     enabled: true
     hooked: false
     name: "redis-operator"
-    namespace: "openshift-startx-redis"
+    namespace: "startx-redis-ee"
     providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"

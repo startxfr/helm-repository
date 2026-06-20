@@ -182,3 +182,4 @@ helm install example-imagestreams-sxv4 startx/example-imagestreams -f https://ra
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.67 | 2026-06-20 | publish stable update for the full repository |

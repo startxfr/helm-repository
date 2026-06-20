@@ -91,29 +91,28 @@ operator:
     enabled: true
     hooked: false
     name: "redis-operator"
-    namespace: "openshift-operators"
+    namespace: "startx-redis"
     version: "v0.15.1"
-    operator: 
+    operator:
       channel: "stable"
       name: redis-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: redis-operator
-      source: 
+      source:
         name: community-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
-        # resources: 
+        # resources:
         #   limits:
         #     cpu: 400m
         #   requests:
         #     cpu: 400m
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
-    target: "all-ns"
     name: "redis-operator"
-    namespace: "openshift-operators"
+    namespace: "startx-redis"
     providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"
 rbac:
   enabled: false

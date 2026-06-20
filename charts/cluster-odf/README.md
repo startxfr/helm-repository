@@ -105,7 +105,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: 21.3.55
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -137,16 +137,35 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: 21.3.55
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
       values: |
         operator:
           enabled: true
+          subscription:
+            operator:
+              channel: "stable-4.21"
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  # OLM adds olm.providedAPIs annotation and upgradeStrategy after operator install
+  ignoreDifferences:
+    - group: operators.coreos.com
+      kind: OperatorGroup
+      name: openshift-storage
+      namespace: openshift-storage
+      jsonPointers:
+        - /metadata/annotations/olm.providedAPIs
+        - /spec/upgradeStrategy
+    - group: console.openshift.io
+      kind: ConsolePlugin
+      name: odf-console
+      jqPathExpressions:
+        - .spec
+        - .metadata.annotations
+        - .metadata.labels
   syncPolicy:
     automated:
       prune: true
@@ -167,7 +186,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-odf
-    targetRevision: 21.3.55
+    targetRevision: 21.3.67
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -181,11 +200,18 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  # OCS operator mutates these fields after sync — ignore to keep Application Synced
   ignoreDifferences:
     - group: ocs.openshift.io
       kind: StorageCluster
-      jsonPointers:
-        - /metadata/finalizers
+      jqPathExpressions:
+        - .metadata.finalizers
+        - .metadata.annotations["uninstall.ocs.openshift.io/cleanup-policy"]
+        - .metadata.annotations["uninstall.ocs.openshift.io/mode"]
+        - .spec.version
+        - .spec.encryption.keyRotation
+        - .spec.managedResources
+        - .spec.storageDeviceSets[].replica
   syncPolicy:
     automated:
       prune: true
@@ -218,3 +244,4 @@ spec:
 | 21.3.29 | 2026-06-19 | Improve cluster-odf options |
 | 21.3.30 | 2026-06-19 | Improve cluster-odf options |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.67 | 2026-06-20 | publish stable update for the full repository |

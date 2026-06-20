@@ -26,7 +26,7 @@ kubecost:
   # Name of the deployed instance of KubecostConfig
   name: default
   # Namespace for the CostAnalyzer instance (default falls back to project.project.name)
-  namespace: "startx-kubecost"
+  namespace: "default-kubecost"
   # The applyed Kubecost config specifications
   spec: |
     pricingCsv:
@@ -1158,7 +1158,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "openshift-kubecost-operator"
+    name: "default-kubecost"
     display_name: Kubecost Operator
     description: Kubecost operator configured by STARTX
     additionalLabels:
@@ -1173,12 +1173,12 @@ operator:
     enabled: true
     hooked: false
     name: "kubecost-operator"
-    namespace: "openshift-kubecost-operator"
+    namespace: "default-kubecost"
     version: "v3.1.3"
     operator:
       channel: "stable"
       name: kubecost-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: kubecost-operator
       source:
         name: certified-operators
@@ -1189,5 +1189,5 @@ operator:
     enabled: true
     hooked: false
     name: "kubecost-operators"
-    namespace: "openshift-kubecost-operator"
+    namespace: "default-kubecost"
     providedAPIs: "Kubecost.v1.charts.kubecost.com"

@@ -114,7 +114,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
+    targetRevision: 21.3.67
   syncPolicy:
     automated:
       prune: true
@@ -157,7 +157,7 @@ spec:
               channel: stable-2.7
               installPlanApproval: Manual
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
+    targetRevision: 21.3.67
   syncPolicy:
     automated:
       prune: true
@@ -186,7 +186,7 @@ spec:
         ansibleAAP:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
+    targetRevision: 21.3.67
   ignoreDifferences:
     - group: aap.ansible.com
       kind: AnsibleAutomationPlatform
@@ -230,3 +230,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.13 | 2026-06-18 | Improve cluster-ansible options |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.56 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.56 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.67 | 2026-06-20 | publish stable update for the full repository |

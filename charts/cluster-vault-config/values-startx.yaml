@@ -5,7 +5,7 @@ context: &context
   cluster: default
   environment: infra
   component: vault-config
-  app: startx-vault-config
+  app: default-vault-config
   version: "0.8.38"
 project: 
   enabled: false
@@ -13,7 +13,7 @@ project:
     <<: *context
   project: 
     enabled: true
-    name: startx-vault-config
+    name: default-vault-config
     display_name: "Startx VAULT"
     requester: startx
     description: Vault storage & control plane configured by STARTX
@@ -21,10 +21,10 @@ project:
     enabled: true
     user: 
     - id: vault-config-sa-edit
-      name: system:serviceaccount:startx-vault-config:{{ .Release.name }}
+      name: system:serviceaccount:default-vault-config:{{ .Release.name }}
       role: edit
     - id: vault-config-agent-injector-sa-admin
-      name: system:serviceaccount:startx-vault-config:{{ .Release.name }}-agent-injector
+      name: system:serviceaccount:default-vault-config:{{ .Release.name }}-agent-injector
       role: admin
 operator:
   enabled: true
@@ -39,7 +39,7 @@ operator:
     operator: 
       channel: alpha
       name: vault-config-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: vault-config-operator
       source: 
         name: community-operators

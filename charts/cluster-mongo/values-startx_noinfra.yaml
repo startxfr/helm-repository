@@ -5,14 +5,14 @@ context: &context
   cluster: default
   environment: infra
   component: mongo
-  app: startx-mongo
+  app: default-mongo
   version: "1.33.0"
 
 loader:
   enabled: false
   list: 
   - name: mongo
-    namespace: startx-mongo
+    namespace: default-mongo
     command: | 
       #!/bin/bash
       echo "write your workload generator script using mongo ..." 
@@ -23,7 +23,7 @@ cluster:
   list: 
   - name: mongodb
     enabled: true
-    namespace: startx-mongo
+    namespace: default-mongo
     publicKey: myPublicKey
     privateKey: myPrivateKey
     orgId: abcdef012345678901234567
@@ -77,7 +77,7 @@ operator:
     operator: 
       channel: v5
       name: mongo-postgres-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       csv: postgresoperator
       source: 
         name: certified-operators

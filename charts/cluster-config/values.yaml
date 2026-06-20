@@ -422,7 +422,7 @@ operatorElastic:
     operator: 
       channel: "stable"
       name: elasticsearch-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: elasticsearch-operator
       source: 
         name: redhat-operators
@@ -449,7 +449,7 @@ operatorLoki:
     operator: 
       channel: "stable-6.5"
       name: loki-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: loki-operator
       source: 
         name: redhat-operators
@@ -482,28 +482,27 @@ projectSosReport:
 # Configuration of the sosreport operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorSosReport:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
     hooked: false
     name: "sosreport-operator"
-    namespace: "openshift-operators"
+    namespace: "default-sosreport"
     version: "v0.0.2"
-    operator: 
+    operator:
       channel: "alpha"
       name: sosreport-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: sosreport-operator
-      source: 
+      source:
         name: community-operators
         namespace: openshift-marketplace
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
-    target: "all-ns"
     name: "sosreport-operator"
-    namespace: "openshift-operators"
+    namespace: "default-sosreport"
     providedAPIs: "Sosreport.v1alpha1.support.openshift.io"
 
 # Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)

@@ -36,7 +36,7 @@ graphanaOperator:
     operator: 
       channel: "beta"
       name: prometheus
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       csv: prometheusoperator
       source: 
         name: community-operators
@@ -50,12 +50,12 @@ graphanaOperator:
     target: ""
     namespace: "deployment-validation-monitoring"
     providedAPIs: ""
-project: 
+project:
   enabled: false
-  context: 
+  context:
     <<: *context
-  project: 
-    enabled: true
+  project:
+    enabled: false
     hooked: false
     type: namespace
     name: "deployment-validation-operator"
@@ -65,31 +65,31 @@ project:
       openshift.io/cluster-monitoring: "true"
 operator:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
     hooked: false
     name: "deployment-validation-operator"
-    namespace: "deployment-validation-operator"
+    namespace: "openshift-operators"
     version: "v0.7.14"
-    operator: 
+    operator:
       channel: "alpha"
       name: deployment-validation-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: deployment-validation-operator
-      source: 
+      source:
         name: community-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
         env:
           - name: NAMESPACE_IGNORE_PATTERN
             value: '^(openshift.*|kube-.*|open-cluster-.*|hypershift.*|local-cluster.*|rhacs-.*|multicluster-.*|hive.*|deployment-validation-.*)$'
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     name: "startx-dvo"
     target: "all-ns"
-    namespace: "deployment-validation-operator"
+    namespace: "openshift-operators"
     providedAPIs: ""

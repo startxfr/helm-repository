@@ -1,0 +1,10 @@
+{{- if and .Values.clusterCrunchy.enabled .Values.clusterCrunchy.project.enabled -}}
+{{- $opNs := .Values.clusterCrunchy.operator.operatorGroup.namespace | default "openshift-crunchy-pgo" -}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $opNs | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+{{- end -}}

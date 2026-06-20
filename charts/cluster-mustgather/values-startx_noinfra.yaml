@@ -32,7 +32,7 @@ project:
   context:
     <<: *context
   project:
-    enabled: true
+    enabled: false
     hooked: false
     type: namespace
     name: "openshift-mustgather-operator"
@@ -66,27 +66,27 @@ operator:
     enabled: true
     hooked: false
     name: "must-gather-operator"
-    namespace: "openshift-mustgather-operator"
+    namespace: "openshift-operators"
     version: "v1.1.2"
     operator:
       channel: "alpha"
       name: must-gather-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: must-gather-operator
       source:
         name: community-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
-        # resources: 
+        # resources:
         #   limits:
         #     cpu: 400m
         #   requests:
         #     cpu: 400m
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     target: "all-ns"
     name: "must-gather-operator"
-    namespace: "openshift-mustgather-operator"
+    namespace: "openshift-operators"
     providedAPIs: "MustGather.v1alpha1.redhatcop.redhat.io"
