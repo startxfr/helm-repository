@@ -177,10 +177,31 @@ Track and report any errors per chart. Non-fatal errors (like external sub-chart
 
 **Step 5 — Global release**
 
-Run:
+⚠ **IMPORTANT**: `./sx-helm release` forces ALL charts to the same version. If `project`, `operator`, or `sxapi` are at a higher version (which they usually are), they will be **downgraded** in `Chart.yaml`. To avoid this, use the manual approach:
+
+**Recommended (safe) approach**:
+```bash
+# 1. Release only charts that have NOT already been released (not in the 3 families above)
+export PATH="/home/cl/.local/bin:$PATH"
+# Run release for charts without basic deps (e.g., example-catalog, example-deployment, etc.)
+for chart in example-catalog example-deployment example-fruitapp-app example-fruitapp-shared \
+             example-html example-imagestreams example-knative example-php example-pod \
+             cluster-auth cluster-machine cluster-rbac cluster-router cluster-storage chaos; do
+  INTERACTIVE=false DESC="update all charts dependencies to v<version>" ./sx-helm $chart release 2>&1
+done
+
+# 2. Update repo-release file manually (avoid ./sx-helm release which would downgrade basic charts)
+CURRENT=$(cat .tools/repo-release)
+NEW_VER=$(echo $CURRENT | awk -F. '{print $1"."$2"."$3+1}')  # increment patch
+echo "$NEW_VER" > .tools/repo-release
+git add .tools/repo-release
+git commit -m "[docs] update repository content to $NEW_VER"
+```
+
+**Alternative (risky) approach** — only use if basic charts are at the SAME version as the target:
 ```bash
 export PATH="/home/cl/.local/bin:$PATH"
-INTERACTIVE=false DESC="update all charts dependencies to v<version>" ./sx-helm release 2>&1
+INTERACTIVE=false DESC="update all charts dependencies to v<version>" ./sx-helm release > /tmp/global-release.log 2>&1
 ```
 
 This bumps the repo-level version counter and ensures charts without basic dependencies (e.g., `chaos` umbrella chart) are also aligned to the new version.
@@ -215,8 +236,26 @@ Errors (if any):
   cluster-vault : external vault sub-chart dependency warning (non-fatal)
 ```
 
-## Known issues
+## Known issues and feedback from first deployment
 
-- `cluster-vault` has an external HashiCorp vault sub-chart dependency that sometimes fails to resolve version during packaging. This is a pre-existing issue unrelated to basic dependency updates — the chart is still packaged and uploaded successfully.
-- `helm`, `yq`, and `aws` must be in PATH. Export `PATH="/home/cl/.local/bin:$PATH"` before every `./sx-helm` call.
-- The global `./sx-helm release` re-packages charts already released individually (at same version), generating duplicate S3 uploads but no version drift. This is expected behavior for a full repo sync.
+### CRITICAL: Basic chart downgrade during global release
+`./sx-helm release` forces ALL charts to the same next version (e.g., 21.3.68). If `project`, `operator`, or `sxapi` are at a HIGHER version (e.g., 21.3.70 from their own release cycle), they get **downgraded** in `Chart.yaml`. The S3 packages for both versions coexist (21.3.70 is still the highest in the index), but the git `Chart.yaml` is incorrect.
+
+**Fix for future runs**: Before running `./sx-helm release`, check if basic chart versions exceed the target version and skip them. Or avoid `./sx-helm release` entirely and instead:
+1. Update `repo-release` manually to the next version
+2. Commit the file
+3. Run `./sx-helm publish` (which handles branch merges)
+
+### Global release timeout
+`./sx-helm release` processes ALL charts (~80+), each downloading helm dependencies from the network. This can take 30+ minutes. Do NOT pipe through `| head -N` or use a pipe that closes early — it will kill the process mid-run and leave repo-release unupdated.
+
+Use `> /tmp/global-release.log 2>&1` with background execution and a 10-minute timeout. If it times out, complete remaining charts manually with individual `./sx-helm <chart> release` calls, then update `repo-release` and commit manually.
+
+### cluster-vault packaging warning
+`cluster-vault` has an external HashiCorp vault sub-chart dependency that sometimes fails to resolve version during packaging. This is a pre-existing issue — the chart is still packaged and uploaded successfully.
+
+### PATH requirement
+`helm`, `yq`, and `aws` are in `~/.local/bin/`, not in the default PATH. Always export `PATH="/home/cl/.local/bin:$PATH"` before every `./sx-helm` call.
+
+### Duplicate S3 uploads
+The global `./sx-helm release` re-packages charts already released individually (at same version), generating duplicate S3 uploads but no version drift. This is expected behavior for a full repo sync.
