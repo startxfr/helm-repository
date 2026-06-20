@@ -71,61 +71,212 @@ chaos-monkey-instance  startx/chaos-monkey
 
 ### 5. Manage with ArgoCD
 
-ArgoCD will allow you to deploy this helm chart in a gitops way of doing. [ArgoCD deployment](../../docs/install-argocd.md) must help you deploy the ArgoCD stack.
+### Deploy via ArgoCD Applications
 
- In order to manage this cluster resource using argoCD, you should deploy your service [using startx charts](https://helm-repository.readthedocs.io) :
-- [project](../../docs/install-argocd.md#11-create-cluster-service-projects) to created required projects
-- [operator](../../docs/install-argocd.md#12-deploy-the-operator) to deploy required operators
-- [instance](../../docs/install-argocd.md#13-create-a-cluster-service-instance) to deploy this resource components
-
-#### 5.1 Create project
+`chaos` is an umbrella chart. The recommended GitOps approach is one AppProject shared across the suite and one Application per sub-chart (cerberus, kraken, litmus, mesh, monkey) to allow independent lifecycle management.
 
 ```yaml
-kind: Application
 apiVersion: argoproj.io/v1alpha1
+kind: AppProject
 metadata:
-name: chaos
-namespace: "chaos"
+  name: chaos
+  namespace: openshift-gitops
 spec:
-destination:
-  namespace: "default"
-  server: 'https://kubernetes.default.svc'
-project: default
-source:
-  repoURL: 'https://helm-repository.readthedocs.io/en/latest/repos/stable'
-  targetRevision: 21.3.102
-  chart: chaos
-  helm:
-    values:
-      ingress:
-        enabled: true
-        path: /
-        hosts:
-          - mydomain.example.com
-        annotations:
-          kubernetes.io/ingress.class: nginx
-          kubernetes.io/tls-acme: "true"
-        labels: {}
-    parameters:
-      - name: sxapi.service.enabled
-      value: "true"
-      - name: sxapi.service.expose
-      value: "true"
-destination:
-  server: 'https://kubernetes.default.svc'
-  namespace: demo-chaos
-syncPolicy:
-  automated:
-    prune: true
-  syncOptions:
-    - CreateNamespace=true
-  retry:
-    limit: 3
+  description: Full chaos testing suite — cerberus, kraken, litmus, chaos-mesh, kube-monkey
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+    - 'https://litmuschaos.github.io/litmus-helm'
+    - 'https://charts.chaos-mesh.org'
+    - 'https://asobti.github.io/kube-monkey/charts/repo'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: chaos-cerberus
+    - server: https://kubernetes.default.svc
+      namespace: chaos-kraken
+    - server: https://kubernetes.default.svc
+      namespace: chaos-litmus
+    - server: https://kubernetes.default.svc
+      namespace: chaos-mesh
+    - server: https://kubernetes.default.svc
+      namespace: chaos-monkey
+    - server: https://kubernetes.default.svc
+      namespace: default
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: project.openshift.io
+      kind: ProjectRequest
+    - group: security.openshift.io
+      kind: SecurityContextConstraints
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+    - group: chaos-mesh.org
+      kind: '*'
+    - group: tekton.dev
+      kind: Pipeline
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-cerberus-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-cerberus
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-cerberus
+    helm:
+      values: |
+        project:
+          enabled: true
+        cerberus:
+          enabled: true
+          kubeconfig:
+            mode: token
+            token:
+              server: https://api.demo219.startx.fr:6443
+              token: sha256~REPLACE_WITH_YOUR_TOKEN
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.105
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-kraken-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-kraken
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-kraken
+    helm:
+      values: |
+        project:
+          enabled: true
+        kraken:
+          enabled: true
+          mode: job
+          cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+          kubeconfig:
+            mode: token
+            token:
+              server: https://api.demo219.startx.fr:6443
+              token: sha256~REPLACE_WITH_YOUR_TOKEN
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.105
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-litmus-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-litmus
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-litmus
+    helm:
+      values: |
+        project:
+          enabled: true
+        litmus:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.105
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-mesh-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-mesh
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-mesh
+    helm:
+      values: |
+        project:
+          enabled: true
+        mesh:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.105
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-monkey-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-monkey
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-monkey
+    helm:
+      values: |
+        project:
+          enabled: true
+        monkey:
+          enabled: true
+          config:
+            dryRun: true
+            timezone: Europe/Paris
+            startHour: 9
+            endHour: 17
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.105
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 ```
 
-#### 5.2 Enable operator
+Apply with:
 
-#### 5.3 Deploy cluster-service instance
+```bash
+kubectl apply -f chaos-argocd.yaml -n openshift-gitops
+```
 
 
 
@@ -314,3 +465,4 @@ helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.102 | 2026-06-20 | publish stable update for the full repository |
+| 21.3.105 | 2026-06-20 | Improve chaos options |
