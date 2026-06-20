@@ -112,7 +112,7 @@ spec:
         operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.56
+    targetRevision: 21.3.67
   destination:
     namespace: openshift-operators
     server: https://kubernetes.default.svc
@@ -142,7 +142,7 @@ spec:
         report:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
+    targetRevision: 21.3.67
   ignoreDifferences:
     - group: managed.openshift.io
       kind: MustGather
@@ -184,3 +184,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
+| 21.3.67 | 2026-06-20 | publish stable update for the full repository |
