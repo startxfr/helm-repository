@@ -165,6 +165,101 @@ spec:
 oc apply -f pod-chaos-example.yaml
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`chaos-mesh` installs upstream CRDs (`chaos-mesh.org/*`) and the chaos-mesh dashboard. The AppProject must whitelist those CRD resources.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: chaos-mesh
+  namespace: openshift-gitops
+spec:
+  description: Deploy Chaos Mesh chaos engineering platform on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+    - 'https://charts.chaos-mesh.org'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: chaos-mesh
+    - server: https://kubernetes.default.svc
+      namespace: default
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: project.openshift.io
+      kind: ProjectRequest
+    - group: security.openshift.io
+      kind: SecurityContextConstraints
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+    - group: chaos-mesh.org
+      kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-mesh-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: chaos-mesh
+  source:
+    chart: chaos-mesh
+    helm:
+      values: |
+        project:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.103
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-mesh-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-mesh
+    server: https://kubernetes.default.svc
+  project: chaos-mesh
+  source:
+    chart: chaos-mesh
+    helm:
+      values: |
+        mesh:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.103
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Apply with:
+
+```bash
+kubectl apply -f chaos-mesh-argocd.yaml -n openshift-gitops
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                                                                              |
@@ -192,3 +287,4 @@ oc apply -f pod-chaos-example.yaml
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.102 | 2026-06-20 | publish stable update for the full repository |
+| 21.3.103 | 2026-06-20 | Improve chaos-mesh options |

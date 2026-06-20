@@ -152,6 +152,97 @@ helm install chaos-litmus startx/chaos-litmus \
   -n chaos-litmus
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`chaos-litmus` follows the project/instance pattern. The litmus portal includes a frontend and a backend — both are enabled by default when `litmus.enabled=true`.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: chaos-litmus
+  namespace: openshift-gitops
+spec:
+  description: Deploy Litmus chaos engineering portal on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+    - 'https://litmuschaos.github.io/litmus-helm'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: chaos-litmus
+    - server: https://kubernetes.default.svc
+      namespace: default
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: project.openshift.io
+      kind: ProjectRequest
+    - group: security.openshift.io
+      kind: SecurityContextConstraints
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-litmus-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: chaos-litmus
+  source:
+    chart: chaos-litmus
+    helm:
+      values: |
+        project:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.103
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-litmus-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-litmus
+    server: https://kubernetes.default.svc
+  project: chaos-litmus
+  source:
+    chart: chaos-litmus
+    helm:
+      values: |
+        litmus:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.103
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Apply with:
+
+```bash
+kubectl apply -f chaos-litmus-argocd.yaml -n openshift-gitops
+```
+
 ## History
 
 | Release  | Date       | Description                                                                                                                                            |
@@ -179,3 +270,4 @@ helm install chaos-litmus startx/chaos-litmus \
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.102 | 2026-06-20 | publish stable update for the full repository |
+| 21.3.103 | 2026-06-20 | Improve chaos-litmus options |
