@@ -388,18 +388,71 @@ spec:
       selfHeal: true
 ```
 
+For **ODF specifically**, the OCS operator mutates several additional fields post-sync. Use `jqPathExpressions` (not `jsonPointers`) for the `-app` Application:
+
+```yaml
+  ignoreDifferences:
+    - group: ocs.openshift.io
+      kind: StorageCluster
+      jqPathExpressions:
+        - .metadata.finalizers
+        - .metadata.annotations["uninstall.ocs.openshift.io/cleanup-policy"]
+        - .metadata.annotations["uninstall.ocs.openshift.io/mode"]
+        - .spec.version
+        - .spec.encryption.keyRotation
+        - .spec.managedResources
+        - .spec.storageDeviceSets[].replica
+```
+
+For the `-operator` Application, OLM mutates the OperatorGroup after install. Add `ignoreDifferences` on the `-operator` Application:
+
+```yaml
+  ignoreDifferences:
+    - group: operators.coreos.com
+      kind: OperatorGroup
+      name: openshift-storage
+      namespace: openshift-storage
+      jsonPointers:
+        - /metadata/annotations/olm.providedAPIs
+        - /spec/upgradeStrategy
+    - group: console.openshift.io
+      kind: ConsolePlugin
+      name: odf-console
+      jqPathExpressions:
+        - .spec
+        - .metadata.annotations
+        - .metadata.labels
+```
+
+Also override the channel in the `-operator` Application values (default `stable-4.19` may be unavailable):
+
+```yaml
+      values: |
+        operator:
+          enabled: true
+          subscription:
+            operator:
+              channel: "stable-4.21"
+```
+
 Common mappings already applied in all chart READMEs:
 
-| Chart | group | kind |
-|---|---|---|
-| cluster-odf | `ocs.openshift.io` | `StorageCluster` |
-| cluster-mtv | `forklift.konveyor.io` | `ForkliftController` |
-| cluster-acm | `operator.open-cluster-management.io` | `MultiClusterHub` |
-| cluster-kafka | `kafka.strimzi.io` | `Kafka` |
-| cluster-istio | `maistra.io` | `ServiceMeshControlPlane` |
-| cluster-logging | `logging.openshift.io` | `ClusterLogging` |
-| cluster-sso | `keycloak.org` | `Keycloak` |
-| cluster-quay | `quay.redhat.com` | `QuayRegistry` |
+| Chart | group | kind | Notes |
+|---|---|---|---|
+| cluster-odf | `ocs.openshift.io` | `StorageCluster` | See extended ignoreDifferences above |
+| cluster-mtv | `forklift.konveyor.io` | `ForkliftController` | |
+| cluster-acm | `operator.open-cluster-management.io` | `MultiClusterHub` | |
+| cluster-kafka | `kafka.strimzi.io` | `Kafka` | |
+| cluster-istio | `maistra.io` | `ServiceMeshControlPlane` | |
+| cluster-logging | `logging.openshift.io` | `ClusterLogging` | |
+| cluster-sso | `keycloak.org` | `Keycloak` | |
+| cluster-quay | `quay.redhat.com` | `QuayRegistry` | |
+
+**Prerequisite for ODF on compact clusters**: label all worker/master nodes before deploying:
+
+```bash
+oc label node <node-name> cluster.ocs.openshift.io/openshift-storage='' --overwrite
+```
 
 ### CR template sync-wave
 

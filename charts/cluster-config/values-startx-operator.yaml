@@ -51,12 +51,12 @@ operatorSosReport:
     enabled: true
     hooked: false
     name: "sosreport-operator"
-    namespace: "openshift-startx-sosreport"
+    namespace: "default-sosreport"
     version: "v0.0.2"
     operator: 
       channel: "alpha"
       name: sosreport-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: sosreport-operator
       source: 
         name: community-operators
@@ -71,9 +71,8 @@ operatorSosReport:
   operatorGroup:
     enabled: true
     hooked: false
-    target: "all-ns"
     name: "sosreport-operator"
-    namespace: "openshift-startx-sosreport"
+    namespace: "default-sosreport"
     providedAPIs: "Sosreport.v1alpha1.support.openshift.io"
 
 # Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)

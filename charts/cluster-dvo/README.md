@@ -40,11 +40,10 @@ helm install cluster-dvo startx/cluster-dvo
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **namespace:** named **deployment-validation-operator** without constraints
 - 1 **operator:** named **deployment-validation-operator** configured with
   - The **alpha** channel for community release
   - The **v0.7.14** version
-  - Deployed under the **deployment-validation-operator** project
+  - Deployed under **openshift-operators** (AllNamespaces — DVO watches all namespaces)
 
 ```bash
 # Create the project
@@ -78,7 +77,7 @@ spec:
   sourceRepos:
     - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
   destinations:
-    - namespace: deployment-validation-operator
+    - namespace: openshift-operators
       server: https://kubernetes.default.svc
     - namespace: openshift-gitops
       server: https://kubernetes.default.svc
@@ -92,37 +91,11 @@ spec:
 
 ### Applications
 
+> DVO requires AllNamespaces scope to validate deployments across the whole cluster. The subscription goes directly into `openshift-operators` — no dedicated namespace or OperatorGroup needed.
+
 ```yaml
 ---
-# Creates namespace deployment-validation-operator
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-dvo-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-dvo
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-dvo
-    targetRevision: 21.3.56
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys DVO operator in dedicated namespace with its own OperatorGroup (all-namespaces)
+# Wave 5 — DVO operator subscription in openshift-operators (AllNamespaces, no project wave needed)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -142,17 +115,19 @@ spec:
       valueFiles:
         - values-startx_noinfra.yaml
       values: |
+        project:
+          enabled: false
         operator:
           enabled: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: deployment-validation-operator
+    namespace: openshift-operators
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
 ---
-# Configures DVO grafana dashboard (disabled by default)
+# Wave 10 — Grafana dashboard for DVO metrics (disabled by default)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -173,10 +148,10 @@ spec:
         - values-startx_noinfra.yaml
       values: |
         grafana:
-          enabled: false
+          enabled: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: deployment-validation-operator
+    namespace: deployment-validation-monitoring
   ignoreDifferences:
     - group: grafana.integreatly.org
       kind: Grafana

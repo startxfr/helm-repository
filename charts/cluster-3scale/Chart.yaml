@@ -6,7 +6,7 @@ description: Helm chart used to configure 3scale at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.56
+version: 21.3.57
 # Version of 3scale operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "0.13.3"
 # Icon of this helm-chart
@@ -86,6 +86,8 @@ annotations:
       description: "Add cluster-redis and cluster-crunchy optional sub-chart dependencies for external databases"
     - kind: added
       description: "Add externalComponents support: system-redis, backend-redis, system-database, zync secrets"
+    - kind: added
+      description: "Auto-create openshift-crunchy-pgo namespace in project wave to allow CrunchyDB operator deployment"
     - kind: changed
       description: "APIManager now supports externalComponents.enabled for 3scale 2.16+ external database requirement"
   artifacthub.io/containsSecurityUpdates: "false"

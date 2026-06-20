@@ -49,7 +49,7 @@ name: crunchy-project
 namespace: "openshift-gitops"
 spec:
   destination:
-    namespace: "crunchy-demo"
+    namespace: "default-crunchy"
     server: 'https://kubernetes.default.svc'
 project: default
 source:
@@ -76,7 +76,7 @@ name: crunchy-operator
 namespace: "openshift-gitops"
 spec:
   destination:
-    namespace: "openshift-operators"
+    namespace: "default-crunchy"
     server: 'https://kubernetes.default.svc'
 project: default
 source:
@@ -103,7 +103,7 @@ name: crunchy-instance
 namespace: "openshift-gitops"
 spec:
   destination:
-    namespace: "crunchy-demo"
+    namespace: "default-crunchy"
     server: 'https://kubernetes.default.svc'
 project: default
 source:
@@ -125,11 +125,11 @@ EOF
 
 Complete deployment of a project with the following characteristics :
 
-- 1 **namespace:** named **demo-crunchy** without constraints
+- 1 **namespace:** named **default-crunchy** without constraints
 - 1 **operator:** named **crunchy-postgres-operator** configured with
   - The **v5** channel for community release
   - The **v5.8.6** version
-  - Deployed under the **demo-crunchy** project
+  - Deployed under the **default-crunchy** project
 
 ```bash
 # Create the project
@@ -163,7 +163,7 @@ spec:
   sourceRepos:
     - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
   destinations:
-    - namespace: demo-crunchy
+    - namespace: default-crunchy
       server: https://kubernetes.default.svc
     - namespace: default-crunchy
       server: https://kubernetes.default.svc
@@ -181,7 +181,7 @@ spec:
 
 ```yaml
 ---
-# Creates namespace demo-crunchy
+# Creates namespace default-crunchy
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -209,7 +209,7 @@ spec:
       prune: true
       selfHeal: true
 ---
-# Deploys Crunchy Postgres operator in demo-crunchy (dedicated namespace, own OperatorGroup)
+# Deploys Crunchy Postgres operator in default-crunchy (dedicated namespace, own OperatorGroup)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -233,13 +233,13 @@ spec:
           enabled: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: demo-crunchy
+    namespace: default-crunchy
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
 ---
-# Deploys PostgresCluster instances in demo-crunchy
+# Deploys PostgresCluster instances in default-crunchy
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -265,7 +265,7 @@ spec:
           enabled: false
   destination:
     server: https://kubernetes.default.svc
-    namespace: demo-crunchy
+    namespace: default-crunchy
   ignoreDifferences:
     - group: postgres-operator.crunchydata.com
       kind: PostgresCluster

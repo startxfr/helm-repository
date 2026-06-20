@@ -115,7 +115,7 @@ operator:
     operator: 
       channel: "stable"
       name: gpu-operator-certified
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: gpu-operator-certified
       source: 
         name: certified-operators
@@ -128,8 +128,9 @@ operator:
         #   requests:
         #     cpu: 400m
   operatorGroup:
-    enabled: false
+    enabled: true
     hooked: false
+    target: "all-ns"
     name: "nvidia-gpu-operator"
     namespace: "nvidia-gpu-operator"
     providedAPIs: "ClusterPolicy.v1.nvidia.com,NVIDIADriver.v1alpha1.nvidia.com"

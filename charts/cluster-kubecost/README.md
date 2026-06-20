@@ -40,9 +40,9 @@ helm install cluster-kubecost startx/cluster-kubecost
 
 Complete deployment of a Kubecost configuration with the following characteristics:
 
-- Deploy the **kubecost-operator** Subscription in `openshift-kubecost-operator`
-- Deploy the **CostAnalyzer** CR instance in `startx-kubecost`
-- The `project` sub-chart creates the `openshift-kubecost-operator` operator namespace
+- Deploy the **kubecost-operator** Subscription in `default-kubecost`
+- Deploy the **CostAnalyzer** CR instance in `default-kubecost`
+- The `project` sub-chart creates the `default-kubecost` operator namespace
 
 ```bash
 # base configuration running default configuration
@@ -62,7 +62,7 @@ helm install cluster-kubecost startx/cluster-kubecost -f https://raw.githubuserc
 ### Deploy via ArgoCD Application
 
 Deploy `cluster-kubecost` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
-The kubecost operator installs in `openshift-kubecost-operator`; the CostAnalyzer instance runs in `startx-kubecost`:
+The kubecost operator installs in `default-kubecost`; the CostAnalyzer instance runs in `default-kubecost`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -76,9 +76,9 @@ spec:
     - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
   destinations:
     - server: https://kubernetes.default.svc
-      namespace: openshift-kubecost-operator
+      namespace: default-kubecost
     - server: https://kubernetes.default.svc
-      namespace: startx-kubecost
+      namespace: default-kubecost
     - server: https://kubernetes.default.svc
       namespace: '*'
   clusterResourceWhitelist:
@@ -100,7 +100,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   destination:
-    namespace: openshift-kubecost-operator
+    namespace: default-kubecost
     server: https://kubernetes.default.svc
   project: cluster-kubecost
   source:
@@ -129,7 +129,7 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: openshift-kubecost-operator
+    namespace: default-kubecost
     server: https://kubernetes.default.svc
   project: cluster-kubecost
   source:
@@ -156,7 +156,7 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: startx-kubecost
+    namespace: default-kubecost
     server: https://kubernetes.default.svc
   project: cluster-kubecost
   source:
@@ -165,7 +165,7 @@ spec:
       values: |
         kubecost:
           enabled: true
-          namespace: startx-kubecost
+          namespace: default-kubecost
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.55
   ignoreDifferences:

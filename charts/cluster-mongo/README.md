@@ -98,7 +98,7 @@ spec:
           enabled: false
   destination:
     server: https://kubernetes.default.svc
-    namespace: openshift-operators
+    namespace: default-mongo
   syncPolicy:
     automated:
       prune: true
@@ -127,7 +127,7 @@ spec:
           enabled: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: startx-mongo
+    namespace: default-mongo
   ignoreDifferences:
     - group: mongodbcommunity.mongodb.com
       kind: MongoDBCommunity

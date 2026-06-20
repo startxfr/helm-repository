@@ -144,9 +144,28 @@ spec:
       values: |
         operator:
           enabled: true
+          subscription:
+            operator:
+              channel: "stable-4.21"
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  # OLM adds olm.providedAPIs annotation and upgradeStrategy after operator install
+  ignoreDifferences:
+    - group: operators.coreos.com
+      kind: OperatorGroup
+      name: openshift-storage
+      namespace: openshift-storage
+      jsonPointers:
+        - /metadata/annotations/olm.providedAPIs
+        - /spec/upgradeStrategy
+    - group: console.openshift.io
+      kind: ConsolePlugin
+      name: odf-console
+      jqPathExpressions:
+        - .spec
+        - .metadata.annotations
+        - .metadata.labels
   syncPolicy:
     automated:
       prune: true
@@ -181,11 +200,18 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
+  # OCS operator mutates these fields after sync — ignore to keep Application Synced
   ignoreDifferences:
     - group: ocs.openshift.io
       kind: StorageCluster
-      jsonPointers:
-        - /metadata/finalizers
+      jqPathExpressions:
+        - .metadata.finalizers
+        - .metadata.annotations["uninstall.ocs.openshift.io/cleanup-policy"]
+        - .metadata.annotations["uninstall.ocs.openshift.io/mode"]
+        - .spec.version
+        - .spec.encryption.keyRotation
+        - .spec.managedResources
+        - .spec.storageDeviceSets[].replica
   syncPolicy:
     automated:
       prune: true

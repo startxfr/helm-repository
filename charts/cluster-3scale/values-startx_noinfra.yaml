@@ -24,13 +24,13 @@ externalComponents:
     backendQueuesDb: "2"
   database:
     enabled: true
-    host: "startx-3scale-db-primary.startx-crunchy.svc.cluster.local"
+    host: "startx-3scale-db-primary.default-crunchy.svc.cluster.local"
     port: "5432"
     name: "3scale"
     user: "3scale"
     password: "3scale_Pa55w0rd!"
   zync:
-    host: "startx-3scale-db-primary.startx-crunchy.svc.cluster.local"
+    host: "startx-3scale-db-primary.default-crunchy.svc.cluster.local"
     port: "5432"
     name: "zync"
     user: "zync"
@@ -67,7 +67,7 @@ clusterRedis:
       operator:
         channel: alpha
         name: redis-operator
-        installPlanApproval: Automatic
+        installPlanApproval: Manual
         source:
           name: community-operators
           namespace: openshift-marketplace
@@ -144,7 +144,7 @@ clusterCrunchy:
       enabled: true
       hooked: false
       type: namespace
-      name: "startx-crunchy"
+      name: "default-crunchy"
       display_name: "Startx CrunchyDB"
       requester: startx
       description: "CrunchyDB for 3scale managed by STARTX"
@@ -159,7 +159,7 @@ clusterCrunchy:
       operator:
         channel: v5
         name: crunchy-postgres-operator
-        installPlanApproval: Automatic
+        installPlanApproval: Manual
         source:
           name: certified-operators
           namespace: openshift-marketplace
@@ -175,7 +175,7 @@ clusterCrunchy:
     list:
     - name: startx-3scale-db
       enabled: true
-      namespace: startx-crunchy
+      namespace: default-crunchy
       postgresVersion: 14
       storageClassName: startx-odf-ceph-rbd
       storageInstanceSize: "10Gi"
@@ -327,7 +327,7 @@ operator:
     operator: 
       channel: threescale-2.16
       name: 3scale-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: 3scale-operator
       source: 
         name: redhat-operators

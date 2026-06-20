@@ -108,7 +108,7 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: openshift-operators-redhat
       server: https://kubernetes.default.svc
-    - namespace: openshift-startx-sosreport
+    - namespace: default-sosreport
       server: https://kubernetes.default.svc
     - namespace: openshift-gitops
       server: https://kubernetes.default.svc

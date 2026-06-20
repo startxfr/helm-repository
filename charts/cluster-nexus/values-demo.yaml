@@ -5,13 +5,13 @@ context: &context
   cluster: default
   environment: infra
   component: nexus
-  app: demo-nexus
+  app: default-nexus
   version: "3.84.0"
 nexus:
   enabled: false
   hooked: false
   name: default
-  namespace: startx-nexus
+  namespace: default-nexus
   spec: |
     ingress:
       enabled: true
@@ -109,7 +109,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "demo-nexus"
+    name: "default-nexus"
     display_name: "Demo NEXUS"
     requester: startx
     description: Demo Nexus configured by STARTX
@@ -121,12 +121,12 @@ operator:
     enabled: true
     hooked: false
     name: "nxrm-operator-certified"
-    namespace: "demo-nexus"
+    namespace: "default-nexus"
     version: "v3.84.0-1"
     operator: 
       channel: stable
       name: nxrm-operator-certified
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: nxrm-operator-certified
       source: 
         name: certified-operators
@@ -134,6 +134,6 @@ operator:
   operatorGroup:
     enabled: true
     hooked: false
-    name: "demo-nexus"
-    namespace: "demo-nexus"
+    name: "default-nexus"
+    namespace: "default-nexus"
     providedAPIs: "NexusRepo.v1alpha1.sonatype.com"

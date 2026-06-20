@@ -24,7 +24,7 @@ nexus:
   # Name of the deployed instance of NexusRepo
   name: default
   # Namespace of the deployed instance of NexusRepo
-  namespace: startx-nexus
+  namespace: default-nexus
   # The applied Nexus config specifications
   spec: |
     ingress:
@@ -127,7 +127,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "startx-nexus"
+    name: "default-nexus"
     display_name: Instance NEXUS
     description: Nexus repository server configured by STARTX
 
@@ -140,12 +140,12 @@ operator:
     enabled: true
     hooked: false
     name: "nexus-repository-ha-operator-certified"
-    namespace: "openshift-operators"
+    namespace: "default-nexus"
     version: "v3.90.3-1"
     operator:
       channel: stable
       name: nexus-repository-ha-operator-certified
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: nexus-repository-ha-operator-certified.v3.90.3-1
       source:
         name: certified-operators
@@ -156,5 +156,5 @@ operator:
     enabled: true
     hooked: false
     name: "global-operators"
-    namespace: "openshift-operators"
+    namespace: "default-nexus"
     providedAPIs: "NexusRepo.v1alpha1.sonatype.com"

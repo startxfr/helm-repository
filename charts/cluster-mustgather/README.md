@@ -62,8 +62,10 @@ helm install cluster-mustgather startx/cluster-mustgather -f https://raw.githubu
 
 ### Deploy via ArgoCD Application
 
-Deploy `cluster-mustgather` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
-The must-gather operator installs in `openshift-mustgather-operator`; MustGather report instances run in `startx-mustgather`:
+Deploy `cluster-mustgather` using two dedicated ArgoCD Applications sharing the same AppProject.
+The must-gather operator installs in `openshift-operators` (AllNamespaces); MustGather report instances run in `default-mustgather`:
+
+> The must-gather operator requires AllNamespaces scope to trigger must-gather on any namespace. No dedicated operator namespace is created — the subscription goes into `openshift-operators`.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -77,48 +79,17 @@ spec:
     - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
   destinations:
     - server: https://kubernetes.default.svc
-      namespace: openshift-mustgather-operator
+      namespace: openshift-operators
     - server: https://kubernetes.default.svc
-      namespace: startx-mustgather
-    - server: https://kubernetes.default.svc
-      namespace: '*'
+      namespace: default-mustgather
   clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-    - group: operators.coreos.com
-      kind: OperatorGroup
-    - group: operators.coreos.com
-      kind: Subscription
-    - group: redhatcop.redhat.io
-      kind: MustGather
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
 ---
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mustgather-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  destination:
-    namespace: openshift-mustgather-operator
-    server: https://kubernetes.default.svc
-  project: cluster-mustgather
-  source:
-    chart: cluster-mustgather
-    helm:
-      values: |
-        project:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
+# Wave 5 — MustGather operator subscription in openshift-operators (AllNamespaces)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -129,23 +100,28 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    namespace: openshift-mustgather-operator
-    server: https://kubernetes.default.svc
   project: cluster-mustgather
   source:
     chart: cluster-mustgather
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
+        project:
+          enabled: false
         operator:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.55
+    targetRevision: 21.3.56
+  destination:
+    namespace: openshift-operators
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
 ---
+# Wave 10 — MustGather report instances in default-mustgather
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -156,13 +132,12 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    namespace: startx-mustgather
-    server: https://kubernetes.default.svc
   project: cluster-mustgather
   source:
     chart: cluster-mustgather
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         report:
           enabled: true

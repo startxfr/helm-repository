@@ -5,7 +5,7 @@ context: &context
   cluster: default
   environment: infra
   component: vault-config
-  app: startx-vault-config
+  app: default-vault-config
   version: "0.8.38"
 project: 
   enabled: false
@@ -13,7 +13,7 @@ project:
     <<: *context
   project: 
     enabled: true
-    name: startx-vault-config
+    name: default-vault-config
     display_name: "Startx VAULT"
     requester: startx
     description: Vault storage & control plane configured by STARTX
@@ -21,10 +21,10 @@ project:
     enabled: true
     user: 
     - id: vault-config-sa-edit
-      name: system:serviceaccount:startx-vault-config:{{ .Release.name }}
+      name: system:serviceaccount:default-vault-config:{{ .Release.name }}
       role: edit
     - id: vault-config-agent-injector-sa-admin
-      name: system:serviceaccount:startx-vault-config:{{ .Release.name }}-agent-injector
+      name: system:serviceaccount:default-vault-config:{{ .Release.name }}-agent-injector
       role: admin
 operator:
   enabled: true
@@ -34,12 +34,12 @@ operator:
     enabled: true
     hooked: false
     name: "vault-config-operator"
-    namespace: "startx-vault-config"
+    namespace: "default-vault-config"
     version: "v0.8.38"
     operator: 
       channel: alpha
       name: vault-config-operator
-      installPlanApproval: Automatic
+      installPlanApproval: Manual
       # csv: vault-config-operator
       source: 
         name: community-operators
@@ -54,8 +54,8 @@ operator:
   operatorGroup:
     enabled: true
     hooked: false
-    name: "startx-vault-config"
-    namespace: "startx-vault-config"
+    name: "default-vault-config"
+    namespace: "default-vault-config"
     providedAPIs: "AuthEngineMount.v1alpha1.redhatcop.redhat.io,DatabaseSecretEngineConfig.v1alpha1.redhatcop.redhat.io,DatabaseSecretEngineRole.v1alpha1.redhatcop.redhat.io,KubernetesAuthEngineConfig.v1alpha1.redhatcop.redhat.io,KubernetesAuthEngineRole.v1alpha1.redhatcop.redhat.io,PasswordPolicy.v1alpha1.redhatcop.redhat.io,Policy.v1alpha1.redhatcop.redhat.io,RandomSecret.v1alpha1.redhatcop.redhat.io,SecretEngineMount.v1alpha1.redhatcop.redhat.io"
 vault:
   RandomSecret:

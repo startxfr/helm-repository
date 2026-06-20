@@ -10,12 +10,12 @@ context: &context
 graphana:
   enabled: false
   name: deployment-validation-operator
-project: 
+project:
   enabled: false
-  context: 
+  context:
     <<: *context
-  project: 
-    enabled: true
+  project:
+    enabled: false
     hooked: false
     type: namespace
     name: "deployment-validation-operator"
@@ -25,27 +25,27 @@ project:
       openshift.io/cluster-monitoring: "true"
 operator:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
     hooked: false
     name: "deployment-validation-operator"
-    namespace: "deployment-validation-operator"
+    namespace: "openshift-operators"
     version: "v0.7.14"
-    operator: 
+    operator:
       channel: "alpha"
       name: deployment-validation-operator
-      installPlanApproval: Automatic
-      source: 
+      installPlanApproval: Manual
+      source:
         name: community-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
   operatorGroup:
-    enabled: true
+    enabled: false
     hooked: false
     name: "startx-dvo"
     target: "all-ns"
-    namespace: "deployment-validation-operator"
+    namespace: "openshift-operators"
     providedAPIs: ""
