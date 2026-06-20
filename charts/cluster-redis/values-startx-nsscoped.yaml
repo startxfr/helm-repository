@@ -16,7 +16,7 @@ project:
     enabled: true
     hooked: false
     type: namespace
-    name: "default-redis"
+    name: "startx-redis"
     display_name: "Startx REDIS"
     requester: startx
     description: Redis configured by STARTX
@@ -38,7 +38,7 @@ operator:
     enabled: true
     hooked: false
     name: "redis-operator"
-    namespace: "default-redis"
+    namespace: "startx-redis"
     version: "v0.15.1"
     operator: 
       channel: "stable"
@@ -59,7 +59,7 @@ operator:
     enabled: true
     hooked: false
     name: "redis-operator"
-    namespace: "default-redis"
+    namespace: "startx-redis"
     providedAPIs: "RedisEnterpriseActiveActiveDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseCluster.v1.app.redislabs.com,RedisEnterpriseDatabase.v1alpha1.app.redislabs.com,RedisEnterpriseRemoteCluster.v1alpha1.app.redislabs.com"
 rbac:
   enabled: false
