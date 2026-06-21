@@ -471,3 +471,4 @@ helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.104 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
