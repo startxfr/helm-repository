@@ -242,7 +242,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.106
   syncPolicy:
     automated:
       prune: true
@@ -272,7 +272,7 @@ spec:
           prometheus:
             create: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.106
   syncPolicy:
     automated:
       prune: true
@@ -319,3 +319,4 @@ kubectl apply -f chaos-mesh-argocd.yaml -n openshift-gitops
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.106 | 2026-06-21 | publish stable update for the full repository |
