@@ -190,6 +190,18 @@ helm install chaos-cerberus startx/chaos-cerberus \
 
 ## ArgoCD deployment
 
+### Prerequisites
+
+Cerberus monitors `ClusterVersions`, `ClusterOperators`, nodes and namespaces — it requires `cluster-reader` access (not just `view`). Create a dedicated ServiceAccount before deploying:
+
+```bash
+oc create serviceaccount cerberus-monitor -n chaos-cerberus
+oc create clusterrolebinding cerberus-monitor-cluster-reader \
+  --clusterrole=cluster-reader --serviceaccount=chaos-cerberus:cerberus-monitor
+# Generate a long-lived token (schema allows up to 2000 chars since v21.3.103)
+SA_TOKEN=$(oc create token cerberus-monitor -n chaos-cerberus --duration=8760h)
+```
+
 ### Deploy via ArgoCD Application
 
 `chaos-cerberus` follows the project/instance pattern: one Application creates the namespace, a second deploys cerberus.
@@ -201,7 +213,7 @@ metadata:
   name: chaos-cerberus
   namespace: openshift-gitops
 spec:
-  description: Deploy cerberus cluster healthcheck watchdog
+  description: Deploy cerberus cluster healthcheck watchdog on OpenShift
   sourceRepos:
     - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
   destinations:
@@ -216,6 +228,8 @@ spec:
       kind: ProjectRequest
     - group: security.openshift.io
       kind: SecurityContextConstraints
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
     - group: rbac.authorization.k8s.io
       kind: ClusterRoleBinding
 ---
@@ -238,7 +252,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.104
+    targetRevision: 21.3.105
   syncPolicy:
     automated:
       prune: true
@@ -265,10 +279,13 @@ spec:
           kubeconfig:
             mode: token
             token:
-              server: https://api.demo219.startx.fr:6443
-              token: sha256~REPLACE_WITH_YOUR_TOKEN
+              server: "https://api.<cluster>:6443"
+              token: "sha256~REPLACE_WITH_YOUR_SA_TOKEN"
+        # Required: prevents nil pointer error on .Values.kraken.version
+        kraken:
+          enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.104
+    targetRevision: 21.3.105
   syncPolicy:
     automated:
       prune: true
@@ -314,3 +331,4 @@ kubectl apply -f chaos-cerberus-argocd.yaml -n openshift-gitops
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.104 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
