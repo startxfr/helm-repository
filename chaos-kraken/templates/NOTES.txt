@@ -1,0 +1,21 @@
+
+The Kraken chaos framework you've require is deploying with the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+{{ if .Values.project.enabled }}
+-- Kraken Project ------------------
+         name : {{ .Values.project.project.name }}
+{{ end }}
+
+{{ if .Values.kraken.enabled }}
+-- Kraken Instance -----------------
+           mode : {{ .Values.kraken.mode }}
+kubeconfig mode : {{ .Values.kraken.kubeconfig.mode }}
+{{ end }}

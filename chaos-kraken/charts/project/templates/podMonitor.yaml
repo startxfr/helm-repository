@@ -1,0 +1,28 @@
+{{- if .Values.enabled }}{{- if .Values.podMonitor }}{{- if .Values.podMonitor.enabled -}}
+{{- $defaultns := .Values.project.name | default .Chart.Name -}}
+
+{{ range .Values.podMonitor.list }}
+{{- $name := .name | default "my-default-pod-monitor" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: "{{- $name -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "project.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" $ -}}-podMonitor-{{- include "startx.appVersion" $ -}}"
+    {{- if $.Values.podMonitor.additionalLabels }}
+    {{- $.Values.podMonitor.additionalLabels | trim | nindent 4 }}
+    {{- end}}
+  annotations:
+    {{- include "project.annotations" $ | nindent 4 }}
+    {{- if $.Values.podMonitor.additionalAnnotations }}
+    {{- $.Values.podMonitor.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
+spec:
+  {{- .spec | nindent 2 }}
+
+{{ end }}
+{{- end -}}{{- end -}}{{- end }}

@@ -1,0 +1,40 @@
+{{- if .Values.enabled }}{{- if .Values.rbac }}{{- if .Values.rbac.enabled -}}
+{{- $scope := .Values.context.scope -}}
+{{- $ns := .Values.project.name | default .Chart.Name -}} 
+{{ range .Values.rbac.rolesbinding }}
+{{- $cscope := "Role" -}} 
+{{- $cbscope := "RoleBinding" -}} 
+{{- if .type }}{{- if eq .type "cluster" }}
+{{- $cscope = "ClusterRole" -}} 
+{{- $cbscope = "ClusterRoleBinding" -}} 
+{{- end }}{{- end }}
+{{- if .typeRole }}{{- if eq .typeRole "cluster" }}
+{{- $cscope = "ClusterRole" -}} 
+{{- end }}{{- end }}
+---
+kind: {{ $cbscope | quote }}
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ .id }}"
+  {{- if ne .type "cluster" }}
+  namespace: "{{- .namespace | default $ns -}}"
+  {{- end }}
+  labels:
+    {{- include "project.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ .id }}-role"
+    {{- if $.Values.rbac.additionalLabels }}
+    {{- $.Values.rbac.additionalLabels | trim | nindent 4 }}
+    {{- end}}
+  annotations:
+    {{- include "project.annotations" $ | nindent 4 }}
+    {{- if $.Values.rbac.additionalAnnotations }}
+    {{- $.Values.rbac.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: {{ $cscope | quote }}
+  name: {{ .role | default "view" | quote }}
+subjects:
+  {{- toYaml .subjects | nindent 2 }}
+{{ end }}
+{{- end -}}{{- end -}}{{- end }}
