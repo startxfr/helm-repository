@@ -155,7 +155,7 @@ spec:
         kraken:
           enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.103
+    targetRevision: 21.3.106
   syncPolicy:
     automated:
       prune: true
@@ -189,7 +189,7 @@ spec:
               server: "https://api.<cluster>:6443"
               token: "sha256~REPLACE_WITH_YOUR_TOKEN"
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.106
   syncPolicy:
     automated:
       prune: true
@@ -215,12 +215,15 @@ spec:
           enabled: true
         litmus:
           enabled: true
-          # Disable persistence to avoid PVC deadlock on WaitForFirstConsumer StorageClass
-          mongo:
+          # Use standalone MongoDB for test environments:
+          # - avoids replicaSet (3 primary + 1 arbiter) which creates SCC issues on OCP
+          # - disables PVC to avoid WaitForFirstConsumer StorageClass deadlock
+          mongodb:
+            architecture: standalone
             persistence:
               enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.103
+    targetRevision: 21.3.106
   syncPolicy:
     automated:
       prune: true
@@ -252,7 +255,7 @@ spec:
           prometheus:
             create: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.106
   syncPolicy:
     automated:
       prune: true
@@ -284,7 +287,7 @@ spec:
             startHour: 9
             endHour: 17
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.103
+    targetRevision: 21.3.106
   syncPolicy:
     automated:
       prune: true
@@ -492,3 +495,4 @@ helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.106 | 2026-06-21 | publish stable update for the full repository |

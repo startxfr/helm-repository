@@ -1,78 +1,56 @@
-apiVersion: v2
-# Name of this Helm chart
-name: chaos-litmus
-# Description of this Helm chart
-description: >-
-  Helm chart used to deploy litmus on Openshift or Kubernetes cluster. 
-  Litmus is as a chaos engine with chaos git or gui configuration backend. 
-  This chart is part of the startx chaos helm chart suite.
-# Helm chart application
-type: application
-# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.105
-# Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "3.26.0"
-# Icon of this helm-chart
-icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-litmus.svg
-# Kube minimum version
-kubeVersion: ">=1.30.0-0"
-# Keyword list for this chart
-keywords: 
-  - kubernetes
-  - openshift
-  - helm
-  - startx
-  - chaos testing
-  - test
-  - litmus
-  - monkey
-# STARTX helm chart repository homepage
-home: https://helm-repository.readthedocs.io/en/latest
-# Sources and documentation for this chart
-sources:
-  - https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus
-  - https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus
-# Main maintainer contact for this helm chart
-maintainers: 
-  - name: "STARTX"
-    email: "dev@startx.fr"
-    url: "https://www.startx.fr"
-
-dependencies:
-  - name: project
-    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.70"
-    alias: project
-    condition: project.enabled
-  - name: litmus
-    repository: https://litmuschaos.github.io/litmus-helm
-    version: "3.26.0"
-    alias: litmus
-    condition: litmus.enabled
-
 annotations:
-  # category associated to this package
-  category: chaos
-  # Artifacthub category associated to this package
   artifacthub.io/category: integration-delivery
-  # Artifacthub license
-  artifacthub.io/license: "GPL-3.0-or-later"
-  # Artifacthub is this release a pre-release
-  artifacthub.io/prerelease: "true"
-  # Artifacthub is an operator chart
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Upgrade dependencies to v21.3.0"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/license: GPL-3.0-or-later
   artifacthub.io/operator: "false"
-  # Artifacthub chart recommandations
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  category: chaos
   startx.io/recommendations: |
     - name: Startx basic chart - Project
       url: https://helm-repository.readthedocs.io/en/latest/charts/project
     - name: Litmus
       url: https://litmuschaos.github.io
-  # Artifacthub signing keys
-  artifacthub.io/signKey: |
-    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
-    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
-  # Artifacthub changes logs
-  artifacthub.io/changes: |
-    - kind: fixed
-      description: "Fix waitForMongoDB curl image tag (3.26.0→3.11.0, tag 3.26.0 does not exist on Docker Hub)"
-  artifacthub.io/containsSecurityUpdates: "false"
+apiVersion: v2
+appVersion: 3.26.0
+dependencies:
+- alias: project
+  condition: project.enabled
+  name: project
+  repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+  version: 21.3.70
+- alias: litmus
+  condition: litmus.enabled
+  name: litmus
+  repository: https://litmuschaos.github.io/litmus-helm
+  version: 3.26.0
+description: Helm chart used to deploy litmus on Openshift or Kubernetes cluster.  Litmus
+  is as a chaos engine with chaos git or gui configuration backend.  This chart is
+  part of the startx chaos helm chart suite.
+home: https://helm-repository.readthedocs.io/en/latest
+icon: https://helm-repository.readthedocs.io/en/latest/img/chaos-litmus.svg
+keywords:
+- kubernetes
+- openshift
+- helm
+- startx
+- chaos testing
+- test
+- litmus
+- monkey
+kubeVersion: '>=1.30.0-0'
+maintainers:
+- email: dev@startx.fr
+  name: STARTX
+  url: https://www.startx.fr
+name: chaos-litmus
+sources:
+- https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus
+- https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus
+type: application
+version: 21.3.106

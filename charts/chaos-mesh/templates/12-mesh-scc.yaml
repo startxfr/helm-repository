@@ -8,7 +8,7 @@ metadata:
   name: anyuid-mesh
   labels:
     app.kubernetes.io/name: "anyuid-mesh-scc"
-    {{- include "startx-chaos-mesh.labels" $ | nindent 4 }}
+    {{- include "chaos-mesh.labels" $ | nindent 4 }}
   annotations:
     {{- include "chaos-mesh.annotations" $ | nindent 4 }}
     kubernetes.io/description: 'allows anyuid access to host'
@@ -55,7 +55,7 @@ metadata:
   name: privileged-mesh
   labels:
     app.kubernetes.io/name: "privileged-mesh-scc"
-    {{- include "startx-chaos-mesh.labels" $ | nindent 4 }}
+    {{- include "chaos-mesh.labels" $ | nindent 4 }}
   annotations:
     {{- include "chaos-mesh.annotations" $ | nindent 4 }}
     kubernetes.io/description: 'allows privileged access to host'
@@ -102,7 +102,7 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "privileged-mesh-scc-role"
-    {{- include "startx-chaos-mesh.labels" $ | nindent 4 }}
+    {{- include "chaos-mesh.labels" $ | nindent 4 }}
   annotations:
     {{- include "chaos-mesh.annotations" $ | nindent 4 }}
 rules:
@@ -118,7 +118,7 @@ metadata:
   namespace: {{ $namespace | default "default" | quote }}
   labels:
     app.kubernetes.io/name: "privileged-mesh-scc-rb"
-    {{- include "startx-chaos-mesh.labels" $ | nindent 4 }}
+    {{- include "chaos-mesh.labels" $ | nindent 4 }}
   annotations:
     {{- include "chaos-mesh.annotations" $ | nindent 4 }}
 subjects:
