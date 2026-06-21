@@ -100,7 +100,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-gitlab
-    targetRevision: 21.3.104
+    targetRevision: 21.3.105
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -130,7 +130,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-gitlab
-    targetRevision: 21.3.104
+    targetRevision: 21.3.105
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -181,3 +181,6 @@ spec:
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.104 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.105 | 2026-06-21 | publish stable update for the full repository |

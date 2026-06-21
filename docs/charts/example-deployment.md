@@ -137,3 +137,4 @@ helm install example-deployment-mariadb startx/example-deployment -f https://raw
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.104 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
