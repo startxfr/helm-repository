@@ -220,3 +220,4 @@ The automated sync policy ensures ArgoCD reconciles the Nexus Repository operato
 | 21.3.104 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
