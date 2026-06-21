@@ -169,19 +169,23 @@ oc create secret docker-registry dockerhub-pull-secret \
 oc secrets link default dockerhub-pull-secret --for=pull -n chaos-litmus
 ```
 
-**MongoDB persistence**: The default `values.yaml` enables MongoDB persistence with a 20Gi PVC. On clusters with a `WaitForFirstConsumer` StorageClass, this causes a deadlock — the PVC stays `Pending` until a pod mounts it, but ArgoCD waits for PVC health before deploying the pod. For test environments, disable persistence:
+**MongoDB in replicaSet mode (default)**: By default the upstream litmus chart deploys MongoDB in `replicaset` mode (3 primaries + 1 arbiter StatefulSet). On OpenShift, the arbiter and primary pods need SCC permissions — they use `runAsUser: 1001` which requires `anyuid` or a custom SCC. Use `architecture: standalone` to avoid the arbiter and get a simpler single-pod Deployment instead.
+
+**MongoDB persistence and PVC deadlock**: In `replicaset` mode, MongoDB creates PVCs via volumeClaimTemplates. On clusters with a `WaitForFirstConsumer` StorageClass, PVCs stay `Pending` until a pod mounts them — but pod creation fails at the SCC step first. For test environments, use standalone mode with persistence disabled:
 
 ```yaml
 litmus:
-  mongo:
+  mongodb:
+    architecture: standalone
     persistence:
       enabled: false
 ```
 
-**StatefulSet immutable spec**: If you change `mongo.persistence` settings after initial deployment, the MongoDB StatefulSet must be deleted manually before ArgoCD can sync the new configuration (StatefulSet spec is immutable after creation):
+**StatefulSet immutable spec**: If you change `mongodb` settings after initial deployment with `replicaset` mode, the MongoDB StatefulSets must be deleted manually before ArgoCD can sync the new configuration (StatefulSet spec is immutable after creation):
 
 ```bash
-oc delete statefulset chaos-litmus-instance-mongodb -n chaos-litmus
+oc delete statefulset chaos-litmus-instance-mongodb chaos-litmus-instance-mongodb-arbiter -n chaos-litmus
+oc delete pvc datadir-chaos-litmus-instance-mongodb-0 -n chaos-litmus
 ```
 
 ### Deploy via ArgoCD Application
@@ -261,8 +265,11 @@ spec:
       values: |
         litmus:
           enabled: true
-          # Disable persistence to avoid PVC deadlock on WaitForFirstConsumer StorageClass
-          mongo:
+          # Use standalone MongoDB for test environments:
+          # - avoids replicaSet (3 primary + 1 arbiter) which creates SCC issues on OCP
+          # - disables PVC to avoid WaitForFirstConsumer StorageClass deadlock
+          mongodb:
+            architecture: standalone
             persistence:
               enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable

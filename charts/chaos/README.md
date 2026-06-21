@@ -215,8 +215,11 @@ spec:
           enabled: true
         litmus:
           enabled: true
-          # Disable persistence to avoid PVC deadlock on WaitForFirstConsumer StorageClass
-          mongo:
+          # Use standalone MongoDB for test environments:
+          # - avoids replicaSet (3 primary + 1 arbiter) which creates SCC issues on OCP
+          # - disables PVC to avoid WaitForFirstConsumer StorageClass deadlock
+          mongodb:
+            architecture: standalone
             persistence:
               enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
