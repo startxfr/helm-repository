@@ -113,3 +113,5 @@ helm install example-html startx/example-html -f https://raw.githubusercontent.c
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.102 | 2026-06-20 | publish stable update for the full repository |
+| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.103 | 2026-06-21 | publish stable update for the full repository |

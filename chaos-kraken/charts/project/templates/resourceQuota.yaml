@@ -1,0 +1,20 @@
+{{- if .Values.enabled }}{{- if .Values.quotas }}{{- if .Values.quotas.enabled -}}
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  name: "{{- .Values.project.name | default .Chart.Name -}}-quotas"
+  namespace: "{{- .Values.project.name | default .Chart.Name -}}"
+  labels:
+    {{- include "project.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-{{- include "startx.appVersion" . -}}-quotas"
+    {{- if .Values.quotas.additionalLabels }}
+    {{- .Values.quotas.additionalLabels | trim | nindent 4 }}
+    {{- end}}
+  annotations:
+    {{- include "project.annotations" . | nindent 4 }}
+    {{- if .Values.quotas.additionalAnnotations }}
+    {{- .Values.quotas.additionalAnnotations | trim | nindent 4 }}
+    {{- end}}
+spec: 
+  {{- .Values.quotas.rules | nindent 2 }}
+{{- end }}{{- end }}{{- end }}

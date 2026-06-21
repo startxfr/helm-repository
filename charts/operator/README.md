@@ -188,7 +188,7 @@ spec:
         operatorGroup:
           enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.102
+    targetRevision: 21.3.103
   destination:
     namespace: openshift-operators
     server: https://kubernetes.default.svc
@@ -235,3 +235,5 @@ The automated sync policy ensures ArgoCD reconciles the operator subscription wh
 | 21.3.69 | 2026-06-20 | Improve operator options |
 | 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
 | 21.3.102 | 2026-06-20 | publish stable update for the full repository |
+| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
