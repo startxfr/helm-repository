@@ -123,7 +123,7 @@ spec:
         auth:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.103
+    targetRevision: 21.3.104
   syncPolicy:
     automated:
       prune: true
@@ -167,3 +167,4 @@ The automated sync policy ensures ArgoCD reconciles the OAuth configuration when
 | 21.3.102 | 2026-06-20 | publish stable update for the full repository |
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.104 | 2026-06-21 | publish stable update for the full repository |
