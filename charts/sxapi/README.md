@@ -257,7 +257,7 @@ spec:
           type: namespace
           name: demo-sxapi-dev
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.106
   destination:
     namespace: demo-sxapi-dev
     server: https://kubernetes.default.svc
@@ -294,7 +294,7 @@ spec:
           debug: true
           replicas: 1
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.106
   destination:
     namespace: demo-sxapi-dev
     server: https://kubernetes.default.svc
@@ -379,3 +379,4 @@ The automated sync policy ensures ArgoCD reconciles the microservice whenever th
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.106 | 2026-06-21 | publish stable update for the full repository |
