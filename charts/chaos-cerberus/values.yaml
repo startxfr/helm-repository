@@ -56,10 +56,13 @@ cerberus:
   watch_url_routes: []
   # Kubeconfig of the supervised tested cluster (mandatory)
   kubeconfig:
-    # Connection mode to use for the cluster (could be token or file)
+    # Connection mode to use for the cluster (could be token, file, or local)
+    # - token: static kubeconfig with explicit server URL + bearer token
+    # - file: raw kubeconfig file content injected via values
+    # - local: in-cluster auth using the pod's own service account token (no external credentials needed)
     mode: token
     # If mode is token, this section must be filled
-    token: 
+    token:
       # The server URL to the target cluster API
       server: https://localhost:6443
       # The token to use to get accesss. This token must have full 

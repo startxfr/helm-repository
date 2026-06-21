@@ -86,6 +86,28 @@ data:
   config: |
     {{- .Values.cerberus.kubeconfig.file | nindent 4 }}
 {{- end -}}
+{{- if eq .Values.cerberus.kubeconfig.mode "local" }}
+  config: |
+    kind: Config
+    apiVersion: v1
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        server: https://kubernetes.default.svc
+    users:
+    - name: default
+      user:
+        tokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
+{{- end -}}
 {{- if eq .Values.cerberus.kubeconfig.mode "token" }}
   config: |
     kind: Config
