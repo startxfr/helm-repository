@@ -8,7 +8,7 @@ metadata:
   namespace: "{{- $namespace -}}"
   labels:
     app.kubernetes.io/name: "server-route"
-    {{- include "startx-chaos-mesh.labels" . | nindent 4 }}
+    {{- include "chaos-mesh.labels" . | nindent 4 }}
     app: "server-mesh"
   annotations:
     {{- include "chaos-mesh.annotations" . | nindent 4 }}
