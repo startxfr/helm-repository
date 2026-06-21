@@ -114,11 +114,18 @@ spec:
       kind: ClusterRoleBinding
     - group: apiextensions.k8s.io
       kind: CustomResourceDefinition
+    # chaos-mesh webhooks (required for chart to sync)
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
     - group: chaos-mesh.org
       kind: '*'
-    - group: tekton.dev
-      kind: Pipeline
 ---
+# Prerequisites for cerberus: create SA with cluster-reader before deploying
+# oc create sa cerberus-monitor -n chaos-cerberus
+# oc create clusterrolebinding cerberus-monitor-cluster-reader \
+#   --clusterrole=cluster-reader --serviceaccount=chaos-cerberus:cerberus-monitor
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -142,10 +149,13 @@ spec:
           kubeconfig:
             mode: token
             token:
-              server: https://api.demo219.startx.fr:6443
-              token: sha256~REPLACE_WITH_YOUR_TOKEN
+              server: "https://api.<cluster>:6443"
+              token: "sha256~REPLACE_WITH_YOUR_SA_TOKEN"
+        # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
+        kraken:
+          enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.103
   syncPolicy:
     automated:
       prune: true
@@ -172,12 +182,12 @@ spec:
         kraken:
           enabled: true
           mode: job
-          cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+          cerberusUrl: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
           kubeconfig:
             mode: token
             token:
-              server: https://api.demo219.startx.fr:6443
-              token: sha256~REPLACE_WITH_YOUR_TOKEN
+              server: "https://api.<cluster>:6443"
+              token: "sha256~REPLACE_WITH_YOUR_TOKEN"
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.105
   syncPolicy:
@@ -205,8 +215,12 @@ spec:
           enabled: true
         litmus:
           enabled: true
+          # Disable persistence to avoid PVC deadlock on WaitForFirstConsumer StorageClass
+          mongo:
+            persistence:
+              enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.103
   syncPolicy:
     automated:
       prune: true
@@ -226,12 +240,17 @@ spec:
   project: chaos
   source:
     chart: chaos-mesh
+    # skipCrds avoids CRD version conflicts — ArgoCD manages CRDs separately
+    skipCrds: true
     helm:
       values: |
         project:
           enabled: true
         mesh:
           enabled: true
+          # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
+          prometheus:
+            create: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.105
   syncPolicy:
@@ -265,7 +284,7 @@ spec:
             startHour: 9
             endHour: 17
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.103
   syncPolicy:
     automated:
       prune: true

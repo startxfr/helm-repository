@@ -154,6 +154,36 @@ helm install chaos-litmus startx/chaos-litmus \
 
 ## ArgoCD deployment
 
+### Known limitations
+
+**Docker Hub rate limit**: All litmus images (`litmuschaos/*`) are hosted on Docker Hub. Anonymous pulls are rate-limited to 100 requests per 6 hours per IP. On shared cluster egress, this limit can be reached quickly. If pods show `ImagePullBackOff` for `litmuschaos/*` images, either wait for the rate limit to reset or configure an imagePullSecret with Docker Hub credentials:
+
+```bash
+# Create a Docker Hub pull secret in the chaos-litmus namespace
+oc create secret docker-registry dockerhub-pull-secret \
+  --docker-server=docker.io \
+  --docker-username=<your-dockerhub-username> \
+  --docker-password=<your-dockerhub-token> \
+  -n chaos-litmus
+# Link it to the default SA so pods can use it
+oc secrets link default dockerhub-pull-secret --for=pull -n chaos-litmus
+```
+
+**MongoDB persistence**: The default `values.yaml` enables MongoDB persistence with a 20Gi PVC. On clusters with a `WaitForFirstConsumer` StorageClass, this causes a deadlock — the PVC stays `Pending` until a pod mounts it, but ArgoCD waits for PVC health before deploying the pod. For test environments, disable persistence:
+
+```yaml
+litmus:
+  mongo:
+    persistence:
+      enabled: false
+```
+
+**StatefulSet immutable spec**: If you change `mongo.persistence` settings after initial deployment, the MongoDB StatefulSet must be deleted manually before ArgoCD can sync the new configuration (StatefulSet spec is immutable after creation):
+
+```bash
+oc delete statefulset chaos-litmus-instance-mongodb -n chaos-litmus
+```
+
 ### Deploy via ArgoCD Application
 
 `chaos-litmus` follows the project/instance pattern. The litmus portal includes a frontend and a backend — both are enabled by default when `litmus.enabled=true`.
@@ -182,6 +212,8 @@ spec:
     - group: security.openshift.io
       kind: SecurityContextConstraints
     - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
       kind: ClusterRoleBinding
     - group: apiextensions.k8s.io
       kind: CustomResourceDefinition
@@ -205,7 +237,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.103
   syncPolicy:
     automated:
       prune: true
@@ -229,8 +261,12 @@ spec:
       values: |
         litmus:
           enabled: true
+          # Disable persistence to avoid PVC deadlock on WaitForFirstConsumer StorageClass
+          mongo:
+            persistence:
+              enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.105
+    targetRevision: 21.3.103
   syncPolicy:
     automated:
       prune: true

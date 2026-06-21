@@ -195,6 +195,12 @@ helm install chaos-kraken-aws startx/chaos-kraken -f my-kraken-aws-values.yaml -
 
 ## ArgoCD deployment
 
+### Known limitations with ArgoCD
+
+**Route sync wave**: The kraken Route is deployed at sync wave 40 after the Job. ArgoCD waits for the Route to become `Healthy` before declaring the sync complete. OpenShift Router assigns the Route host asynchronously — if it takes too long, ArgoCD may mark the sync failed and prune the Route on the next cycle. If the Route disappears after sync, create it manually and ArgoCD will adopt it on the next sync without `prune`.
+
+**cerberusUrl**: Use the internal cluster DNS for cerberus when both charts are deployed in the same cluster: `http://cerberus.chaos-cerberus.svc.cluster.local:8080`.
+
 ### Deploy via ArgoCD Application
 
 `chaos-kraken` follows the project/instance pattern. Kraken requires a kubeconfig to connect to the target cluster and optionally a cerberus URL for health gating.
@@ -222,9 +228,9 @@ spec:
     - group: security.openshift.io
       kind: SecurityContextConstraints
     - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
       kind: ClusterRoleBinding
-    - group: tekton.dev
-      kind: Pipeline
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -270,12 +276,12 @@ spec:
         kraken:
           enabled: true
           mode: job
-          cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+          cerberusUrl: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
           kubeconfig:
             mode: token
             token:
-              server: https://api.demo219.startx.fr:6443
-              token: sha256~REPLACE_WITH_YOUR_TOKEN
+              server: "https://api.<cluster>:6443"
+              token: "sha256~REPLACE_WITH_YOUR_TOKEN"
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.105
   syncPolicy:

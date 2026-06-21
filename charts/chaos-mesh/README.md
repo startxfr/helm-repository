@@ -167,9 +167,25 @@ oc apply -f pod-chaos-example.yaml
 
 ## ArgoCD deployment
 
+### Known limitations
+
+**CRD installation**: The upstream chaos-mesh chart installs its own CRDs (`chaos-mesh.org/*`). When deploying via ArgoCD, skip CRD installation in the chart (ArgoCD manages CRDs separately via the `skipCrds: true` option in the Application spec). This avoids CRD version conflicts during upgrades.
+
+**Label collision in v21.3.103 and earlier**: Versions up to 21.3.103 had a Helm helper name collision between the startx wrapper chart and the upstream chaos-mesh subchart. The wrapper's `chaos-mesh.labels` helper was overriding the upstream subchart's same-named helper, injecting `app.startx.fr/*` labels into pod templates that didn't match the immutable selectors. This caused all Deployments and DaemonSets to fail with `selector does not match template labels`. **Fixed in v21.3.105** by renaming the wrapper helper to `startx-chaos-mesh.labels`.
+
+**Prometheus PVC deadlock**: If `mesh.prometheus.create=true` (default), the upstream chart creates a `prometheus-pvc` PVC using the default StorageClass. On clusters with a `WaitForFirstConsumer` StorageClass, this PVC stays `Pending` indefinitely — ArgoCD waits for the PVC to be `Healthy` before deploying the pod, but the pod is what binds the PVC. Disable prometheus or use `mesh.prometheus.storageClassName` to force a `Immediate` StorageClass:
+
+```yaml
+mesh:
+  prometheus:
+    create: false
+```
+
+**Webhook whitelist in AppProject**: The chaos-mesh chart creates `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` cluster-scoped resources. Add both to `clusterResourceWhitelist`.
+
 ### Deploy via ArgoCD Application
 
-`chaos-mesh` installs upstream CRDs (`chaos-mesh.org/*`) and the chaos-mesh dashboard. The AppProject must whitelist those CRD resources.
+`chaos-mesh` installs upstream CRDs (`chaos-mesh.org/*`) and the chaos-mesh dashboard. The AppProject must whitelist those CRD resources and the webhook configurations.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -200,6 +216,10 @@ spec:
       kind: ClusterRoleBinding
     - group: apiextensions.k8s.io
       kind: CustomResourceDefinition
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
     - group: chaos-mesh.org
       kind: '*'
 ---
@@ -242,10 +262,15 @@ spec:
   project: chaos-mesh
   source:
     chart: chaos-mesh
+    # skipCrds avoids CRD version conflicts — ArgoCD manages CRDs separately
+    skipCrds: true
     helm:
       values: |
         mesh:
           enabled: true
+          # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
+          prometheus:
+            create: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.105
   syncPolicy:
