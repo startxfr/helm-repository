@@ -17,6 +17,7 @@ metadata:
   annotations:
     {{- include "chaos-kraken.annotations" $ | nindent 4 }}
 spec:
+  activeDeadlineSeconds: 7200
   backoffLimit: 0
   completions: 1
   parallelism: 1
