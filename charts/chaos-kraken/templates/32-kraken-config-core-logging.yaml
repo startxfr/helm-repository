@@ -19,12 +19,12 @@ data:
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "app.kubernetes.io/name=collector"
-        kill: 2
+        kill: 1
     - id: wait-for-pods
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "app.kubernetes.io/name=collector"
-        timeout: 120
+        timeout: 60
 
     - id: kill-pods
       config:
@@ -35,7 +35,7 @@ data:
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "app.kubernetes.io/component=ingester"
-        timeout: 120
+        timeout: 60
 
     - id: kill-pods
       config:
@@ -46,7 +46,7 @@ data:
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "app.kubernetes.io/component=distributor"
-        timeout: 120
+        timeout: 60
 
     - id: kill-pods
       config:
@@ -57,7 +57,7 @@ data:
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "app.kubernetes.io/component=compactor"
-        timeout: 120
+        timeout: 60
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -76,12 +76,12 @@ data:
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "app.kubernetes.io/name=collector"
-        kill: 2
+        kill: 1
     - id: wait-for-pods
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "app.kubernetes.io/name=collector"
-        timeout: 120
+        timeout: 60
 
     - id: kill-pods
       config:
@@ -92,7 +92,7 @@ data:
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "common.k8s.elastic.co/type=elasticsearch"
-        timeout: 180
+        timeout: 90
 
     - id: kill-pods
       config:
@@ -103,7 +103,7 @@ data:
       config:
         namespace_pattern: ^openshift-logging$
         label_selector: "common.k8s.elastic.co/type=kibana"
-        timeout: 120
+        timeout: 60
 ---
 kind: ConfigMap
 apiVersion: v1
