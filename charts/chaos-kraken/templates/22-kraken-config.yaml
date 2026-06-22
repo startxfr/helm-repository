@@ -1703,32 +1703,31 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - plugin_scenarios:
+        - pod_disruption_scenarios:
           - scenarios/startx_openshift_logging.yml
           - scenarios/startx_openshift_monitoring.yml
           - scenarios/startx_openshift_machines.yml
           - scenarios/startx_openshift-apiserver.yml
           - scenarios/startx_openshift_etcd_pod.yml
           - scenarios/startx_openshift_podmonkey.yml
-        - container_scenarios: 
+        - container_scenarios:
           - - scenarios/startx_openshift_etcd_container.yml
-        - time_scenarios: 
+        - time_scenarios:
           - scenarios/startx_time_pod.yml
           - scenarios/startx_time_node.yml
-        - node_scenarios: 
+        - node_scenarios:
           - scenarios/startx_node_master.yml
           - scenarios/startx_node_infra.yml
           - scenarios/startx_node_app.yml
-        - network_chaos:
+        - network_chaos_scenarios:
           - scenarios/startx_node_app_network_chaos.yaml
           - scenarios/startx_node_infra_network_chaos.yaml
           - scenarios/startx_node_master_network_chaos.yaml
-        - zone_outages:
+        - zone_outages_scenarios:
           - scenarios/startx_zone_outage.yaml
         - cluster_shut_down_scenarios:
           - - scenarios/cluster_shut_down_scenario.yml
-          # - scenarios/post_action_shut_down.py
-        - application_outages:
+        - application_outages_scenarios:
           - scenarios/app_outage.yaml
         - pvc_scenarios:
           - scenarios/pvc_scenario.yaml
