@@ -54,7 +54,7 @@ spec:
           name: kube-config
           subPath: config
         - mountPath: /home/krkn/kraken/scenarios
-          name: kraken-scenarios-all
+          name: kraken-scenarios
         - mountPath: /home/krkn/kraken/config/config.yaml
           name: kraken-config
           subPath: config.yaml
@@ -82,10 +82,64 @@ spec:
           items:
           - key: config.yaml
             path: config.yaml
-      - name: kraken-scenarios-all
-        configMap:
+      - name: kraken-scenarios
+        projected:
           defaultMode: 420
-          name: kraken-scenarios-all
+          sources:
+          - configMap:
+              name: kraken-scenario-app-outage
+          - configMap:
+              name: kraken-scenario-customapp-pod
+          - configMap:
+              name: kraken-scenario-startx-pvc-fruitapp1
+          - configMap:
+              name: kraken-scenario-startx-pvc-fruitapp2
+          - configMap:
+              name: kraken-scenario-startx-openshift-logging-loki
+          - configMap:
+              name: kraken-scenario-startx-openshift-logging-elastic
+          - configMap:
+              name: kraken-scenario-startx-openshift-machines
+          - configMap:
+              name: kraken-scenario-startx-openshift-monitoring
+          - configMap:
+              name: kraken-scenario-startx-openshift-acm
+          - configMap:
+              name: kraken-scenario-startx-openshift-acs
+          - configMap:
+              name: kraken-scenario-startx-openshift-podmonkey
+          - configMap:
+              name: kraken-scenario-startx-openshift-apiserver
+          - configMap:
+              name: kraken-scenario-startx-openshift-etcd-container
+          - configMap:
+              name: kraken-scenario-startx-openshift-etcd-pod
+          - configMap:
+              name: kraken-scenario-startx-time-node
+          - configMap:
+              name: kraken-scenario-startx-time-pod
+          - configMap:
+              name: kraken-scenario-startx-zone-outage
+          - configMap:
+              name: kraken-scenario-startx-node-app
+          - configMap:
+              name: kraken-scenario-startx-node-app-cpu-chaos
+          - configMap:
+              name: kraken-scenario-startx-node-app-network-chaos
+          - configMap:
+              name: kraken-scenario-startx-node-master-network-chaos
+          - configMap:
+              name: kraken-scenario-startx-node-infra-network-chaos
+          - configMap:
+              name: kraken-scenario-startx-node-master
+          - configMap:
+              name: kraken-scenario-startx-node-infra
+          - configMap:
+              name: kraken-scenario-startx-node-worker
+          - configMap:
+              name: kraken-scenario-cluster-shut-down
+          - configMap:
+              name: kraken-scenario-post-action-etcd
       - name: kraken-config-common
         configMap:
           defaultMode: 420
