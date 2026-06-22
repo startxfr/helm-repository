@@ -54,7 +54,7 @@ spec:
           name: kube-config
           subPath: config
         - mountPath: /home/krkn/kraken/scenarios
-          name: kraken-scenarios-config
+          name: kraken-scenarios-all
         - mountPath: /home/krkn/kraken/config/config.yaml
           name: kraken-config
           subPath: config.yaml
@@ -82,10 +82,10 @@ spec:
           items:
           - key: config.yaml
             path: config.yaml
-      - name: kraken-scenarios-config
+      - name: kraken-scenarios-all
         configMap:
           defaultMode: 420
-          name: kraken-scenarios-config
+          name: kraken-scenarios-all
       - name: kraken-config-common
         configMap:
           defaultMode: 420
