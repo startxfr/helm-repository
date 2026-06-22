@@ -352,3 +352,4 @@ kubectl apply -f examples/argocd/cerberus-argocd.yaml -n openshift-gitops
 | 21.3.108 | 2026-06-22 | Improve chaos-cerberus options |
 | 21.3.109 | 2026-06-22 | Improve chaos-cerberus options |
 | 21.3.110 | 2026-06-22 | improve cerberus config: fix kraken version ref, networkpolicy scope, add upstream fields, local mode schema, ArgoCD examples |
+| 21.3.110 | 2026-06-22 | improve cerberus config: fix kraken version ref, networkpolicy scope, add upstream fields, local mode schema, ArgoCD examples |
