@@ -42,11 +42,11 @@ kind: ConfigMap
 apiVersion: v1
 immutable: false
 metadata:
-  name: kraken-scenarios-config
+  name: kraken-scenarios-all
   namespace: "{{- $namespace -}}"
   labels:
     test: essai
-    app.kubernetes.io/name: "kraken-scenarios-config"
+    app.kubernetes.io/name: "kraken-scenarios-all"
     {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
     {{- include "chaos-kraken.annotations" $ | nindent 4 }}
@@ -57,6 +57,292 @@ data:
       namespace: <namespace-with-application>            # Namespace to target - all application routes will go inaccessible if pod selector is empty
       pod_selector: {app: foo}                            # Pods to target
       block: [Ingress, Egress]                           # It can be Ingress or Egress or Ingress, Egress
+  customapp_pod.yaml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^acme-air$
+        name_pattern: .*
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^acme-air$
+        name_pattern: .*
+        count: 8
+  startx_pvc_fruitapp1-preprod-postgresql.yaml: |
+    pvc_scenario:
+      pvc_name: fruitapp1-preprod-postgresql
+      namespace: fruitapp1-preprod
+      fill_percentage: 99
+      duration: 30
+  startx_pvc_fruitapp2-prod-postgresql.yaml: |
+    pvc_scenario:
+      pvc_name: fruitapp2-prod-postgresql
+      namespace: fruitapp2-prod
+      fill_percentage: 99
+      duration: 30
+  startx_openshift_logging_loki.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/name=collector"
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/name=collector"
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=ingester"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=ingester"
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=distributor"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=distributor"
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=compactor"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=compactor"
+        timeout: 120
+  startx_openshift_logging_elastic.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/name=collector"
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/name=collector"
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "common.k8s.elastic.co/type=elasticsearch"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "common.k8s.elastic.co/type=elasticsearch"
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "common.k8s.elastic.co/type=kibana"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "common.k8s.elastic.co/type=kibana"
+        timeout: 120
+  startx_openshift_machines.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-server
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-server
+        count: 3
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-daemon
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-daemon
+        count: 3
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-machine-api$
+        label_selector: k8s-app=machine-api-operator
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-machine-api$
+        label_selector: k8s-app=machine-api-operator
+        count: 1
+        timeout: 120
+  startx_openshift_monitoring.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=prometheus"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=prometheus"
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=node-exporter"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=node-exporter"
+        count: 3
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=alertmanager"
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=alertmanager"
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=thanos-query"
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=thanos-query"
+        count: 2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        name_pattern: .*
+        kill: 5
+  startx_openshift_acm.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=cluster-manager
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=cluster-manager
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=application-chart
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=application-chart
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=klusterlet-addon-controller-v2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=klusterlet-addon-controller-v2
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=ocm-controller
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        label_selector: app=ocm-controller
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        name_pattern: .*
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^open-cluster-management$
+        timeout: 180
+  startx_openshift_acs.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=collector
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=collector
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=admission-control
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=admission-control
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=scanner
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        label_selector: app=scanner
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^stackrox$
+        name_pattern: .*
+        kill: 5
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^stackrox$
+        timeout: 180
+  startx_openshift_podmonkey.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-.*$
+        name_pattern: .*
+        kill: 5
   cluster_shut_down_scenario.yaml: |
     - id: run_python
       config:
@@ -131,16 +417,6 @@ data:
         return out
 
     cluster_reboot(auth_vcloud(refresh_token), vapp_name_to_vappId(auth_vcloud(refresh_token), vapp_name))
-  customapp_pod.yaml: |
-    - id: kill-pods
-      config:
-        namespace_pattern: ^acme-air$
-        name_pattern: .*
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^acme-air$
-        name_pattern: .*
-        count: 8
   post_action_etcd_container.py: |
     #!/usr/bin/env python3
     import subprocess
@@ -272,18 +548,6 @@ data:
     print("Master nodes list \n" + str(master_nodes))
     infra_nodes = run("oc get nodes --no-headers | grep infra | egrep -v NotReady | awk '{print $1}'").rstrip()
     print("Infra nodes list \n" + str(infra_nodes))
-  startx_pvc_fruitapp1-preprod-postgresql.yaml: |
-    pvc_scenario:
-      pvc_name: fruitapp1-preprod-postgresql
-      namespace: fruitapp1-preprod
-      fill_percentage: 99
-      duration: 30
-  startx_pvc_fruitapp2-prod-postgresql.yaml: |
-    pvc_scenario:
-      pvc_name: fruitapp2-prod-postgresql
-      namespace: fruitapp2-prod
-      fill_percentage: 99
-      duration: 30
   startx_node_app_cpu_chaos.yaml: |
     apiVersion: litmuschaos.io/v1alpha1
     kind: ChaosEngine
@@ -660,83 +924,6 @@ data:
         namespace_pattern: ^openshift-etcd$
         label_selector: k8s-app=etcd
         count: 3
-  startx_openshift_logging_loki.yml: |
-    - id: kill-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/name=collector"
-        kill: 2
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/name=collector"
-        timeout: 120
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/component=ingester"
-        kill: 1
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/component=ingester"
-        timeout: 120
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/component=distributor"
-        kill: 1
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/component=distributor"
-        timeout: 120
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/component=compactor"
-        kill: 1
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/component=compactor"
-        timeout: 120
-  startx_openshift_logging_elastic.yml: |
-    - id: kill-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/name=collector"
-        kill: 2
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "app.kubernetes.io/name=collector"
-        timeout: 120
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "common.k8s.elastic.co/type=elasticsearch"
-        kill: 1
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "common.k8s.elastic.co/type=elasticsearch"
-        timeout: 180
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "common.k8s.elastic.co/type=kibana"
-        kill: 1
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^openshift-logging$
-        label_selector: "common.k8s.elastic.co/type=kibana"
-        timeout: 120
   startx_openshift_machines.yml: |
     - id: kill-pods
       config:
@@ -823,105 +1010,6 @@ data:
     - id: kill-pods
       config:
         namespace_pattern: ^openshift-monitoring$
-        name_pattern: .*
-        kill: 5
-  startx_openshift_acm.yml: |
-    - id: kill-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        label_selector: app=cluster-manager
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        label_selector: app=cluster-manager
-        timeout: 180
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        label_selector: app=application-chart
-        kill: 2
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        label_selector: app=application-chart
-        timeout: 180
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        label_selector: app=klusterlet-addon-controller-v2
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        label_selector: app=klusterlet-addon-controller-v2
-        timeout: 180
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        label_selector: app=ocm-controller
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        label_selector: app=ocm-controller
-        timeout: 180
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        name_pattern: .*
-        kill: 5
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^open-cluster-management$
-        timeout: 180
-  startx_openshift_acs.yml: |
-    - id: kill-pods
-      config:
-        namespace_pattern: ^stackrox$
-        label_selector: app=collector
-        kill: 5
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^stackrox$
-        label_selector: app=collector
-        timeout: 180
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^stackrox$
-        label_selector: app=admission-control
-        kill: 2
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^stackrox$
-        label_selector: app=admission-control
-        timeout: 180
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^stackrox$
-        label_selector: app=scanner
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^stackrox$
-        label_selector: app=scanner
-        timeout: 180
-
-    - id: kill-pods
-      config:
-        namespace_pattern: ^stackrox$
-        name_pattern: .*
-        kill: 5
-    - id: wait-for-pods
-      config:
-        namespace_pattern: ^stackrox$
-        timeout: 180
-  startx_openshift_podmonkey.yml: |
-    - id: kill-pods
-      config:
-        namespace_pattern: ^openshift-.*$
         name_pattern: .*
         kill: 5
   startx_time_node.yml: |
