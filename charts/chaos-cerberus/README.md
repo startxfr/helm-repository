@@ -264,7 +264,7 @@ spec:
         cerberus:
           enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.111
+    targetRevision: 21.3.112
   syncPolicy:
     automated:
       prune: true
@@ -298,7 +298,7 @@ spec:
             # file:  inject a full kubeconfig file
             mode: local
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.111
+    targetRevision: 21.3.112
   syncPolicy:
     automated:
       prune: true
@@ -354,3 +354,4 @@ kubectl apply -f examples/argocd/cerberus-argocd.yaml -n openshift-gitops
 | 21.3.110 | 2026-06-22 | improve cerberus config: fix kraken version ref, networkpolicy scope, add upstream fields, local mode schema, ArgoCD examples |
 | 21.3.110 | 2026-06-22 | improve cerberus config: fix kraken version ref, networkpolicy scope, add upstream fields, local mode schema, ArgoCD examples |
 | 21.3.111 | 2026-06-22 | fix local mode: generate kubeconfig from SA token at startup (tokenFile unsupported by Python k8s client) |
+| 21.3.112 | 2026-06-22 | fix local mode ClusterRole: add nodes/status, CSR, routes, serviceaccounts/token permissions |
