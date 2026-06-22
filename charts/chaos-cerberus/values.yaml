@@ -52,8 +52,27 @@ cerberus:
   watch_nodes: true
   # Enable watching cluster operator health as part of the global health signal
   watch_cluster_operators: true
+  # Enable watching terminating namespaces as part of the global health signal
+  watch_terminating_namespaces: true
   # Url list of endpoint to watch as part of the global healthcheck (double array)
   watch_url_routes: []
+  # List of namespaces to watch (supports regex patterns)
+  watch_namespaces:
+    - openshift-etcd
+    - openshift-apiserver
+    - openshift-kube-apiserver
+    - openshift-monitoring
+    - openshift-kube-controller-manager
+    - openshift-machine-api
+    - openshift-kube-scheduler
+    - openshift-ingress
+    - openshift-ovn-kubernetes
+  # Namespace ignore pattern (regex) - namespaces matching this pattern are excluded
+  watch_namespaces_ignore_pattern:
+    - "^installer.*"
+  # List of custom check scripts to run (paths relative to /root/cerberus/ working dir)
+  # Example: ["config/startx_check.py"] - the script must exist in the cerberus-config ConfigMap
+  custom_checks: []
   # Kubeconfig of the supervised tested cluster (mandatory)
   kubeconfig:
     # Connection mode to use for the cluster (could be token, file, or local)

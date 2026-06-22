@@ -46,7 +46,7 @@ helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-c
 
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
 | context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
 | context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
@@ -66,11 +66,18 @@ helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-c
 | cerberus.kraken_ns               | chaos-kraken           | Namespace of the kraken pod that would be allowed                                                                                                                                                                                                                                 |
 | cerberus.watch_url_routes        | []                     | Url list of endpoint to watch as part of the global healthcheck (double array)                                                                                                                                                                                                    |
 | cerberus.kubeconfig              | {...}                  | Kubeconfig of the supervised tested cluster (mandatory)                                                                                                                                                                                                                           |
-| cerberus.kubeconfig.mode         | token                  | Connection mode to use for the cluster (could be token or file)                                                                                                                                                                                                                   |
-| cerberus.kubeconfig.token        | {...}                  | If mode is token, this section must be filled                                                                                                                                                                                                                                     |
-| cerberus.kubeconfig.token.server | https://localhost:6443 | The server URL to the target cluster API                                                                                                                                                                                                                                          |
-| cerberus.kubeconfig.token.token  | sha256~XXX             | The token to use to get accesss. This token must have full cluster admin accesss to perform some chaos scenarios                                                                                                                                                                    |
-| cerberus.kubeconfig.file         | ""                     | If mode is token, this property must be set with a full kubeconfig content                                                                                                                                                                                                        |
+| cerberus.watch_nodes                    | true                   | Enable watching nodes health as part of the global health signal                                                                                                                                                                                                                  |
+| cerberus.watch_cluster_operators        | true                   | Enable watching cluster operator health as part of the global health signal                                                                                                                                                                                                       |
+| cerberus.watch_terminating_namespaces   | true                   | Enable watching terminating namespaces as part of the global health signal                                                                                                                                                                                                        |
+| cerberus.watch_namespaces               | [...]                  | List of namespaces to watch (supports regex patterns). Defaults to OpenShift critical namespaces                                                                                                                                                                                   |
+| cerberus.watch_namespaces_ignore_pattern| ["^installer.*"]       | Regex patterns for namespaces to exclude from watching                                                                                                                                                                                                                            |
+| cerberus.custom_checks                  | []                     | List of custom check scripts (paths relative to /root/cerberus/ working directory). Example: ["config/startx_check.py"]                                                                                                                                                          |
+| cerberus.kubeconfig                     | {...}                  | Kubeconfig of the supervised tested cluster (mandatory)                                                                                                                                                                                                                           |
+| cerberus.kubeconfig.mode                | token                  | Connection mode to use for the cluster (token, file, or local)                                                                                                                                                                                                                    |
+| cerberus.kubeconfig.token               | {...}                  | If mode is token, this section must be filled                                                                                                                                                                                                                                     |
+| cerberus.kubeconfig.token.server        | https://localhost:6443 | The server URL to the target cluster API                                                                                                                                                                                                                                          |
+| cerberus.kubeconfig.token.token         | sha256~XXX             | The bearer token with cluster-reader access (supports up to 2000 chars since v21.3.103)                                                                                                                                                                                           |
+| cerberus.kubeconfig.file                | ""                     | If mode is file, this property must be set with a full kubeconfig content                                                                                                                                                                                                         |
 
 ## Values files
 
@@ -192,7 +199,9 @@ helm install chaos-cerberus startx/chaos-cerberus \
 
 ### Prerequisites
 
-Cerberus monitors `ClusterVersions`, `ClusterOperators`, nodes and namespaces — it requires `cluster-reader` access (not just `view`). Create a dedicated ServiceAccount before deploying:
+**Local mode** (in-cluster, no external credentials): the chart automatically creates the `ClusterRole` and `ClusterRoleBinding` for the `cerberus` ServiceAccount — nothing extra to prepare.
+
+**Token mode** (remote cluster monitoring): Cerberus monitors `ClusterVersions`, `ClusterOperators`, nodes and namespaces — it requires `cluster-reader` access. Create a dedicated ServiceAccount:
 
 ```bash
 oc create serviceaccount cerberus-monitor -n chaos-cerberus
@@ -204,7 +213,7 @@ SA_TOKEN=$(oc create token cerberus-monitor -n chaos-cerberus --duration=8760h)
 
 ### Deploy via ArgoCD Application
 
-`chaos-cerberus` follows the project/instance pattern: one Application creates the namespace, a second deploys cerberus.
+`chaos-cerberus` follows the project/instance pattern: one Application creates the namespace, a second deploys cerberus. A ready-to-use example file is available at [`examples/argocd/cerberus-argocd.yaml`](examples/argocd/cerberus-argocd.yaml).
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -238,8 +247,9 @@ kind: Application
 metadata:
   name: chaos-cerberus-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  # No finalizer on project wave — avoids deadlock when namespace is slow to terminate
 spec:
   destination:
     namespace: default
@@ -251,8 +261,10 @@ spec:
       values: |
         project:
           enabled: true
+        cerberus:
+          enabled: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.107
+    targetRevision: 21.3.108
   syncPolicy:
     automated:
       prune: true
@@ -263,6 +275,8 @@ kind: Application
 metadata:
   name: chaos-cerberus-instance
   namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -274,18 +288,17 @@ spec:
     chart: chaos-cerberus
     helm:
       values: |
+        project:
+          enabled: false
         cerberus:
           enabled: true
           kubeconfig:
-            mode: token
-            token:
-              server: "https://api.<cluster>:6443"
-              token: "sha256~REPLACE_WITH_YOUR_SA_TOKEN"
-        # Required: prevents nil pointer error on .Values.kraken.version
-        kraken:
-          enabled: false
+            # local: use the pod's own ServiceAccount token (in-cluster, no credentials needed)
+            # token: monitor a remote cluster with a bearer token
+            # file:  inject a full kubeconfig file
+            mode: local
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.107
+    targetRevision: 21.3.108
   syncPolicy:
     automated:
       prune: true
@@ -295,7 +308,7 @@ spec:
 Apply with:
 
 ```bash
-kubectl apply -f chaos-cerberus-argocd.yaml -n openshift-gitops
+kubectl apply -f examples/argocd/cerberus-argocd.yaml -n openshift-gitops
 ```
 
 ## History
@@ -336,3 +349,4 @@ kubectl apply -f chaos-cerberus-argocd.yaml -n openshift-gitops
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.107 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.108 | 2026-06-22 | Improve chaos-cerberus options |

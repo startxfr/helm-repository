@@ -1,7 +1,7 @@
 {{- if .Values.cerberus.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
-{{- $version := .Values.kraken.version | default "latest" -}}
+{{- $version := .Values.cerberus.version | default "latest" -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
