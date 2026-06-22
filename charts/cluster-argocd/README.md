@@ -121,6 +121,8 @@ spec:
   source:
     chart: cluster-argocd
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         argocd:
           enabled: false
@@ -152,6 +154,8 @@ spec:
   source:
     chart: cluster-argocd
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         argocd:
           enabled: false
@@ -183,6 +187,8 @@ spec:
   source:
     chart: cluster-argocd
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         argocd:
           enabled: true

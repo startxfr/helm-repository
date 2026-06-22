@@ -232,7 +232,7 @@ metadata:
   name: chaos-kraken-project
   namespace: openshift-gitops
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io 
 spec:
   destination:
     namespace: default
@@ -241,6 +241,8 @@ spec:
   source:
     chart: chaos-kraken
     helm:
+      valueFiles:
+        - values-startx-project.yaml
       values: |
         project:
           enabled: true
@@ -266,6 +268,8 @@ spec:
   source:
     chart: chaos-kraken
     helm:
+      valueFiles:
+        - values-startx-deploy.yaml
       values: |
         kraken:
           enabled: true

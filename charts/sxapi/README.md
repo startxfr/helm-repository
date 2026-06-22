@@ -251,6 +251,8 @@ spec:
   source:
     chart: project
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -283,6 +285,8 @@ spec:
   source:
     chart: sxapi
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         sxapi:
           service:

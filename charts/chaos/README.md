@@ -141,6 +141,8 @@ spec:
   source:
     chart: chaos-cerberus
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -176,6 +178,8 @@ spec:
   source:
     chart: chaos-kraken
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -210,6 +214,8 @@ spec:
   source:
     chart: chaos-litmus
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -246,6 +252,8 @@ spec:
     # skipCrds avoids CRD version conflicts — ArgoCD manages CRDs separately
     skipCrds: true
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -276,6 +284,8 @@ spec:
   source:
     chart: chaos-monkey
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
