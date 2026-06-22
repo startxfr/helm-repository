@@ -231,6 +231,8 @@ spec:
   source:
     chart: project
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true

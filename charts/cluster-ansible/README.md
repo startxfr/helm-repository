@@ -110,6 +110,8 @@ spec:
   source:
     chart: cluster-ansible
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -139,6 +141,8 @@ spec:
   source:
     chart: cluster-ansible
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         projectOperator:
           enabled: true
@@ -182,6 +186,8 @@ spec:
   source:
     chart: cluster-ansible
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         ansibleAAP:
           enabled: true

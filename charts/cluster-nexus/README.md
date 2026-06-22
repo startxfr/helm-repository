@@ -105,6 +105,8 @@ spec:
   source:
     chart: cluster-nexus
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -134,6 +136,8 @@ spec:
   source:
     chart: cluster-nexus
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         operator:
           enabled: true
@@ -161,6 +165,8 @@ spec:
   source:
     chart: cluster-nexus
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         nexus:
           enabled: true

@@ -110,6 +110,8 @@ spec:
   source:
     chart: cluster-acs
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         acs:
           enabled: false
@@ -141,6 +143,8 @@ spec:
   source:
     chart: cluster-acs
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         acs:
           enabled: false
@@ -172,6 +176,8 @@ spec:
   source:
     chart: cluster-acs
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         acs:
           enabled: true

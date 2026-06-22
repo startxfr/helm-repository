@@ -173,6 +173,8 @@ spec:
   source:
     chart: operator
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         subscription:
           enabled: true

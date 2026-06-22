@@ -109,6 +109,8 @@ spec:
   source:
     chart: cluster-nfd
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
@@ -138,6 +140,8 @@ spec:
   source:
     chart: cluster-nfd
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         operator:
           enabled: true
@@ -165,6 +169,8 @@ spec:
   source:
     chart: cluster-nfd
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         nfd:
           enabled: true

@@ -119,6 +119,8 @@ spec:
   source:
     chart: cluster-auth
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         auth:
           enabled: true

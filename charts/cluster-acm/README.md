@@ -111,6 +111,8 @@ spec:
   source:
     chart: cluster-acm
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         acm:
           enabled: false
@@ -142,6 +144,8 @@ spec:
   source:
     chart: cluster-acm
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         acm:
           enabled: false
@@ -171,6 +175,8 @@ spec:
   source:
     chart: cluster-acm
     helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
       values: |
         acm:
           enabled: true
