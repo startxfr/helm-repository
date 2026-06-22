@@ -1752,6 +1752,31 @@ data:
         wait_duration: 420
         iterations: 1
         daemon_mode: False
+    elastic:
+        enable_elastic: False
+        verify_certs: False
+        elastic_url: ""
+        elastic_port: 32766
+        username: "elastic"
+        password: "test"
+        metrics_index: "krkn-metrics"
+        alerts_index: "krkn-alerts"
+        telemetry_index: "krkn-telemetry"
+    telemetry:
+        enabled: False
+        api_url: https://ulnmf9xv7j.execute-api.us-west-2.amazonaws.com/production
+        username: username
+        password: password
+        prometheus_backup: False
+        full_prometheus_backup: False
+        backup_threads: 5
+        archive_path: /tmp
+        max_retries: 0
+        run_tag: ''
+        archive_size: 500000
+        telemetry_group: ''
+        logs_backup: False
+        events_backup: False
 ---
 kind: ConfigMap
 apiVersion: v1
