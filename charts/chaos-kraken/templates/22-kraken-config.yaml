@@ -664,99 +664,70 @@ data:
     - id: kill-pods
       config:
         namespace_pattern: ^openshift-logging$
-        label_selector: component=collector
+        label_selector: "app.kubernetes.io/name=collector"
         kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/name=collector"
+        timeout: 120
 
     - id: kill-pods
       config:
         namespace_pattern: ^openshift-logging$
-        label_selector: component=elasticsearch
+        label_selector: "component=lokistack-compactor"
         kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "component=lokistack-compactor"
+        timeout: 120
+  startx_openshift_machines.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-server
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-server
+        count: 3
+        timeout: 120
 
     - id: kill-pods
       config:
-        namespace_pattern: ^openshift-logging$
-        name_pattern: .*
-        kill: 5
-  startx_openshift_machines.yml: |
-    config:
-      runStrategy:
-        runs: 1
-        maxSecondsBetweenRuns: 10
-        minSecondsBetweenRuns: 5
-    scenarios:
-      - name: kill 1 server pod in openshift-machine-config-operator namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-machine-config-operator"
-              - labels:
-                  namespace: "openshift-machine-config-operator"
-                  selector: "k8s-app=machine-config-server"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: 1
-                  force: true
-      - name: kill up to 3 daemon running pods in openshift-machine-config-operator namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-machine-config-operator"
-              - labels:
-                  namespace: "openshift-machine-config-operator"
-                  selector: "k8s-app=machine-config-daemon"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 3
-            actions:
-              - kill:
-                  probability: .75
-      - name: kill up to 4 running pods in openshift-machine-* namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-machine-*"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 4
-            actions:
-              - kill:
-                  probability: .75
-      - name: kill 1 pod in openshift-machine-api namespace
-        steps:
-        - podAction:
-            matches:
-              - namespace: "openshift-machine-api"
-            filters:
-              - property:
-                  name: "state"
-                  value: "Running"
-              - randomSample:
-                  size: 1
-            actions:
-              - kill:
-                  probability: .7
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-daemon
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-daemon
+        count: 3
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-machine-api$
+        label_selector: k8s-app=machine-api-operator
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-machine-api$
+        label_selector: k8s-app=machine-api-operator
+        count: 1
+        timeout: 120
   startx_openshift_monitoring.yml: |
     - id: kill-pods
       config:
         namespace_pattern: ^openshift-monitoring$
-        label_selector: app=prometheus
+        label_selector: "app.kubernetes.io/name=prometheus"
+        kill: 1
     - id: wait-for-pods
       config:
         namespace_pattern: ^openshift-monitoring$
-        label_selector: app=prometheus
+        label_selector: "app.kubernetes.io/name=prometheus"
         count: 2
         timeout: 180
 
@@ -764,12 +735,12 @@ data:
       config:
         namespace_pattern: ^openshift-monitoring$
         label_selector: "app.kubernetes.io/name=node-exporter"
-        kill: 2
+        kill: 1
     - id: wait-for-pods
       config:
         namespace_pattern: ^openshift-monitoring$
         label_selector: "app.kubernetes.io/name=node-exporter"
-        count: 8
+        count: 3
         timeout: 180
 
     - id: kill-pods
