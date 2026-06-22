@@ -1,6 +1,7 @@
-{{- if .Values.cerberus.enabled -}}{{- if .Values.cerberus.kraken_allowed -}}
+{{- if .Values.cerberus.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
+{{- if .Values.cerberus.kraken_allowed -}}
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -25,6 +26,7 @@ spec:
               name: "{{ $.Values.cerberus.kraken_ns }}"
   policyTypes:
     - Ingress
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -43,4 +45,4 @@ spec:
       tool: cerberus
   ingress:
     - {}
-{{- end -}}{{- end -}}
+{{- end -}}

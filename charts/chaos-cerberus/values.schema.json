@@ -19,7 +19,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "description": "Name of the global scope for this application. Define an organizational tenant.",
                     "default": "companyname",
                     "examples": [
                         "myscope",
@@ -45,7 +45,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Environement name",
-                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "description": "Name of the environment for this application. Define a stage tenant.",
                     "default": "dev",
                     "examples": [
                         "dev",
@@ -74,7 +74,7 @@
                     "minLength": 1,
                     "maxLength": 40,
                     "title": "Application name",
-                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "description": "Name of the application name. Define a functional tenant.",
                     "default": "cerberus",
                     "examples": [
                         "cerberus",
@@ -160,10 +160,11 @@
                         "mode": {
                             "enum": [
                                 "token",
-                                "file"
+                                "file",
+                                "local"
                             ],
                             "title": "Kubeconfig mode",
-                            "description": "Connection mode to use for the cluster (could be token or file)",
+                            "description": "Connection mode to use for the cluster (could be token, file, or local)",
                             "default": "token"
                         },
                         "file": {
@@ -228,6 +229,13 @@
                             "required": [
                                 "file"
                             ]
+                        },
+                        {
+                            "properties": {
+                                "mode": {
+                                    "const": "local"
+                                }
+                            }
                         }
                     ]
                 },
@@ -235,6 +243,30 @@
                     "type": "array",
                     "title": "Watch routes",
                     "description": "Url list of endpoint to watch as part of the global healthcheck (double array)",
+                    "default": []
+                },
+                "watch_terminating_namespaces": {
+                    "type": "boolean",
+                    "title": "Watch terminating namespaces",
+                    "description": "Enable watching terminating namespaces as part of the global health signal",
+                    "default": true
+                },
+                "watch_namespaces": {
+                    "type": "array",
+                    "title": "Watch namespaces",
+                    "description": "List of namespaces to watch (supports regex patterns)",
+                    "default": []
+                },
+                "watch_namespaces_ignore_pattern": {
+                    "type": "array",
+                    "title": "Namespace ignore patterns",
+                    "description": "Regex patterns for namespaces to exclude from watching",
+                    "default": []
+                },
+                "custom_checks": {
+                    "type": "array",
+                    "title": "Custom checks",
+                    "description": "List of custom check scripts (paths relative to /root/cerberus/ working directory)",
                     "default": []
                 }
             }

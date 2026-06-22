@@ -22,16 +22,17 @@ data:
         port: 8080
         watch_nodes: {{ .Values.cerberus.watch_nodes | default true }}
         watch_cluster_operators: {{ .Values.cerberus.watch_cluster_operators | default true }}
+        watch_terminating_namespaces: {{ .Values.cerberus.watch_terminating_namespaces | default true }}
         watch_url_routes: {{ toJson .Values.cerberus.watch_url_routes }}
         watch_master_schedulable:
             enabled: True
             label: node-role.kubernetes.io/master
         watch_namespaces:
-        - openshift
-        - ^openshift-(?!must-gather.*|debug.*|marketplace.*).*$
-        - ^kube-.*$
-        # - ^startx-.*$
-        cerberus_publish_status: True 
+        {{- range .Values.cerberus.watch_namespaces }}
+        - {{ . }}
+        {{- end }}
+        watch_namespaces_ignore_pattern: {{ toJson .Values.cerberus.watch_namespaces_ignore_pattern }}
+        cerberus_publish_status: True
         inspect_components: False
         prometheus_url:
         prometheus_bearer_token:
@@ -45,8 +46,7 @@ data:
             Saturday:
             Sunday:
         slack_team_alias:
-        custom_checks:
-          - startx_check.py
+        custom_checks: {{ toJson .Values.cerberus.custom_checks }}
     tunings:
         timeout: 10
         iterations: 25
@@ -63,8 +63,8 @@ data:
     def check_name():
         logging.info("Check if number of Ready nodes is greater than 5\n")
     def check():
-        node_count = subprocess.check_output("oc get nodes | grep Ready | wc -l", shell=True, universal_newlines=True)
-        return True if int(node_count) > 5 else False
+        node_count = subprocess.check_output("kubectl get nodes --no-headers | grep -c ' Ready '", shell=True, universal_newlines=True)
+        return True if int(node_count.strip()) > 5 else False
     def main():
         check_name()
         output = check()
@@ -85,6 +85,28 @@ data:
 {{- if eq .Values.cerberus.kubeconfig.mode "file" }}
   config: |
     {{- .Values.cerberus.kubeconfig.file | nindent 4 }}
+{{- end -}}
+{{- if eq .Values.cerberus.kubeconfig.mode "local" }}
+  config: |
+    kind: Config
+    apiVersion: v1
+    current-context: default
+    clusters:
+    - name: default
+      cluster:
+        certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        server: https://kubernetes.default.svc
+    users:
+    - name: default
+      user:
+        tokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    contexts:
+    - name: default
+      context:
+        cluster: default
+        namespace: default
+        user: default
+    preferences: {}
 {{- end -}}
 {{- if eq .Values.cerberus.kubeconfig.mode "token" }}
   config: |

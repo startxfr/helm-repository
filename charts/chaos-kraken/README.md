@@ -245,7 +245,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.103
+    targetRevision: 21.3.107
   syncPolicy:
     automated:
       prune: true
@@ -277,7 +277,7 @@ spec:
               server: https://api.demo219.startx.fr:6443
               token: sha256~REPLACE_WITH_YOUR_TOKEN
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.103
+    targetRevision: 21.3.107
   syncPolicy:
     automated:
       prune: true
@@ -320,3 +320,4 @@ kubectl apply -f chaos-kraken-argocd.yaml -n openshift-gitops
 | 21.3.103 | 2026-06-20 | Improve chaos-kraken options |
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.103 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.107 | 2026-06-21 | publish stable update for the full repository |
