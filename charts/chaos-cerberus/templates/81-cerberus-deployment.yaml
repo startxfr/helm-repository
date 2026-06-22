@@ -37,8 +37,37 @@ spec:
       - name: cerberus
         image: "quay.io/redhat-chaos/cerberus:{{- $version -}}"
         imagePullPolicy: Always
+        {{- if eq .Values.cerberus.kubeconfig.mode "local" }}
+        args:
+          - |
+            TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+            CA_DATA=$(base64 -w0 /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
+            cat > /tmp/kubeconfig <<KUBECONFIGEOF
+            kind: Config
+            apiVersion: v1
+            current-context: default
+            clusters:
+            - name: default
+              cluster:
+                certificate-authority-data: ${CA_DATA}
+                server: https://kubernetes.default.svc
+            users:
+            - name: default
+              user:
+                token: ${TOKEN}
+            contexts:
+            - name: default
+              context:
+                cluster: default
+                namespace: default
+                user: default
+            preferences: {}
+            KUBECONFIGEOF
+            python3 start_cerberus.py -c config/config.yaml
+        {{- else }}
         args:
           - python3 start_cerberus.py -c config/config.yaml
+        {{- end }}
         command:
           - /bin/sh
           - -c
