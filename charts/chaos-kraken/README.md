@@ -247,7 +247,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.110
+    targetRevision: 21.3.112
   syncPolicy:
     automated:
       prune: true
@@ -281,7 +281,7 @@ spec:
               server: https://api.demo219.startx.fr:6443
               token: sha256~REPLACE_WITH_YOUR_TOKEN
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.110
+    targetRevision: 21.3.112
   syncPolicy:
     automated:
       prune: true
@@ -331,3 +331,5 @@ kubectl apply -f chaos-kraken-argocd.yaml -n openshift-gitops
 | 21.3.109 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.109 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.110 | 2026-06-22 | Improve chaos-kraken options |
+| 21.3.111 | 2026-06-22 | fix mountPath: use /home/krkn instead of /root for kraken image paths |
+| 21.3.112 | 2026-06-22 | Improve chaos-kraken options |

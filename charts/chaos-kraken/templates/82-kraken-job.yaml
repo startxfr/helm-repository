@@ -38,7 +38,7 @@ spec:
           - -c
         env:
           - name: KUBECONFIG
-            value: /root/.kube/config
+            value: /home/krkn/.kube/config
         {{- if $.Values.kraken.aws }}{{- if $.Values.kraken.aws.enabled }}
         envFrom:
           - secretRef:
@@ -50,21 +50,21 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /root/.kube/config
+        - mountPath: /home/krkn/.kube/config
           name: kube-config
           subPath: config
-        - mountPath: /root/kraken/scenarios
+        - mountPath: /home/krkn/kraken/scenarios
           name: kraken-scenarios-config
-        - mountPath: /root/kraken/config/config.yaml
+        - mountPath: /home/krkn/kraken/config/config.yaml
           name: kraken-config
           subPath: config.yaml
-        - mountPath: /root/kraken/kube_burner.yaml
+        - mountPath: /home/krkn/kraken/kube_burner.yaml
           name: kraken-config-common
           subPath: kube_burner.yaml
-        - mountPath: /root/kraken/metrics-aggregated.yaml
+        - mountPath: /home/krkn/kraken/metrics-aggregated.yaml
           name: kraken-config-common
           subPath: metrics-aggregated.yaml
-        - mountPath: /root/kraken/startx_alerts.yaml
+        - mountPath: /home/krkn/kraken/startx_alerts.yaml
           name: kraken-config-common
           subPath: startx_alerts.yaml
       restartPolicy: Never
