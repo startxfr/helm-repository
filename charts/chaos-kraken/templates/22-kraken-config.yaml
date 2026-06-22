@@ -660,7 +660,7 @@ data:
         namespace_pattern: ^openshift-etcd$
         label_selector: k8s-app=etcd
         count: 3
-  startx_openshift_logging.yml: |
+  startx_openshift_logging_loki.yml: |
     - id: kill-pods
       config:
         namespace_pattern: ^openshift-logging$
@@ -675,12 +675,67 @@ data:
     - id: kill-pods
       config:
         namespace_pattern: ^openshift-logging$
-        label_selector: "component=lokistack-compactor"
+        label_selector: "app.kubernetes.io/component=ingester"
         kill: 1
     - id: wait-for-pods
       config:
         namespace_pattern: ^openshift-logging$
-        label_selector: "component=lokistack-compactor"
+        label_selector: "app.kubernetes.io/component=ingester"
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=distributor"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=distributor"
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=compactor"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/component=compactor"
+        timeout: 120
+  startx_openshift_logging_elastic.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/name=collector"
+        kill: 2
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "app.kubernetes.io/name=collector"
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "common.k8s.elastic.co/type=elasticsearch"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "common.k8s.elastic.co/type=elasticsearch"
+        timeout: 180
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "common.k8s.elastic.co/type=kibana"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-logging$
+        label_selector: "common.k8s.elastic.co/type=kibana"
         timeout: 120
   startx_openshift_machines.yml: |
     - id: kill-pods
@@ -993,8 +1048,8 @@ data:
       litmus_uninstall: False
       litmus_uninstall_before_run: False
       chaos_scenarios:
-        - plugin_scenarios:
-          - scenarios/startx_openshift_logging.yml
+        - pod_disruption_scenarios:
+          - scenarios/startx_openshift_logging_loki.yml
     cerberus:
         cerberus_enabled: True
         cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
@@ -1675,7 +1730,7 @@ data:
       litmus_uninstall_before_run: False
       chaos_scenarios:
         - pod_disruption_scenarios:
-          - scenarios/startx_openshift_logging.yml
+          - scenarios/startx_openshift_logging_loki.yml
           - scenarios/startx_openshift_monitoring.yml
           - scenarios/startx_openshift_machines.yml
           - scenarios/startx_openshift-apiserver.yml
