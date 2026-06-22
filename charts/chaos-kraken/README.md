@@ -247,7 +247,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.131
+    targetRevision: 21.3.132
   syncPolicy:
     automated:
       prune: true
@@ -281,7 +281,7 @@ spec:
               server: https://api.demo219.startx.fr:6443
               token: sha256~REPLACE_WITH_YOUR_TOKEN
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.131
+    targetRevision: 21.3.132
   syncPolicy:
     automated:
       prune: true
@@ -352,3 +352,4 @@ kubectl apply -f chaos-kraken-argocd.yaml -n openshift-gitops
 | 21.3.129 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.130 | 2026-06-22 | add ingress, OVN and kube-apiserver chaos scenarios |
 | 21.3.131 | 2026-06-22 | fix container scenarios syntax and add ingress OVN kube-apiserver scenarios |
+| 21.3.132 | 2026-06-22 | Improve chaos-kraken options |
