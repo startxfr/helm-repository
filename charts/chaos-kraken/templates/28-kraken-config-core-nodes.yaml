@@ -1,0 +1,388 @@
+{{- if .Values.kraken.enabled -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-node-app
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-node-app"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_node_app.yaml: |
+    config:
+      runStrategy:
+        runs: 1
+        maxSecondsBetweenRuns: 40
+        minSecondsBetweenRuns: 20
+    node_scenarios:
+      - actions:
+          - stop_kubelet_scenario
+          - start_kubelet_scenario
+        node_name:
+        label_selector: node-role.kubernetes.io/worker
+        instance_count: 1
+        runs: 1
+        timeout: 300
+        cloud_type: bm 
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-node-app-cpu-chaos
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-node-app-cpu-chaos"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_node_app_cpu_chaos.yaml: |
+    apiVersion: litmuschaos.io/v1alpha1
+    kind: ChaosEngine
+    metadata:
+      name: nginx-chaos
+      namespace: litmus
+    spec:
+      annotationCheck: 'false'
+      engineState: 'active'
+      chaosServiceAccount: litmus-sa
+      monitoring: false
+      jobCleanUpPolicy: 'delete'
+      experiments:
+        - name: node-cpu-hog
+          spec:
+            components:
+              env:
+                - name: TOTAL_CHAOS_DURATION
+                  value: '60'
+                - name: NODE_CPU_CORE
+                  value: '1'
+                - name: NODES_AFFECTED_PERC
+                  value: '75'
+                - name: NODE_LABEL
+                  value: 'node-role.kubernetes.io/worker=""'
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-node-master
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-node-master"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_node_master.yaml: |
+    - id: run_python
+      config:
+        filename: scenarios/startx_node_master.py
+  startx_node_master.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import http.client
+    import json
+    import xml.etree.ElementTree as ET
+    import os
+    import random
+
+    tenant_url = os.environ.get('TENANT_URL')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+
+    def auth_vcloud(refreshToken):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = 'grant_type=refresh_token&refresh_token='+refreshToken
+        headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        conn.request("POST", "/oauth/tenant/C0000001-004/token", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        jsondata = json.loads(data.decode("utf-8"))
+        return jsondata["access_token"]
+
+    def node_name_to_vmId(access_token, node_name):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("GET", "/api/vms/query?pageSize=128", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        root = ET.fromstring(data)
+        for vmrecord in root.findall('{http://www.vmware.com/vcloud/v1.5}VMRecord'):
+            href = vmrecord.get('href')
+            name = vmrecord.get('name')
+            if name == node_name:
+                vm_id = href.removeprefix('https://'+tenant_url+'/api/vApp/')
+                return vm_id
+
+    def node_reboot(access_token, vm_id):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("POST", "/api/vApp/"+vm_id+"/power/action/reboot", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+
+    def run(cmd):
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.error("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+    master_nodes = run("oc get nodes -l node-role.kubernetes.io/master='' -o custom-columns=NODE:.metadata.name --no-headers ").rstrip()
+    masters = master_nodes.split('\n')
+    random_master_index = random.randint(0,2)
+    stop_kublet = run("oc debug node/" + masters[random_master_index] + " -- chroot /host systemctl stop kubelet").rstrip()
+    node_reboot(auth_vcloud(refresh_token), node_name_to_vmId(auth_vcloud(refresh_token), masters[random_master_index]))
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-node-infra
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-node-infra"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_node_infra.yaml: |
+    - id: run_python
+      config:
+        filename: scenarios/startx_node_infra.py
+  startx_node_infra.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import http.client
+    import json
+    import xml.etree.ElementTree as ET
+    import os
+    import random
+
+    tenant_url = os.environ.get('TENANT_URL')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+
+    def auth_vcloud(refreshToken):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = 'grant_type=refresh_token&refresh_token='+refreshToken
+        headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        conn.request("POST", "/oauth/tenant/C0000001-004/token", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        jsondata = json.loads(data.decode("utf-8"))
+        return jsondata["access_token"]
+
+    def node_name_to_vmId(access_token, node_name):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("GET", "/api/vms/query?pageSize=128", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        root = ET.fromstring(data)
+        for vmrecord in root.findall('{http://www.vmware.com/vcloud/v1.5}VMRecord'):
+            href = vmrecord.get('href')
+            name = vmrecord.get('name')
+            if name == node_name:
+                vm_id = href.removeprefix('https://'+tenant_url+'/api/vApp/')
+                return vm_id
+
+    def node_reboot(access_token, vm_id):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("POST", "/api/vApp/"+vm_id+"/power/action/reboot", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+
+    def run(cmd):
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.error("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+    worker_nodes = run("oc get nodes -l node-role.kubernetes.io/infra='' -o custom-columns=NODE:.metadata.name --no-headers ").rstrip()
+    workers = worker_nodes.split('\n')
+    random_worker_index = random.randint(0,2)
+    stop_kublet = run("oc debug node/" + workers[random_worker_index] + " -- chroot /host systemctl stop kubelet").rstrip()
+    node_reboot(auth_vcloud(refresh_token), node_name_to_vmId(auth_vcloud(refresh_token), workers[random_worker_index]))
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-node-worker
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-node-worker"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_node_worker.yaml: |
+      - id: run_python
+        config:
+          filename: scenarios/startx_node_worker.py
+  startx_node_worker.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import http.client
+    import json
+    import xml.etree.ElementTree as ET
+    import os
+    import random
+
+    tenant_url = os.environ.get('TENANT_URL')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+
+    def auth_vcloud(refreshToken):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = 'grant_type=refresh_token&refresh_token='+refreshToken
+        headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        conn.request("POST", "/oauth/tenant/C0000001-004/token", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        jsondata = json.loads(data.decode("utf-8"))
+        return jsondata["access_token"]
+
+    def node_name_to_vmId(access_token, node_name):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("GET", "/api/vms/query?pageSize=128", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        root = ET.fromstring(data)
+        for vmrecord in root.findall('{http://www.vmware.com/vcloud/v1.5}VMRecord'):
+            href = vmrecord.get('href')
+            name = vmrecord.get('name')
+            if name == node_name:
+                vm_id = href.removeprefix('https://'+tenant_url+'/api/vApp/')
+                return vm_id
+
+    def node_reboot(access_token, vm_id):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("POST", "/api/vApp/"+vm_id+"/power/action/reboot", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+
+    def run(cmd):
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.error("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+    worker_nodes = run("oc get nodes -l node-role.kubernetes.io/worker='' -o custom-columns=NODE:.metadata.name --no-headers").rstrip()
+    workers = worker_nodes.split('\n')
+    random_worker_index = random.randint(0,2)
+    stop_kublet = run("oc debug node/" + workers[random_worker_index] + " -- chroot /host systemctl stop kubelet").rstrip()
+    node_reboot(auth_vcloud(refresh_token), node_name_to_vmId(auth_vcloud(refresh_token), workers[random_worker_index]))
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-config-chaos-nodes
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-nodes"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /home/krkn/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: False
+      signal_address: 0.0.0.0
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - node_scenarios:
+          - scenarios/startx_node_master.yaml
+          - scenarios/startx_node_infra.yaml
+          - scenarios/startx_node_worker.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 300
+        iterations: 1
+        daemon_mode: False
+{{- end -}}

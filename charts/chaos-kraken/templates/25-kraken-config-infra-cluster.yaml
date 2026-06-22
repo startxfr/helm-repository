@@ -1,0 +1,216 @@
+{{- if .Values.kraken.enabled -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-cluster-shut-down
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-cluster-shut-down"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  cluster_shut_down_scenario.yaml: |
+    - id: run_python
+      config:
+        filename: scenarios/cluster_shut_down_scenario.py
+  cluster_shut_down_scenario.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import http.client
+    import json
+    import xml.etree.ElementTree as ET
+    import os
+
+    tenant_url = os.environ.get('TENANT_URL')
+    vapp_name = os.environ.get('VAPP_NAME')
+    refresh_token = os.environ.get('REFRESH_TOKEN')
+
+    def auth_vcloud(refreshToken):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = 'grant_type=refresh_token&refresh_token='+refreshToken
+        headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        conn.request("POST", "/oauth/tenant/C0000001-004/token", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        jsondata = json.loads(data.decode("utf-8"))
+        return jsondata["access_token"]
+
+    def vapp_name_to_vappId(access_token, vapp_name):
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("GET", "/api/vApps/query?pageSize=128", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        root = ET.fromstring(data)
+        # for child in root:
+        #   print(child.tag, child.attrib)
+        for vapprecord in root.findall('{http://www.vmware.com/vcloud/v1.5}VAppRecord'):
+            href = vapprecord.get('href')
+            name = vapprecord.get('name')
+            if name == vapp_name:
+                vapp_id = href.removeprefix('https://console.monacocloud.app/api/vApp/')
+                return vapp_id
+
+    def cluster_reboot(access_token, vapp_id): # cluster_name : data or mgmt
+        conn = http.client.HTTPSConnection(tenant_url)
+        payload = ''
+        headers = {
+        'Accept': '*/*;version=36.2',
+        'Authorization': 'Bearer '+ access_token
+        }
+        conn.request("POST", "/api/vApp/"+vapp_id+"/power/action/reboot", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+
+    def run(cmd):
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.error("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+    cluster_reboot(auth_vcloud(refresh_token), vapp_name_to_vappId(auth_vcloud(refresh_token), vapp_name))
+  post_action_shut_down.py: |
+    #!/usr/bin/env python3
+    import subprocess
+    import logging
+    import time
+    import yaml
+
+
+    def run(cmd):
+        out = ""
+        try:
+            output = subprocess.Popen(
+                cmd, shell=True, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            (out, err) = output.communicate()
+        except Exception as e:
+            logging.info("Failed to run %s, error: %s" % (cmd, e))
+        return out
+
+
+    # Get cluster operators and return yaml
+    def get_cluster_operators():
+        operators_status = run("kubectl get co -o yaml")
+        status_yaml = yaml.safe_load(operators_status, Loader=yaml.FullLoader)
+        return status_yaml
+
+
+    # Monitor cluster operators
+    def monitor_cluster_operator(cluster_operators):
+        failed_operators = []
+        for operator in cluster_operators["items"]:
+            # loop through the conditions in the status section to find the dedgraded condition
+            if "status" in operator.keys() and "conditions" in operator["status"].keys():
+                for status_cond in operator["status"]["conditions"]:
+                    # if the degraded status is not false, add it to the failed operators to return
+                    if status_cond["type"] == "Degraded" and status_cond["status"] != "False":
+                        failed_operators.append(operator["metadata"]["name"])
+                        break
+            else:
+                logging.info("Can't find status of " + operator["metadata"]["name"])
+                failed_operators.append(operator["metadata"]["name"])
+        # return False if there are failed operators else return True
+        return failed_operators
+
+
+    wait_duration = 10
+    timeout = 900
+    counter = 0
+
+    counter = 0
+    co_yaml = get_cluster_operators()
+    failed_operators = monitor_cluster_operator(co_yaml)
+    while len(failed_operators) > 0:
+        time.sleep(wait_duration)
+        co_yaml = get_cluster_operators()
+        failed_operators = monitor_cluster_operator(co_yaml)
+        if counter >= timeout:
+            print("Cluster operators are still degraded after " + str(timeout) + "seconds")
+            print("Degraded operators " + str(failed_operators))
+            exit(1)
+        counter += wait_duration
+
+    not_ready = run("oc get nodes --no-headers | grep 'NotReady' | wc -l").rstrip()
+    while int(not_ready) > 0:
+        time.sleep(wait_duration)
+        not_ready = run("oc get nodes --no-headers | grep 'NotReady' | wc -l").rstrip()
+        if counter >= timeout:
+            print("Nodes are still not ready after " + str(timeout) + "seconds")
+            exit(1)
+        counter += wait_duration
+
+    worker_nodes = run("oc get nodes --no-headers | grep worker | egrep -v NotReady | awk '{print $1}'").rstrip()
+    print("Worker nodes list \n" + str(worker_nodes))
+    master_nodes = run("oc get nodes --no-headers | grep master | egrep -v NotReady | awk '{print $1}'").rstrip()
+    print("Master nodes list \n" + str(master_nodes))
+    infra_nodes = run("oc get nodes --no-headers | grep infra | egrep -v NotReady | awk '{print $1}'").rstrip()
+    print("Infra nodes list \n" + str(infra_nodes))
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-config-chaos-cluster
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-cluster"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /home/krkn/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: False
+      signal_address: 0.0.0.0
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - cluster_shut_down_scenarios:
+          - scenarios/cluster_shut_down_scenario.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 600
+        iterations: 1
+        daemon_mode: False
+{{- end -}}

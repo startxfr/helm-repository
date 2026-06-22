@@ -1,0 +1,71 @@
+{{- if .Values.kraken.enabled -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-openshift-podmonkey
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-openshift-podmonkey"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_openshift_podmonkey.yml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-.*$
+        name_pattern: .*
+        kill: 5
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-config-chaos-releasemonkey
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-releasemonkey"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /home/krkn/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: False
+      signal_address: 0.0.0.0
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - pod_disruption_scenarios:
+          - scenarios/startx_openshift_podmonkey.yml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 240
+        iterations: 2
+        daemon_mode: False
+{{- end -}}

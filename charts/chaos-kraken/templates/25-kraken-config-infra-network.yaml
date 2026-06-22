@@ -1,0 +1,141 @@
+{{- if .Values.kraken.enabled -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-node-app-network-chaos
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-node-app-network-chaos"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_node_app_network_chaos.yaml: |
+    network_chaos:
+      duration: 30
+      node_name:
+      label_selector: 'node-role.kubernetes.io/worker'
+      instance_count: 1
+      interfaces:
+      - "br-ex"
+      - "br-int"
+      - "lo"
+      - "ens192"
+      execution: serial
+      egress:
+        latency: 50ms
+        loss: 0.05
+        bandwidth: 100mbit
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-node-master-network-chaos
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-node-master-network-chaos"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_node_master_network_chaos.yaml: |
+    network_chaos:
+      duration: 30
+      node_name:
+      label_selector: 'node-role.kubernetes.io/master'
+      instance_count: 1
+      interfaces:
+      - "br-ex"
+      - "br-int"
+      - "lo"
+      - "ens192"
+      execution: serial
+      egress:
+        latency: 50ms
+        loss: 0.05
+        bandwidth: 100mbit
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-startx-node-infra-network-chaos
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-startx-node-infra-network-chaos"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  startx_node_infra_network_chaos.yaml: |
+    network_chaos:
+      duration: 30
+      node_name:
+      label_selector: 'node-role.kubernetes.io/infra'
+      instance_count: 1
+      interfaces:
+      - "br-ex"
+      - "br-int"
+      - "lo"
+      - "ens192"
+      execution: serial
+      egress:
+        latency: 50ms
+        loss: 0.05
+        bandwidth: 100mbit
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-config-chaos-network
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config-chaos-network"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  config.yaml: |-
+    kraken:
+      distribution: openshift
+      kubeconfig_path: /home/krkn/.kube/config
+      exit_on_failure: False
+      port: 8081
+      publish_kraken_status: False
+      signal_address: 0.0.0.0
+      signal_state: RUN
+      litmus_version: v1.13.6
+      litmus_uninstall: False
+      litmus_uninstall_before_run: False
+      chaos_scenarios:
+        - network_chaos_scenarios:
+          # - scenarios/startx_node_app_network_chaos.yaml
+          - scenarios/startx_node_infra_network_chaos.yaml
+          # - scenarios/startx_node_master_network_chaos.yaml
+    cerberus:
+        cerberus_enabled: True
+        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
+        check_applicaton_routes: True
+    performance_monitoring:
+        deploy_dashboards: False
+        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
+        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
+        capture_metrics: True
+        config_path: config/kube_burner.yaml
+        metrics_profile_path: config/metrics-aggregated.yaml
+        prometheus_url:
+        prometheus_bearer_token:
+        uuid:
+        enable_alerts: False
+        alert_profile: config/alerts
+    tunings:
+        wait_duration: 300
+        iterations: 1
+        daemon_mode: False
+{{- end -}}

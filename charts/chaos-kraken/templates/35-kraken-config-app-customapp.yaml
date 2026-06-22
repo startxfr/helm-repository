@@ -1,0 +1,27 @@
+{{- if .Values.kraken.enabled -}}
+{{- $appName := include "startx.appName" . -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: kraken-scenario-customapp-pod
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenario-customapp-pod"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  customapp_pod.yaml: |
+    - id: kill-pods
+      config:
+        namespace_pattern: ^acme-air$
+        name_pattern: .*
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^acme-air$
+        name_pattern: .*
+        count: 8
+{{- end -}}
