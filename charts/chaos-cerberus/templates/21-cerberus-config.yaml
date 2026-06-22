@@ -18,7 +18,7 @@ data:
     # read https://github.com/chaos-kubox/cerberus/blob/main/config/config.yaml for full detail of each properties
     cerberus:
         distribution: openshift
-        kubeconfig_path: /root/kubeconfig
+        kubeconfig_path: {{ if eq .Values.cerberus.kubeconfig.mode "local" }}/tmp/kubeconfig{{ else }}/root/kubeconfig{{ end }}
         port: 8080
         watch_nodes: {{ .Values.cerberus.watch_nodes | default true }}
         watch_cluster_operators: {{ .Values.cerberus.watch_cluster_operators | default true }}
