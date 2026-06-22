@@ -329,3 +329,4 @@ kubectl apply -f chaos-kraken-argocd.yaml -n openshift-gitops
 | 21.3.108 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.108 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.109 | 2026-06-22 | Improve chaos-kraken options |
+| 21.3.109 | 2026-06-22 | Improve chaos-kraken options |
