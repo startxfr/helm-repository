@@ -1,0 +1,48 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-keepalived
+# Description of this Helm chart
+description: Helm chart used to configure Keepalived at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 21.3.3
+# Version name of the keepalived operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: 0.5.0
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-keepalived.svg
+# Kube minimum version
+kubeVersion: ">=1.30.0-0"
+# Keyword list for this chart
+keywords: 
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - keepalived
+  - virtual-ip
+  - high-availability
+  - load-balancer
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-keepalived
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-keepalived
+# Main maintainer contact for this helm chart
+maintainers: 
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    version: "21.3.0"
+    condition: project.project.enabled
+  - name: operator
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
+    version: "21.3.0"
+    alias: operator
+    condition: operator.operator.enabled

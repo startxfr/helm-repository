@@ -1,0 +1,63 @@
+{{- if .Values.ingressController.enabled -}}
+---
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: {{ .Values.ingressController.name | quote }}
+  namespace: {{ .Values.ingressController.namespace | quote }}
+  labels:
+    {{- include "cluster-keepalived.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "ingress-controller"
+    app.kubernetes.io/name: {{ .Values.ingressController.name | quote }}
+  annotations:
+    {{- include "cluster-keepalived.annotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.ingressController.replicas | default 3 }}
+  domain: {{ .Values.ingressController.domain | quote }}
+  {{- if .Values.ingressController.routeSelector }}
+  routeSelector:
+    matchLabels:
+      {{- toYaml .Values.ingressController.routeSelector.matchLabels | nindent 6 }}
+  {{- end }}
+  {{- if .Values.ingressController.nodePlacement }}
+  nodePlacement:
+    {{- if .Values.ingressController.nodePlacement.nodeSelector }}
+    nodeSelector:
+      matchLabels:
+        {{- toYaml .Values.ingressController.nodePlacement.nodeSelector.matchLabels | nindent 8 }}
+    {{- end }}
+    {{- if .Values.ingressController.nodePlacement.tolerations }}
+    tolerations:
+      {{- toYaml .Values.ingressController.nodePlacement.tolerations | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.ingressController.defaultCertificate }}
+  defaultCertificate:
+    name: {{ .Values.ingressController.defaultCertificate.name | quote }}
+  {{- end }}
+  {{- if .Values.ingressController.tuningOptions }}
+  tuningOptions:
+    {{- toYaml .Values.ingressController.tuningOptions | nindent 4 }}
+  {{- end }}
+  {{- if .Values.ingressController.clientTLS }}
+  clientTLS:
+    {{- toYaml .Values.ingressController.clientTLS | nindent 4 }}
+  {{- end }}
+  {{- if .Values.ingressController.endpointPublishingStrategy }}
+  endpointPublishingStrategy:
+    {{- toYaml .Values.ingressController.endpointPublishingStrategy | nindent 4 }}
+  {{- end }}
+  {{- if .Values.ingressController.httpCompression }}
+  httpCompression: {{ .Values.ingressController.httpCompression }}
+  {{- end }}
+  {{- if .Values.ingressController.httpEmptyRequestsPolicy }}
+  httpEmptyRequestsPolicy: {{ .Values.ingressController.httpEmptyRequestsPolicy | quote }}
+  {{- end }}
+  {{- if .Values.ingressController.httpErrorCodePages }}
+  httpErrorCodePages:
+    {{- toYaml .Values.ingressController.httpErrorCodePages | nindent 4 }}
+  {{- end }}
+  {{- if .Values.ingressController.unsupportedConfigOverrides }}
+  unsupportedConfigOverrides: {{ .Values.ingressController.unsupportedConfigOverrides }}
+  {{- end }}
+{{- end -}}

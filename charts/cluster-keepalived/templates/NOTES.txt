@@ -1,0 +1,39 @@
+{{- include "cluster-keepalived.notes" . }}
+
+{{- if .Values.operator }}{{- if .Values.operator.enabled }}
+-- Keepalived Operator ---------
+Keepalived operator has been deployed
+{{- if .Values.operator.subscription }}{{- if .Values.operator.subscription.enabled }}
+Subscription {{ .Values.operator.subscription.name }} created in {{ .Values.operator.subscription.namespace }}
+{{- end }}{{- end }}
+{{- if .Values.operator.operatorGroup }}{{- if .Values.operator.operatorGroup.enabled }}
+OperatorGroup {{ .Values.operator.operatorGroup.name }} created in {{ .Values.operator.operatorGroup.namespace }}
+{{- end }}{{- end }}
+{{- end }}{{- end }}
+
+{{- if .Values.project }}{{- if .Values.project.enabled }}
+-- Project Configuration --------
+Project namespace {{ .Values.project.project.name | default "startx-keepalived" }} has been deployed
+{{- end }}{{- end }}
+
+{{- if .Values.clusterNetwork }}{{- if .Values.clusterNetwork.enabled }}
+-- Network Configuration --------
+Cluster network configuration has been updated with external IPs
+{{- end }}{{- end }}
+
+{{- if .Values.ingressController }}{{- if .Values.ingressController.enabled }}
+-- Ingress Controller -----------
+IngressController "{{ .Values.ingressController.name }}" has been deployed
+Domain: {{ .Values.ingressController.domain }}
+Replicas: {{ .Values.ingressController.replicas }}
+{{- if .Values.ingressControllerService }}{{- if .Values.ingressControllerService.enabled }}
+Service: {{ .Values.ingressControllerService.name }} ({{ .Values.ingressControllerService.type }})
+{{- if .Values.ingressControllerService.externalIPs }}
+External IPs: {{ .Values.ingressControllerService.externalIPs | join ", " }}
+{{- end }}
+{{- end }}{{- end }}
+{{- end }}{{- end }}
+
+For more information, please visit:
+https://helm-repository.readthedocs.io/en/latest/charts/cluster-keepalived
+
