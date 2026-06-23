@@ -79,3 +79,4 @@ oc apply -k .
 | 21.3.4 | 2026-06-23 | Improve cluster-keepalived options |
 | 21.3.4 | 2026-06-23 | Improve cluster-keepalived options |
 | 21.3.4 | 2026-06-23 | Improve cluster-keepalived options |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |

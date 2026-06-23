@@ -67,121 +67,15 @@ helm install cluster-descheduler startx/cluster-descheduler -f https://raw.githu
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-descheduler
-  namespace: openshift-gitops
-spec:
-  description: Deploy Kube Descheduler operator and configure descheduler policies
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-kube-descheduler-operator
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-descheduler/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Creates namespace openshift-kube-descheduler-operator
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-descheduler-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-descheduler
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-descheduler
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys Kube Descheduler operator in openshift-kube-descheduler-operator (dedicated namespace, own OperatorGroup)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-descheduler-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-descheduler
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-descheduler
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-kube-descheduler-operator
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys KubeDescheduler instance in openshift-kube-descheduler-operator
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-descheduler-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-descheduler
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-descheduler
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        descheduler:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-kube-descheduler-operator
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 
@@ -217,3 +111,4 @@ spec:
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |

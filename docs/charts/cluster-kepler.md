@@ -57,93 +57,15 @@ helm install cluster-kepler startx/cluster-kepler -f https://raw.githubuserconte
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-kepler
-  namespace: openshift-gitops
-spec:
-  description: Deploy Kepler power monitoring operator
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-power-monitoring
-      server: https://kubernetes.default.svc
-    - namespace: openshift-operators
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-kepler/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Creates namespace openshift-power-monitoring
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-kepler-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-kepler
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-kepler
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys power-monitoring-operator in openshift-operators (shared namespace, global-operators OG exists)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-kepler-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-kepler
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-kepler
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-operators
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 
@@ -179,3 +101,4 @@ spec:
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |

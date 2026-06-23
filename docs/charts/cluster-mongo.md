@@ -40,103 +40,10 @@ helm install cluster-mongo startx/cluster-mongo
 
 ### Applications
 
-```yaml
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mongo-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-mongo
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-mongo
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-        operator:
-          enabled: false
-        cluster:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mongo-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-mongo
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-mongo
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-        cluster:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: default-mongo
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mongo-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-mongo
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-mongo
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        cluster:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: default-mongo
-  ignoreDifferences:
-    - group: mongodbcommunity.mongodb.com
-      kind: MongoDBCommunity
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-mongo/examples/argocd/
+oc apply -k .
 ```
 
 ## Default values
@@ -191,3 +98,4 @@ helm install cluster-mongo startx/cluster-mongo -f https://raw.githubusercontent
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |

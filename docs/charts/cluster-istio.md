@@ -84,148 +84,15 @@ helm install cluster-istio startx/cluster-istio -f https://raw.githubusercontent
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-istio
-  namespace: openshift-gitops
-spec:
-  description: Deploy OpenShift Service Mesh (Istio) and its dependency operators
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: startx-istio
-      server: https://kubernetes.default.svc
-    - namespace: istio-operators
-      server: https://kubernetes.default.svc
-    - namespace: openshift-operators-redhat
-      server: https://kubernetes.default.svc
-    - namespace: openshift-operators
-      server: https://kubernetes.default.svc
-    - namespace: openshift-distributed-tracing
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-istio/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Creates namespaces startx-istio and istio-operators
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-istio-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-istio
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-istio
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-        projectOperator:
-          enabled: true
-        istio:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys Elastic, Loki, Kiali, Jaeger and Service Mesh operators
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-istio-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-istio
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-istio
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operatorElastic:
-          enabled: true
-        operatorLoki:
-          enabled: true
-        operatorKiali:
-          enabled: true
-        operatorJaeger:
-          enabled: true
-        operatorIstio:
-          enabled: true
-        istio:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: istio-operators
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Configures Service Mesh control plane (disabled by default)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-istio-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-istio
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-istio
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        istio:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: startx-istio
-  ignoreDifferences:
-    - group: maistra.io
-      kind: ServiceMeshControlPlane
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 
@@ -260,3 +127,4 @@ spec:
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |

@@ -111,3 +111,4 @@ helm install example-fruitapp-project startx/example-fruitapp-project
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |

@@ -67,136 +67,15 @@ helm install cluster-compliance startx/cluster-compliance -f https://raw.githubu
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-compliance
-  namespace: openshift-gitops
-spec:
-  description: Deploy and configure Compliance operator on the cluster
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-compliance
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-compliance/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-compliance-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-compliance
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-compliance
-    targetRevision: 21.3.107
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        compliance:
-          enabled: false
-        project:
-          enabled: true
-          project:
-            name: "openshift-compliance"
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-compliance-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-compliance
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-compliance
-    targetRevision: 21.3.107
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        compliance:
-          enabled: false
-        operator:
-          enabled: true
-          subscription:
-            enabled: true
-          operatorGroup:
-            enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-compliance-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-compliance
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-compliance
-    targetRevision: 21.3.107
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        compliance:
-          enabled: true
-        project:
-          project:
-            name: "openshift-compliance"
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-compliance
-  ignoreDifferences:
-    - group: compliance.openshift.io
-      kind: ScanSetting
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 
@@ -235,3 +114,4 @@ spec:
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.107 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |

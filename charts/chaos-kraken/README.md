@@ -267,3 +267,4 @@ oc apply -k .
 | 21.3.133 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.134 | 2026-06-22 | improve monitoring apiserver machines podmonkey and app-outage scenarios |
 | 21.3.135 | 2026-06-22 | Improve chaos-kraken options |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |

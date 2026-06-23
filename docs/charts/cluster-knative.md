@@ -64,150 +64,15 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-knative
-  namespace: openshift-gitops
-spec:
-  description: Deploy OpenShift Serverless (Knative) operator and configure serving/eventing
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-serverless
-      server: https://kubernetes.default.svc
-    - namespace: knative-serving
-      server: https://kubernetes.default.svc
-    - namespace: knative-eventing
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-knative/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Creates namespaces openshift-serverless, knative-serving, knative-eventing
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-knative-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-knative
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-knative
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        projectOperator:
-          enabled: true
-        projectKServing:
-          enabled: true
-        projectKEventing:
-          enabled: true
-        kServing:
-          enabled: false
-        kEventing:
-          enabled: false
-        kKafka:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys serverless-operator in openshift-serverless (dedicated namespace, own OperatorGroup)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-knative-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-knative
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-knative
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-        kServing:
-          enabled: false
-        kEventing:
-          enabled: false
-        kKafka:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-serverless
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Configures KnativeServing, KnativeEventing and KnativeKafka instances
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-knative-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-knative
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-knative
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        kServing:
-          enabled: true
-        kEventing:
-          enabled: true
-        kKafka:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: knative-serving
-  ignoreDifferences:
-    - group: operator.knative.dev
-      kind: KnativeServing
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 
@@ -243,3 +108,4 @@ spec:
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
