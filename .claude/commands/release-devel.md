@@ -11,8 +11,8 @@ Release all Helm charts on the `devel` branch and publish a new global release t
 Examples:
 ```
 /release-devel
-/release-devel 21.3.5
-/release-devel 21.3.5 "update all charts for OCP 4.21.3"
+/release-devel 21.3.199
+/release-devel 21.3.199 "update all charts for OCP 4.21.3"
 ```
 
 ## What this command does
@@ -35,7 +35,7 @@ You are executing the release-devel command. Arguments: $ARGUMENTS
 **Step 0 - Parse arguments**
 
 Split `$ARGUMENTS` by spaces:
-- Arg 1 = version (optional, e.g. `21.3.5`)
+- Arg 1 = version (optional, e.g. `21.3.199`)
 - Arg 2+ = description (optional, rest of the string)
 
 Set `FORCE_VERSION` and `FORCE_DESC` (empty if not given).

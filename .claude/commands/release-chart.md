@@ -11,8 +11,8 @@ Release a single Helm chart on the `devel` branch and publish it to the devel pr
 Examples:
 ```
 /release-chart cluster-nmstate
-/release-chart cluster-nmstate 21.3.5
-/release-chart cluster-nmstate 21.3.5 "fix schema validation"
+/release-chart cluster-nmstate 21.3.199
+/release-chart cluster-nmstate 21.3.199 "fix schema validation"
 ```
 
 ## What this command does
@@ -33,7 +33,7 @@ You are executing the release-chart command. Arguments: $ARGUMENTS
 
 Split `$ARGUMENTS` by spaces:
 - Arg 1 = chart name (required). If missing, stop and ask: "Quel chart voulez-vous releaser ?"
-- Arg 2 = version (optional, e.g. `21.3.5`)
+- Arg 2 = version (optional, e.g. `21.3.199`)
 - Arg 3+ = description (optional, rest of the string)
 
 Set `CHART_NAME`, `FORCE_VERSION` (empty if not given), `FORCE_DESC` (empty if not given).
@@ -58,7 +58,7 @@ Check that `charts/$CHART_NAME/` exists. If not, list available charts with `./s
 
 Run: `grep '^version:' charts/$CHART_NAME/Chart.yaml`
 
-Read the current version. Compute next patch version (e.g. 21.3.4 → 21.3.5).
+Read the current version. Compute next patch version (e.g. 21.3.4 → 21.3.199).
 If `FORCE_VERSION` is set, use it. Otherwise use the auto-incremented value.
 If `FORCE_DESC` is set, use it. Otherwise default to `"Improve $CHART_NAME options"`.
 

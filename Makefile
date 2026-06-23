@@ -10,7 +10,7 @@
 # ------------------------------------------------------------------------------
 
 # Load shared configuration so make variables mirror the script's defaults.
-# Values can be overridden on the command line: make release VERSION=21.3.5
+# Values can be overridden on the command line: make release VERSION=21.3.199
 include .tools/config
 export
 
