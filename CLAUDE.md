@@ -360,7 +360,7 @@ application:
    ```
 4. **Optional variants** (e.g., security, custom values): `values-app-<chart>-<variant>.yaml`
    - Example: `values-app-cluster-quay-sec.yaml` (uses `values-startx_noinfra-secvuln.yaml` instead of `values-startx_noinfra-quay.yaml`)
-5. Add entry to `values-aoa-infra-min.yaml` (or other values files) to test/deploy the chart
+5. Add entry to `infra-min.yaml` (or other values files) to test/deploy the chart
 
 ### Current coverage (60 charts)
 
