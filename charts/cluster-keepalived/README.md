@@ -252,3 +252,4 @@ spec:
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 21.3.3   | 2026-06-23 | Initial release of cluster-keepalived chart |
 | 21.3.4 | 2026-06-23 | Improve cluster-keepalived options |
+| 21.3.4 | 2026-06-23 | Improve cluster-keepalived options |
