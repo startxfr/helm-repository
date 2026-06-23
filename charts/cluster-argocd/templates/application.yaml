@@ -36,14 +36,12 @@ spec:
     targetRevision: {{ .rev | default "master" | quote }}
     {{- end }}
     {{- if .helm }}
-    helm: 
-      {{- .helm | nindent 6 }}
-    {{- else }}
-    helm: {}
+    helm:
+      {{- .helm | toYaml | nindent 6 }}
     {{- end }}
   {{- if .syncPolicy }}
-  syncPolicy: 
-    {{- .syncPolicy | nindent 4 }}
+  syncPolicy:
+    {{- .syncPolicy | toYaml | nindent 4 }}
   {{- else }}
   syncPolicy: {}
   {{- end }}
