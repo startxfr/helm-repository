@@ -23,41 +23,41 @@ argocd:
   hooked: false
   # name of the argocd cluster
   name: "openshift-gitops"
-  # # the spec of the argoCD config (default is a generic config with example)
-  # spec: |-
-  #   applicationInstanceLabelKey: argocd.argoproj.io/instance
-  #   server:
-  #     autoscale:
-  #       enabled: false
-  #     insecure: true
-  #     route:
-  #       enabled: true
-  #       tls:
-  #         termination: edge
-  #   statusBadgeEnabled: true
-  #   usersAnonymousEnabled: false
-  #   controller:
-  #     appSync: 120s
-  #     processors:
-  #       operation: 10
-  #       status: 25
-  #   ha:
-  #     enabled: false
-  #   redis:
-  #     resources:
-  #       requests:
-  #         cpu: 50m
-  #   dex:
-  #     openShiftOAuth: true
-  #   grafana:
-  #     enabled: false
-  #   prometheus:
-  #     enabled: true
-  #     size: 2
-  #     route:
-  #       enabled: false
-  #   repo:
-  #     mountsatoken: true
+  # the spec of the argoCD config (default is a generic config with example)
+  spec: |-
+    applicationInstanceLabelKey: argocd.argoproj.io/instance
+    server:
+      autoscale:
+        enabled: false
+      insecure: true
+      route:
+        enabled: true
+        tls:
+          termination: edge
+    statusBadgeEnabled: true
+    usersAnonymousEnabled: false
+    controller:
+      appSync: 120s
+      processors:
+        operation: 10
+        status: 25
+    ha:
+      enabled: false
+    redis:
+      resources:
+        requests:
+          cpu: 50m
+    dex:
+      openShiftOAuth: true
+    grafana:
+      enabled: false
+    prometheus:
+      enabled: true
+      size: 2
+      route:
+        enabled: false
+    repo:
+      mountsatoken: true
 
 # Configuration of secrets to accesss various private repository used in argocd applications
 # Read https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ for more 
@@ -66,45 +66,45 @@ argocd_repocreds:
   # enable deployment of repository credentials
   enabled: false
   # List of repository credentials to create
-  list: 
-      # Name of the export configuration
-    - name: "startx-customers-pragmatik-repo-creds"
-      # Short name for ArgoCD reading
-      shortname: "pragmatik-repo"
-      # Namespace of the export configuration
-      namespace: "openshift-gitops"
-      # URL of the repository (or path if used for multiple repository)
-      url: "https://github.com/argoproj/private-repo"
-      # ArgoCD Secret type (should be repository, repo-creds or cluster)
-      secretType: "repository"
-      # Credentials type for this secret (should be https, ssh or githubapp)
-      type: "https"
-      # Is the connection must be SSL checked
-      insecure: true
-      # Options if credentials type is https
-      httpsOptions: 
-        # Username to use for http authentication
-        username: "my-username"
-        # password coresponding to the username
-        password: "my-password"
-      # Options if credentials type is ssh
-      sshOptions: 
-        # The privateKey to use for ssh connection to the remote repository
-        sshPrivateKey: |-
-          -----BEGIN OPENSSH PRIVATE KEY-----
-          ...
-          -----END OPENSSH PRIVATE KEY-----
-      # Options if credentials type is githubapp
-      githubappOptions: 
-        # The application ID
-        githubAppID: 1
-        # The install application ID
-        githubAppInstallationID: 2
-        # The privateKey to use for ssh connection to the remote repository
-        githubAppPrivateKey: |-
-          -----BEGIN OPENSSH PRIVATE KEY-----
-          ...
-          -----END OPENSSH PRIVATE KEY-----
+  list: []
+    #   # Name of the export configuration
+    # - name: "startx-customers-pragmatik-repo-creds"
+    #   # Short name for ArgoCD reading
+    #   shortname: "pragmatik-repo"
+    #   # Namespace of the export configuration
+    #   namespace: "openshift-gitops"
+    #   # URL of the repository (or path if used for multiple repository)
+    #   url: "https://github.com/argoproj/private-repo"
+    #   # ArgoCD Secret type (should be repository, repo-creds or cluster)
+    #   secretType: "repository"
+    #   # Credentials type for this secret (should be https, ssh or githubapp)
+    #   type: "https"
+    #   # Is the connection must be SSL checked
+    #   insecure: true
+    #   # Options if credentials type is https
+    #   httpsOptions: 
+    #     # Username to use for http authentication
+    #     username: "my-username"
+    #     # password coresponding to the username
+    #     password: "my-password"
+    #   # Options if credentials type is ssh
+    #   sshOptions: 
+    #     # The privateKey to use for ssh connection to the remote repository
+    #     sshPrivateKey: |-
+    #       -----BEGIN OPENSSH PRIVATE KEY-----
+    #       ...
+    #       -----END OPENSSH PRIVATE KEY-----
+    #   # Options if credentials type is githubapp
+    #   githubappOptions: 
+    #     # The application ID
+    #     githubAppID: 1
+    #     # The install application ID
+    #     githubAppInstallationID: 2
+    #     # The privateKey to use for ssh connection to the remote repository
+    #     githubAppPrivateKey: |-
+    #       -----BEGIN OPENSSH PRIVATE KEY-----
+    #       ...
+    #       -----END OPENSSH PRIVATE KEY-----
     
 
 # Configuration of the argocd export
@@ -112,117 +112,117 @@ argocd_export:
   # enable deployment of export
   enabled: false
   # List of export to configure
-  list: 
-      # Name of the export configuration
-    - name: "example-export"
-      # Namespace of the export configuration
-      namespace: "openshift-gitops"
-      # name of the argocd instance to export
-      argocd: "openshift-gitops"
-      # Rythm of the export creation
-      schedule: "0 * * * *"
-      # Storage class used for the PVC creation of the export
-      storageclass: "gp3-csi"
+  list: []
+    #   # Name of the export configuration
+    # - name: "example-export"
+    #   # Namespace of the export configuration
+    #   namespace: "openshift-gitops"
+    #   # name of the argocd instance to export
+    #   argocd: "openshift-gitops"
+    #   # Rythm of the export creation
+    #   schedule: "0 * * * *"
+    #   # Storage class used for the PVC creation of the export
+    #   storageclass: "gp3-csi"
 
 # Configuration of the argocd argocd_project
 argocd_project:
   # enable deployment of argocd_project
   enabled: false
   # List of argocd_project to configure
-  list:
-      # Name of the argocd_project configuration
-    - name: "default"
-      # Namespace of the argocd_project configuration
-      namespace: "default"
-      # List of source repositories allowed in this project (default: ['*'])
-      sourceRepos:
-        - '*'
-      # List of allowed destination clusters and namespaces (default: project namespace on any server)
-      destinations:
-        - namespace: "default"
-          server: '*'
-      # List of cluster-scoped resource types this project can manage (default: all groups and kinds)
-      clusterResourceWhitelist:
-        - group: '*'
-          kind: '*'
-      # List of ArgoCD RBAC roles for this project (default: [])
-      roles: 
-        # Role short name
-      - name: default
-        # Role description
-        description: Read-only privileges to group default in .{{- $name -}} project
-        # Role policy
-        policies:
-        - g, default, role:readonly
-        - p, role:defult, *, get, .*/*, allow
-        # Role goup mapping
-        groups:
-        - default
+  list: []
+    #   # Name of the argocd_project configuration
+    # - name: "default"
+    #   # Namespace of the argocd_project configuration
+    #   namespace: "default"
+    #   # List of source repositories allowed in this project (default: ['*'])
+    #   sourceRepos:
+    #     - '*'
+    #   # List of allowed destination clusters and namespaces (default: project namespace on any server)
+    #   destinations:
+    #     - namespace: "default"
+    #       server: '*'
+    #   # List of cluster-scoped resource types this project can manage (default: all groups and kinds)
+    #   clusterResourceWhitelist:
+    #     - group: '*'
+    #       kind: '*'
+    #   # List of ArgoCD RBAC roles for this project (default: [])
+    #   roles: 
+    #     # Role short name
+    #   - name: default
+    #     # Role description
+    #     description: Read-only privileges to group default in .{{- $name -}} project
+    #     # Role policy
+    #     policies:
+    #     - g, default, role:readonly
+    #     - p, role:defult, *, get, .*/*, allow
+    #     # Role goup mapping
+    #     groups:
+    #     - default
 
 # Configuration of VM to deploy
 application:
   # enable deployment of application
   enabled: false
   # List of application to deploy
-  list: 
-      # Name of the application to configure
-    - name: "example-application"
-      # Namespace where to deploy this application (default is project)
-      namespace: "openshift-gitops"
-      # enable argocd finalizer for this application
-      finalizer: true
-      # name of the destination server (default is https://kubernetes.default.svc) 
-      server: "https://kubernetes.default.svc"
-      # name of the parent project (default is cluster-admin) 
-      project: "cluster-admin"
-      # Application source
-      source: 
-        # repository URL to the application code (default is https://gitlab.com/startx1/helm.git)
-        repo: "https://gitlab.com/startx1/helm.git"
-        # revision to use for this source-code (default is master) 
-        rev: "stable"
-        # path to the application code (default is charts/example-html/)
-        path: "charts/example-html/"
-      # Configuration of the helm chart
-      helm: | 
-        valueFiles:
-          - values.yaml
-        parameters:
-          - name: context.scope
-            value: "myscope"
-          - name: context.cluster
-            value: "mycluster"
-          - name: context.environment
-            value: "myenv"
-          - name: context.version
-            value: "0.0.1-devel"
-          - name: context.app
-            value: "exemple-html-helm"
-          - name: html.expose.enabled
-            value: "true"
-          - name: html.namespace
-            value: "default"
-      # Configuration of the syncPolicy property
-      syncPolicy: | 
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=false
-          - Validate=true
-        retry:
-          limit: 5
-          backoff:
-            duration: 5s
-            factor: 2
-            maxDuration: 60s
-      # Configuration of the ignoreDifferences list
-      ignoreDifferences: | 
-        - group: "apps"
-          kind: Secret
-          namespace: "default"
-          jsonPointers:
-            - /
+  list: []
+    #   # Name of the application to configure
+    # - name: "example-application"
+    #   # Namespace where to deploy this application (default is project)
+    #   namespace: "openshift-gitops"
+    #   # enable argocd finalizer for this application
+    #   finalizer: true
+    #   # name of the destination server (default is https://kubernetes.default.svc) 
+    #   server: "https://kubernetes.default.svc"
+    #   # name of the parent project (default is cluster-admin) 
+    #   project: "cluster-admin"
+    #   # Application source
+    #   source: 
+    #     # repository URL to the application code (default is https://gitlab.com/startx1/helm.git)
+    #     repo: "https://gitlab.com/startx1/helm.git"
+    #     # revision to use for this source-code (default is master) 
+    #     rev: "stable"
+    #     # path to the application code (default is charts/example-html/)
+    #     path: "charts/example-html/"
+    #   # Configuration of the helm chart
+    #   helm: | 
+    #     valueFiles:
+    #       - values.yaml
+    #     parameters:
+    #       - name: context.scope
+    #         value: "myscope"
+    #       - name: context.cluster
+    #         value: "mycluster"
+    #       - name: context.environment
+    #         value: "myenv"
+    #       - name: context.version
+    #         value: "0.0.1-devel"
+    #       - name: context.app
+    #         value: "exemple-html-helm"
+    #       - name: html.expose.enabled
+    #         value: "true"
+    #       - name: html.namespace
+    #         value: "default"
+    #   # Configuration of the syncPolicy property
+    #   syncPolicy: | 
+    #     automated:
+    #       prune: true
+    #       selfHeal: true
+    #     syncOptions:
+    #       - CreateNamespace=false
+    #       - Validate=true
+    #     retry:
+    #       limit: 5
+    #       backoff:
+    #         duration: 5s
+    #         factor: 2
+    #         maxDuration: 60s
+    #   # Configuration of the ignoreDifferences list
+    #   ignoreDifferences: | 
+    #     - group: "apps"
+    #       kind: Secret
+    #       namespace: "default"
+    #       jsonPointers:
+    #         - /
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
