@@ -37,13 +37,11 @@ spec:
     {{- end }}
     {{- if .helm }}
     helm:
-      {{- .helm | toYaml | nindent 6 }}
+{{ .helm | indent 6 }}
     {{- end }}
   {{- if .syncPolicy }}
   syncPolicy:
-    {{- .syncPolicy | toYaml | nindent 4 }}
-  {{- else }}
-  syncPolicy: {}
+{{ .syncPolicy | indent 4 }}
   {{- end }}
   {{- if .ignoreDifferences }}
   ignoreDifferences: 
