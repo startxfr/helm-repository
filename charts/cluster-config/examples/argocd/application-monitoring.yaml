@@ -1,0 +1,33 @@
+# Monitoring and alertmanager configuration
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-monitoring
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-config
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-config
+    targetRevision: 21.3.107
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        monitoring:
+          enabled: true
+          infra_enabled: true
+          storageClass: gp3-csi
+          storageSize: "30Gi"
+          enableUserWorkload: true
+        alertmanager:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-config
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

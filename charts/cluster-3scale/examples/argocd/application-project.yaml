@@ -1,0 +1,45 @@
+# Wave 1 — namespaces: startx-3scale (3scale), default-crunchy (postgres)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-3scale-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: cluster-3scale
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-3scale
+    targetRevision: 21.3.107
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        operator:
+          enabled: false
+        manager:
+          enabled: false
+        externalComponents:
+          enabled: false
+        clusterRedis:
+          enabled: false
+        clusterCrunchy:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-3scale
+  ignoreDifferences:
+    - group: ""
+      kind: ServiceAccount
+      name: default
+      namespace: startx-3scale
+      jsonPointers:
+        - /imagePullSecrets
+        - /secrets
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

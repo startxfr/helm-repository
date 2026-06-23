@@ -80,57 +80,15 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-storage
-  namespace: openshift-gitops
-spec:
-  description: Configure cluster storage classes
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/cluster-storage/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-storage-app
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-storage
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-storage
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 

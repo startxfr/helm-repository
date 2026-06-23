@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-auth-app
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-config
+    server: https://kubernetes.default.svc
+  project: cluster-auth
+  source:
+    chart: cluster-auth
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        auth:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.107
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

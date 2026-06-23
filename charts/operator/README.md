@@ -136,76 +136,10 @@ helm install operator-3scale startx/operator -f https://raw.githubusercontent.co
 Deploy `operator` using a single ArgoCD Application sharing a dedicated AppProject.
 The chart creates operator subscriptions and operator groups in the target namespace:
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: operator-example
-  namespace: openshift-gitops
-spec:
-  description: Deploy startx operator chart for operator subscription management
-  sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: openshift-operators
-    - server: https://kubernetes.default.svc
-      namespace: '*'
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
----
-# Wave 5 — Deploy the operator subscription and operatorGroup
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: operator-example-pipeline
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: operator-example
-  source:
-    chart: operator
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        subscription:
-          enabled: true
-          name: openshift-pipelines-operator-rh
-          namespace: openshift-operators
-          operator:
-            name: openshift-pipelines-operator-rh
-            channel: latest
-            installPlanApproval: Manual
-            source:
-              name: redhat-operators
-              namespace: openshift-marketplace
-        operatorGroup:
-          enabled: false
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.106
-  destination:
-    namespace: openshift-operators
-    server: https://kubernetes.default.svc
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-```
-
-Apply with:
-
 ```bash
-kubectl apply -f operator-argocd.yaml -n openshift-gitops
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/operator/examples/argocd/
+oc apply -k .
 ```
 
 The automated sync policy ensures ArgoCD reconciles the operator subscription whenever the chart or values drift from the desired state.

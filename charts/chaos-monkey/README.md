@@ -163,98 +163,10 @@ metadata:
 
 `chaos-monkey` deploys kube-monkey which runs on a schedule (configurable `startHour`/`endHour`). Target deployments must opt in via annotations.
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: chaos-monkey
-  namespace: openshift-gitops
-spec:
-  description: Deploy kube-monkey chaos pod killer on OpenShift
-  sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-    - 'https://asobti.github.io/kube-monkey/charts/repo'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: chaos-monkey
-    - server: https://kubernetes.default.svc
-      namespace: default
-  clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-    - group: project.openshift.io
-      kind: ProjectRequest
-    - group: security.openshift.io
-      kind: SecurityContextConstraints
-    - group: rbac.authorization.k8s.io
-      kind: ClusterRole
-    - group: rbac.authorization.k8s.io
-      kind: ClusterRoleBinding
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: chaos-monkey-project
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  project: chaos-monkey
-  source:
-    chart: chaos-monkey
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.107
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: chaos-monkey-instance
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: chaos-monkey
-    server: https://kubernetes.default.svc
-  project: chaos-monkey
-  source:
-    chart: chaos-monkey
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        monkey:
-          enabled: true
-          config:
-            dryRun: true
-            timezone: Europe/Paris
-            startHour: 9
-            endHour: 17
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.107
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
-
-Apply with:
-
 ```bash
-kubectl apply -f chaos-monkey-argocd.yaml -n openshift-gitops
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos-monkey/examples/argocd/
+oc apply -k .
 ```
 
 ## History

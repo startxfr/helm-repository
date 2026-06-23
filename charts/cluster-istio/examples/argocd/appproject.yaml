@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-istio
+  namespace: openshift-gitops
+spec:
+  description: Deploy OpenShift Service Mesh (Istio) and its dependency operators
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: startx-istio
+      server: https://kubernetes.default.svc
+    - namespace: istio-operators
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators-redhat
+      server: https://kubernetes.default.svc
+    - namespace: openshift-operators
+      server: https://kubernetes.default.svc
+    - namespace: openshift-distributed-tracing
+      server: https://kubernetes.default.svc
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

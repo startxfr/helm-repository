@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-cerberus-instance
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-cerberus
+    server: https://kubernetes.default.svc
+  project: chaos-cerberus
+  source:
+    chart: chaos-cerberus
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        cerberus:
+          enabled: true
+          kubeconfig:
+            # local: use the pod's own ServiceAccount token (in-cluster, no credentials needed)
+            # token: monitor a remote cluster with a bearer token
+            # file:  inject a full kubeconfig file
+            mode: local
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.112
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

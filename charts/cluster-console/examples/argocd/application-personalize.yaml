@@ -1,0 +1,29 @@
+# Configures console: branding, links, notifications and log links
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-console-personalize
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-console
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-console
+    targetRevision: 21.3.106
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        console:
+          enabled: true
+          namespace: openshift-config
+          state: Managed
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-config
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

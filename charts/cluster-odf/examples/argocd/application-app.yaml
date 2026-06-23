@@ -1,0 +1,47 @@
+# Wave 3 - created last, deleted FIRST so the ODF operator is still alive to process StorageCluster finalizers
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-odf-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-odf
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-odf
+    targetRevision: 21.3.107
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        odf:
+          enabled: true
+          nodeLabeler:
+            enabled: false
+        operator:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  # OCS operator mutates these fields after sync — ignore to keep Application Synced
+  ignoreDifferences:
+    - group: ocs.openshift.io
+      kind: StorageCluster
+      jqPathExpressions:
+        - .metadata.finalizers
+        - .metadata.annotations["uninstall.ocs.openshift.io/cleanup-policy"]
+        - .metadata.annotations["uninstall.ocs.openshift.io/mode"]
+        - .spec.version
+        - .spec.encryption.keyRotation
+        - .spec.managedResources
+        - .spec.storageDeviceSets[].replica
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - SkipDryRunOnMissingResource=true

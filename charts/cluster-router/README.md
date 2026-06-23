@@ -77,62 +77,15 @@ helm install cluster-router startx/cluster-router -f https://raw.githubuserconte
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-router
-  namespace: openshift-gitops
-spec:
-  description: Configure OpenShift cluster router and image registry routes
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-    - namespace: openshift-image-registry
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/cluster-router/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-router-app
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-router
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-router
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        registryroute:
-          enabled: true
-          name: external
-          namespace: openshift-image-registry
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 

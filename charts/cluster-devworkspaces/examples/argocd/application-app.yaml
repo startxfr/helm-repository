@@ -1,0 +1,34 @@
+# Configures DevWorkspace instances in startx-devworkspaces
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-devworkspaces-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-devworkspaces
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-devworkspaces
+    targetRevision: 21.3.106
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        devworkspaces:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: startx-devworkspaces
+  ignoreDifferences:
+    - group: workspace.devfile.io
+      kind: DevWorkspace
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -60,123 +60,15 @@ helm install cluster-mtc startx/cluster-mtc -f https://raw.githubusercontent.com
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-mtc
-  namespace: openshift-gitops
-spec:
-  description: Configure Migration Toolkit for Containers operator
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-    - namespace: openshift-migration
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/cluster-mtc/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mtc-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-mtc
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-mtc
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mtc-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-mtc
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-mtc
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mtc-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-mtc
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-mtc
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        mtc:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  ignoreDifferences:
-    - group: migration.openshift.io
-      kind: MigrationController
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 

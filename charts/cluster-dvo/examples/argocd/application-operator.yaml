@@ -1,0 +1,31 @@
+# Wave 5 — DVO operator subscription in openshift-operators (AllNamespaces, no project wave needed)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-dvo-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-dvo
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-dvo
+    targetRevision: 21.3.106
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-operators
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

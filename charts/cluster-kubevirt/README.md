@@ -48,134 +48,15 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-kubevirt
-  namespace: openshift-gitops
-spec:
-  description: Deploy OpenShift Virtualization (KubeVirt) operator and HyperConverged instance
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-cnv
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/cluster-kubevirt/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Creates namespace openshift-cnv
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-kubevirt-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-kubevirt
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-kubevirt
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-        hyperconvergedCluster:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys kubevirt-hyperconverged operator in openshift-cnv (dedicated namespace, own OperatorGroup)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-kubevirt-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-kubevirt
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-kubevirt
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-          operatorGroup:
-            enabled: true
-        hyperconvergedCluster:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-cnv
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Configures the HyperConverged cluster instance
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-kubevirt-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-kubevirt
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-kubevirt
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        hyperconvergedCluster:
-          enabled: true
-        vms:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-cnv
-  ignoreDifferences:
-    - group: hco.kubevirt.io
-      kind: HyperConverged
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 

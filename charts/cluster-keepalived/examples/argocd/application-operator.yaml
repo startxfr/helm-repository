@@ -1,0 +1,43 @@
+# Installs keepalived-operator via OLM
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-keepalived-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-keepalived
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-keepalived
+    targetRevision: 21.3.4
+    helm:
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: true
+          subscription:
+            enabled: true
+          operatorGroup:
+            enabled: true
+        clusterNetwork:
+          enabled: false
+        keepalived:
+          enabled: false
+        ingressController:
+          enabled: false
+        ingressControllerService:
+          enabled: false
+        ingressControllerSecret:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: keepalived-operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

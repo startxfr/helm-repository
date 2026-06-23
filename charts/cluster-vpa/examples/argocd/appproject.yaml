@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-vpa
+  namespace: openshift-gitops
+spec:
+  description: Deploy VPA operator in openshift-vertical-pod-autoscaler namespace
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+  destinations:
+    - namespace: openshift-gitops
+      server: https://kubernetes.default.svc
+    - namespace: openshift-vertical-pod-autoscaler
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

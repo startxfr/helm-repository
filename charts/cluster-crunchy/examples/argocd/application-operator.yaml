@@ -1,0 +1,29 @@
+# Deploys Crunchy Postgres operator in default-crunchy (dedicated namespace, own OperatorGroup)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-crunchy-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-crunchy
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-crunchy
+    targetRevision: 21.3.106
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-crunchy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-3scale
+  namespace: openshift-gitops
+spec:
+  description: Deploy the 3scale API Management operator on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: openshift-operators
+    - server: https://kubernetes.default.svc
+      namespace: openshift-crunchy-pgo
+    - server: https://kubernetes.default.svc
+      namespace: startx-3scale
+    - server: https://kubernetes.default.svc
+      namespace: default-crunchy
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

@@ -215,104 +215,10 @@ SA_TOKEN=$(oc create token cerberus-monitor -n chaos-cerberus --duration=8760h)
 
 `chaos-cerberus` follows the project/instance pattern: one Application creates the namespace, a second deploys cerberus. A ready-to-use example file is available at [`examples/argocd/cerberus-argocd.yaml`](examples/argocd/cerberus-argocd.yaml).
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: chaos-cerberus
-  namespace: openshift-gitops
-spec:
-  description: Deploy cerberus cluster healthcheck watchdog on OpenShift
-  sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: chaos-cerberus
-    - server: https://kubernetes.default.svc
-      namespace: default
-  clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-    - group: project.openshift.io
-      kind: ProjectRequest
-    - group: security.openshift.io
-      kind: SecurityContextConstraints
-    - group: rbac.authorization.k8s.io
-      kind: ClusterRole
-    - group: rbac.authorization.k8s.io
-      kind: ClusterRoleBinding
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: chaos-cerberus-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-  # No finalizer on project wave — avoids deadlock when namespace is slow to terminate
-spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  project: chaos-cerberus
-  source:
-    chart: chaos-cerberus
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-        cerberus:
-          enabled: false
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.112
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: chaos-cerberus-instance
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: chaos-cerberus
-    server: https://kubernetes.default.svc
-  project: chaos-cerberus
-  source:
-    chart: chaos-cerberus
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: false
-        cerberus:
-          enabled: true
-          kubeconfig:
-            # local: use the pod's own ServiceAccount token (in-cluster, no credentials needed)
-            # token: monitor a remote cluster with a bearer token
-            # file:  inject a full kubeconfig file
-            mode: local
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.112
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
-
-Apply with:
-
 ```bash
-kubectl apply -f examples/argocd/cerberus-argocd.yaml -n openshift-gitops
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos-cerberus/examples/argocd/
+oc apply -k .
 ```
 
 ## History

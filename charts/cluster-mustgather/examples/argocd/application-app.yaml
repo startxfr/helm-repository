@@ -1,0 +1,33 @@
+# Wave 10 — MustGather report instances in default-mustgather
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-mustgather-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-mustgather
+  source:
+    chart: cluster-mustgather
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        report:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.106
+  ignoreDifferences:
+    - group: managed.openshift.io
+      kind: MustGather
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -51,137 +51,15 @@ Complete deployment of a Logging configuration with the following characteristic
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-logging
-  namespace: openshift-gitops
-spec:
-  description: Deploy OpenShift Logging operator (cluster-logging + loki) and configure log forwarding
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-logging
-      server: https://kubernetes.default.svc
-    - namespace: openshift-operators-redhat
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/cluster-logging/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Creates namespace openshift-logging
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-logging-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-logging
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-logging
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys cluster-logging operator in openshift-logging (dedicated namespace, own OperatorGroup)
-# and loki-operator in openshift-operators-redhat (shared namespace, no OperatorGroup)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-logging-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-logging
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-logging
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-          operatorGroup:
-            enabled: true
-        operatorLoki:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-logging
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Configures ClusterLogging and ClusterLogForwarder (disabled by default)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-logging-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-logging
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-logging
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        logging:
-          enabled: false
-        logforwarder:
-          enabled: false
-        eventrouter:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-logging
-  ignoreDifferences:
-    - group: logging.openshift.io
-      kind: ClusterLogging
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 

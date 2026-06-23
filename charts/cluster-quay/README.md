@@ -60,130 +60,15 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-quay
-  namespace: openshift-gitops
-spec:
-  description: Configure Quay enterprise container registry operator
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-    - namespace: openshift-startx-quay
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/cluster-quay/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-quay-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-quay
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-quay
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra-quay.yaml
-      values: |
-        project:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-quay-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-quay
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-quay
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra-quay.yaml
-      values: |
-        operator:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-quay-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-quay
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-quay
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra-quay.yaml
-      values: |
-        quay:
-          enabled: true
-        rhn:
-          user: "<your-rhn-username>"
-          pwd: "<your-rhn-password>"
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  ignoreDifferences:
-    - group: quay.redhat.com
-      kind: QuayRegistry
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-```
+
 
 ## History
 

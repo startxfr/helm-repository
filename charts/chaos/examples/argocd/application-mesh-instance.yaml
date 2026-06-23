@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-mesh-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-mesh
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-mesh
+    # skipCrds avoids CRD version conflicts — ArgoCD manages CRDs separately
+    skipCrds: true
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        mesh:
+          enabled: true
+          # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
+          prometheus:
+            create: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.107
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

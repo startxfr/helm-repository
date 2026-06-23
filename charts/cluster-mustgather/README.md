@@ -67,99 +67,10 @@ The must-gather operator installs in `openshift-operators` (AllNamespaces); Must
 
 > The must-gather operator requires AllNamespaces scope to trigger must-gather on any namespace. No dedicated operator namespace is created — the subscription goes into `openshift-operators`.
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-mustgather
-  namespace: openshift-gitops
-spec:
-  description: Deploy the MustGather operator on OpenShift
-  sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: openshift-operators
-    - server: https://kubernetes.default.svc
-      namespace: default-mustgather
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
----
-# Wave 5 — MustGather operator subscription in openshift-operators (AllNamespaces)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mustgather-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-mustgather
-  source:
-    chart: cluster-mustgather
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: false
-        operator:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.106
-  destination:
-    namespace: openshift-operators
-    server: https://kubernetes.default.svc
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Wave 10 — MustGather report instances in default-mustgather
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-mustgather-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-mustgather
-  source:
-    chart: cluster-mustgather
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        report:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.106
-  ignoreDifferences:
-    - group: managed.openshift.io
-      kind: MustGather
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-```
-
-Apply with:
-
 ```bash
-kubectl apply -f cluster-mustgather-argocd.yaml -n openshift-gitops
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/cluster-mustgather/examples/argocd/
+oc apply -k .
 ```
 
 The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.

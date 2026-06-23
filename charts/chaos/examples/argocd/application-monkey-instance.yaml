@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-monkey-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-monkey
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-monkey
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        monkey:
+          enabled: true
+          config:
+            dryRun: true
+            timezone: Europe/Paris
+            startHour: 9
+            endHour: 17
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.107
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

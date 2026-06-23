@@ -60,96 +60,15 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-gitlab
-  namespace: openshift-gitops
-spec:
-  description: Deploy GitLab instance at cluster level
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: startx-gitlab
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/cluster-gitlab/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Creates namespace startx-gitlab
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-gitlab-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-gitlab
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-gitlab
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys GitLab instance in startx-gitlab namespace (disabled by default - requires storage and domain config)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-gitlab-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-gitlab
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-gitlab
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        gitlab:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: startx-gitlab
-  ignoreDifferences:
-    - group: apps.gitlab.com
-      kind: GitLab
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 

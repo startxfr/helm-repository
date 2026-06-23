@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: operator-example
+  namespace: openshift-gitops
+spec:
+  description: Deploy startx operator chart for operator subscription management
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: openshift-operators
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

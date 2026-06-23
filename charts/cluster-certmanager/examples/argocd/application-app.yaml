@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-certmanager-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-certmanager
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-certmanager
+    targetRevision: 21.3.107
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        certmanager:
+          enabled: false
+        clusterIssuer:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rhcertmanager-operator
+  ignoreDifferences:
+    - group: cert-manager.io
+      kind: Certificate
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

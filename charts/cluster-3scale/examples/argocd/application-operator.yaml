@@ -1,0 +1,55 @@
+# Wave 5 — operators: 3scale (openshift-operators) + redis + crunchy
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-3scale-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-3scale
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-3scale
+    targetRevision: 21.3.107
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: true
+        manager:
+          enabled: false
+        externalComponents:
+          enabled: false
+          redis:
+            enabled: false
+          database:
+            enabled: false
+        clusterRedis:
+          enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: true
+          cluster:
+            enabled: false
+        clusterCrunchy:
+          enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: true
+          cluster:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-operators
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

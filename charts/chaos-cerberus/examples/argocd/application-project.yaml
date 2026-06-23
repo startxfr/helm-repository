@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-cerberus-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  # No finalizer on project wave — avoids deadlock when namespace is slow to terminate
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: chaos-cerberus
+  source:
+    chart: chaos-cerberus
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        cerberus:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.112
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
