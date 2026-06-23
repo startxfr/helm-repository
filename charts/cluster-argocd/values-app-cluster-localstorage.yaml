@@ -1,0 +1,97 @@
+# Auto-generated values-app file for deploying cluster-localstorage via cluster-argocd
+# Source: examples/argocd/ from the cluster-localstorage chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-localstorage'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+      destinations:
+        - namespace: 'openshift-local-storage'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'infra-localstorage-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-localstorage'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-localstorage'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          operator:
+            enabled: false
+          localstorage:
+            enabled: false
+          localstorageset:
+            enabled: false
+          localstoragediscovery:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-localstorage-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-localstorage'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-localstorage'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          operator:
+            enabled: true
+            operatorGroup:
+              enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-localstorage-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-localstorage'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-localstorage'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          operator:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

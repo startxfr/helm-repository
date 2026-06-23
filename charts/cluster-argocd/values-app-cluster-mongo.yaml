@@ -1,0 +1,84 @@
+# Auto-generated values-app file for deploying cluster-mongo via cluster-argocd
+# Source: examples/argocd/ from the cluster-mongo chart
+
+argocd_project:
+  enabled: false
+  list:
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'infra-mongo-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-mongo'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-mongo'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          cluster:
+            enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-mongo-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-mongo'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-mongo'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          operator:
+            enabled: true
+          cluster:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-mongo-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-mongo'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-mongo'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          operator:
+            enabled: false
+          cluster:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

@@ -1,0 +1,49 @@
+# Auto-generated values-app file for deploying project via cluster-argocd
+# Source: examples/argocd/ from the project chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'basic-demo-project'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+      destinations:
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'demo-project'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'basic-demo-project-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'project'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'project'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+            type: namespace
+            name: demo-project
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: false
+  list: []

@@ -1,0 +1,58 @@
+# Auto-generated values-app file for deploying operator via cluster-argocd
+# Source: examples/argocd/ from the operator chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'basic-operator-example'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+      destinations:
+        - namespace: 'openshift-operators'
+          server: 'https://kubernetes.default.svc'
+        - namespace: '*'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Installs and configures the operator
+    - name: 'basic-operator-example-pipeline'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'operator-example'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'operator'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          subscription:
+            enabled: true
+            name: openshift-pipelines-operator-rh
+            namespace: openshift-operators
+            operator:
+              name: openshift-pipelines-operator-rh
+              channel: latest
+              installPlanApproval: Manual
+              source:
+                name: redhat-operators
+                namespace: openshift-marketplace
+          operatorGroup:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: false
+  list: []

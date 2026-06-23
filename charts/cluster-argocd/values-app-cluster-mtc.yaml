@@ -1,0 +1,87 @@
+# Auto-generated values-app file for deploying cluster-mtc via cluster-argocd
+# Source: examples/argocd/ from the cluster-mtc chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-mtc'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+      destinations:
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-migration'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'infra-mtc-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-mtc'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-mtc'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          mtc:
+            enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-mtc-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-mtc'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-mtc'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          operator:
+            enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-mtc-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-mtc'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-mtc'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

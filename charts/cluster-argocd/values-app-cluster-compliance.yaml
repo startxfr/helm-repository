@@ -1,0 +1,100 @@
+# Auto-generated values-app file for deploying cluster-compliance via cluster-argocd
+# Source: examples/argocd/ from the cluster-compliance chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-compliance'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+      destinations:
+        - namespace: 'openshift-compliance'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'infra-compliance-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-compliance'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-compliance'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          compliance:
+            enabled: true
+          project:
+            project:
+              name: "openshift-compliance"
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-compliance-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-compliance'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-compliance'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          compliance:
+            enabled: false
+          operator:
+            enabled: true
+            subscription:
+              enabled: true
+            operatorGroup:
+              enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-compliance-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-compliance'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-compliance'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          compliance:
+            enabled: false
+          project:
+            enabled: true
+            project:
+              name: "openshift-compliance"
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

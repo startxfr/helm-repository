@@ -1,0 +1,72 @@
+# Auto-generated values-app file for deploying chaos-monkey via cluster-argocd
+# Source: examples/argocd/ from the chaos-monkey chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'chaos-chaos-monkey'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+        - 'https://asobti.github.io/kube-monkey/charts/repo'
+      destinations:
+        - namespace: 'chaos-monkey'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'default'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Deploys service instances
+    - name: 'chaos-chaos-monkey-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos-monkey'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-monkey'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          monkey:
+            enabled: true
+            config:
+              dryRun: true
+              timezone: Europe/Paris
+              startHour: 9
+              endHour: 17
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'chaos-chaos-monkey-project'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos-monkey'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-monkey'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

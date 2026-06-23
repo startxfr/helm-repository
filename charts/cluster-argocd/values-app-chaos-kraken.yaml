@@ -1,0 +1,73 @@
+# Auto-generated values-app file for deploying chaos-kraken via cluster-argocd
+# Source: examples/argocd/ from the chaos-kraken chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'chaos-chaos-kraken'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+      destinations:
+        - namespace: 'chaos-kraken'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'default'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Deploys service instances
+    - name: 'chaos-chaos-kraken-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos-kraken'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-kraken'
+        rev: '21.3.135'
+      helm: |
+        valueFiles:
+          - values-startx-deploy.yaml
+        values: |
+          kraken:
+            enabled: true
+            mode: job
+            cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+            kubeconfig:
+              mode: token
+              token:
+                server: https://api.demo219.startx.fr:6443
+                token: sha256~REPLACE_WITH_YOUR_TOKEN
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'chaos-chaos-kraken-project'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos-kraken'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-kraken'
+        rev: '21.3.135'
+      helm: |
+        valueFiles:
+          - values-startx-project.yaml
+        values: |
+          project:
+            enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

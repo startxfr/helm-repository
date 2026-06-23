@@ -1,0 +1,154 @@
+# Auto-generated values-app file for deploying chaos-cerberus via cluster-argocd
+# Source: examples/argocd/ from the chaos-cerberus chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'chaos-chaos-cerberus'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+      destinations:
+        - namespace: 'chaos-cerberus'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'default'
+          server: 'https://kubernetes.default.svc'
+    - name: 'chaos-chaos-cerberus'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+      destinations:
+        - namespace: 'chaos-cerberus'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'default'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Deploys service instances
+    - name: 'chaos-chaos-cerberus-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos-cerberus'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-cerberus'
+        rev: '21.3.112'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          cerberus:
+            enabled: true
+            kubeconfig:
+              # local: use the pod's own ServiceAccount token (in-cluster, no credentials needed)
+              # token: monitor a remote cluster with a bearer token
+              # file:  inject a full kubeconfig file
+              mode: local
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'chaos-chaos-cerberus-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos-cerberus'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-cerberus'
+        rev: '21.3.112'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          cerberus:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'chaos-chaos-cerberus-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos-cerberus'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-cerberus'
+        rev: '21.3.112'
+      helm: |
+        values: |
+          project:
+            enabled: true
+          cerberus:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Deploys service instances
+    - name: 'chaos-chaos-cerberus-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos-cerberus'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-cerberus'
+        rev: '21.3.112'
+      helm: |
+        values: |
+          project:
+            enabled: false
+          cerberus:
+            enabled: true
+            version: "latest"
+            expose: true
+            kraken_allowed: true
+            kraken_ns: chaos-kraken
+            isDaemon: true
+            sleep_time: 15
+            watch_nodes: true
+            watch_cluster_operators: true
+            watch_terminating_namespaces: true
+            watch_namespaces:
+              - openshift-etcd
+              - openshift-apiserver
+              - openshift-kube-apiserver
+              - openshift-monitoring
+              - openshift-kube-controller-manager
+              - openshift-machine-api
+              - openshift-kube-scheduler
+              - openshift-ingress
+              - openshift-ovn-kubernetes
+            watch_namespaces_ignore_pattern:
+              - "^installer.*"
+            watch_url_routes: []
+            custom_checks: []
+            kubeconfig:
+              # local: use the pod's own ServiceAccount token (in-cluster, no credentials needed)
+              # token: monitor a remote cluster with a bearer token
+              # file:  inject a full kubeconfig file
+              mode: local
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

@@ -1,0 +1,78 @@
+# Auto-generated values-app file for deploying cluster-console via cluster-argocd
+# Source: examples/argocd/ from the cluster-console chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-console'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+      destinations:
+        - namespace: 'openshift-config'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-console'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-operators'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Customizes OpenShift console appearance
+    - name: 'infra-console-personalize'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-console'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-console'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          console:
+            enabled: true
+            namespace: openshift-config
+            state: Managed
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Enables OpenShift web terminal plugin
+    - name: 'infra-console-webterminal'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-console'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-console'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          console:
+            enabled: false
+          webTerminal:
+            enabled: true
+            subscription:
+              enabled: true
+            operatorGroup:
+              enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

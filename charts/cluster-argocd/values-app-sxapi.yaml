@@ -1,0 +1,75 @@
+# Auto-generated values-app file for deploying sxapi via cluster-argocd
+# Source: examples/argocd/ from the sxapi chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'basic-sxapi-dev'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+      destinations:
+        - namespace: 'demo-sxapi-dev'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'basic-sxapi-dev-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'sxapi-dev'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'sxapi'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          sxapi:
+            service:
+              enabled: true
+            expose:
+              enabled: true
+            version: "0.3.63"
+            profile: "prod:start"
+            debug: true
+            replicas: 1
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'basic-sxapi-dev-project'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'project'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'project'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+            type: namespace
+            name: demo-sxapi-dev
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: false
+  list: []

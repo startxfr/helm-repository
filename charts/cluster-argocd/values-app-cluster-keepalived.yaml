@@ -1,0 +1,156 @@
+# Auto-generated values-app file for deploying cluster-keepalived via cluster-argocd
+# Source: examples/argocd/ from the cluster-keepalived chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-keepalived'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+      destinations:
+        - namespace: 'keepalived-operator'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-ingress'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-ingress-operator'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'infra-keepalived-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-keepalived'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-keepalived'
+        rev: '21.3.4'
+      helm: |
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          clusterNetwork:
+            enabled: true
+            externalIP:
+              autoAssignCIDRs:
+                - 10.99.10.237/32
+              policy:
+                allowedCIDRs:
+                  - 10.99.10.237/32
+          keepalived:
+            enabled: true
+            groups:
+              enabled: true
+              list:
+                - name: keepalivedgroup-workers
+                  namespace: openshift-ingress
+                  spec: |
+                    blacklistRouterIDs:
+                      - 165
+                      - 168
+                      - 169
+                    image: registry.redhat.io/openshift4/ose-keepalived-ipfailover
+                    interface: br-ex
+                    nodeSelector:
+                      node-role.kubernetes.io/infra: ''
+          ingressController:
+            enabled: true
+            name: public
+            domain: apps.public.example.com
+            replicas: 3
+            routeSelector:
+              matchLabels:
+                ingress: public
+          ingressControllerService:
+            enabled: true
+            name: router-public-lb
+            externalIPs:
+              - 10.99.10.237
+          ingressControllerSecret:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-keepalived-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-keepalived'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-keepalived'
+        rev: '21.3.4'
+      helm: |
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: true
+            subscription:
+              enabled: true
+            operatorGroup:
+              enabled: true
+          clusterNetwork:
+            enabled: false
+          keepalived:
+            enabled: false
+          ingressController:
+            enabled: false
+          ingressControllerService:
+            enabled: false
+          ingressControllerSecret:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-keepalived-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-keepalived'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-keepalived'
+        rev: '21.3.4'
+      helm: |
+        values: |
+          project:
+            enabled: true
+            project:
+              enabled: true
+          operator:
+            enabled: false
+          clusterNetwork:
+            enabled: false
+          keepalived:
+            enabled: false
+          ingressController:
+            enabled: false
+          ingressControllerService:
+            enabled: false
+          ingressControllerSecret:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

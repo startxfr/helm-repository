@@ -1,0 +1,258 @@
+# Auto-generated values-app file for deploying cluster-config via cluster-argocd
+# Source: examples/argocd/ from the cluster-config chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-config'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+      destinations:
+        - namespace: 'startx-config'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-config'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-image-registry'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-ingress'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-ingress-operator'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-monitoring'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-distributed-tracing'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-operators'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-operators-redhat'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'default-sosreport'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Deploys monitoring stack
+    - name: 'infra-config-monitoring'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-config'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-config'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          monitoring:
+            enabled: true
+            infra_enabled: true
+            storageClass: gp3-csi
+            storageSize: "30Gi"
+            enableUserWorkload: true
+          alertmanager:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Configures network policies
+    - name: 'infra-config-network'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-config'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-config'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          api:
+            enabled: false
+          ingresscontroller:
+            enabled: true
+            list:
+              - name: default
+                infra_enabled: true
+          proxy:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-config-operator-elastic'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-config'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-config'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          operatorElastic:
+            enabled: true
+            subscription:
+              enabled: true
+            operatorGroup:
+              enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-config-operator-global'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-config'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-config'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          operatorGlobal:
+            enabled: true
+            operatorGroup:
+              enabled: false
+          redhat:
+            operators: true
+          tracing:
+            operators: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-config-operator-loki'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-config'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-config'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          operatorLoki:
+            enabled: true
+            subscription:
+              enabled: true
+            operatorGroup:
+              enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-config-project'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-config'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-config'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          redhat:
+            operators: true
+          tracing:
+            operators: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-config-projecttemplate'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-config'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-config'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          autoscaling:
+            enabled: false
+          clusterversion:
+            enabled: false
+          projecttemplate:
+            enabled: true
+            rbac:
+              enabled: true
+            networkpolicy:
+              enabled: true
+          priorityClass:
+            enabled: false
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Configures image registry
+    - name: 'infra-config-registry'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-config'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-config'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          imageprunner:
+            enabled: true
+            schedule: "15 * * * *"
+            suspend: false
+          registryroute:
+            enabled: true
+          registryconfig:
+            enabled: true
+            infra_enabled: true
+          
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []
