@@ -135,3 +135,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.184 | 2026-06-24 | Improve cluster-argocd options |
 | 21.3.185 | 2026-06-24 | Improve schema |
 | 21.3.186 | 2026-06-24 | Improve cluster-argocd options |
+| 21.3.199 | 2026-06-24 | publish stable update for the full repository |
