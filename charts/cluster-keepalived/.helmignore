@@ -1,0 +1,41 @@
+# Patterns to ignore when building packages.
+# This supports shell glob patterns, relative path patterns, and negated
+# patterns (prefixed with '!'), as per the specification at
+# https://helm.sh/docs/chart_template_guide/charts_hooks/#the-file-is-excluded
+
+# Locally useful "pod spec" stanzas that end-users can copy & paste as needed
+development/
+experiments/
+figures/
+improve-readme/
+templates/SCRATCH/
+*.orig
+*.swp
+*~
+
+# helm
+#*.tgz
+/charts/*/
+#/charts/
+charts/*/charts/
+charts/*/Chart.lock
+
+# git
+.git/
+.github/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# docs
+/docs
+*.md
+
+# OS
+.DS_Store
+Thumbs.db

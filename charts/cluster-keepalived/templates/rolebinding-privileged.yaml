@@ -1,0 +1,21 @@
+{{- if .Values.keepalived.enabled -}}{{- if .Values.keepalived.groups -}}{{- if .Values.keepalived.groups.enabled -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: 'system:openshift:scc:privileged'
+  namespace: {{ .Values.keepalived.namespace | quote }}
+  labels:
+    {{- include "cluster-keepalived.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "rolebinding"
+  annotations:
+    {{- include "cluster-keepalived.annotations" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: {{ .Values.keepalived.namespace | quote }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'system:openshift:scc:privileged'
+{{- end -}}{{- end -}}{{- end -}}

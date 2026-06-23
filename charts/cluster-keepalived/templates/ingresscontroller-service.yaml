@@ -1,0 +1,49 @@
+{{- if .Values.ingressControllerService.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.ingressControllerService.name | quote }}
+  namespace: {{ .Values.ingressControllerService.namespace | quote }}
+  labels:
+    {{- include "cluster-keepalived.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "ingress-controller-service"
+    app.kubernetes.io/name: {{ .Values.ingressControllerService.name | quote }}
+  annotations:
+    {{- include "cluster-keepalived.annotations" . | nindent 4 }}
+spec:
+  type: {{ .Values.ingressControllerService.type | quote }}
+  {{- if .Values.ingressControllerService.externalIPs }}
+  externalIPs:
+    {{- toYaml .Values.ingressControllerService.externalIPs | nindent 4 }}
+  {{- end }}
+  {{- if .Values.ingressControllerService.clusterIP }}
+  clusterIP: {{ .Values.ingressControllerService.clusterIP | quote }}
+  {{- end }}
+  {{- if .Values.ingressControllerService.clusterIPs }}
+  clusterIPs:
+    {{- toYaml .Values.ingressControllerService.clusterIPs | nindent 4 }}
+  {{- end }}
+  {{- if .Values.ingressControllerService.ipFamilies }}
+  ipFamilies:
+    {{- toYaml .Values.ingressControllerService.ipFamilies | nindent 4 }}
+  {{- end }}
+  {{- if .Values.ingressControllerService.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.ingressControllerService.ipFamilyPolicy | quote }}
+  {{- end }}
+  ports:
+    {{- range .Values.ingressControllerService.ports }}
+    - name: {{ .name | quote }}
+      protocol: {{ .protocol | default "TCP" | quote }}
+      port: {{ .port }}
+      targetPort: {{ .targetPort }}
+    {{- end }}
+  {{- if .Values.ingressControllerService.internalTrafficPolicy }}
+  internalTrafficPolicy: {{ .Values.ingressControllerService.internalTrafficPolicy | quote }}
+  {{- end }}
+  {{- if .Values.ingressControllerService.sessionAffinity }}
+  sessionAffinity: {{ .Values.ingressControllerService.sessionAffinity | quote }}
+  {{- end }}
+  selector:
+    {{- toYaml .Values.ingressControllerService.selector | nindent 4 }}
+{{- end -}}
