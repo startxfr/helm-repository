@@ -1,0 +1,150 @@
+# Auto-generated values-app file for deploying cluster-3scale via cluster-argocd
+# Source: examples/argocd/ from the cluster-3scale chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-3scale'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+      destinations:
+        - namespace: 'openshift-operators'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-crunchy-pgo'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'startx-3scale'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'default-crunchy'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'infra-3scale-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-3scale'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-3scale'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          manager:
+            enabled: true
+          externalComponents:
+            enabled: true
+            redis:
+              enabled: true
+            database:
+              enabled: true
+          clusterRedis:
+            enabled: true
+            project:
+              enabled: false
+            operator:
+              enabled: false
+            cluster:
+              enabled: true
+          clusterCrunchy:
+            enabled: true
+            project:
+              enabled: false
+            operator:
+              enabled: false
+            cluster:
+              enabled: true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Installs and configures the operator
+    - name: 'infra-3scale-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-3scale'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-3scale'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: true
+          manager:
+            enabled: false
+          externalComponents:
+            enabled: false
+            redis:
+              enabled: false
+            database:
+              enabled: false
+          clusterRedis:
+            enabled: true
+            project:
+              enabled: false
+            operator:
+              enabled: true
+            cluster:
+              enabled: false
+          clusterCrunchy:
+            enabled: true
+            project:
+              enabled: false
+            operator:
+              enabled: true
+            cluster:
+              enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-3scale-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-3scale'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-3scale'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          operator:
+            enabled: false
+          manager:
+            enabled: false
+          externalComponents:
+            enabled: false
+          clusterRedis:
+            enabled: false
+          clusterCrunchy:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

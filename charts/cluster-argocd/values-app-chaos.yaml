@@ -1,0 +1,175 @@
+# Auto-generated values-app file for deploying chaos via cluster-argocd
+# Source: examples/argocd/ from the chaos chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'basic-chaos'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+        - 'https://litmuschaos.github.io/litmus-helm'
+        - 'https://charts.chaos-mesh.org'
+        - 'https://asobti.github.io/kube-monkey/charts/repo'
+      destinations:
+        - namespace: 'chaos-cerberus'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'chaos-kraken'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'chaos-litmus'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'chaos-mesh'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'chaos-monkey'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'default'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Deploys service instances
+    - name: 'basic-chaos-cerberus-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-cerberus'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          cerberus:
+            enabled: true
+            kubeconfig:
+              mode: token
+              token:
+                server: "https://api.<cluster>:6443"
+                token: "sha256~REPLACE_WITH_YOUR_SA_TOKEN"
+          # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
+          kraken:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Deploys service instances
+    - name: 'basic-chaos-kraken-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-kraken'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          kraken:
+            enabled: true
+            mode: job
+            cerberusUrl: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+            kubeconfig:
+              mode: token
+              token:
+                server: "https://api.<cluster>:6443"
+                token: "sha256~REPLACE_WITH_YOUR_TOKEN"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Deploys service instances
+    - name: 'basic-chaos-litmus-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-litmus'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          litmus:
+            enabled: true
+            # Use standalone MongoDB for test environments:
+            # - avoids replicaSet (3 primary + 1 arbiter) which creates SCC issues on OCP
+            # - disables PVC to avoid WaitForFirstConsumer StorageClass deadlock
+            mongodb:
+              architecture: standalone
+              persistence:
+                enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Deploys service instances
+    - name: 'basic-chaos-mesh-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-mesh'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          mesh:
+            enabled: true
+            # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
+            prometheus:
+              create: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Deploys service instances
+    - name: 'basic-chaos-monkey-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'chaos'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'chaos-monkey'
+        rev: '21.3.107'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          monkey:
+            enabled: true
+            config:
+              dryRun: true
+              timezone: Europe/Paris
+              startHour: 9
+              endHour: 17
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []

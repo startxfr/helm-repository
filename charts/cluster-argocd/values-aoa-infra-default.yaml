@@ -5,13 +5,13 @@ context: &context
   cluster: default
   environment: infra
   component: argocd
-  app: aoa-infra-min
+  app: aoa-infra-default
   version: "0.1.0"
 
 argocd_project:
   enabled: false
   list:
-    - name: "aoa-infra-min"
+    - name: "aoa-infra-default"
       namespace: "openshift-gitops"
       sourceRepos:
         - '*'
@@ -37,7 +37,7 @@ application:
       namespace: "openshift-gitops"
       finalizer: true
       server: "https://kubernetes.default.svc"
-      project: "aoa-infra-min"
+      project: "aoa-infra-default"
       source:
         repo: "https://gitlab.com/startx1/helm.git"
         rev: "stable"
@@ -73,7 +73,7 @@ application:
       namespace: "openshift-gitops"
       finalizer: true
       server: "https://kubernetes.default.svc"
-      project: "aoa-infra-min"
+      project: "aoa-infra-default"
       source:
         repo: "https://gitlab.com/startx1/helm.git"
         rev: "stable"
@@ -109,7 +109,7 @@ application:
       namespace: "openshift-gitops"
       finalizer: true
       server: "https://kubernetes.default.svc"
-      project: "aoa-infra-min"
+      project: "aoa-infra-default"
       source:
         repo: "https://gitlab.com/startx1/helm.git"
         rev: "stable"
@@ -145,7 +145,7 @@ application:
       namespace: "openshift-gitops"
       finalizer: true
       server: "https://kubernetes.default.svc"
-      project: "aoa-infra-min"
+      project: "aoa-infra-default"
       source:
         repo: "https://gitlab.com/startx1/helm.git"
         rev: "stable"
@@ -181,7 +181,7 @@ application:
       namespace: "openshift-gitops"
       finalizer: true
       server: "https://kubernetes.default.svc"
-      project: "aoa-infra-min"
+      project: "aoa-infra-default"
       source:
         repo: "https://gitlab.com/startx1/helm.git"
         rev: "stable"
@@ -217,7 +217,7 @@ application:
       namespace: "openshift-gitops"
       finalizer: true
       server: "https://kubernetes.default.svc"
-      project: "aoa-infra-min"
+      project: "aoa-infra-default"
       source:
         repo: "https://gitlab.com/startx1/helm.git"
         rev: "stable"
@@ -253,7 +253,7 @@ application:
       namespace: "openshift-gitops"
       finalizer: true
       server: "https://kubernetes.default.svc"
-      project: "aoa-infra-min"
+      project: "aoa-infra-default"
       source:
         repo: "https://gitlab.com/startx1/helm.git"
         rev: "stable"

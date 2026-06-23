@@ -1,0 +1,1089 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: argocd
+  app: aoa-infra-mgmt
+  version: "0.1.0"
+
+argocd_project:
+  enabled: false
+  list:
+    - name: "aoa-infra-mgmt"
+      namespace: "openshift-gitops"
+      sourceRepos:
+        - '*'
+      destinations:
+        - namespace: "*"
+          server: '*'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles:
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:startx-admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+application:
+  enabled: false
+  list:
+    - name: "aoa-infra-chaos"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-chaos.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-acm"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-acm.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-acs"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-acs.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-ansible"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-ansible.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-auth"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-auth.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-certmanager"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-certmanager.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-compliance"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-compliance.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-config"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-config.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-console"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-console.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-costs"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-costs.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-gitlab"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-gitlab.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-kubecost"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-kubecost.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-localstorage"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-localstorage.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-logging"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-logging.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-machine"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-machine.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-maintenance"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-maintenance.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-mustgather"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-mustgather.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-nfd"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-nfd.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-oadp"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-oadp.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-pipeline"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-pipeline.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-ptp"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-ptp.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-quay"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-quay.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-quaysec"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-quaysec.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-rbac"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-rbac.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-router"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-router.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-sso"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-sso.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-storage"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-storage.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-vault"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-vault.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+    - name: "app-infra-vault-config"
+      namespace: "openshift-gitops"
+      finalizer: true
+      server: "https://kubernetes.default.svc"
+      project: "aoa-infra-mgmt"
+      source:
+        repo: "https://gitlab.com/startx1/helm.git"
+        rev: "stable"
+        path: "charts/cluster-argocd/"
+      helm: |
+        valueFiles:
+          - values-app-cluster-vault-config.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+argocd_repocreds:
+  enabled: false
+  list: []
+
+# Default project used par application namespace
+project: 
+  enabled: false
+  project: 
+    enabled: false
+    name: openshift-gitops

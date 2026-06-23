@@ -292,6 +292,87 @@ for item in d['items']:
 
 ---
 
+## cluster-argocd values-app pattern (2026-06)
+
+The `cluster-argocd` chart provides a unified deployment model for all other charts via ArgoCD. Each chart with ArgoCD examples now has a corresponding **`values-app-<chart>.yaml`** file.
+
+### Structure of values-app-*.yaml files
+
+```yaml
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-<short-name>'  # prefix varies: infra- for cluster-*, chaos- for chaos-*, app- for example-*
+      namespace: 'openshift-gitops'
+      sourceRepos: [...]
+      destinations: [...]
+      clusterResourceWhitelist: [...]  # optional
+
+application:
+  enabled: false
+  list:
+    - name: 'infra-<short-name>-project'  # Project wave (no finalizer)
+      project: '<original-chart-name>'     # e.g., 'cluster-quay'
+      source:
+        repo: 'https://gitlab.com/startx1/helm.git'
+        chart: '<chart-name>'
+        rev: '21.3.x'
+      helm: |
+        valueFiles:
+          - values-app-<chart>.yaml
+        parameters:
+          - name: context.cluster
+            value: "example"
+          - name: context.environment
+            value: "dev"
+          - name: argocd_repocreds.enabled
+            value: "true"
+          - name: argocd_project.enabled
+            value: "true"
+          - name: application.enabled
+            value: "true"
+        values: |
+          project:
+            enabled: true
+    - name: 'infra-<short-name>-operator'  # Operator wave (with finalizer)
+      # ... similar structure with operator.enabled: true
+    - name: 'infra-<short-name>-app'       # Application wave (with finalizer)
+      # ... similar structure with feature flags
+```
+
+### Naming conventions
+
+- **AppProject name**: Strip `cluster-`/`example-` prefix, apply type prefix:
+  - `cluster-*` → `infra-<name>` (e.g., `cluster-quay` → `infra-quay`)
+  - `chaos-*` → `chaos-<name>` (e.g., `chaos-cerberus` → `chaos-cerberus`)
+  - `example-*` → `app-<name>` (e.g., `example-sxapi` → `app-sxapi`)
+- **Application names**: Same prefixing logic + `-project`/`-operator`/`-app` suffix
+- **ValueFiles**: Point to `values-app-<chart>.yaml` for each Application (enables nested deployments)
+
+### Process for new charts
+
+1. Chart gets `## ArgoCD deployment` examples section in README.md
+2. Examples extracted to `charts/<name>/examples/argocd/` via `process_argocd.py`
+3. **Auto-generate** `values-app-<chart>.yaml` in `charts/cluster-argocd/`:
+   ```bash
+   python3 /tmp/generate_values_app_v3.py
+   # or add manually following the pattern above
+   ```
+4. **Optional variants** (e.g., security, custom values): `values-app-<chart>-<variant>.yaml`
+   - Example: `values-app-cluster-quay-sec.yaml` (uses `values-startx_noinfra-secvuln.yaml` instead of `values-startx_noinfra-quay.yaml`)
+5. Add entry to `values-aoa-infra-min.yaml` (or other values files) to test/deploy the chart
+
+### Current coverage (60 charts)
+
+**Generated 2026-06-23**: 60 values-app-*.yaml files covering all charts with ArgoCD examples.
+- cluster-* (50 charts)
+- chaos-* (4 charts)
+- other (operator, project, sxapi) (6 files)
+
+Example-* charts (11 total) have no ArgoCD examples — not included.
+
+---
+
 ## Chaos chart specifics
 
 | Chart | Tool | Role |

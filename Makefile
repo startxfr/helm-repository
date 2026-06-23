@@ -17,7 +17,7 @@ export
 # -- Tunables ------------------------------------------------------------------
 CHART       ?=
 VERSION     ?=
-DESC        ?= publish stable update for the full repository
+DESC        ?= "publish stable update for the full repository"
 INTERACTIVE ?= false
 
 SX          := ./sx-helm

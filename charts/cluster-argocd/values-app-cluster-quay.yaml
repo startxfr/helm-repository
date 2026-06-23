@@ -1,0 +1,91 @@
+# Auto-generated values-app file for deploying cluster-quay via cluster-argocd
+# Source: examples/argocd/ from the cluster-quay chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-quay'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+      destinations:
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-startx-quay'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Application configuration and instances
+    - name: 'infra-quay-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-quay'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-quay'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra-quay.yaml
+        values: |
+          quay:
+            enabled: true
+          rhn:
+            user: "<your-rhn-username>"
+            pwd: "<your-rhn-password>"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+    # Installs and configures the operator
+    - name: 'infra-quay-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-quay'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-quay'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra-quay.yaml
+        values: |
+          operator:
+            enabled: true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-quay-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-quay'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-quay'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra-quay.yaml
+        values: |
+          project:
+            enabled: true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: false
+  list: []

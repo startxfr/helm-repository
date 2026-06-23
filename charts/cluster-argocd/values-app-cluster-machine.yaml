@@ -1,0 +1,164 @@
+# Auto-generated values-app file for deploying cluster-machine via cluster-argocd
+# Source: examples/argocd/ from the cluster-machine chart
+
+argocd_project:
+  enabled: false
+  list:
+    - name: 'infra-machine'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+      destinations:
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-machine-api'
+          server: 'https://kubernetes.default.svc'
+
+# Applications
+application:
+  enabled: false
+  list:
+    # Configures autoscaling
+    - name: 'infra-machine-autoscaler'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-machine'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-machine'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          cluster:
+            id: demo219-g866v
+            region: eu-west-2
+            autoscaler:
+              enabled: true
+              spec: |
+                podPriorityThreshold: -10
+                resourceLimits:
+                  maxNodesTotal: 9
+                  cores:
+                    min: 6
+                    max: 12
+                  memory:
+                    min: 12
+                    max: 48
+                scaleDown:
+                  enabled: true
+                  delayAfterAdd: 5m
+                  delayAfterDelete: 3m
+                  delayAfterFailure: 40s
+                  unneededTime: 60s
+          machineAutoscaler:
+            enabled: true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Cluster configuration
+    - name: 'infra-machine-config'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-machine'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-machine'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          machineConfigPool:
+            enabled: true
+          machineConfig:
+            enabled: true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Configures health checks
+    - name: 'infra-machine-healthcheck'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-machine'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-machine'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          cluster:
+            id: demo219-g866v
+            region: eu-west-2
+          machineHealthCheck:
+            enabled: true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Application configuration and instances
+    - name: 'infra-machine-machineset'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      server: 'https://kubernetes.default.svc'
+      project: 'cluster-machine'
+      source:
+        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
+        chart: 'cluster-machine'
+        rev: '21.3.106'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          cluster:
+            id: demo219-g866v
+            region: eu-west-2
+          machineSet:
+            enabled: true
+            list:
+            - name: app-a
+              az: a
+              type: app
+              ami: ami-0e079f8742280b034
+              instanceType: "t3a.large"
+              volumeSize: 75
+              volumeType: "gp3"
+              replicas: 1
+              securityGroupName: "demo219-g866v-node"
+              subnet_name: "demo219-g866v-subnet-private-eu-west-2a"
+            - name: app-b
+              az: b
+              type: app
+              ami: ami-0e079f8742280b034
+              instanceType: "t3a.large"
+              volumeSize: 75
+              volumeType: "gp3"
+              replicas: 1
+              securityGroupName: "demo219-g866v-node"
+              subnet_name: "demo219-g866v-subnet-private-eu-west-2b"
+            - name: app-c
+              az: c
+              type: app
+              ami: ami-0e079f8742280b034
+              instanceType: "t3a.large"
+              volumeSize: 75
+              volumeType: "gp3"
+              replicas: 1
+              securityGroupName: "demo219-g866v-node"
+              subnet_name: "demo219-g866v-subnet-private-eu-west-2c"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: false
+  list: []
