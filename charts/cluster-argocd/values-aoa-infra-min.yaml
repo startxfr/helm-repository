@@ -33,42 +33,24 @@ argocd_project:
 application:
   enabled: false
   list: 
-    - name: "example-application"
-      # Namespace where to deploy this VM (default is project)
-      namespace: "startx-argocd"
-      # enable argocd finalizer for this application
+    - name: "aoa-infra-cluster-auth"
+      namespace: "openshift-gitops"
       finalizer: true
-      # name of the destination server (default is https://kubernetes.default.svc) 
       server: "https://kubernetes.default.svc"
-      # name of the parent project (default is cluster-admin) 
-      project: "cluster-admin"
-      # Application source
+      project: "aoa-infra-min"
       source: 
-        # repository URL to the application code (default is https://gitlab.com/startx1/helm.git)
         repo: "https://gitlab.com/startx1/helm.git"
-        # revision to use for this source-code (default is master) 
         rev: "stable"
-        # path to the application code (default is charts/example-html/)
-        path: "charts/example-html/"
+        path: "charts/cluster-auth/"
       # Configuration of the helm chart
       helm: | 
         valueFiles:
-          - values.yaml
+          - values-startx.yaml
         parameters:
-          - name: context.scope
-            value: "${SCOPE}"
           - name: context.cluster
-            value: "${CLUSTER}"
+            value: "example"
           - name: context.environment
-            value: "${ENV}"
-          - name: context.version
-            value: "${VERSION}"
-          - name: context.app
-            value: "exemple-html-helm"
-          - name: html.expose.enabled
-            value: "true"
-          - name: html.namespace
-            value: "default"
+            value: "dev"
       # Configuration of the syncPolicy chart
       syncPolicy: | 
         automated:
@@ -83,12 +65,6 @@ application:
             duration: 5s
             factor: 2
             maxDuration: 60s
-      ignoreDifferences: | 
-        - group: "apps"
-          kind: Secret
-          namespace: "default"
-          jsonPointers:
-            - /
 argocd_repocreds:
   enabled: false
   list: []
