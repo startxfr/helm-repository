@@ -199,99 +199,10 @@ helm install chaos-kraken-aws startx/chaos-kraken -f my-kraken-aws-values.yaml -
 
 `chaos-kraken` follows the project/instance pattern. Kraken requires a kubeconfig to connect to the target cluster and optionally a cerberus URL for health gating.
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: chaos-kraken
-  namespace: openshift-gitops
-spec:
-  description: Deploy kraken chaos engine for OpenShift clusters
-  sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: chaos-kraken
-    - server: https://kubernetes.default.svc
-      namespace: default
-  clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-    - group: project.openshift.io
-      kind: ProjectRequest
-    - group: security.openshift.io
-      kind: SecurityContextConstraints
-    - group: rbac.authorization.k8s.io
-      kind: ClusterRoleBinding
-    - group: tekton.dev
-      kind: Pipeline
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: chaos-kraken-project
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io 
-spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  project: chaos-kraken
-  source:
-    chart: chaos-kraken
-    helm:
-      valueFiles:
-        - values-startx-project.yaml
-      values: |
-        project:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.135
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: chaos-kraken-instance
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: chaos-kraken
-    server: https://kubernetes.default.svc
-  project: chaos-kraken
-  source:
-    chart: chaos-kraken
-    helm:
-      valueFiles:
-        - values-startx-deploy.yaml
-      values: |
-        kraken:
-          enabled: true
-          mode: job
-          cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
-          kubeconfig:
-            mode: token
-            token:
-              server: https://api.demo219.startx.fr:6443
-              token: sha256~REPLACE_WITH_YOUR_TOKEN
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.135
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
-
-Apply with:
-
 ```bash
-kubectl apply -f chaos-kraken-argocd.yaml -n openshift-gitops
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/chaos-kraken/examples/argocd/
+oc apply -k .
 ```
 
 ## History
@@ -356,3 +267,4 @@ kubectl apply -f chaos-kraken-argocd.yaml -n openshift-gitops
 | 21.3.133 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.134 | 2026-06-22 | improve monitoring apiserver machines podmonkey and app-outage scenarios |
 | 21.3.135 | 2026-06-22 | Improve chaos-kraken options |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
