@@ -265,3 +265,4 @@ oc apply -k .
 | 21.3.110 | 2026-06-22 | improve cerberus config: fix kraken version ref, networkpolicy scope, add upstream fields, local mode schema, ArgoCD examples |
 | 21.3.111 | 2026-06-22 | fix local mode: generate kubeconfig from SA token at startup (tokenFile unsupported by Python k8s client) |
 | 21.3.112 | 2026-06-22 | fix local mode ClusterRole: add nodes/status, CSR, routes, serviceaccounts/token permissions |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
