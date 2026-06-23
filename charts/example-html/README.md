@@ -121,3 +121,4 @@ helm install example-html startx/example-html -f https://raw.githubusercontent.c
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.167 | 2026-06-23 | publish stable update for the full repository |
+| 21.3.181 | 2026-06-23 | publish stable update for the full repository |
