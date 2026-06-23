@@ -31,22 +31,27 @@ spec:
   source:
     chart: cluster-argocd
     helm:
-      valueFiles:
-        - values-aoa-infra-min.yaml
       values: |
-        application:
-          enabled: true
+        context:
+          scope: startx
+          cluster: default
+          environment: infra
+          component: argocd
+          app: aoa-infra-min
+          version: "0.1.0"
         argocd_project:
+          enabled: true
+        application:
           enabled: true
         argocd_repocreds:
           enabled: true
+        project:
+          enabled: false
+          project:
+            enabled: false
+            name: openshift-gitops
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.168
-  # ignoreDifferences:
-  #   - group: argoproj.io
-  #     kind: ArgoCD
-  #     jsonPointers:
-  #       - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true
