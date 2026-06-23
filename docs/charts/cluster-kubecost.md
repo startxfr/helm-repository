@@ -64,127 +64,10 @@ helm install cluster-kubecost startx/cluster-kubecost -f https://raw.githubuserc
 Deploy `cluster-kubecost` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The kubecost operator installs in `default-kubecost`; the CostAnalyzer instance runs in `default-kubecost`:
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-kubecost
-  namespace: openshift-gitops
-spec:
-  description: Deploy the Kubecost cost monitoring operator on OpenShift
-  sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: default-kubecost
-    - server: https://kubernetes.default.svc
-      namespace: default-kubecost
-    - server: https://kubernetes.default.svc
-      namespace: '*'
-  clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-    - group: operators.coreos.com
-      kind: OperatorGroup
-    - group: operators.coreos.com
-      kind: Subscription
-    - group: charts.kubecost.com
-      kind: CostAnalyzer
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-kubecost-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  destination:
-    namespace: default-kubecost
-    server: https://kubernetes.default.svc
-  project: cluster-kubecost
-  source:
-    chart: cluster-kubecost
-    helm:
-      values: |
-        project:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.106
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-kubecost-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: default-kubecost
-    server: https://kubernetes.default.svc
-  project: cluster-kubecost
-  source:
-    chart: cluster-kubecost
-    helm:
-      values: |
-        operator:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.106
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-kubecost-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: default-kubecost
-    server: https://kubernetes.default.svc
-  project: cluster-kubecost
-  source:
-    chart: cluster-kubecost
-    helm:
-      values: |
-        kubecost:
-          enabled: true
-          namespace: default-kubecost
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.106
-  ignoreDifferences:
-    - group: cost-analyzer.kubecost.com
-      kind: CostAnalyzer
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-```
-
-Apply with:
-
 ```bash
-kubectl apply -f cluster-kubecost-argocd.yaml -n openshift-gitops
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-kubecost/examples/argocd/
+oc apply -k .
 ```
 
 The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
@@ -224,3 +107,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
