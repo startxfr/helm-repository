@@ -68,7 +68,7 @@ helm install cluster-descheduler startx/cluster-descheduler -f https://raw.githu
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-descheduler/examples/argocd/
 oc apply -k .
 ```

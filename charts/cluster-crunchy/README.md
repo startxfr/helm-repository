@@ -54,7 +54,7 @@ spec:
 project: default
 source:
     path: charts/cluster-crunchy/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    repoURL: 'https://gitlab.com/startx1/helm.git'
     targetRevision: 21.3.106
     helm:
     valueFiles:
@@ -81,7 +81,7 @@ spec:
 project: default
 source:
     path: charts/cluster-crunchy/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    repoURL: 'https://gitlab.com/startx1/helm.git'
     targetRevision: 21.3.106
     helm:
     valueFiles:
@@ -108,7 +108,7 @@ spec:
 project: default
 source:
     path: charts/cluster-crunchy/
-    repoURL: 'https://github.com/startxfr/helm-repository.git'
+    repoURL: 'https://gitlab.com/startx1/helm.git'
     targetRevision: 21.3.106
     helm:
     valueFiles:
@@ -153,7 +153,7 @@ helm install cluster-crunchy startx/cluster-crunchy -f https://raw.githubusercon
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-crunchy/examples/argocd/
 oc apply -k .
 ```

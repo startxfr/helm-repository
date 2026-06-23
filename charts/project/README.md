@@ -195,7 +195,7 @@ Deploy `project` using a single ArgoCD Application sharing a dedicated AppProjec
 The chart creates a namespace with optional RBAC, network policies, limit ranges and quotas:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/project/examples/argocd/
 oc apply -k .
 ```

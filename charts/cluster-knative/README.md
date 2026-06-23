@@ -65,7 +65,7 @@ helm install cluster-knative startx/cluster-knative -f https://raw.githubusercon
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-knative/examples/argocd/
 oc apply -k .
 ```

@@ -80,7 +80,7 @@ This chart configures multiple cluster domains. Deploy one ArgoCD Application pe
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-config/examples/argocd/
 oc apply -k .
 ```

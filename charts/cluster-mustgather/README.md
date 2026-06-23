@@ -68,7 +68,7 @@ The must-gather operator installs in `openshift-operators` (AllNamespaces); Must
 > The must-gather operator requires AllNamespaces scope to trigger must-gather on any namespace. No dedicated operator namespace is created — the subscription goes into `openshift-operators`.
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-mustgather/examples/argocd/
 oc apply -k .
 ```

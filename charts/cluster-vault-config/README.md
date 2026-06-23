@@ -141,7 +141,7 @@ helm install cluster-vault-config startx/cluster-vault-config -f https://raw.git
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-vault-config/examples/argocd/
 oc apply -k .
 ```

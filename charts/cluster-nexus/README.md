@@ -66,7 +66,7 @@ This example deploys the Nexus HA operator in `openshift-operators` (all-namespa
 The `project` sub-chart is disabled since `openshift-operators` is a pre-existing system namespace:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-nexus/examples/argocd/
 oc apply -k .
 ```

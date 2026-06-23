@@ -81,7 +81,7 @@ helm install cluster-storage startx/cluster-storage -f https://raw.githubusercon
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-storage/examples/argocd/
 oc apply -k .
 ```

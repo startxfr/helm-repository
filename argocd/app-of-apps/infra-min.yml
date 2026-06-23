@@ -8,7 +8,7 @@ spec:
   sourceRepos:
     - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
   destinations:
-    - server: https://kubernetes.default.svc
+    - server: '*'
       namespace: '*'
   clusterResourceWhitelist:
     - group: '*'
@@ -42,11 +42,11 @@ spec:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.107
-  ignoreDifferences:
-    - group: argoproj.io
-      kind: ArgoCD
-      jsonPointers:
-        - /metadata/finalizers
+  # ignoreDifferences:
+  #   - group: argoproj.io
+  #     kind: ArgoCD
+  #     jsonPointers:
+  #       - /metadata/finalizers
   syncPolicy:
     automated:
       prune: true

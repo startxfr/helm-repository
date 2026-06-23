@@ -63,7 +63,7 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-console/examples/argocd/
 oc apply -k .
 ```

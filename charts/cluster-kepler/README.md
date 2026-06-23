@@ -58,7 +58,7 @@ helm install cluster-kepler startx/cluster-kepler -f https://raw.githubuserconte
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-kepler/examples/argocd/
 oc apply -k .
 ```

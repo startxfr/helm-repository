@@ -61,7 +61,7 @@ helm install cluster-mtc startx/cluster-mtc -f https://raw.githubusercontent.com
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-mtc/examples/argocd/
 oc apply -k .
 ```

@@ -62,7 +62,7 @@ helm install cluster-keepalived startx/cluster-keepalived -f https://raw.githubu
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-keepalived/examples/argocd/
 oc apply -k .
 ```

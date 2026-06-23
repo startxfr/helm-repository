@@ -72,7 +72,7 @@ The 3scale operator runs in `openshift-operators` (all-namespaces scope); APIMan
 > **3scale 2.16+ requires external databases.** The optional `clusterRedis` and `clusterCrunchy` sub-chart dependencies deploy a Redis cluster and a CrunchyDB PostgreSQL cluster, and `externalComponents` wires them into the APIManager via secrets (`system-redis`, `backend-redis`, `system-database`, `zync`).
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-3scale/examples/argocd/
 oc apply -k .
 ```

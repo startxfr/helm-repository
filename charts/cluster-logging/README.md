@@ -52,7 +52,7 @@ Complete deployment of a Logging configuration with the following characteristic
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-logging/examples/argocd/
 oc apply -k .
 ```

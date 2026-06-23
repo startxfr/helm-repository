@@ -164,7 +164,7 @@ metadata:
 `chaos-monkey` deploys kube-monkey which runs on a schedule (configurable `startHour`/`endHour`). Target deployments must opt in via annotations.
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/chaos-monkey/examples/argocd/
 oc apply -k .
 ```

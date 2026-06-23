@@ -69,7 +69,7 @@ helm install cluster-nmstate startx/cluster-nmstate -f https://raw.githubusercon
 Deploy `cluster-nmstate` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-nmstate/examples/argocd/
 oc apply -k .
 ```

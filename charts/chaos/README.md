@@ -76,7 +76,7 @@ chaos-monkey-instance  startx/chaos-monkey
 `chaos` is an umbrella chart. The recommended GitOps approach is one AppProject shared across the suite and one Application per sub-chart (cerberus, kraken, litmus, mesh, monkey) to allow independent lifecycle management.
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/chaos/examples/argocd/
 oc apply -k .
 ```

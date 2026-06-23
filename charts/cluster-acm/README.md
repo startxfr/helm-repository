@@ -70,7 +70,7 @@ The ACM operator and the MultiClusterHub CR both install in `openshift-acm-opera
 Observability resources deploy in `startx-acm-observability`:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-acm/examples/argocd/
 oc apply -k .
 ```

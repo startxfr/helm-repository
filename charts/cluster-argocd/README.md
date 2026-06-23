@@ -80,7 +80,7 @@ Deploy `cluster-argocd` using three dedicated ArgoCD Applications - one per conc
 The GitOps operator installs in the shared `openshift-operators` namespace. The `ArgoCD` CR deploys in `openshift-gitops`:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-argocd/examples/argocd/
 oc apply -k .
 ```

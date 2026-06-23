@@ -64,7 +64,7 @@ helm install cluster-storage-efs startx/cluster-storage-efs -f https://raw.githu
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-storage-efs/examples/argocd/
 oc apply -k .
 ```

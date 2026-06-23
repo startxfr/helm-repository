@@ -216,7 +216,7 @@ SA_TOKEN=$(oc create token cerberus-monitor -n chaos-cerberus --duration=8760h)
 `chaos-cerberus` follows the project/instance pattern: one Application creates the namespace, a second deploys cerberus. A ready-to-use example file is available at [`examples/argocd/cerberus-argocd.yaml`](examples/argocd/cerberus-argocd.yaml).
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/chaos-cerberus/examples/argocd/
 oc apply -k .
 ```

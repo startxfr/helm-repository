@@ -61,7 +61,7 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-quay/examples/argocd/
 oc apply -k .
 ```

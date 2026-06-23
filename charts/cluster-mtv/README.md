@@ -60,7 +60,7 @@ helm install cluster-mtv startx/cluster-mtv -f https://raw.githubusercontent.com
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-mtv/examples/argocd/
 oc apply -k .
 ```

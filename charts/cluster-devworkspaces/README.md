@@ -67,7 +67,7 @@ helm install cluster-devworkspaces startx/cluster-devworkspaces -f https://raw.g
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-devworkspaces/examples/argocd/
 oc apply -k .
 ```

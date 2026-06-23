@@ -69,7 +69,7 @@ Deploy `cluster-ansible` using three dedicated ArgoCD Applications - one per con
 The AAP operator installs in the dedicated `aap` namespace (with its own OperatorGroup). The `AnsibleAutomationPlatform` CR deploys in `startx-ansible`:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-ansible/examples/argocd/
 oc apply -k .
 ```

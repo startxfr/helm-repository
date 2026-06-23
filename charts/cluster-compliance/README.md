@@ -68,7 +68,7 @@ helm install cluster-compliance startx/cluster-compliance -f https://raw.githubu
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-compliance/examples/argocd/
 oc apply -k .
 ```

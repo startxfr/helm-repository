@@ -67,7 +67,7 @@ helm install cluster-pipeline startx/cluster-pipeline -f https://raw.githubuserc
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-pipeline/examples/argocd/
 oc apply -k .
 ```

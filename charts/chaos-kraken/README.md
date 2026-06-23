@@ -200,7 +200,7 @@ helm install chaos-kraken-aws startx/chaos-kraken -f my-kraken-aws-values.yaml -
 `chaos-kraken` follows the project/instance pattern. Kraken requires a kubeconfig to connect to the target cluster and optionally a cerberus URL for health gating.
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/chaos-kraken/examples/argocd/
 oc apply -k .
 ```

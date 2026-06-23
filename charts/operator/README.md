@@ -137,7 +137,7 @@ Deploy `operator` using a single ArgoCD Application sharing a dedicated AppProje
 The chart creates operator subscriptions and operator groups in the target namespace:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/operator/examples/argocd/
 oc apply -k .
 ```

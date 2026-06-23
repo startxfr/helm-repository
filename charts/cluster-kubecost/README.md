@@ -65,7 +65,7 @@ Deploy `cluster-kubecost` using three dedicated ArgoCD Applications - one per co
 The kubecost operator installs in `default-kubecost`; the CostAnalyzer instance runs in `default-kubecost`:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-kubecost/examples/argocd/
 oc apply -k .
 ```

@@ -61,7 +61,7 @@ helm install cluster-redis startx/cluster-redis -f https://raw.githubusercontent
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-redis/examples/argocd/
 oc apply -k .
 ```

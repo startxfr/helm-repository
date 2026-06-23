@@ -68,7 +68,7 @@ helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com
 Deploy `cluster-nfd` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-nfd/examples/argocd/
 oc apply -k .
 ```

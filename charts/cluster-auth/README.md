@@ -82,7 +82,7 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 `cluster-auth` is a configuration-only chart (no operator, no dedicated namespace). It configures the cluster `OAuth` CR and related secrets in `openshift-config`. A single Application is sufficient:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-auth/examples/argocd/
 oc apply -k .
 ```

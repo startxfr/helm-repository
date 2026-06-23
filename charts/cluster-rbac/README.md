@@ -61,7 +61,7 @@ helm install cluster-rbac startx/cluster-rbac -f https://raw.githubusercontent.c
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-rbac/examples/argocd/
 oc apply -k .
 ```

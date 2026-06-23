@@ -63,7 +63,7 @@ helm install cluster-ods startx/cluster-ods -f https://raw.githubusercontent.com
 ### AppProject
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-ods/examples/argocd/
 oc apply -k .
 ```

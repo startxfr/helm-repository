@@ -69,7 +69,7 @@ Deploy `cluster-acs` using three dedicated ArgoCD Applications - one per concern
 The ACS operator installs in the shared `openshift-operators` namespace. The `Central` CR deploys in `startx-acs`:
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository/charts/cluster-acs/examples/argocd/
 oc apply -k .
 ```
