@@ -194,67 +194,10 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 Deploy `project` using a single ArgoCD Application sharing a dedicated AppProject.
 The chart creates a namespace with optional RBAC, network policies, limit ranges and quotas:
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: demo-project
-  namespace: openshift-gitops
-spec:
-  description: Deploy startx project chart for namespace management
-  sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: openshift-gitops
-    - server: https://kubernetes.default.svc
-      namespace: 'demo-project'
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
----
-# Wave 5 — Create the project namespace with RBAC, network policies and quotas
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: demo-project-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: project
-  source:
-    chart: project
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-          type: namespace
-          name: demo-project
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.106
-  destination:
-    namespace: demo-project
-    server: https://kubernetes.default.svc
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-```
-
-Apply with:
-
 ```bash
-kubectl apply -f project-argocd.yaml -n openshift-gitops
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/project/examples/argocd/
+oc apply -k .
 ```
 
 The automated sync policy ensures ArgoCD reconciles the namespace whenever the chart or values drift from the desired state.

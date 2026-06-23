@@ -64,136 +64,15 @@ helm install cluster-localstorage startx/cluster-localstorage -f https://raw.git
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-localstorage
-  namespace: openshift-gitops
-spec:
-  description: Deploy Local Storage operator and configure local volumes
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-local-storage
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-localstorage/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Creates namespace openshift-local-storage
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-localstorage-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-localstorage
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-localstorage
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-        operator:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Deploys local-storage-operator in openshift-local-storage (dedicated namespace, own OperatorGroup)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-localstorage-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-localstorage
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-localstorage
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-          operatorGroup:
-            enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-local-storage
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Configures LocalVolume, LocalVolumeSet and LocalVolumeDiscovery (disabled by default)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-localstorage-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-localstorage
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-localstorage
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: false
-        localstorage:
-          enabled: false
-        localstorageset:
-          enabled: false
-        localstoragediscovery:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-local-storage
-  ignoreDifferences:
-    - group: local.storage.openshift.io
-      kind: LocalVolume
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 

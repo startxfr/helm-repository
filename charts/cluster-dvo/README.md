@@ -66,102 +66,17 @@ helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-dvo
-  namespace: openshift-gitops
-spec:
-  description: Deploy Deployment Validation Operator and configure DVO at cluster level
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-operators
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-dvo/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
 > DVO requires AllNamespaces scope to validate deployments across the whole cluster. The subscription goes directly into `openshift-operators` — no dedicated namespace or OperatorGroup needed.
 
-```yaml
----
-# Wave 5 — DVO operator subscription in openshift-operators (AllNamespaces, no project wave needed)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-dvo-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-dvo
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-dvo
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: false
-        operator:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-operators
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Wave 10 — Grafana dashboard for DVO metrics (disabled by default)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-dvo-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-dvo
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-dvo
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        grafana:
-          enabled: true
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: deployment-validation-monitoring
-  ignoreDifferences:
-    - group: grafana.integreatly.org
-      kind: Grafana
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 

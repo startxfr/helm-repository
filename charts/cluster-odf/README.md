@@ -63,164 +63,17 @@ helm install cluster-odf startx/cluster-odf -f https://raw.githubusercontent.com
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-odf
-  namespace: openshift-gitops
-spec:
-  description: Configure OpenShift Data Foundation operator
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-    - namespace: openshift-storage
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-odf/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
 > **Deletion order**: always delete in reverse creation order - `cluster-odf-app` first (wait for StorageCluster cleanup), then `cluster-odf-operator`, then `cluster-odf-project`. The sync-waves below enforce this order automatically in an App-of-Apps pattern.
 
-```yaml
----
-# Wave 1 - created first, deleted LAST (namespace cleanup happens naturally once contents are gone)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-odf-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  project: cluster-odf
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-odf
-    targetRevision: 21.3.107
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        project:
-          enabled: true
-        operator:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Wave 2 - operator deployed after namespace exists, deleted after StorageCluster is gone
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-odf-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-odf
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-odf
-    targetRevision: 21.3.107
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        operator:
-          enabled: true
-          subscription:
-            operator:
-              channel: "stable-4.21"
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  # OLM adds olm.providedAPIs annotation and upgradeStrategy after operator install
-  ignoreDifferences:
-    - group: operators.coreos.com
-      kind: OperatorGroup
-      name: openshift-storage
-      namespace: openshift-storage
-      jsonPointers:
-        - /metadata/annotations/olm.providedAPIs
-        - /spec/upgradeStrategy
-    - group: console.openshift.io
-      kind: ConsolePlugin
-      name: odf-console
-      jqPathExpressions:
-        - .spec
-        - .metadata.annotations
-        - .metadata.labels
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - SkipDryRunOnMissingResource=true
----
-# Wave 3 - created last, deleted FIRST so the ODF operator is still alive to process StorageCluster finalizers
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-odf-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-odf
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-odf
-    targetRevision: 21.3.107
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        odf:
-          enabled: true
-          nodeLabeler:
-            enabled: false
-        operator:
-          enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  # OCS operator mutates these fields after sync — ignore to keep Application Synced
-  ignoreDifferences:
-    - group: ocs.openshift.io
-      kind: StorageCluster
-      jqPathExpressions:
-        - .metadata.finalizers
-        - .metadata.annotations["uninstall.ocs.openshift.io/cleanup-policy"]
-        - .metadata.annotations["uninstall.ocs.openshift.io/mode"]
-        - .spec.version
-        - .spec.encryption.keyRotation
-        - .spec.managedResources
-        - .spec.storageDeviceSets[].replica
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - SkipDryRunOnMissingResource=true
-```
+
 
 ## History
 

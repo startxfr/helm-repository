@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: chaos
+  namespace: openshift-gitops
+spec:
+  description: Full chaos testing suite — cerberus, kraken, litmus, chaos-mesh, kube-monkey
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+    - 'https://litmuschaos.github.io/litmus-helm'
+    - 'https://charts.chaos-mesh.org'
+    - 'https://asobti.github.io/kube-monkey/charts/repo'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: chaos-cerberus
+    - server: https://kubernetes.default.svc
+      namespace: chaos-kraken
+    - server: https://kubernetes.default.svc
+      namespace: chaos-litmus
+    - server: https://kubernetes.default.svc
+      namespace: chaos-mesh
+    - server: https://kubernetes.default.svc
+      namespace: chaos-monkey
+    - server: https://kubernetes.default.svc
+      namespace: default
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: project.openshift.io
+      kind: ProjectRequest
+    - group: security.openshift.io
+      kind: SecurityContextConstraints
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+    # chaos-mesh webhooks (required for chart to sync)
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+    - group: chaos-mesh.org
+      kind: '*'

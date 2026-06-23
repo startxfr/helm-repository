@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-kraken-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-kraken
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-kraken
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        kraken:
+          enabled: true
+          mode: job
+          cerberusUrl: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+          kubeconfig:
+            mode: token
+            token:
+              server: "https://api.<cluster>:6443"
+              token: "sha256~REPLACE_WITH_YOUR_TOKEN"
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.107
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -22,11 +22,15 @@ argocd_export:
       storageclass: "gov-slow-retain"
 argocd_project:
   enabled: false
-  list: 
+  list:
     - name: "startx-argocd"
     - name: "cluster-admin"
     - name: "startx-argocd"
       namespace: "startx-argocd"
+      sourceRepos: []
+      destinations: []
+      clusterResourceWhitelist: []
+      roles: []
 application:
   enabled: false
   list: 
@@ -41,8 +45,8 @@ application:
       project: "cluster-admin"
       # Application source
       source: 
-        # repository URL to the application code (default is https://github.com/startxfr/helm-repository.git)
-        repo: "https://github.com/startxfr/helm-repository.git"
+        # repository URL to the application code (default is https://gitlab.com/startx1/helm.git)
+        repo: "https://gitlab.com/startx1/helm.git"
         # revision to use for this source-code (default is master) 
         rev: "devel"
         # path to the application code (default is charts/example-html/)

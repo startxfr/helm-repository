@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-auth
+  namespace: openshift-gitops
+spec:
+  description: Configure OpenShift OAuth and authentication on the cluster
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: openshift-config
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: config.openshift.io
+      kind: OAuth
+    - group: ''
+      kind: Secret
+    - group: ''
+      kind: ConfigMap

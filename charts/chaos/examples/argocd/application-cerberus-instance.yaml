@@ -1,0 +1,40 @@
+# Prerequisites for cerberus: create SA with cluster-reader before deploying
+# oc create sa cerberus-monitor -n chaos-cerberus
+# oc create clusterrolebinding cerberus-monitor-cluster-reader \
+#   --clusterrole=cluster-reader --serviceaccount=chaos-cerberus:cerberus-monitor
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-cerberus-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-cerberus
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-cerberus
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        cerberus:
+          enabled: true
+          kubeconfig:
+            mode: token
+            token:
+              server: "https://api.<cluster>:6443"
+              token: "sha256~REPLACE_WITH_YOUR_SA_TOKEN"
+        # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
+        kraken:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.107
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

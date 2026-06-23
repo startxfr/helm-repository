@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-redis-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-redis
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-redis
+    targetRevision: 21.3.106
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        cluster:
+          enabled: true
+          list:
+            - name: startx-redis
+              namespace: startx-redis
+              enabled: true
+              spec: |
+                clusterSize: 3
+                clusterVersion: v7
+                kubernetesConfig:
+                  image: quay.io/opstree/redis:v7.0.5
+                  imagePullPolicy: IfNotPresent
+                  updateStrategy: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  ignoreDifferences:
+    - group: redis.redis.opstreelabs.in
+      kind: Redis
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

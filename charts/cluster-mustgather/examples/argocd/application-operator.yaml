@@ -1,0 +1,31 @@
+# Wave 5 — MustGather operator subscription in openshift-operators (AllNamespaces)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-mustgather-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-mustgather
+  source:
+    chart: cluster-mustgather
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.106
+  destination:
+    namespace: openshift-operators
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

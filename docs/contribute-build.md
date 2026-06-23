@@ -12,7 +12,7 @@ In order to get the full developement environment, you must stick to the followi
 ## 1. Get a copy of the repository
 
 ```bash
-git clone https://github.com/startxfr/helm-repository.git
+git clone https://gitlab.com/startx1/helm.git
 cd helm-repository
 ```
 

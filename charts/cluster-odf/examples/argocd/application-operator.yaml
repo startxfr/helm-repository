@@ -1,0 +1,50 @@
+# Wave 2 - operator deployed after namespace exists, deleted after StorageCluster is gone
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-odf-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-odf
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-odf
+    targetRevision: 21.3.107
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        operator:
+          enabled: true
+          subscription:
+            operator:
+              channel: "stable-4.21"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  # OLM adds olm.providedAPIs annotation and upgradeStrategy after operator install
+  ignoreDifferences:
+    - group: operators.coreos.com
+      kind: OperatorGroup
+      name: openshift-storage
+      namespace: openshift-storage
+      jsonPointers:
+        - /metadata/annotations/olm.providedAPIs
+        - /spec/upgradeStrategy
+    - group: console.openshift.io
+      kind: ConsolePlugin
+      name: odf-console
+      jqPathExpressions:
+        - .spec
+        - .metadata.annotations
+        - .metadata.labels
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - SkipDryRunOnMissingResource=true

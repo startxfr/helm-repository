@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-quay-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-quay
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-quay
+    targetRevision: 21.3.106
+    helm:
+      valueFiles:
+        - values-startx_noinfra-quay.yaml
+      values: |
+        quay:
+          enabled: true
+        rhn:
+          user: "<your-rhn-username>"
+          pwd: "<your-rhn-password>"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  ignoreDifferences:
+    - group: quay.redhat.com
+      kind: QuayRegistry
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

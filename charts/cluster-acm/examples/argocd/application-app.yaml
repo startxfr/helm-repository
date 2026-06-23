@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-acm-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-acm-operator
+    server: https://kubernetes.default.svc
+  project: cluster-acm
+  source:
+    chart: cluster-acm
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        acm:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.107
+  ignoreDifferences:
+    - group: operator.open-cluster-management.io
+      kind: MultiClusterHub
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
