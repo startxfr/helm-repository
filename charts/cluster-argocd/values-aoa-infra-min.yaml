@@ -5,48 +5,27 @@ context: &context
   cluster: default
   environment: infra
   component: argocd
-  app: startx-argocd
-  version: "1.20.4"
+  app: aoa-infra-min
+  version: "0.1.0"
 
 argocd_project:
   enabled: false
   list:
-    - name: "startx-argocd"
-    - name: "cluster-admin"
-    - name: "startx-argocd"
-      namespace: "startx-argocd"
-      sourceRepos: []
-      destinations: []
-      clusterResourceWhitelist: []
+    - name: "aoa-infra-min"
+      namespace: "openshift-gitops"
+      sourceRepos:
+        - '*'
+      destinations:
+        - namespace: "*"
+          server: '*'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
       roles:
-      - name: ops
-        description: Read-only (and sync) privileges to group ops in .{{- $name -}} project
-        policies:
-        - p, role:startx-ops, clusters, get, .{{- $name -}}/*, allow
-        - p, role:startx-ops, projects, get, .{{- $name -}}/*, allow
-        - p, role:startx-ops, applications, get, .{{- $name -}}/*, allow
-        - p, role:startx-ops, applications, sync, .{{- $name -}}/*, allow
-        - p, role:startx-ops, repositories, get, .{{- $name -}}/*, allow
-        - p, role:startx-ops, repositories, sync, .{{- $name -}}/*, allow
-        - p, role:startx-ops, certificates, get, .{{- $name -}}/*, allow
-        - g, ops, role:startx-ops
-        groups:
-        - ops
-      - name: devops
-        description: Read-only privileges to group devops in .{{- $name -}} project
-        policies:
-        - p, role:startx-devops, clusters, get, .{{- $name -}}/*, allow
-        - p, role:startx-devops, projects, get, .{{- $name -}}/*, allow
-        - p, role:startx-devops, applications, get, .{{- $name -}}/*, allow
-        - p, role:startx-devops, repositories, get, .{{- $name -}}/*, allow
-        - p, role:startx-devops, certificates, get, .{{- $name -}}/*, allow
-        - g, devops, role:startx-devops
-        groups:
-        - devops
       - name: admin
-        description: All privileges to group admin in .{{- $name -}} project
+        description: All privileges to group admin in project
         policies:
-        - p, role:startx-admin, *, *, {{- $name -}}/*, allow
+        - p, role:startx-admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
