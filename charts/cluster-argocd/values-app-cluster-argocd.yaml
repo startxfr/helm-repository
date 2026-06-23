@@ -4,16 +4,14 @@
 argocd_project:
   enabled: true
   list:
-    - name: 'infra-argocd'
+    - name: 'infra-argocd-example'
       namespace: 'openshift-gitops'
       sourceRepos:
         - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
       destinations:
-        - namespace: 'openshift-operators'
-          server: 'https://kubernetes.default.svc'
         - namespace: 'openshift-gitops'
           server: 'https://kubernetes.default.svc'
-        - namespace: '*'
+        - namespace: 'startx-argocd'
           server: 'https://kubernetes.default.svc'
 
 # Applications
@@ -21,11 +19,11 @@ application:
   enabled: true
   list:
     # Application configuration and instances
-    - name: 'infra-argocd-app'
+    - name: 'infra-argocd-example-app'
       namespace: 'openshift-gitops'
       finalizer: true
       server: 'https://kubernetes.default.svc'
-      project: 'cluster-argocd'
+      project: 'infra-argocd-example'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'cluster-argocd'
@@ -34,55 +32,9 @@ application:
         valueFiles:
           - values-startx_noinfra.yaml
         values: |
-          argocd:
+          argocd_project:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
-    # Installs and configures the operator
-    - name: 'infra-argocd-operator'
-      namespace: 'openshift-gitops'
-      finalizer: true
-      server: 'https://kubernetes.default.svc'
-      project: 'cluster-argocd'
-      source:
-        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
-        chart: 'cluster-argocd'
-        rev: '21.3.107'
-      helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
-        values: |
-          argocd:
-            enabled: false
-          operator:
-            enabled: true
-            operatorGroup:
-              enabled: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-    # Creates project namespace and RBAC
-    - name: 'infra-argocd-project'
-      namespace: 'openshift-gitops'
-      finalizer: false
-      server: 'https://kubernetes.default.svc'
-      project: 'cluster-argocd'
-      source:
-        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
-        chart: 'cluster-argocd'
-        rev: '21.3.107'
-      helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
-        values: |
-          argocd:
-            enabled: false
-          project:
+          application:
             enabled: true
       syncPolicy: |
         automated:

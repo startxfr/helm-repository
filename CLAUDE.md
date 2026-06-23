@@ -6,14 +6,14 @@
 
 `github.com/startxfr/helm-repository` — Helm chart repository for Openshift/Kubernetes. Three remotes: `origin` (GitHub), `gitlab` (GitLab), `monaco` (AWS CodeCommit).
 
-| Prefix | Role |
-|--------|------|
-| `chaos-*` | Chaos testing tools (cerberus, kraken, litmus, mesh, monkey) + umbrella `chaos` |
-| `cluster-*` | Cluster-level configuration via Openshift operators |
-| `example-*` | Demo / tutorial deployments |
-| `operator` | Generic operator subscription chart |
-| `project` | Base chart: namespace + RBAC + NetworkPolicy + Quotas + LimitRange |
-| `sxapi` | Micro-service deployment based on the sxapi nodejs engine |
+| Prefix      | Role                                                                            |
+| ----------- | ------------------------------------------------------------------------------- |
+| `chaos-*`   | Chaos testing tools (cerberus, kraken, litmus, mesh, monkey) + umbrella `chaos` |
+| `cluster-*` | Cluster-level configuration via Openshift operators                             |
+| `example-*` | Demo / tutorial deployments                                                     |
+| `operator`  | Generic operator subscription chart                                             |
+| `project`   | Base chart: namespace + RBAC + NetworkPolicy + Quotas + LimitRange              |
+| `sxapi`     | Micro-service deployment based on the sxapi nodejs engine                       |
 
 ## Chart structure
 
@@ -51,12 +51,12 @@ Never edit hardcoded values inside `.tools/cli` or `sx-helm`; all tunables are i
 
 ### S3 sub-repos
 
-| Path | Purpose | Populated by |
-|------|---------|-------------|
-| `devel` | Pre-release from devel branch | `make publish-devel` / `/release-chart` / `/release-devel` |
-| `stable` | Production stable | `make publish` |
-| `noschema` | Stable, no schema validation | `make publish` |
-| `release-<N>` | Charts for OCP minor release N | `make publish` / `make archive` |
+| Path          | Purpose                        | Populated by                                               |
+| ------------- | ------------------------------ | ---------------------------------------------------------- |
+| `devel`       | Pre-release from devel branch  | `make publish-devel` / `/release-chart` / `/release-devel` |
+| `stable`      | Production stable              | `make publish`                                             |
+| `noschema`    | Stable, no schema validation   | `make publish`                                             |
+| `release-<N>` | Charts for OCP minor release N | `make publish` / `make archive`                            |
 
 ### Makefile usage
 
@@ -85,12 +85,12 @@ make delete     CHART=cluster-nmstate [FORCE_DELETE=yes]
 
 ### Environment variables (cli)
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `INTERACTIVE` | `true` | `false` = skip `read -r` prompts (mandatory in CI) |
-| `VERSION` | `""` | Force specific version instead of auto-increment |
-| `DESC` | `""` | Force release description |
-| `FORCE_DELETE` | `""` | `yes` = skip delete confirmation |
+| Variable       | Default | Purpose                                            |
+| -------------- | ------- | -------------------------------------------------- |
+| `INTERACTIVE`  | `true`  | `false` = skip `read -r` prompts (mandatory in CI) |
+| `VERSION`      | `""`    | Force specific version instead of auto-increment   |
+| `DESC`         | `""`    | Force release description                          |
+| `FORCE_DELETE` | `""`    | `yes` = skip delete confirmation                   |
 
 ---
 
@@ -105,14 +105,14 @@ devel → /release-chart <name>  (single chart: bump + S3 + publish-devel)
                 → /release-stable (merge master→stable + publish + propagate stable-4.x + tag)
 ```
 
-| Skill | Args | What it does |
-|-------|------|-------------|
-| `/release-chart` | `<name> [ver] [desc]` | Single chart: bump, package, upload S3, publish devel, push devel |
-| `/release-devel` | `[ver] [desc]` | All charts on devel: bump, package, publish devel, push devel |
-| `/release-master` | — | Merge devel→master, publish stable repos, propagate master-4.x, push |
-| `/release-stable` | — | Merge master→stable, publish, propagate stable-4.x, tag, push |
-| `/new-major-release` | `<N>` | Init OCP major release N: update config, create docs/repos/N/, merge to master |
-| `/new-chart` | `<family>-<name>` | New chart: gather inputs, copy, update Chart.yaml+README, clean templates, adjust values, publish |
+| Skill                | Args                  | What it does                                                                                      |
+| -------------------- | --------------------- | ------------------------------------------------------------------------------------------------- |
+| `/release-chart`     | `<name> [ver] [desc]` | Single chart: bump, package, upload S3, publish devel, push devel                                 |
+| `/release-devel`     | `[ver] [desc]`        | All charts on devel: bump, package, publish devel, push devel                                     |
+| `/release-master`    | —                     | Merge devel→master, publish stable repos, propagate master-4.x, push                              |
+| `/release-stable`    | —                     | Merge master→stable, publish, propagate stable-4.x, tag, push                                     |
+| `/new-major-release` | `<N>`                 | Init OCP major release N: update config, create docs/repos/N/, merge to master                    |
+| `/new-chart`         | `<family>-<name>`     | New chart: gather inputs, copy, update Chart.yaml+README, clean templates, adjust values, publish |
 
 - `release-charts` (make target) = bump all versions **without** merging/tagging — safe to run multiple times on devel
 - `release-all` (make target) = full flow: bumps + merges devel→master→stable + tags + pushes
@@ -125,12 +125,12 @@ Every `cluster-*` README must have a `## Deploy via ArgoCD` section with **one A
 
 ### Operator namespace naming rules (standardized 2026-06)
 
-| Operator catalog / install mode | Operator namespace | Instance namespace |
-|--------------------------------|-------------------|-------------------|
-| `redhat-operators` (any mode) | chart-specific (e.g. `openshift-storage`) | chart-specific |
-| Community/certified — **AllNamespaces** | `openshift-operators` (no dedicated NS, no OG) | `default-xxx` |
-| Community/certified — **OwnNamespace** | `default-xxx` (OG enabled, no `target:`) | `default-xxx` |
-| Community/certified — **SingleNamespace** | `openshift-xxx-operator` (OG watching `default-xxx`) | `default-xxx` |
+| Operator catalog / install mode           | Operator namespace                                   | Instance namespace |
+| ----------------------------------------- | ---------------------------------------------------- | ------------------ |
+| `redhat-operators` (any mode)             | chart-specific (e.g. `openshift-storage`)            | chart-specific     |
+| Community/certified — **AllNamespaces**   | `openshift-operators` (no dedicated NS, no OG)       | `default-xxx`      |
+| Community/certified — **OwnNamespace**    | `default-xxx` (OG enabled, no `target:`)             | `default-xxx`      |
+| Community/certified — **SingleNamespace** | `openshift-xxx-operator` (OG watching `default-xxx`) | `default-xxx`      |
 
 Applied namespaces per chart:
 - `cluster-redis` → `default-redis` (OwnNamespace), EE variant → `default-redis-ee`
@@ -147,11 +147,11 @@ Applied namespaces per chart:
 
 ### Application split
 
-| Application | Wave | Enabled flags | Destination |
-|-------------|------|--------------|-------------|
-| `cluster-xxx-project` | `"1"` | `project.enabled: true`, all others `false` | operator/instance namespace |
-| `cluster-xxx-operator` | `"5"` | `operator.enabled: true`, all others `false` | operator namespace |
-| `cluster-xxx-app` | `"10"` | `<feature>.enabled: true`, all others `false` | instance namespace |
+| Application            | Wave   | Enabled flags                                 | Destination                 |
+| ---------------------- | ------ | --------------------------------------------- | --------------------------- |
+| `cluster-xxx-project`  | `"1"`  | `project.enabled: true`, all others `false`   | operator/instance namespace |
+| `cluster-xxx-operator` | `"5"`  | `operator.enabled: true`, all others `false`  | operator namespace          |
+| `cluster-xxx-app`      | `"10"` | `<feature>.enabled: true`, all others `false` | instance namespace          |
 
 **Critical**: explicitly set all non-relevant flags to `false` in every Application's `helm.values`. Omitting causes `SharedResourceWarning`.
 
@@ -209,33 +209,33 @@ ignoreDifferences:
       - .metadata.labels
 ```
 
-| Chart | group | kind |
-|-------|-------|------|
-| cluster-odf | `ocs.openshift.io` | `StorageCluster` |
-| cluster-mtv | `forklift.konveyor.io` | `ForkliftController` |
-| cluster-acm | `operator.open-cluster-management.io` | `MultiClusterHub` |
-| cluster-kafka | `kafka.strimzi.io` | `Kafka` |
-| cluster-istio | `maistra.io` | `ServiceMeshControlPlane` |
-| cluster-logging | `logging.openshift.io` | `ClusterLogging` |
-| cluster-sso | `keycloak.org` | `Keycloak` |
-| cluster-quay | `quay.redhat.com` | `QuayRegistry` |
-| cluster-crunchy | `postgres-operator.crunchydata.com` | `PostgresCluster` |
-| cluster-mongo | `mongodbcommunity.mongodb.com` | `MongoDBCommunity` |
-| cluster-mustgather | `managed.openshift.io` | `MustGather` |
-| cluster-3scale | `apps.3scale.net` | `APIManager` |
+| Chart              | group                                 | kind                      |
+| ------------------ | ------------------------------------- | ------------------------- |
+| cluster-odf        | `ocs.openshift.io`                    | `StorageCluster`          |
+| cluster-mtv        | `forklift.konveyor.io`                | `ForkliftController`      |
+| cluster-acm        | `operator.open-cluster-management.io` | `MultiClusterHub`         |
+| cluster-kafka      | `kafka.strimzi.io`                    | `Kafka`                   |
+| cluster-istio      | `maistra.io`                          | `ServiceMeshControlPlane` |
+| cluster-logging    | `logging.openshift.io`                | `ClusterLogging`          |
+| cluster-sso        | `keycloak.org`                        | `Keycloak`                |
+| cluster-quay       | `quay.redhat.com`                     | `QuayRegistry`            |
+| cluster-crunchy    | `postgres-operator.crunchydata.com`   | `PostgresCluster`         |
+| cluster-mongo      | `mongodbcommunity.mongodb.com`        | `MongoDBCommunity`        |
+| cluster-mustgather | `managed.openshift.io`                | `MustGather`              |
+| cluster-3scale     | `apps.3scale.net`                     | `APIManager`              |
 
 ### CR template sync-waves
 
-| Resource type | Wave |
-|--------------|------|
-| Namespace / Project | `-10` |
-| OperatorGroup | `-6` |
-| Subscription / CSV | `-5` |
-| Secrets, RBAC, ServiceAccount | `1` |
-| Jobs (e.g. node labeler) | `5` |
-| ConsolePlugin | `10` |
-| Main CR (StorageCluster, Kafka…) | `15` |
-| Secondary CRs (topics, realms…) | `30`–`50` |
+| Resource type                    | Wave      |
+| -------------------------------- | --------- |
+| Namespace / Project              | `-10`     |
+| OperatorGroup                    | `-6`      |
+| Subscription / CSV               | `-5`      |
+| Secrets, RBAC, ServiceAccount    | `1`       |
+| Jobs (e.g. node labeler)         | `5`       |
+| ConsolePlugin                    | `10`      |
+| Main CR (StorageCluster, Kafka…) | `15`      |
+| Secondary CRs (topics, realms…)  | `30`–`50` |
 
 Do **not** declare `finalizers` in CR templates — operators manage them.
 
@@ -375,13 +375,13 @@ Example-* charts (11 total) have no ArgoCD examples — not included.
 
 ## Chaos chart specifics
 
-| Chart | Tool | Role |
-|-------|------|------|
-| `chaos-cerberus` | Cerberus | Watchdog — global cluster health check via API |
-| `chaos-kraken` | Kraken | Chaos engine — injects scenarios (node stop, pod kill, network partition…) |
-| `chaos-litmus` | Litmus | Chaos engineering platform — portal + workflows + scheduler |
-| `chaos-mesh` | Chaos Mesh | GUI-driven chaos engine — PodChaos, NetworkChaos, TimeChaos CRs |
-| `chaos-monkey` | Kube-monkey | Random pod terminator — opt-in via Deployment labels during business hours |
+| Chart            | Tool        | Role                                                                       |
+| ---------------- | ----------- | -------------------------------------------------------------------------- |
+| `chaos-cerberus` | Cerberus    | Watchdog — global cluster health check via API                             |
+| `chaos-kraken`   | Kraken      | Chaos engine — injects scenarios (node stop, pod kill, network partition…) |
+| `chaos-litmus`   | Litmus      | Chaos engineering platform — portal + workflows + scheduler                |
+| `chaos-mesh`     | Chaos Mesh  | GUI-driven chaos engine — PodChaos, NetworkChaos, TimeChaos CRs            |
+| `chaos-monkey`   | Kube-monkey | Random pod terminator — opt-in via Deployment labels during business hours |
 
 Every chaos chart README must have `## Usage examples` (after values dictionary, before History) with minimum 3 examples: (1) default/full stack, (2) minimal, (3) advanced.
 

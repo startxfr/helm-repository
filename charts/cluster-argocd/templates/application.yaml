@@ -6,6 +6,7 @@
 {{- $namespace := .namespace | default $defaultns -}}
 {{- $server := .server | default "https://kubernetes.default.svc" -}}
 {{- $project := .project | default "cluster-admin" -}}
+{{- $wave := .wave | default "10" -}}
 ---
 kind: Application
 apiVersion: argoproj.io/v1alpha1
@@ -17,7 +18,7 @@ metadata:
     app.kubernetes.io/name: "{{- $name -}}-application"
   annotations:
     {{- include "cluster-argocd.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "50"
+    argocd.argoproj.io/sync-wave: {{ $wave | quote }}
   {{- if .finalizer }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io

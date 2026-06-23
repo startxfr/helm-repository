@@ -94,52 +94,333 @@
         },
         "application": {
             "type": "object",
+            "title": "ArgoCD Applications",
+            "description": "Configuration of ArgoCD Application resources to deploy",
             "properties": {
                 "enabled": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "title": "Enable Applications",
+                    "description": "Enable deployment of ArgoCD applications",
+                    "default": false,
+                    "examples": [
+                        true,
+                        false
+                    ]
                 },
                 "list": {
                     "type": "array",
+                    "title": "Application list",
+                    "description": "List of ArgoCD applications to deploy",
                     "items": {
                         "type": "object",
                         "properties": {
-                            "finalizer": {
-                                "type": "boolean"
-                            },
-                            "helm": {
-                                "type": "string"
-                            },
-                            "ignoreDifferences": {
-                                "type": "string"
-                            },
                             "name": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 253,
+                                "title": "Application name",
+                                "description": "Name of the application resource",
+                                "examples": [
+                                    "example-application",
+                                    "app-infra-auth"
+                                ]
                             },
                             "namespace": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "Namespace",
+                                "description": "Kubernetes namespace where to deploy this application (default is project namespace)",
+                                "default": "openshift-gitops",
+                                "examples": [
+                                    "openshift-gitops",
+                                    "default"
+                                ]
                             },
-                            "project": {
-                                "type": "string"
+                            "finalizer": {
+                                "type": "boolean",
+                                "title": "Enable ArgoCD finalizer",
+                                "description": "Enable resources-finalizer.argocd.argoproj.io finalizer for this application",
+                                "default": false,
+                                "examples": [
+                                    true,
+                                    false
+                                ]
+                            },
+                            "wave": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 5,
+                                "title": "Sync wave",
+                                "description": "ArgoCD sync-wave annotation for deployment order",
+                                "default": "50",
+                                "examples": [
+                                    "10",
+                                    "50",
+                                    "100"
+                                ]
                             },
                             "server": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "title": "Destination server",
+                                "description": "Kubernetes API server URL for deployment destination",
+                                "default": "https://kubernetes.default.svc",
+                                "examples": [
+                                    "https://kubernetes.default.svc",
+                                    "https://api.example.com:6443"
+                                ]
+                            },
+                            "project": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "Project name",
+                                "description": "ArgoCD project name for RBAC",
+                                "default": "cluster-admin",
+                                "examples": [
+                                    "cluster-admin",
+                                    "aoa-infra-min"
+                                ]
                             },
                             "source": {
                                 "type": "object",
+                                "title": "Source configuration",
+                                "description": "Git repository and path configuration for the application source",
                                 "properties": {
-                                    "path": {
-                                        "type": "string"
-                                    },
                                     "repo": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "title": "Repository URL",
+                                        "description": "Git repository URL containing the application code",
+                                        "default": "https://gitlab.com/startx1/helm.git",
+                                        "examples": [
+                                            "https://gitlab.com/startx1/helm.git",
+                                            "https://github.com/example/repo.git",
+                                            "git@github.com:example/repo.git"
+                                        ]
                                     },
                                     "rev": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 255,
+                                        "title": "Revision",
+                                        "description": "Git branch, tag or commit hash to use",
+                                        "default": "master",
+                                        "examples": [
+                                            "master",
+                                            "main",
+                                            "stable",
+                                            "devel",
+                                            "v1.0.0"
+                                        ]
+                                    },
+                                    "path": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 255,
+                                        "title": "Path",
+                                        "description": "Path within the repository to the application manifests or Helm chart",
+                                        "default": "charts/example-html/",
+                                        "examples": [
+                                            "charts/example-html/",
+                                            "helm/myapp/",
+                                            "k8s/",
+                                            "."
+                                        ]
                                     }
                                 }
                             },
+                            "helm": {
+                                "type": "string",
+                                "minLength": 1,
+                                "title": "Helm configuration",
+                                "description": "Helm source configuration (valueFiles, parameters) as YAML literal block",
+                                "examples": [
+                                    "valueFiles:\n  - values.yaml\nparameters:\n  - name: context.scope\n    value: \"myscope\""
+                                ]
+                            },
                             "syncPolicy": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "title": "Sync policy",
+                                "description": "ArgoCD sync policy configuration (automated, syncOptions, retry) as YAML literal block",
+                                "examples": [
+                                    "automated:\n  prune: true\n  selfHeal: true\nsyncOptions:\n  - CreateNamespace=false"
+                                ]
+                            },
+                            "ignoreDifferences": {
+                                "type": "string",
+                                "minLength": 1,
+                                "title": "Ignore differences",
+                                "description": "ArgoCD ignoreDifferences configuration for fields to ignore during sync as YAML literal block",
+                                "examples": [
+                                    "- group: \"apps\"\n  kind: Secret\n  namespace: \"default\"\n  jsonPointers:\n    - /"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "argocd_repocreds": {
+            "type": "object",
+            "title": "ArgoCD repository credentials",
+            "description": "Configuration of repository credentials for private Git repositories",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable repository credentials",
+                    "description": "Enable deployment of repository credential secrets",
+                    "default": false,
+                    "examples": [
+                        true,
+                        false
+                    ]
+                },
+                "list": {
+                    "type": "array",
+                    "title": "Repository credentials list",
+                    "description": "List of repository credentials to create",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 253,
+                                "title": "Credential name",
+                                "description": "Name of the repository credentials secret",
+                                "examples": [
+                                    "startx-customers-repo-creds",
+                                    "private-repo-https"
+                                ]
+                            },
+                            "shortname": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "Short name",
+                                "description": "Short name for ArgoCD to reference these credentials",
+                                "examples": [
+                                    "pragmatik-repo",
+                                    "my-repo"
+                                ]
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "Namespace",
+                                "description": "Kubernetes namespace where the secret will be created",
+                                "default": "openshift-gitops",
+                                "examples": [
+                                    "openshift-gitops",
+                                    "default"
+                                ]
+                            },
+                            "url": {
+                                "type": "string",
+                                "minLength": 1,
+                                "title": "Repository URL",
+                                "description": "URL of the repository (or base path for multiple repositories)",
+                                "examples": [
+                                    "https://github.com/argoproj/private-repo",
+                                    "git@github.com:example/repo.git",
+                                    "https://gitlab.com/mycompany"
+                                ]
+                            },
+                            "secretType": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 25,
+                                "title": "Secret type",
+                                "description": "ArgoCD secret type (repository, repo-creds, or cluster)",
+                                "default": "repository",
+                                "examples": [
+                                    "repository",
+                                    "repo-creds",
+                                    "cluster"
+                                ]
+                            },
+                            "type": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 25,
+                                "title": "Credentials type",
+                                "description": "Type of credentials (https, ssh, or githubapp)",
+                                "default": "https",
+                                "examples": [
+                                    "https",
+                                    "ssh",
+                                    "githubapp"
+                                ]
+                            },
+                            "insecure": {
+                                "type": "boolean",
+                                "title": "Skip TLS verification",
+                                "description": "Skip SSL/TLS certificate verification",
+                                "default": false,
+                                "examples": [
+                                    true,
+                                    false
+                                ]
+                            },
+                            "httpsOptions": {
+                                "type": "object",
+                                "title": "HTTPS options",
+                                "description": "Credentials for HTTPS authentication",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 255,
+                                        "title": "Username",
+                                        "description": "Username for HTTP authentication"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "title": "Password",
+                                        "description": "Password for HTTP authentication"
+                                    }
+                                }
+                            },
+                            "sshOptions": {
+                                "type": "object",
+                                "title": "SSH options",
+                                "description": "SSH private key for SSH authentication",
+                                "properties": {
+                                    "sshPrivateKey": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "title": "SSH private key",
+                                        "description": "SSH private key in PEM format"
+                                    }
+                                }
+                            },
+                            "githubappOptions": {
+                                "type": "object",
+                                "title": "GitHub App options",
+                                "description": "GitHub App credentials",
+                                "properties": {
+                                    "githubAppID": {
+                                        "type": "integer",
+                                        "title": "GitHub App ID",
+                                        "description": "GitHub application ID"
+                                    },
+                                    "githubAppInstallationID": {
+                                        "type": "integer",
+                                        "title": "Installation ID",
+                                        "description": "GitHub App installation ID"
+                                    },
+                                    "githubAppPrivateKey": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "title": "GitHub App private key",
+                                        "description": "GitHub App private key in PEM format"
+                                    }
+                                }
                             }
                         }
                     }
@@ -148,43 +429,128 @@
         },
         "argocd": {
             "type": "object",
+            "title": "ArgoCD cluster configuration",
+            "description": "Configuration of the ArgoCD cluster (OpenShift GitOps operator)",
             "properties": {
                 "enabled": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "title": "Enable ArgoCD cluster",
+                    "description": "Enable deployment of the ArgoCD cluster resource",
+                    "default": false,
+                    "examples": [
+                        true,
+                        false
+                    ]
                 },
                 "hooked": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "title": "Activate as Helm hook",
+                    "description": "Activate the ArgoCD manager as a Helm hook for ordered deployment",
+                    "default": false,
+                    "examples": [
+                        true,
+                        false
+                    ]
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 63,
+                    "title": "ArgoCD instance name",
+                    "description": "Name of the ArgoCD cluster resource",
+                    "default": "openshift-gitops",
+                    "examples": [
+                        "openshift-gitops",
+                        "argocd"
+                    ]
+                },
+                "spec": {
+                    "type": "string",
+                    "title": "ArgoCD spec",
+                    "description": "ArgoCD cluster specification as YAML (server config, HA, redis, dex, grafana, prometheus, repo settings)"
                 }
             }
         },
         "argocd_export": {
             "type": "object",
+            "title": "ArgoCD export configuration",
+            "description": "Configuration of ArgoCD export resources for backup and migration",
             "properties": {
                 "enabled": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "title": "Enable ArgoCD export",
+                    "description": "Enable deployment of ArgoCD export resources",
+                    "default": false,
+                    "examples": [
+                        true,
+                        false
+                    ]
                 },
                 "list": {
                     "type": "array",
+                    "title": "Export list",
+                    "description": "List of ArgoCD export configurations",
                     "items": {
                         "type": "object",
                         "properties": {
-                            "argocd": {
-                                "type": "string"
-                            },
                             "name": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 253,
+                                "title": "Export name",
+                                "description": "Name of the export configuration resource",
+                                "examples": [
+                                    "example-export",
+                                    "daily-backup"
+                                ]
                             },
                             "namespace": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "Namespace",
+                                "description": "Kubernetes namespace for the export resource",
+                                "default": "openshift-gitops",
+                                "examples": [
+                                    "openshift-gitops",
+                                    "default"
+                                ]
+                            },
+                            "argocd": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "ArgoCD instance",
+                                "description": "Name of the ArgoCD instance to export",
+                                "examples": [
+                                    "openshift-gitops",
+                                    "argocd"
+                                ]
                             },
                             "schedule": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100,
+                                "title": "Export schedule",
+                                "description": "Cron expression for export timing",
+                                "default": "0 * * * *",
+                                "examples": [
+                                    "0 * * * *",
+                                    "0 0 * * *",
+                                    "0 2 * * 0"
+                                ]
                             },
                             "storageclass": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "Storage class",
+                                "description": "Kubernetes storage class for export PVC",
+                                "examples": [
+                                    "gp3-csi",
+                                    "standard",
+                                    "fast"
+                                ]
                             }
                         }
                     }
@@ -193,59 +559,187 @@
         },
         "argocd_project": {
             "type": "object",
+            "title": "ArgoCD projects",
+            "description": "Configuration of ArgoCD AppProject resources for RBAC and access control",
             "properties": {
                 "enabled": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "title": "Enable ArgoCD projects",
+                    "description": "Enable deployment of ArgoCD project resources",
+                    "default": false,
+                    "examples": [
+                        true,
+                        false
+                    ]
                 },
                 "list": {
                     "type": "array",
+                    "title": "Project list",
+                    "description": "List of ArgoCD projects to create",
                     "items": {
                         "type": "object",
                         "properties": {
                             "name": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "Project name",
+                                "description": "Name of the ArgoCD project",
+                                "examples": [
+                                    "default",
+                                    "aoa-infra-min",
+                                    "team-platform"
+                                ]
                             },
                             "namespace": {
-                                "type": "string"
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 63,
+                                "title": "Namespace",
+                                "description": "Kubernetes namespace for the project resource",
+                                "default": "openshift-gitops",
+                                "examples": [
+                                    "openshift-gitops",
+                                    "default"
+                                ]
                             },
                             "sourceRepos": {
                                 "type": "array",
+                                "title": "Source repositories",
+                                "description": "List of Git repository URLs allowed in this project",
                                 "items": {
-                                    "type": "string"
-                                }
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "examples": [
+                                        "*",
+                                        "https://gitlab.com/startx1/helm.git",
+                                        "https://github.com/example/*"
+                                    ]
+                                },
+                                "examples": [
+                                    ["*"],
+                                    ["https://gitlab.com/startx1/helm.git"]
+                                ]
                             },
                             "destinations": {
                                 "type": "array",
+                                "title": "Destinations",
+                                "description": "List of allowed deployment destinations (clusters and namespaces)",
                                 "items": {
                                     "type": "object",
                                     "properties": {
                                         "namespace": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 63,
+                                            "title": "Namespace",
+                                            "description": "Target namespace (use '*' for any)",
+                                            "examples": [
+                                                "*",
+                                                "default",
+                                                "openshift-gitops"
+                                            ]
                                         },
                                         "server": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "title": "Server",
+                                            "description": "Kubernetes API server URL (use '*' for any)",
+                                            "examples": [
+                                                "*",
+                                                "https://kubernetes.default.svc"
+                                            ]
                                         }
                                     }
-                                }
+                                },
+                                "examples": [
+                                    [
+                                        {
+                                            "namespace": "*",
+                                            "server": "*"
+                                        }
+                                    ]
+                                ]
                             },
                             "clusterResourceWhitelist": {
                                 "type": "array",
+                                "title": "Cluster resource whitelist",
+                                "description": "List of cluster-scoped resources this project can manage",
                                 "items": {
                                     "type": "object",
                                     "properties": {
                                         "group": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "title": "API group",
+                                            "description": "Kubernetes API group (use '*' for any)",
+                                            "examples": [
+                                                "*",
+                                                "apps",
+                                                "batch"
+                                            ]
                                         },
                                         "kind": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "title": "Resource kind",
+                                            "description": "Kubernetes resource kind (use '*' for any)",
+                                            "examples": [
+                                                "*",
+                                                "ClusterRole",
+                                                "ClusterRoleBinding"
+                                            ]
                                         }
                                     }
-                                }
+                                },
+                                "examples": [
+                                    [
+                                        {
+                                            "group": "*",
+                                            "kind": "*"
+                                        }
+                                    ]
+                                ]
                             },
                             "roles": {
                                 "type": "array",
+                                "title": "RBAC roles",
+                                "description": "List of ArgoCD RBAC roles for this project",
                                 "items": {
-                                    "type": "object"
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 63,
+                                            "title": "Role name",
+                                            "description": "Short name of the RBAC role",
+                                            "examples": [
+                                                "admin",
+                                                "readonly",
+                                                "default"
+                                            ]
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "title": "Role description",
+                                            "description": "Human-readable description of the role privileges"
+                                        },
+                                        "policies": {
+                                            "type": "array",
+                                            "title": "RBAC policies",
+                                            "description": "List of RBAC policy statements (Casbin format)",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "groups": {
+                                            "type": "array",
+                                            "title": "Group mappings",
+                                            "description": "LDAP/OIDC groups to assign to this role",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -255,102 +749,246 @@
         },
         "operator": {
             "type": "object",
+            "title": "OpenShift operator configuration",
+            "description": "Configuration of the OpenShift GitOps operator (OLM subscription and operator group)",
             "properties": {
                 "context": {
                     "type": "object",
+                    "title": "Operator context",
+                    "description": "Deployment context for the operator",
                     "properties": {
-                        "app": {
-                            "type": "string"
+                        "scope": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Scope name",
+                            "description": "Organisational tenant name"
                         },
                         "cluster": {
-                            "type": "string"
-                        },
-                        "component": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Cluster name",
+                            "description": "Platform tenant name"
                         },
                         "environment": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Environment name",
+                            "description": "Stage tenant name"
                         },
-                        "scope": {
-                            "type": "string"
+                        "component": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Component name",
+                            "description": "Logical tenant name"
+                        },
+                        "app": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 40,
+                            "title": "Application name",
+                            "description": "Functional tenant name"
                         }
                     }
                 },
                 "enabled": {
-                    "type": "boolean"
-                },
-                "operatorGroup": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "hooked": {
-                            "type": "boolean"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "namespace": {
-                            "type": "string"
-                        },
-                        "providedAPIs": {
-                            "type": "string"
-                        }
-                    }
+                    "type": "boolean",
+                    "title": "Enable operator",
+                    "description": "Enable deployment of the OpenShift GitOps operator",
+                    "default": false,
+                    "examples": [
+                        true,
+                        false
+                    ]
                 },
                 "subscription": {
                     "type": "object",
+                    "title": "Operator subscription",
+                    "description": "OLM subscription configuration for the GitOps operator",
                     "properties": {
                         "enabled": {
-                            "type": "boolean"
+                            "type": "boolean",
+                            "title": "Enable subscription",
+                            "description": "Enable creation of the operator subscription",
+                            "default": true,
+                            "examples": [
+                                true,
+                                false
+                            ]
                         },
                         "hooked": {
-                            "type": "boolean"
+                            "type": "boolean",
+                            "title": "Activate as Helm hook",
+                            "description": "Activate as a Helm hook for ordered deployment",
+                            "default": false,
+                            "examples": [
+                                true,
+                                false
+                            ]
                         },
                         "name": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "Subscription name",
+                            "description": "Name of the operator subscription resource",
+                            "default": "openshift-gitops-operator",
+                            "examples": [
+                                "openshift-gitops-operator"
+                            ]
                         },
                         "namespace": {
-                            "type": "string"
-                        },
-                        "operator": {
-                            "type": "object",
-                            "properties": {
-                                "channel": {
-                                    "type": "string"
-                                },
-                                "csv": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "source": {
-                                    "type": "object",
-                                    "properties": {
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "namespace": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "Namespace",
+                            "description": "Namespace where the operator will be deployed",
+                            "default": "openshift-operators",
+                            "examples": [
+                                "openshift-operators",
+                                "openshift-operator-lifecycle-manager"
+                            ]
                         },
                         "version": {
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 30,
-                                    "title": "Version name",
-                            "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
-                            "default": "0.0.1",
+                            "title": "Operator version",
+                            "description": "Version of the GitOps operator to deploy",
+                            "default": "v1.20.4",
                             "examples": [
-                                "0.0.1",
-                                "0.1",
-                                "0.0.1-snapshot",
-                                "0.0.1-202110300900"
+                                "v1.20.4",
+                                "v1.19.0"
+                            ]
+                        },
+                        "operator": {
+                            "type": "object",
+                            "title": "Operator spec",
+                            "description": "Operator specification (channel, name, source)",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 63,
+                                    "title": "Operator name",
+                                    "description": "Name of the operator in the catalog",
+                                    "default": "openshift-gitops-operator",
+                                    "examples": [
+                                        "openshift-gitops-operator"
+                                    ]
+                                },
+                                "channel": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 63,
+                                    "title": "Channel",
+                                    "description": "OLM release channel",
+                                    "default": "gitops-1.20",
+                                    "examples": [
+                                        "gitops-1.20",
+                                        "latest"
+                                    ]
+                                },
+                                "csv": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 255,
+                                    "title": "ClusterServiceVersion",
+                                    "description": "Specific operator version (ClusterServiceVersion name)"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "title": "Catalog source",
+                                    "description": "OLM catalog source for the operator",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 63,
+                                            "title": "Source name",
+                                            "description": "CatalogSource name",
+                                            "default": "redhat-operators",
+                                            "examples": [
+                                                "redhat-operators",
+                                                "community-operators"
+                                            ]
+                                        },
+                                        "namespace": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 63,
+                                            "title": "Source namespace",
+                                            "description": "Namespace containing the CatalogSource",
+                                            "default": "openshift-marketplace",
+                                            "examples": [
+                                                "openshift-marketplace",
+                                                "olm"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "title": "Operator group",
+                    "description": "OLM OperatorGroup configuration",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable operator group",
+                            "description": "Enable creation of the operator group resource",
+                            "default": false,
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        },
+                        "hooked": {
+                            "type": "boolean",
+                            "title": "Activate as Helm hook",
+                            "description": "Activate as a Helm hook for ordered deployment",
+                            "default": false,
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        },
+                        "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "OperatorGroup name",
+                            "description": "Name of the OperatorGroup resource",
+                            "default": "startx-gitops",
+                            "examples": [
+                                "startx-gitops",
+                                "my-operator-group"
+                            ]
+                        },
+                        "namespace": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "Namespace",
+                            "description": "Namespace for the OperatorGroup resource",
+                            "default": "openshift-operators",
+                            "examples": [
+                                "openshift-operators"
+                            ]
+                        },
+                        "providedAPIs": {
+                            "type": "string",
+                            "minLength": 1,
+                            "title": "Provided APIs",
+                            "description": "Comma-separated list of APIs provided by the operator group",
+                            "examples": [
+                                "AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1beta1.argoproj.io"
                             ]
                         }
                     }
@@ -359,85 +997,210 @@
         },
         "project": {
             "type": "object",
+            "title": "Kubernetes project (namespace)",
+            "description": "Configuration of the Kubernetes project namespace and related resources (RBAC, network policy, quotas, limits)",
             "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable project",
+                    "description": "Enable deployment of the project namespace and resources",
+                    "default": false,
+                    "examples": [
+                        true,
+                        false
+                    ]
+                },
                 "context": {
                     "type": "object",
+                    "title": "Project context",
+                    "description": "Deployment context for the project",
                     "properties": {
-                        "app": {
-                            "type": "string"
+                        "scope": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Scope name",
+                            "description": "Organisational tenant name"
                         },
                         "cluster": {
-                            "type": "string"
-                        },
-                        "component": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Cluster name",
+                            "description": "Platform tenant name"
                         },
                         "environment": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Environment name",
+                            "description": "Stage tenant name"
                         },
-                        "scope": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "enabled": {
-                    "type": "boolean"
-                },
-                "limits": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        }
-                    }
-                },
-                "networkpolicy": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
+                        "component": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Component name",
+                            "description": "Logical tenant name"
                         },
-                        "rules": {
-                            "type": "array"
+                        "app": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 40,
+                            "title": "Application name",
+                            "description": "Functional tenant name"
                         }
                     }
                 },
                 "project": {
                     "type": "object",
+                    "title": "Project resource",
+                    "description": "Namespace/project resource configuration",
                     "properties": {
-                        "description": {
-                            "type": "string"
-                        },
-                        "display_name": {
-                            "type": "string"
-                        },
                         "enabled": {
-                            "type": "boolean"
-                        },
-                        "name": {
-                            "type": "string"
-                        },
-                        "requester": {
-                            "type": "string"
+                            "type": "boolean",
+                            "title": "Enable namespace",
+                            "description": "Enable creation of the namespace resource",
+                            "default": true,
+                            "examples": [
+                                true,
+                                false
+                            ]
                         },
                         "type": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "quotas": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 25,
+                            "title": "Project type",
+                            "description": "Type of project (namespace or project for OpenShift)",
+                            "default": "namespace",
+                            "examples": [
+                                "namespace",
+                                "project"
+                            ]
+                        },
+                        "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "Namespace name",
+                            "description": "Name of the namespace",
+                            "examples": [
+                                "openshift-gitops",
+                                "default"
+                            ]
+                        },
+                        "display_name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 255,
+                            "title": "Display name",
+                            "description": "Display name for the namespace (OpenShift only)",
+                            "examples": [
+                                "Openshift GITOPS",
+                                "My Namespace"
+                            ]
+                        },
+                        "description": {
+                            "type": "string",
+                            "title": "Description",
+                            "description": "Description of the namespace purpose"
+                        },
+                        "requester": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "Requester",
+                            "description": "Name of the person/team requesting the namespace",
+                            "examples": [
+                                "startx",
+                                "devops-team"
+                            ]
                         }
                     }
                 },
                 "rbac": {
                     "type": "object",
+                    "title": "RBAC configuration",
+                    "description": "Role-based access control configuration",
                     "properties": {
                         "enabled": {
-                            "type": "boolean"
+                            "type": "boolean",
+                            "title": "Enable RBAC",
+                            "description": "Enable deployment of RBAC resources (roles and role bindings)",
+                            "default": false,
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                },
+                "networkpolicy": {
+                    "type": "object",
+                    "title": "Network policy",
+                    "description": "Kubernetes NetworkPolicy configuration for network segmentation",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable network policies",
+                            "description": "Enable deployment of network policy resources",
+                            "default": false,
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        },
+                        "rules": {
+                            "type": "array",
+                            "title": "Network policy rules",
+                            "description": "List of network policy rules",
+                            "items": {
+                                "type": "object"
+                            },
+                            "default": [],
+                            "examples": [
+                                [
+                                    {
+                                        "name": "allow-from-openshift",
+                                        "policyTypes": ["Ingress"]
+                                    }
+                                ]
+                            ]
+                        }
+                    }
+                },
+                "limits": {
+                    "type": "object",
+                    "title": "Resource limits",
+                    "description": "Resource limits configuration (LimitRange)",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable limits",
+                            "description": "Enable deployment of LimitRange resources",
+                            "default": false,
+                            "examples": [
+                                true,
+                                false
+                            ]
+                        }
+                    }
+                },
+                "quotas": {
+                    "type": "object",
+                    "title": "Resource quotas",
+                    "description": "Resource quotas configuration (ResourceQuota)",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable quotas",
+                            "description": "Enable deployment of ResourceQuota resources",
+                            "default": false,
+                            "examples": [
+                                true,
+                                false
+                            ]
                         }
                     }
                 }

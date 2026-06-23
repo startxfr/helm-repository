@@ -139,7 +139,7 @@ package-all:
 # ------------------------------------------------------------------------------
 
 release: _require-chart
-	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC=$(DESC) \
+	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC="$(DESC)" \
 	  $(SX) $(CHART) release $(VERSION) "$(DESC)"
 
 release-all:
@@ -157,7 +157,7 @@ publish-devel:
 	$(SX) publish-devel
 
 publish-chart: _require-chart
-	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC=$(DESC) \
+	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC="$(DESC)" \
 	  $(SX) $(CHART) publish
 
 
