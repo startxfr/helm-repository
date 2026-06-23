@@ -1,23 +1,4 @@
 # Default values for cluster-keepalived.
-# 
-# PURPOSE: Patch the OpenShift Cluster Network Configuration
-# ================================================================
-# This chart configures the cluster network to allow external IP assignment.
-# It patches the 'Network' CRD resource (config.openshift.io/v1) to:
-#
-# 1. PRIMARY: Configure external IP pool for the cluster
-#    - Defines autoAssignCIDRs (which IPs can be auto-assigned)
-#    - Sets allowedCIDRs policy (which IPs are allowed)
-#    - Example: 10.99.10.237/32 can be used by services/routes
-#    - Applied with ArgoCD sync-wave: 1
-#
-# OPTIONAL COMPONENTS (managed separately, not with ArgoCD):
-# 2. keepalivedgroup: (optional) Manages keepalived VIP on worker nodes
-# 3. ingressController: (optional) Create dedicated ingress controller
-# 4. ingressControllerService: (optional) Expose ingress with external IP
-#
-# These components can be deployed using this chart or managed independently.
-# The primary focus is the Network configuration for external IP support.
 
 # Application deployment context
 context: &context
@@ -35,34 +16,23 @@ context: &context
   version: "0.5.0"
 
 # Deploy keepalived configuration
-# Keepalived manages the virtual IP (VIP) for high availability
-# Creates KeepalivedGroup CRD resources that handle VRRP protocol
 keepalived:
   # Enable creation of KeepalivedGroup resources
-  # Set to false to disable keepalived VRRP management (VIP will not be maintained)
   enabled: false
-  # Activate the manager as a helm hook (not used in current implementation)
+  # Activate the manager as a helm hook
   hooked: false
   # Default namespace for keepalivedgroup resources
-  # Falls back to project.project.name if not specified
   namespace: openshift-ingress
   # KeepalivedGroup configuration list
   groups:
-    # Enable creation of keepalived groups
-    # When disabled, no KeepalivedGroup CRDs are created
+    # Enable creation of KeepalivedGroup CRDs
     enabled: true
     # List of KeepalivedGroup instances to configure
-    # Each entry creates a separate KeepalivedGroup CRD resource
     list:
-      # Name of the KeepalivedGroup resource
-      # Used as the resource name in Kubernetes (e.g. "keepalivedgroup-workers")
       - name: keepalivedgroup-workers
-        # Namespace where the KeepalivedGroup resource will be created
         # Falls back to keepalived.namespace if not specified
         namespace: openshift-ingress
         # Complete KeepalivedGroup spec as YAML string
-        # Defines VRRP configuration, interface, router IDs, and node selectors
-        # Common fields: blacklistRouterIDs, interface, nodeSelector, image
         spec: |
           blacklistRouterIDs:
             - 165
@@ -74,199 +44,113 @@ keepalived:
             node-role.kubernetes.io/infra: ''
 
 # Configuration of the project namespace for operator installation
-# This creates the namespace where the keepalived operator will be installed
-# Uses the STARTX project chart as a dependency to create the namespace with proper labels
-project: 
+project:
   # Enable creation of the project namespace
-  # Set to false to skip namespace creation (it must exist separately)
   enabled: false
   # Context metadata applied to the namespace resource
-  # Referenced via YAML anchor to share values with other components
-  context: 
+  context:
     <<: *context
-  # Project/Namespace configuration
-  # Uses the STARTX project chart (dependency)
-  project: 
+  # Project/Namespace configuration (uses the STARTX project chart dependency)
+  project:
     # Enable project resource creation
-    # When true, creates a Namespace resource via the project chart
     enabled: false
     # Activate project creation as a helm hook
     hooked: false
-    # Type of project resource (always "namespace" for Kubernetes)
+    # Type of project resource (namespace or project)
     type: namespace
-    # Name of the namespace to create for operator installation
-    # Must match operator.subscription.namespace for consistency
+    # Name of the namespace — must match operator.subscription.namespace
     name: "keepalived-operator"
-    # Display name annotation for the namespace
-    # Shows in OpenShift console
+    # Display name annotation shown in OpenShift console
     display_name: Keepalived Operator
     # Description annotation for the namespace
-    # Explains the purpose of the namespace
     description: Namespace for keepalived operator installation
 
 # Configuration of cluster network (externalIP and CIDR management)
 # Patches the OpenShift Network CRD (config.openshift.io/v1) at the cluster level
-# PRIMARY resource applied with ArgoCD sync-wave: 1 (executed first)
-# This defines the IP pools available for services/ingress controllers
 clusterNetwork:
   # Enable patching of the cluster Network CRD
-  # Set to false to skip network configuration (external IPs cannot be assigned)
   enabled: false
-  # Network type (usually OVNKubernetes or OpenShiftSDN)
-  # Used for informational purposes; not applied to the patch
+  # Network type (OVNKubernetes or OpenShiftSDN) — informational, not patched
   networkType: OVNKubernetes
-  # Cluster network CIDR configuration (informational, not patched)
-  # The internal pod network ranges
+  # Internal pod network ranges (informational, not patched)
   clusterNetwork:
     - cidr: 10.128.0.0/14
       hostPrefix: 23
-  # Service network CIDR (informational, not patched)
-  # The range for service cluster IPs
+  # Service cluster IP range (informational, not patched)
   serviceNetwork:
     - 172.30.0.0/16
-  # External IP configuration - defines the VIP pool for keepalived and ingress controller
-  # This is the only part that gets patched into the Network CRD
+  # External IP configuration — the only part patched into the Network CRD
   externalIP:
-    # CIDRs that are available to be automatically assigned to external IPs
-    # When a service has externalIPs field, these CIDRs are checked first
-    # Example: 10.99.10.237/32 allows the VIP to be used as externalIP
+    # CIDRs available for automatic external IP assignment
     autoAssignCIDRs:
       - 10.99.10.237/32
-    # Policy for external IP assignment
     policy:
-      # List of CIDRs that are allowed to be assigned to external IPs
-      # Services can only use externalIPs within these ranges
-      # Must include all IPs that services/ingress controllers will bind to
+      # CIDRs that services are allowed to use as externalIPs
       allowedCIDRs:
         - 10.99.10.237/32
 
 # IngressController configuration for exposing services with external VIP
 # Creates a custom IngressController CRD (operator.openshift.io/v1)
-# Runs on infrastructure nodes and routes traffic from specific routes
-# Optional component - deployed independently without ArgoCD sync-wave
 ingressController:
   # Enable creation of IngressController resource
-  # Set to false to skip creating a dedicated ingress controller
   enabled: false
   # Name of the ingress controller resource
-  # Used as the resource name in Kubernetes and pod selector
   name: public
   # Namespace where the IngressController resource is created
-  # Usually openshift-ingress-operator (where ingress controllers run)
   namespace: openshift-ingress-operator
   # Domain for this ingress controller
-  # Routes exposed by this controller will use this domain
-  # Example: public.poly-ocp.chenieux.lan -> routes use subdomains like app.public.poly-ocp.chenieux.lan
   domain: apps.public.poly-ocp.chenieux.lan
   # Number of ingress controller replicas
-  # Determines how many ingress controller pods are deployed
   replicas: 3
-  # Route selector for this ingress controller
   # Only routes matching these labels will be served by this controller
-  # Example: routes labeled "ingress: public" will use this controller
   routeSelector:
     matchLabels:
       ingress: public
-  # Node placement configuration (pod affinity and tolerations)
-  # Determines which nodes run the ingress controller pods
+  # Node placement configuration (nodeSelector + tolerations)
   nodePlacement:
-    # Node selector to run pods on specific nodes
-    # Example: node-role.kubernetes.io/infra: "" runs pods on infrastructure nodes
     nodeSelector:
       matchLabels:
         node-role.kubernetes.io/infra: ""
-    # Tolerations to allow scheduling on tainted nodes
-    # Example: allows scheduling on infra nodes with NoSchedule taint
     tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
         operator: Exists
-  # Default certificate for TLS termination
-  # References a Secret resource with tls.crt and tls.key data
-  # Routes without their own certificate will use this one
+  # Secret with default TLS certificate for routes without their own cert
   defaultCertificate:
     name: public-ingress-cert
-  # Tuning options for ingress performance
-  # reloadInterval: how often to reload router configuration
   tuningOptions:
     reloadInterval: 0s
-  # Client TLS configuration (optional mutual TLS)
-  # clientCA: CA certificate for client authentication
+  # Optional mutual TLS configuration
   clientTLS:
     clientCA:
       name: ""
     clientCertificatePolicy: ""
-  # Endpoint publishing strategy (how the ingress is exposed)
-  # Private: only accessible within cluster or via service
-  # NodePort/LoadBalancer: exposed on nodes or via load balancer
   endpointPublishingStrategy:
     type: Private
-  # HTTP compression configuration
-  # Enables gzip compression for HTTP responses
   httpCompression: {}
-  # HTTP empty requests policy
-  # Respond: return error for empty requests, Ignore: drop connections
   httpEmptyRequestsPolicy: Respond
-  # HTTP error code pages (optional custom error pages)
-  # name: ConfigMap with custom error page templates
   httpErrorCodePages:
     name: ""
-  # Unsupported config overrides (optional advanced configuration)
-  # Raw HAProxy configuration overrides (use with caution)
   unsupportedConfigOverrides: null
 
 # Service for exposing the ingress controller with external IP
-# Creates a Service resource that binds the VIP to ingress controller pods
-# The externalIPs field assigns the VIP (from clusterNetwork config) to this service
-# Traffic to the VIP:80/443 is routed to ingress controller pods via this service
+# Binds the VIP (from clusterNetwork.externalIP) to ingress controller pods
 ingressControllerService:
   # Enable creation of ingress controller service
-  # Set to false to skip service creation (ingress controller pods won't be accessible)
   enabled: false
-  # Name of the service
-  # Used for DNS resolution and pod-to-pod communication
   name: router-public-lb
-  # Namespace of the service
-  # Should match ingressController.namespace for consistency
   namespace: openshift-ingress
-  # Service type
-  # ClusterIP: internal only (but externalIPs expose it externally)
-  # LoadBalancer: requests external LB (not used with externalIPs)
   type: ClusterIP
-  # External IPs to assign to the service
   # Must be within clusterNetwork.externalIP.allowedCIDRs
-  # Traffic to these IPs is routed to service endpoints
-  # Typically the VIP managed by keepalived
   externalIPs:
     - 10.99.10.237
-  # Cluster IP address assigned by Kubernetes
-  # Internal service IP used for DNS (service-name.namespace.svc.cluster.local)
-  clusterIP: 172.30.183.172
-  # List of cluster IPs (usually single-stack)
-  # Older API field, mostly deprecated
-  clusterIPs:
-    - 172.30.183.172
-  # IP families supported by the service
-  # IPv4: only IPv4 support
-  # IPv6: only IPv6 support
-  # Both: dual-stack support
+  clusterIP: ""
+  clusterIPs: []
   ipFamilies:
     - IPv4
-  # IP family policy (single-stack vs dual-stack)
-  # SingleStack: use only one IP family
-  # PreferDualStack: prefer dual-stack if available
   ipFamilyPolicy: SingleStack
-  # Internal traffic policy (applies to cluster-internal traffic)
-  # Cluster: route to all endpoints in cluster
-  # Local: route only to local endpoints
   internalTrafficPolicy: Cluster
-  # Session affinity (sticky sessions)
-  # None: no session affinity
-  # ClientIP: route same client to same pod
   sessionAffinity: None
-  # Service ports configuration
-  # Defines which ports the service listens on
-  # http/https map to ingress controller's http/https listening ports
   ports:
     - name: http
       protocol: TCP
@@ -276,100 +160,55 @@ ingressControllerService:
       protocol: TCP
       port: 443
       targetPort: https
-  # Label selector for the service
-  # Selects which pods are endpoints for this service
-  # Matches pods labeled with: ingresscontroller.operator.openshift.io/deployment-ingresscontroller: public
   selector:
     ingresscontroller.operator.openshift.io/deployment-ingresscontroller: public
 
-# TLS Secret for IngressController certificate
-# Creates a Secret resource with TLS certificate and key
-# Used by ingressController.defaultCertificate to terminate TLS for routes
-# Routes without their own certificate will use this certificate
+# TLS Secret for IngressController default certificate
+# Must match ingressController.defaultCertificate.name
 ingressControllerSecret:
   # Enable creation of TLS secret
-  # Set to false to skip secret creation (routes must provide their own certs)
   enabled: false
-  # Name of the secret
   # Must match ingressController.defaultCertificate.name
   name: public-ingress-cert
-  # Namespace for the secret
   # Must match ingressControllerService.namespace
   namespace: openshift-ingress
-  # TLS certificate and key (base64 encoded)
-  # These are embedded directly in the template
   tls:
-    # Base64 encoded TLS certificate (public key)
-    # In PEM format: -----BEGIN CERTIFICATE-----...-----END CERTIFICATE-----
-    # Encode with: cat cert.crt | base64 -w0
+    # Base64 encoded TLS certificate (cat cert.crt | base64 -w0)
     crt: ""
-    # Base64 encoded TLS private key
-    # In PEM format: -----BEGIN PRIVATE KEY-----...-----END PRIVATE KEY-----
-    # Encode with: cat key.key | base64 -w0
+    # Base64 encoded TLS private key (cat key.key | base64 -w0)
     key: ""
 
 # Configuration of the operator (keepalived operator installation via OLM)
 # Uses the STARTX operator chart as a dependency
-# Creates Subscription and OperatorGroup CRDs for OLM to manage operator installation
-# The operator manages KeepalivedGroup resources (defines VRRP configuration)
 operator:
   # Enable operator installation
-  # Set to false to skip operator deployment (keepalived VRRP cannot be configured)
   enabled: false
-  # Context metadata applied to operator resources
-  context: 
+  context:
     <<: *context
-  # Subscription configuration (OLM operator subscription)
-  # The Subscription resource tells OLM to install and update the operator
+  # OLM Subscription resource configuration
   subscription:
     # Enable creation of Subscription resource
     enabled: false
     # Activate subscription as a helm hook
     hooked: false
-    # Name of the subscription resource
-    # Used as the resource identifier in Kubernetes
     name: "keepalived-operator"
-    # Namespace where the subscription will be created
-    # The operator pod will run in this namespace
     namespace: "keepalived-operator"
-    # Version of the operator to install
-    # Not used in template but kept for reference
     version: "1.5.4"
-    # Operator-specific subscription settings
-    operator: 
-      # Channel for operator updates
-      # "alpha": latest/unstable releases, "beta": pre-release, "stable": stable releases
+    operator:
       channel: "alpha"
-      # Name of the operator (as listed in OperatorHub)
       name: keepalived-operator
-      # InstallPlan approval strategy
-      # Automatic: auto-approve updates, Manual: require user approval
       installPlanApproval: Automatic
-      # Starting CSV (ClusterServiceVersion) version
-      # Specifies which version to start with
       startingCSV: "keepalived-operator.v1.5.4"
-      # Operator source (marketplace/catalog)
-      source: 
-        # Name of the CatalogSource resource providing the operator
+      source:
         name: community-operators
-        # Namespace where the CatalogSource is located
         namespace: openshift-marketplace
-  # OperatorGroup configuration (OLM operator group)
-  # The OperatorGroup determines which namespaces the operator can manage
+  # OLM OperatorGroup resource configuration
   operatorGroup:
     # Enable creation of OperatorGroup resource
     enabled: false
-    # Activate operatorGroup as a helm hook
     hooked: false
-    # Name of the operatorGroup resource
     name: "keepalived-operator"
-    # Namespace where the operatorGroup will be created
-    # Operators run in same namespace as operatorGroup
     namespace: "keepalived-operator"
-    # Upgrade strategy for automatic updates
-    # Default: standard rollout, Restricted: more controlled updates
     upgradeStrategy: "Default"
-    # Provided APIs annotation
-    # Lists the CRDs this operator provides (for OLM dependency tracking)
-    # Format: APIVersion.Kind.group/version
+    # CRDs provided by this operator (for OLM dependency tracking)
     providedAPIs: "KeepalivedGroup.v1alpha1.redhatcop.redhat.io"
