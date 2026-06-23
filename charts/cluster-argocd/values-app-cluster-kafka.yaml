@@ -2,7 +2,7 @@
 # Source: examples/argocd/ from the cluster-kafka chart
 
 argocd_project:
-  enabled: false
+  enabled: true
   list:
     - name: 'infra-kafka'
       namespace: 'openshift-gitops'
@@ -18,7 +18,7 @@ argocd_project:
 
 # Applications
 application:
-  enabled: false
+  enabled: true
   list:
     # Application configuration and instances
     - name: 'infra-kafka-app'
@@ -86,5 +86,5 @@ application:
           selfHeal: true
 
 argocd_repocreds:
-  enabled: false
+  enabled: true
   list: []

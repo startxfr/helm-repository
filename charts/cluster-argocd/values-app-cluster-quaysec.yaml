@@ -3,7 +3,7 @@
 # Note: Uses values-startx_noinfra-secvuln.yaml for enhanced security scanning
 
 argocd_project:
-  enabled: false
+  enabled: true
   list:
     - name: 'infra-quay'
       namespace: 'openshift-gitops'
@@ -17,7 +17,7 @@ argocd_project:
 
 # Applications
 application:
-  enabled: false
+  enabled: true
   list:
     # Application configuration and instances
     - name: 'infra-quaysec-app'
@@ -88,5 +88,5 @@ application:
           - CreateNamespace=true
 
 argocd_repocreds:
-  enabled: false
+  enabled: true
   list: []

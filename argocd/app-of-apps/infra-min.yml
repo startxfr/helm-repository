@@ -7,7 +7,7 @@ metadata:
 spec:
   description: Deploy Minimal infrastructure components and configurations
   sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+    - 'https://gitlab.com/startx1/helm.git'
   destinations:
     - server: '*'
       namespace: '*'
@@ -31,28 +31,11 @@ spec:
   project: aoa-infra-min
   source:
     repoURL: https://gitlab.com/startx1/helm.git
-    targetRevision: stable
+    targetRevision: devel
     path: charts/cluster-argocd/
     helm:
-      values: |
-        context:
-          scope: startx
-          cluster: default
-          environment: infra
-          component: argocd
-          app: aoa-infra-min
-          version: "0.1.0"
-        argocd_project:
-          enabled: true
-        application:
-          enabled: true
-        argocd_repocreds:
-          enabled: true
-        project:
-          enabled: false
-          project:
-            enabled: false
-            name: openshift-gitops
+      valueFiles:
+        - values-aoa-infra-min.yaml
   syncPolicy:
     automated:
       prune: true

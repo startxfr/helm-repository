@@ -2,7 +2,7 @@
 # Source: examples/argocd/ from the cluster-acm chart
 
 argocd_project:
-  enabled: false
+  enabled: true
   list:
     - name: 'infra-acm'
       namespace: 'openshift-gitops'
@@ -18,7 +18,7 @@ argocd_project:
 
 # Applications
 application:
-  enabled: false
+  enabled: true
   list:
     # Application configuration and instances
     - name: 'infra-acm-app'
@@ -88,5 +88,5 @@ application:
           - CreateNamespace=true
 
 argocd_repocreds:
-  enabled: false
+  enabled: true
   list: []

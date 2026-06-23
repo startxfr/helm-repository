@@ -130,3 +130,6 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.169 | 2026-06-23 | Improve cluster-argocd options |
 | 21.3.181 | 2026-06-23 | publish stable update for the full repository |
 | 21.3.182 | 2026-06-23 | publish stable update for the full repository |
+|  | 2026-06-23 | Improve cluster-argocd options |
+| 21.3.183 | 2026-06-23 | fix: convert literal YAML blocks to proper structures |
+| 21.3.184 | 2026-06-24 | Improve cluster-argocd options |

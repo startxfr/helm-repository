@@ -9,7 +9,7 @@ context: &context
   version: "0.1.0"
 
 argocd_project:
-  enabled: false
+  enabled: true
   list:
     - name: "aoa-infra-mgmt"
       namespace: "openshift-gitops"
@@ -31,7 +31,7 @@ argocd_project:
         - system:cluster-admins
         - admin
 application:
-  enabled: false
+  enabled: true
   list:
     - name: "aoa-infra-chaos"
       namespace: "openshift-gitops"
@@ -1078,7 +1078,7 @@ application:
             factor: 2
             maxDuration: 60s
 argocd_repocreds:
-  enabled: false
+  enabled: true
   list: []
 
 # Default project used par application namespace

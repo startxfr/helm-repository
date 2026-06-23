@@ -1,6 +1,7 @@
 {{- if .Values.application }}{{- if .Values.application.enabled }}
 {{- $defaultns := .Values.project.project.name -}}
 {{ range .Values.application.list }}
+---
 {{- $name := .name | default "default-application" -}}
 {{- $namespace := .namespace | default $defaultns -}}
 {{- $server := .server | default "https://kubernetes.default.svc" -}}
@@ -36,22 +37,16 @@ spec:
     targetRevision: {{ .rev | default "master" | quote }}
     {{- end }}
     {{- if .helm }}
-    helm: 
+    helm:
       {{- .helm | nindent 6 }}
-    {{- else }}
-    helm: {}
     {{- end }}
   {{- if .syncPolicy }}
-  syncPolicy: 
+  syncPolicy:
     {{- .syncPolicy | nindent 4 }}
-  {{- else }}
-  syncPolicy: {}
   {{- end }}
   {{- if .ignoreDifferences }}
-  ignoreDifferences: 
+  ignoreDifferences:
     {{- .ignoreDifferences | nindent 4 }}
-  {{- else }}
-  ignoreDifferences: []
   {{- end }}
 {{- end }}
 {{- end }}{{- end }}
