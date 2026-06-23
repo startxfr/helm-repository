@@ -37,17 +37,15 @@ spec:
     {{- end }}
     {{- if .helm }}
     helm:
-{{ .helm | indent 6 }}
+{{ .helm | toYaml | indent 6 }}
     {{- end }}
   {{- if .syncPolicy }}
   syncPolicy:
-{{ .syncPolicy | indent 4 }}
+{{ .syncPolicy | toYaml | indent 4 }}
   {{- end }}
   {{- if .ignoreDifferences }}
-  ignoreDifferences: 
-    {{- .ignoreDifferences | nindent 4 }}
-  {{- else }}
-  ignoreDifferences: []
+  ignoreDifferences:
+{{ .ignoreDifferences | toYaml | indent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}{{- end }}
