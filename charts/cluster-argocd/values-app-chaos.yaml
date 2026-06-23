@@ -55,7 +55,6 @@ application:
           # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
           kraken:
             enabled: false
-          
       syncPolicy: |
         automated:
           prune: true
@@ -85,7 +84,6 @@ application:
               token:
                 server: "https://api.<cluster>:6443"
                 token: "sha256~REPLACE_WITH_YOUR_TOKEN"
-          
       syncPolicy: |
         automated:
           prune: true
@@ -115,7 +113,6 @@ application:
               architecture: standalone
               persistence:
                 enabled: false
-          
       syncPolicy: |
         automated:
           prune: true
@@ -141,7 +138,6 @@ application:
             # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
             prometheus:
               create: false
-          
       syncPolicy: |
         automated:
           prune: true
@@ -169,7 +165,6 @@ application:
               timezone: Europe/Paris
               startHour: 9
               endHour: 17
-          
       syncPolicy: |
         automated:
           prune: true
