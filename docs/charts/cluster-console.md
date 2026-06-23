@@ -62,101 +62,15 @@ helm install cluster-console startx/cluster-console -f https://raw.githubusercon
 
 ### AppProject
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-console
-  namespace: openshift-gitops
-spec:
-  description: Configure OpenShift console and deploy web-terminal operator
-  sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-  destinations:
-    - namespace: openshift-config
-      server: https://kubernetes.default.svc
-    - namespace: openshift-console
-      server: https://kubernetes.default.svc
-    - namespace: openshift-operators
-      server: https://kubernetes.default.svc
-    - namespace: openshift-gitops
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: '*'
-      kind: '*'
-  namespaceResourceWhitelist:
-    - group: '*'
-      kind: '*'
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-console/examples/argocd/
+oc apply -k .
 ```
 
 ### Applications
 
-```yaml
----
-# Deploys web-terminal operator in openshift-operators (shared namespace, OG already exists)
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-console-webterminal
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-console
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-console
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        console:
-          enabled: false
-        webTerminal:
-          enabled: true
-          subscription:
-            enabled: true
-          operatorGroup:
-            enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-gitops
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-# Configures console: branding, links, notifications and log links
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-console-personalize
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster-console
-  source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    chart: cluster-console
-    targetRevision: 21.3.106
-    helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
-      values: |
-        console:
-          enabled: true
-          namespace: openshift-config
-          state: Managed
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: openshift-config
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
+
 
 ## History
 
@@ -193,3 +107,4 @@ spec:
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
