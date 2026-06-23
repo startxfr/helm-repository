@@ -64,6 +64,42 @@ data:
     - id: kill-pods
       config:
         namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=prometheus-operator"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=prometheus-operator"
+        count: 1
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=kube-state-metrics"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=kube-state-metrics"
+        count: 1
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=openshift-state-metrics"
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
+        label_selector: "app.kubernetes.io/name=openshift-state-metrics"
+        count: 1
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-monitoring$
         name_pattern: .*
         kill: 3
 ---

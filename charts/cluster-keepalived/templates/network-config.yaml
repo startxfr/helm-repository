@@ -1,0 +1,27 @@
+{{- if .Values.clusterNetwork.enabled -}}
+---
+apiVersion: config.openshift.io/v1
+kind: Network
+metadata:
+  name: cluster
+  labels:
+    {{- include "cluster-keepalived.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-keepalived.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  {{- if .Values.clusterNetwork.externalIP }}
+  externalIP:
+    {{- if .Values.clusterNetwork.externalIP.autoAssignCIDRs }}
+    autoAssignCIDRs:
+      {{- toYaml .Values.clusterNetwork.externalIP.autoAssignCIDRs | nindent 6 }}
+    {{- end }}
+    {{- if .Values.clusterNetwork.externalIP.policy }}
+    policy:
+      {{- if .Values.clusterNetwork.externalIP.policy.allowedCIDRs }}
+      allowedCIDRs:
+        {{- toYaml .Values.clusterNetwork.externalIP.policy.allowedCIDRs | nindent 8 }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end -}}

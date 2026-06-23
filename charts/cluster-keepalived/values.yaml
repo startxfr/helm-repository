@@ -1,0 +1,214 @@
+# Default values for cluster-keepalived.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functionnal tenant, default use Chart name)
+  app: default-keepalived
+  # Version name of this application (default use Chart appVersion)
+  version: "0.5.0"
+
+# Deploy keepalived configuration
+keepalived:
+  # Enable creation of KeepalivedGroup resources
+  enabled: false
+  # Activate the manager as a helm hook
+  hooked: false
+  # Default namespace for keepalivedgroup resources
+  namespace: openshift-ingress
+  # KeepalivedGroup configuration list
+  groups:
+    # Enable creation of KeepalivedGroup CRDs
+    enabled: true
+    # List of KeepalivedGroup instances to configure
+    list:
+      - name: keepalivedgroup-workers
+        # Falls back to keepalived.namespace if not specified
+        namespace: openshift-ingress
+        # Complete KeepalivedGroup spec as YAML string
+        spec: |
+          blacklistRouterIDs:
+            - 165
+            - 168
+            - 169
+          image: registry.redhat.io/openshift4/ose-keepalived-ipfailover
+          interface: br-ex
+          nodeSelector:
+            node-role.kubernetes.io/infra: ''
+
+# Configuration of the project namespace for operator installation
+project:
+  # Enable creation of the project namespace
+  enabled: false
+  # Context metadata applied to the namespace resource
+  context:
+    <<: *context
+  # Project/Namespace configuration (uses the STARTX project chart dependency)
+  project:
+    # Enable project resource creation
+    enabled: false
+    # Activate project creation as a helm hook
+    hooked: false
+    # Type of project resource (namespace or project)
+    type: namespace
+    # Name of the namespace — must match operator.subscription.namespace
+    name: "keepalived-operator"
+    # Display name annotation shown in OpenShift console
+    display_name: Keepalived Operator
+    # Description annotation for the namespace
+    description: Namespace for keepalived operator installation
+
+# Configuration of cluster network (externalIP and CIDR management)
+# Patches the OpenShift Network CRD (config.openshift.io/v1) at the cluster level
+clusterNetwork:
+  # Enable patching of the cluster Network CRD
+  enabled: false
+  # Network type (OVNKubernetes or OpenShiftSDN) — informational, not patched
+  networkType: OVNKubernetes
+  # Internal pod network ranges (informational, not patched)
+  clusterNetwork:
+    - cidr: 10.128.0.0/14
+      hostPrefix: 23
+  # Service cluster IP range (informational, not patched)
+  serviceNetwork:
+    - 172.30.0.0/16
+  # External IP configuration — the only part patched into the Network CRD
+  externalIP:
+    # CIDRs available for automatic external IP assignment
+    autoAssignCIDRs:
+      - 10.99.10.237/32
+    policy:
+      # CIDRs that services are allowed to use as externalIPs
+      allowedCIDRs:
+        - 10.99.10.237/32
+
+# IngressController configuration for exposing services with external VIP
+# Creates a custom IngressController CRD (operator.openshift.io/v1)
+ingressController:
+  # Enable creation of IngressController resource
+  enabled: false
+  # Name of the ingress controller resource
+  name: public
+  # Namespace where the IngressController resource is created
+  namespace: openshift-ingress-operator
+  # Domain for this ingress controller
+  domain: apps.public.poly-ocp.chenieux.lan
+  # Number of ingress controller replicas
+  replicas: 3
+  # Only routes matching these labels will be served by this controller
+  routeSelector:
+    matchLabels:
+      ingress: public
+  # Node placement configuration (nodeSelector + tolerations)
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/infra: ""
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/infra
+        operator: Exists
+  # Secret with default TLS certificate for routes without their own cert
+  defaultCertificate:
+    name: public-ingress-cert
+  tuningOptions:
+    reloadInterval: 0s
+  # Optional mutual TLS configuration
+  clientTLS:
+    clientCA:
+      name: ""
+    clientCertificatePolicy: ""
+  endpointPublishingStrategy:
+    type: Private
+  httpCompression: {}
+  httpEmptyRequestsPolicy: Respond
+  httpErrorCodePages:
+    name: ""
+  unsupportedConfigOverrides: null
+
+# Service for exposing the ingress controller with external IP
+# Binds the VIP (from clusterNetwork.externalIP) to ingress controller pods
+ingressControllerService:
+  # Enable creation of ingress controller service
+  enabled: false
+  name: router-public-lb
+  namespace: openshift-ingress
+  type: ClusterIP
+  # Must be within clusterNetwork.externalIP.allowedCIDRs
+  externalIPs:
+    - 10.99.10.237
+  clusterIP: ""
+  clusterIPs: []
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster
+  sessionAffinity: None
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: https
+  selector:
+    ingresscontroller.operator.openshift.io/deployment-ingresscontroller: public
+
+# TLS Secret for IngressController default certificate
+# Must match ingressController.defaultCertificate.name
+ingressControllerSecret:
+  # Enable creation of TLS secret
+  enabled: false
+  # Must match ingressController.defaultCertificate.name
+  name: public-ingress-cert
+  # Must match ingressControllerService.namespace
+  namespace: openshift-ingress
+  tls:
+    # Base64 encoded TLS certificate (cat cert.crt | base64 -w0)
+    crt: ""
+    # Base64 encoded TLS private key (cat key.key | base64 -w0)
+    key: ""
+
+# Configuration of the operator (keepalived operator installation via OLM)
+# Uses the STARTX operator chart as a dependency
+operator:
+  # Enable operator installation
+  enabled: false
+  context:
+    <<: *context
+  # OLM Subscription resource configuration
+  subscription:
+    # Enable creation of Subscription resource
+    enabled: false
+    # Activate subscription as a helm hook
+    hooked: false
+    name: "keepalived-operator"
+    namespace: "keepalived-operator"
+    version: "1.5.4"
+    operator:
+      channel: "alpha"
+      name: keepalived-operator
+      installPlanApproval: Automatic
+      startingCSV: "keepalived-operator.v1.5.4"
+      source:
+        name: community-operators
+        namespace: openshift-marketplace
+  # OLM OperatorGroup resource configuration
+  operatorGroup:
+    # Enable creation of OperatorGroup resource
+    enabled: false
+    hooked: false
+    name: "keepalived-operator"
+    namespace: "keepalived-operator"
+    upgradeStrategy: "Default"
+    # CRDs provided by this operator (for OLM dependency tracking)
+    providedAPIs: "KeepalivedGroup.v1alpha1.redhatcop.redhat.io"

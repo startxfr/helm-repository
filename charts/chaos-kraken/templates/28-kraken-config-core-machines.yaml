@@ -41,6 +41,30 @@ data:
 
     - id: kill-pods
       config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-daemon
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-daemon
+        count: 3
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-controller
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-machine-config-operator$
+        label_selector: k8s-app=machine-config-controller
+        count: 1
+        timeout: 120
+
+    - id: kill-pods
+      config:
         namespace_pattern: ^openshift-machine-api$
         label_selector: k8s-app=machine-api-operator
         kill: 1

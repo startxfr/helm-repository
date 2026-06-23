@@ -1,0 +1,669 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Deployment context",
+            "description": "Properties of the deployment context.",
+            "required": [
+                "scope",
+                "cluster",
+                "environment",
+                "component",
+                "app"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "default": "myscope",
+                    "examples": [
+                        "myscope",
+                        "mycustomer"
+                    ]
+                },
+                "cluster": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "localhost",
+                    "examples": [
+                        "mycluster",
+                        "localhost"
+                    ]
+                },
+                "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Environement name",
+                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "mycomponent",
+                    "examples": [
+                        "mycomponent",
+                        "myservice"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application. Define a functionnal tenant.",
+                    "default": "default-keepalived",
+                    "examples": [
+                        "default-keepalived",
+                        "myapp"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Version name",
+                    "description": "Name of the application version. Define this deployment version.",
+                    "default": "0.5.0",
+                    "examples": [
+                        "0.5.0",
+                        "0.1",
+                        "0.5.0-snapshot"
+                    ]
+                }
+            }
+        },
+        "keepalived": {
+            "type": "object",
+            "title": "Keepalived configuration",
+            "description": "Configuration for Keepalived deployment and KeepalivedGroup creation",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable Keepalived",
+                    "description": "Enable the configuration of Keepalived resources",
+                    "default": false
+                },
+                "hooked": {
+                    "type": "boolean",
+                    "title": "Use as helm hook",
+                    "description": "Activate the manager as a helm hook",
+                    "default": false
+                },
+                "namespace": {
+                    "type": "string",
+                    "title": "Namespace",
+                    "description": "Default namespace for all Keepalived resources",
+                    "default": "openshift-ingress",
+                    "examples": [
+                        "openshift-ingress",
+                        "keepalived-system"
+                    ]
+                },
+                "groups": {
+                    "type": "object",
+                    "title": "KeepalivedGroup configuration",
+                    "description": "Configuration for KeepalivedGroup resources",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable KeepalivedGroups",
+                            "description": "Enable creation of KeepalivedGroup resources",
+                            "default": true
+                        },
+                        "list": {
+                            "type": "array",
+                            "title": "KeepalivedGroups list",
+                            "description": "List of KeepalivedGroup resources to create",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 63,
+                                        "title": "KeepalivedGroup name",
+                                        "description": "Name of the KeepalivedGroup resource",
+                                        "examples": [
+                                            "keepalivedgroup-workers",
+                                            "startx-cluster-vip"
+                                        ]
+                                    },
+                                    "namespace": {
+                                        "type": "string",
+                                        "title": "Namespace",
+                                        "description": "Namespace for this KeepalivedGroup (defaults to keepalived.namespace)",
+                                        "examples": [
+                                            "openshift-ingress"
+                                        ]
+                                    },
+                                    "spec": {
+                                        "type": "string",
+                                        "title": "KeepalivedGroup specification",
+                                        "description": "YAML specification for the KeepalivedGroup CRD resource",
+                                        "examples": [
+                                            "blacklistRouterIDs:\n  - 165\n  - 168\nimage: registry.redhat.io/openshift4/ose-keepalived-ipfailover\ninterface: br-ex\nnodeSelector:\n  node-role.kubernetes.io/infra: ''"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "spec"
+                                ]
+                            },
+                            "minItems": 0,
+                            "default": [
+                                {
+                                    "name": "keepalivedgroup-workers",
+                                    "spec": "blacklistRouterIDs:\n  - 165\n  - 168\nimage: registry.redhat.io/openshift4/ose-keepalived-ipfailover\ninterface: br-ex\nnodeSelector:\n  node-role.kubernetes.io/infra: ''"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "clusterNetwork": {
+            "type": "object",
+            "title": "Cluster Network configuration",
+            "description": "Configuration for the cluster network, external IPs, and service networks",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable cluster network configuration",
+                    "description": "Enable patching of the cluster Network CRD to allow external IP assignment",
+                    "default": false
+                },
+                "networkType": {
+                    "type": "string",
+                    "title": "Network type",
+                    "default": "OVNKubernetes",
+                    "enum": ["OVNKubernetes", "OpenShiftSDN"]
+                },
+                "clusterNetwork": {
+                    "type": "array",
+                    "title": "Cluster network CIDRs",
+                    "description": "Internal pod network ranges (informational, not patched)",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "cidr": {"type": "string", "pattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$"},
+                            "hostPrefix": {"type": "integer", "minimum": 1, "maximum": 32}
+                        }
+                    }
+                },
+                "serviceNetwork": {
+                    "type": "array",
+                    "title": "Service network CIDRs",
+                    "description": "Service cluster IP ranges (informational, not patched)",
+                    "items": {"type": "string", "pattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$"}
+                },
+                "externalIP": {
+                    "type": "object",
+                    "title": "External IP configuration",
+                    "description": "Defines the VIP pool for keepalived and ingress controller — the only part patched into the Network CRD",
+                    "properties": {
+                        "autoAssignCIDRs": {
+                            "type": "array",
+                            "title": "Auto-assign CIDRs",
+                            "description": "CIDRs available for automatic external IP assignment",
+                            "items": {"type": "string", "pattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$"}
+                        },
+                        "policy": {
+                            "type": "object",
+                            "title": "External IP policy",
+                            "properties": {
+                                "allowedCIDRs": {
+                                    "type": "array",
+                                    "title": "Allowed CIDRs",
+                                    "description": "CIDRs that services are allowed to use as externalIPs",
+                                    "items": {"type": "string", "pattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$"}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "ingressController": {
+            "type": "object",
+            "title": "IngressController configuration",
+            "description": "Configuration for OpenShift IngressController with external VIP",
+            "properties": {
+                "enabled": {"type": "boolean", "title": "Enable IngressController", "description": "Enable creation of a dedicated IngressController resource", "default": false},
+                "name": {"type": "string", "minLength": 1, "maxLength": 63, "title": "IngressController name", "default": "public"},
+                "namespace": {"type": "string", "title": "IngressController namespace", "default": "openshift-ingress-operator"},
+                "domain": {"type": "string", "title": "Domain", "description": "Routes served by this controller will use subdomains of this domain", "default": "apps.public.example.com"},
+                "replicas": {"type": "integer", "title": "Replicas", "minimum": 1, "default": 3},
+                "routeSelector": {
+                    "type": "object",
+                    "title": "Route selector",
+                    "description": "Only routes matching these labels will be served by this controller",
+                    "properties": {
+                        "matchLabels": {"type": "object", "additionalProperties": {"type": "string"}}
+                    }
+                },
+                "nodePlacement": {
+                    "type": "object",
+                    "title": "Node placement",
+                    "description": "Determines which nodes run the ingress controller pods",
+                    "properties": {
+                        "nodeSelector": {
+                            "type": "object",
+                            "properties": {
+                                "matchLabels": {"type": "object", "additionalProperties": {"type": "string"}}
+                            }
+                        },
+                        "tolerations": {
+                            "type": "array",
+                            "items": {"type": "object"}
+                        }
+                    }
+                },
+                "defaultCertificate": {
+                    "type": "object",
+                    "title": "Default TLS certificate",
+                    "description": "Secret containing the default TLS certificate for routes without their own cert",
+                    "properties": {
+                        "name": {"type": "string", "title": "Certificate secret name"}
+                    }
+                },
+                "tuningOptions": {"type": "object", "additionalProperties": true},
+                "clientTLS": {"type": "object", "additionalProperties": true},
+                "endpointPublishingStrategy": {"type": "object", "additionalProperties": true},
+                "httpCompression": {"type": "object"},
+                "httpEmptyRequestsPolicy": {"type": "string", "enum": ["Respond", "Ignore"]},
+                "httpErrorCodePages": {"type": "object"},
+                "unsupportedConfigOverrides": {"type": ["object", "null"]}
+            }
+        },
+        "ingressControllerService": {
+            "type": "object",
+            "title": "IngressController Service configuration",
+            "description": "Service that binds the VIP to ingress controller pods via externalIPs",
+            "properties": {
+                "enabled": {"type": "boolean", "title": "Enable service", "description": "Enable creation of the ingress controller service with external IP", "default": false},
+                "name": {"type": "string", "minLength": 1, "maxLength": 63, "title": "Service name", "default": "router-public-lb"},
+                "namespace": {"type": "string", "title": "Service namespace", "default": "openshift-ingress"},
+                "type": {"type": "string", "title": "Service type", "enum": ["ClusterIP", "NodePort", "LoadBalancer"], "default": "ClusterIP"},
+                "externalIPs": {
+                    "type": "array",
+                    "title": "External IPs",
+                    "description": "Must be within clusterNetwork.externalIP.allowedCIDRs",
+                    "items": {"type": "string", "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"}
+                },
+                "clusterIP": {"type": "string", "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$", "title": "Cluster IP"},
+                "clusterIPs": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"}
+                },
+                "ipFamilies": {
+                    "type": "array",
+                    "items": {"type": "string", "enum": ["IPv4", "IPv6"]},
+                    "default": ["IPv4"]
+                },
+                "ipFamilyPolicy": {"type": "string", "enum": ["SingleStack", "PreferDualStack", "RequireDualStack"], "default": "SingleStack"},
+                "internalTrafficPolicy": {"type": "string", "enum": ["Cluster", "Local"], "default": "Cluster"},
+                "sessionAffinity": {"type": "string", "enum": ["None", "ClientIP"], "default": "None"},
+                "ports": {
+                    "type": "array",
+                    "title": "Service ports",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string"},
+                            "protocol": {"type": "string", "enum": ["TCP", "UDP"], "default": "TCP"},
+                            "port": {"type": "integer", "minimum": 1, "maximum": 65535},
+                            "targetPort": {"type": ["string", "integer"]}
+                        },
+                        "required": ["name", "port", "targetPort"]
+                    }
+                },
+                "selector": {
+                    "type": "object",
+                    "title": "Pod selector",
+                    "additionalProperties": {"type": "string"}
+                }
+            }
+        },
+        "ingressControllerSecret": {
+            "type": "object",
+            "title": "IngressController TLS Secret",
+            "description": "TLS Secret used by the IngressController as default certificate for route TLS termination",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable TLS secret",
+                    "description": "Enable creation of the TLS secret for the ingress controller",
+                    "default": false
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 63,
+                    "title": "Secret name",
+                    "description": "Must match ingressController.defaultCertificate.name",
+                    "default": "public-ingress-cert",
+                    "examples": [
+                        "public-ingress-cert"
+                    ]
+                },
+                "namespace": {
+                    "type": "string",
+                    "title": "Secret namespace",
+                    "description": "Must match ingressControllerService.namespace",
+                    "default": "openshift-ingress",
+                    "examples": [
+                        "openshift-ingress"
+                    ]
+                },
+                "tls": {
+                    "type": "object",
+                    "title": "TLS certificate and key",
+                    "properties": {
+                        "crt": {
+                            "type": "string",
+                            "title": "TLS certificate",
+                            "description": "Base64 encoded TLS certificate in PEM format"
+                        },
+                        "key": {
+                            "type": "string",
+                            "title": "TLS private key",
+                            "description": "Base64 encoded TLS private key in PEM format"
+                        }
+                    }
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project configuration",
+            "description": "Configuration for the project namespace via project chart dependency",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable project",
+                    "description": "Enable the project chart dependency",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Project context",
+                    "description": "Context configuration for the project"
+                },
+                "project": {
+                    "type": "object",
+                    "title": "Project namespace",
+                    "description": "Project namespace configuration",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable project namespace",
+                            "description": "Create the project namespace",
+                            "default": false
+                        },
+                        "hooked": {
+                            "type": "boolean",
+                            "title": "Use as helm hook",
+                            "description": "Activate as a helm hook",
+                            "default": false
+                        },
+                        "type": {
+                            "type": "string",
+                            "title": "Project type",
+                            "description": "Type of project resource",
+                            "default": "namespace",
+                            "enum": [
+                                "namespace",
+                                "project"
+                            ]
+                        },
+                        "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "Project name",
+                            "description": "Name of the project namespace",
+                            "default": "keepalived-operator",
+                            "examples": [
+                                "keepalived-operator"
+                            ]
+                        },
+                        "display_name": {
+                            "type": "string",
+                            "title": "Display name",
+                            "description": "Display name for the project",
+                            "default": "Keepalived Operator",
+                            "examples": [
+                                "Keepalived Operator"
+                            ]
+                        },
+                        "description": {
+                            "type": "string",
+                            "title": "Description",
+                            "description": "Description of the project",
+                            "default": "Namespace for keepalived operator installation",
+                            "examples": [
+                                "Namespace for keepalived operator installation"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "title": "Operator configuration",
+            "description": "Configuration for the Keepalived operator installation via OLM",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable operator",
+                    "description": "Enable installation of the Keepalived operator",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Operator context",
+                    "description": "Context configuration for the operator"
+                },
+                "subscription": {
+                    "type": "object",
+                    "title": "Operator subscription",
+                    "description": "OLM Subscription resource configuration",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable subscription",
+                            "description": "Create operator subscription",
+                            "default": false
+                        },
+                        "hooked": {
+                            "type": "boolean",
+                            "title": "Use as helm hook",
+                            "description": "Activate as a helm hook",
+                            "default": false
+                        },
+                        "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "Subscription name",
+                            "description": "Name of the operator subscription",
+                            "default": "keepalived-operator",
+                            "examples": [
+                                "keepalived-operator"
+                            ]
+                        },
+                        "namespace": {
+                            "type": "string",
+                            "title": "Subscription namespace",
+                            "description": "Namespace for the operator subscription",
+                            "default": "keepalived-operator",
+                            "examples": [
+                                "keepalived-operator"
+                            ]
+                        },
+                        "version": {
+                            "type": "string",
+                            "title": "Operator version",
+                            "description": "Version of the operator to install",
+                            "default": "1.5.4",
+                            "examples": [
+                                "1.5.4"
+                            ]
+                        },
+                        "operator": {
+                            "type": "object",
+                            "title": "Operator details",
+                            "description": "Operator subscription details",
+                            "properties": {
+                                "channel": {
+                                    "type": "string",
+                                    "title": "Channel",
+                                    "description": "Operator update channel",
+                                    "default": "alpha",
+                                    "enum": [
+                                        "alpha",
+                                        "beta",
+                                        "stable"
+                                    ]
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "title": "Operator name",
+                                    "description": "Name of the operator as listed in OperatorHub",
+                                    "default": "keepalived-operator",
+                                    "examples": [
+                                        "keepalived-operator"
+                                    ]
+                                },
+                                "installPlanApproval": {
+                                    "type": "string",
+                                    "title": "Install plan approval",
+                                    "description": "Installation plan approval strategy",
+                                    "default": "Automatic",
+                                    "enum": [
+                                        "Automatic",
+                                        "Manual"
+                                    ]
+                                },
+                                "startingCSV": {
+                                    "type": "string",
+                                    "title": "Starting CSV",
+                                    "description": "ClusterServiceVersion to start with",
+                                    "default": "keepalived-operator.v1.5.4",
+                                    "examples": [
+                                        "keepalived-operator.v1.5.4"
+                                    ]
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "title": "Operator source",
+                                    "description": "Operator catalog source",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "title": "Source name",
+                                            "description": "Name of the catalog source",
+                                            "default": "community-operators",
+                                            "examples": [
+                                                "community-operators",
+                                                "redhat-operators"
+                                            ]
+                                        },
+                                        "namespace": {
+                                            "type": "string",
+                                            "title": "Source namespace",
+                                            "description": "Namespace of the catalog source",
+                                            "default": "openshift-marketplace",
+                                            "examples": [
+                                                "openshift-marketplace"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "title": "Operator group",
+                    "description": "OLM OperatorGroup resource configuration",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "title": "Enable operator group",
+                            "description": "Create operator group",
+                            "default": false
+                        },
+                        "hooked": {
+                            "type": "boolean",
+                            "title": "Use as helm hook",
+                            "description": "Activate as a helm hook",
+                            "default": false
+                        },
+                        "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 63,
+                            "title": "Operator group name",
+                            "description": "Name of the operator group",
+                            "default": "keepalived-operator",
+                            "examples": [
+                                "keepalived-operator"
+                            ]
+                        },
+                        "namespace": {
+                            "type": "string",
+                            "title": "Operator group namespace",
+                            "description": "Namespace for the operator group",
+                            "default": "keepalived-operator",
+                            "examples": [
+                                "keepalived-operator"
+                            ]
+                        },
+                        "upgradeStrategy": {
+                            "type": "string",
+                            "title": "Upgrade strategy",
+                            "description": "Upgrade strategy for automatic updates",
+                            "default": "Default",
+                            "enum": [
+                                "Default",
+                                "Restricted"
+                            ]
+                        },
+                        "providedAPIs": {
+                            "type": "string",
+                            "title": "Provided APIs",
+                            "description": "CRDs provided by this operator (for OLM dependency tracking)",
+                            "default": "KeepalivedGroup.v1alpha1.redhatcop.redhat.io",
+                            "examples": [
+                                "KeepalivedGroup.v1alpha1.redhatcop.redhat.io"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

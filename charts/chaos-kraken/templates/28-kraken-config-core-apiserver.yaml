@@ -19,11 +19,25 @@ data:
       config:
         namespace_pattern: ^openshift-apiserver$
         label_selector: app=openshift-apiserver-a
+        kill: 1
     - id: wait-for-pods
       config:
         namespace_pattern: ^openshift-apiserver$
         label_selector: app=openshift-apiserver-a
-        count: 3
+        count: 2
+        timeout: 120
+
+    - id: kill-pods
+      config:
+        namespace_pattern: ^openshift-apiserver$
+        label_selector: app=openshift-apiserver-a
+        kill: 1
+    - id: wait-for-pods
+      config:
+        namespace_pattern: ^openshift-apiserver$
+        label_selector: app=openshift-apiserver-a
+        count: 2
+        timeout: 120
 ---
 kind: ConfigMap
 apiVersion: v1

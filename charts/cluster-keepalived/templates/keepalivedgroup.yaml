@@ -1,0 +1,23 @@
+{{- if .Values.keepalived.enabled -}}{{- if .Values.keepalived.groups -}}{{- if .Values.keepalived.groups.enabled -}}
+{{- $ns1 := .Values.project.project.name | default "default" -}}
+{{- $ns2 := .Values.keepalived.namespace | default ($ns1) -}}
+{{- range .Values.keepalived.groups.list -}}
+{{- $namespace := .namespace | default ($ns2) -}}
+{{- $name := .name | default "keepalivedgroup" -}}
+{{- $spec := .spec | default "{}" }}
+---
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: KeepalivedGroup
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-keepalived.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}"
+    controller.devfile.io/creator: {{ $.Release.Service | quote }}
+  annotations:
+    {{- include "cluster-keepalived.annotations" $ | nindent 4 }}
+spec:
+  {{- $spec | nindent 2 }}
+{{- end -}}
+{{- end -}}{{- end -}}{{- end -}}
