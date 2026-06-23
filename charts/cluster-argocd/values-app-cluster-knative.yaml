@@ -2,7 +2,7 @@
 # Source: examples/argocd/ from the cluster-knative chart
 
 argocd_project:
-  enabled: false
+  enabled: true
   list:
     - name: 'infra-knative'
       namespace: 'openshift-gitops'
@@ -20,7 +20,7 @@ argocd_project:
 
 # Applications
 application:
-  enabled: false
+  enabled: true
   list:
     # Application configuration and instances
     - name: 'infra-knative-app'
@@ -104,5 +104,5 @@ application:
           selfHeal: true
 
 argocd_repocreds:
-  enabled: false
+  enabled: true
   list: []

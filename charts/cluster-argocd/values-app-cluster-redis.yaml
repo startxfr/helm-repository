@@ -2,7 +2,7 @@
 # Source: examples/argocd/ from the cluster-redis chart
 
 argocd_project:
-  enabled: false
+  enabled: true
   list:
     - name: 'infra-redis'
       namespace: 'openshift-gitops'
@@ -18,7 +18,7 @@ argocd_project:
 
 # Applications
 application:
-  enabled: false
+  enabled: true
   list:
     # Application configuration and instances
     - name: 'infra-redis-app'
@@ -101,5 +101,5 @@ application:
           - CreateNamespace=true
 
 argocd_repocreds:
-  enabled: false
+  enabled: true
   list: []

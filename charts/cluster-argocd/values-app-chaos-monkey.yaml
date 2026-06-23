@@ -2,7 +2,7 @@
 # Source: examples/argocd/ from the chaos-monkey chart
 
 argocd_project:
-  enabled: false
+  enabled: true
   list:
     - name: 'chaos-chaos-monkey'
       namespace: 'openshift-gitops'
@@ -17,7 +17,7 @@ argocd_project:
 
 # Applications
 application:
-  enabled: false
+  enabled: true
   list:
     # Deploys service instances
     - name: 'chaos-chaos-monkey-instance'
@@ -66,5 +66,5 @@ application:
           selfHeal: true
 
 argocd_repocreds:
-  enabled: false
+  enabled: true
   list: []

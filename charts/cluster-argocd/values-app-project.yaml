@@ -2,7 +2,7 @@
 # Source: examples/argocd/ from the project chart
 
 argocd_project:
-  enabled: false
+  enabled: true
   list:
     - name: 'basic-demo-project'
       namespace: 'openshift-gitops'
@@ -16,7 +16,7 @@ argocd_project:
 
 # Applications
 application:
-  enabled: false
+  enabled: true
   list:
     # Application configuration and instances
     - name: 'basic-demo-project-app'
@@ -44,5 +44,5 @@ application:
           - CreateNamespace=true
 
 argocd_repocreds:
-  enabled: false
+  enabled: true
   list: []
