@@ -207,6 +207,46 @@
                             },
                             "namespace": {
                                 "type": "string"
+                            },
+                            "sourceRepos": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "destinations": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "namespace": {
+                                            "type": "string"
+                                        },
+                                        "server": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "clusterResourceWhitelist": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "group": {
+                                            "type": "string"
+                                        },
+                                        "kind": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "roles": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object"
+                                }
                             }
                         }
                     }

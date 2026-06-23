@@ -1,0 +1,122 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: argocd
+  app: startx-argocd
+  version: "1.20.4"
+
+argocd_project:
+  enabled: false
+  list:
+    - name: "startx-argocd"
+    - name: "cluster-admin"
+    - name: "startx-argocd"
+      namespace: "startx-argocd"
+      sourceRepos: []
+      destinations: []
+      clusterResourceWhitelist: []
+      roles:
+      - name: ops
+        description: Read-only (and sync) privileges to group ops in .{{- $name -}} project
+        policies:
+        - p, role:startx-ops, clusters, get, .{{- $name -}}/*, allow
+        - p, role:startx-ops, projects, get, .{{- $name -}}/*, allow
+        - p, role:startx-ops, applications, get, .{{- $name -}}/*, allow
+        - p, role:startx-ops, applications, sync, .{{- $name -}}/*, allow
+        - p, role:startx-ops, repositories, get, .{{- $name -}}/*, allow
+        - p, role:startx-ops, repositories, sync, .{{- $name -}}/*, allow
+        - p, role:startx-ops, certificates, get, .{{- $name -}}/*, allow
+        - g, ops, role:startx-ops
+        groups:
+        - ops
+      - name: devops
+        description: Read-only privileges to group devops in .{{- $name -}} project
+        policies:
+        - p, role:startx-devops, clusters, get, .{{- $name -}}/*, allow
+        - p, role:startx-devops, projects, get, .{{- $name -}}/*, allow
+        - p, role:startx-devops, applications, get, .{{- $name -}}/*, allow
+        - p, role:startx-devops, repositories, get, .{{- $name -}}/*, allow
+        - p, role:startx-devops, certificates, get, .{{- $name -}}/*, allow
+        - g, devops, role:startx-devops
+        groups:
+        - devops
+      - name: admin
+        description: All privileges to group admin in .{{- $name -}} project
+        policies:
+        - p, role:startx-admin, *, *, {{- $name -}}/*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+application:
+  enabled: false
+  list: 
+    - name: "example-application"
+      # Namespace where to deploy this VM (default is project)
+      namespace: "startx-argocd"
+      # enable argocd finalizer for this application
+      finalizer: true
+      # name of the destination server (default is https://kubernetes.default.svc) 
+      server: "https://kubernetes.default.svc"
+      # name of the parent project (default is cluster-admin) 
+      project: "cluster-admin"
+      # Application source
+      source: 
+        # repository URL to the application code (default is https://github.com/startxfr/helm-repository.git)
+        repo: "https://github.com/startxfr/helm-repository.git"
+        # revision to use for this source-code (default is master) 
+        rev: "stable"
+        # path to the application code (default is charts/example-html/)
+        path: "charts/example-html/"
+      # Configuration of the helm chart
+      helm: | 
+        valueFiles:
+          - values.yaml
+        parameters:
+          - name: context.scope
+            value: "${SCOPE}"
+          - name: context.cluster
+            value: "${CLUSTER}"
+          - name: context.environment
+            value: "${ENV}"
+          - name: context.version
+            value: "${VERSION}"
+          - name: context.app
+            value: "exemple-html-helm"
+          - name: html.expose.enabled
+            value: "true"
+          - name: html.namespace
+            value: "default"
+      # Configuration of the syncPolicy chart
+      syncPolicy: | 
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false
+          - Validate=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 60s
+      ignoreDifferences: | 
+        - group: "apps"
+          kind: Secret
+          namespace: "default"
+          jsonPointers:
+            - /
+argocd_repocreds:
+  enabled: false
+  list: []
+
+# Default project used par application namespace
+project: 
+  enabled: false
+  project: 
+    enabled: false
+    name: startx-argocd

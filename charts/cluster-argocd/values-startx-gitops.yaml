@@ -22,11 +22,15 @@ argocd_export:
       storageclass: "startx-aws-slow-retain"
 argocd_project:
   enabled: false
-  list: 
+  list:
     - name: "startx-gitops"
     - name: "cluster-admin"
     - name: "startx-gitops"
       namespace: "startx-gitops"
+      sourceRepos: []
+      destinations: []
+      clusterResourceWhitelist: []
+      roles: []
 application:
   enabled: false
   list: 

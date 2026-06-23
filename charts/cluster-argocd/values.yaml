@@ -129,11 +129,35 @@ argocd_project:
   # enable deployment of argocd_project
   enabled: false
   # List of argocd_project to configure
-  list: 
+  list:
       # Name of the argocd_project configuration
     - name: "default"
       # Namespace of the argocd_project configuration
       namespace: "default"
+      # List of source repositories allowed in this project (default: ['*'])
+      sourceRepos:
+        - '*'
+      # List of allowed destination clusters and namespaces (default: project namespace on any server)
+      destinations:
+        - namespace: "default"
+          server: '*'
+      # List of cluster-scoped resource types this project can manage (default: all groups and kinds)
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      # List of ArgoCD RBAC roles for this project (default: [])
+      roles: 
+        # Role short name
+      - name: default
+        # Role description
+        description: Read-only privileges to group default in .{{- $name -}} project
+        # Role policy
+        policies:
+        - g, default, role:readonly
+        - p, role:defult, *, get, .*/*, allow
+        # Role goup mapping
+        groups:
+        - default
 
 # Configuration of VM to deploy
 application:

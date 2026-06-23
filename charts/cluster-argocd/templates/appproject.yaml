@@ -1,9 +1,8 @@
 {{- if .Values.argocd_project }}{{- if .Values.argocd_project.enabled }}
-{{- $defaultns := .Values.project.project.name -}}
+{{- $defaultns := .Values.project.project.name | default "openshift-gitops" -}}
 {{ range .Values.argocd_project.list }}
 {{- $name := .name | default "default" -}}
-{{- $namespace := .namespace | default $defaultns -}}
-
+{{- $namespace := .namespace | default $defaultns }}
 ---
 kind: AppProject
 apiVersion: argoproj.io/v1alpha1
@@ -20,54 +19,31 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   sourceRepos:
+{{- if .sourceRepos }}
+    {{- toYaml .sourceRepos | nindent 4 }}
+{{- else }}
     - '*'
+{{- end }}
   destinations:
+{{- if .destinations }}
+    {{- toYaml .destinations | nindent 4 }}
+{{- else }}
     - namespace: {{ $namespace | quote }}
       server: '*'
+{{- end }}
   clusterResourceWhitelist:
+{{- if .clusterResourceWhitelist }}
+    {{- toYaml .clusterResourceWhitelist | nindent 4 }}
+{{- else }}
     - group: '*'
       kind: '*'
+{{- end }}
+{{- if .roles }}
   roles:
-  - name: dev
-    description: Read-only privileges to group dev in .{{- $name -}} project
-    policies:
-    - g, dev, role:readonly
-    - p, role:startx-dev, *, get, .{{- $name -}}/*, allow
-    groups:
-    - dev
-  - name: ops
-    description: Read-only (and sync) privileges to group ops in .{{- $name -}} project
-    policies:
-    - p, role:startx-ops, clusters, get, .{{- $name -}}/*, allow
-    - p, role:startx-ops, projects, get, .{{- $name -}}/*, allow
-    - p, role:startx-ops, applications, get, .{{- $name -}}/*, allow
-    - p, role:startx-ops, applications, sync, .{{- $name -}}/*, allow
-    - p, role:startx-ops, repositories, get, .{{- $name -}}/*, allow
-    - p, role:startx-ops, repositories, sync, .{{- $name -}}/*, allow
-    - p, role:startx-ops, certificates, get, .{{- $name -}}/*, allow
-    - g, ops, role:startx-ops
-    groups:
-    - ops
-  - name: devops
-    description: Read-only privileges to group devops in .{{- $name -}} project
-    policies:
-    - p, role:startx-devops, clusters, get, .{{- $name -}}/*, allow
-    - p, role:startx-devops, projects, get, .{{- $name -}}/*, allow
-    - p, role:startx-devops, applications, get, .{{- $name -}}/*, allow
-    - p, role:startx-devops, repositories, get, .{{- $name -}}/*, allow
-    - p, role:startx-devops, certificates, get, .{{- $name -}}/*, allow
-    - g, devops, role:startx-devops
-    groups:
-    - devops
-  - name: admin
-    description: All privileges to group admin in .{{- $name -}} project
-    policies:
-    - p, role:startx-admin, *, *, {{- $name -}}/*, allow
-    - g, system:cluster-admins, role:admin
-    groups:
-    - my-oidc-group
-    - system:cluster-admins
-    - admin
+    {{- toYaml .roles | nindent 4 }}
+{{- else }}
+  roles: []
+{{- end }}
 
 {{- end }}
 {{- end }}{{- end }}
