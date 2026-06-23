@@ -68,132 +68,10 @@ helm install cluster-acs startx/cluster-acs -f https://raw.githubusercontent.com
 Deploy `cluster-acs` using three dedicated ArgoCD Applications - one per concern - all sharing the same AppProject.
 The ACS operator installs in the shared `openshift-operators` namespace. The `Central` CR deploys in `startx-acs`:
 
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: cluster-acs
-  namespace: openshift-gitops
-spec:
-  description: Deploy Advanced Cluster Security (RHACS) on OpenShift
-  sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: openshift-operators
-    - server: https://kubernetes.default.svc
-      namespace: startx-acs
-    - server: https://kubernetes.default.svc
-      namespace: '*'
-  clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-    - group: operators.coreos.com
-      kind: OperatorGroup
-    - group: operators.coreos.com
-      kind: Subscription
-    - group: platform.stackrox.io
-      kind: Central
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-acs-project
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-spec:
-  destination:
-    namespace: startx-acs
-    server: https://kubernetes.default.svc
-  project: cluster-acs
-  source:
-    chart: cluster-acs
-    helm:
-      values: |
-        acs:
-          enabled: false
-        project:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.107
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-acs-operator
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: openshift-operators
-    server: https://kubernetes.default.svc
-  project: cluster-acs
-  source:
-    chart: cluster-acs
-    helm:
-      values: |
-        acs:
-          enabled: false
-        operator:
-          enabled: true
-          operatorGroup:
-            enabled: false
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.107
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-acs-app
-  namespace: openshift-gitops
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: startx-acs
-    server: https://kubernetes.default.svc
-  project: cluster-acs
-  source:
-    chart: cluster-acs
-    helm:
-      values: |
-        acs:
-          enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.107
-  ignoreDifferences:
-    - group: platform.stackrox.io
-      kind: Central
-      jsonPointers:
-        - /metadata/finalizers
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-```
-
-Apply with:
-
 ```bash
-kubectl apply -f cluster-acs-argocd.yaml -n openshift-gitops
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-acs/examples/argocd/
+oc apply -k .
 ```
 
 The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
@@ -237,3 +115,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.105 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.106 | 2026-06-21 | publish stable update for the full repository |
 | 21.3.107 | 2026-06-21 | publish stable update for the full repository |
+| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
