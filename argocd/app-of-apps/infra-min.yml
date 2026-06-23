@@ -1,3 +1,4 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -29,10 +30,10 @@ spec:
     server: https://kubernetes.default.svc
   project: aoa-infra-min
   source:
-    chart: cluster-argocd
+    repoURL: https://gitlab.com/startx1/helm.git
+    targetRevision: stable
+    path: charts/cluster-argocd/
     helm:
-      valueFiles:
-        - values-aoa-infra-min.yaml
       values: |
         context:
           scope: startx
@@ -52,8 +53,6 @@ spec:
           project:
             enabled: false
             name: openshift-gitops
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.182
   syncPolicy:
     automated:
       prune: true
