@@ -23,9 +23,7 @@ argocd_export:
 argocd_project:
   enabled: false
   list:
-    - name: "startx-argocd"
-    - name: "cluster-admin"
-    - name: "startx-argocd"
+    - name: "startx-argocd-example-app"
       namespace: "startx-argocd"
       sourceRepos: []
       destinations: []
@@ -42,7 +40,7 @@ application:
       # name of the destination server (default is https://kubernetes.default.svc) 
       server: "https://kubernetes.default.svc"
       # name of the parent project (default is cluster-admin) 
-      project: "cluster-admin"
+      project: "startx-argocd-example-app"
       # Application source
       source: 
         # repository URL to the application code (default is https://gitlab.com/startx1/helm.git)
@@ -56,20 +54,10 @@ application:
         valueFiles:
           - values.yaml
         parameters:
-          - name: context.scope
-            value: "${SCOPE}"
-          - name: context.cluster
-            value: "${CLUSTER}"
-          - name: context.environment
-            value: "${ENV}"
-          - name: context.version
-            value: "${VERSION}"
-          - name: context.app
-            value: "exemple-html-helm"
           - name: html.expose.enabled
             value: "true"
           - name: html.namespace
-            value: "default"
+            value: "startx-argocd-example"
       # Configuration of the syncPolicy chart
       syncPolicy: | 
         automated:
