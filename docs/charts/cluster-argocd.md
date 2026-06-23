@@ -126,3 +126,5 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.108 | 2026-06-23 | Improve cluster-argocd options |
 | 21.3.167 | 2026-06-23 | publish stable update for the full repository |
 | 21.3.168 | 2026-06-23 | add pattern app-of-apps |
+| 21.3.169 | 2026-06-23 | Improve cluster-argocd options |
+| 21.3.169 | 2026-06-23 | Improve cluster-argocd options |
