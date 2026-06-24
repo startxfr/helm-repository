@@ -1,0 +1,44 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: aoa-infra-all
+  namespace: openshift-gitops
+spec:
+  description: Deploy all infrastructure components and configurations
+  sourceRepos:
+    - 'https://gitlab.com/startx1/helm.git'
+  destinations:
+    - server: '*'
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: aoa-infra-all
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-gitops
+    server: https://kubernetes.default.svc
+  project: aoa-infra-all
+  source:
+    repoURL: https://gitlab.com/startx1/helm.git
+    targetRevision: devel
+    path: charts/cluster-argocd/
+    helm:
+      valueFiles:
+        - values-aoa-infra-all.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
