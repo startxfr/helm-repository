@@ -60,6 +60,13 @@ application:
         automated:
           prune: true
           selfHeal: true
+      ignoreDifferences:
+        - kind: ConfigMap
+          name: startx-logo
+          namespace: openshift-console
+          jsonPointers:
+            - /metadata/annotations
+            - /metadata/labels
     # Enables OpenShift web terminal plugin
     - name: 'infra-console-webterminal'
       namespace: 'openshift-gitops'
