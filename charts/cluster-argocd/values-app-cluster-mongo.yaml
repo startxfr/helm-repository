@@ -4,6 +4,28 @@
 argocd_project:
   enabled: true
   list:
+    - name: 'infra-mongo'
+      namespace: 'openshift-gitops'
+      wave: "7"
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'startx-mongo'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 
 # Applications
 application:
