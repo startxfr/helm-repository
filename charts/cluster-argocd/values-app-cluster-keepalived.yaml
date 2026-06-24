@@ -26,6 +26,7 @@ application:
     - name: 'infra-keepalived-app'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "7"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-keepalived'
       source:
@@ -85,6 +86,7 @@ application:
     - name: 'infra-keepalived-operator'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "7"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-keepalived'
       source:

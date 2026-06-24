@@ -22,6 +22,7 @@ application:
     - name: 'infra-descheduler-app'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "12"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-descheduler'
       source:
@@ -42,6 +43,7 @@ application:
     - name: 'infra-descheduler-operator'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "12"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-descheduler'
       source:

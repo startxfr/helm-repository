@@ -22,6 +22,7 @@ application:
     - name: 'infra-certmanager-app'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "5"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-certmanager'
       source:
@@ -44,6 +45,7 @@ application:
     - name: 'infra-certmanager-operator'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "5"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-certmanager'
       source:

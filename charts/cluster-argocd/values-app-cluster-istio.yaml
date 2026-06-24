@@ -30,6 +30,7 @@ application:
     - name: 'infra-istio-app'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "6"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-istio'
       source:
@@ -50,6 +51,7 @@ application:
     - name: 'infra-istio-operator'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "6"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-istio'
       source:

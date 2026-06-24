@@ -22,6 +22,7 @@ application:
     - name: 'infra-localstorage-app'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "-3"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-localstorage'
       source:
@@ -48,6 +49,7 @@ application:
     - name: 'infra-localstorage-operator'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "-3"
       server: 'https://kubernetes.default.svc'
       project: 'cluster-localstorage'
       source:
