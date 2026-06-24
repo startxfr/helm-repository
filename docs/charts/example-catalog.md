@@ -126,3 +126,4 @@ helm install example-catalog startx/example-catalog -f https://raw.githubusercon
 | 21.3.199 | 2026-06-24 | publish stable update for the full repository |
 | 21.3.201 | 2026-06-24 | publish stable update for the full repository |
 | 21.3.202 | 2026-06-24 | publish stable update for the full repository |
+| 21.3.205 | 2026-06-24 | publish stable update for the full repository |
