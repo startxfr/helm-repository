@@ -23,7 +23,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-redis:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -61,12 +61,6 @@ application:
                     image: quay.io/opstree/redis:v7.0.5
                     imagePullPolicy: IfNotPresent
                     updateStrategy: {}
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-redis-operator'
       namespace: 'openshift-gitops'

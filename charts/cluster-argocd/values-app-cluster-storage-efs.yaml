@@ -23,7 +23,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-storage-efs:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -57,10 +57,6 @@ application:
               namespace: "default"
               accessPointID: "fsap-xxxxxxxxxxxxxxxxx"
               fileSystemID: "fs-xxxxxxxxxxxxxxxxx"
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Installs and configures the operator
     - name: 'infra-storage-efs-operator'
       namespace: 'openshift-gitops'

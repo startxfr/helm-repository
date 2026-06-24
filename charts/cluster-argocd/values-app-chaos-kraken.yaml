@@ -4,7 +4,7 @@
 argocd_project:
   enabled: true
   list:
-    - name: 'chaos-chaos-kraken'
+    - name: 'chaos-kraken'
       namespace: 'openshift-gitops'
       wave: "-1"
       sourceRepos:
@@ -21,7 +21,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:chaos-kraken:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -32,7 +32,7 @@ application:
   enabled: true
   list:
     # Deploys service instances
-    - name: 'chaos-chaos-kraken-instance'
+    - name: 'chaos-kraken-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "52"
@@ -55,12 +55,8 @@ application:
               token:
                 server: https://api.demo219.startx.fr:6443
                 token: sha256~REPLACE_WITH_YOUR_TOKEN
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Creates project namespace and RBAC
-    - name: 'chaos-chaos-kraken-project'
+    - name: 'chaos-kraken-project'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "52"

@@ -21,7 +21,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-ods:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -48,10 +48,6 @@ application:
         values: |
           DataScienceCluster:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Installs and configures the operator
     - name: 'infra-ods-operator'
       namespace: 'openshift-gitops'

@@ -23,7 +23,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-acm:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -50,10 +50,6 @@ application:
         values: |
           acm:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Installs and configures the operator
     - name: 'infra-acm-operator'
       namespace: 'openshift-gitops'

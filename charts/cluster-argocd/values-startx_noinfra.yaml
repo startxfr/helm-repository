@@ -37,7 +37,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:startx-argocd-example-app:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -45,7 +45,7 @@ argocd_project:
 application:
   enabled: false
   list: 
-    - name: "example-application"
+    - name: "startx-argocd-example-app"
       # Namespace where to deploy this VM (default is project)
       namespace: "startx-argocd"
       # enable argocd finalizer for this application

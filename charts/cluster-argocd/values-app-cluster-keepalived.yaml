@@ -25,7 +25,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-keepalived:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -91,10 +91,6 @@ application:
               - 10.99.10.237
           ingressControllerSecret:
             enabled: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Installs and configures the operator
     - name: 'infra-keepalived-operator'
       namespace: 'openshift-gitops'

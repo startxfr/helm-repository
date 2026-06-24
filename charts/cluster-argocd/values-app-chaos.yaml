@@ -4,7 +4,7 @@
 argocd_project:
   enabled: true
   list:
-    - name: 'basic-chaos'
+    - name: 'chaos-all'
       namespace: 'openshift-gitops'
       wave: "0"
       sourceRepos:
@@ -32,7 +32,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:chaos-all:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -43,7 +43,7 @@ application:
   enabled: true
   list:
     # Deploys service instances
-    - name: 'basic-chaos-cerberus-instance'
+    - name: 'chaos-all-cerberus-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
@@ -69,12 +69,8 @@ application:
           # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
           kraken:
             enabled: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Deploys service instances
-    - name: 'basic-chaos-kraken-instance'
+    - name: 'chaos-all-kraken-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
@@ -99,12 +95,8 @@ application:
               token:
                 server: "https://api.<cluster>:6443"
                 token: "sha256~REPLACE_WITH_YOUR_TOKEN"
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Deploys service instances
-    - name: 'basic-chaos-litmus-instance'
+    - name: 'chaos-all-litmus-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
@@ -129,12 +121,8 @@ application:
               architecture: standalone
               persistence:
                 enabled: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Deploys service instances
-    - name: 'basic-chaos-mesh-instance'
+    - name: 'chaos-all-mesh-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
@@ -155,12 +143,8 @@ application:
             # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
             prometheus:
               create: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Deploys service instances
-    - name: 'basic-chaos-monkey-instance'
+    - name: 'chaos-all-monkey-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
@@ -183,10 +167,6 @@ application:
               timezone: Europe/Paris
               startHour: 9
               endHour: 17
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
 
 argocd_repocreds:
   enabled: true

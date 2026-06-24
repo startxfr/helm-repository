@@ -23,7 +23,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-ansible:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -50,12 +50,6 @@ application:
         values: |
           ansibleAAP:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-ansible-operator'
       namespace: 'openshift-gitops'
@@ -91,8 +85,6 @@ application:
         automated:
           prune: true
           selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Creates project namespace and RBAC
     - name: 'infra-ansible-project'
       namespace: 'openshift-gitops'

@@ -21,7 +21,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:chaos-cerberus:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -55,10 +55,6 @@ application:
               # token: monitor a remote cluster with a bearer token
               # file:  inject a full kubeconfig file
               mode: local
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Creates project namespace and RBAC
     - name: 'chaos-chaos-cerberus-project'
       namespace: 'openshift-gitops'
@@ -72,26 +68,6 @@ application:
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
-        values: |
-          project:
-            enabled: true
-          cerberus:
-            enabled: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-    # Creates project namespace and RBAC
-    - name: 'chaos-chaos-cerberus-project'
-      namespace: 'openshift-gitops'
-      finalizer: false
-      server: 'https://kubernetes.default.svc'
-      project: 'chaos-cerberus'
-      source:
-        repoURL: 'https://gitlab.com/startx1/helm.git'
-        path: 'charts/chaos-cerberus'
-        targetRevision: devel
-      helm: |
         values: |
           project:
             enabled: true
@@ -146,10 +122,6 @@ application:
               # token: monitor a remote cluster with a bearer token
               # file:  inject a full kubeconfig file
               mode: local
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
 
 argocd_repocreds:
   enabled: true

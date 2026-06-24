@@ -4,7 +4,7 @@
 argocd_project:
   enabled: true
   list:
-    - name: 'basic-operator-example'
+    - name: 'operator-example'
       namespace: 'openshift-gitops'
       wave: "-9"
       sourceRepos:
@@ -21,7 +21,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:operator-example:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -32,7 +32,7 @@ application:
   enabled: true
   list:
     # Installs and configures the operator
-    - name: 'basic-operator-example-pipeline'
+    - name: 'operator-example-pipeline'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "19"
@@ -59,12 +59,6 @@ application:
                 namespace: openshift-marketplace
           operatorGroup:
             enabled: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
 
 argocd_repocreds:
   enabled: true

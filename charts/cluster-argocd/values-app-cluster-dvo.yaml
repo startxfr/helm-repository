@@ -21,7 +21,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-dvo:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -48,10 +48,6 @@ application:
         values: |
           grafana:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Installs and configures the operator
     - name: 'infra-dvo-operator'
       namespace: 'openshift-gitops'
@@ -71,10 +67,6 @@ application:
             enabled: false
           operator:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
 
 argocd_repocreds:
   enabled: true

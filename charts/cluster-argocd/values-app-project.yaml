@@ -4,7 +4,7 @@
 argocd_project:
   enabled: true
   list:
-    - name: 'basic-demo-project'
+    - name: 'project-example'
       namespace: 'openshift-gitops'
       wave: "-19"
       sourceRepos:
@@ -21,7 +21,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:project-example:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -32,7 +32,7 @@ application:
   enabled: true
   list:
     # Application configuration and instances
-    - name: 'basic-demo-project-app'
+    - name: 'project-example-app'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "9"
@@ -51,9 +51,6 @@ application:
             type: namespace
             name: demo-project
       syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
         syncOptions:
           - CreateNamespace=true
 

@@ -21,7 +21,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-mustgather:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -48,12 +48,6 @@ application:
         values: |
           report:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-mustgather-operator'
       namespace: 'openshift-gitops'

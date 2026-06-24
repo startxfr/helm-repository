@@ -21,7 +21,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-vault:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -52,10 +52,6 @@ application:
             enabled: true
             global:
               enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Creates project namespace and RBAC
     - name: 'infra-vault-project'
       namespace: 'openshift-gitops'
