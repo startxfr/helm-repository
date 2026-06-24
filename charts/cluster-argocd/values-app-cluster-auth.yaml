@@ -37,9 +37,9 @@ application:
       server: 'https://kubernetes.default.svc'
       project: 'infra-auth'
       source:
-        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
-        chart: 'cluster-auth'
-        rev: '21.3.201'
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-auth'
+        targetRevision: devel
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml

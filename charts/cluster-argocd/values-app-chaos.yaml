@@ -50,9 +50,9 @@ application:
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
-        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
-        chart: 'chaos-cerberus'
-        rev: '21.3.201'
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/chaos-cerberus'
+        targetRevision: devel
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -81,9 +81,9 @@ application:
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
-        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
-        chart: 'chaos-kraken'
-        rev: '21.3.201'
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/chaos-kraken'
+        targetRevision: devel
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -111,9 +111,9 @@ application:
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
-        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
-        chart: 'chaos-litmus'
-        rev: '21.3.201'
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/chaos-litmus'
+        targetRevision: devel
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -141,9 +141,9 @@ application:
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
-        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
-        chart: 'chaos-mesh'
-        rev: '21.3.201'
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/chaos-mesh'
+        targetRevision: devel
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -167,9 +167,9 @@ application:
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
-        repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
-        chart: 'chaos-monkey'
-        rev: '21.3.201'
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/chaos-monkey'
+        targetRevision: devel
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
