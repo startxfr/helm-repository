@@ -89,8 +89,8 @@ Print a table of results:
 ```
 Chart                  | Ver      | targetRevision | History | Docs sync
 -----------------------|----------|----------------|---------|----------
-cluster-redis          | 21.3.67  | ✓              | ✓       | ✓
-cluster-mongo          | 21.3.55  | ✗ (21.3.27)    | ✓       | ✗ (diff)
+cluster-redis          | 21.3.199  | ✓              | ✓       | ✓
+cluster-mongo          | 21.3.199  | ✗ (21.3.27)    | ✓       | ✗ (diff)
 ```
 
 If no mismatches: print `All charts are consistent. Nothing to fix.` and stop.
@@ -126,13 +126,13 @@ cp charts/$chart/README.md docs/charts/$chart.md
 Version check complete.
 
 Fixed   : N charts
-  - <chart> : targetRevision updated (21.3.27 → 21.3.67)
+  - <chart> : targetRevision updated (21.3.27 → 21.3.199)
   - <chart> : docs/charts/<name>.md re-synced from README
 
 OK      : M charts (no changes needed)
 
 History : K charts with last row < chart version (manual review needed)
-  - <chart> : last history row 21.3.55, chart version 21.3.67
+  - <chart> : last history row 21.3.199, chart version 21.3.199
 ```
 
 If fixes were applied, remind: "Run `make publish` if the updated READMEs affect charts that are already released."

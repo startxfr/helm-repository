@@ -6,6 +6,7 @@ argocd_project:
   list:
     - name: 'infra-3scale'
       namespace: 'openshift-gitops'
+      wave: "-5"
       sourceRepos:
         - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
       destinations:
@@ -17,6 +18,18 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: 'default-crunchy'
           server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 
 # Applications
 application:
@@ -26,12 +39,13 @@ application:
     - name: 'infra-3scale-app'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "48"
       server: 'https://kubernetes.default.svc'
-      project: 'cluster-3scale'
+      project: 'infra-3scale'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'cluster-3scale'
-        rev: '21.3.107'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -72,12 +86,13 @@ application:
     - name: 'infra-3scale-operator'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "48"
       server: 'https://kubernetes.default.svc'
-      project: 'cluster-3scale'
+      project: 'infra-3scale'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'cluster-3scale'
-        rev: '21.3.107'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -119,11 +134,11 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
-      project: 'cluster-3scale'
+      project: 'infra-3scale'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'cluster-3scale'
-        rev: '21.3.107'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml

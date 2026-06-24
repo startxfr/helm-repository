@@ -6,6 +6,7 @@ argocd_project:
   list:
     - name: 'infra-console'
       namespace: 'openshift-gitops'
+      wave: "-8"
       sourceRepos:
         - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
       destinations:
@@ -17,6 +18,18 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: 'openshift-gitops'
           server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 
 # Applications
 application:
@@ -26,12 +39,13 @@ application:
     - name: 'infra-console-personalize'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "1"
       server: 'https://kubernetes.default.svc'
-      project: 'cluster-console'
+      project: 'infra-console'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'cluster-console'
-        rev: '21.3.106'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -48,12 +62,13 @@ application:
     - name: 'infra-console-webterminal'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "1"
       server: 'https://kubernetes.default.svc'
-      project: 'cluster-console'
+      project: 'infra-console'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'cluster-console'
-        rev: '21.3.106'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml

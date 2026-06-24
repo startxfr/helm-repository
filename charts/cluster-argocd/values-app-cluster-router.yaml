@@ -6,6 +6,7 @@ argocd_project:
   list:
     - name: 'infra-router'
       namespace: 'openshift-gitops'
+      wave: "-13"
       sourceRepos:
         - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
       destinations:
@@ -13,6 +14,18 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: 'openshift-image-registry'
           server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 
 # Applications
 application:
@@ -22,12 +35,13 @@ application:
     - name: 'infra-router-app'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "3"
       server: 'https://kubernetes.default.svc'
-      project: 'cluster-router'
+      project: 'infra-router'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'cluster-router'
-        rev: '21.3.106'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml

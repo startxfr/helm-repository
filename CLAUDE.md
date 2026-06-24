@@ -61,8 +61,8 @@ Never edit hardcoded values inside `.tools/cli` or `sx-helm`; all tunables are i
 ### Makefile usage
 
 ```bash
-make release   CHART=cluster-nmstate [VERSION=21.3.5] [DESC="fix"]
-make release-all                     [VERSION=21.3.5] [DESC="stable update"]
+make release   CHART=cluster-nmstate [VERSION=21.3.199] [DESC="fix"]
+make release-all                     [VERSION=21.3.199] [DESC="stable update"]
 make publish        # regenerates stable/noschema/release-N S3 repos
 make publish-chart  CHART=cluster-nmstate
 make lint/test/schema/package  CHART=cluster-nmstate

@@ -23,14 +23,25 @@ argocd_export:
 argocd_project:
   enabled: false
   list:
-    - name: "startx-gitops"
     - name: "cluster-admin"
-    - name: "startx-gitops"
       namespace: "startx-gitops"
-      sourceRepos: []
-      destinations: []
-      clusterResourceWhitelist: []
-      roles: []
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: '*'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 application:
   enabled: false
   list: 
@@ -39,6 +50,7 @@ application:
       namespace: "startx-gitops"
       # enable argocd finalizer for this application
       finalizer: true
+      wave: "49"
       # name of the destination server (default is https://kubernetes.default.svc) 
       server: "https://kubernetes.default.svc"
       # name of the parent project (default is cluster-admin) 

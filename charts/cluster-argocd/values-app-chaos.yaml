@@ -6,6 +6,7 @@ argocd_project:
   list:
     - name: 'basic-chaos'
       namespace: 'openshift-gitops'
+      wave: "0"
       sourceRepos:
         - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
         - 'https://litmuschaos.github.io/litmus-helm'
@@ -24,6 +25,18 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: 'default'
           server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 
 # Applications
 application:
@@ -33,12 +46,13 @@ application:
     - name: 'basic-chaos-cerberus-instance'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "50"
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'chaos-cerberus'
-        rev: '21.3.107'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -63,12 +77,13 @@ application:
     - name: 'basic-chaos-kraken-instance'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "50"
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'chaos-kraken'
-        rev: '21.3.107'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -92,12 +107,13 @@ application:
     - name: 'basic-chaos-litmus-instance'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "50"
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'chaos-litmus'
-        rev: '21.3.107'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -121,12 +137,13 @@ application:
     - name: 'basic-chaos-mesh-instance'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "50"
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'chaos-mesh'
-        rev: '21.3.107'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
@@ -146,12 +163,13 @@ application:
     - name: 'basic-chaos-monkey-instance'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "50"
       server: 'https://kubernetes.default.svc'
       project: 'chaos'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'chaos-monkey'
-        rev: '21.3.107'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml

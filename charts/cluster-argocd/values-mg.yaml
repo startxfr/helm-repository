@@ -23,26 +23,38 @@ argocd_export:
 argocd_project:
   enabled: false
   list:
-    - name: "startx-argocd"
-    - name: "cluster-admin"
-    - name: "startx-argocd"
-      namespace: "startx-argocd"
-      sourceRepos: []
-      destinations: []
-      clusterResourceWhitelist: []
-      roles: []
+    - name: "startx-argocd-example"
+      namespace: "openshift-gitops"
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'default'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 application:
   enabled: false
   list: 
     - name: "example-application"
       # Namespace where to deploy this VM (default is project)
-      namespace: "startx-argocd"
+      namespace: "openshift-gitops"
       # enable argocd finalizer for this application
       finalizer: true
+      wave: "49"
       # name of the destination server (default is https://kubernetes.default.svc) 
       server: "https://kubernetes.default.svc"
       # name of the parent project (default is cluster-admin) 
-      project: "cluster-admin"
+      project: "startx-argocd-example"
       # Application source
       source: 
         # repository URL to the application code (default is https://gitlab.com/startx1/helm.git)
@@ -56,16 +68,6 @@ application:
         valueFiles:
           - values.yaml
         parameters:
-          - name: context.scope
-            value: "${SCOPE}"
-          - name: context.cluster
-            value: "${CLUSTER}"
-          - name: context.environment
-            value: "${ENV}"
-          - name: context.version
-            value: "${VERSION}"
-          - name: context.app
-            value: "exemple-html-helm"
           - name: html.expose.enabled
             value: "true"
           - name: html.namespace

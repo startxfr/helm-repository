@@ -6,6 +6,7 @@ argocd_project:
   list:
     - name: 'basic-operator-example'
       namespace: 'openshift-gitops'
+      wave: "-9"
       sourceRepos:
         - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
       destinations:
@@ -13,6 +14,18 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: '*'
           server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 
 # Applications
 application:
@@ -22,12 +35,13 @@ application:
     - name: 'basic-operator-example-pipeline'
       namespace: 'openshift-gitops'
       finalizer: true
+      wave: "19"
       server: 'https://kubernetes.default.svc'
       project: 'operator-example'
       source:
         repo: 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable'
         chart: 'operator'
-        rev: '21.3.106'
+        rev: '21.3.201'
       helm: |
         valueFiles:
           - values-startx_noinfra.yaml
