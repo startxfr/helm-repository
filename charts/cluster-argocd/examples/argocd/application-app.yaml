@@ -13,15 +13,15 @@ spec:
     server: https://kubernetes.default.svc
   project: cluster-argocd
   source:
-    chart: cluster-argocd
+    repoURL: https://gitlab.com/startx1/helm.git
+    targetRevision: devel
+    path: charts/cluster-argocd/
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
       values: |
         argocd:
           enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.199
   ignoreDifferences:
     - group: argoproj.io
       kind: ArgoCD
