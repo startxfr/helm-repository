@@ -51,12 +51,6 @@ application:
           rhn:
             user: "<your-rhn-username>"
             pwd: "<your-rhn-password>"
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-quay-operator'
       namespace: 'openshift-gitops'

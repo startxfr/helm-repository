@@ -32,32 +32,6 @@ argocd_project:
 application:
   enabled: true
   list:
-    # Application configuration and instances
-    - name: 'infra-quaysec-app'
-      namespace: 'openshift-gitops'
-      finalizer: true
-      wave: "46"
-      server: 'https://kubernetes.default.svc'
-      project: 'infra-quaysec'
-      source:
-        repoURL: 'https://gitlab.com/startx1/helm.git'
-        path: 'charts/cluster-quay'
-        targetRevision: devel
-      helm: |
-        valueFiles:
-          - values-startx_noinfra-secvuln.yaml
-        values: |
-          quay:
-            enabled: true
-          rhn:
-            user: "<your-rhn-username>"
-            pwd: "<your-rhn-password>"
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-quaysec-operator'
       namespace: 'openshift-gitops'
@@ -73,7 +47,7 @@ application:
         valueFiles:
           - values-startx_noinfra-secvuln.yaml
         values: |
-          operator:
+          operatorsec:
             enabled: true
       syncPolicy: |
         automated:

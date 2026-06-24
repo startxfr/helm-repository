@@ -48,12 +48,6 @@ application:
         values: |
           report:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-mustgather-operator'
       namespace: 'openshift-gitops'

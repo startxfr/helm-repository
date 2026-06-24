@@ -48,10 +48,6 @@ application:
         values: |
           grafana:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Installs and configures the operator
     - name: 'infra-dvo-operator'
       namespace: 'openshift-gitops'
@@ -71,10 +67,6 @@ application:
             enabled: false
           operator:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
 
 argocd_repocreds:
   enabled: true

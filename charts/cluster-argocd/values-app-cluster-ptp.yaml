@@ -48,12 +48,6 @@ application:
         values: |
           ptp:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-ptp-operator'
       namespace: 'openshift-gitops'

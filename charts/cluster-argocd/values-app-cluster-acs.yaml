@@ -50,12 +50,6 @@ application:
         values: |
           acs:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-acs-operator'
       namespace: 'openshift-gitops'

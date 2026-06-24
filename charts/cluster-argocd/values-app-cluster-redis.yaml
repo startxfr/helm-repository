@@ -61,12 +61,6 @@ application:
                     image: quay.io/opstree/redis:v7.0.5
                     imagePullPolicy: IfNotPresent
                     updateStrategy: {}
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-redis-operator'
       namespace: 'openshift-gitops'

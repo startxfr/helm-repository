@@ -69,10 +69,6 @@ application:
           # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
           kraken:
             enabled: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Deploys service instances
     - name: 'chaos-all-kraken-instance'
       namespace: 'openshift-gitops'
@@ -99,10 +95,6 @@ application:
               token:
                 server: "https://api.<cluster>:6443"
                 token: "sha256~REPLACE_WITH_YOUR_TOKEN"
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Deploys service instances
     - name: 'chaos-all-litmus-instance'
       namespace: 'openshift-gitops'
@@ -129,10 +121,6 @@ application:
               architecture: standalone
               persistence:
                 enabled: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Deploys service instances
     - name: 'chaos-all-mesh-instance'
       namespace: 'openshift-gitops'
@@ -155,10 +143,6 @@ application:
             # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
             prometheus:
               create: false
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
     # Deploys service instances
     - name: 'chaos-all-monkey-instance'
       namespace: 'openshift-gitops'
@@ -183,10 +167,6 @@ application:
               timezone: Europe/Paris
               startHour: 9
               endHour: 17
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
 
 argocd_repocreds:
   enabled: true

@@ -50,12 +50,6 @@ application:
         values: |
           ansibleAAP:
             enabled: true
-      syncPolicy: |
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Installs and configures the operator
     - name: 'infra-ansible-operator'
       namespace: 'openshift-gitops'
@@ -91,8 +85,6 @@ application:
         automated:
           prune: true
           selfHeal: true
-        syncOptions:
-          - CreateNamespace=true
     # Creates project namespace and RBAC
     - name: 'infra-ansible-project'
       namespace: 'openshift-gitops'
