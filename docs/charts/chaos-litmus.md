@@ -187,3 +187,4 @@ helm install chaos-litmus startx/chaos-litmus \
 | 21.3.201 | 2026-06-24 | publish stable update for the full repository |
 | 21.3.202 | 2026-06-24 | publish stable update for the full repository |
 | 21.3.203 | 2026-06-24 | Improve chaos-litmus options |
+| 21.3.205 | 2026-06-24 | publish stable update for the full repository |
