@@ -240,3 +240,4 @@ The automated sync policy ensures ArgoCD reconciles the namespace whenever the c
 | 21.3.181 | 2026-06-23 | publish stable update for the full repository |
 | 21.3.182 | 2026-06-23 | publish stable update for the full repository |
 | 21.3.199 | 2026-06-24 | publish stable update for the full repository |
+| 21.3.201 | 2026-06-24 | publish stable update for the full repository |
