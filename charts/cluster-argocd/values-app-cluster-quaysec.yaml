@@ -15,6 +15,18 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: 'openshift-startx-quay'
           server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 
 # Applications
 application:

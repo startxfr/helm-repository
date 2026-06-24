@@ -4,7 +4,7 @@
 argocd_project:
   enabled: true
   list:
-    - name: 'chaos-chaos-cerberus'
+    - name: 'chaos-cerberus'
       namespace: 'openshift-gitops'
       wave: "-1"
       sourceRepos:
@@ -14,15 +14,18 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: 'default'
           server: 'https://kubernetes.default.svc'
-    - name: 'chaos-chaos-cerberus'
-      namespace: 'openshift-gitops'
-      sourceRepos:
-        - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
-      destinations:
-        - namespace: 'chaos-cerberus'
-          server: 'https://kubernetes.default.svc'
-        - namespace: 'default'
-          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, role:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
 
 # Applications
 application:
