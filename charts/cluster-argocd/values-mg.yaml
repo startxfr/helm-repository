@@ -23,7 +23,7 @@ argocd_export:
 argocd_project:
   enabled: false
   list:
-    - name: "startx-argocd-example"
+    - name: "startx-argocd"
       namespace: "openshift-gitops"
       sourceRepos:
         - 'https://gitlab.com/startx1/helm.git'
@@ -37,7 +37,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:startx-argocd:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -54,7 +54,7 @@ application:
       # name of the destination server (default is https://kubernetes.default.svc) 
       server: "https://kubernetes.default.svc"
       # name of the parent project (default is cluster-admin) 
-      project: "startx-argocd-example"
+      project: "startx-argocd"
       # Application source
       source: 
         # repository URL to the application code (default is https://gitlab.com/startx1/helm.git)

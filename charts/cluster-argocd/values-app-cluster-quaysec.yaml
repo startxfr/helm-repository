@@ -5,7 +5,7 @@
 argocd_project:
   enabled: true
   list:
-    - name: 'infra-quay'
+    - name: 'infra-quaysec'
       namespace: 'openshift-gitops'
       wave: "26"
       sourceRepos:
@@ -22,7 +22,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:infra-quaysec:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -38,7 +38,7 @@ application:
       finalizer: true
       wave: "46"
       server: 'https://kubernetes.default.svc'
-      project: 'infra-quay'
+      project: 'infra-quaysec'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/cluster-quay'
@@ -84,7 +84,7 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
-      project: 'infra-quay'
+      project: 'infra-quaysec'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/cluster-quay'

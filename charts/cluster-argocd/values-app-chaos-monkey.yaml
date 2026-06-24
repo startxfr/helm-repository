@@ -4,7 +4,7 @@
 argocd_project:
   enabled: true
   list:
-    - name: 'chaos-chaos-monkey'
+    - name: 'chaos-monkey'
       namespace: 'openshift-gitops'
       wave: "-1"
       sourceRepos:
@@ -22,7 +22,7 @@ argocd_project:
       - name: admin
         description: All privileges to group admin in project
         policies:
-        - p, role:admin, *, *, */*, allow
+        - p, proj:chaos-monkey:admin, *, *, */*, allow
         - g, system:cluster-admins, role:admin
         groups:
         - system:cluster-admins
@@ -33,7 +33,7 @@ application:
   enabled: true
   list:
     # Deploys service instances
-    - name: 'chaos-chaos-monkey-instance'
+    - name: 'chaos-monkey-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "54"
@@ -59,7 +59,7 @@ application:
           prune: true
           selfHeal: true
     # Creates project namespace and RBAC
-    - name: 'chaos-chaos-monkey-project'
+    - name: 'chaos-monkey-project'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "54"
