@@ -90,7 +90,7 @@ oc apply -k .
 | 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
 | 21.3.4 | 2026-06-17 | 21.3.9 |
 | 21.3.11 | 2026-06-17 | publish stable update for the full repository |
-| 21.3.12 | 2026-06-18 | Update context version to 4.21.3, web-terminal operator to v1.14.0, add ArgoCD deployment examples |
+| 21.3.12 | 2026-06-18 | Update context version to 4.21.3, web-terminal operator to v1.13.0, add ArgoCD deployment examples |
 | 21.3.13 | 2026-06-18 | Improve cluster-console options |
 | 21.3.27 | 2026-06-19 | publish stable update for the full repository |
 | 21.3.55 | 2026-06-19 | publish stable update for the full repository |
