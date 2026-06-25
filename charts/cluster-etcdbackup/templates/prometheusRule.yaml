@@ -1,0 +1,46 @@
+{{- if .Values.etcdBackup.enabled }}
+{{- if .Values.etcdBackup.alerting.enabled }}
+{{- $ns := .Values.etcdBackup.namespace | default "etcd-backup" -}}
+{{- $hours := .Values.etcdBackup.alerting.noBackupForHours | default 24 -}}
+{{- $seconds := mul $hours 3600 -}}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: etcd-backup-cronjob-monitor
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/name: etcd-backup-prometheusrule
+  annotations:
+    {{- include "etcd-backup.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "12"
+spec:
+  groups:
+    - name: etcd-backup
+      rules:
+        # Fire if no successful backup Job completed in the last N hours.
+        # Looks at the most recent successful completion time across all etcd-backup-* Jobs.
+        - alert: EtcdBackupNoRecentSuccess
+          expr: |
+            (time() - max(kube_job_status_completion_time{namespace="{{ $ns }}", job_name=~"etcd-backup.*"})) > {{ $seconds }}
+            or
+            absent(kube_job_status_completion_time{namespace="{{ $ns }}", job_name=~"etcd-backup.*"})
+          for: 10m
+          labels:
+            severity: {{ .Values.etcdBackup.alerting.severity | default "critical" | quote }}
+          annotations:
+            summary: "No successful etcd backup in the last {{ $hours }}h"
+            description: "The etcd-backup CronJob in namespace {{ $ns }} has not produced a successful Job completion in the last {{ $hours }} hours."
+        # Also alert if the latest Job actually failed (orthogonal to the above).
+        - alert: EtcdBackupLastJobFailed
+          expr: |
+            max by (job_name) (kube_job_status_failed{namespace="{{ $ns }}", job_name=~"etcd-backup.*"}) > 0
+          for: 5m
+          labels:
+            severity: {{ .Values.etcdBackup.alerting.severity | default "critical" | quote }}
+          annotations:
+            summary: "Latest etcd-backup Job failed"
+            description: "Job {{`{{ $labels.job_name }}`}} in namespace {{ $ns }} reported a failure."
+{{- end }}
+{{- end }}

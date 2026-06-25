@@ -1,0 +1,42 @@
+apiVersion: v2
+name: etcd-backup
+description: Helm chart used to deploy a CronJob that backs up OpenShift etcd to an S3-compatible object store
+type: application
+version: 21.3.3
+appVersion: "1.0.0"
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-backup.svg
+kubeVersion: ">=1.30.0-0"
+keywords:
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - backup
+  - etcd
+  - openshift
+home: https://helm-repository.readthedocs.io/en/latest
+sources:
+  - https://github.com/adfinis/openshift-etcd-backup
+maintainers:
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: https://helm-repository.readthedocs.io/en/latest/repos/stable
+    version: "21.3.3"
+    alias: project
+    condition: project.enabled
+
+annotations:
+  category: cluster
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/license: "GPL-3.0-or-later"
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Initial release of etcd-backup CronJob chart"
+  artifacthub.io/containsSecurityUpdates: "false"

@@ -1,0 +1,60 @@
+{{- if .Values.k10 }}
+{{- if .Values.k10.enabled }}
+{{- $name := .Values.k10.name | default "k10" -}}
+{{- $namespace := .Values.project.project.name | default "kasten-io" -}}
+---
+apiVersion: "{{- .Values.k10.apiVersion | default "apik10.kasten.io/v1alpha1" -}}"
+kind: K10
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "kasten.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-k10"
+  annotations:
+    {{- include "kasten.annotations" . | nindent 4 }}
+    {{- if .Values.k10.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  {{- if .Values.k10.auth }}
+  auth:
+    {{- if .Values.k10.auth.openshift }}
+    openshift:
+      enabled: {{ .Values.k10.auth.openshift.enabled | default false }}
+      dashboardURL: {{ .Values.k10.auth.openshift.dashboardURL | default "" | quote }}
+      insecureCA: {{ .Values.k10.auth.openshift.insecureCA | default "false" | quote }}
+      openshiftURL: {{ .Values.k10.auth.openshift.openshiftURL | default "" | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.k10.global }}
+  global:
+    {{- if .Values.k10.global.persistence }}
+    persistence:
+      {{- if .Values.k10.global.persistence.catalog }}
+      catalog:
+        size: {{ .Values.k10.global.persistence.catalog.size | default "" | quote }}
+      {{- end }}
+      storageClass: {{ .Values.k10.global.persistence.storageClass | default "" | quote }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.k10.metering }}
+  metering:
+    mode: {{ .Values.k10.metering.mode | default "" | quote }}
+  {{- end }}
+  {{- if .Values.k10.route }}
+  route:
+    enabled: {{ .Values.k10.route.enabled | default false }}
+    host: {{ .Values.k10.route.host | default "" | quote }}
+    {{- if .Values.k10.route.tls }}
+    tls:
+      enabled: {{ .Values.k10.route.tls.enabled | default false }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

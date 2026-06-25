@@ -1,0 +1,28 @@
+
+NetApp Trident CSI is enabled, at the cluster level, with the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+{{- if .Values.project }}{{- if .Values.project.enabled }}{{- if .Values.project.project }}
+-- Namespace -----------------------
+         name : {{ .Values.project.project.name | default "trident" }}
+ display_name : {{ .Values.project.project.display_name | default "Trident" }}
+         type : {{ .Values.project.project.type | default "namespace" }}
+{{- end }}{{- end }}{{- end }}
+
+{{- if .Values.operator }}{{- if .Values.operator.enabled }}{{- if .Values.operator.subscription }}{{- if .Values.operator.subscription.enabled }}
+-- Subscription --------------------
+         name : {{ .Values.operator.subscription.name }}
+    namespace : {{ .Values.operator.subscription.namespace }}
+      channel : {{ .Values.operator.subscription.operator.channel }}
+       source : {{ .Values.operator.subscription.operator.source.name }} / {{ .Values.operator.subscription.operator.source.namespace }}
+          CSV : {{ .Values.operator.subscription.operator.csv }}.{{ .Values.operator.subscription.version }}
+{{- end }}{{- end }}{{- end }}{{- end }}
+
+{{ include "trident.notes" .Values }}

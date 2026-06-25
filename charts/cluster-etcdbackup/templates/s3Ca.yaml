@@ -1,0 +1,20 @@
+{{- if .Values.etcdBackup.enabled }}
+{{- if .Values.etcdBackup.useS3Ca }}
+{{- $ns := .Values.etcdBackup.namespace | default "etcd-backup" -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: s3-ca
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/name: etcd-backup-s3-ca
+  annotations:
+    {{- include "etcd-backup.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "11"
+data:
+  ca-bundle.crt: |
+{{ .Values.etcdBackup.s3CaCert | indent 4 }}
+{{- end }}
+{{- end }}

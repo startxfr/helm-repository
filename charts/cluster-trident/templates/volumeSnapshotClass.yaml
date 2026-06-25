@@ -1,0 +1,42 @@
+{{- if .Values.volumeSnapshotClasses }}
+{{- if .Values.volumeSnapshotClasses.enabled }}
+{{- $root := . -}}
+{{- $driver := .Values.volumeSnapshotClasses.driver | default "csi.trident.netapp.io" -}}
+{{- range $idx, $vsc := .Values.volumeSnapshotClasses.list }}
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: {{ $vsc.name | quote }}
+  labels:
+    {{- include "trident.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ $vsc.name }}-volumesnapshotclass"
+    {{- if $vsc.kastenDefault }}
+    {{- end }}
+  annotations:
+    k10.kasten.io/is-snapshot-class: "true"
+    {{- include "trident.annotations" $root | nindent 4 }}
+    {{- if $vsc.isDefault }}
+    snapshot.storage.kubernetes.io/is-default-class: "true"
+    {{- else }}
+    snapshot.storage.kubernetes.io/is-default-class: "false"
+    {{- end }}
+    {{- if $.Values.volumeSnapshotClasses.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "31"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "4"
+driver: {{ $driver | quote }}
+deletionPolicy: {{ $vsc.deletionPolicy | default "Delete" }}
+{{- if $vsc.parameters }}
+parameters:
+  {{- range $key, $val := $vsc.parameters }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

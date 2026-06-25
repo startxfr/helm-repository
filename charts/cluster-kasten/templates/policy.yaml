@@ -1,0 +1,74 @@
+{{- if .Values.policies }}
+{{- if .Values.policies.enabled }}
+{{- $namespace := .Values.project.project.name | default "kasten-io" -}}
+{{- $apiVersion := .Values.policies.apiVersion | default "config.kio.kasten.io/v1alpha1" -}}
+{{- $root := . -}}
+{{- range $idx, $policy := .Values.policies.list }}
+---
+apiVersion: {{ $apiVersion | quote }}
+kind: Policy
+metadata:
+  name: {{ $policy.name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "kasten.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ $policy.name }}-policy"
+  annotations:
+    {{- include "kasten.annotations" $root | nindent 4 }}
+    {{- if $.Values.policies.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "40"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  {{- if $policy.comment }}
+  comment: {{ $policy.comment | quote }}
+  {{- end }}
+  frequency: {{ $policy.frequency | default "@daily" | quote }}
+  {{- if $policy.paused }}
+  paused: {{ $policy.paused | default false }}
+  {{- end }}
+  actions:
+    - action: backup
+      backupParameters:
+        filters: {}
+        profile:
+          name: {{ $policy.backup.profile.name | quote }}
+          namespace: {{ $policy.backup.profile.namespace | default $namespace | quote }}
+        {{- if $policy.backup.imageRepoProfile }}
+        imageRepoProfile:
+          name: {{ $policy.backup.imageRepoProfile.name | quote }}
+          namespace: {{ $policy.backup.imageRepoProfile.namespace | default $namespace | quote }}
+        {{- end }}
+    {{- if $policy.export }}
+    - action: export
+      exportParameters:
+        frequency: {{ $policy.export.frequency | default $policy.frequency | quote }}
+        profile:
+          name: {{ $policy.export.profile.name | default $policy.backup.profile.name | quote }}
+          namespace: {{ $policy.export.profile.namespace | default $namespace | quote }}
+        exportData:
+          enabled: {{ $policy.export.exportData.enabled | default true }}
+      retention: 
+        {{- if $policy.retention.daily }}
+        daily: {{ $policy.retention.daily | default 0 }}
+        {{- end }}
+        {{- if $policy.retention.weekly }}
+        weekly: {{ $policy.retention.weekly | default 0 }}
+        {{- end }}
+        {{- if $policy.retention.monthly }}
+        monthly: {{ $policy.retention.monthly | default 0 }}
+        {{- end }}
+        {{- if $policy.retention.yearly }}
+        yearly: {{ $policy.retention.yearly | default 0 }}
+        {{- end }}
+        {{- end }}
+  retention: {}
+  selector:
+{{ toYaml $policy.selector | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}

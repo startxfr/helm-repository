@@ -1,0 +1,26 @@
+{{- if .Values.etcdBackup.enabled }}
+{{- $ns := .Values.etcdBackup.namespace | default "etcd-backup" -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-config
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/name: etcd-backup-config
+  annotations:
+    {{- include "etcd-backup.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "11"
+data:
+  OCP_BACKUP_S3: "true"
+  OCP_BACKUP_S3_NAME: {{ .Values.etcdBackup.s3_region | quote }}
+  OCP_BACKUP_S3_HOST: {{ .Values.etcdBackup.s3_endpoint | quote }}
+  OCP_BACKUP_S3_BUCKET: {{ .Values.etcdBackup.s3_bucket_name | quote }}
+  OCP_BACKUP_SUBDIR: "/etcd-backup"
+  OCP_BACKUP_DIRNAME: "+etcd-backup-%FT%T%:z"
+  OCP_BACKUP_EXPIRE_TYPE: "days"
+  OCP_BACKUP_KEEP_DAYS: {{ .Values.etcdBackup.keep_days | quote }}
+  OCP_BACKUP_KEEP_COUNT: {{ .Values.etcdBackup.keep_count | quote }}
+  OCP_BACKUP_UMASK: "0027"
+{{- end }}

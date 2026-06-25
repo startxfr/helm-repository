@@ -1,0 +1,91 @@
+# Default values for etcd-backup.
+
+# Application deployment context
+context: &context
+  scope: myscope
+  cluster: default
+  environment: myenv
+  component: backup
+  app: etcd-backup
+  version: "1.0.0"
+
+# Master switch for the etcd-backup CronJob + its supporting resources
+etcdBackup:
+  enabled: false
+  # Namespace where the CronJob, SA, RBAC, ConfigMap, and Secret live.
+  # Used by every sibling template; also fed to the project sub-chart below.
+  namespace: etcd-backup
+
+  # CronJob schedule (every 12h by default)
+  schedule: "0 */12 * * *"
+
+  # Container image
+  image:
+    repository: ghcr.io/adfinis/openshift-etcd-backup
+    tag: latest
+    pullPolicy: Always
+
+  # Resources
+  resources:
+    requests:
+      cpu: 500m
+      memory: 128Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
+  # CronJob history caps — without these completed Job objects accumulate forever
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 600
+
+  # S3 destination (non-sensitive)
+  s3_endpoint: ""
+  s3_region: ""
+  s3_bucket_name: ""
+
+  # S3 credentials. Two modes:
+  #  1. Inline: leave `secretName` empty and fill `s3_access_key` + `s3_secret_key`.
+  #     The chart will render a Secret named "<release>-etcd-backup-s3" of type Opaque.
+  #  2. External: set `secretName` to an existing Secret in the same namespace
+  #     containing keys `OCP_BACKUP_S3_ACCESS_KEY` and `OCP_BACKUP_S3_SECRET_KEY`.
+  s3_secret:
+    secretName: ""
+    s3_access_key: ""
+    s3_secret_key: ""
+
+  # Retention (passed through to the backup script)
+  keep_days: 30
+  keep_count: 10
+
+  # Custom CA bundle for S3 endpoint (self-signed or private CA)
+  useS3Ca: false
+  # PEM-encoded CA bundle, inserted verbatim into the s3-ca ConfigMap.
+  s3CaCert: ""
+
+  # Alerting — minutes since last successful backup before the alert fires.
+  # The default expression checks for >24h without a success.
+  alerting:
+    enabled: true
+    noBackupForHours: 24
+    severity: critical
+
+# Configuration of the project sub-chart (manages the namespace)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    type: namespace
+    name: "etcd-backup"
+    display_name: "Etcd Backup"
+    description: Etcd backup CronJob namespace configured by startx
+  rbac:
+    enabled: false
+  networkpolicy:
+    enabled: false
+  limits:
+    enabled: false
+  quotas:
+    enabled: false

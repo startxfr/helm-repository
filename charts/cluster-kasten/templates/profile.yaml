@@ -1,0 +1,84 @@
+{{- if .Values.profiles }}
+{{- if .Values.profiles.enabled }}
+{{- $namespace := .Values.project.project.name | default "kasten-io" -}}
+{{- $apiVersion := .Values.profiles.apiVersion | default "config.kio.kasten.io/v1alpha1" -}}
+{{- $root := . -}}
+{{- range $idx, $profile := .Values.profiles.list }}
+{{- $credential := $profile.locationSpec.credential | default dict -}}
+{{- $secretName := $credential.secretName | default (printf "%s-secret" $profile.name) -}}
+---
+apiVersion: {{ $apiVersion | quote }}
+kind: Profile
+metadata:
+  name: {{ $profile.name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "kasten.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ $profile.name }}-profile"
+  annotations:
+    {{- include "kasten.annotations" $root | nindent 4 }}
+    {{- if $.Values.profiles.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "30"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  type: {{ $profile.type | default "Location" }}
+  locationSpec:
+    type: {{ $profile.locationSpec.type | default "ObjectStore" }}
+    {{- if $profile.locationSpec.objectStore }}
+    objectStore:
+      objectStoreType: {{ $profile.locationSpec.objectStore.objectStoreType | default "S3" }}
+      name: {{ $profile.locationSpec.objectStore.name | quote }}
+      {{- if $profile.locationSpec.objectStore.region }}
+      region: {{ $profile.locationSpec.objectStore.region | quote }}
+      {{- end }}
+      {{- if $profile.locationSpec.objectStore.endpoint }}
+      endpoint: {{ $profile.locationSpec.objectStore.endpoint | quote }}
+      {{- end }}
+      {{- if $profile.locationSpec.objectStore.protectionPeriod }}
+      protectionPeriod: {{ $profile.locationSpec.objectStore.protectionPeriod | quote }}
+      {{- end }}
+      {{- if hasKey $profile.locationSpec.objectStore "skipSSLVerify" }}
+      skipSSLVerify: {{ $profile.locationSpec.objectStore.skipSSLVerify }}
+      {{- end }}
+      {{- if $profile.locationSpec.objectStore.pathType }}
+      pathType: {{ $profile.locationSpec.objectStore.pathType | quote }}
+      {{- end }}
+    {{- end }}
+    credential:
+      secretType: {{ $credential.secretType | default "AwsAccessKey" }}
+      secret:
+        apiVersion: v1
+        kind: Secret
+        name: {{ $secretName | quote }}
+        namespace: "{{- $namespace -}}"
+---
+apiVersion: v1
+kind: Secret
+type: secrets.kanister.io/aws
+metadata:
+  name: {{ $secretName | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "kasten.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ $secretName }}-secret"
+  annotations:
+    {{- include "kasten.annotations" $root | nindent 4 }}
+    {{- if $.Values.profiles.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "29"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "4"
+stringData:
+  aws_access_key_id: {{ $credential.awsAccessKeyID | quote }}
+  aws_secret_access_key: {{ $credential.awsSecretAccessKey | quote }}
+{{- end }}
+{{- end }}
+{{- end }}

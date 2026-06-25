@@ -1,0 +1,16 @@
+
+Etcd backup is configured with the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+{{ include "etcd-backup.notes" .Values }}
+
+To trigger an on-demand backup (without waiting for the next schedule):
+
+    oc -n {{ .Values.etcdBackup.namespace | default "etcd-backup" }} create job --from=cronjob/etcd-backup etcd-backup-manual-$(date +%s)
