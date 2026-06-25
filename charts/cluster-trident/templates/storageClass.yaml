@@ -1,0 +1,52 @@
+{{- if .Values.storageClasses }}
+{{- if .Values.storageClasses.enabled }}
+{{- $root := . -}}
+{{- $provisioner := .Values.storageClasses.provisioner | default "csi.trident.netapp.io" -}}
+{{- $defaultMountOptions := .Values.storageClasses.defaultMountOptions | default (list "nfsvers=3") -}}
+{{- range $idx, $sc := .Values.storageClasses.list }}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ $sc.name | quote }}
+  labels:
+    {{- include "trident.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ $sc.name }}-storageclass"
+  annotations:
+    {{- include "trident.annotations" $root | nindent 4 }}
+    {{- if $sc.isDefault }}
+    storageclass.kubernetes.io/is-default-class: "true"
+    {{- else }}
+    storageclass.kubernetes.io/is-default-class: "false"
+    {{- end }}
+    {{- if $.Values.storageClasses.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "30"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "4"
+provisioner: {{ $provisioner | quote }}
+reclaimPolicy: {{ $sc.reclaimPolicy | default "Delete" }}
+allowVolumeExpansion: {{ $sc.allowVolumeExpansion | default true }}
+volumeBindingMode: {{ $sc.volumeBindingMode | default "Immediate" }}
+mountOptions:
+  {{- if $sc.mountOptions }}
+  {{- range $sc.mountOptions }}
+  - {{ . | quote }}
+  {{- end }}
+  {{- else }}
+  {{- range $defaultMountOptions }}
+  - {{ . | quote }}
+  {{- end }}
+  {{- end }}
+{{- if $sc.parameters }}
+parameters:
+  {{- range $key, $val := $sc.parameters }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

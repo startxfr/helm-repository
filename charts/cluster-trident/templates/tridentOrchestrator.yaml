@@ -1,0 +1,41 @@
+{{- if .Values.orchestrator }}
+{{- if .Values.orchestrator.enabled }}
+{{- $name := .Values.orchestrator.name | default "trident" -}}
+---
+apiVersion: "{{- .Values.orchestrator.apiVersion | default "trident.netapp.io/v1" -}}"
+kind: TridentOrchestrator
+metadata:
+  name: {{ $name | quote }}
+  labels:
+    {{- include "trident.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-tridentorchestrator"
+  annotations:
+    {{- include "trident.annotations" . | nindent 4 }}
+    {{- if .Values.orchestrator.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  IPv6: {{ .Values.orchestrator.spec.IPv6 | default false }}
+  debug: {{ .Values.orchestrator.spec.debug | default false }}
+  enableForceDetach: {{ .Values.orchestrator.spec.enableForceDetach | default false }}
+  silenceAutosupport: {{ .Values.orchestrator.spec.silenceAutosupport | default false }}
+  namespace: {{ .Values.orchestrator.spec.namespace | default "trident" | quote }}
+  imageRegistry: {{ .Values.orchestrator.spec.imageRegistry | default "" | quote }}
+  imagePullSecrets:
+    {{- if .Values.orchestrator.spec.imagePullSecrets }}
+    {{- .Values.orchestrator.spec.imagePullSecrets | toYaml | nindent 4 }}
+    {{- else }} []
+    {{- end }}
+  {{- if .Values.orchestrator.spec.nodePrep }}
+  nodePrep:
+    {{- .Values.orchestrator.spec.nodePrep | toYaml | nindent 4 }}
+  {{- else }}
+  nodePrep: null
+  {{- end }}
+{{- end }}
+{{- end }}
