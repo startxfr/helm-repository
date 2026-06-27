@@ -1,0 +1,19 @@
+
+# Default values for sxapi - no infra baseline
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: sxapi
+  app: startx-sxapi
+sxapi:
+  service:
+    enabled: true
+  expose:
+    enabled: false
+    kind: "route"
+  version: "0.3.63"
+  profile: "prod:start"
+  debug: false
+  replicas: 1
