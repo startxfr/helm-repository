@@ -1,0 +1,26 @@
+
+# Default values for operator - no infra baseline
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: demo
+  component: operator
+  app: startx-operator
+enabled: true
+subscription:
+  enabled: false
+  name: "openshift-pipelines-operator-rh"
+  namespace: "openshift-operators"
+  hooked: false
+  operator:
+    channel: latest
+    name: openshift-pipelines-operator-rh
+    installPlanApproval: Manual
+    source:
+      name: redhat-operators
+      namespace: openshift-marketplace
+operatorGroup:
+  enabled: false
+consolePlugin:
+  enabled: false
