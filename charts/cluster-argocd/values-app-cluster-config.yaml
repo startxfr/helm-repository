@@ -46,7 +46,7 @@ application:
         values: |
           monitoring:
             enabled: true
-            infra_enabled: true
+            infra_enabled: false
             storageClass: gp3-csi
             storageSize: "30Gi"
             enableUserWorkload: true
@@ -77,7 +77,7 @@ application:
             enabled: true
             list:
               - name: default
-                infra_enabled: true
+                infra_enabled: false
           proxy:
             enabled: false
       syncPolicy: |
@@ -240,7 +240,7 @@ application:
             enabled: true
           registryconfig:
             enabled: true
-            infra_enabled: true
+            infra_enabled: false
       syncPolicy: |
         automated:
           prune: true
