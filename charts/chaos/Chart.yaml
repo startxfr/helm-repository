@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.205
+version: 21.3.229
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.22.2"
 # Icon of this helm-chart
@@ -42,27 +42,27 @@ maintainers:
 dependencies:
   - name: "chaos-cerberus"
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.205"
+    version: "21.3.229"
     alias: cerberus
     condition: cerberus.enabled
   - name: "chaos-kraken"
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.205"
+    version: "21.3.229"
     alias: kraken
     condition: kraken.enabled
   - name: "chaos-litmus"
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.205"
+    version: "21.3.229"
     alias: litmus
     condition: litmus.enabled
   - name: "chaos-mesh"
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.205"
+    version: "21.3.229"
     alias: mesh
     condition: mesh.enabled
   - name: "chaos-monkey"
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.205"
+    version: "21.3.229"
     alias: monkey
     condition: monkey.enabled
 
@@ -98,5 +98,5 @@ annotations:
   # Artifacthub changes logs
   artifacthub.io/changes: |
     - kind: changed
-      description: "Upgrade sub-chart dependencies to v21.3.205 and OCP 4.22.2"
+      description: "Align all charts (chaos, cluster and examples) to v21.3.229 release"
   artifacthub.io/containsSecurityUpdates: "false"
