@@ -190,3 +190,4 @@ The automated sync policy ensures ArgoCD reconciles the operator subscription wh
 | 21.3.207 | 2026-06-28 | Improve operator options |
 | 21.3.222 | 2026-08-08 | Improve operator options |
 | 21.3.229 | 2026-08-08 | publish stable update for the full repository |
+| 21.3.273 | 2026-08-09 | publish stable update for the full repository |
