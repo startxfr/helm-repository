@@ -26,9 +26,9 @@ metadata:
   {{- if eq .Values.operatorGroup.target "all-ns" }}
 spec: {}
   {{- else }}
-  spec: 
-    targetNamespaces:
-      - {{ .Values.operatorGroup.target | default $namespace | quote }}
+spec: 
+  targetNamespaces:
+    - {{ .Values.operatorGroup.target | default $namespace | quote }}
   {{- end }}
 {{- else }}
 spec: 

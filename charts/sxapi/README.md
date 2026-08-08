@@ -303,3 +303,4 @@ The automated sync policy ensures ArgoCD reconciles the microservice whenever th
 | 21.3.206 | 2026-06-28 | Improve sxapi options |
 | 21.3.207 | 2026-06-28 | Improve sxapi options |
 | 21.3.208 | 2026-06-28 | Improve sxapi options |
+| 21.3.222 | 2026-08-08 | Improve sxapi options |
