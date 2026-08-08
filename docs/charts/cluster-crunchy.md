@@ -55,7 +55,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.273
+    targetRevision: 21.3.277
     helm:
     valueFiles:
     - values-demo.yaml
@@ -82,7 +82,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.273
+    targetRevision: 21.3.277
     helm:
     valueFiles:
     - values-demo.yaml
@@ -109,7 +109,7 @@ project: default
 source:
     path: charts/cluster-crunchy/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.273
+    targetRevision: 21.3.277
     helm:
     valueFiles:
     - values-demo.yaml
@@ -205,3 +205,4 @@ oc apply -k .
 | 21.3.205 | 2026-06-24 | publish stable update for the full repository |
 | 21.3.229 | 2026-08-08 | publish stable update for the full repository |
 | 21.3.273 | 2026-08-09 | publish stable update for the full repository |
+| 21.3.277 | 2026-08-09 | Align all charts to v21.3.277 |
