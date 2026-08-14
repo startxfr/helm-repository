@@ -1,0 +1,124 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: 
+  scope: startx
+  cluster: startx-centigpu
+  environment: infra
+  component: config
+  app: startx-machine
+  version: "4.18.11"
+
+cluster:
+  id: startx-xyzab
+  region: eu-west-2
+  autoscaler: 
+    enabled: false
+
+machineConfigPool: 
+  enabled: false
+  infra: false
+  virt: false
+  storage: false
+  list: 
+  - name: worker
+    machineConfigSelector: |-
+      matchExpressions:
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker]}
+    nodeSelector: |-
+      matchLabels:
+        node-role.kubernetes.io/worker: ""
+    paused: false
+  - name: workergpu
+    machineConfigSelector: |-
+      matchExpressions:
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,gpu]}
+    nodeSelector: |-
+      matchLabels:
+        node-role.kubernetes.io/worker: ""
+        node-role.kubernetes.io/gpu: ""
+    paused: false
+machineConfig: 
+  enabled: false
+  kubelet_gc_enabled: false
+  kubelet_connectiontimeout_enabled: false
+  kubelet_master_maxpodbig: true
+  kubelet_worker_maxpodbig: false
+  kubelet_protectkerneldefaults: false
+  infra_specialconfig: false
+  add_scc_netraw: false
+  add_clusterimageconfig: false
+
+machineHealthCheck:
+  enabled: false
+  list: 
+  - name: master
+    type: master
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: worker
+    type: worker
+    group: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+  - name: workergpu
+    type: workergpu
+    group: worker
+    maxUnhealthy: 40%
+    timeouts: 300s
+
+
+machineAutoscaler: 
+  enabled: false
+  list: []
+
+machineSet: 
+  enabled: false
+  list: 
+  - name: workergpu
+    az: a
+    type: workergpu
+    group: worker
+    ami: ami-00667f67a54be771a
+    instanceType: "g6.2xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: workergpu
+    az: b
+    type: workergpu
+    group: worker
+    ami: ami-00667f67a54be771a
+    instanceType: "g6.4xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: workergpu
+    az: c
+    type: workergpu
+    group: worker
+    ami: ami-00667f67a54be771a
+    instanceType: "g6.2xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: worker
+    az: a
+    type: worker
+    group: worker
+    ami: ami-00667f67a54be771a
+    instanceType: "m5.xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: worker
+    az: b
+    type: worker
+    group: worker
+    ami: ami-00667f67a54be771a
+    instanceType: "m5.xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: worker
+    az: c
+    type: worker
+    group: worker
+    ami: ami-00667f67a54be771a
+    instanceType: "m5.xlarge"
+    volumeSize: 150
+    replicas: 0
