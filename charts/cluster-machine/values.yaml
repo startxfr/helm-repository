@@ -141,6 +141,20 @@ machineSet:
     #       iops: 2000
     #       volumeSize: 500
     #       volumeType: io1
+    # # List of security groups (if not set, will use securityGroupName or the default "<clusterid>-node" group)
+    # securityGroups: |-
+    #   - filters:
+    #       - name: tag:Name
+    #         values:
+    #           - "mycluster-xxxxx-node"
+    # # List of load balancers to attach this node to (not set by default)
+    # loadBalancers: |-
+    #   - name: "mycluster-xxxxx-int"
+    #     type: network
+    # # List of additionnals tags to add to the backing cloud instance
+    # tags: |-
+    #   - name: profile
+    #     value: myprofile
     # volume size in Giga
     volumeSize: 150
     # volume type (according to the csi backend)
