@@ -36,6 +36,14 @@ machineConfigPool:
       matchLabels:
         node-role.kubernetes.io/worker: ""
         node-role.kubernetes.io/gpu: ""
+  - name: workergpubig
+    machineConfigSelector: |-
+      matchExpressions:
+        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,gpubig]}
+    nodeSelector: |-
+      matchLabels:
+        node-role.kubernetes.io/worker: ""
+        node-role.kubernetes.io/gpubig: ""
     paused: false
 machineConfig: 
   enabled: false
@@ -63,8 +71,13 @@ machineHealthCheck:
   - name: workergpu
     type: workergpu
     group: worker
-    maxUnhealthy: 40%
+    maxUnhealthy: 70%
     timeouts: 300s
+  - name: workergpubig
+    type: workergpubig
+    group: worker
+    maxUnhealthy: 70%
+    timeouts: 600s
 
 
 machineAutoscaler: 
@@ -77,25 +90,49 @@ machineSet:
   - name: workergpu
     az: a
     type: workergpu
-    group: worker
+    group: gpu
     ami: ami-00667f67a54be771a
     instanceType: "g6.2xlarge"
     volumeSize: 150
-    replicas: 0
+    replicas: 1
   - name: workergpu
     az: b
     type: workergpu
-    group: worker
+    group: gpu
     ami: ami-00667f67a54be771a
-    instanceType: "g6.4xlarge"
+    instanceType: "g6.2xlarge"
     volumeSize: 150
     replicas: 0
   - name: workergpu
     az: c
     type: workergpu
-    group: worker
+    group: gpu
     ami: ami-00667f67a54be771a
     instanceType: "g6.2xlarge"
+    volumeSize: 150
+    replicas: 0
+  - name: workergpubig
+    az: a
+    type: workergpubig
+    group: gpu
+    ami: ami-00667f67a54be771a
+    instanceType: "g7e.2xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: workergpubig
+    az: b
+    type: workergpubig
+    group: gpu
+    ami: ami-00667f67a54be771a
+    instanceType: "g7e.2xlarge"
+    volumeSize: 150
+    replicas: 1
+  - name: workergpubig
+    az: c
+    type: workergpubig
+    group: gpu
+    ami: ami-00667f67a54be771a
+    instanceType: "g7e.2xlarge"
     volumeSize: 150
     replicas: 0
   - name: worker
