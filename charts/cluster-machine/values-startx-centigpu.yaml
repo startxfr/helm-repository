@@ -28,23 +28,6 @@ machineConfigPool:
       matchLabels:
         node-role.kubernetes.io/worker: ""
     paused: false
-  - name: workergpu
-    machineConfigSelector: |-
-      matchExpressions:
-        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,gpu]}
-    nodeSelector: |-
-      matchLabels:
-        node-role.kubernetes.io/worker: ""
-        node-role.kubernetes.io/gpu: ""
-  - name: workergpubig
-    machineConfigSelector: |-
-      matchExpressions:
-        - {key: machineconfiguration.openshift.io/role, operator: In, values: [worker,gpubig]}
-    nodeSelector: |-
-      matchLabels:
-        node-role.kubernetes.io/worker: ""
-        node-role.kubernetes.io/gpubig: ""
-    paused: false
 machineConfig: 
   enabled: false
   kubelet_gc_enabled: false
@@ -52,7 +35,7 @@ machineConfig:
   kubelet_master_maxpodbig: true
   kubelet_worker_maxpodbig: false
   kubelet_protectkerneldefaults: false
-  infra_specialconfig: false
+  infra_specialconfig: true
   add_scc_netraw: false
   add_clusterimageconfig: false
 
@@ -68,94 +51,121 @@ machineHealthCheck:
     group: worker
     maxUnhealthy: 40%
     timeouts: 300s
-  - name: workergpu
-    type: workergpu
-    group: worker
-    maxUnhealthy: 70%
+  - name: worker-gpu
+    type: worker-gpu
+    group: worker-gpu
+    maxUnhealthy: 40%
     timeouts: 300s
-  - name: workergpubig
-    type: workergpubig
-    group: worker
-    maxUnhealthy: 70%
-    timeouts: 600s
+  - name: worker-gpubig
+    type: worker-gpubig
+    group: worker-gpubig
+    maxUnhealthy: 40%
+    timeouts: 300s
 
 
 machineAutoscaler: 
   enabled: false
-  list: []
+  list: 
+  - name: aworker-gpu-a
+    minReplicas: 1
+    maxReplicas: 2
+  - name: worker-gpu-b
+    minReplicas: 0
+    maxReplicas: 2
+  - name: worker-gpu-c
+    minReplicas: 0
+    maxReplicas: 2
+  - name: worker-gpubig-a
+    minReplicas: 0
+    maxReplicas: 2
+  - name: worker-gpubig-b
+    minReplicas: 1
+    maxReplicas: 2
+  - name: worker-gpubig-c
+    minReplicas: 0
+    maxReplicas: 2
+  - name: worker-a
+    minReplicas: 0
+    maxReplicas: 2
+  - name: worker-b
+    minReplicas: 0
+    maxReplicas: 2
+  - name: worker-c
+    minReplicas: 1
+    maxReplicas: 2
 
 machineSet: 
   enabled: false
   list: 
-  - name: workergpu-2a
+  - name: worker-gpu-a
     az: a
-    type: workergpu
-    group: gpu
+    type: worker-gpu
+    group: worker-gpu
     ami: ami-00667f67a54be771a
     instanceType: "g6.2xlarge"
     volumeSize: 150
     replicas: 1
-  - name: workergpu-2b
+  - name: worker-gpu-b
     az: b
-    type: workergpu
-    group: gpu
+    type: app
+    group: worker-gpu
     ami: ami-00667f67a54be771a
     instanceType: "g6.2xlarge"
     volumeSize: 150
     replicas: 0
-  - name: workergpu-2c
+  - name: worker-gpu-c
     az: c
-    type: workergpu
-    group: gpu
+    type: app
+    group: worker-gpu
     ami: ami-00667f67a54be771a
     instanceType: "g6.2xlarge"
     volumeSize: 150
     replicas: 0
-  - name: workergpubig-2a
+  - name: worker-gpubig-a
     az: a
-    type: workergpubig
-    group: gpu
+    type: app
+    group: worker-gpubig
     ami: ami-00667f67a54be771a
     instanceType: "g7e.2xlarge"
     volumeSize: 150
-    replicas: 1
-  - name: workergpubig-2b
+    replicas: 0
+  - name: worker-gpubig-b
     az: b
-    type: workergpubig
-    group: gpu
+    type: app
+    group: worker-gpubig
     ami: ami-00667f67a54be771a
     instanceType: "g7e.2xlarge"
     volumeSize: 150
     replicas: 1
-  - name: workergpubig
+  - name: worker-gpubig-c
     az: c
-    type: workergpubig-2c
-    group: gpu
+    type: app
+    group: worker-gpubig
     ami: ami-00667f67a54be771a
     instanceType: "g7e.2xlarge"
     volumeSize: 150
     replicas: 0
-  - name: worker
+  - name: worker-a
     az: a
-    type: worker
+    type: app
     group: worker
     ami: ami-00667f67a54be771a
     instanceType: "m5.xlarge"
     volumeSize: 150
     replicas: 0
-  - name: worker
+  - name: worker-b
     az: b
-    type: worker
+    type: app
     group: worker
     ami: ami-00667f67a54be771a
     instanceType: "m5.xlarge"
     volumeSize: 150
     replicas: 0
-  - name: worker
+  - name: worker-c
     az: c
-    type: worker
+    type: app
     group: worker
     ami: ami-00667f67a54be771a
     instanceType: "m5.xlarge"
     volumeSize: 150
-    replicas: 0
+    replicas: 1
