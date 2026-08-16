@@ -136,3 +136,4 @@ oc apply -k .
 | 21.3.273 | 2026-08-09 | publish stable update for the full repository |
 | 21.3.277 | 2026-08-09 | Align all charts to v21.3.277 |
 | 21.3.278 | 2026-08-14 | add centigpu |
+| 21.3.279 | 2026-08-16 | imrpove centigpu profile |
