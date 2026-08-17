@@ -1,0 +1,62 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation of each parameter
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: backup
+  app: etcd-backup
+  version: "1.0.0"
+
+etcdBackup:
+  enabled: true
+  namespace: etcd-backup
+  schedule: "0 */12 * * *"
+
+  image:
+    repository: ghcr.io/adfinis/openshift-etcd-backup
+    tag: latest
+    pullPolicy: Always
+
+  resources:
+    requests: { cpu: 500m, memory: 128Mi }
+    limits:   { cpu: 1000m, memory: 512Mi }
+
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 600
+
+  s3_endpoint: ""
+  s3_region: ""
+  s3_bucket_name: ""
+  s3_secret:
+    secretName: ""
+    s3_access_key: "S3_ACCESS_KEY"
+    s3_secret_key: "S3_SECRET_KEY"
+
+  keep_days: 30
+  keep_count: 10
+
+  useS3Ca: false
+  s3CaCert: ""
+
+  alerting:
+    enabled: true
+    noBackupForHours: 24
+    severity: critical
+
+project:
+  enabled: true
+  context:
+    <<: *context
+  project:
+    enabled: true
+    type: namespace
+    name: "etcd-backup"
+    display_name: "Startx Etcd Backup"
+    requester: startx
+    description: Etcd backup namespace configured by STARTX
+  rbac: { enabled: false }
+  networkpolicy: { enabled: false }
+  limits: { enabled: false }
+  quotas: { enabled: false }

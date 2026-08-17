@@ -1,0 +1,99 @@
+{{- if .Values.etcdBackup.enabled }}
+{{- $ns := .Values.etcdBackup.namespace | default "etcd-backup" -}}
+{{- $image := printf "%s:%s" .Values.etcdBackup.image.repository (.Values.etcdBackup.image.tag | default "latest") -}}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: etcd-backup
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/name: etcd-backup-cronjob
+  annotations:
+    {{- include "etcd-backup.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  schedule: {{ .Values.etcdBackup.schedule | quote }}
+  startingDeadlineSeconds: {{ .Values.etcdBackup.startingDeadlineSeconds | default 600 }}
+  successfulJobsHistoryLimit: {{ .Values.etcdBackup.successfulJobsHistoryLimit | default 7 }}
+  failedJobsHistoryLimit: {{ .Values.etcdBackup.failedJobsHistoryLimit | default 3 }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            {{- include "etcd-backup.labels" . | nindent 12 }}
+        spec:
+          serviceAccountName: etcd-backup
+          restartPolicy: Never
+          dnsPolicy: ClusterFirst
+          hostNetwork: true
+          hostPID: true
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+          tolerations:
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/master
+              operator: Exists
+          containers:
+            - name: backup-etcd
+              image: {{ $image | quote }}
+              imagePullPolicy: {{ .Values.etcdBackup.image.pullPolicy | default "Always" }}
+              command:
+                - /bin/sh
+                - "-c"
+                - |
+                  set -euo pipefail
+                  {{- if .Values.etcdBackup.useS3Ca }}
+                  echo "Setting up custom CA certificates..."
+                  cp /tmp/s3-ca/ca-bundle.crt /etc/pki/ca-trust/source/anchors/s3-ca-bundle.crt
+                  update-ca-trust extract
+                  echo "CA certificates updated successfully"
+                  {{- end }}
+                  /usr/local/bin/backup.sh
+              {{- if .Values.etcdBackup.useS3Ca }}
+              env:
+                - name: SSL_CERT_FILE
+                  value: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+              {{- end }}
+              envFrom:
+                - configMapRef:
+                    name: backup-config
+                - secretRef:
+                    name: {{ include "etcd-backup.s3SecretName" . | quote }}
+              resources:
+                requests:
+                  cpu: {{ .Values.etcdBackup.resources.requests.cpu | default "500m" | quote }}
+                  memory: {{ .Values.etcdBackup.resources.requests.memory | default "128Mi" | quote }}
+                limits:
+                  cpu: {{ .Values.etcdBackup.resources.limits.cpu | default "1000m" | quote }}
+                  memory: {{ .Values.etcdBackup.resources.limits.memory | default "512Mi" | quote }}
+              securityContext:
+                privileged: true
+                runAsUser: 0
+              volumeMounts:
+                {{- if .Values.etcdBackup.useS3Ca }}
+                - name: s3-ca-cert
+                  mountPath: /tmp/s3-ca
+                  readOnly: true
+                {{- end }}
+                - name: host
+                  mountPath: /host
+          volumes:
+            {{- if .Values.etcdBackup.useS3Ca }}
+            - name: s3-ca-cert
+              configMap:
+                name: s3-ca
+                items:
+                  - key: ca-bundle.crt
+                    path: ca-bundle.crt
+                defaultMode: 420
+            {{- end }}
+            - name: host
+              hostPath:
+                path: /
+                type: Directory
+{{- end }}
