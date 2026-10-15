@@ -1,0 +1,225 @@
+# Default values for cluster-unifai.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-unifai
+  # Version name of this application (default use Chart appVersion)
+  version: "1.16.0"
+
+# Configure the UnifAI multi-agent AI platform
+# UnifAI (https://github.com/redhat-community-ai-tools/UnifAI) ships no operator and no CRD :
+# it is a plain multi-component application (backend, multiagent, rag, ui, identity) deployed
+# as regular Deployments/Services/Routes, backed by externally managed infrastructure
+# (MongoDB, Qdrant, RabbitMQ, Redis, optional Temporal) and an external Keycloak/SSO identity provider.
+unifai:
+  # Enable the configuration of unifai
+  enabled: true
+  # Namespace for all unifai workloads (default falls back to project.project.name)
+  namespace: "default-unifai"
+
+  global:
+    # Deployment environment reported to the UnifAI components
+    environment: "production"
+    # Whether this is deployed on Openshift (enables Route objects)
+    openshift: true
+    # Default ClusterSecretStore used by externalServices secrets of type "externalSecret"
+    defaultSecretStoreRef:
+      name: vault-backend-secretstore
+      kind: ClusterSecretStore
+
+  # Shared Flask SECRET_KEY used to sign sessions across backend/multiagent/rag/identity.
+  # Leave empty to auto-generate one at install time (regenerated on every upgrade unless pinned here).
+  secretKey: ""
+
+  # External infrastructure required by UnifAI. None of these services are deployed by this
+  # chart : bring your own (e.g. the repository's own cluster-mongo / cluster-redis charts,
+  # or any existing instance) and reference it here.
+  externalServices:
+    mongodb:
+      # MongoDB connection URI used by rag/multiagent/identity/backend
+      uri: ""
+      secret:
+        # "secret" creates a plain Secret from .value ; "externalSecret" creates an ExternalSecret from Vault
+        type: "secret"
+        name: unifai-mongodb-secret
+        namespace: ""
+        vaultKey: "secret/data/unifai/mongodb"
+        dataKey: "connection-string"
+        value: ""
+    redis:
+      host: ""
+      port: 6379
+      secret:
+        type: "secret"
+        name: unifai-redis-secret
+        namespace: ""
+        vaultKey: "secret/data/unifai/redis"
+        dataKey: "password"
+        value: ""
+    rabbitmq:
+      # RabbitMQ AMQP URI used as the Celery broker for the rag module
+      uri: ""
+      secret:
+        type: "secret"
+        name: unifai-rabbitmq-secret
+        namespace: ""
+        vaultKey: "secret/data/unifai/rabbitmq"
+        dataKey: "uri"
+        value: ""
+    qdrant:
+      host: ""
+      port: 6333
+      secret:
+        type: "secret"
+        name: unifai-qdrant-secret
+        namespace: ""
+        vaultKey: "secret/data/unifai/qdrant"
+        dataKey: "api-key"
+        value: ""
+    keycloak:
+      url: ""
+      realm: "unifai"
+      clientId: "unifai-frontend"
+      secret:
+        type: "secret"
+        name: unifai-keycloak-secret
+        namespace: ""
+        vaultKey: "secret/data/unifai/keycloak"
+        dataKey: "client-secret"
+        value: ""
+
+  # Backend service (images.paas.redhat.com/unifai/backend upstream)
+  backend:
+    enabled: true
+    replicaCount: 2
+    image:
+      # Default points to the upstream private Red Hat registry (requires pullSecret / internal access).
+      # To stay fully autonomous, build this image yourself from the UnifAI repo's backend/Dockerfile
+      # (based on the public registry.access.redhat.com/ubi9/python-311) and push it to your own registry.
+      repository: images.paas.redhat.com/unifai/backend
+      tag: "latest"
+      pullPolicy: IfNotPresent
+    pullSecret: ""
+    port: 8080
+    resources: {}
+    route:
+      enabled: false
+      hostname: ""
+
+  # Multi-Agent System : orchestration engine executing agent-graph blueprints (LangGraph or Temporal)
+  multiagent:
+    enabled: true
+    replicaCount: 2
+    # Execution engine : "langgraph" (in-process) or "temporal" (distributed, requires temporalWorker.enabled)
+    engine: "langgraph"
+    image:
+      repository: images.paas.redhat.com/unifai/multiagent
+      tag: "latest"
+      pullPolicy: IfNotPresent
+    pullSecret: ""
+    port: 8080
+    resources: {}
+    route:
+      enabled: true
+      hostname: ""
+    temporal:
+      # External Temporal server endpoint, only used when engine is "temporal"
+      host: ""
+      namespace: "default"
+      taskQueue: "unifai-multiagent"
+    temporalWorker:
+      enabled: false
+      replicaCount: 1
+      resources: {}
+
+  # RAG / Data Pipeline Hub : document ingestion (PDF, Markdown, Slack) and vector search
+  rag:
+    enabled: true
+    replicaCount: 2
+    image:
+      repository: images.paas.redhat.com/unifai/rag
+      tag: "latest"
+      pullPolicy: IfNotPresent
+    pullSecret: ""
+    port: 8080
+    resources: {}
+    celery:
+      worker:
+        enabled: true
+        replicaCount: 2
+        queues: "default"
+        resources: {}
+      beat:
+        enabled: true
+        resources: {}
+
+  # Web UI : React/Vite frontend served via Nginx, reverse-proxying to backend/multiagent/rag/identity
+  ui:
+    enabled: true
+    replicaCount: 2
+    image:
+      repository: images.paas.redhat.com/unifai/ui
+      tag: "latest"
+      pullPolicy: IfNotPresent
+    pullSecret: ""
+    port: 8080
+    resources: {}
+    route:
+      enabled: true
+      hostname: "unifai.apps.cluster.local"
+
+  # Identity service : brokers Keycloak/SSO OAuth2/OIDC logins and Redis-backed sessions
+  identity:
+    enabled: true
+    replicaCount: 2
+    image:
+      repository: images.paas.redhat.com/unifai/sharedresources/identity
+      tag: "latest"
+      pullPolicy: IfNotPresent
+    pullSecret: ""
+    port: 8080
+    resources: {}
+    route:
+      enabled: false
+      hostname: ""
+
+  # Custom agent-graph blueprints (plain YAML, not a CRD) mounted into the multiagent orchestrator pod
+  # at /app/multi-agent/lib/mas/blueprints/<name>.yaml
+  blueprints: []
+  # - name: "hr-document-analysis"
+  #   content: |
+  #     description: "RAG pipeline for automated CV and HR document analysis"
+  #     nodes:
+  #       - name: doc-retriever
+  #         type: retriever
+  #         source: qdrant
+  #       - name: hr-agent
+  #         type: agent
+  #         model: "llama3"
+  #     edges:
+  #       - from: doc-retriever
+  #         to: hr-agent
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-unifai"
+    display_name: UnifAI
+    description: UnifAI multi-agent AI platform configured by STARTX
+    additionalLabels:
+      openshift.io/cluster-monitoring: "true"

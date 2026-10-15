@@ -1,0 +1,88 @@
+# Auto-generated values-app file for deploying cluster-unifai via argocd
+# Source: examples/argocd/ from the cluster-unifai chart
+# Note: UnifAI has no operator/CRD upstream, so there is no "-operator" Application here,
+# unlike most other cluster-* charts in this repository.
+
+argocd_project:
+  enabled: true
+  list:
+    - name: 'infra-unifai'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'startx-unifai'
+          server: 'https://kubernetes.default.svc'
+        - namespace: '*'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles:
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, proj:infra-unifai:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+
+# Applications
+application:
+  enabled: true
+  list:
+    # Deploys all enabled unifai components (backend, multiagent, rag, ui, identity)
+    - name: 'infra-unifai-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "29"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-unifai'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-unifai'
+        targetRevision: stable
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          unifai:
+            enabled: true
+            namespace: startx-unifai
+        syncOptions:
+          - CreateNamespace=true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-unifai-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-unifai'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-unifai'
+        targetRevision: stable
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          unifai:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: true
+  list: []

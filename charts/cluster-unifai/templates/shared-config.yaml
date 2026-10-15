@@ -1,0 +1,85 @@
+{{- if .Values.unifai.enabled -}}
+{{- $namespace := include "cluster-unifai.namespace" . -}}
+{{- $name := include "cluster-unifai.appName" . -}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ $name }}-shared-secret"
+  namespace: {{ $namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque
+data:
+  SECRET_KEY: {{ .Values.unifai.secretKey | default (randAlphaNum 32) | b64enc }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ $name }}-shared-config"
+  namespace: {{ $namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  MONGODB_URI: {{ .Values.unifai.externalServices.mongodb.uri | quote }}
+  REDIS_HOST: {{ .Values.unifai.externalServices.redis.host | quote }}
+  REDIS_PORT: {{ .Values.unifai.externalServices.redis.port | quote }}
+  RABBITMQ_URI: {{ .Values.unifai.externalServices.rabbitmq.uri | quote }}
+  QDRANT_HOST: {{ .Values.unifai.externalServices.qdrant.host | quote }}
+  QDRANT_PORT: {{ .Values.unifai.externalServices.qdrant.port | quote }}
+  KEYCLOAK_BASE_URL: {{ .Values.unifai.externalServices.keycloak.url | quote }}
+  KEYCLOAK_REALM: {{ .Values.unifai.externalServices.keycloak.realm | quote }}
+  KEYCLOAK_CLIENT_ID: {{ .Values.unifai.externalServices.keycloak.clientId | quote }}
+  FRONTEND_URL: {{ .Values.unifai.ui.route.hostname | quote }}
+  ENGINE_NAME: {{ .Values.unifai.multiagent.engine | quote }}
+  TEMPORAL_HOST: {{ .Values.unifai.multiagent.temporal.host | quote }}
+  TEMPORAL_NAMESPACE: {{ .Values.unifai.multiagent.temporal.namespace | quote }}
+  TEMPORAL_TASK_QUEUE: {{ .Values.unifai.multiagent.temporal.taskQueue | quote }}
+{{- range $svcName, $svc := .Values.unifai.externalServices }}
+{{- $secretNamespace := $svc.secret.namespace | default $namespace }}
+{{- if eq $svc.secret.type "externalSecret" }}
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ $svc.secret.name }}
+  namespace: {{ $secretNamespace }}
+  labels:
+    {{- include "cluster-unifai.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  secretStoreRef:
+    name: {{ $.Values.unifai.global.defaultSecretStoreRef.name }}
+    kind: {{ $.Values.unifai.global.defaultSecretStoreRef.kind }}
+  target:
+    name: {{ $svc.secret.name }}
+  data:
+    - secretKey: {{ $svc.secret.dataKey }}
+      remoteRef:
+        key: {{ $svc.secret.vaultKey }}
+{{- else if eq $svc.secret.type "secret" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $svc.secret.name }}
+  namespace: {{ $secretNamespace }}
+  labels:
+    {{- include "cluster-unifai.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque
+stringData:
+  {{ $svc.secret.dataKey }}: {{ $svc.secret.value | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}

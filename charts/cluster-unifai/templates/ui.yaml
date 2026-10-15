@@ -1,0 +1,93 @@
+{{- if .Values.unifai.enabled -}}
+{{- if .Values.unifai.ui.enabled -}}
+{{- $namespace := include "cluster-unifai.namespace" . -}}
+{{- $name := printf "%s-ui" (include "cluster-unifai.appName" .) -}}
+{{- $comp := .Values.unifai.ui -}}
+{{- $shared := include "cluster-unifai.appName" . -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ $name }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  replicas: {{ $comp.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+  template:
+    metadata:
+      labels:
+        {{- include "cluster-unifai.labels" . | nindent 8 }}
+        app.kubernetes.io/name: {{ $name }}
+    spec:
+      {{- if $comp.pullSecret }}
+      imagePullSecrets:
+        - name: {{ $comp.pullSecret }}
+      {{- end }}
+      containers:
+        - name: ui
+          image: "{{ $comp.image.repository }}:{{ $comp.image.tag }}"
+          imagePullPolicy: {{ $comp.image.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: {{ $comp.port }}
+          envFrom:
+            - configMapRef:
+                name: "{{ $shared }}-shared-config"
+          resources:
+            {{- toYaml ($comp.resources | default dict) | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ $name }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  selector:
+    app.kubernetes.io/name: {{ $name }}
+  ports:
+    - name: http
+      port: {{ $comp.port }}
+      targetPort: http
+{{- if $comp.route.enabled }}
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "50"
+spec:
+  {{- if $comp.route.hostname }}
+  host: {{ $comp.route.hostname }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ $name }}
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+{{- end }}
+{{- end }}
+{{- end -}}

@@ -1,0 +1,29 @@
+# STARTX "noinfra" values for cluster-unifai, used by the ArgoCD Applications under examples/argocd/
+# Same namespace layout as values-startx.yaml ; kept as a separate file to follow this
+# repository's cluster-* chart convention (ArgoCD Applications always reference the _noinfra variant).
+
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: unifai
+  app: startx-unifai
+  version: "1.16.0"
+
+unifai:
+  enabled: true
+  namespace: "startx-unifai"
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "startx-unifai"
+    display_name: UnifAI
+    description: UnifAI multi-agent AI platform configured by STARTX
+    additionalLabels:
+      openshift.io/cluster-monitoring: "true"

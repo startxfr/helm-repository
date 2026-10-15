@@ -79,6 +79,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-dvo](charts/cluster-dvo.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-dvo)           | enable Deployment Validation Operator (DVO)  to checks deployments and other resources against a curated collection of best practices |
 | **[cluster-kargo](charts/cluster-kargo.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kargo)           | enable Kargo builds upon GitOps principles to manage and automate the promotion of stage lifecycle  |
 | **[cluster-keepalived](charts/cluster-keepalived.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-keepalived)           | enable keepalived builds upon GitOps principles to manage and automate the keepalived lifecycle  |
+| **[cluster-unifai](charts/cluster-unifai.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-unifai)           | deploy UnifAI multi-agent AI platform at the cluster level  |
 
 ### Chaos Charts
 
