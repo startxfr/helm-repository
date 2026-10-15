@@ -2,6 +2,9 @@
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
     "properties": {
+        "blueprints": {
+            "type": "array"
+        },
         "context": {
             "type": "object",
             "properties": {
@@ -22,6 +25,291 @@
                 },
                 "version": {
                     "type": "string"
+                }
+            }
+        },
+        "glue": {
+            "type": "object",
+            "properties": {
+                "adminAllowedUsers": {
+                    "type": "string"
+                },
+                "credentialEncryptionKey": {
+                    "type": "string"
+                },
+                "keycloak": {
+                    "type": "object",
+                    "properties": {
+                        "baseUrl": {
+                            "type": "string"
+                        },
+                        "bindDn": {
+                            "type": "string"
+                        },
+                        "bindPassword": {
+                            "type": "string"
+                        },
+                        "clientId": {
+                            "type": "string"
+                        },
+                        "clientSecret": {
+                            "type": "string"
+                        },
+                        "directoryProvider": {
+                            "type": "string"
+                        },
+                        "directoryUrl": {
+                            "type": "string"
+                        },
+                        "realm": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "langfuse": {
+                    "type": "object",
+                    "properties": {
+                        "baseUrl": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "publicKey": {
+                            "type": "string"
+                        },
+                        "secretKey": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "oauthStateSecret": {
+                    "type": "string"
+                },
+                "secretKey": {
+                    "type": "string"
+                },
+                "slack": {
+                    "type": "object",
+                    "properties": {
+                        "botToken": {
+                            "type": "string"
+                        },
+                        "userToken": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "umami": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "scriptUrl": {
+                            "type": "string"
+                        },
+                        "websiteId": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "vault": {
+                    "type": "object",
+                    "properties": {
+                        "roleId": {
+                            "type": "string"
+                        },
+                        "secretId": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "identity": {
+            "type": "object",
+            "properties": {
+                "backend": {
+                    "type": "object",
+                    "properties": {
+                        "env": {
+                            "type": "object",
+                            "properties": {
+                                "FRONTEND_URL": {
+                                    "type": "string"
+                                },
+                                "IDENTITY_HOST": {
+                                    "type": "string"
+                                },
+                                "MULTIAGENT_HOST": {
+                                    "type": "string"
+                                },
+                                "MULTIAGENT_PORT": {
+                                    "type": "string"
+                                },
+                                "RAG_HOST": {
+                                    "type": "string"
+                                },
+                                "RAG_PORT": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "image": {
+                            "type": "object",
+                            "properties": {
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "tag": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                }
+            }
+        },
+        "mongodb": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "className": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "multiagent_server": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "multiagent_shared_storage": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "className": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "multiagent_temporal_worker": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },
@@ -87,490 +375,430 @@
                 }
             }
         },
-        "unifai": {
+        "qdrant": {
             "type": "object",
             "properties": {
-                "backend": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "image": {
-                            "type": "object",
-                            "properties": {
-                                "pullPolicy": {
-                                    "type": "string"
-                                },
-                                "repository": {
-                                    "type": "string"
-                                },
-                                "tag": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "port": {
-                            "type": "integer"
-                        },
-                        "pullSecret": {
-                            "type": "string"
-                        },
-                        "replicaCount": {
-                            "type": "integer"
-                        },
-                        "resources": {
-                            "type": "object"
-                        },
-                        "route": {
-                            "type": "object",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                },
-                                "hostname": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                },
-                "blueprints": {
-                    "type": "array"
-                },
                 "enabled": {
                     "type": "boolean"
                 },
-                "externalServices": {
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
                     "type": "object",
                     "properties": {
-                        "keycloak": {
-                            "type": "object",
-                            "properties": {
-                                "clientId": {
-                                    "type": "string"
-                                },
-                                "realm": {
-                                    "type": "string"
-                                },
-                                "secret": {
-                                    "type": "object",
-                                    "properties": {
-                                        "dataKey": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "namespace": {
-                                            "type": "string"
-                                        },
-                                        "type": {
-                                            "type": "string"
-                                        },
-                                        "value": {
-                                            "type": "string"
-                                        },
-                                        "vaultKey": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "url": {
-                                    "type": "string"
-                                }
-                            }
+                        "registry": {
+                            "type": "string"
                         },
-                        "mongodb": {
-                            "type": "object",
-                            "properties": {
-                                "secret": {
-                                    "type": "object",
-                                    "properties": {
-                                        "dataKey": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "namespace": {
-                                            "type": "string"
-                                        },
-                                        "type": {
-                                            "type": "string"
-                                        },
-                                        "value": {
-                                            "type": "string"
-                                        },
-                                        "vaultKey": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "uri": {
-                                    "type": "string"
-                                }
-                            }
+                        "repository": {
+                            "type": "string"
                         },
-                        "qdrant": {
-                            "type": "object",
-                            "properties": {
-                                "host": {
-                                    "type": "string"
-                                },
-                                "port": {
-                                    "type": "integer"
-                                },
-                                "secret": {
-                                    "type": "object",
-                                    "properties": {
-                                        "dataKey": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "namespace": {
-                                            "type": "string"
-                                        },
-                                        "type": {
-                                            "type": "string"
-                                        },
-                                        "value": {
-                                            "type": "string"
-                                        },
-                                        "vaultKey": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "rabbitmq": {
-                            "type": "object",
-                            "properties": {
-                                "secret": {
-                                    "type": "object",
-                                    "properties": {
-                                        "dataKey": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "namespace": {
-                                            "type": "string"
-                                        },
-                                        "type": {
-                                            "type": "string"
-                                        },
-                                        "value": {
-                                            "type": "string"
-                                        },
-                                        "vaultKey": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "uri": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "redis": {
-                            "type": "object",
-                            "properties": {
-                                "host": {
-                                    "type": "string"
-                                },
-                                "port": {
-                                    "type": "integer"
-                                },
-                                "secret": {
-                                    "type": "object",
-                                    "properties": {
-                                        "dataKey": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "namespace": {
-                                            "type": "string"
-                                        },
-                                        "type": {
-                                            "type": "string"
-                                        },
-                                        "value": {
-                                            "type": "string"
-                                        },
-                                        "vaultKey": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
+                        "tag": {
+                            "type": "string"
                         }
                     }
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "className": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "rabbitmq": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
                 },
                 "global": {
                     "type": "object",
                     "properties": {
-                        "defaultSecretStoreRef": {
-                            "type": "object",
-                            "properties": {
-                                "kind": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "environment": {
+                        "storageClass": {
                             "type": "string"
-                        },
-                        "openshift": {
-                            "type": "boolean"
                         }
                     }
                 },
-                "identity": {
+                "image": {
                     "type": "object",
                     "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "image": {
-                            "type": "object",
-                            "properties": {
-                                "pullPolicy": {
-                                    "type": "string"
-                                },
-                                "repository": {
-                                    "type": "string"
-                                },
-                                "tag": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "port": {
-                            "type": "integer"
-                        },
-                        "pullSecret": {
+                        "registry": {
                             "type": "string"
                         },
-                        "replicaCount": {
-                            "type": "integer"
-                        },
-                        "resources": {
-                            "type": "object"
-                        },
-                        "route": {
-                            "type": "object",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                },
-                                "hostname": {
-                                    "type": "string"
-                                }
-                            }
+                        "repository": {
+                            "type": "string"
                         }
                     }
                 },
-                "multiagent": {
+                "persistence": {
                     "type": "object",
                     "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "engine": {
+                        "storageClass": {
                             "type": "string"
-                        },
-                        "image": {
-                            "type": "object",
-                            "properties": {
-                                "pullPolicy": {
-                                    "type": "string"
-                                },
-                                "repository": {
-                                    "type": "string"
-                                },
-                                "tag": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "port": {
-                            "type": "integer"
-                        },
-                        "pullSecret": {
-                            "type": "string"
-                        },
-                        "replicaCount": {
-                            "type": "integer"
-                        },
-                        "resources": {
-                            "type": "object"
-                        },
-                        "route": {
-                            "type": "object",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                },
-                                "hostname": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "temporal": {
-                            "type": "object",
-                            "properties": {
-                                "host": {
-                                    "type": "string"
-                                },
-                                "namespace": {
-                                    "type": "string"
-                                },
-                                "taskQueue": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "temporalWorker": {
-                            "type": "object",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                },
-                                "replicaCount": {
-                                    "type": "integer"
-                                },
-                                "resources": {
-                                    "type": "object"
-                                }
-                            }
                         }
                     }
+                }
+            }
+        },
+        "redis": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
                 },
-                "namespace": {
+                "fullnameOverride": {
                     "type": "string"
                 },
-                "rag": {
+                "image": {
                     "type": "object",
                     "properties": {
-                        "celery": {
-                            "type": "object",
-                            "properties": {
-                                "beat": {
-                                    "type": "object",
-                                    "properties": {
-                                        "enabled": {
-                                            "type": "boolean"
-                                        },
-                                        "resources": {
-                                            "type": "object"
-                                        }
-                                    }
-                                },
-                                "worker": {
-                                    "type": "object",
-                                    "properties": {
-                                        "enabled": {
-                                            "type": "boolean"
-                                        },
-                                        "queues": {
-                                            "type": "string"
-                                        },
-                                        "replicaCount": {
-                                            "type": "integer"
-                                        },
-                                        "resources": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "image": {
-                            "type": "object",
-                            "properties": {
-                                "pullPolicy": {
-                                    "type": "string"
-                                },
-                                "repository": {
-                                    "type": "string"
-                                },
-                                "tag": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "port": {
-                            "type": "integer"
-                        },
-                        "pullSecret": {
+                        "registry": {
                             "type": "string"
                         },
-                        "replicaCount": {
-                            "type": "integer"
+                        "repository": {
+                            "type": "string"
                         },
-                        "resources": {
-                            "type": "object"
+                        "tag": {
+                            "type": "string"
                         }
                     }
                 },
-                "secretKey": {
+                "password": {
                     "type": "string"
                 },
-                "ui": {
+                "redisConfigMapName": {
+                    "type": "string"
+                },
+                "storage": {
                     "type": "object",
                     "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "image": {
-                            "type": "object",
-                            "properties": {
-                                "pullPolicy": {
-                                    "type": "string"
-                                },
-                                "repository": {
-                                    "type": "string"
-                                },
-                                "tag": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "port": {
-                            "type": "integer"
-                        },
-                        "pullSecret": {
+                        "storageClassName": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "sharedEnv": {
+            "type": "object",
+            "properties": {
+                "FRONTEND_URL": {
+                    "type": "string"
+                },
+                "IDENTITY_HOST": {
+                    "type": "string"
+                },
+                "MULTIAGENT_HOST": {
+                    "type": "string"
+                },
+                "MULTIAGENT_PORT": {
+                    "type": "string"
+                },
+                "RAG_HOST": {
+                    "type": "string"
+                },
+                "RAG_PORT": {
+                    "type": "string"
+                }
+            }
+        },
+        "temporal": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "storageClassName": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "ui": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
                             "type": "string"
                         },
-                        "replicaCount": {
-                            "type": "integer"
+                        "IDENTITY_HOST": {
+                            "type": "string"
                         },
-                        "resources": {
-                            "type": "object"
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
                         },
-                        "route": {
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_backend": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_rag_celery": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_rag_celery_beat": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        },
+                        "ROLE": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "resources": {
+                    "type": "object",
+                    "properties": {
+                        "limits": {
                             "type": "object",
                             "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                },
-                                "hostname": {
+                                "cpu": {
                                     "type": "string"
+                                },
+                                "memory": {
+                                    "type": "string"
+                                },
+                                "nvidia.com/gpu": {
+                                    "type": "null"
                                 }
                             }
+                        },
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string"
+                                },
+                                "memory": {
+                                    "type": "string"
+                                },
+                                "nvidia.com/gpu": {
+                                    "type": "null"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_rag_server": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_rag_shared_storage": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "className": {
+                            "type": "string"
                         }
                     }
                 }

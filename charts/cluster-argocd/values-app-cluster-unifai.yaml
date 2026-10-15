@@ -49,9 +49,8 @@ application:
         values: |
           project:
             enabled: false
-          unifai:
-            enabled: true
-            namespace: startx-unifai
+          # All component aliases default to enabled: true already (except
+          # multiagent_temporal_worker and temporal, opt-in only).
         syncOptions:
           - CreateNamespace=true
       syncPolicy: |
@@ -74,8 +73,21 @@ application:
         values: |
           project:
             enabled: true
-          unifai:
-            enabled: false
+          unifai_backend: { enabled: false }
+          multiagent_server: { enabled: false }
+          multiagent_temporal_worker: { enabled: false }
+          multiagent_shared_storage: { enabled: false }
+          unifai_rag_server: { enabled: false }
+          unifai_rag_celery: { enabled: false }
+          unifai_rag_celery_beat: { enabled: false }
+          unifai_rag_shared_storage: { enabled: false }
+          ui: { enabled: false }
+          identity: { enabled: false }
+          mongodb: { enabled: false }
+          qdrant: { enabled: false }
+          rabbitmq: { enabled: false }
+          redis: { enabled: false }
+          temporal: { enabled: false }
       syncPolicy: |
         automated:
           prune: true

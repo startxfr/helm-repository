@@ -20,9 +20,9 @@ spec:
       values: |
         project:
           enabled: false
-        unifai:
-          enabled: true
-          namespace: startx-unifai
+        # All component aliases default to enabled: true already (except
+        # multiagent_temporal_worker and temporal, opt-in only) - nothing to set here
+        # unless you want to disable a specific component for this deployment.
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.1
   syncPolicy:
