@@ -1,0 +1,26 @@
+{{- if .Values.route.enabled }}
+{{- if .Values.qdrant.enabled }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "cluster-qdrant.qdrantFullname" . }}
+  namespace: {{ include "cluster-qdrant.namespace" . }}
+  labels:
+    {{- include "cluster-qdrant.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-qdrant.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  {{- if .Values.route.host }}
+  host: {{ .Values.route.host }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ include "cluster-qdrant.qdrantFullname" . }}
+  port:
+    targetPort: {{ .Values.route.targetPort }}
+  tls:
+    termination: {{ .Values.route.termination }}
+    insecureEdgeTerminationPolicy: Redirect
+{{- end }}
+{{- end }}

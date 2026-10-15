@@ -1,0 +1,82 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-qdrant
+# Description of this Helm chart
+description: Helm chart used to deploy Qdrant vector database at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 21.3.1
+# Version name of the Qdrant vector database (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: "v1.19.2"
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-qdrant.svg
+# Kube minimum version
+kubeVersion: ">=1.30.0-0"
+# Keyword list for this chart
+keywords:
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - qdrant
+  - vector database
+  - vector search
+  - embeddings
+  - AI
+  - RAG
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-qdrant
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-qdrant
+  - https://github.com/qdrant/qdrant-helm
+# Main maintainer contact for this helm chart
+maintainers:
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+    version: "21.3.222"
+    alias: project
+    condition: project.enabled
+  - name: qdrant
+    repository: https://qdrant.github.io/qdrant-helm
+    version: "1.19.2"
+    alias: qdrant
+    condition: qdrant.enabled
+
+annotations:
+  # category associated to this package
+  category: cluster
+  # Artifacthub category associated to this package
+  artifacthub.io/category: database
+  # Artifacthub license
+  artifacthub.io/license: "GPL-3.0-or-later"
+  # Artifacthub is this release a pre-release
+  artifacthub.io/prerelease: "true"
+  # Artifacthub is an operator chart -- no actively maintained Qdrant Kubernetes operator exists
+  # (community options are dormant or archived, the official operator is closed-source Hybrid-Cloud
+  # only). This chart wraps Qdrant's own vendor Helm chart directly as a StatefulSet workload.
+  artifacthub.io/operator: "false"
+  # Artifacthub chart recommandations
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Qdrant vendor chart (qdrant-helm)
+      url: https://github.com/qdrant/qdrant-helm
+  # Artifacthub signing keys
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  # Artifacthub changes logs
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Create chart cluster-qdrant wrapping qdrant/qdrant-helm (no operator available for Qdrant)"
+  artifacthub.io/containsSecurityUpdates: "false"

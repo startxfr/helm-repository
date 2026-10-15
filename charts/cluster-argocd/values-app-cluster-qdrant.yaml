@@ -1,0 +1,87 @@
+# Auto-generated values-app file for deploying cluster-qdrant via argocd
+# Source: examples/argocd/ from the cluster-qdrant chart
+# Note: Qdrant has no operator/CRD upstream, so there is no "-operator" Application here,
+# unlike most other cluster-* charts in this repository.
+
+argocd_project:
+  enabled: true
+  list:
+    - name: 'infra-qdrant'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'default-qdrant'
+          server: 'https://kubernetes.default.svc'
+        - namespace: '*'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles:
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, proj:infra-qdrant:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+
+# Applications
+application:
+  enabled: true
+  list:
+    # Deploys the qdrant StatefulSet/Service/Route
+    - name: 'infra-qdrant-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "31"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-qdrant'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-qdrant'
+        targetRevision: stable
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          qdrant:
+            enabled: true
+        syncOptions:
+          - CreateNamespace=true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-qdrant-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-qdrant'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-qdrant'
+        targetRevision: stable
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          qdrant:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: true
+  list: []
