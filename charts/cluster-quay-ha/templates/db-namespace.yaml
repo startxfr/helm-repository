@@ -1,0 +1,19 @@
+{{- if and (include "cluster-quay-ha.chartManagedDb" .) .Values.database.namespace .Values.database.createNamespace }}
+{{- if ne .Values.database.namespace (include "cluster-quay-ha.namespace" .) }}
+---
+# Dedicated namespace of the databases, without the openshift.io/cluster-monitoring label: its PodMonitor and
+# PrometheusRule are handled by the user workload monitoring stack. Rendered whatever .Values.enabled says, so that
+# the Application installing the operators (enabled: false, dbOperator.enabled: true) can create it first.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.database.namespace }}
+  labels:
+    {{- include "cluster-quay-ha.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-namespace" .Values.database.namespace | quote }}
+  annotations:
+    {{- include "cluster-quay-ha.annotations" . | nindent 4 }}
+    openshift.io/display-name: "Quay - PostgreSQL databases"
+    argocd.argoproj.io/sync-wave: "-10"
+{{- end }}
+{{- end }}

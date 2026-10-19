@@ -1,0 +1,10 @@
+# oc apply -k examples/argocd : AppProject and the two Applications with inline values (operators, then registry).
+# applicationset.yaml (values from a Git repository, Vault plugin) replaces the two Applications: apply it instead of
+# them. argocd-health.yaml is a patch of the ArgoCD custom resource and avp-plugin.yaml the plugin definition, applied
+# separately (see README, Deploy with ArgoCD).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - appproject.yaml
+  - application-operators.yaml
+  - application-registry.yaml

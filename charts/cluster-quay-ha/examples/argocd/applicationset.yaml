@@ -1,0 +1,98 @@
+# Chart pulled from the STARTX Helm repository, values read from a Git repository of the environment
+# (values-example.yaml is a complete example of that file), secrets resolved at render time by the Argo CD Vault
+# Plugin (CMP argocd-vault-plugin-helm, see avp-plugin.yaml). One ApplicationSet generates the two Applications:
+#   cluster-quay-ha-operators (wave 1): namespaces and OLM subscriptions, enabled: false, never pruned
+#   cluster-quay-ha (wave 2): databases, config bundle, QuayRegistry, budgets, alerts
+# The git files generator hands the parsed values file to the template, which serializes it back into the plugin
+# variable HELM_VALUES; a commit on the values file regenerates the Applications. Requires Argo CD 2.10+
+# (goTemplate, templatePatch) and the AppProject of appproject.yaml.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-quay-ha
+  namespace: openshift-gitops
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  syncPolicy:
+    # Deleting the ApplicationSet keeps the Applications and the registry
+    preserveResourcesOnDeletion: true
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: https://git.example.com/infra/quay-values.git
+              revision: main
+              files:
+                - path: quay/values.yaml
+          - list:
+              elements:
+                - app: cluster-quay-ha-operators
+                  wave: "1"
+                  destination: openshift-operators
+                  helmArgs: "--set enabled=false --set project.enabled=true --set operator.enabled=true --set dbOperator.enabled=true --set database.createNamespace=true"
+                - app: cluster-quay-ha
+                  wave: "2"
+                  destination: quay-enterprise
+                  helmArgs: ""
+  template:
+    metadata:
+      name: '{{ .app }}'
+      namespace: openshift-gitops
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ .wave }}'
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: cluster-quay-ha
+      source:
+        repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+        chart: cluster-quay-ha
+        targetRevision: 21.3.0
+        plugin:
+          name: argocd-vault-plugin-helm
+          env:
+            - name: HELM_ARGS
+              value: '{{ .helmArgs }}'
+            # The values file, without the generator parameters (path) and the list element keys
+            - name: HELM_VALUES
+              value: '{{ toYaml (omit . "app" "wave" "destination" "helmArgs" "path") }}'
+      destination:
+        # Cluster that runs Quay: the cluster of Argo CD itself, or the API URL of a cluster registered in Argo CD
+        # (argocd cluster list); appproject.yaml must allow the same server
+        server: https://kubernetes.default.svc
+        namespace: '{{ .destination }}'
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+  # Registry Application only: pruning, retries (the CRDs may not exist at the first sync) and the finalizers
+  # added by the operators
+  templatePatch: |
+    {{- if eq .app "cluster-quay-ha" }}
+    spec:
+      syncPolicy:
+        automated:
+          prune: true
+        retry:
+          limit: 10
+          backoff:
+            duration: 30s
+            factor: 2
+            maxDuration: 10m
+      ignoreDifferences:
+        - group: postgres-operator.crunchydata.com
+          kind: PostgresCluster
+          jsonPointers:
+            - /metadata/finalizers
+        - group: postgresql.cnpg.io
+          kind: Cluster
+          jsonPointers:
+            - /metadata/finalizers
+        - group: quay.redhat.com
+          kind: QuayRegistry
+          jsonPointers:
+            - /metadata/finalizers
+    {{- end }}

@@ -1,0 +1,239 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "cluster-quay-ha values",
+    "properties": {
+        "enabled": {"type": "boolean"},
+        "context": {
+            "type": "object",
+            "title": "Deployment context",
+            "required": ["scope", "cluster", "environment", "component", "app"],
+            "properties": {
+                "scope": {"type": "string", "minLength": 1, "maxLength": 25},
+                "cluster": {"type": "string", "minLength": 1, "maxLength": 25},
+                "environment": {"type": "string", "minLength": 1, "maxLength": 25},
+                "component": {"type": "string", "minLength": 1, "maxLength": 25},
+                "app": {"type": "string", "minLength": 1, "maxLength": 25},
+                "version": {"type": "string", "minLength": 1}
+            }
+        },
+        "namespace": {"type": "string"},
+        "project": {"type": "object", "properties": {"enabled": {"type": "boolean"}}},
+        "operator": {"type": "object", "properties": {"enabled": {"type": "boolean"}}},
+        "dbOperator": {"type": "object", "properties": {"enabled": {"type": "boolean"}}},
+        "quay": {
+            "type": "object",
+            "required": ["name", "superUsers", "components", "tls", "podDisruptionBudgets"],
+            "properties": {
+                "name": {"type": "string", "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$", "maxLength": 30},
+                "hostname": {"type": "string"},
+                "superUsers": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                "userInitialize": {"type": "boolean"},
+                "userCreation": {"type": "boolean"},
+                "secretKey": {"type": "string"},
+                "databaseSecretKey": {"type": "string"},
+                "registryTitle": {"type": "string"},
+                "registryTitleShort": {"type": "string"},
+                "defaultTagExpiration": {"type": "string", "pattern": "^[0-9]+[smhdw]$"},
+                "tagExpirationOptions": {"type": "array", "items": {"type": "string", "pattern": "^[0-9]+[smhdw]$"}},
+                "extraConfig": {"type": "object"},
+                "extraCaCerts": {"type": "object", "additionalProperties": {"type": "string"}},
+                "existingConfigBundleSecret": {"type": "string"},
+                "tls": {
+                    "type": "object",
+                    "required": ["managed"],
+                    "properties": {"managed": {"type": "boolean"}, "cert": {"type": "string"}, "key": {"type": "string"}}
+                },
+                "components": {
+                    "type": "object",
+                    "required": ["clair", "mirror", "hpa", "route", "monitoring"],
+                    "properties": {
+                        "clair": {"type": "boolean"},
+                        "mirror": {"type": "boolean"},
+                        "hpa": {"type": "boolean"},
+                        "route": {"type": "boolean"},
+                        "monitoring": {"type": "boolean"}
+                    }
+                },
+                "overrides": {
+                    "type": "object",
+                    "properties": {"quay": {"type": "object"}, "clair": {"type": "object"}, "mirror": {"type": "object"}}
+                },
+                "stopped": {"type": "boolean"},
+                "podDisruptionBudgets": {"type": "object", "required": ["enabled"], "properties": {"enabled": {"type": "boolean"}}}
+            }
+        },
+        "storage": {
+            "type": "object",
+            "required": ["mode", "external"],
+            "properties": {
+                "mode": {"type": "string", "enum": ["external", "operator"]},
+                "external": {
+                    "type": "object",
+                    "required": ["driver"],
+                    "properties": {
+                        "driver": {"type": "string", "enum": ["RadosGWStorage", "S3Storage"]},
+                        "host": {"type": "string"},
+                        "port": {"type": ["string", "integer"]},
+                        "isSecure": {"type": "boolean"},
+                        "bucket": {"type": "string"},
+                        "storagePath": {"type": "string"},
+                        "accessKey": {"type": "string"},
+                        "secretKey": {"type": "string"},
+                        "region": {"type": "string"},
+                        "caCert": {"type": "string"},
+                        "custom": {"type": "object"}
+                    }
+                }
+            }
+        },
+        "database": {
+            "type": "object",
+            "required": ["mode", "replicas", "tls", "quay", "clair", "cloudnativepg"],
+            "properties": {
+                "mode": {"type": "string", "enum": ["crunchy", "cloudnativepg", "external", "quayOperator"]},
+                "namespace": {"type": "string"},
+                "createNamespace": {"type": "boolean"},
+                "replicas": {"type": "integer", "minimum": 1, "maximum": 5},
+                "synchronous": {"type": "boolean"},
+                "avoidInfraNodes": {"type": "boolean"},
+                "tls": {
+                    "type": "object",
+                    "required": ["mode"],
+                    "properties": {"mode": {"type": "string", "enum": ["require", "verify-full"]}, "caCert": {"type": "string"}}
+                },
+                "quay": {"$ref": "#/definitions/dbCluster"},
+                "clair": {"$ref": "#/definitions/dbCluster"},
+                "cloudnativepg": {
+                    "type": "object",
+                    "required": ["flavor"],
+                    "properties": {
+                        "flavor": {"type": "string", "enum": ["community", "edb"]},
+                        "topologyKey": {"type": "string"}
+                    }
+                }
+            }
+        },
+        "backup": {
+            "type": "object",
+            "required": ["enabled", "s3", "retentionDays", "schedules", "cloudnativepg"],
+            "properties": {
+                "enabled": {"type": "boolean"},
+                "s3": {
+                    "type": "object",
+                    "properties": {
+                        "endpoint": {"type": "string"},
+                        "port": {"type": ["string", "integer"]},
+                        "region": {"type": "string"},
+                        "bucket": {"type": "string"},
+                        "accessKey": {"type": "string"},
+                        "secretKey": {"type": "string"},
+                        "caCert": {"type": "string"},
+                        "pathPrefix": {"type": "string"}
+                    }
+                },
+                "retentionDays": {"type": "integer", "minimum": 1},
+                "schedules": {
+                    "type": "object",
+                    "required": ["full"],
+                    "properties": {
+                        "full": {"type": "string", "pattern": "^(\\S+\\s+){4}\\S+$"},
+                        "differential": {"type": "string"}
+                    }
+                },
+                "cloudnativepg": {
+                    "type": "object",
+                    "required": ["method"],
+                    "properties": {
+                        "method": {"type": "string", "enum": ["barmanObjectStore", "plugin"]},
+                        "compression": {"type": "string", "enum": ["gzip", "bzip2", "lz4", "snappy"]}
+                    }
+                }
+            }
+        },
+        "restore": {
+            "type": "object",
+            "required": ["enabled", "quay", "clair", "inPlace"],
+            "properties": {
+                "enabled": {"type": "boolean"},
+                "pathPrefix": {"type": "string"},
+                "quay": {"$ref": "#/definitions/restoreTarget"},
+                "clair": {"$ref": "#/definitions/restoreTarget"},
+                "inPlace": {
+                    "type": "object",
+                    "required": ["enabled"],
+                    "properties": {
+                        "enabled": {"type": "boolean"},
+                        "quay": {"type": "object", "properties": {"target": {"type": "string"}}},
+                        "clair": {"type": "object", "properties": {"target": {"type": "string"}}}
+                    }
+                }
+            }
+        },
+        "oidc": {
+            "type": "object",
+            "required": ["enabled"],
+            "properties": {
+                "enabled": {"type": "boolean"},
+                "internalAuthentication": {"type": "boolean"},
+                "serviceName": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*$"},
+                "server": {"type": "string"},
+                "clientId": {"type": "string"},
+                "clientSecret": {"type": "string"},
+                "loginScopes": {"type": "array", "items": {"type": "string"}},
+                "usernameClaim": {"type": "string"},
+                "emailClaim": {"type": "string"},
+                "groupClaim": {"type": "string"},
+                "teamSyncing": {"type": "boolean"},
+                "nonSuperuserTeamSyncingSetup": {"type": "boolean"},
+                "pkce": {"type": "boolean"},
+                "caCert": {"type": "string"}
+            }
+        },
+        "monitoring": {
+            "type": "object",
+            "required": ["enabled"],
+            "properties": {
+                "enabled": {"type": "boolean"},
+                "replicationLagBytes": {"type": "integer"},
+                "replicationLagSeconds": {"type": "integer"},
+                "backupMaxAgeHours": {"type": "integer"},
+                "fullBackupMaxAgeDays": {"type": "integer"},
+                "volumeUsagePercent": {"type": "integer", "minimum": 1, "maximum": 100}
+            }
+        },
+        "networkPolicy": {
+            "type": "object",
+            "required": ["enabled"],
+            "properties": {
+                "enabled": {"type": "boolean"},
+                "monitoringNamespaces": {"type": "array", "items": {"type": "string"}},
+                "operatorNamespaces": {"type": "array", "items": {"type": "string"}}
+            }
+        }
+    },
+    "definitions": {
+        "dbCluster": {
+            "type": "object",
+            "required": ["name", "database", "user"],
+            "properties": {
+                "name": {"type": "string", "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$", "maxLength": 40},
+                "host": {"type": "string"},
+                "port": {"type": "integer", "minimum": 1, "maximum": 65535},
+                "database": {"type": "string", "minLength": 1},
+                "user": {"type": "string", "minLength": 1},
+                "password": {"type": "string"},
+                "postgresVersion": {"type": "integer", "minimum": 13},
+                "extensions": {"type": "array", "items": {"type": "string"}},
+                "storage": {"type": "object", "required": ["size"], "properties": {"size": {"type": "string"}, "storageClass": {"type": "string"}}},
+                "resources": {"type": "object"},
+                "parameters": {"type": "object"},
+                "cloudnativepg": {"type": "object", "properties": {"imageName": {"type": "string"}, "serverName": {"type": "string"}}}
+            }
+        },
+        "restoreTarget": {
+            "type": "object",
+            "properties": {"source": {"type": "string"}, "target": {"type": "string"}}
+        }
+    }
+}

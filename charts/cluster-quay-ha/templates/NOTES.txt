@@ -1,0 +1,36 @@
+
+Red Hat Quay registry (high availability) is configured with the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+    namespace : {{ include "cluster-quay-ha.namespace" . }}
+
+{{- if .Values.project }}{{- if .Values.project.enabled }}
+{{ include "project.notes" .Values.project }}
+{{- end }}{{- end }}
+
+{{- if .Values.operator }}{{- if .Values.operator.enabled }}
+{{ include "operator.notes" .Values.operator }}
+{{- end }}{{- end }}
+
+{{- if .Values.dbOperator }}{{- if .Values.dbOperator.enabled }}
+{{ include "operator.notes" .Values.dbOperator }}
+{{- end }}{{- end }}
+
+-- Quay registry -------------------
+     registry : {{ .Values.quay.name }}{{ if .Values.quay.hostname }} ({{ .Values.quay.hostname }}){{ end }}
+      storage : {{ .Values.storage.mode }}{{ if eq .Values.storage.mode "external" }} ({{ .Values.storage.external.driver }}, bucket {{ .Values.storage.external.bucket }}){{ end }}
+     database : {{ .Values.database.mode }}{{ if include "cluster-quay-ha.chartManagedDb" . }} ({{ .Values.database.replicas }} instances per cluster, TLS {{ .Values.database.tls.mode }}){{ end }}
+        clair : {{ .Values.quay.components.clair }}
+         oidc : {{ .Values.oidc.enabled }}{{ if .Values.oidc.enabled }} ({{ .Values.oidc.server }}){{ end }}
+       backup : {{ if include "cluster-quay-ha.dbBackup" . }}enabled (bucket {{ .Values.backup.s3.bucket }}){{ else }}disabled{{ end }}
+      restore : {{ .Values.restore.enabled }}{{ if .Values.restore.inPlace.enabled }} (in place){{ end }}
+      stopped : {{ .Values.quay.stopped }}
+
+Next steps are described in the README of the chart: approve the InstallPlans, create the first super user
+(quay.userInitialize), then switch oidc.enabled.
