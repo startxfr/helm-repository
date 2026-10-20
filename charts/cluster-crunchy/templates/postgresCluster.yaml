@@ -1,13 +1,31 @@
 {{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- include "cluster-crunchy.validate" . -}}
 {{- $scope := .Values.context.scope -}}
-{{- $defaultns := .Values.project.project.name | default .Chart.Name -}}
+{{- $defaultns := include "cluster-crunchy.defaultNamespace" . -}}
 
 
 {{/* Loop over the cluster list */}}
 {{- range .Values.cluster.list }}
 {{- $name := .name | default "default-cluster" -}}
 {{- $ns := .namespace | default $defaultns -}}
+{{- $c := . -}}
+{{- $database := .database | default $name -}}
+{{- $username := .username | default $name -}}
+{{- $backup := .backup | default dict -}}
+{{- $btype := include "cluster-crunchy.backupType" . -}}
+{{- $s3 := dict -}}
+{{- if eq $btype "s3" }}{{ $s3 = include "cluster-crunchy.s3Entry" (dict "root" $ "name" $backup.s3) | fromYaml }}{{ end -}}
+{{- $restore := .restore | default dict -}}
+{{- $rs3 := $s3 -}}
+{{- if and $restore.enabled $restore.s3 }}{{ $rs3 = include "cluster-crunchy.s3Entry" (dict "root" $ "name" $restore.s3) | fromYaml }}{{ end -}}
+{{- $inPlace := .inPlaceRestore | default dict -}}
+{{- $monitoring := .monitoring | default dict -}}
+{{- $prefix := ($backup.pathPrefix | default $ns) | trimAll "/" -}}
+{{- $pgbouncer := include "cluster-crunchy.bool" (dict "d" (.pgbouncer | default dict) "k" "enabled" "def" true) -}}
+{{- $pgadmin := include "cluster-crunchy.bool" (dict "d" (.pgadmin | default dict) "k" "enabled" "def" true) -}}
+{{- $trust := include "cluster-crunchy.bool" (dict "d" . "k" "pgHbaTrust" "def" true) -}}
 {{- if .enabled -}}
+{{- if $pgbouncer }}
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -22,7 +40,7 @@ metadata:
     postgresql: "{{- $name -}}"
   annotations:
     {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-wave: "1"
 data:
   ada_hba.conf: |-
     host all all 0.0.0.0/0 trust
@@ -34,6 +52,31 @@ data:
     auth_hba_file = /etc/pgbouncer/ada_hba.conf
     client_tls_sslmode = disable
     server_tls_sslmode = disable
+{{- end }}
+{{- if .password }}
+---
+# Owner password supplied by the values: the operator keeps it and computes the SCRAM verifier itself
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ $name }}-pguser-{{ $username }}"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-crunchy.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-pguser-{{ $username }}-secret"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+    postgres-operator.crunchydata.com/cluster: "{{- $name -}}"
+    postgres-operator.crunchydata.com/pguser: "{{- $username -}}"
+    postgres-operator.crunchydata.com/role: pguser
+  annotations:
+    {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+type: Opaque
+stringData:
+  password: {{ .password | quote }}
+{{- end }}
 ---
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
@@ -47,24 +90,54 @@ metadata:
     postgresql: "{{- $name -}}"
   annotations:
     {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "25"
+    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   {{- if .istioSidecarEnabled }}
   metadata:
     annotations:
       sidecar.istio.io/inject: "true"
   {{- end }}
-  {{- if .initScript }}
+  {{- if include "cluster-crunchy.hasInitSQL" . }}
   databaseInitSQL:
     key: init.sql
     name: '{{ $name }}-initdb'
   {{- end }}
   users:
-    - name: {{ .username | default $name | quote }}
+    - name: {{ $username | quote }}
       databases:
-        - {{ $name | quote }}
+        - {{ $database | quote }}
       password:
-        type: ASCII
+        type: {{ if .password }}AlphaNumeric{{ else }}ASCII{{ end }}
+  {{- with .parameters }}
+  config:
+    parameters:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- if and $restore.enabled (eq $btype "s3") }}
+  # Restore into a new cluster: read at cluster creation only
+  dataSource:
+    pgbackrest:
+      stanza: db
+      configuration:
+        - secret:
+            name: {{ include "cluster-crunchy.s3SecretName" $rs3 | quote }}
+      global:
+        repo1-path: {{ $restore.source | quote }}
+        {{- include "cluster-crunchy.s3GlobalOptions" (dict "s3" $rs3) | nindent 8 }}
+      repo:
+        name: repo1
+        s3:
+          bucket: {{ $rs3.bucket | quote }}
+          endpoint: {{ $rs3.endpoint | quote }}
+          region: {{ $rs3.region | quote }}
+      {{- if $restore.target }}
+      options:
+        - --type=time
+        - --target={{ $restore.target | quote }}
+      {{- end }}
+  {{- end }}
+  {{- if ne $btype "none" }}
   backups:
     pgbackrest:
       {{- if .istioSidecarEnabled }}
@@ -72,22 +145,65 @@ spec:
         annotations:
           sidecar.istio.io/inject: "true"
       {{- end }}
-      image: >-
-        registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.41-0
-      # This section is usefull if you wan't to execute a manual backup using the 
+      {{- with $backup.image }}
+      image: {{ . | quote }}
+      {{- end }}
+      {{- if eq $btype "s3" }}
+      configuration:
+        - secret:
+            name: {{ include "cluster-crunchy.s3SecretName" $s3 | quote }}
+      {{- end }}
+      {{- if .avoidInfraNodes }}
+      jobs:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: node-role.kubernetes.io/infra
+                      operator: DoesNotExist
+      {{- end }}
+      # This section is useful if you want to execute a manual backup using the
       # postgres-operator.crunchydata.com/pgbackrest-backup annotation
       manual:
         repoName: repo1
         options:
          - --type=full
+      {{- if eq $btype "s3" }}
+      # In place restore: enabled by a commit, triggered by the pgbackrest-restore annotation (README)
+      restore:
+        enabled: {{ $inPlace.enabled | default false }}
+        repoName: repo1
+        {{- if and $inPlace.enabled $inPlace.target }}
+        options:
+          - --type=time
+          - --target={{ $inPlace.target | quote }}
+        {{- end }}
+      {{- end }}
       global:
-        repo1-retention-full: "14"
+        {{- if eq $btype "s3" }}
+        repo1-path: /{{ $prefix }}/{{ $name }}/repo1
+        {{- end }}
+        repo1-retention-full: {{ $backup.retentionDays | default 14 | quote }}
         repo1-retention-full-type: time
+        {{- if eq $btype "s3" }}
+        {{- include "cluster-crunchy.s3GlobalOptions" (dict "s3" $s3) | nindent 8 }}
+        {{- end }}
       repos:
         - name: repo1
+          {{- $sched := $backup.schedules | default dict }}
+          {{- $diff := "0 1 * * 1-6" }}{{ if hasKey $sched "differential" }}{{ $diff = $sched.differential }}{{ end }}
           schedules:
-            full: "0 1 * * 0"
-            differential: "0 1 * * 1-6"
+            full: {{ $sched.full | default "0 1 * * 0" | quote }}
+            {{- with $diff }}
+            differential: {{ . | quote }}
+            {{- end }}
+          {{- if eq $btype "s3" }}
+          s3:
+            bucket: {{ $s3.bucket | quote }}
+            endpoint: {{ $s3.endpoint | quote }}
+            region: {{ $s3.region | quote }}
+          {{- else }}
           volume:
             volumeClaimSpec:
               accessModes:
@@ -95,40 +211,83 @@ spec:
               resources:
                 requests:
                   storage: {{ .storageBackupSize | default "1Gi" | quote }}
-              storageClassName: {{ .storageClassName | default "gp3-csi" | quote }}
-  image: 'registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.6-0'
+              {{- with .storageClassName }}
+              storageClassName: {{ . | quote }}
+              {{- end }}
+          {{- end }}
+  {{- end }}
+  {{- with .image }}
+  image: {{ . | quote }}
+  {{- end }}
   imagePullPolicy: IfNotPresent
   patroni:
+    {{- if or $trust .synchronous }}
     dynamicConfiguration:
+      {{- if $trust }}
       bootstrap:
         pg_hba:
           - host all all 0.0.0.0/0 trust
           - host all postgres 127.0.0.1/32 trust
           - host all all  ::1/128  md5
+      {{- end }}
       postgresql:
+        {{- if $trust }}
         pg_hba:
           - "host all all 0.0.0.0/0 trust" # this line enabled logical replication with programmatic access
           - host all postgres 127.0.0.1/32 trust
           - host all all  ::1/128  md5
+        {{- end }}
+        {{- if .synchronous }}
+        synchronous_mode: true
+        {{- end }}
+    {{- end }}
     leaderLeaseDurationSeconds: 30
     port: 8008
     syncPeriodSeconds: 10
   instances:
     - name: instance1
-      replicas: 1
+      replicas: {{ .replicas | default 1 }}
       {{- if .istioSidecarEnabled }}
       metadata:
         annotations:
           sidecar.istio.io/inject: "true"
       {{- end }}
+      {{- with .resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       dataVolumeClaimSpec:
-        storageClassName: {{ .storageClassName | default "gp3-csi" | quote }}
+        {{- with .storageClassName }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
         accessModes:
           - ReadWriteOnce
         resources:
           requests:
             storage: {{ .storageInstanceSize | default "1Gi" | quote }}
+      {{- if .avoidInfraNodes }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/infra
+                    operator: DoesNotExist
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  postgres-operator.crunchydata.com/cluster: "{{- $name -}}"
+                  postgres-operator.crunchydata.com/instance-set: instance1
+      {{- end }}
+  {{- if $monitoring.enabled }}
+  monitoring:
+    pgmonitor:
+      exporter: {}
+  {{- end }}
   openshift: true
+  {{- if $pgbouncer }}
   proxy:
     pgBouncer:
       config:
@@ -146,6 +305,7 @@ spec:
       replicas: 1
       service:
         type: ClusterIP
+  {{- end }}
   paused: false
   port: 5432
   postgresVersion: {{ .postgresVersion | default 14 }}
@@ -154,18 +314,24 @@ spec:
   shutdown: false
   standby:
     enabled: false
+  {{- if $pgadmin }}
   userInterface:
     pgAdmin:
-      # https://access.crunchydata.com/documentation/postgres-operator/5.8.6/references/crd/#postgresclusterspecuserinterfacepgadminconfig
+      # https://access.crunchydata.com/documentation/postgres-operator/5.8/references/crd/#postgresclusterspecuserinterfacepgadminconfig
       dataVolumeClaimSpec:
-        storageClassName: {{ .storageClassName | default "gp3-csi" | quote }}
+        accessModes:
+          - ReadWriteOnce
+        {{- with .storageClassName }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
         resources:
           requests:
             storage: 1Gi
       replicas: 1
       service:
         type: ClusterIP
-{{- if .initScript }}
+  {{- end }}
+{{- if include "cluster-crunchy.hasInitSQL" . }}
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -180,10 +346,14 @@ metadata:
     postgresql: "{{- $name -}}"
   annotations:
     {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-wave: "1"
 data:
   init.sql: |-
+    {{- if .initScript }}
     {{- .initScript | nindent 4 }}
+    {{- else }}
+    {{- include "cluster-crunchy.initSQL" . | nindent 4 }}
+    {{- end }}
 {{- end }}
 {{- end -}}{{- end -}}
 {{- end -}}{{- end }}

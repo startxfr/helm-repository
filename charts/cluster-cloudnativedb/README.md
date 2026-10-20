@@ -1,0 +1,305 @@
+# ![cluster-cloudnativedb](https://helm-repository.readthedocs.io/en/latest/img/cluster-cloudnativedb.svg "Cluster Chart : CloudNativeDB") Cluster Chart : CloudNativeDB
+[![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--cloudnativedb-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+cloudnativedb+startx)
+
+This helm chart is used to deploy PostgreSQL clusters managed by the CloudNativePG operator: the community
+build certified and supported by EDB (`flavor: community`, package `cloudnative-pg` of the certified catalog) or
+EDB Postgres for Kubernetes (`flavor: edb`, package `cloud-native-postgresql`, EDB subscription). Each entry of
+`cluster.list` is a `Cluster`, from a single instance for development up to a highly available cluster for
+production: several instances with synchronous replication and quorum based failover on distinct nodes, Barman
+Cloud backups to an S3 bucket with point in time recovery, PodMonitor and alerts, NetworkPolicy. The chart is used
+alone, or as the `cloudnativedb` sub-chart of
+[cluster-quay](https://helm-repository.readthedocs.io/en/latest/charts/cluster-quay), which derives the database
+connection strings of the registry from the clusters listed here.
+
+This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
+
+## Requirements and guidelines
+
+Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
+more information on how to use these resources.
+
+| Requirement | Detail |
+| --- | --- |
+| OpenShift 4.17+ (Kubernetes 1.30+) | `kubeVersion` of the chart |
+| CloudNativePG 1.30 (`flavor: community`) | `certified-operators` catalog, package `cloudnative-pg`, channel `stable-v1`, provided by EnterpriseDB, installed by the `operator` sub-chart in the namespace of the clusters (OwnNamespace). Apache 2.0, free of charge; the support contract is optional |
+| EDB Postgres for Kubernetes 1.30 (`flavor: edb`) | `certified-operators` catalog, package `cloud-native-postgresql`, channel `fast`, `stable` (LTS) or `stable-vX.Y`, installed cluster wide in `openshift-operators`. An EDB subscription and the pull Secret `postgresql-operator-pull-secret` in the operator namespace are required (see `values-startx-edb.yaml`) |
+| `backup.enabled` | An S3 compatible bucket reachable from the database pods, described in `s3.list`. `backup.method: plugin` also needs the Barman Cloud Plugin and cert-manager installed next to the operator |
+| `monitoring.enabled` | The Prometheus operator CRDs (`PodMonitor`, `PrometheusRule`): user workload monitoring enabled on the cluster |
+| Secrets | Passwords and S3 credentials are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`) or supplied by a values file kept out of Git; the chart never generates them |
+
+## Deploy this helm chart on openshift
+
+### 1. Connect to your Openshift cluster
+
+```bash
+oc login -t <token> <cluster-url>
+```
+
+### 2. Install the repository
+
+```bash
+helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable/
+```
+
+### 3. Get information about this chart
+
+```bash
+helm show chart startx/cluster-cloudnativedb
+```
+
+### 4. Install this chart
+
+```bash
+helm install cluster-cloudnativedb startx/cluster-cloudnativedb
+```
+
+## Deploy this helm chart with ArgoCD
+
+### 1. Create the project
+
+```bash
+cat <<EOF | oc apply -f -
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: cloudnativedb-project
+namespace: "openshift-gitops"
+spec:
+  destination:
+    namespace: "default-cloudnativedb"
+    server: 'https://kubernetes.default.svc'
+project: default
+source:
+    path: charts/cluster-cloudnativedb/
+    repoURL: 'https://gitlab.com/startx1/helm.git'
+    targetRevision: 21.3.279
+    helm:
+    valueFiles:
+    - values-demo.yaml
+    parameters:
+    - name: project.enabled
+      value: "true"
+EOF
+```
+
+### 2. Deploy the operator
+
+```bash
+cat <<EOF | oc apply -f -
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: cloudnativedb-operator
+namespace: "openshift-gitops"
+spec:
+  destination:
+    namespace: "default-cloudnativedb"
+    server: 'https://kubernetes.default.svc'
+project: default
+source:
+    path: charts/cluster-cloudnativedb/
+    repoURL: 'https://gitlab.com/startx1/helm.git'
+    targetRevision: 21.3.279
+    helm:
+    valueFiles:
+    - values-demo.yaml
+    parameters:
+    - name: operator.enabled
+      value: "true"
+EOF
+```
+
+### 3. Deploy a cloudnativedb instance
+
+```bash
+cat <<EOF | oc apply -f -
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+name: cloudnativedb-instance
+namespace: "openshift-gitops"
+spec:
+  destination:
+    namespace: "default-cloudnativedb"
+    server: 'https://kubernetes.default.svc'
+project: default
+source:
+    path: charts/cluster-cloudnativedb/
+    repoURL: 'https://gitlab.com/startx1/helm.git'
+    targetRevision: 21.3.279
+    helm:
+    valueFiles:
+    - values-demo.yaml
+    parameters:
+    - name: cluster.enabled
+      value: "true"
+    - name: loader.enabled
+      value: "true"
+EOF
+```
+
+## Default values
+
+Complete deployment of a project with the following characteristics :
+
+- 1 **namespace:** named **default-cloudnativedb** without constraints
+- 1 **operator:** named **cloudnative-pg** configured with
+  - The **stable-v1** channel of the certified catalog
+  - The **v1.30.1** version
+  - Deployed under the **default-cloudnativedb** project
+- 1 **cluster:** named **default-db** configured with
+  - PostgreSQL **17** (image `ghcr.io/cloudnative-pg/postgresql:17-system-trixie`), one instance, a **2Gi** data volume
+  - the owner role **default-user** with a password generated by the operator (Secret `default-db-app`)
+  - no backup, no monitoring, no network policy
+
+```bash
+# Create the project
+helm install cluster-cloudnativedb-project startx/cluster-cloudnativedb --set project.enabled=true,operator.enabled=false,cluster.enabled=false
+# Deploy the cloudnativedb operator
+helm install cluster-cloudnativedb-operator startx/cluster-cloudnativedb --set project.enabled=false,operator.enabled=true,cluster.enabled=false && sleep 10
+# Configure default cloudnativedb resources
+helm install cluster-cloudnativedb-instance startx/cluster-cloudnativedb --set project.enabled=false,operator.enabled=false,cluster.enabled=true
+```
+
+## Other available values
+
+- **startx** : CloudNativePG operator and a demo cluster (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx.yaml))
+- **startx-ha** : one highly available cluster, three instances, synchronous replication with quorum failover, S3 backups, monitoring (see [values-startx-ha.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx-ha.yaml))
+- **startx-quay** : the two databases of a highly available Quay registry, used by the `cloudnativedb` sub-chart of cluster-quay (see [values-startx-quay.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx-quay.yaml))
+- **startx-edb** : the highly available cluster with EDB Postgres for Kubernetes (see [values-startx-edb.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx-edb.yaml))
+- **demo** : demo cluster (see [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-demo.yaml))
+- `values-startx_noinfra*.yaml` : the same without the infra node placement of the operator
+
+```bash
+helm install cluster-cloudnativedb startx/cluster-cloudnativedb -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx.yaml
+```
+
+## Values
+
+### Flavor (`flavor`)
+
+| Value | Operator | API group | Labels | Metrics |
+| --- | --- | --- | --- | --- |
+| `community` (default) | CloudNativePG, package `cloudnative-pg` | `postgresql.cnpg.io` | `cnpg.io/*` | `cnpg_*` |
+| `edb` | EDB Postgres for Kubernetes, package `cloud-native-postgresql` | `postgresql.k8s.enterprisedb.io` | `k8s.enterprisedb.io/*` | `cnp_*` |
+
+The rendered objects are the same for both flavors; only the API group, the label prefix and the metric prefix
+change. With `flavor: edb` and no `imageName`, the instances run the default image of the operator, pulled from
+`docker.enterprisedb.com` with the pull Secret of the subscription.
+
+### Cluster entries (`cluster.list[]`)
+
+Every key below the first entry of `values.yaml` is optional.
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `name`, `enabled`, `namespace` | `default-db`, `true`, project name | Name of the `Cluster`, switch, namespace |
+| `postgresVersion`, `imageName` | `17`, `""` | Major version. Community flavor: picks `ghcr.io/cloudnative-pg/postgresql:<version>-system-trixie` unless `imageName` is set (pin a minor version in production); edb flavor: default image of the operator |
+| `storageClassName`, `storageInstanceSize` | `""`, `2Gi` | Data volume (empty class: default StorageClass of the cluster) |
+| `username`, `database` | `default-user`, cluster name | Owner role and its database (`bootstrap.initdb`) |
+| `password` | `""` | Owner password (secret). Empty: generated by the operator in the Secret `<name>-app`. Set: the chart renders the Secret `<name>-owner` (basic-auth) used by initdb and kept in sync on the role (`managed.roles`) |
+| `extensions`, `initScript` | `[]`, `""` | Extensions created in the database at initialization (`postInitApplicationSQL`); SQL script executed afterwards (ConfigMap `<name>-initdb`, `postInitApplicationSQLRefs`) |
+| `instances` | `1` | Instances of the cluster; 2 or more enables the automated failover |
+| `synchronous` | `false` | Synchronous replication (`method: any`, `number: 1`, `dataDurability: preferred`): no committed transaction lost at failover |
+| `failoverQuorum` | `false` | Promotion only when a replica is proven to hold every synchronous commit; requires `synchronous` and makes sense with 3 instances or more |
+| `avoidInfraNodes`, `topologyKey` | `false`, `kubernetes.io/hostname` | Required anti-affinity between the instances (one per `topologyKey`) and no scheduling on infra nodes |
+| `resources`, `parameters` | `{}`, `{}` | Resources of each instance, `postgresql.conf` parameters |
+| `istioSidecarEnabled` | `false` | Istio sidecar annotation inherited by the instances |
+| `backup.enabled`, `backup.method` | `false`, `barmanObjectStore` | Barman Cloud backups: in-core integration (`barmanObjectStore`, deprecated since CloudNativePG 1.26 but still shipped, needs a `system` image) or Barman Cloud Plugin (`plugin`, renders `ObjectStore` objects) |
+| `backup.s3`, `backup.pathPrefix`, `backup.serverName` | `""`, namespace, cluster name | Entry of `s3.list`; the backups land in `s3://<bucket>/<pathPrefix>/<serverName>`. Set `serverName` when a cluster is recreated under the same name from its own backups: the archive of a new cluster must be empty |
+| `backup.retentionDays`, `backup.schedule`, `backup.compression` | `14`, `0 1 * * 0`, `gzip` | Retention policy, cron (5 fields) of the `ScheduledBackup <name>-full` (first backup immediately), WAL and base backup compression |
+| `restore.enabled`, `restore.s3`, `restore.pathPrefix`, `restore.source`, `restore.target` | `false` | Bootstrap the cluster from the folder `source` (serverName of the source cluster) of the endpoint `s3` (empty: `backup.s3`) under `pathPrefix` (empty: `backup.pathPrefix`), at `target` (empty: end of the archive). Read at cluster creation only; requires `backup.enabled` |
+| `monitoring.enabled` and thresholds | `false` | `PodMonitor <name>-exporter` and `PrometheusRule <name>-alerts` (`CloudNativePG*` alerts: no primary, no replica, instance down, replication lag, WAL archive failing, backup too old, volume full) |
+| `networkPolicy.enabled`, `allowedNamespaces`, `operatorNamespaces`, `monitoringNamespaces` | `false` | Ingress policy on the database pods: same namespace, `allowedNamespaces` on 5432, `operatorNamespaces` on every port (set it to `openshift-operators` with a cluster wide operator), monitoring stacks on the metrics port |
+
+### S3 endpoints (`s3.list[]`)
+
+| Key | Description |
+| --- | --- |
+| `name`, `namespace` | Name referenced by `backup.s3` and `restore.s3`; namespace of the Secret `<name>-barman-s3` (the namespace of the clusters) |
+| `endpoint`, `port`, `region`, `bucket` | Endpoint without scheme, port (empty: 443), signature region (optional), bucket |
+| `accessKey`, `secretKey`, `caCert` | Credentials (secret) and PEM of a private CA signing the endpoint certificate |
+
+### Sub-charts
+
+`project` (namespace) and `operator` (OLM subscription and OperatorGroup of the operator) are the STARTX basic
+charts; see their documentation. The chart objects use Argo CD sync waves: Secrets and ConfigMaps (1), `ObjectStore`
+(10), `Cluster` and `NetworkPolicy` (15), `ScheduledBackup`, `PodMonitor` and `PrometheusRule` (30), loaders (35).
+
+## Procedures
+
+### Backups
+
+```bash
+# status of the cluster, its WAL archive and its last backup
+oc get cluster startx-db -n default-cloudnativedb -o yaml | yq '.status | {phase, currentPrimary, firstRecoverabilityPoint, lastSuccessfulBackup}'
+# on demand backup
+cat <<EOF | oc apply -f -
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: startx-db-$(date +%Y%m%d%H%M)
+  namespace: default-cloudnativedb
+spec:
+  cluster:
+    name: startx-db
+  method: barmanObjectStore
+EOF
+```
+
+With `backup.method: plugin`, use `method: plugin` and `pluginConfiguration.name: barman-cloud.cloudnative-pg.io`.
+
+### Restore to a point in time
+
+CloudNativePG restores into a new cluster (bootstrap by recovery), never in place. Add a cluster entry with
+`restore.enabled: true`, `restore.source` set to the serverName of the source cluster and `restore.target` to the
+point in time, with a different name or a `backup.serverName` different from the source: the new cluster must not
+archive into the folder it restores from (the chart refuses it). Once the new cluster is verified, switch the
+applications to its `<name>-rw` service and drop the old one.
+
+```bash
+oc get cluster -n default-cloudnativedb
+oc get pods -n default-cloudnativedb -l cnpg.io/cluster=startx-db-r1
+```
+
+### Switchover and failover
+
+```bash
+# planned switchover to the most aligned replica (kubectl cnpg plugin)
+kubectl cnpg promote startx-db 2 -n default-cloudnativedb
+# status of the replication and the quorum
+kubectl cnpg status startx-db -n default-cloudnativedb
+```
+
+### Certificate authority of a cluster
+
+The operator issues one CA per cluster (Secret `<name>-ca`). Clients verifying the server certificate
+(`sslmode=verify-full`) need it:
+
+```bash
+oc get secret startx-db-ca -n default-cloudnativedb -o jsonpath='{.data.ca\.crt}' | base64 -d
+```
+
+## Deploy with ArgoCD
+
+### AppProject
+
+```bash
+git clone https://gitlab.com/startx1/helm.git
+cd helm-repository/charts/cluster-cloudnativedb/examples/argocd/
+oc apply -k .
+```
+
+### Applications
+
+The `examples/argocd` folder holds the AppProject and the three Applications (project, operator, app) of the standard
+pattern, using `values-startx_noinfra.yaml`. For a highly available cluster, replace the values file by
+`values-startx_noinfra-ha.yaml` and declare the S3 credentials through the Argo CD Vault Plugin. With `flavor: edb`,
+the operator is cluster wide: drop the project Application and point the operator Application to
+`openshift-operators`.
+
+## History
+
+| Release  | Date       | Description                                            |
+| -------- | ---------- | ------------------------------------------------------ |
+| 21.3.279 | 2026-10-20 | Initial chart creation |

@@ -1,0 +1,108 @@
+{{- if .Values.quay.enabled -}}
+{{- include "cluster-quay.validate" . -}}
+{{- $namespace := include "cluster-quay.namespace" . -}}
+{{- $name := include "cluster-quay.registryName" . -}}
+{{- $v := .Values -}}
+{{- $q := $v.quay -}}
+{{- if and $q.config.enabled (not $q.config.existingSecret) }}
+---
+# Config bundle of the registry: config.yaml, optional clair-config.yaml, extra CA certificates, optional TLS pair.
+# Applied server side by Argo CD so that no clear text copy lands in a last-applied-configuration annotation
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{- $name -}}-config-bundle"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-quay.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-config-bundle-secret"
+  annotations:
+    {{- include "cluster-quay.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+type: Opaque
+stringData:
+  config.yaml: |
+    {{- include "cluster-quay.config" . | nindent 4 }}
+  {{- if and (include "cluster-quay.unmanagedDb" .) $q.components.clair }}
+  clair-config.yaml: |
+    indexer:
+      connstring: {{ include "cluster-quay.clairConnString" . }}
+    matcher:
+      connstring: {{ include "cluster-quay.clairConnString" . }}
+    notifier:
+      connstring: {{ include "cluster-quay.clairConnString" . }}
+  {{- end }}
+  {{- if and (include "cluster-quay.unmanagedDb" .) (eq $v.database.tls.mode "verify-full") }}
+  extra_ca_cert_postgres-ca.crt: |
+    {{- $v.database.tls.caCert | nindent 4 }}
+  {{- end }}
+  {{- if and (eq $v.storage.mode "external") $v.storage.external.caCert }}
+  extra_ca_cert_storage.crt: |
+    {{- $v.storage.external.caCert | nindent 4 }}
+  {{- end }}
+  {{- if and $v.oidc.enabled $v.oidc.caCert }}
+  extra_ca_cert_oidc.crt: |
+    {{- $v.oidc.caCert | nindent 4 }}
+  {{- end }}
+  {{- range $caName, $pem := $q.config.extraCaCerts }}
+  extra_ca_cert_{{ $caName }}: |
+    {{- $pem | nindent 4 }}
+  {{- end }}
+  {{- if not $q.tls.managed }}
+  ssl.cert: |
+    {{- $q.tls.cert | nindent 4 }}
+  ssl.key: |
+    {{- $q.tls.key | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- if and (include "cluster-quay.unmanagedDb" .) (eq $v.database.tls.mode "verify-full") }}
+---
+# CA of the databases for the quay-app, quay-mirror and upgrade pods, rendered even with an existing config bundle:
+# the operator projects this secret into /run/secrets/postgresql and the Quay image copies ca.crt to /.postgresql/root.crt
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgresql-client-certs
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-quay.labels" . | nindent 4 }}
+    app.kubernetes.io/name: postgresql-client-certs-secret
+  annotations:
+    {{- include "cluster-quay.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+type: Opaque
+stringData:
+  ca.crt: |
+    {{- $v.database.tls.caCert | nindent 4 }}
+{{- end }}
+{{- if $q.podDisruptionBudgets.enabled }}
+{{- range $component := list "quay-app" "clair-app" "quay-mirror" }}
+{{- if or (ne $component "clair-app") $q.components.clair }}
+{{- if or (ne $component "quay-mirror") $q.components.mirror }}
+---
+# The Quay operator sets no PodDisruptionBudget: a drain evicts one pod of each component at a time
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: "{{- $name -}}-{{- $component -}}"
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-quay.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-{{- $component -}}-pdb"
+  annotations:
+    {{- include "cluster-quay.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      quay-operator/quayregistry: "{{- $name -}}"
+      quay-component: {{ $component }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}

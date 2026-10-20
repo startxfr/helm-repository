@@ -1,0 +1,165 @@
+# Values for the two PostgreSQL clusters of a highly available Red Hat Quay registry (see the cluster-quay chart, which embeds this chart as the cloudnativedb sub-chart). Three instances for Quay with quorum failover, two for Clair, synchronous replication, Barman Cloud backups to an S3 bucket, monitoring and network policies.
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: cloudnativedb
+  app: quay-cloudnativedb
+  version: "1.30.1"
+
+flavor: community
+
+loader:
+  enabled: false
+  list: []
+
+# Secret values are Argo CD Vault Plugin placeholders: replace the KV path by yours, or use a values file kept out of Git
+s3:
+  list:
+    - name: quay-backup
+      namespace: quay-postgres
+      endpoint: s3.example.com
+      port: ""
+      region: ""
+      bucket: quay-barman
+      accessKey: <path:kv/data/quay/prod#pgbackrest_access_key>
+      secretKey: <path:kv/data/quay/prod#pgbackrest_secret_key>
+      caCert: ""
+
+cluster:
+  enabled: false
+  list:
+    - name: quay-db
+      enabled: true
+      namespace: quay-postgres
+      postgresVersion: 17
+      imageName: ""
+      storageClassName: ""
+      storageInstanceSize: "100Gi"
+      username: quay
+      database: quay
+      password: <path:kv/data/quay/prod#quay_db_password>
+      extensions:
+        - pg_trgm
+      instances: 3
+      synchronous: true
+      failoverQuorum: true
+      avoidInfraNodes: true
+      resources:
+        requests:
+          cpu: "2"
+          memory: 8Gi
+        limits:
+          memory: 16Gi
+      parameters:
+        max_connections: "2000"
+        shared_buffers: "2GB"
+        effective_cache_size: "6GB"
+      backup:
+        enabled: true
+        method: barmanObjectStore
+        s3: quay-backup
+        pathPrefix: ""
+        serverName: ""
+        retentionDays: 14
+        schedule: "0 1 * * 0"
+        compression: gzip
+      restore:
+        enabled: false
+        source: ""
+        target: ""
+      monitoring:
+        enabled: true
+      networkPolicy:
+        enabled: true
+        allowedNamespaces:
+          - quay-enterprise
+    - name: clair-db
+      enabled: true
+      namespace: quay-postgres
+      postgresVersion: 15
+      imageName: ""
+      storageClassName: ""
+      storageInstanceSize: "50Gi"
+      username: clair
+      database: clair
+      password: <path:kv/data/quay/prod#clair_db_password>
+      extensions:
+        - uuid-ossp
+      instances: 2
+      synchronous: true
+      failoverQuorum: false
+      avoidInfraNodes: true
+      resources:
+        requests:
+          cpu: "1"
+          memory: 4Gi
+        limits:
+          memory: 8Gi
+      parameters:
+        max_connections: "2000"
+        shared_buffers: "1GB"
+        effective_cache_size: "3GB"
+      backup:
+        enabled: true
+        method: barmanObjectStore
+        s3: quay-backup
+        pathPrefix: ""
+        serverName: ""
+        retentionDays: 14
+        schedule: "0 1 * * 0"
+        compression: gzip
+      restore:
+        enabled: false
+        source: ""
+        target: ""
+      monitoring:
+        enabled: true
+      networkPolicy:
+        enabled: true
+        allowedNamespaces:
+          - quay-enterprise
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "quay-postgres"
+    display_name: "Quay - PostgreSQL databases"
+    requester: startx
+    description: PostgreSQL databases of the Quay registry, CloudNativePG, configured by STARTX
+    # Argo CD never deletes the namespace of the databases, whatever the pruning policy of the Application
+    additionalAnnotations: |-
+      argocd.argoproj.io/sync-options: Prune=false
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cloudnative-pg"
+    namespace: "quay-postgres"
+    version: "v1.30.1"
+    operator:
+      channel: stable-v1
+      name: cloudnative-pg
+      installPlanApproval: Manual
+      csv: cloudnative-pg
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "cloudnativedb-operator"
+    namespace: "quay-postgres"
+    providedAPIs: "Cluster.v1.postgresql.cnpg.io,Backup.v1.postgresql.cnpg.io,ScheduledBackup.v1.postgresql.cnpg.io,Pooler.v1.postgresql.cnpg.io,Database.v1.postgresql.cnpg.io,Publication.v1.postgresql.cnpg.io,Subscription.v1.postgresql.cnpg.io,ImageCatalog.v1.postgresql.cnpg.io,ClusterImageCatalog.v1.postgresql.cnpg.io,FailoverQuorum.v1.postgresql.cnpg.io"

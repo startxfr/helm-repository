@@ -1,0 +1,143 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- $defaultns := include "cluster-crunchy.defaultNamespace" . -}}
+
+{{/* PodMonitor and PrometheusRule of every cluster with monitoring enabled */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- $ns := .namespace | default $defaultns -}}
+{{- $m := .monitoring | default dict -}}
+{{- $btype := include "cluster-crunchy.backupType" . -}}
+{{- $replicas := int (.replicas | default 1) -}}
+{{- $lagBytes := int64 ($m.replicationLagBytes | default 104857600) -}}
+{{- $backupHours := int64 ($m.backupMaxAgeHours | default 36) -}}
+{{- $fullDays := int64 ($m.fullBackupMaxAgeDays | default 8) -}}
+{{- $volumePct := int64 ($m.volumeUsagePercent | default 80) -}}
+{{- if and .enabled $m.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: "{{ $name }}-exporter"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-crunchy.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-exporter-podmonitor"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  selector:
+    matchLabels:
+      postgres-operator.crunchydata.com/cluster: "{{- $name -}}"
+      postgres-operator.crunchydata.com/crunchy-postgres-exporter: "true"
+  podMetricsEndpoints:
+    - port: exporter
+      interval: 30s
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_cluster]
+          targetLabel: pg_cluster
+        - sourceLabels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_role]
+          targetLabel: role
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: "{{ $name }}-alerts"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-crunchy.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-alerts-prometheusrule"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  groups:
+    - name: {{ $name }}-postgres
+      rules:
+        - alert: CrunchyPostgresNoPrimary
+          expr: absent(ccp_is_in_recovery_status{pg_cluster="{{ $name }}"} == 2)
+          for: 2m
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }} has no reachable primary instance"
+        {{- if gt $replicas 1 }}
+        - alert: CrunchyPostgresNoReplica
+          expr: |
+            count(ccp_is_in_recovery_status{pg_cluster="{{ $name }}"} == 2)
+              unless count(ccp_is_in_recovery_status{pg_cluster="{{ $name }}"} == 1)
+          for: 10m
+          labels:
+            severity: warning
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }} runs without a replica: no failover possible"
+        {{- end }}
+        - alert: CrunchyPostgresReplicationLag
+          expr: max(ccp_replication_lag_size_bytes{pg_cluster="{{ $name }}"}) > {{ $lagBytes }}
+          for: 5m
+          labels:
+            severity: warning
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: a replica lags more than {{ $lagBytes }} bytes of WAL behind the primary"
+        {{- if ne $btype "none" }}
+        - alert: CrunchyPostgresWalArchiveFailing
+          expr: max(ccp_archive_command_status_seconds_since_last_fail{pg_cluster="{{ $name }}"}) > 300
+          for: 1m
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: WAL archiving to the backup repository has been failing for more than 5 minutes"
+        - alert: CrunchyPostgresBackupTooOld
+          expr: min(ccp_backrest_last_diff_backup_time_since_completion_seconds{pg_cluster="{{ $name }}"}) > {{ $backupHours }} * 3600
+          for: 1h
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: no full or differential backup for more than {{ $backupHours }} hours"
+        - alert: CrunchyPostgresFullBackupTooOld
+          expr: min(ccp_backrest_last_full_backup_time_since_completion_seconds{pg_cluster="{{ $name }}"}) > {{ $fullDays }} * 86400
+          for: 1h
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: no full backup for more than {{ $fullDays }} days"
+        - alert: CrunchyPostgresBackupsNotVisible
+          expr: absent(ccp_backrest_last_diff_backup_time_since_completion_seconds{pg_cluster="{{ $name }}"})
+          for: 1h
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: no backup visible, repository unreachable or no backup ever completed"
+        {{- end }}
+        - alert: CrunchyPostgresConnections
+          expr: max by (pod) (100 * ccp_connection_stats_total{pg_cluster="{{ $name }}"} / ccp_connection_stats_max_connections{pg_cluster="{{ $name }}"}) > 80
+          for: 5m
+          labels:
+            severity: warning
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: more than 80% of max_connections in use"
+        - alert: CrunchyPostgresVolumeFull
+          expr: max by (pod) (100 * (1 - ccp_nodemx_data_disk_available_bytes{pg_cluster="{{ $name }}"} / ccp_nodemx_data_disk_total_bytes{pg_cluster="{{ $name }}"})) > {{ $volumePct }}
+          for: 5m
+          labels:
+            severity: warning
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "{{ `{{ $labels.pod }}` }}: data volume more than {{ $volumePct }}% full"
+{{- end }}
+{{- end }}
+{{- end -}}{{- end }}

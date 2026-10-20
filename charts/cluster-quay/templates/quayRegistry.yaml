@@ -1,16 +1,31 @@
 {{- if .Values.quay.enabled -}}
-{{- $namespace := .Values.project.project.name | default "default-quay" -}}
+{{- include "cluster-quay.validate" . -}}
+{{- $namespace := include "cluster-quay.namespace" . -}}
+{{- $name := include "cluster-quay.registryName" . -}}
+{{- $v := .Values -}}
+{{- $q := $v.quay -}}
+{{- $quayOverrides := dict -}}
+{{- with $q.overrides.quay }}{{ $quayOverrides = deepCopy . }}{{ end -}}
+{{- $clairOverrides := dict -}}
+{{- with $q.overrides.clair }}{{ $clairOverrides = deepCopy . }}{{ end -}}
+{{- $mirrorOverrides := dict -}}
+{{- with $q.overrides.mirror }}{{ $mirrorOverrides = deepCopy . }}{{ end -}}
+{{- if $q.stopped -}}
+{{- $_ := set $quayOverrides "replicas" 0 -}}
+{{- $_ := set $clairOverrides "replicas" 0 -}}
+{{- $_ := set $mirrorOverrides "replicas" 0 -}}
+{{- end -}}
 apiVersion: quay.redhat.com/v1
 kind: QuayRegistry
 metadata:
-  name: "{{- include "startx.appName" . -}}"
+  name: "{{- $name -}}"
   namespace: "{{- $namespace -}}"
   labels:
     {{- include "cluster-quay.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-quayecosystem"
+    app.kubernetes.io/name: "{{- $name -}}-quayregistry"
   annotations:
     {{- include "cluster-quay.annotations" . | nindent 4 }}
-    {{- if .Values.quay.hooked }}
+    {{- if $q.hooked }}
     helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-weight: "10"
     helm.sh/hook-delete-policy: hook-failed
@@ -18,72 +33,44 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
     argocd.argoproj.io/sync-wave: "25"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
+  {{- if include "cluster-quay.hasConfig" . }}
+  configBundleSecret: {{ $q.config.existingSecret | default (printf "%s-config-bundle" $name) }}
+  {{- end }}
   components:
-    - kind: clair
+    - kind: quay
       managed: true
+      {{- with $quayOverrides }}
+      overrides:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     - kind: postgres
-      managed: true
-    - kind: objectstorage
-      managed: true
+      managed: {{ not (include "cluster-quay.unmanagedDb" .) }}
+    - kind: clair
+      managed: {{ $q.components.clair }}
+      {{- if and $q.components.clair $clairOverrides }}
+      overrides:
+        {{- toYaml $clairOverrides | nindent 8 }}
+      {{- end }}
+    - kind: clairpostgres
+      managed: {{ and $q.components.clair (not (include "cluster-quay.unmanagedDb" .)) }}
     - kind: redis
       managed: true
     - kind: horizontalpodautoscaler
-      managed: true
+      managed: {{ and $q.components.hpa (not $q.stopped) }}
+    - kind: objectstorage
+      managed: {{ or (eq $v.storage.mode "operator") (not (include "cluster-quay.hasConfig" .)) }}
     - kind: route
-      managed: true
-    - kind: mirror
-      managed: true
-    - kind: monitoring
-      managed: true
+      managed: {{ $q.components.route }}
     - kind: tls
-      managed: true
-#   quay:
-#     skipSetup: false
-#     keepConfigDeployment: true
-#     deploymentStrategy: RollingUpdate
-# {{- with .Values.quay.image }}
-#     image: "{{- . -}}"
-# {{- end }}
-# {{- if .Values.quay.pullSecretEnabled }}
-#     imagePullSecretName: "{{- include "startx.appName" . -}}-pull-auth"
-# {{- end }}
-# {{- if .Values.quay.admin }}
-#     superuserCredentialsSecretName: "{{- include "startx.appName" . -}}-adminuser"
-# {{- end }}
-#     migrationPhase: new-installation
-#     repoMirrorResources: {}
-#     resources:
-#       limits:
-#         cpu: "1"
-#         memory: 4096Mi
-#       requests:
-#         cpu: 400m
-#         memory: 2048Mi
-#     readinessProbe:
-#       failureThreshold: 3
-#       httpGet:
-#         path: /health/instance
-#         port: 8443
-#         scheme: HTTPS
-#       initialDelaySeconds: 5
-#     # externalAccessType: Route
-#     livenessProbe:
-#       failureThreshold: 3
-#       httpGet:
-#         path: /health/instance
-#         port: 8443
-#         scheme: HTTPS
-#       initialDelaySeconds: 90
-#       timeoutSeconds: 5
-#     registryBackends:
-#       - name: default
-#         local:
-#           storagePath: /datastorage/registry
-#     registryStorage:
-#       persistentVolumeAccessModes:
-#         - {{ .Values.quay.storageAccess | default "ReadWriteOnce" | quote }}
-#       persistentVolumeSize: {{ .Values.quay.size | default "10Gi" | quote }}
-#       persistentVolumeStorageClassName: {{ .Values.quay.storageClass | default "gp3-csi" | quote  }}
-
+      managed: {{ $q.tls.managed }}
+    - kind: mirror
+      managed: {{ $q.components.mirror }}
+      {{- if and $q.components.mirror $mirrorOverrides }}
+      overrides:
+        {{- toYaml $mirrorOverrides | nindent 8 }}
+      {{- end }}
+    - kind: monitoring
+      managed: {{ $q.components.monitoring }}
 {{- end -}}

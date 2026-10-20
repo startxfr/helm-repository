@@ -2,7 +2,7 @@
 
 # Application deployment context
 context:  &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -13,54 +13,235 @@ context:  &context
   # Application name (functional tenant, default use Chart name)
   app: default-quay
   # Version name of this application (default use Chart appVersion)
-  version: "3.16.2"
+  version: "3.18.0"
 
 # RHN information for the container catalog
 rhn:
-  # Enable the configuration of the rhn account for image pull
+  # Enable the configuration of the rhn account for image pull (Secret <app>-pull-auth)
   enabled: true
-  # Redhat Network accesss user to the RH container catalog
+  # Redhat Network access user to the RH container catalog
   user: rhnuser
-  # Redhat Network accesss password to the Rh container catalog
+  # Redhat Network access password to the RH container catalog
   pwd: rhnpwd
-# Deploy aroute to the quay registry
+
+# Deploy a route to the quay registry (previous releases, QuayEcosystem labels). The Quay operator manages the route
+# of the QuayRegistry: see quay.components.route
 route:
-  # Enable the configuration of the API manager
+  # Enable the configuration of the route
   enabled: true
-  # Enable the configuration of the API manager
+  # Name of the route and its service
   name: registry
-# Deploy an API manager
+
+# Quay registry (QuayRegistry custom resource)
 quay:
-  # Enable the configuration of the API manager
+  # Enable the configuration of the registry
   enabled: true
-  # Activate the manager as a helm hook
+  # Activate the registry as a helm hook
   hooked: false
-  # Image to use for the database deployment
-  image: 'quay.io/redhat/quay:v3.2.0'
-  # The size of the persistant volume to use form image layer storage
-  size: '10Gi'
-  # The storage class used for images persistance
-  storageClass: 'startx-aws-generic-retain'
-  # The storage accesss mode used for registry recording
-  storageAccesss: 'ReadWriteOnce'
+  # Name of the QuayRegistry (empty: the application name of the context). Every object created by the operator is
+  # prefixed with it (<name>-quay-app, <name>-quay-config-bundle...)
+  name: ""
   # Enable pull secret using rhn credentials
   pullSecretEnabled: true
-  # Configuration of the admin user
-  admin: 
+  # Admin user Secret <app>-adminuser (informational: the first super user of a QuayRegistry is created through the
+  # API, see quay.config.userInitialize and README)
+  admin:
+    enabled: true
     # username of the admin user
     username: "admin"
     # password for the admin user
     password: "mysecret123"
     # email of the admin user
     email: "mail@example.com"
+  # Configuration bundle (config.yaml) of the registry, rendered by the chart in the Secret <name>-config-bundle.
+  # Values marked "secret" are expected to be Argo CD Vault Plugin placeholders (<path:kv/data/...#key>) or supplied
+  # by a values file kept out of Git; the chart never generates them
+  config:
+    # false: no bundle, the operator generates the whole configuration and manages every component (single pod
+    # PostgreSQL, Redis, ObjectBucketClaim storage), the behaviour of the previous releases of this chart.
+    # true: config.yaml rendered from the keys below, storage.*, database.* and oidc.*
+    enabled: false
+    # SERVER_HOSTNAME. Empty: the operator uses the default route hostname (<name>-quay-<namespace>.apps...)
+    hostname: ""
+    # SUPER_USERS
+    superUsers:
+      - quayadmin
+    # FEATURE_USER_INITIALIZE: allows the creation of the first super user through the API (set it to false afterwards)
+    userInitialize: true
+    # FEATURE_USER_CREATION (forced to true when oidc.enabled)
+    userCreation: false
+    # SECRET_KEY: random string, 64 characters (secret). Required
+    secretKey: ""
+    # DATABASE_SECRET_KEY: random string, 64 characters (secret). Required. Never change it once Quay runs
+    databaseSecretKey: ""
+    # Registry title shown in the UI
+    registryTitle: "Red Hat Quay"
+    registryTitleShort: "Quay"
+    # Tag expiration
+    defaultTagExpiration: "2w"
+    tagExpirationOptions:
+      - "0s"
+      - "1d"
+      - "1w"
+      - "2w"
+      - "4w"
+    # Any other config.yaml key; merged last, overrides the keys rendered by the chart
+    extraConfig: {}
+    # Extra CA certificates added to the bundle as extra_ca_cert_<name> (PEM). Example:
+    # extraCaCerts:
+    #   corporate-ca.crt: |
+    #     -----BEGIN CERTIFICATE-----
+    extraCaCerts: {}
+    # Name of an existing config bundle Secret. When set, the chart renders no bundle: you are responsible for
+    # config.yaml, clair-config.yaml and extra_ca_cert_* keys; the components still follow storage.mode and database.mode
+    existingSecret: ""
+  # Route TLS certificate. managed: true lets the operator use the cluster wildcard certificate. managed: false
+  # requires cert and key (PEM, secret), added to the bundle as ssl.cert and ssl.key
+  tls:
+    managed: true
+    cert: ""
+    key: ""
+  # Components managed by the operator (postgres, clairpostgres and objectstorage follow database.mode and storage.mode)
+  components:
+    # Clair security scanner (and its database, see database.clair)
+    clair: true
+    # Repository mirroring workers
+    mirror: true
+    # HorizontalPodAutoscaler of quay-app, clair-app and quay-mirror (min 2, max 20/10/20)
+    hpa: true
+    # OpenShift Route (false: quay.config.hostname is required)
+    route: true
+    # ServiceMonitor, PrometheusRule and Grafana dashboard (requires the operator in AllNamespaces mode)
+    monitoring: true
+  # Overrides of the managed components (replicas, resources, env, affinity, volumeSize for clair...). Example:
+  # overrides:
+  #   quay:
+  #     resources:
+  #       requests:
+  #         cpu: "2"
+  #         memory: 8Gi
+  #   clair:
+  #     volumeSize: 50Gi
+  overrides:
+    quay: {}
+    clair: {}
+    mirror: {}
+  # true: quay-app, clair-app and quay-mirror are scaled to zero and the HPA is unmanaged (maintenance, restore)
+  stopped: false
+  # PodDisruptionBudgets (maxUnavailable 1) of quay-app, clair-app and quay-mirror: a drain evicts one pod at a time
+  podDisruptionBudgets:
+    enabled: false
 
+# Object storage of the registry (quay.config.enabled)
+storage:
+  # operator: object storage managed by the Quay operator (ObjectBucketClaim, requires OpenShift Data Foundation / NooBaa)
+  # external: S3 compatible endpoint described below (DISTRIBUTED_STORAGE_CONFIG in the bundle)
+  mode: operator
+  external:
+    # RadosGWStorage: any S3 compatible endpoint (Ceph RGW, MinIO, NooBaa, a cloud S3 compatible service...)
+    # S3Storage: Amazon S3 only (Quay derives the endpoint from region: host, port and isSecure are ignored)
+    driver: RadosGWStorage
+    # Hostname of the endpoint, without scheme (RadosGWStorage)
+    host: ""
+    # Port of the endpoint (RadosGWStorage; empty: 443 or 80 according to isSecure)
+    port: ""
+    isSecure: true
+    bucket: ""
+    storagePath: /datastorage/registry
+    # Credentials (secret)
+    accessKey: ""
+    secretKey: ""
+    # Signature region: S3Storage requires it (the endpoint is s3.<region>.amazonaws.com); RadosGWStorage uses it when set
+    region: ""
+    # PEM of a private CA signing the endpoint certificate (added to the bundle as extra_ca_cert_storage.crt)
+    caCert: ""
+    # Full DISTRIBUTED_STORAGE_CONFIG passthrough for other drivers (e.g. IBMCloudStorage, GoogleCloudStorage).
+    # When set, the keys above are ignored except caCert. Example:
+    # custom:
+    #   default:
+    #     - S3Storage
+    #     - s3_bucket: ...
+    custom: {}
+
+# PostgreSQL databases of Quay and Clair (quay.config.enabled)
+database:
+  # quayOperator:  single pod databases managed by the Quay operator (not highly available, no backup: for tests)
+  # crunchy:       clusters of the cluster-crunchy sub-chart (see crunchy below): the host, database, user and password
+  #                of Quay and Clair are read from the entries of crunchy.cluster.list named quay.cluster and clair.cluster
+  # cloudnativedb: clusters of the cluster-cloudnativedb sub-chart (see cloudnativedb below), same logic
+  # external:      databases you operate elsewhere (quay.host / clair.host below)
+  mode: quayOperator
+  # TLS between Quay/Clair and the databases (crunchy, cloudnativedb, external).
+  # require: encrypted, server certificate not verified (works without caCert)
+  # verify-full: server certificate verified against caCert (PEM): crunchy -> Secret <cluster>-cluster-cert key ca.crt
+  #   (root CA of the operator, 10 years), cloudnativedb -> Secret <cluster>-ca key ca.crt of each cluster (90 days by
+  #   default, CERTIFICATE_DURATION of the operator: raise it or refresh caCert at each renewal), external -> your CA
+  tls:
+    mode: require
+    caCert: ""
+  # Quay database
+  quay:
+    # Name of the entry of crunchy.cluster.list or cloudnativedb.cluster.list (crunchy, cloudnativedb)
+    cluster: quay-db
+    # Host of the server. Required with external; crunchy and cloudnativedb derive it from the cluster
+    # (<cluster>-primary.<namespace>.svc and <cluster>-rw.<namespace>.svc) unless set
+    host: ""
+    port: 5432
+    # Database, owner and password (secret). Required with external; crunchy and cloudnativedb read them from the
+    # cluster entry (database, username, password) unless set
+    database: ""
+    user: ""
+    password: ""
+  # Clair database (ignored when quay.components.clair is false)
+  clair:
+    cluster: clair-db
+    host: ""
+    port: 5432
+    database: ""
+    user: ""
+    password: ""
+
+# OIDC login (Keycloak, Red Hat build of Keycloak, any OpenID Connect provider) (quay.config.enabled)
+oidc:
+  enabled: false
+  # true: AUTHENTICATION_TYPE OIDC, the provider is the internal authentication of Quay: team synchronization from the
+  #   group claim; username/password logins (UI form, podman login) are checked by the provider through the OAuth2
+  #   password grant (enable "Direct access grants" on the Keycloak client, or use robot accounts); the accounts created
+  #   before in the database, including the first super user, no longer log in with their password (their API tokens
+  #   keep working). List the provider usernames of the administrators in quay.config.superUsers before switching.
+  # false: AUTHENTICATION_TYPE stays Database, the provider is an additional login button (the procedure of the Quay
+  #   operator documentation): database accounts keep their password, no team synchronization. FEATURE_USER_CREATION
+  #   is set to true in both cases (first login of a provider user); with false it also allows self registration
+  internalAuthentication: true
+  # Prefix of the config block (<SERVICE>_LOGIN_CONFIG) and name shown on the login button
+  serviceName: SSO
+  # Issuer URL with a trailing slash: https://sso.example.com/realms/<realm>/
+  server: ""
+  clientId: quay
+  # secret
+  clientSecret: ""
+  loginScopes:
+    - openid
+    - email
+    - profile
+  usernameClaim: preferred_username
+  emailClaim: email
+  # Claim carrying the groups, for team synchronization (empty: no group claim)
+  groupClaim: groups
+  # FEATURE_TEAM_SYNCING (internalAuthentication only)
+  teamSyncing: true
+  # FEATURE_NONSUPERUSER_TEAM_SYNCING_SETUP (internalAuthentication only)
+  nonSuperuserTeamSyncingSetup: false
+  pkce: true
+  # PEM of a private CA signing the provider certificate (added as extra_ca_cert_oidc.crt)
+  caCert: ""
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
-project: 
+project:
   enabled: false
-  context: 
+  context:
     <<: *context
-  project: 
+  project:
     enabled: true
     hooked: false
     type: namespace
@@ -71,23 +252,23 @@ project:
 # Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operator:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: false
     hooked: false
     name: "quay-operator"
     namespace: "openshift-startx-quay"
-    version: "v3.16.2"
-    operator: 
-      channel: stable-3.16
+    version: "v3.18.0"
+    operator:
+      channel: stable-3.18
       name: quay-operator
       installPlanApproval: Manual
       # csv: quay-operator
-      source: 
+      source:
         name: redhat-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
   operatorGroup:
     enabled: false
@@ -96,26 +277,248 @@ operator:
     namespace: "openshift-startx-quay"
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io,QuayRegistry.v1.quay.redhat.com"
 
-# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+# Configuration of the container security operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 operatorsec:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: false
     hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
-    version: "v3.16.2"
-    operator: 
-      channel: stable-3.16
+    version: "v3.18.0"
+    operator:
+      channel: stable-3.18
       name: container-security-operator
       installPlanApproval: Manual
       # csv: container-security-operator
-      source: 
+      source:
         name: redhat-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: true
   operatorGroup:
     enabled: false
+    hooked: false
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "ImageManifestVuln.v1alpha1.secscan.quay.redhat.com"
+
+# PostgreSQL clusters of the registry managed by the Crunchy Postgres for Kubernetes operator: values of the
+# cluster-crunchy sub-chart (see https://helm-repository.readthedocs.io/en/latest/charts/cluster-crunchy for every
+# key: s3 endpoints, backups, restore, monitoring, network policies). Rendered when crunchy.enabled; database.mode
+# crunchy reads the connection settings of Quay and Clair in cluster.list whether the sub-chart is enabled or not
+# (the clusters may also be deployed by a separate release of cluster-crunchy with the same values)
+crunchy:
+  enabled: false
+  context:
+    <<: *context
+  s3:
+    list: []
+  cluster:
+    enabled: false
+    list:
+      - name: quay-db
+        enabled: true
+        namespace: quay-postgres
+        postgresVersion: 17
+        storageClassName: ""
+        storageInstanceSize: "100Gi"
+        storageBackupSize: "100Gi"
+        username: quay
+        database: quay
+        # secret: required by database.mode crunchy (the chart cannot read a password generated by the operator)
+        password: ""
+        extensions:
+          - pg_trgm
+        replicas: 1
+        synchronous: false
+        avoidInfraNodes: false
+        pgHbaTrust: false
+        pgbouncer:
+          enabled: false
+        pgadmin:
+          enabled: false
+        backup:
+          enabled: true
+          type: volume
+        monitoring:
+          enabled: false
+        networkPolicy:
+          enabled: false
+          allowedNamespaces:
+            - quay-operator
+      - name: clair-db
+        enabled: true
+        namespace: quay-postgres
+        postgresVersion: 15
+        storageClassName: ""
+        storageInstanceSize: "50Gi"
+        storageBackupSize: "50Gi"
+        username: clair
+        database: clair
+        password: ""
+        extensions:
+          - uuid-ossp
+        replicas: 1
+        synchronous: false
+        avoidInfraNodes: false
+        pgHbaTrust: false
+        pgbouncer:
+          enabled: false
+        pgadmin:
+          enabled: false
+        backup:
+          enabled: true
+          type: volume
+        monitoring:
+          enabled: false
+        networkPolicy:
+          enabled: false
+          allowedNamespaces:
+            - quay-operator
+  project:
+    enabled: false
+    context:
+      <<: *context
+    project:
+      enabled: true
+      hooked: false
+      type: namespace
+      name: "quay-postgres"
+      display_name: "Quay - PostgreSQL databases"
+      description: PostgreSQL databases of the Quay registry, Crunchy Postgres for Kubernetes, configured by STARTX
+      # Argo CD never deletes the namespace of the databases, whatever the pruning policy of the Application
+      additionalAnnotations: |-
+        argocd.argoproj.io/sync-options: Prune=false
+  operator:
+    enabled: false
+    context:
+      <<: *context
+    subscription:
+      enabled: true
+      hooked: false
+      name: "crunchy-postgres-operator"
+      namespace: "quay-postgres"
+      version: "v5.8.9"
+      operator:
+        channel: v5
+        name: crunchy-postgres-operator
+        installPlanApproval: Manual
+        csv: postgresoperator
+        source:
+          name: certified-operators
+          namespace: openshift-marketplace
+        config:
+          infra: false
+    operatorGroup:
+      enabled: true
+      hooked: false
+      name: "crunchy-postgres-operator"
+      namespace: "quay-postgres"
+      providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"
+
+# PostgreSQL clusters of the registry managed by the CloudNativePG operator (community build certified by EDB, or
+# EDB Postgres for Kubernetes with flavor edb): values of the cluster-cloudnativedb sub-chart (see
+# https://helm-repository.readthedocs.io/en/latest/charts/cluster-cloudnativedb for every key). Rendered when
+# cloudnativedb.enabled; database.mode cloudnativedb reads the connection settings of Quay and Clair in cluster.list
+cloudnativedb:
+  enabled: false
+  context:
+    <<: *context
+  flavor: community
+  s3:
+    list: []
+  cluster:
+    enabled: false
+    list:
+      - name: quay-db
+        enabled: true
+        namespace: quay-postgres
+        postgresVersion: 17
+        imageName: ""
+        storageClassName: ""
+        storageInstanceSize: "100Gi"
+        username: quay
+        database: quay
+        # secret: required by database.mode cloudnativedb (the chart cannot read a password generated by the operator)
+        password: ""
+        extensions:
+          - pg_trgm
+        instances: 1
+        synchronous: false
+        failoverQuorum: false
+        avoidInfraNodes: false
+        backup:
+          enabled: false
+        monitoring:
+          enabled: false
+        networkPolicy:
+          enabled: false
+          allowedNamespaces:
+            - quay-operator
+      - name: clair-db
+        enabled: true
+        namespace: quay-postgres
+        postgresVersion: 15
+        imageName: ""
+        storageClassName: ""
+        storageInstanceSize: "50Gi"
+        username: clair
+        database: clair
+        password: ""
+        extensions:
+          - uuid-ossp
+        instances: 1
+        synchronous: false
+        failoverQuorum: false
+        avoidInfraNodes: false
+        backup:
+          enabled: false
+        monitoring:
+          enabled: false
+        networkPolicy:
+          enabled: false
+          allowedNamespaces:
+            - quay-operator
+  project:
+    enabled: false
+    context:
+      <<: *context
+    project:
+      enabled: true
+      hooked: false
+      type: namespace
+      name: "quay-postgres"
+      display_name: "Quay - PostgreSQL databases"
+      description: PostgreSQL databases of the Quay registry, CloudNativePG, configured by STARTX
+      # Argo CD never deletes the namespace of the databases, whatever the pruning policy of the Application
+      additionalAnnotations: |-
+        argocd.argoproj.io/sync-options: Prune=false
+  operator:
+    enabled: false
+    context:
+      <<: *context
+    subscription:
+      enabled: true
+      hooked: false
+      name: "cloudnative-pg"
+      namespace: "quay-postgres"
+      version: "v1.30.1"
+      operator:
+        channel: stable-v1
+        name: cloudnative-pg
+        installPlanApproval: Manual
+        csv: cloudnative-pg
+        source:
+          name: certified-operators
+          namespace: openshift-marketplace
+        config:
+          infra: false
+    operatorGroup:
+      enabled: true
+      hooked: false
+      name: "cloudnativedb-operator"
+      namespace: "quay-postgres"
+      providedAPIs: "Cluster.v1.postgresql.cnpg.io,Backup.v1.postgresql.cnpg.io,ScheduledBackup.v1.postgresql.cnpg.io,Pooler.v1.postgresql.cnpg.io,Database.v1.postgresql.cnpg.io,Publication.v1.postgresql.cnpg.io,Subscription.v1.postgresql.cnpg.io,ImageCatalog.v1.postgresql.cnpg.io,ClusterImageCatalog.v1.postgresql.cnpg.io,FailoverQuorum.v1.postgresql.cnpg.io"
