@@ -162,7 +162,7 @@ helm install cluster-quay startx/cluster-quay -f https://raw.githubusercontent.c
 
 ## Values
 
-Everything is in [values.yaml](values.yaml), with the same comments. Values marked *secret* are expected from the
+Everything is in [values.yaml](https://github.com/startxfr/helm-repository/blob/master/charts/cluster-quay/values.yaml), with the same comments. Values marked *secret* are expected from the
 Argo CD Vault Plugin or from a values file kept out of Git.
 
 ### Registry (`quay.*`)
