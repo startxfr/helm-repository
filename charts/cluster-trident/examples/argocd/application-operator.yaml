@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-trident-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-trident
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-trident
+    targetRevision: 21.3.278
+    helm:
+      valueFiles:
+        - values-startx.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: true
+          operatorGroup:
+            enabled: false
+        orchestrator:
+          enabled: false
+        backends:
+          enabled: false
+        storageClasses:
+          enabled: false
+        volumeSnapshotClasses:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-operators
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

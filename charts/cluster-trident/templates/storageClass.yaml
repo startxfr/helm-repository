@@ -26,7 +26,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "40"
 provisioner: {{ $provisioner | quote }}
 reclaimPolicy: {{ $sc.reclaimPolicy | default "Delete" }}
 allowVolumeExpansion: {{ $sc.allowVolumeExpansion | default true }}

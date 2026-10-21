@@ -28,7 +28,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "40"
 driver: {{ $driver | quote }}
 deletionPolicy: {{ $vsc.deletionPolicy | default "Delete" }}
 {{- if $vsc.parameters }}
