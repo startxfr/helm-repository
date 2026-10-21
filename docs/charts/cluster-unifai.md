@@ -171,3 +171,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | ------- | ---------- | ----------------------------------------- |
 | 21.3.1  | 2026-10-15 | Create chart cluster-unifai from cluster-kubecost |
 | 21.3.2  | 2026-10-15 | Rebuild as an umbrella chart vendoring the real component charts from startxfr/UnifAI (devel) |
+| 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
