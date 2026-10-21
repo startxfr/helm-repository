@@ -218,3 +218,4 @@ the operator is cluster wide: drop the project Application and point the operato
 | Release  | Date       | Description                                            |
 | -------- | ---------- | ------------------------------------------------------ |
 | 21.3.279 | 2026-10-20 | Initial chart creation |
+| 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
