@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/name: etcd-backup-config
   annotations:
     {{- include "etcd-backup.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "11"
+    argocd.argoproj.io/sync-wave: "1"
 data:
   OCP_BACKUP_S3: "true"
   OCP_BACKUP_S3_NAME: {{ .Values.etcdBackup.s3_region | quote }}

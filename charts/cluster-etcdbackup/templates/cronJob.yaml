@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/name: etcd-backup-cronjob
   annotations:
     {{- include "etcd-backup.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    argocd.argoproj.io/sync-wave: "15"
 spec:
   schedule: {{ .Values.etcdBackup.schedule | quote }}
   startingDeadlineSeconds: {{ .Values.etcdBackup.startingDeadlineSeconds | default 600 }}
