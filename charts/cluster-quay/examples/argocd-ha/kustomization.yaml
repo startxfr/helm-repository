@@ -1,0 +1,13 @@
+# oc apply -k examples/argocd-ha : AppProject and the three Applications (project, operator, app) of the highly
+# available registry with Crunchy databases. applicationset.yaml (clusters picked by label, values from the Git
+# repository of each cluster, Vault plugin) replaces the three Applications, and applicationset-single.yaml generates
+# one Application per cluster: apply one of them instead, with repo-secret.yaml for each cluster repository.
+# argocd-health.yaml is a patch of the ArgoCD custom resource and avp-plugin.yaml the plugin definition, applied
+# separately (see README, Deploy with ArgoCD).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - appproject.yaml
+  - application-project.yaml
+  - application-operator.yaml
+  - application-app.yaml

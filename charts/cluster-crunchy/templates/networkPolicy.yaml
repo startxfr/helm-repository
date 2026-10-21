@@ -1,0 +1,73 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- $defaultns := include "cluster-crunchy.defaultNamespace" . -}}
+
+{{/* Ingress NetworkPolicy of every cluster with networkPolicy enabled */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- $ns := .namespace | default $defaultns -}}
+{{- $np := .networkPolicy | default dict -}}
+{{- $m := .monitoring | default dict -}}
+{{- $monNs := list "openshift-monitoring" "openshift-user-workload-monitoring" -}}
+{{- if hasKey $np "monitoringNamespaces" }}{{ $monNs = $np.monitoringNamespaces }}{{ end -}}
+{{- $opNs := without ($np.operatorNamespaces | default list) $ns -}}
+{{- $allowed := without ($np.allowedNamespaces | default list) $ns -}}
+{{- if and .enabled $np.enabled }}
+---
+# Only the pods of the namespace, the allowed namespaces (5432), the operator namespaces and the monitoring
+# stacks (metrics port) reach the database pods; password and TLS are still required
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "{{ $name }}-postgres"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-crunchy.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-postgres-networkpolicy"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-crunchy.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  podSelector:
+    matchLabels:
+      postgres-operator.crunchydata.com/cluster: "{{- $name -}}"
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector: {}
+    {{- if $allowed }}
+    - from:
+        {{- range $allowed }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . | quote }}
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: 5432
+    {{- end }}
+    {{- if $opNs }}
+    # Database operator running outside the database namespace (every port: Patroni API, PostgreSQL)
+    - from:
+        {{- range $opNs }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . | quote }}
+        {{- end }}
+    {{- end }}
+    {{- if and $m.enabled $monNs }}
+    - from:
+        {{- range $monNs }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ . | quote }}
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: 9187
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}{{- end }}

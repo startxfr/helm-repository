@@ -1,0 +1,96 @@
+# Same chain as applicationset.yaml (clusters selected by the label cluster-quay-ha, values file read from the Git
+# repository named after the cluster, secrets resolved by the Argo CD Vault Plugin) with ONE generated Application
+# per cluster instead of two: the namespaces, the operators (STARTX sub-charts project and operator of the registry
+# and of the crunchy sub-chart) and the registry are rendered together, every flag being switched on by HELM_ARGS so
+# that the same values file serves both layouts (cloudnativedb.* flags for CloudNativePG). Pick one of the two ApplicationSets, not both.
+# How the single Application syncs:
+#   - sync waves order everything: namespaces (-10), OperatorGroup (-6), Subscriptions (-5), Secrets (1), databases
+#     (15), QuayRegistry (25), budgets and alerts (30);
+#   - the first sync waits at wave -5 until the InstallPlans are approved and the operators installed (the OLM
+#     Subscription health check of Argo CD, or the one of argocd-health.yaml), then goes on: the custom resources
+#     carry SkipDryRunOnMissingResource=true, so the dry run of the operation does not fail while their CRDs are
+#     missing; SkipDryRunOnMissingResource=true below covers a chart version without those annotations;
+#   - prune: true removes an object dropped from the rendering; both namespaces carry Prune=false (values and chart)
+#     and are never deleted; a Subscription or OperatorGroup dropped from the values would be pruned (the CSV and
+#     the operator stay installed);
+#   - the health of the Application aggregates the operators: an InstallPlan waiting for approval is Healthy with the
+#     Subscription rule of argocd-health.yaml (Argo CD 3.5 behaviour), Progressing without it on earlier versions.
+# The cluster Secret must not be project scoped (see applicationset.yaml). Requires Argo CD 2.10+ (goTemplate), the
+# plugin of avp-plugin.yaml and the AppProject of appproject.yaml.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-quay-ha
+  namespace: openshift-gitops
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  syncPolicy:
+    # Deleting the ApplicationSet keeps the Application and the registry
+    preserveResourcesOnDeletion: true
+  generators:
+    - matrix:
+        generators:
+          - clusters:
+              selector:
+                # label set on the cluster by the job template, whatever its value
+                matchExpressions:
+                  - key: cluster-quay-ha
+                    operator: Exists
+          - git:
+              repoURL: 'https://git.example.com/infra/{{ .name }}.git'
+              revision: main
+              files:
+                - path: quay/values.yaml
+  template:
+    metadata:
+      name: 'cluster-quay-ha-{{ .nameNormalized }}'
+      namespace: openshift-gitops
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: cluster-quay-ha
+      source:
+        repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+        chart: cluster-quay
+        targetRevision: 21.3.279
+        plugin:
+          name: argocd-vault-plugin-helm
+          env:
+            # Namespaces, operators and databases rendered with the registry (the values file keeps every flag false)
+            - name: HELM_ARGS
+              value: "--set project.enabled=true --set operator.enabled=true --set quay.enabled=true --set crunchy.project.enabled=true --set crunchy.operator.enabled=true --set crunchy.cluster.enabled=true"
+            # The values file, without the generator parameters (cluster, path)
+            - name: HELM_VALUES
+              value: '{{ toYaml (omit . "path" "name" "nameNormalized" "server" "metadata") }}'
+      destination:
+        # The cluster selected by the clusters generator (its API URL as registered in Argo CD)
+        server: '{{ .server }}'
+        namespace: quay-enterprise
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - SkipDryRunOnMissingResource=true
+        # The CRDs may still be missing when the sync reaches the databases
+        retry:
+          limit: 10
+          backoff:
+            duration: 30s
+            factor: 2
+            maxDuration: 10m
+      ignoreDifferences:
+        - group: postgres-operator.crunchydata.com
+          kind: PostgresCluster
+          jsonPointers:
+            - /metadata/finalizers
+        - group: postgresql.cnpg.io
+          kind: Cluster
+          jsonPointers:
+            - /metadata/finalizers
+        - group: quay.redhat.com
+          kind: QuayRegistry
+          jsonPointers:
+            - /metadata/finalizers

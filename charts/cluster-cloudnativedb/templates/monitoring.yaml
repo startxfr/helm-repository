@@ -1,0 +1,141 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- $defaultns := include "cluster-cloudnativedb.defaultNamespace" . -}}
+{{- $lbl := include "cluster-cloudnativedb.labelPrefix" . -}}
+{{- $mp := include "cluster-cloudnativedb.metricsPrefix" . -}}
+
+{{/* PodMonitor and PrometheusRule of every cluster with monitoring enabled */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- $ns := .namespace | default $defaultns -}}
+{{- $m := .monitoring | default dict -}}
+{{- $b := .backup | default dict -}}
+{{- $plugin := and $b.enabled (eq ($b.method | default "barmanObjectStore") "plugin") -}}
+{{- $instances := int (.instances | default 1) -}}
+{{- $lagSeconds := int64 ($m.replicationLagSeconds | default 60) -}}
+{{- $backupHours := int64 ($m.backupMaxAgeHours | default 36) -}}
+{{- $volumePct := int64 ($m.volumeUsagePercent | default 80) -}}
+{{- if and .enabled $m.enabled }}
+---
+# PodMonitor of the instances (Cluster.spec.monitoring.enablePodMonitor is deprecated since CloudNativePG 1.30)
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: "{{ $name }}-exporter"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-exporter-podmonitor"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  selector:
+    matchLabels:
+      {{ $lbl }}/cluster: "{{- $name -}}"
+      {{ $lbl }}/podRole: instance
+  podMetricsEndpoints:
+    - port: metrics
+      interval: 30s
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_label_{{ $lbl | replace "." "_" }}_cluster]
+          targetLabel: pg_cluster
+        - sourceLabels: [__meta_kubernetes_pod_label_{{ $lbl | replace "." "_" }}_instanceRole]
+          targetLabel: role
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: "{{ $name }}-alerts"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-alerts-prometheusrule"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  groups:
+    - name: {{ $name }}-postgres
+      rules:
+        - alert: CloudNativePGNoPrimary
+          expr: absent({{ $mp }}_pg_replication_in_recovery{pg_cluster="{{ $name }}"} == 0)
+          for: 2m
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }} has no reachable primary instance"
+        {{- if gt $instances 1 }}
+        - alert: CloudNativePGNoReplica
+          expr: |
+            count({{ $mp }}_pg_replication_in_recovery{pg_cluster="{{ $name }}"} == 0)
+              unless count({{ $mp }}_pg_replication_in_recovery{pg_cluster="{{ $name }}"} == 1)
+          for: 10m
+          labels:
+            severity: warning
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }} runs without a replica: no failover possible"
+        {{- end }}
+        - alert: CloudNativePGInstanceDown
+          expr: {{ $mp }}_collector_up{pg_cluster="{{ $name }}"} == 0
+          for: 5m
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "{{ `{{ $labels.pod }}` }}: PostgreSQL is down"
+        - alert: CloudNativePGReplicationLag
+          expr: max({{ $mp }}_pg_replication_lag{pg_cluster="{{ $name }}"}) > {{ $lagSeconds }}
+          for: 5m
+          labels:
+            severity: warning
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: a replica lags more than {{ $lagSeconds }} seconds behind the primary"
+        {{- if $b.enabled }}
+        - alert: CloudNativePGWalArchiveFailing
+          expr: max({{ $mp }}_collector_pg_wal_archive_status{pg_cluster="{{ $name }}",value="ready"}) > 2
+          for: 10m
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: WAL segments are waiting to be archived to the backup bucket"
+        {{- if not $plugin }}
+        # cnpg_collector_last_available_backup_timestamp is fed by the in-core backup method only (not by the plugin)
+        - alert: CloudNativePGBackupTooOld
+          expr: time() - max({{ $mp }}_collector_last_available_backup_timestamp{pg_cluster="{{ $name }}"}) > {{ $backupHours }} * 3600
+          for: 1h
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: no successful backup for more than {{ $backupHours }} hours"
+        - alert: CloudNativePGBackupsNotVisible
+          expr: absent({{ $mp }}_collector_last_available_backup_timestamp{pg_cluster="{{ $name }}"} > 0)
+          for: 1h
+          labels:
+            severity: critical
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "PostgreSQL cluster {{ $name }}: no backup visible, no backup ever completed"
+        {{- end }}
+        {{- end }}
+        - alert: CloudNativePGVolumeFull
+          expr: max by (persistentvolumeclaim) (100 * kubelet_volume_stats_used_bytes{namespace="{{ $ns }}",persistentvolumeclaim=~"{{ $name }}-[0-9]+"} / kubelet_volume_stats_capacity_bytes{namespace="{{ $ns }}",persistentvolumeclaim=~"{{ $name }}-[0-9]+"}) > {{ $volumePct }}
+          for: 5m
+          labels:
+            severity: warning
+            postgresql_cluster: {{ $name }}
+          annotations:
+            summary: "{{ `{{ $labels.persistentvolumeclaim }}` }}: data volume more than {{ $volumePct }}% full"
+{{- end }}
+{{- end }}
+{{- end -}}{{- end }}

@@ -1,0 +1,105 @@
+# Config Management Plugin expected by applicationset.yaml: renders the chart with Helm and resolves the
+# <path:...#key> placeholders with the Argo CD Vault Plugin. The plugin runs in the chart directory extracted by the
+# repo-server from the Helm repository; the values come from the HELM_VALUES variable (content of the values file,
+# handed over by the ApplicationSet) and HELM_ARGS (extra Helm arguments, --set ... or -f <file of the chart>).
+# KUBE_VERSION is provided by Argo CD: the chart and the STARTX sub-charts require Kubernetes 1.30+.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-vault-plugin-helm
+  namespace: openshift-gitops
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: argocd-vault-plugin-helm
+    spec:
+      allowConcurrency: true
+      lockRepo: false
+      discover:
+        find:
+          command: [sh, -c, "find . -maxdepth 2 -name Chart.yaml"]
+      generate:
+        command: [sh, -c]
+        args:
+          - |
+            set -e
+            VALUES=$(mktemp)
+            trap 'rm -f "$VALUES"' EXIT
+            if [ -n "${ARGOCD_ENV_HELM_VALUES:-}" ]; then
+              printf '%s\n' "$ARGOCD_ENV_HELM_VALUES" > "$VALUES"
+              set -- -f "$VALUES"
+            else
+              set --
+            fi
+            helm template "$ARGOCD_APP_NAME" -n "$ARGOCD_APP_NAMESPACE" --kube-version "$KUBE_VERSION" \
+              "$@" ${ARGOCD_ENV_HELM_ARGS:-} --include-crds . | argocd-vault-plugin generate -
+---
+# Reference wiring of the plugin as a sidecar of the repo-server of OpenShift GitOps (ArgoCD custom resource),
+# with the Kubernetes authentication of Vault: the sidecar presents the service account token of the repo-server
+# pod to Vault, which must hold a role bound to that service account (README, "Deploy with ArgoCD").
+# Adapt the image (it must carry helm), the plugin version and the Vault address.
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  name: openshift-gitops
+  namespace: openshift-gitops
+spec:
+  repo:
+    volumes:
+      - name: cmp-plugin
+        configMap:
+          name: argocd-vault-plugin-helm
+      - name: custom-tools
+        emptyDir: {}
+      - name: cmp-tmp
+        emptyDir: {}
+    initContainers:
+      - name: download-tools
+        image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+        command: [sh, -c]
+        args:
+          - curl -fsSL -o /custom-tools/argocd-vault-plugin
+            https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v1.18.1/argocd-vault-plugin_1.18.1_linux_amd64
+            && chmod +x /custom-tools/argocd-vault-plugin
+        volumeMounts:
+          - mountPath: /custom-tools
+            name: custom-tools
+    sidecarContainers:
+      - name: argocd-vault-plugin-helm
+        command: [/var/run/argocd/argocd-cmp-server]
+        # Image of your repo-server, which ships helm:
+        # oc get deploy openshift-gitops-repo-server -n openshift-gitops -o jsonpath='{.spec.template.spec.containers[0].image}'
+        image: registry.redhat.io/openshift-gitops-1/argocd-rhel8:v1.14
+        env:
+          - name: AVP_TYPE
+            value: vault
+          - name: AVP_AUTH_TYPE
+            value: k8s
+          - name: AVP_K8S_ROLE
+            value: argocd
+          - name: AVP_K8S_MOUNT_PATH
+            value: auth/kubernetes
+          - name: VAULT_ADDR
+            value: https://vault.example.com
+          # - name: VAULT_CACERT
+          #   value: /etc/vault/ca.crt
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            subPath: plugin.yaml
+            name: cmp-plugin
+          - mountPath: /tmp
+            name: cmp-tmp
+          - mountPath: /usr/local/bin/argocd-vault-plugin
+            subPath: argocd-vault-plugin
+            name: custom-tools

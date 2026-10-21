@@ -6,7 +6,7 @@ context: &context
   environment: infra
   component: quaysecvuln
   app: startx-quaysecvuln
-  version: "3.16.2"
+  version: "3.18.0"
 rhn:
   enabled: false
 route:
@@ -14,11 +14,11 @@ route:
 quay:
   enabled: false
   hooked: false
-project: 
+project:
   enabled: false
-  context: 
+  context:
     <<: *context
-  project: 
+  project:
     hooked: false
     enabled: false
     type: namespace
@@ -32,25 +32,25 @@ operator:
     enabled: false
 operatorsec:
   enabled: true
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
     hooked: false
     name: "container-security-operator"
     namespace: "openshift-operators"
-    version: "v3.16.2"
-    operator: 
-      channel: stable-3.16
+    version: "v3.18.0"
+    operator:
+      channel: stable-3.18
       name: container-security-operator
       installPlanApproval: Manual
       # csv: container-security-operator
-      source: 
+      source:
         name: redhat-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
-        # resources: 
+        # resources:
         #   limits:
         #     cpu: 400m
         #   requests:

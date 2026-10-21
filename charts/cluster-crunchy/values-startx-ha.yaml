@@ -1,0 +1,120 @@
+# Values for a highly available PostgreSQL cluster: two instances with synchronous replication on distinct nodes,
+# SCRAM authentication, pgBackRest backups to an S3 bucket, monitoring and network policy.
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: crunchy
+  app: startx-crunchy
+  version: "5.8.9"
+
+loader:
+  enabled: false
+  list: []
+
+# Secret values are Argo CD Vault Plugin placeholders: replace the KV path by yours, or use a values file kept out of Git
+s3:
+  list:
+    - name: backup
+      namespace: default-crunchy
+      endpoint: s3.example.com
+      port: ""
+      region: us-east-1
+      bucket: startx-pgbackrest
+      accessKey: <path:kv/data/crunchy#s3_access_key>
+      secretKey: <path:kv/data/crunchy#s3_secret_key>
+      caCert: ""
+      uriStyle: path
+
+cluster:
+  enabled: false
+  list:
+    - name: startx-db
+      enabled: true
+      namespace: default-crunchy
+      postgresVersion: 17
+      storageClassName: ""
+      storageInstanceSize: "20Gi"
+      username: startx
+      database: startx
+      password: <path:kv/data/crunchy#startx_db_password>
+      extensions:
+        - pg_trgm
+      replicas: 2
+      synchronous: true
+      avoidInfraNodes: true
+      pgHbaTrust: false
+      pgbouncer:
+        enabled: false
+      pgadmin:
+        enabled: false
+      resources:
+        requests:
+          cpu: "1"
+          memory: 2Gi
+        limits:
+          memory: 4Gi
+      parameters:
+        max_connections: "500"
+      backup:
+        enabled: true
+        type: s3
+        s3: backup
+        pathPrefix: ""
+        retentionDays: 14
+        schedules:
+          full: "0 1 * * 0"
+          differential: "0 1 * * 1-6"
+      restore:
+        enabled: false
+        source: ""
+        target: ""
+      inPlaceRestore:
+        enabled: false
+        target: ""
+      monitoring:
+        enabled: true
+      networkPolicy:
+        enabled: true
+        allowedNamespaces: []
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-crunchy"
+    display_name: "Startx CrunchyDB"
+    requester: startx
+    description: CrunchyDB configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "crunchy-postgres-operator"
+    namespace: "default-crunchy"
+    version: "v5.8.9"
+    operator:
+      channel: v5
+      name: crunchy-postgres-operator
+      installPlanApproval: Manual
+      csv: postgresoperator
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "crunchy-operator"
+    namespace: "default-crunchy"
+    providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"
