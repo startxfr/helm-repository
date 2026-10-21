@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-quay-ha
+  namespace: openshift-gitops
+spec:
+  description: Red Hat Quay registry, high availability (cluster-quay chart with the crunchy or cloudnativedb sub-chart)
+  sourceRepos:
+    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    # Git repositories of the values, one per cluster and named after it, when applicationset.yaml is used
+    - https://git.example.com/infra/*
+  destinations:
+    # Any cluster registered in Argo CD (the clusters generator picks them by label), these namespaces only;
+    # with the inline Applications, restrict server to https://kubernetes.default.svc
+    - server: "*"
+      namespace: openshift-gitops
+    - server: "*"
+      namespace: openshift-operators
+    - server: "*"
+      namespace: quay-enterprise
+    - server: "*"
+      namespace: quay-postgres
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

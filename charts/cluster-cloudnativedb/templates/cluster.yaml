@@ -1,0 +1,319 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- include "cluster-cloudnativedb.validate" . -}}
+{{- $defaultns := include "cluster-cloudnativedb.defaultNamespace" . -}}
+{{- $group := include "cluster-cloudnativedb.apiGroup" . -}}
+{{- $lbl := include "cluster-cloudnativedb.labelPrefix" . -}}
+
+
+{{/* Loop over the cluster list */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- $ns := .namespace | default $defaultns -}}
+{{- $c := . -}}
+{{- $database := .database | default $name -}}
+{{- $username := .username | default $name -}}
+{{- $backup := .backup | default dict -}}
+{{- $hasBackup := $backup.enabled -}}
+{{- $plugin := and $hasBackup (eq ($backup.method | default "barmanObjectStore") "plugin") -}}
+{{- $s3 := dict -}}
+{{- if $hasBackup }}{{ $s3 = include "cluster-cloudnativedb.s3Entry" (dict "root" $ "name" $backup.s3) | fromYaml }}{{ end -}}
+{{- $restore := .restore | default dict -}}
+{{- $rs3 := $s3 -}}
+{{- if and $restore.enabled $restore.s3 }}{{ $rs3 = include "cluster-cloudnativedb.s3Entry" (dict "root" $ "name" $restore.s3) | fromYaml }}{{ end -}}
+{{- $monitoring := .monitoring | default dict -}}
+{{- $prefix := ($backup.pathPrefix | default $ns) | trimAll "/" -}}
+{{- $rprefix := ($restore.pathPrefix | default $prefix) | trimAll "/" -}}
+{{- $serverName := include "cluster-cloudnativedb.serverName" . -}}
+{{- $retention := printf "%dd" (int ($backup.retentionDays | default 14)) -}}
+{{- $compression := $backup.compression | default "gzip" -}}
+{{- $image := include "cluster-cloudnativedb.image" (dict "root" $ "cluster" .) -}}
+{{- $instances := int (.instances | default 1) -}}
+{{- if .enabled -}}
+{{- if .password }}
+---
+# Owner credentials: used by initdb and kept in sync on the role by managed.roles
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ $name }}-owner"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-owner-secret"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+    {{ $lbl }}/reload: "true"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+type: kubernetes.io/basic-auth
+stringData:
+  username: {{ $username | quote }}
+  password: {{ .password | quote }}
+{{- end }}
+{{- if .initScript }}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: "{{ $name }}-initdb"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-initdb-cm"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+data:
+  init.sql: |-
+    {{- .initScript | nindent 4 }}
+{{- end }}
+{{- if $plugin }}
+---
+# Object store of the Barman Cloud Plugin (backups and WAL archive of this cluster)
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: "{{ $name }}-backup"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-backup-objectstore"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  retentionPolicy: {{ $retention | quote }}
+  configuration:
+    destinationPath: s3://{{ $s3.bucket }}/{{ $prefix }}
+    endpointURL: {{ include "cluster-cloudnativedb.s3EndpointUrl" $s3 | quote }}
+    {{- include "cluster-cloudnativedb.s3Credentials" (dict "s3" $s3) | nindent 4 }}
+    wal:
+      compression: {{ $compression }}
+      maxParallel: 4
+    data:
+      compression: {{ $compression }}
+      jobs: 2
+{{- if $restore.enabled }}
+---
+# Object store of the source cluster for the recovery (serverName set by the plugin parameters of the Cluster)
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: "{{ $name }}-recovery"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-recovery-objectstore"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  configuration:
+    destinationPath: s3://{{ $rs3.bucket }}/{{ $rprefix }}
+    endpointURL: {{ include "cluster-cloudnativedb.s3EndpointUrl" $rs3 | quote }}
+    {{- include "cluster-cloudnativedb.s3Credentials" (dict "s3" $rs3) | nindent 4 }}
+    wal:
+      maxParallel: 4
+{{- end }}
+{{- end }}
+---
+apiVersion: {{ $group }}/v1
+kind: Cluster
+metadata:
+  name: "{{ $name }}"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-cluster"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  instances: {{ $instances }}
+  {{- if $image }}
+  imageName: {{ $image | quote }}
+  {{- end }}
+  primaryUpdateStrategy: unsupervised
+  enableSuperuserAccess: false
+  {{- if .istioSidecarEnabled }}
+  inheritedMetadata:
+    annotations:
+      sidecar.istio.io/inject: "true"
+  {{- end }}
+  storage:
+    size: {{ .storageInstanceSize | default "1Gi" | quote }}
+    {{- with .storageClassName }}
+    storageClass: {{ . | quote }}
+    {{- end }}
+  {{- with .resources }}
+  resources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if or .parameters (and .synchronous (gt $instances 1)) }}
+  postgresql:
+    {{- with .parameters }}
+    parameters:
+      {{- range $pk, $pv := . }}
+      {{ $pk }}: {{ $pv | toString | quote }}
+      {{- end }}
+    {{- end }}
+    {{- if and .synchronous (gt $instances 1) }}
+    synchronous:
+      method: any
+      number: 1
+      dataDurability: preferred
+      {{- if .failoverQuorum }}
+      failoverQuorum: true
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- if .avoidInfraNodes }}
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: required
+    topologyKey: {{ .topologyKey | default "kubernetes.io/hostname" | quote }}
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/infra
+                operator: DoesNotExist
+  {{- end }}
+  {{- if .password }}
+  managed:
+    roles:
+      - name: {{ $username | quote }}
+        ensure: present
+        login: true
+        passwordSecret:
+          name: "{{ $name }}-owner"
+  {{- end }}
+  bootstrap:
+    {{- if and $restore.enabled $hasBackup }}
+    # Recovery from the backups of the source cluster: read at cluster creation only
+    recovery:
+      source: source
+      database: {{ $database | quote }}
+      owner: {{ $username | quote }}
+      {{- if .password }}
+      secret:
+        name: "{{ $name }}-owner"
+      {{- end }}
+      {{- if $restore.target }}
+      recoveryTarget:
+        targetTime: {{ $restore.target | quote }}
+      {{- end }}
+    {{- else }}
+    initdb:
+      database: {{ $database | quote }}
+      owner: {{ $username | quote }}
+      {{- if .password }}
+      secret:
+        name: "{{ $name }}-owner"
+      {{- end }}
+      {{- with .extensions }}
+      postInitApplicationSQL:
+        {{- range . }}
+        - CREATE EXTENSION IF NOT EXISTS "{{ . }}";
+        {{- end }}
+      {{- end }}
+      {{- if .initScript }}
+      postInitApplicationSQLRefs:
+        configMapRefs:
+          - name: "{{ $name }}-initdb"
+            key: init.sql
+      {{- end }}
+    {{- end }}
+  {{- if and $restore.enabled $hasBackup }}
+  externalClusters:
+    - name: source
+      {{- if $plugin }}
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: "{{ $name }}-recovery"
+          serverName: {{ $restore.source | quote }}
+      {{- else }}
+      barmanObjectStore:
+        serverName: {{ $restore.source | quote }}
+        destinationPath: s3://{{ $rs3.bucket }}/{{ $rprefix }}
+        endpointURL: {{ include "cluster-cloudnativedb.s3EndpointUrl" $rs3 | quote }}
+        {{- include "cluster-cloudnativedb.s3Credentials" (dict "s3" $rs3) | nindent 8 }}
+        wal:
+          maxParallel: 4
+      {{- end }}
+  {{- end }}
+  {{- if $hasBackup }}
+  {{- if $plugin }}
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      enabled: true
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: "{{ $name }}-backup"
+        {{- if $backup.serverName }}
+        serverName: {{ $backup.serverName | quote }}
+        {{- end }}
+  {{- else }}
+  backup:
+    retentionPolicy: {{ $retention | quote }}
+    barmanObjectStore:
+      serverName: {{ $serverName | quote }}
+      destinationPath: s3://{{ $s3.bucket }}/{{ $prefix }}
+      endpointURL: {{ include "cluster-cloudnativedb.s3EndpointUrl" $s3 | quote }}
+      {{- include "cluster-cloudnativedb.s3Credentials" (dict "s3" $s3) | nindent 6 }}
+      wal:
+        compression: {{ $compression }}
+        maxParallel: 4
+      data:
+        compression: {{ $compression }}
+        jobs: 2
+  {{- end }}
+  {{- end }}
+{{- if $hasBackup }}
+---
+apiVersion: {{ $group }}/v1
+kind: ScheduledBackup
+metadata:
+  name: "{{ $name }}-full"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-full-scheduledbackup"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  # 6 fields, seconds first
+  schedule: {{ printf "0 %s" ($backup.schedule | default "0 1 * * 0") | quote }}
+  backupOwnerReference: self
+  immediate: true
+  cluster:
+    name: "{{ $name }}"
+  {{- if $plugin }}
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
+  {{- else }}
+  method: barmanObjectStore
+  {{- end }}
+{{- end }}
+{{- end -}}{{- end -}}
+{{- end -}}{{- end }}

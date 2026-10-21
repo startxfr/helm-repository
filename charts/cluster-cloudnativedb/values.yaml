@@ -1,0 +1,202 @@
+# Default values for cluster-cloudnativedb.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-cloudnativedb
+  # Version name of this application (default use Chart appVersion)
+  version: "1.30.1"
+
+# Distribution of the operator managing the clusters:
+# community: CloudNativePG (API group postgresql.cnpg.io), the build certified and supported by EDB in the
+#            certified-operators catalog (package cloudnative-pg), or the project manifest
+# edb:       EDB Postgres for Kubernetes (API group postgresql.k8s.enterprisedb.io, package cloud-native-postgresql,
+#            EDB subscription). Rendered objects, labels and metrics prefixes follow the flavor
+flavor: community
+
+# Configure the loaders pod
+loader:
+  # Enable the configuration of the loader (post install)
+  enabled: false
+  # List of loader to deploy
+  list:
+    # name of the loader
+  - name: default
+    # namespace of the loader
+    namespace: default-cloudnativedb
+    # Command to execute for the loader
+    command: |
+      #!/bin/bash
+      echo "write your workload generator script using psql ..."
+      exit 0;
+
+# S3 compatible buckets used by Barman Cloud when a cluster enables backups (see cluster.list[].backup).
+# One Secret <name>-barman-s3 is rendered per entry (when cluster.enabled), in its namespace, holding the credentials, the region and the CA.
+# Secret values are expected to be Argo CD Vault Plugin placeholders (<path:kv/data/...#key>) or supplied by a
+# values file kept out of Git; the chart never generates them.
+s3:
+  # List of S3 endpoints usable by the clusters
+  list: []
+    # name of the endpoint, referenced by cluster.list[].backup.s3 and cluster.list[].restore.s3
+  # - name: backup
+    # namespace where the credentials Secret is rendered (must be the namespace of the clusters using it)
+    # namespace: default-cloudnativedb
+    # Hostname of the endpoint, without scheme
+    # endpoint: s3.example.com
+    # Port of the endpoint (empty: 443)
+    # port: ""
+    # Signature region of the endpoint (empty: none)
+    # region: ""
+    # Bucket holding the backups
+    # bucket: mybucket
+    # Credentials (secret)
+    # accessKey: ""
+    # secretKey: ""
+    # PEM of a private CA signing the endpoint certificate (empty: system trust store)
+    # caCert: ""
+
+# Configure the CloudNativePG environment
+cluster:
+  # Enable the configuration of the CloudNativePG environment
+  enabled: false
+  # List of cluster to deploy. Every key not listed in the first entry below is optional (see README)
+  list:
+    # name of the cluster
+  - name: default-db
+    # Enable the creation and deployment of this cluster
+    enabled: true
+    # namespace of this cluster
+    namespace: default-cloudnativedb
+    # Major version of PostgreSQL (community flavor: picks the image ghcr.io/cloudnative-pg/postgresql:<version>-system-trixie
+    # unless imageName is set; edb flavor: the default image of the operator)
+    postgresVersion: 17
+    # Image of the instances (empty: see postgresVersion). Pin a minor version in production
+    imageName: ""
+    # storageClass to use for storage provisioning (empty: default storageClass of the cluster)
+    storageClassName: ""
+    # storage size to use for persistence
+    storageInstanceSize: "2Gi"
+    # Owner of the database
+    username: default-user
+    # Database created at initialization (empty: the cluster name)
+    database: ""
+    # Password of username (secret). Empty: the operator generates the Secret <name>-app. Set: the chart renders the
+    # Secret <name>-owner (basic-auth) used by initdb and kept in sync on the role
+    password: ""
+    # Extensions created in the database at initialization
+    extensions: []
+    # SQL script executed in the database after initialization (ConfigMap <name>-initdb, postInitApplicationSQLRefs)
+    initScript: ""
+    # Number of PostgreSQL instances (1: no replica; 2 or more: automated failover)
+    instances: 1
+    # Synchronous replication: each commit waits for one replica (method any, number 1, preferred data durability)
+    synchronous: false
+    # Promotion only when a replica is proven to hold every synchronous commit (failoverQuorum, instances >= 3)
+    failoverQuorum: false
+    # Keep the instances on distinct nodes (required pod anti-affinity) and off the infra nodes
+    avoidInfraNodes: false
+    # Topology key of the anti-affinity
+    topologyKey: kubernetes.io/hostname
+    # Resources of each instance (empty: no request nor limit)
+    resources: {}
+    # postgresql.conf parameters
+    parameters: {}
+    # Enable the istio sidecar on the instances
+    istioSidecarEnabled: false
+    # Backups (Barman Cloud)
+    backup:
+      enabled: false
+      # barmanObjectStore: in-core Barman Cloud integration (deprecated since CloudNativePG 1.26, needs a system image);
+      # plugin: Barman Cloud Plugin (installed next to the operator, with cert-manager): renders ObjectStore objects
+      method: barmanObjectStore
+      # Name of the s3.list entry
+      s3: ""
+      # Prefix of the path in the bucket: s3://<bucket>/<pathPrefix>/<serverName>. Empty: the namespace
+      pathPrefix: ""
+      # Folder of this cluster in the bucket (empty: the cluster name). Set it when a cluster is recreated under the
+      # same name from its own backups: the archive of a new cluster must be empty
+      serverName: ""
+      # Retention of the backups, in days
+      retentionDays: 14
+      # Cron schedule (5 fields) of the full backups
+      schedule: "0 1 * * 0"
+      # WAL and base backup compression: gzip, bzip2, lz4 or snappy
+      compression: gzip
+    # Bootstrap the cluster from the backups of another cluster (read at cluster creation only)
+    restore:
+      enabled: false
+      # Name of the s3.list entry holding the backups to restore from (empty: backup.s3)
+      s3: ""
+      # Prefix of the path holding the backups to restore from (empty: backup.pathPrefix)
+      pathPrefix: ""
+      # serverName of the source cluster in the bucket
+      source: ""
+      # Point in time to restore, "2026-10-15 14:00:00+00" (empty: end of the archive)
+      target: ""
+    # Monitoring: PodMonitor and PrometheusRule (Prometheus operator CRDs, user workload monitoring)
+    monitoring:
+      enabled: false
+      # Alert thresholds
+      replicationLagSeconds: 60
+      backupMaxAgeHours: 36
+      volumeUsagePercent: 80
+    # Ingress NetworkPolicy on the database pods: same namespace, allowedNamespaces on 5432, operatorNamespaces
+    # on every port (the operator reaches the instances on 8000 and 5432), monitoringNamespaces on the metrics port
+    networkPolicy:
+      enabled: false
+      allowedNamespaces: []
+      operatorNamespaces: []
+      monitoringNamespaces:
+        - openshift-monitoring
+        - openshift-user-workload-monitoring
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-cloudnativedb"
+    display_name: "Demo CloudNativePG"
+    description: Demo CloudNativePG configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator).
+# Community flavor: CloudNativePG build certified by EDB (package cloudnative-pg, channel stable-v1), own namespace.
+# EDB flavor: see values-startx-edb.yaml (package cloud-native-postgresql, channel fast or stable)
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cloudnative-pg"
+    namespace: "default-cloudnativedb"
+    version: "v1.30.1"
+    operator:
+      channel: stable-v1
+      name: cloudnative-pg
+      installPlanApproval: Manual
+      csv: cloudnative-pg
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "cloudnativedb-operator"
+    namespace: "default-cloudnativedb"
+    providedAPIs: "Cluster.v1.postgresql.cnpg.io,Backup.v1.postgresql.cnpg.io,ScheduledBackup.v1.postgresql.cnpg.io,Pooler.v1.postgresql.cnpg.io,Database.v1.postgresql.cnpg.io,Publication.v1.postgresql.cnpg.io,Subscription.v1.postgresql.cnpg.io,ImageCatalog.v1.postgresql.cnpg.io,ClusterImageCatalog.v1.postgresql.cnpg.io,FailoverQuorum.v1.postgresql.cnpg.io"

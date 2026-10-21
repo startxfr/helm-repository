@@ -1,0 +1,117 @@
+# Values for a highly available PostgreSQL cluster managed by EDB Postgres for Kubernetes (EDB subscription, images pulled from docker.enterprisedb.com with the Secret postgresql-operator-pull-secret in the operator namespace): three instances with synchronous replication and quorum failover on distinct nodes, Barman Cloud backups to an S3 bucket, monitoring and network policy.
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: cloudnativedb
+  app: startx-cloudnativedb
+  version: "1.30.1"
+
+flavor: edb
+
+loader:
+  enabled: false
+  list: []
+
+# Secret values are Argo CD Vault Plugin placeholders: replace the KV path by yours, or use a values file kept out of Git
+s3:
+  list:
+    - name: backup
+      namespace: default-cloudnativedb
+      endpoint: s3.example.com
+      port: ""
+      region: ""
+      bucket: startx-barman
+      accessKey: <path:kv/data/cloudnativedb#s3_access_key>
+      secretKey: <path:kv/data/cloudnativedb#s3_secret_key>
+      caCert: ""
+
+cluster:
+  enabled: false
+  list:
+    - name: startx-db
+      enabled: true
+      namespace: default-cloudnativedb
+      postgresVersion: 17
+      imageName: ""
+      storageClassName: ""
+      storageInstanceSize: "20Gi"
+      username: startx
+      database: startx
+      password: <path:kv/data/cloudnativedb#startx_db_password>
+      extensions:
+        - pg_trgm
+      instances: 3
+      synchronous: true
+      failoverQuorum: true
+      avoidInfraNodes: true
+      resources:
+        requests:
+          cpu: "1"
+          memory: 2Gi
+        limits:
+          memory: 4Gi
+      parameters:
+        max_connections: "500"
+      backup:
+        enabled: true
+        method: barmanObjectStore
+        s3: backup
+        pathPrefix: ""
+        serverName: ""
+        retentionDays: 14
+        schedule: "0 1 * * 0"
+        compression: gzip
+      restore:
+        enabled: false
+        source: ""
+        target: ""
+      monitoring:
+        enabled: true
+      networkPolicy:
+        enabled: true
+        allowedNamespaces: []
+        operatorNamespaces:
+          - openshift-operators
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-cloudnativedb"
+    display_name: "Startx CloudNativePG"
+    requester: startx
+    description: CloudNativePG configured by STARTX
+
+# EDB Postgres for Kubernetes: certified-operators package cloud-native-postgresql, installed cluster wide in
+# openshift-operators (global OperatorGroup, no project wave). Channels: fast (latest minor), stable (LTS), stable-vX.Y
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cloud-native-postgresql"
+    namespace: "openshift-operators"
+    version: "v1.30.1"
+    operator:
+      channel: fast
+      name: cloud-native-postgresql
+      installPlanApproval: Manual
+      csv: cloud-native-postgresql
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "cloudnativedb-operator"
+    namespace: "openshift-operators"
