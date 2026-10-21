@@ -1,0 +1,350 @@
+# Health checks to add to the ArgoCD custom resource of OpenShift GitOps (spec.resourceHealthChecks) or, for a
+# vanilla Argo CD, to the argocd-cm ConfigMap (resource.customizations.health.<group>_<kind>).
+# They only use what the operators publish in .status, so a durable failure becomes Degraded (the sync fails and is
+# retried instead of waiting forever) and a status older than the spec stays Progressing (observedGeneration):
+#   PostgresCluster: Paused -> Suspended (spec.paused) or Degraded (backups removed without the authorizeBackupRemoval
+#     annotation); restore failed, volume resize refused -> Degraded; spec not yet reconciled, restore running, instances
+#     not all ready or updated -> Progressing; a failed manual backup is only mentioned in the message.
+#     A crash-looping instance is reported by the operator as "not ready" (Progressing), not as a failure: the
+#     QuayPostgres* alerts of the chart cover that case.
+#   Cluster (CloudNativePG and EDB, same phases): phases that need an operator action -> Degraded; healthy -> Healthy;
+#     every transition (switchover, failover, restart, configuration, upgrade) -> Progressing. The cnpg rule replaces
+#     the one built into Argo CD, which classifies switchovers and configuration changes as Degraded.
+#   QuayRegistry: spec not yet observed -> Progressing; RolloutBlocked, failed migrations or PostgreSQL upgrade ->
+#     Degraded; Available -> Healthy; otherwise Progressing with the components that are not ready.
+#   Subscription (OLM): the rule of Argo CD 3.5, for earlier versions: an InstallPlan waiting for manual approval on an
+#     operator that is already installed is Healthy, not Progressing (otherwise a pending operator update would hold a
+#     sync that includes the Subscription, such as the first sync of a single Application); failed resolution, failed
+#     InstallPlan or unhealthy catalog -> Degraded.
+#   Application: the rule of the Argo CD documentation for an Application that generates other Applications.
+# Custom checks run without the Lua string and math libraries (no useOpenLibs in the ArgoCD CR): these scripts only use
+# the base library. Tested against the status fields of Crunchy PGO 5.8.9, CloudNativePG 1.27 and the Quay operator 3.18.
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  name: openshift-gitops
+  namespace: openshift-gitops
+spec:
+  resourceHealthChecks:
+    - group: postgres-operator.crunchydata.com
+      kind: PostgresCluster
+      check: |
+        hs = {}
+        if obj.status == nil then
+          hs.status = "Progressing"
+          hs.message = "waiting for the Crunchy operator"
+          return hs
+        end
+        local generation = nil
+        if obj.metadata ~= nil then generation = obj.metadata.generation end
+        -- conditions set by the operator for the current generation: paused, restore, volumes
+        local note = ""
+        if obj.status.conditions ~= nil then
+          for _, c in ipairs(obj.status.conditions) do
+            local current = (c.observedGeneration == nil or generation == nil or c.observedGeneration >= generation)
+            if current and c.type == "Progressing" and c.status == "False" and c.reason == "Paused" then
+              if obj.spec ~= nil and obj.spec.paused == true then
+                hs.status = "Suspended"
+              else
+                hs.status = "Degraded"
+              end
+              hs.message = c.message
+              return hs
+            end
+            if current and c.type == "PostgresDataInitialized" and c.status == "False" then
+              if c.reason == "PGBackRestRestoreFailed" then hs.status = "Degraded" else hs.status = "Progressing" end
+              hs.message = c.reason .. ": " .. c.message
+              return hs
+            end
+            if current and c.type == "PGBackRestoreProgressing" and c.status == "True" then
+              hs.status = "Progressing"
+              hs.message = c.message
+              return hs
+            end
+            if current and c.type == "PersistentVolumeResizeError" and c.status == "True" then
+              hs.status = "Degraded"
+              hs.message = c.reason .. ": " .. c.message
+              return hs
+            end
+            if current and c.type == "PersistentVolumeResizing" and c.status == "False" then
+              hs.status = "Degraded"
+              hs.message = c.reason .. ": " .. c.message
+              return hs
+            end
+            if c.type == "PGBackRestManualBackupSuccessful" and c.status == "False" then
+              note = "; last manual backup failed"
+            end
+          end
+        end
+        -- the status still describes a previous spec
+        if generation ~= nil and obj.status.observedGeneration ~= nil and obj.status.observedGeneration < generation then
+          hs.status = "Progressing"
+          hs.message = "generation " .. generation .. " not yet reconciled (observed " .. obj.status.observedGeneration .. ")"
+          return hs
+        end
+        if obj.status.instances ~= nil then
+          local ready, total, updated = 0, 0, 0
+          for _, i in ipairs(obj.status.instances) do
+            total = total + (i.replicas or 0)
+            ready = ready + (i.readyReplicas or 0)
+            updated = updated + (i.updatedReplicas or i.replicas or 0)
+          end
+          if total > 0 and ready == total and updated == total then
+            hs.status = "Healthy"
+            hs.message = ready .. "/" .. total .. " instances ready" .. note
+          else
+            hs.status = "Progressing"
+            hs.message = ready .. "/" .. total .. " instances ready, " .. updated .. "/" .. total .. " updated" .. note
+          end
+          return hs
+        end
+        hs.status = "Progressing"
+        hs.message = "waiting for the Crunchy operator"
+        return hs
+    - group: postgresql.cnpg.io
+      kind: Cluster
+      check: |
+        hs = {}
+        local phases = {
+          ["Cluster in healthy state"] = "Healthy",
+          ["Setting up primary"] = "Progressing",
+          ["Creating a new replica"] = "Progressing",
+          ["Upgrading cluster"] = "Progressing",
+          ["Upgrading Postgres major version"] = "Progressing",
+          ["Waiting for the instances to become active"] = "Progressing",
+          ["Promoting to primary cluster"] = "Progressing",
+          ["Switchover in progress"] = "Progressing",
+          ["Failing over"] = "Progressing",
+          ["Applying configuration"] = "Progressing",
+          ["Primary instance is being restarted in-place"] = "Progressing",
+          ["Primary instance is being restarted without a switchover"] = "Progressing",
+          ["Online upgrade in progress"] = "Progressing",
+          ["Cluster upgrade delayed"] = "Progressing",
+          ["Waiting for user action"] = "Degraded",
+          ["Cluster cannot execute instance online upgrade due to missing architecture binary"] = "Degraded",
+          ["Unable to create required cluster objects"] = "Degraded",
+          ["Cluster cannot proceed to reconciliation due to an unknown plugin being required"] = "Degraded",
+          ["Cluster cannot proceed to reconciliation due to an error while interacting with plugins"] = "Degraded",
+          ["Cluster has incomplete or invalid image catalog"] = "Degraded",
+          ["Cluster is unrecoverable and needs manual intervention"] = "Degraded",
+        }
+        local annotations = {}
+        if obj.metadata ~= nil and obj.metadata.annotations ~= nil then annotations = obj.metadata.annotations end
+        if annotations["cnpg.io/reconciliationLoop"] == "disabled" or annotations["k8s.enterprisedb.io/reconciliationLoop"] == "disabled" then
+          hs.status = "Suspended"
+          hs.message = "cluster reconciliation is suspended"
+          return hs
+        end
+        if obj.status == nil or obj.status.phase == nil then
+          hs.status = "Progressing"
+          hs.message = "waiting for the PostgreSQL operator"
+          return hs
+        end
+        if obj.status.conditions ~= nil then
+          for _, c in ipairs(obj.status.conditions) do
+            if c.type == "cnpg.io/hibernation" or c.type == "k8s.enterprisedb.io/hibernation" then
+              if c.status == "True" then hs.status = "Suspended" else hs.status = "Progressing" end
+              hs.message = c.message
+              return hs
+            end
+          end
+        end
+        local instances = ""
+        if obj.status.instances ~= nil then
+          instances = ", " .. (obj.status.readyInstances or 0) .. "/" .. obj.status.instances .. " instances ready"
+        end
+        local reason = ""
+        if obj.status.phaseReason ~= nil and obj.status.phaseReason ~= "" then reason = ": " .. obj.status.phaseReason end
+        hs.status = phases[obj.status.phase] or "Unknown"
+        hs.message = obj.status.phase .. reason .. instances
+        if hs.status == "Healthy" and obj.status.instances ~= nil and (obj.status.readyInstances or 0) < obj.status.instances then
+          hs.status = "Progressing"
+        end
+        return hs
+    - group: postgresql.k8s.enterprisedb.io
+      kind: Cluster
+      check: |
+        hs = {}
+        local phases = {
+          ["Cluster in healthy state"] = "Healthy",
+          ["Setting up primary"] = "Progressing",
+          ["Creating a new replica"] = "Progressing",
+          ["Upgrading cluster"] = "Progressing",
+          ["Upgrading Postgres major version"] = "Progressing",
+          ["Waiting for the instances to become active"] = "Progressing",
+          ["Promoting to primary cluster"] = "Progressing",
+          ["Switchover in progress"] = "Progressing",
+          ["Failing over"] = "Progressing",
+          ["Applying configuration"] = "Progressing",
+          ["Primary instance is being restarted in-place"] = "Progressing",
+          ["Primary instance is being restarted without a switchover"] = "Progressing",
+          ["Online upgrade in progress"] = "Progressing",
+          ["Cluster upgrade delayed"] = "Progressing",
+          ["Waiting for user action"] = "Degraded",
+          ["Cluster cannot execute instance online upgrade due to missing architecture binary"] = "Degraded",
+          ["Unable to create required cluster objects"] = "Degraded",
+          ["Cluster cannot proceed to reconciliation due to an unknown plugin being required"] = "Degraded",
+          ["Cluster cannot proceed to reconciliation due to an error while interacting with plugins"] = "Degraded",
+          ["Cluster has incomplete or invalid image catalog"] = "Degraded",
+          ["Cluster is unrecoverable and needs manual intervention"] = "Degraded",
+        }
+        local annotations = {}
+        if obj.metadata ~= nil and obj.metadata.annotations ~= nil then annotations = obj.metadata.annotations end
+        if annotations["cnpg.io/reconciliationLoop"] == "disabled" or annotations["k8s.enterprisedb.io/reconciliationLoop"] == "disabled" then
+          hs.status = "Suspended"
+          hs.message = "cluster reconciliation is suspended"
+          return hs
+        end
+        if obj.status == nil or obj.status.phase == nil then
+          hs.status = "Progressing"
+          hs.message = "waiting for the PostgreSQL operator"
+          return hs
+        end
+        if obj.status.conditions ~= nil then
+          for _, c in ipairs(obj.status.conditions) do
+            if c.type == "cnpg.io/hibernation" or c.type == "k8s.enterprisedb.io/hibernation" then
+              if c.status == "True" then hs.status = "Suspended" else hs.status = "Progressing" end
+              hs.message = c.message
+              return hs
+            end
+          end
+        end
+        local instances = ""
+        if obj.status.instances ~= nil then
+          instances = ", " .. (obj.status.readyInstances or 0) .. "/" .. obj.status.instances .. " instances ready"
+        end
+        local reason = ""
+        if obj.status.phaseReason ~= nil and obj.status.phaseReason ~= "" then reason = ": " .. obj.status.phaseReason end
+        hs.status = phases[obj.status.phase] or "Unknown"
+        hs.message = obj.status.phase .. reason .. instances
+        if hs.status == "Healthy" and obj.status.instances ~= nil and (obj.status.readyInstances or 0) < obj.status.instances then
+          hs.status = "Progressing"
+        end
+        return hs
+    - group: quay.redhat.com
+      kind: QuayRegistry
+      check: |
+        hs = {}
+        if obj.status == nil or obj.status.conditions == nil then
+          hs.status = "Progressing"
+          hs.message = "waiting for the Quay operator"
+          return hs
+        end
+        -- the operator writes observedGeneration with every status update: an older value means the last spec
+        -- change has not been processed yet and the conditions still describe the previous configuration
+        if obj.metadata ~= nil and obj.metadata.generation ~= nil and obj.status.observedGeneration ~= nil
+           and obj.status.observedGeneration < obj.metadata.generation then
+          hs.status = "Progressing"
+          hs.message = "generation " .. obj.metadata.generation .. " not yet observed by the Quay operator (observed " .. obj.status.observedGeneration .. ")"
+          return hs
+        end
+        local failed = { MigrationsFailed = true, PostgresUpgradeFailed = true, ComponentCreationFailed = true }
+        for _, c in ipairs(obj.status.conditions) do
+          if c.type == "RolloutBlocked" and c.status == "True" then
+            hs.status = "Degraded"
+            hs.message = (c.reason or "RolloutBlocked") .. ": " .. (c.message or "")
+            return hs
+          end
+        end
+        for _, c in ipairs(obj.status.conditions) do
+          if c.type == "ComponentsCreated" and c.status == "False" then
+            if failed[c.reason] then hs.status = "Degraded" else hs.status = "Progressing" end
+            hs.message = (c.reason or "ComponentsCreated=False") .. ": " .. (c.message or "")
+            return hs
+          end
+        end
+        for _, c in ipairs(obj.status.conditions) do
+          if c.type == "Available" and c.status == "True" then
+            hs.status = "Healthy"
+            hs.message = c.message or "available"
+            return hs
+          end
+        end
+        local notReady = ""
+        for _, c in ipairs(obj.status.conditions) do
+          if c.status == "False" and c.reason == "ComponentNotReady" and c.type ~= "Available" then
+            notReady = notReady .. " " .. c.type .. " (" .. (c.message or "") .. ")"
+          end
+        end
+        hs.status = "Progressing"
+        if notReady ~= "" then
+          hs.message = "components not ready:" .. notReady
+        else
+          hs.message = "waiting for the Quay operator"
+        end
+        return hs
+    - group: operators.coreos.com
+      kind: Subscription
+      check: |
+        hs = {}
+        if obj.status == nil or obj.status.conditions == nil then
+          hs.status = "Progressing"
+          hs.message = "an install plan for the subscription is pending installation"
+          return hs
+        end
+        -- an InstallPlan waiting for manual approval on an operator that is already installed is a policy state,
+        -- not a problem (Argo CD 3.5 and later behave the same; this rule makes earlier versions do so too)
+        local manualPending = false
+        if obj.spec ~= nil and obj.spec.installPlanApproval == "Manual" and obj.status.installedCSV ~= nil then
+          for _, c in ipairs(obj.status.conditions) do
+            if c.type == "InstallPlanPending" and c.status == "True" and c.reason == "RequiresApproval" then
+              manualPending = true
+            end
+          end
+        end
+        local pending, degraded, msg = 0, 0, ""
+        for i, c in ipairs(obj.status.conditions) do
+          if manualPending and c.type == "InstallPlanPending" then
+            msg = msg .. i .. ": " .. c.type .. " | " .. c.status .. " (manual approval pending, operator installed)\n"
+          else
+            msg = msg .. i .. ": " .. c.type .. " | " .. c.status .. "\n"
+            if c.type == "InstallPlanPending" and c.status == "True" then
+              pending = pending + 1
+            elseif c.type == "InstallPlanMissing" and c.reason ~= "ReferencedInstallPlanNotFound" then
+              degraded = degraded + 1
+            elseif (c.type == "CatalogSourcesUnhealthy" or c.type == "InstallPlanFailed" or c.type == "ResolutionFailed") and c.status == "True" then
+              degraded = degraded + 1
+            end
+          end
+        end
+        local state = obj.status.state
+        if state == nil or state == "" or state == "UpgradeAvailable" then
+          pending = pending + 1
+          msg = msg .. ".status.state not yet known\n"
+        elseif state == "UpgradePending" then
+          if manualPending then
+            msg = msg .. ".status.state is 'UpgradePending' (manual InstallPlan approval pending; treated as healthy)\n"
+          else
+            pending = pending + 1
+            msg = msg .. ".status.state is 'UpgradePending'\n"
+          end
+        elseif state == "UpgradeFailed" then
+          degraded = degraded + 1
+          msg = msg .. ".status.state is 'UpgradeFailed'\n"
+        else
+          msg = msg .. ".status.state is '" .. state .. "'\n"
+        end
+        if degraded > 0 then
+          hs.status = "Degraded"
+        elseif pending > 0 then
+          hs.status = "Progressing"
+        else
+          hs.status = "Healthy"
+        end
+        hs.message = msg
+        return hs
+    - group: argoproj.io
+      kind: Application
+      check: |
+        hs = {}
+        hs.status = "Progressing"
+        hs.message = ""
+        if obj.status ~= nil then
+          if obj.status.health ~= nil then
+            hs.status = obj.status.health.status
+            if obj.status.health.message ~= nil then
+              hs.message = obj.status.health.message
+            end
+          end
+        end
+        return hs

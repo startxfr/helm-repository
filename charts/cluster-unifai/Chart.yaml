@@ -1,0 +1,152 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-unifai
+# Description of this Helm chart
+description: Helm chart used to configure UnifAI multi-agent AI platform at the cluster level
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 21.3.2
+# Version name of the UnifAI platform (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: "1.16.0"
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-unifai.svg
+# Kube minimum version
+kubeVersion: ">=1.30.0-0"
+# Keyword list for this chart
+keywords:
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - AI
+  - UnifAI
+  - multi-agent
+  - RAG
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-unifai
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-unifai
+  - https://github.com/redhat-community-ai-tools/UnifAI
+# Main maintainer contact for this helm chart
+maintainers:
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+    version: "21.3.222"
+    alias: project
+    condition: project.enabled
+
+  # --- Vendored from https://github.com/startxfr/UnifAI (branch devel) ---
+  # See vendor/VENDORED_FROM.md for the exact commit this was synced from, and
+  # .tools/sync-unifai-vendor.sh to refresh.
+  - name: unifai-backend
+    repository: "file://vendor/backend/unifai-backend"
+    version: "0.1.0"
+    alias: unifai_backend
+    condition: unifai_backend.enabled
+  - name: multiagent
+    repository: "file://vendor/multiagent/be"
+    version: "0.1.0"
+    alias: multiagent_server
+    condition: multiagent_server.enabled
+  - name: multiagent-temporal-worker
+    repository: "file://vendor/multiagent/temporal-worker"
+    version: "0.1.0"
+    alias: multiagent_temporal_worker
+    condition: multiagent_temporal_worker.enabled
+  - name: unifai-multiagent-shared-storage
+    repository: "file://vendor/multiagent/unifai-multiagent-shared-storage"
+    version: "0.1.0"
+    alias: multiagent_shared_storage
+    condition: multiagent_shared_storage.enabled
+  - name: rag
+    repository: "file://vendor/rag/unifai-rag-server"
+    version: "0.1.0"
+    alias: unifai_rag_server
+    condition: unifai_rag_server.enabled
+  - name: unifai-rag-celery
+    repository: "file://vendor/rag/unifai-rag-celery"
+    version: "0.1.0"
+    alias: unifai_rag_celery
+    condition: unifai_rag_celery.enabled
+  - name: unifai-rag-celery
+    repository: "file://vendor/rag/unifai-rag-celery"
+    version: "0.1.0"
+    alias: unifai_rag_celery_beat
+    condition: unifai_rag_celery_beat.enabled
+  - name: unifai-rag-shared-storage
+    repository: "file://vendor/rag/unifai-rag-shared-storage"
+    version: "0.1.0"
+    alias: unifai_rag_shared_storage
+    condition: unifai_rag_shared_storage.enabled
+  - name: ui
+    repository: "file://vendor/ui"
+    version: "0.1.0"
+    alias: ui
+    condition: ui.enabled
+  - name: identity
+    repository: "file://vendor/shared-resources/identity"
+    version: "0.1.0"
+    alias: identity
+    condition: identity.enabled
+  - name: mongodb
+    repository: "file://vendor/shared-resources/mongodb"
+    version: "0.7.0"
+    alias: mongodb
+    condition: mongodb.enabled
+  - name: rabbitmq
+    repository: "file://vendor/shared-resources/rabbitmq"
+    version: "15.2.1"
+    alias: rabbitmq
+    condition: rabbitmq.enabled
+  - name: qdrant
+    repository: "file://vendor/shared-resources/qdrant"
+    version: "0.1.0"
+    alias: qdrant
+    condition: qdrant.enabled
+  - name: redis
+    repository: "file://vendor/shared-resources/redis"
+    version: "0.1.0"
+    alias: redis
+    condition: redis.enabled
+  - name: temporal
+    repository: "file://vendor/shared-resources/temporal"
+    version: "0.1.0"
+    alias: temporal
+    condition: temporal.enabled
+
+annotations:
+  # category associated to this package
+  category: cluster
+  # Artifacthub category associated to this package
+  artifacthub.io/category: integration-delivery
+  # Artifacthub license
+  artifacthub.io/license: "GPL-3.0-or-later"
+  # Artifacthub is this release a pre-release
+  artifacthub.io/prerelease: "true"
+  # Artifacthub is an operator chart
+  artifacthub.io/operator: "false"
+  # Artifacthub chart recommandations
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+  # Artifacthub signing keys
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  # Artifacthub changes logs
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Create chart cluster-unifai from cluster-kubecost"
+    - kind: changed
+      description: "Rebuild as an umbrella chart vendoring the real component charts from startxfr/UnifAI (devel)"
+  artifacthub.io/containsSecurityUpdates: "false"

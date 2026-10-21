@@ -1,0 +1,78 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: cloudnativedb
+  app: default-cloudnativedb
+  version: "1.30.1"
+
+flavor: community
+
+loader:
+  enabled: false
+  list: []
+
+s3:
+  list: []
+
+cluster:
+  enabled: false
+  list:
+  - name: startx-db
+    enabled: true
+    namespace: default-cloudnativedb
+    postgresVersion: 17
+    storageClassName: ""
+    storageInstanceSize: "2Gi"
+    username: startx
+    database: startx
+    password: ""
+    initScript: |-
+      CREATE TABLE startx_table (
+        field       TEXT COLLATE "C" NOT NULL,
+        CONSTRAINT field PRIMARY KEY (field)
+      );
+      CREATE INDEX field_idx ON startx_table (field);
+    instances: 1
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-cloudnativedb"
+    display_name: "Startx CloudNativePG"
+    requester: startx
+    description: CloudNativePG configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cloudnative-pg"
+    namespace: "default-cloudnativedb"
+    version: "v1.30.1"
+    operator:
+      channel: stable-v1
+      name: cloudnative-pg
+      installPlanApproval: Manual
+      csv: cloudnative-pg
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "cloudnativedb-operator"
+    namespace: "default-cloudnativedb"
+    providedAPIs: "Cluster.v1.postgresql.cnpg.io,Backup.v1.postgresql.cnpg.io,ScheduledBackup.v1.postgresql.cnpg.io,Pooler.v1.postgresql.cnpg.io,Database.v1.postgresql.cnpg.io,Publication.v1.postgresql.cnpg.io,Subscription.v1.postgresql.cnpg.io,ImageCatalog.v1.postgresql.cnpg.io,ClusterImageCatalog.v1.postgresql.cnpg.io,FailoverQuorum.v1.postgresql.cnpg.io"

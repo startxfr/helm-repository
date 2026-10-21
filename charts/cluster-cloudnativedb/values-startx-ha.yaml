@@ -1,0 +1,114 @@
+# Values for a highly available PostgreSQL cluster: three instances with synchronous replication and quorum failover on distinct nodes, Barman Cloud backups to an S3 bucket, monitoring and network policy.
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: cloudnativedb
+  app: startx-cloudnativedb
+  version: "1.30.1"
+
+flavor: community
+
+loader:
+  enabled: false
+  list: []
+
+# Secret values are Argo CD Vault Plugin placeholders: replace the KV path by yours, or use a values file kept out of Git
+s3:
+  list:
+    - name: backup
+      namespace: default-cloudnativedb
+      endpoint: s3.example.com
+      port: ""
+      region: ""
+      bucket: startx-barman
+      accessKey: <path:kv/data/cloudnativedb#s3_access_key>
+      secretKey: <path:kv/data/cloudnativedb#s3_secret_key>
+      caCert: ""
+
+cluster:
+  enabled: false
+  list:
+    - name: startx-db
+      enabled: true
+      namespace: default-cloudnativedb
+      postgresVersion: 17
+      imageName: ""
+      storageClassName: ""
+      storageInstanceSize: "20Gi"
+      username: startx
+      database: startx
+      password: <path:kv/data/cloudnativedb#startx_db_password>
+      extensions:
+        - pg_trgm
+      instances: 3
+      synchronous: true
+      failoverQuorum: true
+      avoidInfraNodes: true
+      resources:
+        requests:
+          cpu: "1"
+          memory: 2Gi
+        limits:
+          memory: 4Gi
+      parameters:
+        max_connections: "500"
+      backup:
+        enabled: true
+        method: barmanObjectStore
+        s3: backup
+        pathPrefix: ""
+        serverName: ""
+        retentionDays: 14
+        schedule: "0 1 * * 0"
+        compression: gzip
+      restore:
+        enabled: false
+        source: ""
+        target: ""
+      monitoring:
+        enabled: true
+      networkPolicy:
+        enabled: true
+        allowedNamespaces: []
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-cloudnativedb"
+    display_name: "Startx CloudNativePG"
+    requester: startx
+    description: CloudNativePG configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cloudnative-pg"
+    namespace: "default-cloudnativedb"
+    version: "v1.30.1"
+    operator:
+      channel: stable-v1
+      name: cloudnative-pg
+      installPlanApproval: Manual
+      csv: cloudnative-pg
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "cloudnativedb-operator"
+    namespace: "default-cloudnativedb"
+    providedAPIs: "Cluster.v1.postgresql.cnpg.io,Backup.v1.postgresql.cnpg.io,ScheduledBackup.v1.postgresql.cnpg.io,Pooler.v1.postgresql.cnpg.io,Database.v1.postgresql.cnpg.io,Publication.v1.postgresql.cnpg.io,Subscription.v1.postgresql.cnpg.io,ImageCatalog.v1.postgresql.cnpg.io,ClusterImageCatalog.v1.postgresql.cnpg.io,FailoverQuorum.v1.postgresql.cnpg.io"

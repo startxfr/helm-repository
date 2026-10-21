@@ -1,0 +1,276 @@
+# Default values for cluster-unifai.
+#
+# This chart is an umbrella around the real component charts of UnifAI
+# (https://github.com/redhat-community-ai-tools/UnifAI), vendored from the
+# startxfr/UnifAI fork (branch devel, see vendor/VENDORED_FROM.md) as Helm
+# dependencies. Every top-level key below (except context/project/glue) matches
+# one dependency alias declared in Chart.yaml and is passed straight through to
+# that vendored chart, merged on top of its own values.yaml defaults.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-unifai
+  # Version name of this application (default use Chart appVersion)
+  version: "1.16.0"
+
+# Environment variables shared across every UnifAI component (merged into each alias's own
+# "env" block below via the "<<: *sharedEnv" YAML anchor) - mirrors the fork's global-config.yaml,
+# which Helmfile injects into every release.
+sharedEnv: &sharedEnv
+  # Public URL of the ui component (leave empty until ui.route.hostname is known)
+  FRONTEND_URL: ""
+  # Hostname of the rag server component (matches unifai_rag_server.fullnameOverride below)
+  RAG_HOST: "unifai-rag-server"
+  RAG_PORT: "13456"
+  # Hostname of the multiagent server component (matches multiagent_server.fullnameOverride below)
+  MULTIAGENT_HOST: "unifai-multiagent-be"
+  MULTIAGENT_PORT: "8003"
+  # Public URL of the identity component (leave empty until identity route/host is known)
+  IDENTITY_HOST: ""
+
+# Glue settings that don't belong to any single vendored chart : shared Secret/ConfigMap content
+# (templates/shared-config.yaml), consumed by every component via its own globalConfigMapName /
+# globalSecretName values (all default to "shared-config" / "shared-secret", already matched below).
+glue:
+  # Shared Flask SECRET_KEY signing sessions across backend/multiagent/rag/identity.
+  # Leave empty to auto-generate one at install time (regenerated on every upgrade unless pinned here).
+  secretKey: ""
+  # HashiCorp Vault AppRole used by components that read secrets from Vault directly
+  vault:
+    roleId: ""
+    secretId: ""
+  # Langfuse observability (optional, disable if unused)
+  langfuse:
+    enabled: true
+    baseUrl: "https://us.cloud.langfuse.com"
+    secretKey: ""
+    publicKey: ""
+  # Umami analytics (optional)
+  umami:
+    enabled: false
+    websiteId: ""
+    scriptUrl: ""
+  credentialEncryptionKey: ""
+  oauthStateSecret: ""
+  # JSON list of usernames allowed to reach admin-only routes
+  adminAllowedUsers: '["admin"]'
+  # Slack tokens for the rag component's optional Slack ingestion (unifai-rag-secrets Secret)
+  slack:
+    botToken: ""
+    userToken: ""
+  # Keycloak / Red Hat SSO, consumed by the identity component (identity-config/identity-secret)
+  keycloak:
+    baseUrl: ""
+    realm: "unifai"
+    clientId: "unifai"
+    clientSecret: ""
+    directoryProvider: ""
+    directoryUrl: ""
+    bindDn: ""
+    bindPassword: ""
+
+# Custom agent-graph blueprints (plain YAML, not a CRD) mounted into the multiagent_server pod
+# at /app/multi-agent/lib/mas/blueprints/<name>.yaml. Creating the matching volumes/volumeMounts
+# entry under multiagent_server.volumes/volumeMounts below is a manual step (see README).
+blueprints: []
+# - name: "hr-document-analysis"
+#   content: |
+#     description: "RAG pipeline for automated CV and HR document analysis"
+#     nodes:
+#       - name: doc-retriever
+#         type: retriever
+#         source: qdrant
+#       - name: hr-agent
+#         type: agent
+#         model: "llama3"
+#     edges:
+#       - from: doc-retriever
+#         to: hr-agent
+
+# ============================================================================
+# Application components (vendored from backend/, multiagent/, rag/, ui/)
+# Images have NO default repository/tag : build them yourself from the UnifAI
+# repo's Dockerfiles (see README) and push to a registry you control.
+# ============================================================================
+
+unifai_backend:
+  enabled: true
+  fullnameOverride: "unifai-backend"
+  image:
+    repository: ""
+    tag: ""
+  env:
+    <<: *sharedEnv
+
+multiagent_server:
+  enabled: true
+  fullnameOverride: "unifai-multiagent-be"
+  image:
+    repository: ""
+    tag: ""
+  env:
+    <<: *sharedEnv
+
+multiagent_temporal_worker:
+  # Only needed when multiagent_server runs with ROLE/engine set to use Temporal.
+  enabled: false
+  fullnameOverride: "unifai-multiagent-temporal-worker"
+  image:
+    repository: ""
+    tag: ""
+  env:
+    <<: *sharedEnv
+
+multiagent_shared_storage:
+  enabled: true
+  storage:
+    # Empty = use the cluster's default StorageClass (upstream default "aws-efs-tier-c1" is AWS-specific)
+    className: ""
+
+unifai_rag_server:
+  enabled: true
+  fullnameOverride: "unifai-rag-server"
+  image:
+    repository: ""
+    tag: ""
+  env:
+    <<: *sharedEnv
+
+unifai_rag_celery:
+  enabled: true
+  fullnameOverride: "unifai-rag-celery"
+  image:
+    repository: ""
+    tag: ""
+  env:
+    <<: *sharedEnv
+
+unifai_rag_celery_beat:
+  # Same chart as unifai_rag_celery (file://vendor/rag/unifai-rag-celery), deployed a second time
+  # with ROLE overridden to "celery-beat" and the GPU request dropped (celery-beat is a scheduler,
+  # it doesn't need a GPU).
+  enabled: true
+  fullnameOverride: "unifai-rag-celery-beat"
+  image:
+    repository: ""
+    tag: ""
+  env:
+    <<: *sharedEnv
+    ROLE: "celery-beat"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+      nvidia.com/gpu: null
+    requests:
+      cpu: 250m
+      memory: 256Mi
+      nvidia.com/gpu: null
+
+unifai_rag_shared_storage:
+  enabled: true
+  storage:
+    className: ""
+
+ui:
+  enabled: true
+  fullnameOverride: "unifai-ui"
+  image:
+    repository: ""
+    tag: ""
+  env:
+    <<: *sharedEnv
+
+identity:
+  enabled: true
+  fullnameOverride: "unifai-identity"
+  backend:
+    image:
+      repository: ""
+      tag: ""
+    env:
+      <<: *sharedEnv
+
+# ============================================================================
+# Infrastructure (vendored from shared-resources/*), bundled by default.
+# Images default to the public substitutes validated by the startxfr/UnifAI fork
+# (MEMORY.md, demo333 cluster) instead of the private images.paas.redhat.com/genie/*.
+# ============================================================================
+
+mongodb:
+  enabled: true
+  fullnameOverride: "mongodb"
+  image:
+    registry: docker.io
+    repository: library/mongo
+  storage:
+    className: ""
+
+qdrant:
+  enabled: true
+  fullnameOverride: "qdrant"
+  image:
+    registry: docker.io
+    repository: qdrant/qdrant
+    tag: v1.16.0
+  storage:
+    className: ""
+
+rabbitmq:
+  enabled: true
+  fullnameOverride: "rabbitmq"
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/rabbitmq
+  global:
+    storageClass: ""
+  persistence:
+    storageClass: ""
+
+redis:
+  enabled: true
+  fullnameOverride: "redis"
+  image:
+    registry: quay.io
+    repository: fedora/redis-7
+    tag: "20250108"
+  storage:
+    storageClassName: ""
+  # Password required by the image's "--requirepass" startup arg ; sourced from the
+  # redis-secret Secret this chart creates (templates/shared-config.yaml). Leave empty to
+  # auto-generate one at install time.
+  password: ""
+  # No "redis-config" ConfigMap is vendored (excluded, see README) : disable that optional
+  # envFrom reference so the chart doesn't look for one.
+  redisConfigMapName: ""
+
+temporal:
+  # Optional : only required when multiagent_server/multiagent_temporal_worker use the Temporal engine.
+  enabled: false
+  fullnameOverride: "temporal"
+  storage:
+    storageClassName: ""
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-unifai"
+    display_name: UnifAI
+    description: UnifAI multi-agent AI platform configured by STARTX
+    additionalLabels:
+      openshift.io/cluster-monitoring: "true"

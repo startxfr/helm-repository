@@ -1,0 +1,171 @@
+{{/*
+Glue objects this chart creates directly from values (no Helm hook Jobs, no bash scripts),
+standing in for what the upstream UnifAI Helmfile creates via its presync/postsync hook
+scripts (helm/scripts/*.sh). Every vendored component chart references these resources by
+a FIXED name (globalConfigMapName/globalSecretName default to "shared-config"/"shared-secret"
+in every vendored chart already, no override needed) ; a few components hardcode additional
+names that are NOT values-driven in the vendored charts, so this template creates those too,
+under the exact same fixed names, so the vendored Deployments can actually start.
+
+Caveat: the ConfigMap/Secret KEY NAMES below (e.g. identity-config's KEYCLOAK_BASE_URL) are
+inferred from the fork's MEMORY.md / presync script descriptions, not from reading the actual
+application source - verify against your UnifAI image's expected env vars if something doesn't
+pick up as expected.
+*/}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "shared-config"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  MONGODB_IP: {{ .Values.mongodb.fullnameOverride | default "mongodb" | quote }}
+  MONGODB_PORT: "27017"
+  RABBITMQ_IP: {{ .Values.rabbitmq.fullnameOverride | default "rabbitmq" | quote }}
+  RABBITMQ_PORT: "5672"
+  QDRANT_IP: {{ printf "http://%s" (.Values.qdrant.fullnameOverride | default "qdrant") | quote }}
+  QDRANT_PORT: "6333"
+  REDIS_IP: {{ .Values.redis.fullnameOverride | default "redis" | quote }}
+  REDIS_PORT: "6379"
+  {{- if .Values.temporal.enabled }}
+  TEMPORAL_HOST: {{ printf "%s:7233" (.Values.temporal.fullnameOverride | default "temporal") | quote }}
+  {{- end }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "shared-secret"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque
+stringData:
+  SECRET_KEY: {{ .Values.glue.secretKey | default (randAlphaNum 32) | quote }}
+  VAULT_ROLE_ID: {{ .Values.glue.vault.roleId | quote }}
+  VAULT_SECRET_ID: {{ .Values.glue.vault.secretId | quote }}
+  LANGFUSE_ENABLED: {{ .Values.glue.langfuse.enabled | quote }}
+  LANGFUSE_BASE_URL: {{ .Values.glue.langfuse.baseUrl | quote }}
+  LANGFUSE_SECRET_KEY: {{ .Values.glue.langfuse.secretKey | quote }}
+  LANGFUSE_PUBLIC_KEY: {{ .Values.glue.langfuse.publicKey | quote }}
+  UMAMI_ENABLED: {{ .Values.glue.umami.enabled | quote }}
+  UMAMI_WEBSITE_ID: {{ .Values.glue.umami.websiteId | quote }}
+  UMAMI_SCRIPT_URL: {{ .Values.glue.umami.scriptUrl | quote }}
+  CREDENTIAL_ENCRYPTION_KEY: {{ .Values.glue.credentialEncryptionKey | default (randAlphaNum 32) | quote }}
+  OAUTH_STATE_SECRET: {{ .Values.glue.oauthStateSecret | default (randAlphaNum 32) | quote }}
+  ADMIN_ALLOWED_USERS: {{ .Values.glue.adminAllowedUsers | quote }}
+---
+# unifai-rag-celery / unifai-rag-server hardcode this exact Secret name (not values-driven).
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "unifai-rag-secrets"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque
+stringData:
+  default_slack_bot_token: {{ .Values.glue.slack.botToken | quote }}
+  default_slack_user_token: {{ .Values.glue.slack.userToken | quote }}
+---
+# multiagent/be and multiagent/temporal-worker hardcode these exact ConfigMap names (not
+# values-driven). Kept as empty placeholders : extend with extra keys here if your blueprints
+# or tools need additional multiagent-be-configmap / multiagent-temporal-worker-configmap entries.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "multiagent-be-configmap"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+data: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "multiagent-temporal-worker-configmap"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+data: {}
+---
+# multiagent/temporal-worker also reads .Values.MultiagentSecretName, default "multiagent-be-secret".
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "multiagent-be-secret"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque
+data: {}
+---
+# shared-resources/redis requires REDIS_PASSWORD via its redisSecretName (default "redis-secret").
+# redisConfigMapName is set to "" in values.yaml so no "redis-config" ConfigMap is required.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "redis-secret"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque
+stringData:
+  REDIS_PASSWORD: {{ .Values.redis.password | default (randAlphaNum 24) | quote }}
+---
+# shared-resources/identity requires these exact names by default (IdentityConfigMapName /
+# IdentitySecretName values, both already defaulted to match in the vendored chart).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "identity-config"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  KEYCLOAK_BASE_URL: {{ .Values.glue.keycloak.baseUrl | quote }}
+  KEYCLOAK_REALM: {{ .Values.glue.keycloak.realm | quote }}
+  CLIENT_ID: {{ .Values.glue.keycloak.clientId | quote }}
+  DIRECTORY_PROVIDER: {{ .Values.glue.keycloak.directoryProvider | quote }}
+  DIRECTORY_URL: {{ .Values.glue.keycloak.directoryUrl | quote }}
+  DIRECTORY_BIND_DN: {{ .Values.glue.keycloak.bindDn | quote }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "identity-secret"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque
+stringData:
+  CLIENT_SECRET: {{ .Values.glue.keycloak.clientSecret | quote }}
+  DIRECTORY_BIND_PASSWORD: {{ .Values.glue.keycloak.bindPassword | quote }}

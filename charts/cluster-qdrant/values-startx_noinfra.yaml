@@ -1,0 +1,26 @@
+# STARTX "noinfra" values for cluster-qdrant, used by the ArgoCD Applications under examples/argocd/
+# Same namespace layout as values-startx.yaml ; kept as a separate file to follow this
+# repository's cluster-* chart convention (ArgoCD Applications always reference the _noinfra variant).
+
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: qdrant
+  app: default-qdrant
+  version: "v1.19.2"
+
+qdrant:
+  enabled: true
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-qdrant"
+    display_name: "Startx QDRANT"
+    description: Qdrant vector database configured by STARTX

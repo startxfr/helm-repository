@@ -1,0 +1,31 @@
+
+Qdrant vector database is enabled, at the cluster level, with the following characteristics :
+NOTE: Qdrant has no actively maintained Kubernetes operator -- this chart wraps Qdrant's own
+vendor Helm chart (qdrant/qdrant-helm) directly as a StatefulSet, not a Custom Resource.
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+{{- if .Values.project }}{{- if .Values.project.enabled }}
+{{ include "project.notes" .Values.project }}
+{{- end }}{{- end }}
+
+{{ include "cluster-qdrant.notes" .Values }}
+
+{{- if .Values.qdrant.enabled }}
+{{- if .Values.qdrant.apiKey }}
+
+Retrieve the auto-generated (or configured) Qdrant API key with :
+  oc get secret {{ include "cluster-qdrant.qdrantFullname" . }}-apikey -n {{ include "cluster-qdrant.namespace" . }} -o jsonpath='{.data.api-key}' | base64 -d
+{{- end }}
+{{- if .Values.route.enabled }}
+
+Qdrant REST API is reachable via the OpenShift Route :
+  oc get route {{ include "cluster-qdrant.qdrantFullname" . }} -n {{ include "cluster-qdrant.namespace" . }}
+{{- end }}
+{{- end }}

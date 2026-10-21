@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-unifai-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  destination:
+    namespace: startx-unifai
+    server: https://kubernetes.default.svc
+  project: cluster-unifai
+  source:
+    chart: cluster-unifai
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        unifai_backend:
+          enabled: false
+        multiagent_server:
+          enabled: false
+        multiagent_temporal_worker:
+          enabled: false
+        multiagent_shared_storage:
+          enabled: false
+        unifai_rag_server:
+          enabled: false
+        unifai_rag_celery:
+          enabled: false
+        unifai_rag_celery_beat:
+          enabled: false
+        unifai_rag_shared_storage:
+          enabled: false
+        ui:
+          enabled: false
+        identity:
+          enabled: false
+        mongodb:
+          enabled: false
+        qdrant:
+          enabled: false
+        rabbitmq:
+          enabled: false
+        redis:
+          enabled: false
+        temporal:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

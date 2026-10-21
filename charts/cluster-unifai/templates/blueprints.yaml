@@ -1,0 +1,25 @@
+{{/*
+UnifAI blueprints are plain YAML files consumed by the multiagent orchestrator - there is no
+Blueprint CRD / Kubernetes custom resource involved. Each entry below is rendered as a ConfigMap.
+Mounting it into the multiagent_server pod is a manual step : add a matching entry under
+multiagent_server.volumes / multiagent_server.volumeMounts in values.yaml (see README), since
+Helm values are static data and this chart cannot cross-reference them from a template.
+*/}}
+{{- if .Values.multiagent_server.enabled -}}
+{{- range .Values.blueprints }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "unifai-blueprint-{{ .name }}"
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "cluster-unifai.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "cluster-unifai.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  {{ .name }}.yaml: |
+    {{- .content | nindent 4 }}
+{{- end }}
+{{- end -}}

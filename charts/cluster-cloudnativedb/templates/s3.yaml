@@ -1,0 +1,36 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}{{- if .Values.s3 }}{{- if .Values.s3.list }}
+{{- $defaultns := include "cluster-cloudnativedb.defaultNamespace" . -}}
+{{- $lbl := include "cluster-cloudnativedb.labelPrefix" . -}}
+
+{{/* One Barman Cloud credentials Secret per S3 endpoint */}}
+{{- range .Values.s3.list }}
+{{- $ns := .namespace | default $defaultns -}}
+---
+# Credentials of the backup bucket (Barman Cloud). Applied server side by Argo CD so that no clear text copy
+# lands in a last-applied-configuration annotation
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "cluster-cloudnativedb.s3SecretName" . | quote }}
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-cloudnativedb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ include "cluster-cloudnativedb.s3SecretName" . }}-secret"
+    {{ $lbl }}/reload: "true"
+  annotations:
+    {{- include "cluster-cloudnativedb.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+type: Opaque
+stringData:
+  ACCESS_KEY_ID: {{ .accessKey | quote }}
+  ACCESS_SECRET_KEY: {{ .secretKey | quote }}
+  {{- if .region }}
+  REGION: {{ .region | quote }}
+  {{- end }}
+  {{- if .caCert }}
+  ca.crt: |
+    {{- .caCert | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end -}}{{- end }}{{- end -}}{{- end }}

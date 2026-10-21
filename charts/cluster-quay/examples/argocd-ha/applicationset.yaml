@@ -1,0 +1,113 @@
+# Chart pulled from the STARTX Helm repository, values read from a Git repository of each target cluster, secrets
+# resolved at render time by the Argo CD Vault Plugin (CMP argocd-vault-plugin-helm, see avp-plugin.yaml).
+# Generators, nested matrix (one level of nesting is allowed):
+#   clusters: the clusters registered in Argo CD that carry the label cluster-quay-ha, set by the automation (with ACM,
+#     GitOpsCluster copies the ManagedCluster labels onto the cluster Secret, so the label is set on the ManagedCluster);
+#   git files: the values file of that cluster, in the Git repository named after the cluster (<cluster>, file
+#     quay/values.yaml; values-example.yaml is a complete example, values-startx-quay-ha-*.yaml of the chart too). The git generator uses {{ .name }} produced by
+#     the clusters generator, which therefore comes first;
+#   list: the two Applications of each cluster, switching on the flags of the registry and of the crunchy sub-chart
+#     (cloudnativedb.* for CloudNativePG) through HELM_ARGS, the values file keeping every flag false:
+#     cluster-quay-ha-operators-<cluster> (wave 1): namespaces and OLM subscriptions, never pruned
+#     cluster-quay-ha-<cluster> (wave 2): databases, config bundle, QuayRegistry, budgets, alerts
+# The parsed values file is handed back to the plugin in HELM_VALUES; a commit on the file regenerates the
+# Applications. The first generator wins on a key conflict, so the cluster Secret must not be project scoped (its
+# non empty `project` field would shadow the `project` sub-chart values). Requires Argo CD 2.10+ (goTemplate,
+# templatePatch) and the AppProject of appproject.yaml.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-quay-ha
+  namespace: openshift-gitops
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  syncPolicy:
+    # Deleting the ApplicationSet keeps the Applications and the registry
+    preserveResourcesOnDeletion: true
+  generators:
+    - matrix:
+        generators:
+          - matrix:
+              generators:
+                - clusters:
+                    selector:
+                      # label set on the cluster by the job template, whatever its value
+                      matchExpressions:
+                        - key: cluster-quay-ha
+                          operator: Exists
+                - git:
+                    repoURL: 'https://git.example.com/infra/{{ .name }}.git'
+                    revision: main
+                    files:
+                      - path: quay/values.yaml
+          - list:
+              elements:
+                - app: cluster-quay-ha-operators
+                  wave: "1"
+                  destination: openshift-operators
+                  helmArgs: "--set project.enabled=true --set operator.enabled=true --set crunchy.project.enabled=true --set crunchy.operator.enabled=true"
+                - app: cluster-quay-ha
+                  wave: "2"
+                  destination: quay-enterprise
+                  helmArgs: "--set quay.enabled=true --set crunchy.cluster.enabled=true"
+  template:
+    metadata:
+      name: '{{ .app }}-{{ .nameNormalized }}'
+      namespace: openshift-gitops
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ .wave }}'
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: cluster-quay-ha
+      source:
+        repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+        chart: cluster-quay
+        targetRevision: 21.3.279
+        plugin:
+          name: argocd-vault-plugin-helm
+          env:
+            - name: HELM_ARGS
+              value: '{{ .helmArgs }}'
+            # The values file, without the generator parameters (cluster, path) and the list element keys
+            - name: HELM_VALUES
+              value: '{{ toYaml (omit . "app" "wave" "destination" "helmArgs" "path" "name" "nameNormalized" "server" "metadata") }}'
+      destination:
+        # The cluster selected by the clusters generator (its API URL as registered in Argo CD)
+        server: '{{ .server }}'
+        namespace: '{{ .destination }}'
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+  # Registry Application only: pruning, retries (the CRDs may not exist at the first sync) and the finalizers
+  # added by the operators
+  templatePatch: |
+    {{- if eq .app "cluster-quay-ha" }}
+    spec:
+      syncPolicy:
+        automated:
+          prune: true
+        retry:
+          limit: 10
+          backoff:
+            duration: 30s
+            factor: 2
+            maxDuration: 10m
+      ignoreDifferences:
+        - group: postgres-operator.crunchydata.com
+          kind: PostgresCluster
+          jsonPointers:
+            - /metadata/finalizers
+        - group: postgresql.cnpg.io
+          kind: Cluster
+          jsonPointers:
+            - /metadata/finalizers
+        - group: quay.redhat.com
+          kind: QuayRegistry
+          jsonPointers:
+            - /metadata/finalizers
+    {{- end }}

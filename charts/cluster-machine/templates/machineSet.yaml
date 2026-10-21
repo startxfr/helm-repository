@@ -140,29 +140,40 @@ spec:
           deviceIndex: 0
           iamInstanceProfile:
             id: "{{ $.Values.cluster.id }}-worker-profile"
+          {{- if .securityGroups }}
+          securityGroups:
+            {{- .securityGroups | nindent 12 }}
+          {{- else }}
           securityGroups:
             - filters:
                 - name: tag:Name
                   values:
-                    - "{{ .securityGroupName | default (printf "%s-worker-sg" $.Values.cluster.id) }}"
+                    - "{{ .securityGroupName | default (printf "%s-node" $.Values.cluster.id) }}"
+          {{- end }}
           subnet:
           {{- if .subnet_name }}
             filters:
               - name: tag:Name
                 values:
                   - "{{ .subnet_name }}"
-                  # - "{{ $.Values.cluster.id }}-worker-subnet"
           {{- else if .subnet_id }}
             id: "{{ .subnet_id }}"
           {{- else }}
             filters:
               - name: tag:Name
                 values:
-                  - "{{ $.Values.cluster.id }}-private-{{ $.Values.cluster.region }}{{ .az }}"
+                  - "{{ $.Values.cluster.id }}-subnet-private-{{ $.Values.cluster.region }}{{ .az }}"
           {{ end }}
-          tags: 
+          {{- if .loadBalancers }}
+          loadBalancers:
+            {{- .loadBalancers | nindent 12 }}
+          {{- end }}
+          tags:
             - name: kubernetes.io/cluster/{{ $.Values.cluster.id }}
               value: owned
+            {{- if .tags }}
+            {{- .tags | nindent 12 }}
+            {{- end }}
           userDataSecret:
             name: worker-user-data
           {{ end }}

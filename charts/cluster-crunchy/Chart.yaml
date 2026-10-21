@@ -2,13 +2,13 @@ apiVersion: v2
 # Name of this Helm chart
 name: cluster-crunchy
 # Description of this Helm chart
-description: Helm chart used to configure PostgreSQL cluster using CrunchyDB operator
+description: Helm chart used to configure highly available PostgreSQL clusters using the Crunchy Postgres for Kubernetes operator, with S3 backups, restore, monitoring and network policies
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.278
+version: 21.3.279
 # Version name of the crunchy operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
-appVersion: "5.8.7"
+appVersion: "5.8.9"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-crunchy.svg
 # Kube minimum version
@@ -41,12 +41,12 @@ maintainers:
 dependencies:
   - name: project
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.222"
+    version: "21.3.278"
     alias: project
     condition: project.enabled
   - name: operator
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.222"
+    version: "21.3.278"
     alias: operator
     condition: operator.enabled
 
@@ -61,7 +61,7 @@ annotations:
   artifacthub.io/prerelease: "true"
   # Artifacthub is an operator chart
   artifacthub.io/operator: "false"
-  # Artifacthub chart recommandations
+  # Artifacthub chart recommendations
   startx.io/recommendations: |
     - name: Startx basic chart - Project
       url: https://helm-repository.readthedocs.io/en/latest/charts/project
@@ -73,6 +73,16 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
+    - kind: added
+      description: "High availability settings per cluster: replicas, synchronous replication, anti-affinity, resources, parameters, owner password and extensions"
+    - kind: added
+      description: "S3 backups with pgBackRest (s3.list endpoints, retention, schedules), restore into a new cluster or in place"
+    - kind: added
+      description: "PodMonitor, PrometheusRule alerts and NetworkPolicy per cluster"
     - kind: changed
-      description: "Align all charts to v21.3.278"
+      description: "pgBouncer, pgAdmin and pg_hba trust become optional (enabled by default); instance and pgBackRest images default to the operator images; empty storageClassName uses the default StorageClass"
+    - kind: changed
+      description: "Crunchy Postgres for Kubernetes 5.8.9; Argo CD sync waves aligned on the repository conventions (Secrets and ConfigMaps 1, PostgresCluster 15, monitoring 30)"
+    - kind: fixed
+      description: "pgAdmin volume claim without accessModes, refused by the PostgresCluster CRD of the operator 5.8"
   artifacthub.io/containsSecurityUpdates: "false"

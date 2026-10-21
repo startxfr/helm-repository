@@ -1,0 +1,178 @@
+# Values for the two PostgreSQL clusters of a highly available Red Hat Quay registry (see the cluster-quay chart,
+# which embeds this chart as the crunchy sub-chart). Two instances per cluster, synchronous replication, SCRAM
+# authentication, pgBackRest backups to an S3 bucket, monitoring and network policies.
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: crunchy
+  app: quay-crunchy
+  version: "5.8.9"
+
+loader:
+  enabled: false
+  list: []
+
+# Secret values are Argo CD Vault Plugin placeholders: replace the KV path by yours, or use a values file kept out of Git
+s3:
+  list:
+    - name: quay-backup
+      namespace: quay-postgres
+      endpoint: s3.example.com
+      port: ""
+      region: us-east-1
+      bucket: quay-pgbackrest
+      accessKey: <path:kv/data/quay/prod#pgbackrest_access_key>
+      secretKey: <path:kv/data/quay/prod#pgbackrest_secret_key>
+      caCert: ""
+      uriStyle: path
+
+cluster:
+  enabled: false
+  list:
+    - name: quay-db
+      enabled: true
+      namespace: quay-postgres
+      postgresVersion: 17
+      storageClassName: ""
+      storageInstanceSize: "100Gi"
+      username: quay
+      database: quay
+      password: <path:kv/data/quay/prod#quay_db_password>
+      extensions:
+        - pg_trgm
+      replicas: 2
+      synchronous: true
+      avoidInfraNodes: true
+      pgHbaTrust: false
+      pgbouncer:
+        enabled: false
+      pgadmin:
+        enabled: false
+      resources:
+        requests:
+          cpu: "2"
+          memory: 8Gi
+        limits:
+          memory: 16Gi
+      parameters:
+        max_connections: "2000"
+        shared_buffers: "2GB"
+        effective_cache_size: "6GB"
+      backup:
+        enabled: true
+        type: s3
+        s3: quay-backup
+        pathPrefix: ""
+        retentionDays: 14
+        schedules:
+          full: "0 1 * * 0"
+          differential: "0 1 * * 1-6"
+      restore:
+        enabled: false
+        source: ""
+        target: ""
+      inPlaceRestore:
+        enabled: false
+        target: ""
+      monitoring:
+        enabled: true
+      networkPolicy:
+        enabled: true
+        allowedNamespaces:
+          - quay-enterprise
+    - name: clair-db
+      enabled: true
+      namespace: quay-postgres
+      postgresVersion: 15
+      storageClassName: ""
+      storageInstanceSize: "50Gi"
+      username: clair
+      database: clair
+      password: <path:kv/data/quay/prod#clair_db_password>
+      extensions:
+        - uuid-ossp
+      replicas: 2
+      synchronous: true
+      avoidInfraNodes: true
+      pgHbaTrust: false
+      pgbouncer:
+        enabled: false
+      pgadmin:
+        enabled: false
+      resources:
+        requests:
+          cpu: "1"
+          memory: 4Gi
+        limits:
+          memory: 8Gi
+      parameters:
+        max_connections: "2000"
+        shared_buffers: "1GB"
+        effective_cache_size: "3GB"
+      backup:
+        enabled: true
+        type: s3
+        s3: quay-backup
+        pathPrefix: ""
+        retentionDays: 14
+        schedules:
+          full: "0 1 * * 0"
+          differential: "0 1 * * 1-6"
+      restore:
+        enabled: false
+        source: ""
+        target: ""
+      inPlaceRestore:
+        enabled: false
+        target: ""
+      monitoring:
+        enabled: true
+      networkPolicy:
+        enabled: true
+        allowedNamespaces:
+          - quay-enterprise
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "quay-postgres"
+    display_name: "Quay - PostgreSQL databases"
+    requester: startx
+    description: PostgreSQL databases of the Quay registry, Crunchy Postgres for Kubernetes, configured by STARTX
+    # Argo CD never deletes the namespace of the databases, whatever the pruning policy of the Application
+    additionalAnnotations: |-
+      argocd.argoproj.io/sync-options: Prune=false
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "crunchy-postgres-operator"
+    namespace: "quay-postgres"
+    version: "v5.8.9"
+    operator:
+      channel: v5
+      name: crunchy-postgres-operator
+      installPlanApproval: Manual
+      csv: postgresoperator
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "crunchy-operator"
+    namespace: "quay-postgres"
+    providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"

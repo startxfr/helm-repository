@@ -1,0 +1,808 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "blueprints": {
+            "type": "array"
+        },
+        "context": {
+            "type": "object",
+            "properties": {
+                "app": {
+                    "type": "string"
+                },
+                "cluster": {
+                    "type": "string"
+                },
+                "component": {
+                    "type": "string"
+                },
+                "environment": {
+                    "type": "string"
+                },
+                "scope": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "glue": {
+            "type": "object",
+            "properties": {
+                "adminAllowedUsers": {
+                    "type": "string"
+                },
+                "credentialEncryptionKey": {
+                    "type": "string"
+                },
+                "keycloak": {
+                    "type": "object",
+                    "properties": {
+                        "baseUrl": {
+                            "type": "string"
+                        },
+                        "bindDn": {
+                            "type": "string"
+                        },
+                        "bindPassword": {
+                            "type": "string"
+                        },
+                        "clientId": {
+                            "type": "string"
+                        },
+                        "clientSecret": {
+                            "type": "string"
+                        },
+                        "directoryProvider": {
+                            "type": "string"
+                        },
+                        "directoryUrl": {
+                            "type": "string"
+                        },
+                        "realm": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "langfuse": {
+                    "type": "object",
+                    "properties": {
+                        "baseUrl": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "publicKey": {
+                            "type": "string"
+                        },
+                        "secretKey": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "oauthStateSecret": {
+                    "type": "string"
+                },
+                "secretKey": {
+                    "type": "string"
+                },
+                "slack": {
+                    "type": "object",
+                    "properties": {
+                        "botToken": {
+                            "type": "string"
+                        },
+                        "userToken": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "umami": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "scriptUrl": {
+                            "type": "string"
+                        },
+                        "websiteId": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "vault": {
+                    "type": "object",
+                    "properties": {
+                        "roleId": {
+                            "type": "string"
+                        },
+                        "secretId": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "identity": {
+            "type": "object",
+            "properties": {
+                "backend": {
+                    "type": "object",
+                    "properties": {
+                        "env": {
+                            "type": "object",
+                            "properties": {
+                                "FRONTEND_URL": {
+                                    "type": "string"
+                                },
+                                "IDENTITY_HOST": {
+                                    "type": "string"
+                                },
+                                "MULTIAGENT_HOST": {
+                                    "type": "string"
+                                },
+                                "MULTIAGENT_PORT": {
+                                    "type": "string"
+                                },
+                                "RAG_HOST": {
+                                    "type": "string"
+                                },
+                                "RAG_PORT": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "image": {
+                            "type": "object",
+                            "properties": {
+                                "repository": {
+                                    "type": "string"
+                                },
+                                "tag": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                }
+            }
+        },
+        "mongodb": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "className": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "multiagent_server": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "multiagent_shared_storage": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "className": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "multiagent_temporal_worker": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "project": {
+                    "type": "object",
+                    "properties": {
+                        "additionalLabels": {
+                            "type": "object",
+                            "properties": {
+                                "openshift.io/cluster-monitoring": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "display_name": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "qdrant": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "className": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "rabbitmq": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "global": {
+                    "type": "object",
+                    "properties": {
+                        "storageClass": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "persistence": {
+                    "type": "object",
+                    "properties": {
+                        "storageClass": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "redis": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "registry": {
+                            "type": "string"
+                        },
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "password": {
+                    "type": "string"
+                },
+                "redisConfigMapName": {
+                    "type": "string"
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "storageClassName": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "sharedEnv": {
+            "type": "object",
+            "properties": {
+                "FRONTEND_URL": {
+                    "type": "string"
+                },
+                "IDENTITY_HOST": {
+                    "type": "string"
+                },
+                "MULTIAGENT_HOST": {
+                    "type": "string"
+                },
+                "MULTIAGENT_PORT": {
+                    "type": "string"
+                },
+                "RAG_HOST": {
+                    "type": "string"
+                },
+                "RAG_PORT": {
+                    "type": "string"
+                }
+            }
+        },
+        "temporal": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "storageClassName": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "ui": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_backend": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_rag_celery": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_rag_celery_beat": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        },
+                        "ROLE": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "resources": {
+                    "type": "object",
+                    "properties": {
+                        "limits": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string"
+                                },
+                                "memory": {
+                                    "type": "string"
+                                },
+                                "nvidia.com/gpu": {
+                                    "type": "null"
+                                }
+                            }
+                        },
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "cpu": {
+                                    "type": "string"
+                                },
+                                "memory": {
+                                    "type": "string"
+                                },
+                                "nvidia.com/gpu": {
+                                    "type": "null"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_rag_server": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "env": {
+                    "type": "object",
+                    "properties": {
+                        "FRONTEND_URL": {
+                            "type": "string"
+                        },
+                        "IDENTITY_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_HOST": {
+                            "type": "string"
+                        },
+                        "MULTIAGENT_PORT": {
+                            "type": "string"
+                        },
+                        "RAG_HOST": {
+                            "type": "string"
+                        },
+                        "RAG_PORT": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fullnameOverride": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "repository": {
+                            "type": "string"
+                        },
+                        "tag": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unifai_rag_shared_storage": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "storage": {
+                    "type": "object",
+                    "properties": {
+                        "className": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

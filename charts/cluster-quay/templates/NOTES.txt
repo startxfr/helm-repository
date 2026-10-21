@@ -21,4 +21,12 @@ Private image registry (quay) is enabled, at the cluster level, with the followi
 {{ include "operator.notes" .Values.operatorsec }}
 {{- end }}{{- end }}
 
+{{- if .Values.crunchy }}{{- if .Values.crunchy.enabled }}
+{{ include "cluster-crunchy.notes" .Values.crunchy }}
+{{- end }}{{- end }}
+
+{{- if .Values.cloudnativedb }}{{- if .Values.cloudnativedb.enabled }}
+{{ include "cluster-cloudnativedb.notes" .Values.cloudnativedb }}
+{{- end }}{{- end }}
+
 {{ include "cluster-quay.notes" .Values }}

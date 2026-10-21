@@ -6,7 +6,7 @@ context: &context
   environment: infra
   component: quay
   app: startx-quay
-  version: "3.16.2"
+  version: "3.18.0"
 rhn:
   enabled: true
   user: startx_rhnuser
@@ -17,21 +17,18 @@ route:
 quay:
   enabled: false
   hooked: false
-  image: 'quay.io/redhat/quay:v3.2.0'
-  size: '10Gi'
-  storageClass: 'startx-aws-generic-retain'
-  storageAccess: 'ReadWriteOnce'
   pullSecretEnabled: true
-  admin: 
+  admin:
+    enabled: true
     username: "admin"
-    password: "secretdemerde"
+    password: "mysecret123"
     email: "cl@startx.fr"
-project: 
+project:
   enabled: false
   infra: false
-  context: 
+  context:
     <<: *context
-  project: 
+  project:
     enabled: true
     hooked: false
     type: namespace
@@ -41,25 +38,25 @@ project:
     description: Quay enterprise registry configured by STARTX
 operator:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: true
     hooked: false
     name: "quay-operator"
     namespace: "openshift-startx-quay"
-    version: "v3.16.2"
-    operator: 
-      channel: stable-3.16
+    version: "v3.18.0"
+    operator:
+      channel: stable-3.18
       name: quay-operator
       installPlanApproval: Manual
       # csv: quay-operator
-      source: 
+      source:
         name: redhat-operators
         namespace: openshift-marketplace
-      config: 
+      config:
         infra: false
-        # resources: 
+        # resources:
         #   limits:
         #     cpu: 400m
         #   requests:
@@ -72,7 +69,7 @@ operator:
     providedAPIs: "QuayEcosystem.v1alpha1.redhatcop.redhat.io,QuayRegistry.v1.quay.redhat.com"
 operatorsec:
   enabled: false
-  context: 
+  context:
     <<: *context
   subscription:
     enabled: false

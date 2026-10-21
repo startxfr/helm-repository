@@ -1,0 +1,144 @@
+# Default values for cluster-qdrant.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-qdrant
+  # Version name of this application (default use Chart appVersion)
+  version: "v1.19.2"
+
+# Configure the Qdrant vector database
+# Qdrant (https://qdrant.tech) has no actively maintained Kubernetes operator : the community
+# operators (qdrant-operator/qdrant-operator, ganochenkodg/qdrant-operator) are dormant or
+# archived and never published on OperatorHub/OLM, and Qdrant's own real operator is closed-source
+# (Private/Hybrid Cloud only). This chart therefore wraps Qdrant's official "qdrant-helm" vendor
+# Helm chart (https://github.com/qdrant/qdrant-helm) directly as a dependency (alias "qdrant"
+# below), deploying a plain StatefulSet instead of an Operator Subscription + Custom Resource.
+# Every key under this "qdrant" block is merged directly into the qdrant-helm subchart's own
+# values (Helm merges values under a top-level key matching a dependency's "alias" into that
+# subchart's values root) -- see https://github.com/qdrant/qdrant-helm/blob/main/charts/qdrant/values.yaml
+# for the full upstream reference.
+# This chart deploys a single Qdrant instance per Helm release : qdrant-helm has no CRD to range
+# over (unlike this repository's cluster-redis chart), so multiple independent Qdrant clusters
+# are achieved by installing multiple releases / ArgoCD Applications of this same chart with a
+# different release name and project.project.name, not a list[] of instances.
+qdrant:
+  # Enable deployment of the Qdrant StatefulSet via the vendor qdrant-helm chart
+  enabled: true
+
+  # Single-instance default : one Qdrant node for this release. To scale, raise replicaCount and
+  # set config.cluster.enabled to true (both apply to this single StatefulSet, qdrant-helm has no
+  # per-node subchart)
+  replicaCount: 1
+
+  image:
+    # Upstream Qdrant engine image
+    repository: qdrant/qdrant
+    pullPolicy: IfNotPresent
+    # Leave empty to inherit the qdrant-helm chart's own default (matches this chart's appVersion)
+    tag: ""
+
+  # OpenShift SCC compatibility : the vendor chart hardcodes runAsUser/runAsGroup/fsGroup, which
+  # the default restricted-v2 SCC rejects. Nulling them out lets OpenShift auto-assign UID/fsGroup
+  # from the namespace's allocated range (preferred over granting a permissive SCC). Nulling
+  # runAsUser also skips the vendor chart's "ensure-dir-ownership" init container, which is itself
+  # guarded on this same field, so there is no side effect left to patch separately.
+  containerSecurityContext:
+    runAsNonRoot: true
+    runAsUser: null
+    runAsGroup: null
+    allowPrivilegeEscalation: false
+    privileged: false
+    readOnlyRootFilesystem: true
+    # Vendor chart does not set this ; restricted-v2 SCC requires it
+    capabilities:
+      drop: ["ALL"]
+
+  podSecurityContext:
+    fsGroup: null
+
+  # Persistence for the main Qdrant storage (collections, WAL)
+  persistence:
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    # storageClassName: ""   # leave commented to use the cluster default StorageClass
+
+  # Optional separate PVC for snapshots -- left disabled (snapshots fall back to an emptyDir)
+  snapshotPersistence:
+    enabled: false
+
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+
+  # REST (6333) / gRPC (6334) / P2P (6335) ClusterIP service, exposed externally by this chart's
+  # own OpenShift Route (see the "route" block below)
+  service:
+    type: ClusterIP
+
+  # The vendor chart's own Ingress has no OpenShift/Route awareness ; left disabled in favor of
+  # this chart's own templates/route.yaml
+  ingress:
+    enabled: false
+
+  # API key : false (disabled) / true (auto-generate, see NOTES.txt) / string (fixed value) /
+  # valueFrom.secretKeyRef (external secret). Defaults to disabled for the simplest first install ;
+  # strongly recommended to set this to true (or a fixed value / external secret) before exposing
+  # the Route externally.
+  apiKey: false
+  # readOnlyApiKey: false
+
+  config:
+    cluster:
+      # Single-replica default : cluster mode has no effect until replicaCount is greater than 1
+      enabled: false
+
+  # Prometheus Operator ServiceMonitor -- disabled by default. Enabling it on OpenShift requires
+  # user-workload-monitoring to be enabled cluster-wide first (cluster-scoped monitoring config,
+  # out of scope for this chart)
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+  podDisruptionBudget:
+    enabled: false
+
+# OpenShift Route exposing the qdrant Service's REST API port (6333/http). The vendor qdrant-helm
+# chart ships no Route template (only a plain networking.k8s.io/v1 Ingress with no OpenShift
+# integration), so this chart provides its own templates/route.yaml for this.
+route:
+  # Enable creation of the Route resource
+  enabled: true
+  # Hostname for the route (empty lets OpenShift assign a hostname on the default apps domain)
+  host: ""
+  # Termination type : edge (TLS terminated at the router, backend plain HTTP) or reencrypt
+  # (backend talks TLS -- requires qdrant.config.service.enable_tls to be true)
+  termination: edge
+  # Name of the backend qdrant Service port to target (must match qdrant-helm's own service port name)
+  targetPort: http
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-qdrant"
+    display_name: "Startx QDRANT"
+    description: Qdrant vector database configured by STARTX

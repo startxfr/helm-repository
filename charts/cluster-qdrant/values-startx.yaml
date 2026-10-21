@@ -1,0 +1,24 @@
+# STARTX values for cluster-qdrant : Qdrant deployed in a "default-qdrant" namespace
+
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: qdrant
+  app: default-qdrant
+  version: "v1.19.2"
+
+qdrant:
+  enabled: true
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-qdrant"
+    display_name: "Startx QDRANT"
+    description: Qdrant vector database configured by STARTX
