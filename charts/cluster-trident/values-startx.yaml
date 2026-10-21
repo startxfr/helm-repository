@@ -1,0 +1,158 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: storage
+  app: trident
+  version: "26.2.1"
+
+orchestrator:
+  enabled: true
+  hooked: false
+  apiVersion: "trident.netapp.io/v1"
+  name: "trident"
+  spec:
+    IPv6: false
+    debug: true
+    enableForceDetach: false
+    imagePullSecrets: []
+    imageRegistry: ''
+    namespace: trident
+    nodePrep: null
+    silenceAutosupport: false
+
+backends:
+  enabled: true
+  hooked: false
+  apiVersion: "trident.netapp.io/v1"
+  list:
+    - name: ""
+      backendName: ""
+      storageDriverName: ""
+      version: 1
+      deletionPolicy: retain
+      nfsMountOptions: "nfsvers=3"
+      managementLIF: ""
+      dataLIF: ""
+      svm: ""
+      aggregate: "aggr2"
+      autoExportPolicy: true
+      limitVolumeSize: "...Gi"
+      credentials:
+        secretName: ""
+        username: ""
+        password: ""
+
+storageClasses:
+  enabled: true
+  hooked: false
+  provisioner: "csi.trident.netapp.io"
+  defaultMountOptions:
+    - nfsvers=3
+  list:
+    - name: "ontap-nas-standard"
+      isDefault: true
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+      parameters:
+        backendType: "ontap-nas"
+        provisioningType: "thin"
+        snapshots: "true"
+        snapshotPolicy: "default"
+        snapshotReserve: "5"
+        splitOnClone: "false"
+        unixPermissions: "0755"
+    - name: "ontap-nas-premium"
+      isDefault: false
+      reclaimPolicy: Retain
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+      parameters:
+        backendType: "ontap-nas"
+        provisioningType: "thick"
+        snapshots: "true"
+        snapshotPolicy: "default"
+        snapshotReserve: "10"
+        splitOnClone: "true"
+        unixPermissions: "0755"
+    - name: "ontap-nas-bronze"
+      isDefault: false
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+      parameters:
+        backendType: "ontap-nas"
+        provisioningType: "thin"
+        snapshots: "false"
+        snapshotPolicy: "none"
+        unixPermissions: "0755"
+    - name: "ontap-nas-backup"
+      isDefault: false
+      reclaimPolicy: Retain
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+      parameters:
+        backendType: "ontap-nas"
+        provisioningType: "thin"
+        snapshots: "true"
+        snapshotPolicy: "default"
+        snapshotReserve: "20"
+        splitOnClone: "false"
+        unixPermissions: "0755"
+
+volumeSnapshotClasses:
+  enabled: true
+  hooked: false
+  driver: "csi.trident.netapp.io"
+  list:
+    - name: "ontap-nas-snapclass"
+      isDefault: true
+      deletionPolicy: Delete
+      kastenDefault: true
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: true
+  context:
+    <<: *context
+  project:
+    enabled: true
+    type: namespace
+    name: "trident"
+    display_name: "Startx Trident"
+    requester: startx
+    description: NetApp Trident CSI namespace configured by STARTX
+  rbac:
+    enabled: false
+  networkpolicy:
+    enabled: false
+  limits:
+    enabled: false
+  quotas:
+    enabled: false
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: true
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "trident-operator"
+    namespace: "openshift-operators"
+    version: "v26.2.1"
+    operator:
+      channel: "stable"
+      name: trident-operator
+      installPlanApproval: Automatic
+      csv: trident-operator
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+  # OperatorGroup not needed: 'openshift-operators' already has a global one
+  operatorGroup:
+    enabled: false

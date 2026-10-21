@@ -1,0 +1,228 @@
+# Default values for trident.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: storage
+  # Application name (functionnal tenant, default use Chart name)
+  app: trident
+  # Version name of this application (default use Chart appVersion)
+  version: "26.2.1"
+
+# Configuration of the TridentOrchestrator (deploys the trident control-plane)
+orchestrator:
+  # Enable the deployment of the TridentOrchestrator CR
+  enabled: false
+  # Activate the orchestrator as a helm hook
+  hooked: false
+  # The ApiVersion of the TridentOrchestrator
+  apiVersion: "trident.netapp.io/v1"
+  # Name of the TridentOrchestrator CR
+  name: "trident"
+  # Specifications of the TridentOrchestrator
+  spec:
+    # Enable IPv6
+    IPv6: false
+    # Enable debug logging for trident
+    debug: true
+    # Force-detach volumes from nodes (use with care)
+    enableForceDetach: false
+    # Image pull secrets to use to pull trident images
+    imagePullSecrets: []
+    # Custom image registry to use to pull trident images
+    imageRegistry: ''
+    # Namespace where the trident control-plane will be deployed
+    namespace: trident
+    # nodePrep configuration (set to null to disable)
+    nodePrep: null
+    # Silence autosupport telemetry to NetApp
+    silenceAutosupport: false
+
+# Configuration of a TridentBackendConfig (ONTAP-NAS in this default)
+# Multiple backends can be added; each entry creates one TridentBackendConfig + matching Secret
+backends:
+  # Enable the deployment of TridentBackendConfig CR(s)
+  enabled: false
+  # Activate the backend as a helm hook (deployed after the orchestrator is ready)
+  hooked: false
+  # The ApiVersion of the TridentBackendConfig
+  apiVersion: "trident.netapp.io/v1"
+  # List of backends to declare
+  list:
+    - # Name of the TridentBackendConfig CR
+      name: ""
+      # Friendly name as seen from the backend storage system
+      backendName: ""
+      # Driver to use (ontap-nas, ontap-san, ontap-nas-economy, ...)
+      storageDriverName: ""
+      # Version of the backend config schema
+      version: 1
+      # Deletion policy (retain | delete)
+      deletionPolicy: retain
+      # NFS mount options forwarded to clients
+      nfsMountOptions: "nfsvers=3"
+      # Management LIF (ONTAP cluster mgmt interface)
+      managementLIF: ""
+      # Data LIF (NFS data interface)
+      dataLIF: ""
+      # ONTAP SVM (Storage Virtual Machine) name
+      svm: ""
+      # Aggregate to use for provisioning new volumes
+      aggregate: "aggr2"
+      # Auto-manage export policy
+      autoExportPolicy: true
+      # Hard upper bound on individual volume size
+      limitVolumeSize: "...Gi"
+      # Backend credentials (rendered as a Secret in the trident namespace)
+      credentials:
+        # Name of the secret holding credentials for this backend.
+        # If left empty, defaults to "<backend.name>-secret".
+        secretName: ""
+        # ONTAP/SVM username
+        username: ""
+        # ONTAP/SVM password
+        password: ""
+
+# StorageClasses to create on top of the Trident backend(s).
+# All four classes share the same provisioner and backendType -> they all
+# land on whichever Trident backend matches `backendType: ontap-nas`.
+storageClasses:
+  # Enable rendering of StorageClass resources
+  enabled: false
+  # Activate as a helm hook (runs after the backend is registered)
+  hooked: false
+  # CSI provisioner — always csi.trident.netapp.io for Trident
+  provisioner: "csi.trident.netapp.io"
+  # Default mount options applied to every class unless overridden per item
+  defaultMountOptions:
+    - nfsvers=3
+  # List of storage classes
+  list:
+    # ----- standard (= the cluster default) -----
+    - name: "ontap-nas-standard"
+      isDefault: true
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+      parameters:
+        backendType: "ontap-nas"
+        provisioningType: "thin"
+        snapshots: "true"
+        snapshotPolicy: "default"
+        snapshotReserve: "5"
+        splitOnClone: "false"
+        unixPermissions: "0755"
+    # ----- premium (Retain + thick, for databases / prod) -----
+    - name: "ontap-nas-premium"
+      isDefault: false
+      reclaimPolicy: Retain
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+      parameters:
+        backendType: "ontap-nas"
+        provisioningType: "thick"
+        snapshots: "true"
+        snapshotPolicy: "default"
+        snapshotReserve: "10"
+        splitOnClone: "true"
+        unixPermissions: "0755"
+    # ----- bronze (cheap, no snapshots, for scratch / CI) -----
+    - name: "ontap-nas-bronze"
+      isDefault: false
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+      parameters:
+        backendType: "ontap-nas"
+        provisioningType: "thin"
+        snapshots: "false"
+        snapshotPolicy: "none"
+        unixPermissions: "0755"
+    # ----- backup (large snapshot reserve, Retain, for Kasten / restore data) -----
+    - name: "ontap-nas-backup"
+      isDefault: false
+      reclaimPolicy: Retain
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+      parameters:
+        backendType: "ontap-nas"
+        provisioningType: "thin"
+        snapshots: "true"
+        snapshotPolicy: "default"
+        snapshotReserve: "20"
+        splitOnClone: "false"
+        unixPermissions: "0755"
+
+# VolumeSnapshotClasses — required by Kasten to take CSI snapshots of PVCs.
+volumeSnapshotClasses:
+  enabled: false
+  hooked: false
+  driver: "csi.trident.netapp.io"
+  list:
+    - name: "ontap-nas-snapclass"
+      isDefault: true
+      deletionPolicy: Delete
+      # Optional Kasten label to mark a default snapshotclass it can use
+      kastenDefault: true
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: false
+    type: namespace
+    name: "trident"
+    display_name: "Trident"
+    description: NetApp Trident CSI namespace configured by startx
+  rbac:
+    enabled: false
+    groups:
+      - id: devops-view
+        name: devops
+        role: view
+      - id: ops-admin
+        name: ops
+        role: admin
+  networkpolicy:
+    enabled: false
+  limits:
+    enabled: false
+  quotas:
+    enabled: false
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+# Default: subscription only, OperatorGroup disabled because the Trident operator
+# is installed in 'openshift-operators' which already provides a global OperatorGroup.
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "trident-operator"
+    namespace: "openshift-operators"
+    # Use the "vX.Y.Z" prefix here so the rendered startingCSV is e.g. trident-operator.v26.2.1
+    version: "v26.2.1"
+    operator:
+      channel: "stable"
+      name: trident-operator
+      installPlanApproval: Automatic
+      csv: trident-operator
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "openshift-operators"
+    namespace: "openshift-operators"
+    providedAPIs: "TridentOrchestrator.v1.trident.netapp.io"

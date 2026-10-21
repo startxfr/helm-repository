@@ -1,0 +1,59 @@
+{{- if .Values.backends }}
+{{- if .Values.backends.enabled }}
+{{- $namespace := .Values.orchestrator.spec.namespace | default "trident" -}}
+{{- $apiVersion := .Values.backends.apiVersion | default "trident.netapp.io/v1" -}}
+{{- $root := . -}}
+{{- range $idx, $backend := .Values.backends.list }}
+{{- $secretName := $backend.credentials.secretName | default (printf "%s-secret" $backend.name) }}
+---
+apiVersion: {{ $apiVersion | quote }}
+kind: TridentBackendConfig
+metadata:
+  name: {{ $backend.name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "trident.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ $backend.name }}-tridentbackendconfig"
+  annotations:
+    {{- include "trident.annotations" $root | nindent 4 }}
+    {{- if $.Values.backends.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "20"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  version: {{ $backend.version | default 1 }}
+  backendName: {{ $backend.backendName | default $backend.name | quote }}
+  storageDriverName: {{ $backend.storageDriverName | default "ontap-nas" | quote }}
+  {{- if $backend.deletionPolicy }}
+  deletionPolicy: {{ $backend.deletionPolicy | quote }}
+  {{- end }}
+  {{- if $backend.nfsMountOptions }}
+  nfsMountOptions: {{ $backend.nfsMountOptions | quote }}
+  {{- end }}
+  {{- if $backend.managementLIF }}
+  managementLIF: {{ $backend.managementLIF | quote }}
+  {{- end }}
+  {{- if $backend.dataLIF }}
+  dataLIF: {{ $backend.dataLIF | quote }}
+  {{- end }}
+  {{- if $backend.svm }}
+  svm: {{ $backend.svm | quote }}
+  {{- end }}
+  {{- if $backend.aggregate }}
+  aggregate: {{ $backend.aggregate | quote }}
+  {{- end }}
+  {{- if hasKey $backend "autoExportPolicy" }}
+  autoExportPolicy: {{ $backend.autoExportPolicy }}
+  {{- end }}
+  {{- if $backend.limitVolumeSize }}
+  limitVolumeSize: {{ $backend.limitVolumeSize | quote }}
+  {{- end }}
+  credentials:
+    name: {{ $secretName | quote }}
+{{- end }}
+{{- end }}
+{{- end }}

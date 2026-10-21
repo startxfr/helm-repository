@@ -1,0 +1,182 @@
+# Default values for kasten.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organisational tenant)
+  scope: myscope
+  # Name of the cluster running this application (plateform tenant)
+  cluster: default
+  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: backup
+  # Application name (functionnal tenant, default use Chart name)
+  app: kasten
+  # Version name of this application (default use Chart appVersion)
+  version: "8.5.8"
+
+# Configuration of the K10 instance (the Kasten data-management platform)
+k10:
+  # Enable the deployment of the K10 CR
+  enabled: false
+  # Activate the K10 CR as a helm hook
+  hooked: false
+  # The ApiVersion of the K10 CR
+  apiVersion: "apik10.kasten.io/v1alpha1"
+  # Name of the K10 CR
+  name: "k10"
+  # Authentication settings of the K10 instance
+  auth:
+    basicAuth:
+      enabled: false
+      htpasswd: ''
+      secretName: ''
+    tokenAuth:
+      enabled: true
+  # Global settings (persistence / catalog)
+  global:
+    persistence:
+      catalog:
+        # Size of the catalog PVC. Empty string lets the operator pick its default.
+        size: ''
+      # StorageClass to use for K10 PVCs. Empty string lets the operator pick the cluster default.
+      storageClass: ''
+  # Metering mode (e.g. 'airgap'). Empty string keeps the default behaviour.
+  metering:
+    mode: ''
+  # External exposure of the K10 dashboard
+  route:
+    enabled: true
+    # Hostname to expose. Empty string lets the router compute it.
+    host: ''
+    tls:
+      enabled: true
+# Kasten K10 Policy CRs (backup + optional export schedules).
+# Each entry creates one Policy + an optional Secret holding the
+# migrationToken receiveString (when export is configured).
+policies:
+  # Enable rendering of Policy resources
+  enabled: false
+  # Activate as a helm hook (recommended; the Policy CRD only exists once K10
+  # is up, so creating policies in the same wave as the K10 CR fails on fresh
+  # installs).
+  hooked: true
+  # The ApiVersion of the Policy CR
+  apiVersion: "config.kio.kasten.io/v1alpha1"
+  # List of policies to declare
+  list: []
+  # Example shape (uncomment and adapt in values-startx.yaml or the umbrella):
+  #
+  # list:
+  #   - name: free-pro-infra-backup
+  #     comment: Backup all of openshift namespaces
+  #     frequency: "@daily"
+  #     paused: false
+  #     backup:
+  #       profile:
+  #         name: jso000ac59
+  #         # namespace defaults to project.project.name (kasten-io)
+  #       imageRepoProfile:
+  #         name: jso000ac59
+  #     # Optional second action — replicate backups to a remote profile
+  #     export:
+  #       frequency: "@daily"
+  #       profile:
+  #         name: jso000ac59
+  #       exportData:
+  #         enabled: true
+  #     retention:
+  #       daily: 14
+  #       weekly: 4
+  #       monthly: 0
+  #       yearly: 0
+  #     selector:
+  #       matchExpressions:
+  #         - key: k10.kasten.io/appNamespace
+  #           operator: In
+  #           values:
+  #             - openshift-monitoring
+  #             - openshift-logging
+  #             # ... etc
+profiles:
+  enabled: true
+  hooked: true
+  apiVersion: "config.kio.kasten.io/v1alpha1"
+  list:
+    # - name: jso000ac59
+    #   type: Location
+    #   locationSpec:
+    #     type: ObjectStore
+    #     objectStore:
+    #       objectStoreType: S3
+    #       name: "alcatelsubmarin-veeam-kasten"
+    #       region: "fr-lyo"
+    #       endpoint: "https://s3.fr-lyo.freepro.com"
+    #       protectionPeriod: "360h0m0s"
+    #       # Optional — only set if your endpoint uses a self-signed cert
+    #       # skipSSLVerify: false
+    #       # Optional — only set if your S3 backend requires path-style URLs
+    #       # pathType: "PathTypePathStyle"
+    #     credential:
+    #       secretType: AwsAccessKey
+    #       # MODE 1: leave secretName empty -> Secret named "jso000ac59-secret"
+    #       # MODE 2: set secretName -> Secret named what you chose
+    #       # MODE 3: set secretName AND leave access keys empty -> chart references
+    #       #         an existing Secret without rendering one
+    #       secretName: ""
+    #       awsAccessKeyID: "REPLACE_WITH_S3_ACCESS_KEY"
+    #       awsSecretAccessKey: "REPLACE_WITH_S3_SECRET_KEY"
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: false
+    type: namespace
+    name: "kasten-io"
+    display_name: "Kasten K10"
+    description: Kasten K10 namespace configured by startx
+  rbac:
+    enabled: false
+    groups:
+      - id: devops-view
+        name: devops
+        role: view
+      - id: ops-admin
+        name: ops
+        role: admin
+  networkpolicy:
+    enabled: false
+  limits:
+    enabled: false
+  quotas:
+    enabled: false
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "k10-kasten-operator-rhmp"
+    namespace: "kasten-io"
+    # Use the "vX.Y.Z" prefix here so the rendered startingCSV is e.g. k10-kasten-operator-rhmp.v8.5.8
+    version: "v8.5.8"
+    operator:
+      channel: "stable"
+      name: k10-kasten-operator-rhmp
+      installPlanApproval: Automatic
+      csv: k10-kasten-operator-rhmp
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+  # K10 lives in its own namespace -> we DO need an OperatorGroup here.
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "kasten-io"
+    namespace: "kasten-io"
+    providedAPIs: "K10.v1alpha1.apik10.kasten.io"
