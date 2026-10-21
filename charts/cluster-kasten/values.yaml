@@ -1,16 +1,16 @@
-# Default values for kasten.
+# Default values for cluster-kasten.
 
 # Application deployment context
 context: &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
-  # Name of the cluster running this application (plateform tenant)
+  # Name of the cluster running this application (platform tenant)
   cluster: default
-  # Name of the environement for this application (ex: dev, factory, preprod or prod)
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
   # Component name of this application (logical tenant)
   component: backup
-  # Application name (functionnal tenant, default use Chart name)
+  # Application name (functional tenant, default use Chart name)
   app: kasten
   # Version name of this application (default use Chart appVersion)
   version: "8.5.8"
@@ -98,9 +98,14 @@ policies:
   #             - openshift-monitoring
   #             - openshift-logging
   #             # ... etc
+# Kasten K10 Profile CRs (backup locations such as S3 object stores).
+# Each entry creates one Profile + an optional Secret holding the credentials.
 profiles:
+  # Enable rendering of Profile resources
   enabled: true
+  # Activate as a helm hook (the Profile CRD only exists once K10 is up)
   hooked: true
+  # The ApiVersion of the Profile CR
   apiVersion: "config.kio.kasten.io/v1alpha1"
   list:
     # - name: jso000ac59

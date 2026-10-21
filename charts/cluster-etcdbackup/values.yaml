@@ -1,12 +1,18 @@
-# Default values for etcd-backup.
+# Default values for cluster-etcdbackup.
 
 # Application deployment context
 context: &context
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
+  # Name of the cluster running this application (platform tenant)
   cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
   environment: myenv
+  # Component name of this application (logical tenant)
   component: backup
+  # Application name (functional tenant, default use Chart name)
   app: etcd-backup
+  # Version name of this application (default use Chart appVersion)
   version: "1.0.0"
 
 # Master switch for the etcd-backup CronJob + its supporting resources
@@ -70,7 +76,7 @@ etcdBackup:
     noBackupForHours: 24
     severity: critical
 
-# Configuration of the project sub-chart (manages the namespace)
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project:
   enabled: false
   context:

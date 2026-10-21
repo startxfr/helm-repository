@@ -1,0 +1,119 @@
+# Auto-generated values-app file for deploying cluster-kasten via argocd
+# Source: examples/argocd/ from the cluster-kasten chart
+
+argocd_project:
+  enabled: true
+  list:
+    - name: 'infra-kasten'
+      namespace: 'openshift-gitops'
+      wave: "-7"
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'kasten-io'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles: 
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, proj:infra-kasten:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+
+# Applications
+application:
+  enabled: true
+  list:
+    # Application configuration and instances
+    - name: 'infra-kasten-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "17"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-kasten'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-kasten'
+        targetRevision: stable
+      helm: |
+        valueFiles:
+          - values-startx.yaml
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          k10:
+            enabled: true
+          profiles:
+            enabled: true
+          policies:
+            enabled: true
+    # Installs and configures the operator
+    - name: 'infra-kasten-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "17"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-kasten'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-kasten'
+        targetRevision: stable
+      helm: |
+        valueFiles:
+          - values-startx.yaml
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: true
+          k10:
+            enabled: false
+          profiles:
+            enabled: false
+          policies:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-kasten-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-kasten'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-kasten'
+        targetRevision: stable
+      helm: |
+        valueFiles:
+          - values-startx.yaml
+        values: |
+          project:
+            enabled: true
+          operator:
+            enabled: false
+          k10:
+            enabled: false
+          profiles:
+            enabled: false
+          policies:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: true
+  list: []

@@ -24,7 +24,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   type: {{ $profile.type | default "Location" }}
   locationSpec:
@@ -75,7 +75,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "1"
 stringData:
   aws_access_key_id: {{ $credential.awsAccessKeyID | quote }}
   aws_secret_access_key: {{ $credential.awsSecretAccessKey | quote }}

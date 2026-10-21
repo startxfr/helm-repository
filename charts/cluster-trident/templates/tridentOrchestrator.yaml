@@ -18,7 +18,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "15"
 spec:
   IPv6: {{ .Values.orchestrator.spec.IPv6 | default false }}
   debug: {{ .Values.orchestrator.spec.debug | default false }}

@@ -1,16 +1,16 @@
 apiVersion: v2
 # Name of this Helm chart
-name: kasten
+name: cluster-kasten
 # Description of this Helm chart
-description: Helm chart used to configure Kasten K10 (operator + K10 CR) at the cluster level
+description: Helm chart used to configure Kasten K10 data management platform (operator, K10 instance, policies, profiles) at the cluster level
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.3
+version: 21.3.278
 # Version name of the K10 operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "8.5.8"
 # Icon of this helm-chart
-icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-backup.svg
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-kasten.svg
 # Kube minimum version
 kubeVersion: ">=1.30.0-0"
 # Keyword list for this chart
@@ -22,7 +22,8 @@ keywords:
   - cluster
   - infrastructure
   - backup
-  - dr
+  - restore
+  - disaster recovery
   - kasten
   - k10
   - veeam
@@ -30,8 +31,8 @@ keywords:
 home: https://helm-repository.readthedocs.io/en/latest
 # Sources and documentation for this chart
 sources:
-  - https://helm-repository.readthedocs.io/en/latest/charts/kasten
-  - https://github.com/startxfr/helm-repository/tree/master/charts/kasten
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-kasten
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kasten
 # Main maintainer contact for this helm chart
 maintainers:
   - name: "STARTX"
@@ -40,13 +41,13 @@ maintainers:
 
 dependencies:
   - name: project
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
-    version: "21.3.0"
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+    version: "21.3.222"
     alias: project
     condition: project.enabled
   - name: operator
-    repository: https://helm-repository.readthedocs.io/en/latest/repos/21/
-    version: "21.3.0"
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+    version: "21.3.222"
     alias: operator
     condition: operator.enabled
 
@@ -63,7 +64,7 @@ annotations:
   artifacthub.io/operator: "true"
   # Artifacthub operator capabilities
   artifacthub.io/operatorCapabilities: "Seamless Upgrades"
-  # Artifacthub chart recommandations
+  # Artifacthub chart recommendations
   startx.io/recommendations: |
     - name: Startx basic chart - Project
       url: https://helm-repository.readthedocs.io/en/latest/charts/project
@@ -75,6 +76,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
-    - kind: added
-      description: "Initial release of Kasten K10 chart"
+    - kind: changed
+      description: "Align chart name, icon, metadata, sync-waves and documentation to repository conventions"
   artifacthub.io/containsSecurityUpdates: "false"

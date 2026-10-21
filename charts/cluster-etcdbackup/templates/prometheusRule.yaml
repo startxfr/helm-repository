@@ -14,7 +14,7 @@ metadata:
     app.kubernetes.io/name: etcd-backup-prometheusrule
   annotations:
     {{- include "etcd-backup.annotations" . | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "12"
+    argocd.argoproj.io/sync-wave: "30"
 spec:
   groups:
     - name: etcd-backup
