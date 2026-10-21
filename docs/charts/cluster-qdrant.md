@@ -100,3 +100,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | Release | Date       | Description                                                                          |
 | ------- | ---------- | ------------------------------------------------------------------------------------- |
 | 21.3.1  | 2026-10-15 | Create chart cluster-qdrant wrapping qdrant-helm (no operator available for Qdrant) |
+| 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
