@@ -1,10 +1,10 @@
 # Values for a highly available Red Hat Quay registry: config bundle rendered by the chart, external S3 object
-# storage, PostgreSQL clusters of Quay and Clair managed by the CloudNativePG operator (cloudnativedb sub-chart:
-# three instances for Quay with quorum failover, two for Clair, synchronous replication, backups to an S3 bucket, monitoring, network policies), Quay
-# operator installed cluster wide, pod disruption budgets. Secret values are Argo CD Vault Plugin placeholders
-# (<path:kv/data/quay/prod#key>): replace the KV path by yours, or use a values file kept out of Git.
-# Deploy it with the three Applications of examples/argocd-ha (project, operator, app): each one switches on the
-# matching flags of the registry and of the cloudnativedb sub-chart.
+# storage, PostgreSQL clusters of Quay and Clair managed by the CloudNativePG operator (cloudnativedb sub-chart: three
+# instances for Quay with quorum failover, two for Clair, synchronous replication, backups to an S3 bucket,
+# monitoring, network policies), Quay operator installed cluster wide, pod disruption budgets. Secret values are Argo
+# CD Vault Plugin placeholders (<path:kv/data/quay/prod#key>): replace the KV path by yours, or use a values file kept
+# out of Git. Deploy it with the three Applications of examples/argocd-ha (project, operator, app): each one switches
+# on the matching flags of the registry and of the cloudnativedb sub-chart.
 # see values.yaml for explanation on each params
 context: &context
   scope: startx
@@ -351,3 +351,6 @@ cloudnativedb:
       name: "cloudnativedb-operator"
       namespace: "quay-postgres"
       providedAPIs: "Cluster.v1.postgresql.cnpg.io,Backup.v1.postgresql.cnpg.io,ScheduledBackup.v1.postgresql.cnpg.io,Pooler.v1.postgresql.cnpg.io,Database.v1.postgresql.cnpg.io,Publication.v1.postgresql.cnpg.io,Subscription.v1.postgresql.cnpg.io,ImageCatalog.v1.postgresql.cnpg.io,ClusterImageCatalog.v1.postgresql.cnpg.io,FailoverQuorum.v1.postgresql.cnpg.io"
+
+percona:
+  enabled: false

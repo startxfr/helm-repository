@@ -1,0 +1,33 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}{{- if .Values.s3 }}{{- if .Values.s3.list }}
+{{- $defaultns := include "cluster-percona.defaultNamespace" . -}}
+
+{{/* One pgBackRest credentials Secret per S3 endpoint */}}
+{{- range .Values.s3.list }}
+{{- $ns := .namespace | default $defaultns -}}
+---
+# Credentials of the backup bucket, read by pgBackRest in the database pods and the backup jobs.
+# Applied server side by Argo CD so that no clear text copy lands in a last-applied-configuration annotation
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "cluster-percona.s3SecretName" . | quote }}
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-percona.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ include "cluster-percona.s3SecretName" . }}-secret"
+  annotations:
+    {{- include "cluster-percona.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+type: Opaque
+stringData:
+  s3.conf: |
+    [global]
+    repo1-s3-key={{ .accessKey }}
+    repo1-s3-key-secret={{ .secretKey }}
+  {{- if .caCert }}
+  s3-ca.crt: |
+    {{- .caCert | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end -}}{{- end }}{{- end -}}{{- end }}

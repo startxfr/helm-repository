@@ -1,0 +1,539 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "cluster": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "autoCreateUserSchema": {
+                                "type": "boolean"
+                            },
+                            "avoidInfraNodes": {
+                                "type": "boolean"
+                            },
+                            "backup": {
+                                "type": "object",
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    },
+                                    "pathPrefix": {
+                                        "type": "string"
+                                    },
+                                    "retentionDays": {
+                                        "type": "integer"
+                                    },
+                                    "s3": {
+                                        "type": "string"
+                                    },
+                                    "schedules": {
+                                        "type": "object",
+                                        "properties": {
+                                            "differential": {
+                                                "type": "string"
+                                            },
+                                            "full": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "builtinExtensions": {
+                                "type": "object"
+                            },
+                            "database": {
+                                "type": "string"
+                            },
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "extensions": {
+                                "type": "array"
+                            },
+                            "image": {
+                                "type": "string"
+                            },
+                            "inPlaceRestore": {
+                                "type": "object",
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "restoreName": {
+                                        "type": "string"
+                                    },
+                                    "target": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "initScript": {
+                                "type": "string"
+                            },
+                            "istioSidecarEnabled": {
+                                "type": "boolean"
+                            },
+                            "logCollector": {
+                                "type": "object",
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "monitoring": {
+                                "type": "object",
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "existingSecret": {
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    },
+                                    "querySource": {
+                                        "type": "string"
+                                    },
+                                    "serverHost": {
+                                        "type": "string"
+                                    },
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            },
+                            "networkPolicy": {
+                                "type": "object",
+                                "properties": {
+                                    "allowedNamespaces": {
+                                        "type": "array"
+                                    },
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "operatorNamespaces": {
+                                        "type": "array"
+                                    }
+                                }
+                            },
+                            "parameters": {
+                                "type": "object"
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "pgHbaTrust": {
+                                "type": "boolean"
+                            },
+                            "pgbouncer": {
+                                "type": "object",
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    },
+                                    "replicas": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "postgresVersion": {
+                                "type": "integer"
+                            },
+                            "replicas": {
+                                "type": "integer"
+                            },
+                            "resources": {
+                                "type": "object"
+                            },
+                            "restore": {
+                                "type": "object",
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "s3": {
+                                        "type": "string"
+                                    },
+                                    "source": {
+                                        "type": "string"
+                                    },
+                                    "target": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "storageBackupSize": {
+                                "type": "string"
+                            },
+                            "storageClassName": {
+                                "type": "string"
+                            },
+                            "storageInstanceSize": {
+                                "type": "string"
+                            },
+                            "synchronous": {
+                                "type": "boolean"
+                            },
+                            "username": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "context": {
+            "type": "object",
+            "title": "Deployment context",
+            "description": "Properties of the deployment context.",
+            "required": [
+                "scope",
+                "cluster",
+                "environment",
+                "component",
+                "app"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "default": "myscope",
+                    "examples": [
+                        "myscope",
+                        "mycustomer"
+                    ]
+                },
+                "cluster": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "localhost",
+                    "examples": [
+                        "mycluster",
+                        "localhost"
+                    ]
+                },
+                "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Environement name",
+                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "sxapi",
+                    "examples": [
+                        "mycomp",
+                        "myservice"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "default": "default-sxapi",
+                    "examples": [
+                        "myapp",
+                        "mymicroservice"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Version name",
+                    "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                    "default": "0.0.1",
+                    "examples": [
+                        "0.0.1",
+                        "0.1",
+                        "0.0.1-snapshot",
+                        "0.0.1-202110300900"
+                    ]
+                }
+            }
+        },
+        "crVersion": {
+            "type": "string"
+        },
+        "images": {
+            "type": "object",
+            "properties": {
+                "logcollector": {
+                    "type": "string"
+                },
+                "pgbackrest": {
+                    "type": "string"
+                },
+                "pgbouncer": {
+                    "type": "string"
+                },
+                "pmm": {
+                    "type": "string"
+                },
+                "postgres": {
+                    "type": "object",
+                    "properties": {
+                        "14": {
+                            "type": "string"
+                        },
+                        "15": {
+                            "type": "string"
+                        },
+                        "16": {
+                            "type": "string"
+                        },
+                        "17": {
+                            "type": "string"
+                        },
+                        "18": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "loader": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "providedAPIs": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "properties": {
+                                "channel": {
+                                    "type": "string"
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "properties": {
+                                        "infra": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "csv": {
+                                    "type": "string"
+                                },
+                                "installPlanApproval": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "namespace": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "project": {
+                    "type": "object",
+                    "properties": {
+                        "description": {
+                            "type": "string"
+                        },
+                        "display_name": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "s3": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array"
+                }
+            }
+        }
+    }
+}

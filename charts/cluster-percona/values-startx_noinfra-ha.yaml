@@ -1,0 +1,124 @@
+# Values for a highly available PostgreSQL cluster: two instances with synchronous replication on distinct nodes, pgBackRest backups to an S3 bucket, PMM monitoring ready to switch on, network policy.
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: percona
+  app: startx-percona
+  version: "3.1.0"
+
+loader:
+  enabled: false
+  list: []
+
+# Secret values are Argo CD Vault Plugin placeholders: replace the KV path by yours, or use a values file kept out of Git
+s3:
+  list:
+    - name: backup
+      namespace: default-percona
+      endpoint: s3.example.com
+      port: ""
+      region: us-east-1
+      bucket: startx-pgbackrest
+      accessKey: <path:kv/data/percona#s3_access_key>
+      secretKey: <path:kv/data/percona#s3_secret_key>
+      caCert: ""
+      uriStyle: path
+
+cluster:
+  enabled: false
+  list:
+    - name: startx-db
+      enabled: true
+      namespace: default-percona
+      postgresVersion: 18
+      image: ""
+      storageClassName: ""
+      storageInstanceSize: "20Gi"
+      username: startx
+      database: startx
+      password: <path:kv/data/percona#startx_db_password>
+      extensions:
+        - pg_trgm
+      replicas: 2
+      synchronous: true
+      avoidInfraNodes: true
+      resources:
+        requests:
+          cpu: "1"
+          memory: 2Gi
+        limits:
+          memory: 4Gi
+      parameters:
+        max_connections: "500"
+      pgHbaTrust: false
+      pgbouncer:
+        enabled: false
+      backup:
+        enabled: true
+        type: s3
+        s3: backup
+        pathPrefix: ""
+        retentionDays: 14
+        schedules:
+          full: "0 1 * * 0"
+          differential: "0 1 * * 1-6"
+      restore:
+        enabled: false
+        source: ""
+        target: ""
+      inPlaceRestore:
+        enabled: false
+        restoreName: ""
+        target: ""
+      # PMM: set enabled true with the address of the PMM server and its service account token
+      monitoring:
+        enabled: false
+        serverHost: monitoring-service
+        token: <path:kv/data/percona#pmm_server_token>
+      logCollector:
+        enabled: false
+      networkPolicy:
+        enabled: true
+        allowedNamespaces: []
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-percona"
+    display_name: "Startx Percona PostgreSQL"
+    requester: startx
+    description: Percona Operator for PostgreSQL configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "percona-postgresql-operator-certified"
+    namespace: "default-percona"
+    version: "v3.1.0"
+    operator:
+      channel: stable
+      name: percona-postgresql-operator-certified
+      installPlanApproval: Manual
+      csv: percona-postgresql-operator-certified
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "percona-operator"
+    namespace: "default-percona"
+    providedAPIs: "PerconaPGCluster.v2.pgv2.percona.com,PerconaPGBackup.v2.pgv2.percona.com,PerconaPGRestore.v2.pgv2.percona.com,PerconaPGUpgrade.v2.pgv2.percona.com,PostgresCluster.v1beta1.upstream.pgv2.percona.com,PGUpgrade.v1beta1.upstream.pgv2.percona.com,PGAdmin.v1beta1.upstream.pgv2.percona.com,CrunchyBridgeCluster.v1beta1.upstream.pgv2.percona.com"

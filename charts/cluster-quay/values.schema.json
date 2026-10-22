@@ -1031,6 +1031,317 @@
                 }
             }
         },
+        "percona": {
+            "type": "object",
+            "properties": {
+                "cluster": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "list": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "avoidInfraNodes": {
+                                        "type": "boolean"
+                                    },
+                                    "backup": {
+                                        "type": "object",
+                                        "properties": {
+                                            "enabled": {
+                                                "type": "boolean"
+                                            },
+                                            "type": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "database": {
+                                        "type": "string"
+                                    },
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "extensions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    },
+                                    "monitoring": {
+                                        "type": "object",
+                                        "properties": {
+                                            "enabled": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "namespace": {
+                                        "type": "string"
+                                    },
+                                    "networkPolicy": {
+                                        "type": "object",
+                                        "properties": {
+                                            "allowedNamespaces": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "enabled": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "pgHbaTrust": {
+                                        "type": "boolean"
+                                    },
+                                    "pgbouncer": {
+                                        "type": "object",
+                                        "properties": {
+                                            "enabled": {
+                                                "type": "boolean"
+                                            }
+                                        }
+                                    },
+                                    "postgresVersion": {
+                                        "type": "integer"
+                                    },
+                                    "replicas": {
+                                        "type": "integer"
+                                    },
+                                    "storageBackupSize": {
+                                        "type": "string"
+                                    },
+                                    "storageClassName": {
+                                        "type": "string"
+                                    },
+                                    "storageInstanceSize": {
+                                        "type": "string"
+                                    },
+                                    "synchronous": {
+                                        "type": "boolean"
+                                    },
+                                    "username": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "operator": {
+                    "type": "object",
+                    "properties": {
+                        "context": {
+                            "type": "object",
+                            "properties": {
+                                "app": {
+                                    "type": "string"
+                                },
+                                "cluster": {
+                                    "type": "string"
+                                },
+                                "component": {
+                                    "type": "string"
+                                },
+                                "environment": {
+                                    "type": "string"
+                                },
+                                "scope": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "operatorGroup": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "hooked": {
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "namespace": {
+                                    "type": "string"
+                                },
+                                "providedAPIs": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "subscription": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "hooked": {
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "namespace": {
+                                    "type": "string"
+                                },
+                                "operator": {
+                                    "type": "object",
+                                    "properties": {
+                                        "channel": {
+                                            "type": "string"
+                                        },
+                                        "config": {
+                                            "type": "object",
+                                            "properties": {
+                                                "infra": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        },
+                                        "csv": {
+                                            "type": "string"
+                                        },
+                                        "installPlanApproval": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "source": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "namespace": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "project": {
+                    "type": "object",
+                    "properties": {
+                        "context": {
+                            "type": "object",
+                            "properties": {
+                                "app": {
+                                    "type": "string"
+                                },
+                                "cluster": {
+                                    "type": "string"
+                                },
+                                "component": {
+                                    "type": "string"
+                                },
+                                "environment": {
+                                    "type": "string"
+                                },
+                                "scope": {
+                                    "type": "string"
+                                },
+                                "version": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "project": {
+                            "type": "object",
+                            "properties": {
+                                "additionalAnnotations": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "display_name": {
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "hooked": {
+                                    "type": "boolean"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "s3": {
+                    "type": "object",
+                    "properties": {
+                        "list": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        },
         "project": {
             "type": "object",
             "properties": {
