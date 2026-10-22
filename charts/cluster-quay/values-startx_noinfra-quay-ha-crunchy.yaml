@@ -1,10 +1,10 @@
 # Values for a highly available Red Hat Quay registry: config bundle rendered by the chart, external S3 object
-# storage, PostgreSQL clusters of Quay and Clair managed by the Crunchy Postgres for Kubernetes operator (crunchy sub-chart:
-# two instances per cluster, synchronous replication, backups to an S3 bucket, monitoring, network policies), Quay
-# operator installed cluster wide, pod disruption budgets. Secret values are Argo CD Vault Plugin placeholders
-# (<path:kv/data/quay/prod#key>): replace the KV path by yours, or use a values file kept out of Git.
-# Deploy it with the three Applications of examples/argocd-ha (project, operator, app): each one switches on the
-# matching flags of the registry and of the crunchy sub-chart.
+# storage, PostgreSQL clusters of Quay and Clair managed by the Crunchy Postgres for Kubernetes operator (crunchy sub-
+# chart: two instances per cluster, synchronous replication, backups to an S3 bucket, monitoring, network policies),
+# Quay operator installed cluster wide, pod disruption budgets. Secret values are Argo CD Vault Plugin placeholders
+# (<path:kv/data/quay/prod#key>): replace the KV path by yours, or use a values file kept out of Git. Deploy it with
+# the three Applications of examples/argocd-ha (project, operator, app): each one switches on the matching flags of
+# the registry and of the crunchy sub-chart.
 # see values.yaml for explanation on each params
 context: &context
   scope: startx
@@ -363,4 +363,7 @@ crunchy:
       providedAPIs: "PostgresCluster.v1beta1.postgres-operator.crunchydata.com"
 
 cloudnativedb:
+  enabled: false
+
+percona:
   enabled: false
