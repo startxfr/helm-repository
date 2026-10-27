@@ -70,7 +70,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.279
+    targetRevision: 21.3.309
     helm:
     valueFiles:
     - values-demo.yaml
@@ -97,7 +97,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.279
+    targetRevision: 21.3.309
     helm:
     valueFiles:
     - values-demo.yaml
@@ -124,7 +124,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.279
+    targetRevision: 21.3.309
     helm:
     valueFiles:
     - values-demo.yaml
@@ -306,3 +306,4 @@ pattern, using `values-startx_noinfra.yaml`. For a highly available cluster, rep
 | Release  | Date       | Description                                            |
 | -------- | ---------- | ------------------------------------------------------ |
 | 21.3.279 | 2026-10-22 | Initial chart creation |
+| 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
