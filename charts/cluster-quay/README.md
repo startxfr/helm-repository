@@ -492,3 +492,4 @@ the `project` sub-chart (`crunchy.project.enabled: false`) when they must stay w
 | 21.3.277 | 2026-08-09 | Align all charts to v21.3.277 |
 | 21.3.278 | 2026-08-14 | add centigpu |
 | 21.3.279 | 2026-10-22 | Highly available registry: config bundle, external S3 storage, databases from the cluster-crunchy, cluster-cloudnativedb and cluster-percona sub-charts, OIDC, pod disruption budgets; quay-operator 3.18 |
+| 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
