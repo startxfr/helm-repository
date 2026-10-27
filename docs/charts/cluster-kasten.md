@@ -121,3 +121,4 @@ oc apply -k .
 | 21.3.3   | 2026-06-26 | Initial release of Kasten K10 chart                               |
 | 21.3.278 | 2026-10-21 | Align name, icon, metadata, sync-waves and docs to conventions   |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
+| 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
