@@ -29,4 +29,8 @@ Private image registry (quay) is enabled, at the cluster level, with the followi
 {{ include "cluster-cloudnativedb.notes" .Values.cloudnativedb }}
 {{- end }}{{- end }}
 
+{{- if .Values.percona }}{{- if .Values.percona.enabled }}
+{{ include "cluster-percona.notes" .Values.percona }}
+{{- end }}{{- end }}
+
 {{ include "cluster-quay.notes" .Values }}

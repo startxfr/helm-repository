@@ -73,10 +73,10 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- $mode := $root.Values.database.mode -}}
 {{- $d := index $root.Values.database .db -}}
 {{- $out := dict "host" ($d.host | default "") "port" (toString ($d.port | default 5432)) "database" ($d.database | default "") "user" ($d.user | default "") "password" ($d.password | default "") -}}
-{{- if has $mode (list "crunchy" "cloudnativedb") -}}
+{{- if has $mode (list "crunchy" "cloudnativedb" "percona") -}}
 {{- $entry := include "cluster-quay.dbClusterEntry" (dict "root" $root "chart" $mode "name" $d.cluster) | fromYaml -}}
 {{- $ns := $entry.namespace | default (include "cluster-quay.dbChartNamespace" (dict "root" $root "chart" $mode)) -}}
-{{- $suffix := ternary "primary" "rw" (eq $mode "crunchy") -}}
+{{- $suffix := ternary "rw" "primary" (eq $mode "cloudnativedb") -}}
 {{- if not $out.host -}}{{- $_ := set $out "host" (printf "%s-%s.%s.svc" $d.cluster $suffix $ns) -}}{{- end -}}
 {{- if not $out.database -}}{{- $_ := set $out "database" ($entry.database | default $entry.name | default "") -}}{{- end -}}
 {{- if not $out.user -}}{{- $_ := set $out "user" ($entry.username | default $entry.name | default "") -}}{{- end -}}
@@ -112,8 +112,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- $v := .Values -}}
 {{- $q := $v.quay -}}
 {{- $db := $v.database -}}
-{{- if not (has $db.mode (list "quayOperator" "crunchy" "cloudnativedb" "external")) -}}
-{{- fail (printf "database.mode must be one of quayOperator, crunchy, cloudnativedb, external (got %q)" (toString $db.mode)) -}}
+{{- if not (has $db.mode (list "quayOperator" "crunchy" "cloudnativedb" "percona" "external")) -}}
+{{- fail (printf "database.mode must be one of quayOperator, crunchy, cloudnativedb, percona, external (got %q)" (toString $db.mode)) -}}
 {{- end -}}
 {{- if not (has $v.storage.mode (list "operator" "external")) -}}
 {{- fail (printf "storage.mode must be operator or external (got %q)" (toString $v.storage.mode)) -}}
@@ -135,7 +135,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- range $key := list "quay" "clair" -}}
 {{- if or (eq $key "quay") $q.components.clair -}}
 {{- $d := index $db $key -}}
-{{- if has $db.mode (list "crunchy" "cloudnativedb") -}}
+{{- if has $db.mode (list "crunchy" "cloudnativedb" "percona") -}}
 {{- $entry := include "cluster-quay.dbClusterEntry" (dict "root" $ "chart" $db.mode "name" $d.cluster) | fromYaml -}}
 {{- if and (not $entry.name) (not $d.host) -}}
 {{- fail (printf "database.%s.cluster %q is not an entry of %s.cluster.list (set it, or database.%s.host)" $key (toString $d.cluster) $db.mode $key) -}}
@@ -146,7 +146,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- if not $s.database -}}{{- fail (printf "database.%s.database is required with database.mode %s" $key $db.mode) -}}{{- end -}}
 {{- if not $s.user -}}{{- fail (printf "database.%s.user is required with database.mode %s" $key $db.mode) -}}{{- end -}}
 {{- if not $s.password -}}
-{{- if has $db.mode (list "crunchy" "cloudnativedb") -}}
+{{- if has $db.mode (list "crunchy" "cloudnativedb" "percona") -}}
 {{- fail (printf "database.%s.password is required (secret): set password on the entry %q of %s.cluster.list, or database.%s.password" $key (toString $d.cluster) $db.mode $key) -}}
 {{- else -}}
 {{- fail (printf "database.%s.password is required (secret)" $key) -}}

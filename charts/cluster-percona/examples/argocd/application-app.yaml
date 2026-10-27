@@ -1,0 +1,36 @@
+# Deploys PerconaPGCluster instances in default-percona
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-percona-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-percona
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-percona
+    targetRevision: 21.3.279
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        cluster:
+          enabled: true
+        loader:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-percona
+  ignoreDifferences:
+    - group: pgv2.percona.com
+      kind: PerconaPGCluster
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
