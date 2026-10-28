@@ -1,0 +1,377 @@
+# Values for a highly available Red Hat Quay registry: config bundle rendered by the chart, external S3 object
+# storage, PostgreSQL clusters of Quay and Clair managed by the Percona Operator for PostgreSQL (percona sub-chart:
+# two instances per cluster, synchronous replication, backups to an S3 bucket, network policies, PMM monitoring ready
+# to switch on), Quay operator installed cluster wide, pod disruption budgets. Secret values are Argo CD Vault Plugin
+# placeholders (<path:kv/data/quay/prod#key>): replace the KV path by yours, or use a values file kept out of Git.
+# Deploy it with the three Applications of examples/argocd-ha (project, operator, app): each one switches on the
+# matching flags of the registry and of the percona sub-chart.
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: quay
+  app: startx-quay
+  version: "3.18.0"
+
+rhn:
+  enabled: false
+route:
+  enabled: false
+quay:
+  enabled: false
+  hooked: false
+  name: registry
+  pullSecretEnabled: false
+  admin:
+    enabled: false
+  config:
+    enabled: true
+    # Hostname of the registry (the operator also creates the default route <name>-quay-<namespace>.apps...)
+    hostname: quay.apps.ocp.example.com
+    superUsers:
+      - quayadmin
+    # true while the first super user is created (README, First super user), then false
+    userInitialize: true
+    userCreation: false
+    secretKey: <path:kv/data/quay/prod#secret_key>
+    databaseSecretKey: <path:kv/data/quay/prod#database_secret_key>
+    registryTitle: "Red Hat Quay"
+    registryTitleShort: "Quay"
+    defaultTagExpiration: "2w"
+    tagExpirationOptions:
+      - "0s"
+      - "1d"
+      - "1w"
+      - "2w"
+      - "4w"
+    extraConfig: {}
+    extraCaCerts: {}
+    existingSecret: ""
+  tls:
+    managed: true
+    cert: ""
+    key: ""
+  components:
+    clair: true
+    mirror: true
+    hpa: true
+    route: true
+    monitoring: true
+  overrides:
+    quay:
+      resources:
+        requests:
+          cpu: "2"
+          memory: 8Gi
+        limits:
+          cpu: "4"
+          memory: 12Gi
+    clair:
+      volumeSize: 50Gi
+    mirror: {}
+  stopped: false
+  podDisruptionBudgets:
+    enabled: true
+
+storage:
+  mode: external
+  external:
+    driver: RadosGWStorage
+    host: s3.example.com
+    port: ""
+    isSecure: true
+    bucket: quay-registry
+    storagePath: /datastorage/registry
+    accessKey: <path:kv/data/quay/prod#s3_access_key>
+    secretKey: <path:kv/data/quay/prod#s3_secret_key>
+    region: ""
+    caCert: ""
+    custom: {}
+
+database:
+  mode: percona
+  tls:
+    # First deployment with require; switch to verify-full once the CA of the clusters is known (README, Verify the
+    # database certificates)
+    mode: require
+    caCert: ""
+  quay:
+    cluster: quay-db
+    host: ""
+    port: 5432
+    database: ""
+    user: ""
+    password: ""
+  clair:
+    cluster: clair-db
+    host: ""
+    port: 5432
+    database: ""
+    user: ""
+    password: ""
+
+oidc:
+  # false until the first super user exists, then true (README, Enable the OIDC login)
+  enabled: false
+  internalAuthentication: true
+  serviceName: SSO
+  server: https://sso.apps.ocp.example.com/realms/startx/
+  clientId: quay
+  clientSecret: <path:kv/data/quay/prod#oidc_client_secret>
+  loginScopes:
+    - openid
+    - email
+    - profile
+  usernameClaim: preferred_username
+  emailClaim: email
+  groupClaim: groups
+  teamSyncing: true
+  nonSuperuserTeamSyncingSetup: false
+  pkce: true
+  caCert: ""
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "quay-enterprise"
+    display_name: "Startx QUAY"
+    requester: startx
+    description: Quay enterprise registry configured by STARTX
+    # Argo CD never deletes the namespace of the registry, whatever the pruning policy of the Application
+    additionalAnnotations: |-
+      argocd.argoproj.io/sync-options: Prune=false
+
+# Quay operator installed cluster wide (the monitoring component requires the AllNamespaces mode)
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "quay-operator"
+    namespace: "openshift-operators"
+    # Without csv the subscription follows the channel. With csv: quay-operator and version: v3.18.<z> the chart
+    # renders startingCSV: quay-operator.v3.18.<z> (pin the version that took your backups)
+    version: "v3.18.0"
+    operator:
+      channel: stable-3.18
+      name: quay-operator
+      installPlanApproval: Manual
+      # csv: quay-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "global-operators"
+    namespace: "openshift-operators"
+
+operatorsec:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: false
+  operatorGroup:
+    enabled: false
+
+crunchy:
+  enabled: false
+
+cloudnativedb:
+  enabled: false
+
+percona:
+  enabled: true
+  # Context of the database objects
+  context: &dbcontext
+    scope: startx
+    cluster: default
+    environment: infra
+    component: database
+    app: quay-postgres
+    version: "3.1.0"
+  loader:
+    enabled: false
+    list: []
+
+  # Secret values are Argo CD Vault Plugin placeholders: replace the KV path by yours, or use a values file kept out of Git
+  s3:
+    list:
+      - name: quay-backup
+        namespace: quay-postgres
+        endpoint: s3.example.com
+        port: ""
+        region: us-east-1
+        bucket: quay-pgbackrest
+        accessKey: <path:kv/data/quay/prod#pgbackrest_access_key>
+        secretKey: <path:kv/data/quay/prod#pgbackrest_secret_key>
+        caCert: ""
+        uriStyle: path
+
+  cluster:
+    enabled: false
+    list:
+      - name: quay-db
+        enabled: true
+        namespace: quay-postgres
+        postgresVersion: 17
+        image: ""
+        storageClassName: ""
+        storageInstanceSize: "100Gi"
+        username: quay
+        database: quay
+        password: <path:kv/data/quay/prod#quay_db_password>
+        extensions:
+          - pg_trgm
+        replicas: 2
+        synchronous: true
+        avoidInfraNodes: true
+        resources:
+          requests:
+            cpu: "2"
+            memory: 8Gi
+          limits:
+            memory: 16Gi
+        parameters:
+          max_connections: "2000"
+          shared_buffers: "2GB"
+          effective_cache_size: "6GB"
+        pgHbaTrust: false
+        pgbouncer:
+          enabled: false
+        backup:
+          enabled: true
+          type: s3
+          s3: quay-backup
+          pathPrefix: quay-postgres
+          retentionDays: 14
+          schedules:
+            full: "0 1 * * 0"
+            differential: "0 1 * * 1-6"
+        restore:
+          enabled: false
+          source: ""
+          target: ""
+        inPlaceRestore:
+          enabled: false
+          restoreName: ""
+          target: ""
+        monitoring:
+          enabled: false
+          serverHost: monitoring-service
+          token: <path:kv/data/quay/prod#pmm_server_token>
+        logCollector:
+          enabled: false
+        networkPolicy:
+          enabled: true
+          allowedNamespaces:
+            - quay-enterprise
+      - name: clair-db
+        enabled: true
+        namespace: quay-postgres
+        postgresVersion: 15
+        image: ""
+        storageClassName: ""
+        storageInstanceSize: "50Gi"
+        username: clair
+        database: clair
+        password: <path:kv/data/quay/prod#clair_db_password>
+        extensions:
+          - uuid-ossp
+        replicas: 2
+        synchronous: true
+        avoidInfraNodes: true
+        resources:
+          requests:
+            cpu: "1"
+            memory: 4Gi
+          limits:
+            memory: 8Gi
+        parameters:
+          max_connections: "2000"
+          shared_buffers: "1GB"
+          effective_cache_size: "3GB"
+        pgHbaTrust: false
+        pgbouncer:
+          enabled: false
+        backup:
+          enabled: true
+          type: s3
+          s3: quay-backup
+          pathPrefix: quay-postgres
+          retentionDays: 14
+          schedules:
+            full: "0 1 * * 0"
+            differential: "0 1 * * 1-6"
+        restore:
+          enabled: false
+          source: ""
+          target: ""
+        inPlaceRestore:
+          enabled: false
+          restoreName: ""
+          target: ""
+        monitoring:
+          enabled: false
+          serverHost: monitoring-service
+          token: <path:kv/data/quay/prod#pmm_server_token>
+        logCollector:
+          enabled: false
+        networkPolicy:
+          enabled: true
+          allowedNamespaces:
+            - quay-enterprise
+
+  project:
+    enabled: false
+    context:
+      <<: *dbcontext
+    project:
+      enabled: true
+      hooked: false
+      type: namespace
+      name: "quay-postgres"
+      display_name: "Quay - PostgreSQL databases"
+      requester: startx
+      description: PostgreSQL databases of the Quay registry, Percona Operator for PostgreSQL, configured by STARTX
+      # Argo CD never deletes the namespace of the databases, whatever the pruning policy of the Application
+      additionalAnnotations: |-
+        argocd.argoproj.io/sync-options: Prune=false
+
+  operator:
+    enabled: false
+    context:
+      <<: *dbcontext
+    subscription:
+      enabled: true
+      hooked: false
+      name: "percona-postgresql-operator-certified"
+      namespace: "quay-postgres"
+      version: "v3.1.0"
+      operator:
+        channel: stable
+        name: percona-postgresql-operator-certified
+        installPlanApproval: Manual
+        csv: percona-postgresql-operator-certified
+        source:
+          name: certified-operators
+          namespace: openshift-marketplace
+        config:
+          infra: false
+    operatorGroup:
+      enabled: true
+      hooked: false
+      name: "percona-operator"
+      namespace: "quay-postgres"
+      providedAPIs: "PerconaPGCluster.v2.pgv2.percona.com,PerconaPGBackup.v2.pgv2.percona.com,PerconaPGRestore.v2.pgv2.percona.com,PerconaPGUpgrade.v2.pgv2.percona.com,PostgresCluster.v1beta1.upstream.pgv2.percona.com,PGUpgrade.v1beta1.upstream.pgv2.percona.com,PGAdmin.v1beta1.upstream.pgv2.percona.com,CrunchyBridgeCluster.v1beta1.upstream.pgv2.percona.com"

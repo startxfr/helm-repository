@@ -1,0 +1,80 @@
+# Demo values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: percona
+  app: startx-percona
+  version: "3.1.0"
+
+loader:
+  enabled: false
+  list: []
+
+s3:
+  list: []
+
+cluster:
+  enabled: false
+  list:
+  - name: demo-db
+    enabled: true
+    namespace: default-percona
+    postgresVersion: 18
+    storageClassName: ""
+    storageInstanceSize: "2Gi"
+    storageBackupSize: "2Gi"
+    username: demo
+    database: demo
+    password: ""
+    initScript: |-
+      CREATE TABLE demo_table (
+        field       TEXT COLLATE "C" NOT NULL,
+        CONSTRAINT field PRIMARY KEY (field)
+      );
+      CREATE INDEX field_idx ON demo_table (field);
+    replicas: 1
+    pgbouncer:
+      enabled: true
+      replicas: 1
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-percona"
+    display_name: "Demo Percona PostgreSQL"
+    requester: startx
+    description: Demo Percona Operator for PostgreSQL configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "percona-postgresql-operator-certified"
+    namespace: "default-percona"
+    version: "v3.1.0"
+    operator:
+      channel: stable
+      name: percona-postgresql-operator-certified
+      installPlanApproval: Manual
+      csv: percona-postgresql-operator-certified
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "percona-operator"
+    namespace: "default-percona"
+    providedAPIs: "PerconaPGCluster.v2.pgv2.percona.com,PerconaPGBackup.v2.pgv2.percona.com,PerconaPGRestore.v2.pgv2.percona.com,PerconaPGUpgrade.v2.pgv2.percona.com,PostgresCluster.v1beta1.upstream.pgv2.percona.com,PGUpgrade.v1beta1.upstream.pgv2.percona.com,PGAdmin.v1beta1.upstream.pgv2.percona.com,CrunchyBridgeCluster.v1beta1.upstream.pgv2.percona.com"

@@ -140,3 +140,4 @@ oc apply -k .
 | 21.30.201 | 2026-08-16 | update version |
 | 21.30.202 | 2026-08-16 | Improve cluster-machine options |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
+| 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |

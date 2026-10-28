@@ -1,0 +1,362 @@
+{{- if .Values.cluster }}{{- if .Values.cluster.enabled }}
+{{- include "cluster-percona.validate" . -}}
+{{- $defaultns := include "cluster-percona.defaultNamespace" . -}}
+{{- $crVersion := include "cluster-percona.crVersion" . -}}
+
+
+{{/* Loop over the cluster list */}}
+{{- range .Values.cluster.list }}
+{{- $name := .name | default "default-cluster" -}}
+{{- $ns := .namespace | default $defaultns -}}
+{{- $c := . -}}
+{{- $database := .database | default $name -}}
+{{- $username := .username | default $name -}}
+{{- $pgVersion := int (.postgresVersion | default 18) -}}
+{{- $backup := .backup | default dict -}}
+{{- $btype := include "cluster-percona.backupType" . -}}
+{{- $s3 := dict -}}
+{{- if eq $btype "s3" }}{{ $s3 = include "cluster-percona.s3Entry" (dict "root" $ "name" $backup.s3) | fromYaml }}{{ end -}}
+{{- $restore := .restore | default dict -}}
+{{- $rs3 := $s3 -}}
+{{- if and $restore.enabled $restore.s3 }}{{ $rs3 = include "cluster-percona.s3Entry" (dict "root" $ "name" $restore.s3) | fromYaml }}{{ end -}}
+{{- $inPlace := .inPlaceRestore | default dict -}}
+{{- $monitoring := .monitoring | default dict -}}
+{{- $logs := .logCollector | default dict -}}
+{{- $prefix := ($backup.pathPrefix | default $ns) | trimAll "/" -}}
+{{- $pgbouncer := include "cluster-percona.bool" (dict "d" (.pgbouncer | default dict) "k" "enabled" "def" true) -}}
+{{- $trust := include "cluster-percona.bool" (dict "d" . "k" "pgHbaTrust" "def" false) -}}
+{{- $image := include "cluster-percona.image" (dict "root" $ "value" .image "key" "postgres" "version" $pgVersion) -}}
+{{- $pgbackrestImage := include "cluster-percona.image" (dict "root" $ "value" $backup.image "key" "pgbackrest") -}}
+{{- $pgbouncerImage := include "cluster-percona.image" (dict "root" $ "value" (.pgbouncer | default dict).image "key" "pgbouncer") -}}
+{{- $pmmImage := include "cluster-percona.image" (dict "root" $ "value" $monitoring.image "key" "pmm") -}}
+{{- $logsImage := include "cluster-percona.image" (dict "root" $ "value" $logs.image "key" "logcollector") -}}
+{{- if .enabled -}}
+{{- if .password }}
+---
+# Owner password supplied by the values: the operator keeps it and computes the SCRAM verifier itself
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ $name }}-pguser-{{ $username }}"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-percona.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-pguser-{{ $username }}-secret"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+    postgres-operator.crunchydata.com/cluster: "{{- $name -}}"
+    postgres-operator.crunchydata.com/pguser: "{{- $username -}}"
+    postgres-operator.crunchydata.com/role: pguser
+  annotations:
+    {{- include "cluster-percona.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+type: Opaque
+stringData:
+  password: {{ .password | quote }}
+{{- end }}
+{{- if and $monitoring.enabled $monitoring.token (not $monitoring.existingSecret) }}
+---
+# Token of the PMM server for the pmm-client sidecars
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "{{ $name }}-pmm-secret"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-percona.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-pmm-secret"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-percona.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+type: Opaque
+stringData:
+  PMM_SERVER_TOKEN: {{ $monitoring.token | quote }}
+{{- end }}
+---
+apiVersion: pgv2.percona.com/v2
+kind: PerconaPGCluster
+metadata:
+  name: "{{ $name }}"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-percona.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-perconapgcluster"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-percona.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  crVersion: {{ $crVersion | quote }}
+  image: {{ $image | quote }}
+  imagePullPolicy: IfNotPresent
+  postgresVersion: {{ $pgVersion }}
+  port: 5432
+  openshift: true
+  autoCreateUserSchema: {{ .autoCreateUserSchema | default false }}
+  {{- if .istioSidecarEnabled }}
+  metadata:
+    annotations:
+      sidecar.istio.io/inject: "true"
+  {{- end }}
+  {{- if include "cluster-percona.hasInitSQL" . }}
+  databaseInitSQL:
+    key: init.sql
+    name: '{{ $name }}-initdb'
+  {{- end }}
+  users:
+    - name: {{ $username | quote }}
+      databases:
+        - {{ $database | quote }}
+      password:
+        type: {{ if .password }}AlphaNumeric{{ else }}ASCII{{ end }}
+  {{- if and $restore.enabled (eq $btype "s3") }}
+  # Restore into a new cluster: read at cluster creation only
+  dataSource:
+    pgbackrest:
+      stanza: db
+      configuration:
+        - secret:
+            name: {{ include "cluster-percona.s3SecretName" $rs3 | quote }}
+      global:
+        repo1-path: {{ $restore.source | quote }}
+        {{- include "cluster-percona.s3GlobalOptions" (dict "s3" $rs3) | nindent 8 }}
+      repo:
+        name: repo1
+        s3:
+          bucket: {{ $rs3.bucket | quote }}
+          endpoint: {{ $rs3.endpoint | quote }}
+          region: {{ $rs3.region | quote }}
+      {{- if $restore.target }}
+      options:
+        - --type=time
+        - --target={{ $restore.target | quote }}
+      {{- end }}
+  {{- end }}
+  {{- if eq $btype "none" }}
+  backups:
+    enabled: false
+    pgbackrest:
+      image: {{ $pgbackrestImage | quote }}
+  {{- else }}
+  backups:
+    enabled: true
+    pgbackrest:
+      image: {{ $pgbackrestImage | quote }}
+      {{- if .istioSidecarEnabled }}
+      metadata:
+        annotations:
+          sidecar.istio.io/inject: "true"
+      {{- end }}
+      {{- if eq $btype "s3" }}
+      configuration:
+        - secret:
+            name: {{ include "cluster-percona.s3SecretName" $s3 | quote }}
+      {{- end }}
+      {{- if .avoidInfraNodes }}
+      jobs:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: node-role.kubernetes.io/infra
+                      operator: DoesNotExist
+      {{- end }}
+      # On demand backup: a PerconaPGBackup object (README), this section only sets its defaults
+      manual:
+        repoName: repo1
+        options:
+         - --type=full
+      global:
+        {{- if eq $btype "s3" }}
+        repo1-path: /{{ $prefix }}/{{ $name }}/repo1
+        {{- end }}
+        repo1-retention-full: {{ $backup.retentionDays | default 14 | quote }}
+        repo1-retention-full-type: time
+        {{- if eq $btype "s3" }}
+        {{- include "cluster-percona.s3GlobalOptions" (dict "s3" $s3) | nindent 8 }}
+        {{- end }}
+      repos:
+        - name: repo1
+          {{- $sched := $backup.schedules | default dict }}
+          {{- $diff := "0 1 * * 1-6" }}{{ if hasKey $sched "differential" }}{{ $diff = $sched.differential }}{{ end }}
+          schedules:
+            full: {{ $sched.full | default "0 1 * * 0" | quote }}
+            {{- with $diff }}
+            differential: {{ . | quote }}
+            {{- end }}
+          {{- if eq $btype "s3" }}
+          s3:
+            bucket: {{ $s3.bucket | quote }}
+            endpoint: {{ $s3.endpoint | quote }}
+            region: {{ $s3.region | quote }}
+          {{- else }}
+          volume:
+            volumeClaimSpec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: {{ .storageBackupSize | default "1Gi" | quote }}
+              {{- with .storageClassName }}
+              storageClassName: {{ . | quote }}
+              {{- end }}
+          {{- end }}
+  {{- end }}
+  patroni:
+    {{- if or $trust .synchronous .parameters }}
+    dynamicConfiguration:
+      {{- if $trust }}
+      bootstrap:
+        pg_hba:
+          - host all all 0.0.0.0/0 trust
+          - host all postgres 127.0.0.1/32 trust
+          - host all all  ::1/128  md5
+      {{- end }}
+      postgresql:
+        {{- if $trust }}
+        pg_hba:
+          - "host all all 0.0.0.0/0 trust"
+          - host all postgres 127.0.0.1/32 trust
+          - host all all  ::1/128  md5
+        {{- end }}
+        {{- with .parameters }}
+        parameters:
+          {{- range $pk, $pv := . }}
+          {{ $pk }}: {{ $pv | toString | quote }}
+          {{- end }}
+        {{- end }}
+        {{- if .synchronous }}
+        synchronous_mode: true
+        {{- end }}
+    {{- end }}
+    leaderLeaseDurationSeconds: 30
+    port: 8008
+    syncPeriodSeconds: 10
+  instances:
+    - name: instance1
+      replicas: {{ .replicas | default 1 }}
+      {{- if .istioSidecarEnabled }}
+      metadata:
+        annotations:
+          sidecar.istio.io/inject: "true"
+      {{- end }}
+      {{- with .resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dataVolumeClaimSpec:
+        {{- with .storageClassName }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .storageInstanceSize | default "1Gi" | quote }}
+      {{- if .avoidInfraNodes }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/infra
+                    operator: DoesNotExist
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  postgres-operator.crunchydata.com/cluster: "{{- $name -}}"
+                  postgres-operator.crunchydata.com/instance-set: instance1
+      {{- end }}
+  {{- if $pgbouncer }}
+  proxy:
+    pgBouncer:
+      replicas: {{ (.pgbouncer | default dict).replicas | default 1 }}
+      image: {{ $pgbouncerImage | quote }}
+      {{- if .avoidInfraNodes }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/infra
+                    operator: DoesNotExist
+      {{- end }}
+  {{- end }}
+  {{- if $monitoring.enabled }}
+  pmm:
+    enabled: true
+    image: {{ $pmmImage | quote }}
+    secret: {{ include "cluster-percona.pmmSecretName" . | quote }}
+    serverHost: {{ $monitoring.serverHost | quote }}
+    querySource: {{ $monitoring.querySource | default "pgstatmonitor" }}
+  {{- end }}
+  {{- if $logs.enabled }}
+  logcollector:
+    enabled: true
+    image: {{ $logsImage | quote }}
+  {{- end }}
+  {{- with .builtinExtensions }}
+  extensions:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- if $inPlace.enabled }}
+---
+# In place restore of the running cluster, run once by the operator; a new restoreName starts a new restore
+apiVersion: pgv2.percona.com/v2
+kind: PerconaPGRestore
+metadata:
+  name: "{{ $name }}-restore-{{ $inPlace.restoreName }}"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-percona.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-restore-{{ $inPlace.restoreName }}-perconapgrestore"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-percona.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  pgCluster: "{{ $name }}"
+  repoName: repo1
+  {{- if $inPlace.target }}
+  options:
+    - --type=time
+    - --target={{ $inPlace.target | quote }}
+  {{- end }}
+{{- end }}
+{{- if include "cluster-percona.hasInitSQL" . }}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: "{{ $name }}-initdb"
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-percona.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-initdb-cm"
+    postgresql_cluster: "{{- $name -}}"
+    postgresql: "{{- $name -}}"
+  annotations:
+    {{- include "cluster-percona.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+data:
+  init.sql: |-
+    {{- if .initScript }}
+    {{- .initScript | nindent 4 }}
+    {{- else }}
+    {{- include "cluster-percona.initSQL" . | nindent 4 }}
+    {{- end }}
+{{- end }}
+{{- end -}}{{- end -}}
+{{- end -}}{{- end }}

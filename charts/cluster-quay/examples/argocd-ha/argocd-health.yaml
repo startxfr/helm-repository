@@ -10,6 +10,8 @@
 #   Cluster (CloudNativePG and EDB, same phases): phases that need an operator action -> Degraded; healthy -> Healthy;
 #     every transition (switchover, failover, restart, configuration, upgrade) -> Progressing. The cnpg rule replaces
 #     the one built into Argo CD, which classifies switchovers and configuration changes as Degraded.
+#   PerconaPGCluster: state ready -> Healthy, paused -> Suspended, initializing or stopping -> Progressing, a finished
+#     pgBackRest restore without success -> Degraded; spec not yet reconciled (observedGeneration) -> Progressing.
 #   QuayRegistry: spec not yet observed -> Progressing; RolloutBlocked, failed migrations or PostgreSQL upgrade ->
 #     Degraded; Available -> Healthy; otherwise Progressing with the components that are not ready.
 #   Subscription (OLM): the rule of Argo CD 3.5, for earlier versions: an InstallPlan waiting for manual approval on an
@@ -18,7 +20,8 @@
 #     InstallPlan or unhealthy catalog -> Degraded.
 #   Application: the rule of the Argo CD documentation for an Application that generates other Applications.
 # Custom checks run without the Lua string and math libraries (no useOpenLibs in the ArgoCD CR): these scripts only use
-# the base library. Tested against the status fields of Crunchy PGO 5.8.9, CloudNativePG 1.27 and the Quay operator 3.18.
+# the base library. Tested against the status fields of Crunchy PGO 5.8.9, CloudNativePG 1.27, Percona Operator for PostgreSQL 3.1.0
+# and the Quay operator 3.18.
 apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
@@ -220,6 +223,47 @@ spec:
         if hs.status == "Healthy" and obj.status.instances ~= nil and (obj.status.readyInstances or 0) < obj.status.instances then
           hs.status = "Progressing"
         end
+        return hs
+    - group: pgv2.percona.com
+      kind: PerconaPGCluster
+      check: |
+        hs = {}
+        if obj.status == nil or obj.status.state == nil or obj.status.state == "" then
+          hs.status = "Progressing"
+          hs.message = "waiting for the Percona operator"
+          return hs
+        end
+        -- the operator writes observedGeneration with every status update: an older value means the last spec
+        -- change has not been processed yet
+        if obj.metadata ~= nil and obj.metadata.generation ~= nil and obj.status.observedGeneration ~= nil
+           and obj.status.observedGeneration < obj.metadata.generation then
+          hs.status = "Progressing"
+          hs.message = "generation " .. obj.metadata.generation .. " not yet reconciled by the Percona operator (observed " .. obj.status.observedGeneration .. ")"
+          return hs
+        end
+        local instances = ""
+        if obj.status.postgres ~= nil and obj.status.postgres.size ~= nil then
+          instances = ", " .. (obj.status.postgres.ready or 0) .. "/" .. obj.status.postgres.size .. " instances ready"
+        end
+        -- a finished restore job without success: the cluster stays initializing until an operator action
+        if obj.status.pgbackrest ~= nil and obj.status.pgbackrest.restore ~= nil and obj.status.pgbackrest.restore.finished == true
+           and (obj.status.pgbackrest.restore.succeeded == nil or obj.status.pgbackrest.restore.succeeded == 0) then
+          hs.status = "Degraded"
+          hs.message = "pgBackRest restore " .. (obj.status.pgbackrest.restore.id or "") .. " failed" .. instances
+          return hs
+        end
+        if obj.status.state == "ready" then
+          hs.status = "Healthy"
+          hs.message = "ready" .. instances
+          return hs
+        end
+        if obj.status.state == "paused" then
+          hs.status = "Suspended"
+          hs.message = "paused (spec.pause)"
+          return hs
+        end
+        hs.status = "Progressing"
+        hs.message = obj.status.state .. instances
         return hs
     - group: quay.redhat.com
       kind: QuayRegistry

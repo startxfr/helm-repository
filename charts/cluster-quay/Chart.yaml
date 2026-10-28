@@ -2,11 +2,11 @@ apiVersion: v2
 # Name of this Helm chart
 name: cluster-quay
 # Description of this Helm chart
-description: Helm chart used to configure a Red Hat Quay registry at the cluster level, from the single pod databases of the operator up to a highly available registry (external S3 storage, PostgreSQL clusters of the cluster-crunchy or cluster-cloudnativedb sub-charts, OIDC login, pod disruption budgets)
+description: Helm chart used to configure a Red Hat Quay registry at the cluster level, from the single pod databases of the operator up to a highly available registry (external S3 storage, PostgreSQL clusters of the cluster-crunchy, cluster-cloudnativedb or cluster-percona sub-charts, OIDC login, pod disruption budgets)
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.300
+version: 21.3.309
 # Version name of the quay operator (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "3.18.0"
 # Icon of this helm-chart
@@ -58,14 +58,19 @@ dependencies:
     condition: operatorsec.enabled
   - name: cluster-crunchy
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.300"
+    version: "21.3.309"
     alias: crunchy
     condition: crunchy.enabled
   - name: cluster-cloudnativedb
     repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
-    version: "21.3.300"
+    version: "21.3.309"
     alias: cloudnativedb
     condition: cloudnativedb.enabled
+  - name: cluster-percona
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+    version: "21.3.309"
+    alias: percona
+    condition: percona.enabled
 
 annotations:
   # category associated to this package
@@ -90,6 +95,8 @@ annotations:
       url: https://helm-repository.readthedocs.io/en/latest/charts/cluster-crunchy
     - name: Startx cluster chart - CloudNativeDB
       url: https://helm-repository.readthedocs.io/en/latest/charts/cluster-cloudnativedb
+    - name: Startx cluster chart - Percona
+      url: https://helm-repository.readthedocs.io/en/latest/charts/cluster-percona
   # Artifacthub signing keys
   artifacthub.io/signKey: |
     fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
@@ -99,7 +106,7 @@ annotations:
     - kind: added
       description: "[cluster-quay] Config bundle rendered by the chart (quay.config): external S3 storage, OIDC login, extra CA certificates, custom TLS certificate"
     - kind: added
-      description: "[cluster-quay] PostgreSQL clusters of Quay and Clair from the cluster-crunchy or cluster-cloudnativedb sub-charts (database.mode crunchy, cloudnativedb) or external databases, TLS verify-full"
+      description: "[cluster-quay] PostgreSQL clusters of Quay and Clair from the cluster-crunchy, cluster-cloudnativedb or cluster-percona sub-charts (database.mode crunchy, cloudnativedb, percona) or external databases, TLS verify-full"
     - kind: added
       description: "[cluster-quay] Components switches, overrides, stopped mode, PodDisruptionBudgets, ApplicationSet and Argo CD Vault Plugin examples, Argo CD health checks"
     - kind: changed
