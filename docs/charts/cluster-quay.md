@@ -494,3 +494,4 @@ the `project` sub-chart (`crunchy.project.enabled: false`) when they must stay w
 | 21.3.279 | 2026-10-22 | Highly available registry: config bundle, external S3 storage, databases from the cluster-crunchy, cluster-cloudnativedb and cluster-percona sub-charts, OIDC, pod disruption budgets; quay-operator 3.18 |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.311 | 2026-10-29 | Improve cluster-quay options |
+| 21.3.312 | 2026-10-29 | Improve cluster-quay options |
