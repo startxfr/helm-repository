@@ -59,7 +59,7 @@ spec:
         {{  if .ldapBindDN }}
         bindDN: "{{- .ldapBindDN -}}"
         {{- end -}}
-        {{  if .ldapBindPassword }}
+        {{  if or .ldapBindPassword (dig "externalSecret" "enabled" false .) }}
         bindPassword: 
           name: "{{- .name | default "default-ldap" -}}-ldap-auth"
         {{- end -}}
@@ -100,7 +100,7 @@ spec:
         extraScopes: 
           {{- .oidcExtraScopes | nindent 10 }}
         {{- end -}}
-        {{  if .oidcClientSecret }}
+        {{  if or .oidcClientSecret (dig "externalSecret" "enabled" false .) }}
         clientSecret: 
           name: "{{- .name | default "default-oidc" -}}-oidc-auth"
         {{- end -}}

@@ -15,6 +15,19 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   version: "6.5.1"
 
+# Default settings of the ExternalSecret objects rendered by this chart when a
+# secret is sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
 # configuration of the logging service
 logging:
   # Enable the deployment of the logging service
@@ -169,6 +182,21 @@ logforwarder:
     username: mypwd
     # Password to the external Elastic endpoint
     password: mypwd
+    # Source this Secret from an external store instead of the values above:
+    # renders an ExternalSecret producing the same Secret (keys of your choice)
+    externalSecret:
+      enabled: false
+      # remoteRefs:
+      #   username:
+      #     key: ocp/logging/elasticsearch
+      #     property: username
+      #   password:
+      #     key: ocp/logging/elasticsearch
+      #     property: password
+      # # ...or fetch every key of the external secret at once
+      # dataFrom:
+      #   - extract:
+      #       key: ocp/logging/elasticsearch
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 

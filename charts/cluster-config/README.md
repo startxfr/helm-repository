@@ -89,6 +89,48 @@ oc apply -k .
 
 
 
+## External secrets
+
+Secrets rendered from values can come from an external store (Vault, AWS
+Secrets Manager...) through the [External Secrets Operator](https://external-secrets.io)
+instead. With `externalSecret.enabled: true` in one of the sections below, the
+chart renders an `ExternalSecret` producing the very same Secret, so the objects
+that reference it (`APIServer`, `IngressController`, image registry, monitoring)
+are unchanged. Without `externalSecret`, the chart keeps rendering the Secret
+from the values.
+
+| Section | Secret produced (namespace) | Required keys |
+| ------- | --------------------------- | ------------- |
+| `api.externalSecret` | `api.name` (openshift-config, `kubernetes.io/tls`) | `tls.crt`, `tls.key` |
+| `ingresscontroller.list[].certificate.externalSecret` | `<name>-ingress-cert` (openshift-ingress, `kubernetes.io/tls`) | `tls.crt`, `tls.key` |
+| `alertmanager.externalSecret` | `alertmanager-main` (openshift-monitoring) | `alertmanager.yaml` |
+| `registryconfig.externalSecret` | `image-registry-private-configuration-user` (openshift-image-registry) | `REGISTRY_STORAGE_S3_ACCESSKEY`, `REGISTRY_STORAGE_S3_SECRETKEY` |
+
+```yaml
+externalSecretDefaults:
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+api:
+  enabled: true
+  url: api.mycluster.example.com
+  externalSecret:
+    enabled: true
+    remoteRefs:
+      tls.crt:
+        key: ocp/certificates/api
+        property: tls.crt
+      tls.key:
+        key: ocp/certificates/api
+        property: tls.key
+```
+
+An `externalSecret` block accepts `secretStoreRef` and `refreshInterval`
+(defaults: `externalSecretDefaults`), `remoteRefs` (map of secret key to ESO
+`remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template` (e.g. to
+build `alertmanager.yaml` from individual keys). Rendering fails when no store
+is set or when a required key is not provided.
+
 ## History
 
 | Release  | Date       | Description                                                                                            |
