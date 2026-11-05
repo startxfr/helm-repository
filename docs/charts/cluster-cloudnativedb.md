@@ -220,3 +220,4 @@ the operator is cluster wide: drop the project Application and point the operato
 | 21.3.279 | 2026-10-20 | Initial chart creation |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
+| 21.3.321 | 2026-11-05 | Adding external secret management |
