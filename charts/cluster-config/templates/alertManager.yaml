@@ -1,4 +1,7 @@
 {{- if .Values.alertmanager.enabled -}}
+{{- if dig "externalSecret" "enabled" false .Values.alertmanager }}
+{{ include "cluster-config.externalSecret" (dict "root" . "name" "alertmanager-main" "namespace" "openshift-monitoring" "config" .Values.alertmanager.externalSecret "defaults" .Values.externalSecretDefaults "keys" (list "alertmanager.yaml")) }}
+{{- else -}}
 kind: Secret
 type: Opaque
 apiVersion: v1
@@ -53,4 +56,5 @@ stringData:
   alertmanager.yaml: |-
     {{- .Values.alertmanager.config | nindent 4 }}
   {{ end }}
+{{- end -}}
 {{- end -}}

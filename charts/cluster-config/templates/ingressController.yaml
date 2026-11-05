@@ -116,6 +116,9 @@ spec:
     name: "{{ $name }}-ingress-cert"
 {{- end }}{{- end }}
 {{- if .certificate }}{{- if .certificate.enabled }}
+{{- if dig "externalSecret" "enabled" false .certificate }}
+{{ include "cluster-config.externalSecret" (dict "root" $ "name" (printf "%s-ingress-cert" $name) "namespace" "openshift-ingress" "config" .certificate.externalSecret "defaults" $.Values.externalSecretDefaults "keys" (list "tls.crt" "tls.key") "type" "kubernetes.io/tls") }}
+{{- else }}
 ---
 kind: Secret
 apiVersion: v1
@@ -140,6 +143,7 @@ data:
     {{- .certificate.privateKeyRaw | nindent 4 }}
 {{- else }}
     {{- .certificate.privateKey | b64enc | nindent 4 }}
+{{- end }}
 {{- end }}
 {{- end }}{{- end }}
 {{- end }}

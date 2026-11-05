@@ -15,6 +15,19 @@ context:
   # Version name of this application (default use Chart appVersion)
   version: "4.21.19"
 
+# Default settings of the ExternalSecret objects rendered by this chart when a
+# secret is sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
 # configuration of the auth service
 auth:
   # Enable the configuration of the auth service
@@ -105,6 +118,14 @@ auth:
     #   # Content of the htpasswd file secret
     #   htpasswdContent: |
     #     dev:$apr1$nRaTnhFT$hegk25Y8Ln81obQ7ixGy/.
+    #   # Source the htpasswd file from an external store instead of htpasswdContent
+    #   # (renders an ExternalSecret producing the same <name>-htpasswd-auth Secret)
+    #   externalSecret:
+    #     enabled: true
+    #     remoteRefs:
+    #       htpasswd:
+    #         key: ocp/auth/myhtpasswd
+    #         property: htpasswd
     # - name: myldap
     #   # Type of auth backend (htpasswd, ldap or oidc)
     #   type: ldap
@@ -129,6 +150,14 @@ auth:
     #   ldapBindDN: "cn=admin,dc=example,dc=com"
     #   # Define the password associated to the ldapBindDN user used to query LDAP server. (mandatory if ldapBindDN is set, otherwise optional)
     #   ldapBindPassword: mybindldappwd
+    #   # Source the bind password from an external store instead of ldapBindPassword
+    #   # (renders an ExternalSecret producing the same <name>-ldap-auth Secret)
+    #   externalSecret:
+    #     enabled: true
+    #     remoteRefs:
+    #       bindPassword:
+    #         key: ocp/auth/myldap
+    #         property: bindPassword
     #   # List of attributes to use as the identity. 
     #   ldapBindAttributes:
     #     # Attribute used to define the unique id.
@@ -164,6 +193,14 @@ auth:
     #     -----END CERTIFICATE-----
     #   # Client secret.
     #   oidcClientSecret: myoidcsecret
+    #   # Source the client secret from an external store instead of oidcClientSecret
+    #   # (renders an ExternalSecret producing the same <name>-oidc-auth Secret)
+    #   externalSecret:
+    #     enabled: true
+    #     remoteRefs:
+    #       clientSecret:
+    #         key: ocp/auth/myoidc
+    #         property: clientSecret
     #   # List of claims to use as the identity. First non-empty claim is used. At least one claim is required. If none of the listed claims have a value, authentication fails.
     #   oidcClaims:
     #     email: |-

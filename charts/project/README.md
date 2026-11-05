@@ -253,3 +253,4 @@ The automated sync policy ensures ArgoCD reconciles the namespace whenever the c
 | 21.3.278 | 2026-08-14 | add centigpu |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
+| 21.3.321 | 2026-11-05 | Adding external secret management |

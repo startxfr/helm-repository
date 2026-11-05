@@ -1,0 +1,156 @@
+{{- if .Values.acs.enabled }}{{- if .Values.acs.securedCluster }}{{- if .Values.acs.securedCluster.enabled }}
+{{- $namespace := .Values.project.project.name | default "open-security-management" -}}
+{{- $sc := .Values.acs.securedCluster -}}
+{{- $reg := $sc.registration | default dict -}}
+{{- $mode := include "cluster-acs.registrationMode" $sc -}}
+{{- $name := include "cluster-acs.securedClusterName" . -}}
+{{- if eq $mode "job" }}
+{{- $job := $reg.job | default dict -}}
+{{- $central := .Values.acs.central | default dict -}}
+{{- $spec := include "cluster-acs.securedClusterSpec" . | fromYaml -}}
+{{- $baseName := printf "%s-registration" $name | trunc 63 | trimSuffix "-" -}}
+{{- /* Central API: job.centralEndpoint, else the SecuredCluster endpoint (without https:// or wss://), else the local Central service */ -}}
+{{- $endpoint := $job.centralEndpoint | default $spec.centralEndpoint | default (printf "central.%s.svc:443" $namespace) -}}
+{{- $endpoint = regexReplaceAll "^[A-Za-z][A-Za-z0-9+.-]*://" $endpoint "" | trimSuffix "/" -}}
+{{- /* Local Central of this chart: owner of the generated secret (deleted with the Central and its CA) */ -}}
+{{- $centralCR := "" -}}
+{{- if and $central.enabled (not $job.centralEndpoint) (not $spec.centralEndpoint) }}{{ $centralCR = $central.name | default "default" }}{{ end -}}
+{{- $pwd := $job.adminPasswordSecret | default dict -}}
+{{- $pwdName := $pwd.name | default "central-htpasswd" -}}
+{{- $pwdKey := $pwd.key | default "password" -}}
+{{- if not (regexMatch "^[A-Za-z0-9_-]+$" $pwdKey) }}
+{{- fail (printf "cluster-acs: acs.securedCluster.registration.job.adminPasswordSecret.key %q must only contain letters, digits, '-' and '_'" $pwdKey) }}
+{{- end }}
+{{- $max := $job.maxRegistrations | default 0 | int -}}
+{{- if or (lt $max 0) (gt $max 100) }}
+{{- fail "cluster-acs: acs.securedCluster.registration.job.maxRegistrations must be between 0 (unlimited) and 100" }}
+{{- end }}
+{{- $validFor := $job.validFor | default "" | toString -}}
+{{- if and $validFor (not (regexMatch "^[0-9]+(\\.[0-9]+)?s$" $validFor)) }}
+{{- fail (printf "cluster-acs: acs.securedCluster.registration.job.validFor %q must be a protobuf duration in seconds (ex: \"86400s\")" $validFor) }}
+{{- end }}
+{{- $timeout := $job.timeoutSeconds | default 1800 | int -}}
+{{- $ttl := 300 -}}
+{{- if hasKey $job "ttlSecondsAfterFinished" }}{{ $ttl = $job.ttlSecondsAfterFinished | int }}{{ end -}}
+{{- $clusterName := include "cluster-acs.clusterName" . -}}
+{{- $podTemplate := include "cluster-acs.registrationPodTemplate" (dict
+    "name" $baseName
+    "image" ($job.image | default "registry.redhat.io/openshift4/ose-cli-rhel9:v4.21")
+    "endpoint" $endpoint
+    "centralCR" $centralCR
+    "pwdName" $pwdName
+    "pwdKey" $pwdKey
+    "clusterName" $clusterName
+    "crsPrefix" (regexReplaceAll "[^A-Za-z0-9._-]" $clusterName "-" | trunc 60)
+    "max" $max
+    "validFor" $validFor
+    "securedCluster" $name
+    "timeout" $timeout) -}}
+{{- /* Job name suffixed with the hash of its pod template: a changed template creates a new Job (immutable spec.template) */ -}}
+{{- $jobName := printf "%s-%s" ($baseName | trunc 54 | trimSuffix "-") ($podTemplate | sha256sum | trunc 8) -}}
+---
+# ServiceAccount of the Job registering this cluster in Central
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $baseName | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ $baseName | quote }}
+  annotations:
+    {{- include "cluster-acs.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "0"
+---
+# Role: read the Central admin password, check, create and replace the registration secret,
+# annotate the SecuredCluster to trigger its reconciliation
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $baseName | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ $baseName | quote }}
+  annotations:
+    {{- include "cluster-acs.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "0"
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames:
+      - {{ $pwdName | quote }}
+      - "cluster-registration-secret"
+      - "sensor-tls"
+      - "admission-control-tls"
+      - "collector-tls"
+      - "tls-cert-sensor"
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames:
+      - "cluster-registration-secret"
+    verbs: ["delete"]
+  - apiGroups: ["platform.stackrox.io"]
+    resources: ["securedclusters"]
+    resourceNames:
+      - {{ $name | quote }}
+    verbs: ["get", "patch"]
+  {{- if $centralCR }}
+  - apiGroups: ["platform.stackrox.io"]
+    resources: ["centrals"]
+    resourceNames:
+      - {{ $centralCR | quote }}
+    verbs: ["get"]
+  {{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $baseName | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ $baseName | quote }}
+  annotations:
+    {{- include "cluster-acs.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "0"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $baseName | quote }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $baseName | quote }}
+    namespace: "{{- $namespace -}}"
+---
+# Job: generates a Cluster Registration Secret (CRS) from the Central API and stores it
+# as cluster-registration-secret, required by the SecuredCluster (idempotent, see _registration.tpl)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $jobName | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ $baseName | quote }}
+  annotations:
+    {{- include "cluster-acs.annotations" . | nindent 4 }}
+    argocd.argoproj.io/hook: {{ ternary "PostSync" "Sync" (eq (include "cluster-acs.securedClusterHooked" .) "true") }}
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  ttlSecondsAfterFinished: {{ $ttl }}
+  backoffLimit: 3
+  activeDeadlineSeconds: {{ add $timeout 600 }}
+  template:
+    {{- $podTemplate | nindent 4 }}
+{{- else if eq $mode "externalSecret" }}
+{{ include "cluster-acs.externalSecret" (dict "root" . "name" "cluster-registration-secret" "namespace" $namespace "config" $reg.externalSecret "defaults" .Values.externalSecretDefaults "keys" (list "crs") "wave" "1") }}
+{{- else if ne $mode "none" }}
+{{- fail (printf "cluster-acs: acs.securedCluster.registration.mode %q is not supported (job, externalSecret or none)" $mode) }}
+{{- end }}
+{{- end }}{{- end }}{{- end }}

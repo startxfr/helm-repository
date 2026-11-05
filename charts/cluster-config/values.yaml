@@ -15,8 +15,21 @@ context: &context
   # Version name of this application (default use Chart appVersion)
   version: "4.21.19"
 
+# Default settings of the ExternalSecret objects rendered by this chart when a
+# secret is sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
 # TODO Comment this section
-api: 
+api:
   enabled: false
   name: api-tls
   url: api.mycluster.local
@@ -53,6 +66,18 @@ api:
   #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eAp4eHh4eHh4eHh4eHh4eHh4eHh4eHh4
   #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4Cnh4eHh4eHh4eHh4eHh4
   #   eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tL
+  # Source tls.crt / tls.key from an external store instead of certificateChain and
+  # privateKey: renders an ExternalSecret producing the same kubernetes.io/tls Secret
+  # (named after `name`) in openshift-config
+  externalSecret:
+    enabled: false
+    # remoteRefs:
+    #   tls.crt:
+    #     key: ocp/certificates/api
+    #     property: tls.crt
+    #   tls.key:
+    #     key: ocp/certificates/api
+    #     property: tls.key
 
 
 # Configuration of the cluster auto-scaling feature
@@ -163,6 +188,30 @@ alertmanager:
         - receiver: Critical
           match:
             severity: critical
+  # Source the alertmanager-main Secret (key alertmanager.yaml, namespace
+  # openshift-monitoring) from an external store instead of the values above
+  externalSecret:
+    enabled: false
+    # # Either fetch a complete alertmanager.yaml from the external store...
+    # remoteRefs:
+    #   alertmanager.yaml:
+    #     key: ocp/monitoring/alertmanager
+    #     property: alertmanager.yaml
+    # # ...or build it with an ESO template from individual keys
+    # remoteRefs:
+    #   pagerduty_key:
+    #     key: ocp/monitoring/alertmanager
+    #     property: pagerduty_key
+    # template:
+    #   engineVersion: v2
+    #   data:
+    #     alertmanager.yaml: |
+    #       receivers:
+    #         - name: pagerduty
+    #           pagerduty_configs:
+    #             - routing_key: '{{ .pagerduty_key }}'
+    #       route:
+    #         receiver: pagerduty
 
 # Configuration of the cluster monitoring feature
 monitoring:
@@ -243,6 +292,18 @@ registryconfig:
   s3BucketAccesssKey: minio
   # Set the AWS S3 secret key credentials (default is mysecretkey)
   s3BucketSecretKey: minio123
+  # Source the S3 credentials from an external store instead of the keys above
+  # (requires s3Storage and s3StorageEnableSecret): renders an ExternalSecret producing
+  # the image-registry-private-configuration-user Secret in openshift-image-registry
+  externalSecret:
+    enabled: false
+    # remoteRefs:
+    #   REGISTRY_STORAGE_S3_ACCESSKEY:
+    #     key: ocp/registry/s3
+    #     property: access_key
+    #   REGISTRY_STORAGE_S3_SECRETKEY:
+    #     key: ocp/registry/s3
+    #     property: secret_key
   # Enable the configuration of the pvc backend storage
   pvcStorage: false
   # Define the pvc Name to use for configuration
@@ -339,6 +400,17 @@ ingresscontroller:
   #       MIIJKAyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
   #       yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
   #       -----END RSA PRIVATE KEY-----
+  #     # Source tls.crt / tls.key from an external store instead of the values above
+  #     # (renders an ExternalSecret producing the same <name>-ingress-cert Secret)
+  #     externalSecret:
+  #       enabled: true
+  #       remoteRefs:
+  #         tls.crt:
+  #           key: ocp/certificates/ingress-default
+  #           property: tls.crt
+  #         tls.key:
+  #           key: ocp/certificates/ingress-default
+  #           property: tls.key
 
 
 # Configuration of the cluster project-template feature

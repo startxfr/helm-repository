@@ -75,6 +75,46 @@ oc apply -k .
 
 
 
+## External secrets
+
+The backup storage credentials (`cloudcreds`) can come from an external store
+(Vault, AWS Secrets Manager...) through the
+[External Secrets Operator](https://external-secrets.io) instead of `cloudcreds.spec`.
+With `cloudcreds.externalSecret.enabled: true`, the chart renders an
+`ExternalSecret` producing the Secret `cloudcreds.name` (key `cloud`) in the OADP
+namespace, so the `DataProtectionApplication` referencing it is unchanged.
+Without `externalSecret`, the chart keeps rendering the Secret from the values.
+
+When `remoteRefs` provides `aws_access_key_id` and `aws_secret_access_key`, the
+chart builds the AWS-style credentials file (section `[profile]`, default
+`default`) with an ESO template:
+
+```yaml
+externalSecretDefaults:
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+cloudcreds:
+  enabled: true
+  name: cloud-credentials
+  externalSecret:
+    enabled: true
+    profile: default
+    remoteRefs:
+      aws_access_key_id:
+        key: ocp/oadp/s3
+        property: access_key
+      aws_secret_access_key:
+        key: ocp/oadp/s3
+        property: secret_key
+```
+
+A complete credentials file can also be fetched as the `cloud` key
+(`remoteRefs.cloud`). An `externalSecret` block accepts `secretStoreRef` and
+`refreshInterval` (defaults: `externalSecretDefaults`), `remoteRefs` and the raw
+ESO fields `data`, `dataFrom` and `template`. Rendering fails when no store is
+set or when the `cloud` key is not provided.
+
 ## History
 
 | Release  | Date       | Description                                                                                    |
@@ -122,3 +162,4 @@ oc apply -k .
 | 21.3.278 | 2026-08-14 | add centigpu |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
+| 21.3.321 | 2026-11-05 | Adding external secret management |

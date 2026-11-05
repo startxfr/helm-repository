@@ -19,6 +19,9 @@ spec:
         name: {{ .Values.api.name | default "api-tls" | quote }}
   audit:
     profile: Default
+{{- if dig "externalSecret" "enabled" false .Values.api }}
+{{ include "cluster-config.externalSecret" (dict "root" . "name" (.Values.api.name | default "api-tls") "namespace" "openshift-config" "config" .Values.api.externalSecret "defaults" .Values.externalSecretDefaults "keys" (list "tls.crt" "tls.key") "type" "kubernetes.io/tls" "wave" "0") }}
+{{- else }}
 ---
 kind: Secret
 apiVersion: v1
@@ -44,5 +47,6 @@ data:
     {{ default "xxxxxx" .Values.api.privateKeyRaw }}
 {{- else }}
     {{ .Values.api.privateKey | b64enc }}
+{{- end }}
 {{- end }}
 {{- end }}

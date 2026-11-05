@@ -61,6 +61,38 @@ oc apply -k .
 
 
 
+## External secrets
+
+The log forwarder secret (`logforwarder.secret`) can come from an external
+store (Vault, AWS Secrets Manager...) through the
+[External Secrets Operator](https://external-secrets.io) instead of the chart
+values. With `logforwarder.secret.externalSecret.enabled: true`, the chart
+renders an `ExternalSecret` producing the Secret `logforwarder.secret.name` in
+the logging namespace, with the keys of your choice, so the
+`ClusterLogForwarder` outputs referencing it are unchanged. Without
+`externalSecret`, the chart keeps rendering the Secret from the values.
+
+```yaml
+externalSecretDefaults:
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+logforwarder:
+  secret:
+    enabled: true
+    name: elasticsearch-external
+    externalSecret:
+      enabled: true
+      dataFrom:
+        - extract:
+            key: ocp/logging/elasticsearch
+```
+
+An `externalSecret` block accepts `secretStoreRef` and `refreshInterval`
+(defaults: `externalSecretDefaults`), `remoteRefs` (map of secret key to ESO
+`remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`. Rendering
+fails when no store is set or when no key source is provided.
+
 ## History
 
 | Release  | Date       | Description                                                                                                      |
@@ -108,3 +140,4 @@ oc apply -k .
 | 21.3.278 | 2026-08-14 | add centigpu |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
+| 21.3.321 | 2026-11-05 | Adding external secret management |
