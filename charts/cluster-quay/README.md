@@ -495,3 +495,4 @@ the `project` sub-chart (`crunchy.project.enabled: false`) when they must stay w
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.311 | 2026-10-29 | Improve cluster-quay options |
 | 21.3.312 | 2026-10-29 | Improve cluster-quay options |
+| 21.3.321 | 2026-11-05 | Adding external secret management |
