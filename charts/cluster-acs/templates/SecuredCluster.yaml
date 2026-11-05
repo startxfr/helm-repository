@@ -1,0 +1,25 @@
+{{- if .Values.acs.enabled }}{{- if .Values.acs.securedCluster }}{{- if .Values.acs.securedCluster.enabled }}
+{{- $namespace := .Values.project.project.name | default "open-security-management" -}}
+{{- $name := include "cluster-acs.securedClusterName" . -}}
+{{- $central := .Values.acs.central | default dict -}}
+{{- if and $central.enabled (eq $name ($central.name | default "default")) }}
+{{- fail (printf "cluster-acs: acs.securedCluster.name %q must differ from acs.central.name (Central and SecuredCluster share the namespace %s)" $name $namespace) }}
+{{- end }}
+apiVersion: platform.stackrox.io/v1alpha1
+kind: SecuredCluster
+metadata:
+  name: {{ $name | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-acs.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-securedcluster" $name | trunc 63 | trimSuffix "-" | quote }}
+  annotations:
+    {{- include "cluster-acs.annotations" . | nindent 4 }}
+    {{- if include "cluster-acs.securedClusterHooked" . }}
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  {{- include "cluster-acs.securedClusterSpec" . | nindent 2 }}
+{{- end }}{{- end }}{{- end }}
