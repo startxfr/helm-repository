@@ -89,6 +89,47 @@ oc apply -k .
 
 The automated sync policy ensures ArgoCD reconciles the OAuth configuration whenever the chart or values drift from the desired state.
 
+## External secrets
+
+The secret of each identity provider can come from an external store (Vault,
+AWS Secrets Manager...) through the [External Secrets Operator](https://external-secrets.io)
+instead of the chart values. With `externalSecret.enabled: true` on a backend,
+the chart renders an `ExternalSecret` producing the very same Secret (name,
+namespace, key), so the `OAuth` configuration that references it is unchanged.
+Without `externalSecret`, the chart keeps rendering the Secret from the values.
+
+| Backend type | Secret produced (openshift-config) | Required key |
+| ------------ | ---------------------------------- | ------------ |
+| `htpasswd`   | `<name>-htpasswd-auth`             | `htpasswd`   |
+| `ldap`       | `<name>-ldap-auth`                 | `bindPassword` |
+| `oidc`       | `<name>-oidc-auth`                 | `clientSecret` |
+
+```yaml
+externalSecretDefaults:
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+auth:
+  enabled: true
+  authBackend:
+    - name: corp-ldap
+      type: ldap
+      ldapURL: "ldaps://ldap.example.com/ou=users,dc=example,dc=com?uid"
+      ldapBindDN: "cn=svc-ocp,ou=services,dc=example,dc=com"
+      externalSecret:
+        enabled: true
+        remoteRefs:
+          bindPassword:
+            key: ocp/auth/corp-ldap
+            property: bindPassword
+```
+
+An `externalSecret` block accepts `secretStoreRef` and `refreshInterval`
+(defaults: `externalSecretDefaults`), `remoteRefs` (map of secret key to ESO
+`remoteRef`) and the raw ESO fields `data`, `dataFrom` and `template`. Rendering
+fails when no store is set or when the required key is not provided.
+`manageSubresource` cannot be combined with `externalSecret`.
+
 ## History
 
 | Release  | Date       | Description                                                                                                                                             |

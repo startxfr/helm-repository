@@ -122,6 +122,183 @@
                 },
                 "infra": {
                     "type": "boolean"
+                },
+                "securedCluster": {
+                    "type": "object",
+                    "description": "Secured cluster services (SecuredCluster CR) registering this cluster in a Central",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable the deployment of the SecuredCluster"
+                        },
+                        "hooked": {
+                            "type": "boolean",
+                            "description": "Deploy the SecuredCluster in the ArgoCD PostSync phase"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Name of the SecuredCluster resource (must differ from acs.central.name)"
+                        },
+                        "clusterName": {
+                            "type": "string",
+                            "description": "Name of this cluster in ACS (required, cannot be changed once registered)"
+                        },
+                        "centralEndpoint": {
+                            "type": "string",
+                            "description": "Central endpoint as host:port (empty: Central of the same namespace, required when acs.central.enabled is false)"
+                        },
+                        "clusterLabels": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        },
+                        "admissionControl": {
+                            "type": "object",
+                            "properties": {
+                                "enforcement": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Enabled",
+                                        "Disabled",
+                                        ""
+                                    ]
+                                },
+                                "failurePolicy": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Ignore",
+                                        "Fail",
+                                        ""
+                                    ]
+                                }
+                            }
+                        },
+                        "perNode": {
+                            "type": "object",
+                            "properties": {
+                                "collection": {
+                                    "type": "string",
+                                    "enum": [
+                                        "CORE_BPF",
+                                        "NoCollection",
+                                        ""
+                                    ]
+                                },
+                                "taintToleration": {
+                                    "type": "string",
+                                    "enum": [
+                                        "TolerateTaints",
+                                        "AvoidTaints",
+                                        ""
+                                    ]
+                                }
+                            }
+                        },
+                        "auditLogs": {
+                            "type": "string",
+                            "enum": [
+                                "Auto",
+                                "Enabled",
+                                "Disabled",
+                                ""
+                            ]
+                        },
+                        "scanner": {
+                            "type": "string",
+                            "enum": [
+                                "AutoSense",
+                                "Disabled",
+                                ""
+                            ]
+                        },
+                        "scannerV4": {
+                            "type": "string",
+                            "enum": [
+                                "Default",
+                                "AutoSense",
+                                "Disabled",
+                                ""
+                            ]
+                        },
+                        "spec": {
+                            "type": [
+                                "string",
+                                "object"
+                            ],
+                            "description": "Additional SecuredCluster spec merged over the generated one"
+                        },
+                        "registration": {
+                            "type": "object",
+                            "description": "Registration of this cluster in Central (Cluster Registration Secret)",
+                            "properties": {
+                                "mode": {
+                                    "type": "string",
+                                    "enum": [
+                                        "job",
+                                        "externalSecret",
+                                        "none"
+                                    ]
+                                },
+                                "job": {
+                                    "type": "object",
+                                    "properties": {
+                                        "image": {
+                                            "type": "string"
+                                        },
+                                        "centralEndpoint": {
+                                            "type": "string"
+                                        },
+                                        "adminPasswordSecret": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "key": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "maxRegistrations": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 100
+                                        },
+                                        "validFor": {
+                                            "type": "string"
+                                        },
+                                        "timeoutSeconds": {
+                                            "type": "integer",
+                                            "minimum": 60
+                                        },
+                                        "ttlSecondsAfterFinished": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                        }
+                                    }
+                                },
+                                "externalSecret": {
+                                    "$ref": "#/definitions/externalSecret"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "externalSecretDefaults": {
+            "type": "object",
+            "description": "Default settings of the ExternalSecret objects rendered by this chart",
+            "properties": {
+                "apiVersion": {
+                    "type": "string"
+                },
+                "refreshInterval": {
+                    "type": "string"
+                },
+                "secretStoreRef": {
+                    "$ref": "#/definitions/externalSecretStoreRef"
                 }
             }
         },
@@ -320,6 +497,82 @@
                             }
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "externalSecretStoreRef": {
+            "type": "object",
+            "description": "SecretStore or ClusterSecretStore to read from",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "SecretStore",
+                        "ClusterSecretStore"
+                    ]
+                }
+            }
+        },
+        "externalSecret": {
+            "type": "object",
+            "description": "Source this secret from an external store (External Secrets Operator ExternalSecret) instead of the chart values",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Render an ExternalSecret producing the same Secret instead of the Secret itself"
+                },
+                "apiVersion": {
+                    "type": "string"
+                },
+                "refreshInterval": {
+                    "type": "string"
+                },
+                "secretStoreRef": {
+                    "$ref": "#/definitions/externalSecretStoreRef"
+                },
+                "remoteRefs": {
+                    "type": "object",
+                    "description": "Map of target secret keys to ExternalSecret remoteRef",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "key": {
+                                "type": "string"
+                            },
+                            "property": {
+                                "type": "string"
+                            },
+                            "version": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "key"
+                        ]
+                    }
+                },
+                "data": {
+                    "type": "array",
+                    "description": "Raw ExternalSecret spec.data entries",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "dataFrom": {
+                    "type": "array",
+                    "description": "Raw ExternalSecret spec.dataFrom entries",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "template": {
+                    "type": "object",
+                    "description": "Raw ExternalSecret spec.target.template"
                 }
             }
         }
