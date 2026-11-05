@@ -295,6 +295,9 @@
                                         ]
                                     }
                                 }
+                            },
+                            "externalSecret": {
+                                "$ref": "#/definitions/externalSecret"
                             }
                         }
                     },
@@ -342,6 +345,97 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "externalSecretDefaults": {
+            "type": "object",
+            "description": "Default settings of the ExternalSecret objects rendered by this chart",
+            "properties": {
+                "apiVersion": {
+                    "type": "string"
+                },
+                "refreshInterval": {
+                    "type": "string"
+                },
+                "secretStoreRef": {
+                    "$ref": "#/definitions/externalSecretStoreRef"
+                }
+            }
+        }
+    },
+    "definitions": {
+        "externalSecretStoreRef": {
+            "type": "object",
+            "description": "SecretStore or ClusterSecretStore to read from",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "SecretStore",
+                        "ClusterSecretStore"
+                    ]
+                }
+            }
+        },
+        "externalSecret": {
+            "type": "object",
+            "description": "Source this secret from an external store (External Secrets Operator ExternalSecret) instead of the chart values",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Render an ExternalSecret producing the same Secret instead of the Secret itself"
+                },
+                "apiVersion": {
+                    "type": "string"
+                },
+                "refreshInterval": {
+                    "type": "string"
+                },
+                "secretStoreRef": {
+                    "$ref": "#/definitions/externalSecretStoreRef"
+                },
+                "remoteRefs": {
+                    "type": "object",
+                    "description": "Map of target secret keys to ExternalSecret remoteRef",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "key": {
+                                "type": "string"
+                            },
+                            "property": {
+                                "type": "string"
+                            },
+                            "version": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "key"
+                        ]
+                    }
+                },
+                "data": {
+                    "type": "array",
+                    "description": "Raw ExternalSecret spec.data entries",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "dataFrom": {
+                    "type": "array",
+                    "description": "Raw ExternalSecret spec.dataFrom entries",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "template": {
+                    "type": "object",
+                    "description": "Raw ExternalSecret spec.target.template"
                 }
             }
         }

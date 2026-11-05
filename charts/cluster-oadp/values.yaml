@@ -15,6 +15,19 @@ context:  &context
   # Version name of this application (default use Chart appVersion)
   version: "1.5.4"
 
+# Default settings of the ExternalSecret objects rendered by this chart when a
+# secret is sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
 # Configure various OADP resources
 oadp:
   # Enable the configuration of the API manager
@@ -135,6 +148,25 @@ cloudcreds:
     [startx]
     aws_accesss_key_id=XXXXXXXXX
     aws_secret_accesss_key=XXXXXXXXXXXXXXX
+  # Source the credentials file from an external store instead of `spec`:
+  # renders an ExternalSecret producing the same Secret (key `cloud`)
+  externalSecret:
+    enabled: false
+    # # With these two keys, the chart builds the AWS-style credentials file
+    # # (section [profile]) through an ESO template
+    # profile: default
+    # remoteRefs:
+    #   aws_access_key_id:
+    #     key: ocp/oadp/s3
+    #     property: access_key
+    #   aws_secret_access_key:
+    #     key: ocp/oadp/s3
+    #     property: secret_key
+    # # ...or fetch a complete credentials file as the `cloud` key
+    # remoteRefs:
+    #   cloud:
+    #     key: ocp/oadp/s3
+    #     property: credentials
 
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
