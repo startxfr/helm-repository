@@ -2,7 +2,7 @@
 
 # Application deployment context
 context: &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -213,22 +213,60 @@ alertmanager:
     #       route:
     #         receiver: pagerduty
 
-# Configuration of the cluster monitoring feature
+# Configuration of the cluster monitoring feature (ConfigMap openshift-monitoring/cluster-monitoring-config)
 monitoring:
-  # Enable the cluster monitoring personnalisation
+  # Enable the cluster monitoring customization
   enabled: false
-  # Enable the deployment of the logging service into infra nodes
+  # Deploy the monitoring components (except node-exporter) on the infra nodes
   infra_enabled: false
-  # Define the storage class to use for persistance (default is gp3-csi)
+  # Storage class of the Prometheus and Alertmanager persistent volumes (default is gp3-csi)
   storageClass: gp3-csi
-  # Define the storage size to use for persistance (default is 20Gi)
+  # Size of the Prometheus persistent volume, one per replica (default is 20Gi)
   storageSize: "20Gi"
-  # Define the storage size to use for persistance of alertManager (default is 5Gi)
+  # Size of the Alertmanager persistent volume, one per replica (default is 5Gi)
   storageSizeAlert: "5Gi"
-  # Enabling monitoring for user-defined projects (see https://docs.openshift.com/container-platform/4.14/monitoring/enabling-monitoring-for-user-defined-projects.html)
+  # Enable the monitoring of user-defined projects (see the userWorkload block for its configuration)
   enableUserWorkload: false
-  # Define the prometheus retention period (default is 7d)
+  # Prometheus data retention duration (default is 7d)
   retentionPeriod: 7d
+  # Prometheus maximum data size on disk, ex: 40GB (about 80% of storageSize). Empty keeps only the time-based retention
+  retentionSize: ""
+  # Resource requests and limits of the Prometheus pods
+  resources:
+    requests:
+      cpu: 200m
+      memory: 2Gi
+  # Labels added by Prometheus to every metric and alert leaving the cluster (remote write, federation, alert receivers)
+  externalLabels:
+    # Add the scope, environment and cluster_name labels from the deployment context. The keys prometheus,
+    # prometheus_replica and cluster are reserved by OpenShift 4.19+ and rejected by the monitoring webhook
+    contextLabels: true
+    # Additional labels (key: value)
+    custom: {}
+  # Remote write endpoints of the platform Prometheus (list of remoteWrite settings, see the OpenShift documentation)
+  remoteWrite: []
+  # Platform Alertmanager
+  alertmanager:
+    # Deploy the platform Alertmanager (false removes it, alerts must then be sent to an external Alertmanager)
+    enabled: true
+  # Additional cluster-monitoring-config settings added as-is at the end of config.yaml (keys managed by this chart must not be repeated)
+  extraConfig: {}
+  # Monitoring of user-defined projects (ConfigMap openshift-user-workload-monitoring/user-workload-monitoring-config), requires enableUserWorkload
+  userWorkload:
+    # Manage the user-workload-monitoring-config ConfigMap
+    enabled: false
+    # Data retention duration of the user workload Prometheus (default is 24h)
+    retentionPeriod: 24h
+    # Maximum data size on disk of the user workload Prometheus. Empty keeps only the time-based retention
+    retentionSize: ""
+    # Storage class of the user workload Prometheus persistent volume (empty uses monitoring.storageClass)
+    storageClass: ""
+    # Size of the user workload Prometheus persistent volume, one per replica (default is 10Gi)
+    storageSize: "10Gi"
+    # Resource requests and limits of the user workload Prometheus pods
+    resources: {}
+    # Additional user-workload-monitoring-config settings added as-is at the end of its config.yaml
+    extraConfig: {}
 
 # Configuration of the cluster proxy feature
 proxy:

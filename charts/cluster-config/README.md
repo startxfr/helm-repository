@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -65,7 +65,65 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-config startx/cluster-config
 ```
 
-## Others values availables
+## Cluster monitoring
+
+The `monitoring` block manages the `cluster-monitoring-config` ConfigMap of the `openshift-monitoring`
+namespace (platform Prometheus and Alertmanager) and, with `monitoring.userWorkload.enabled`, the
+`user-workload-monitoring-config` ConfigMap of the `openshift-user-workload-monitoring` namespace.
+Both ConfigMaps replace any existing configuration, which is validated by the monitoring admission
+webhook of OpenShift 4.19+: unknown keys and the reserved external labels `prometheus`,
+`prometheus_replica` and `cluster` are rejected, this is why the cluster name is exposed as
+`cluster_name`. Dashboards, alert routes or remote write relabelings keyed on the former `cluster`
+external label must be updated to `cluster_name` when upgrading an existing deployment.
+
+```yaml
+monitoring:
+  enabled: true
+  infra_enabled: false
+  storageClass: ocs-storagecluster-ceph-rbd   # block RWO storage class of the cluster
+  storageSize: "50Gi"                          # per Prometheus replica (2 PVC)
+  storageSizeAlert: "5Gi"                      # per Alertmanager replica (2 PVC)
+  retentionPeriod: 15d
+  retentionSize: 40GB                          # about 80% of storageSize
+  enableUserWorkload: true
+  externalLabels:
+    custom:
+      site: paris
+  userWorkload:
+    enabled: true
+    retentionPeriod: 7d
+    storageSize: "10Gi"
+```
+
+| Key                                   | Default        | Description                                                                                   |
+| ------------------------------------- | -------------- | --------------------------------------------------------------------------------------------- |
+| monitoring.enabled                    | `false`        | Manage the cluster-monitoring-config ConfigMap                                                |
+| monitoring.infra_enabled              | `false`        | Deploy the monitoring components (except node-exporter) on the infra nodes                    |
+| monitoring.storageClass               | `gp3-csi`      | Storage class of the Prometheus and Alertmanager persistent volumes                           |
+| monitoring.storageSize                | `20Gi`         | Size of the Prometheus persistent volume (one per replica)                                    |
+| monitoring.storageSizeAlert           | `5Gi`          | Size of the Alertmanager persistent volume (one per replica)                                  |
+| monitoring.enableUserWorkload         | `false`        | Enable the monitoring of user-defined projects                                                |
+| monitoring.retentionPeriod            | `7d`           | Prometheus data retention duration                                                            |
+| monitoring.retentionSize              | `""`           | Prometheus maximum data size on disk (ex: `40GB`), empty keeps only the time-based retention  |
+| monitoring.resources                  | 200m / 2Gi     | Resource requests and limits of the Prometheus pods                                           |
+| monitoring.externalLabels.contextLabels | `true`       | Add the `scope`, `environment` and `cluster_name` labels from the deployment context          |
+| monitoring.externalLabels.custom      | `{}`           | Additional external labels (reserved keys are rejected)                                       |
+| monitoring.remoteWrite                | `[]`           | Remote write endpoints of the platform Prometheus                                             |
+| monitoring.alertmanager.enabled       | `true`         | Deploy the platform Alertmanager                                                              |
+| monitoring.extraConfig                | `{}`           | Additional cluster-monitoring-config settings added as-is (managed keys must not be repeated) |
+| monitoring.userWorkload.enabled       | `false`        | Manage the user-workload-monitoring-config ConfigMap (requires `enableUserWorkload`)          |
+| monitoring.userWorkload.retentionPeriod | `24h`        | Data retention duration of the user workload Prometheus                                       |
+| monitoring.userWorkload.retentionSize | `""`           | Maximum data size on disk of the user workload Prometheus                                     |
+| monitoring.userWorkload.storageClass  | `""`           | Storage class of the user workload Prometheus volume (empty uses `monitoring.storageClass`)   |
+| monitoring.userWorkload.storageSize   | `10Gi`         | Size of the user workload Prometheus persistent volume (one per replica)                      |
+| monitoring.userWorkload.resources     | `{}`           | Resource requests and limits of the user workload Prometheus pods                             |
+| monitoring.userWorkload.extraConfig   | `{}`           | Additional user-workload-monitoring-config settings added as-is                               |
+
+Switching from the default ephemeral storage to persistent volumes restarts the Prometheus and
+Alertmanager pods: the metrics history and the active silences are lost. Growing `storageSize` later
+does not resize existing PersistentVolumeClaims.
+
+## Other available values
 
 - **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml))
 
@@ -183,3 +241,4 @@ is set or when a required key is not provided.
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
+| 21.3.321 | 2026-11-08 | Monitoring: configurable retention size, resources, external labels (cluster_name replaces the reserved cluster label), remote write, Alertmanager toggle, extra settings and user workload monitoring storage. With monitoring.enabled the rendered ConfigMap changes: metricsServer and monitoringPlugin replace k8sPrometheusAdapter, label app.kubernetes.io/name ends with -monitoring- |

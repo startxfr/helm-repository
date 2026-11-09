@@ -50,7 +50,7 @@ annotations:
   artifacthub.io/operator: "true"
   # Artifacthub operator capabilities
   artifacthub.io/operatorCapabilities: "Seamless Upgrades"
-  # Artifacthub chart recommandations
+  # Artifacthub chart recommendations
   startx.io/recommendations: |
     - name: Startx basic chart - Project
       url: https://helm-repository.readthedocs.io/en/latest/charts/project
@@ -62,6 +62,10 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
+    - kind: fixed
+      description: "[cluster-config] monitoring: the cluster external label, reserved by OpenShift 4.19+, is replaced by cluster_name (the ConfigMap was rejected by the monitoring webhook)"
     - kind: changed
-      description: "Align all charts to v21.3.321"
+      description: "[cluster-config] monitoring: metricsServer and monitoringPlugin replace the removed k8sPrometheusAdapter for the infra placement (the rendered cluster-monitoring-config changes when monitoring.enabled is true: cluster_name label, metricsServer, monitoringPlugin, app.kubernetes.io/name label suffix -monitoring-)"
+    - kind: added
+      description: "[cluster-config] monitoring: retentionSize, resources, externalLabels, remoteWrite, alertmanager.enabled, extraConfig and userWorkload (user-workload-monitoring-config) settings"
   artifacthub.io/containsSecurityUpdates: "false"
