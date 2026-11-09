@@ -1,0 +1,112 @@
+{{- if .Values.lokistack.enabled -}}
+{{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
+{{- $name := .Values.lokistack.name | default "logging-loki" -}}
+{{- $tenants := .Values.lokistack.tenants | default dict -}}
+{{- $storage := .Values.lokistack.storage | default dict -}}
+{{- $secret := $storage.secret | default dict -}}
+{{- $tls := $storage.tls | default dict -}}
+{{- $retention := .Values.lokistack.retention | default dict -}}
+{{- $limits := .Values.lokistack.limits | default dict -}}
+{{- $replication := .Values.lokistack.replication | default dict -}}
+{{- $rules := .Values.lokistack.rules | default dict -}}
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-loki.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-lokistack"
+  annotations:
+    {{- include "cluster-loki.annotations" . | nindent 4 }}
+    {{- if .Values.lokistack.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  managementState: {{ .Values.lokistack.managementState | default "Managed" | quote }}
+  size: {{ .Values.lokistack.size | default "1x.small" | quote }}
+  storageClassName: {{ .Values.lokistack.storageClassName | default "gp3-csi" | quote }}
+  tenants:
+    mode: {{ $tenants.mode | default "openshift-logging" | quote }}
+  storage:
+    {{- with $storage.schemas }}
+    schemas:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    secret:
+      name: {{ $secret.name | default "logging-loki-s3" | quote }}
+      type: {{ $secret.type | default "s3" | quote }}
+      {{- with $secret.credentialMode }}
+      credentialMode: {{ . | quote }}
+      {{- end }}
+    {{- if $tls.caName }}
+    tls:
+      caName: {{ $tls.caName | quote }}
+      {{- with $tls.caKey }}
+      caKey: {{ . | quote }}
+      {{- end }}
+    {{- end }}
+  {{- if $replication.factor }}
+  replication:
+    factor: {{ $replication.factor }}
+  {{- end }}
+  {{- if or $retention.days $limits.ingestion $limits.queries }}
+  limits:
+    global:
+      {{- if $retention.days }}
+      retention:
+        days: {{ $retention.days }}
+        {{- with $retention.streams }}
+        streams:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- end }}
+      {{- with $limits.ingestion }}
+      ingestion:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $limits.queries }}
+      queries:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- end }}
+  {{- if $rules.enabled }}
+  rules:
+    enabled: true
+    {{- with $rules.selector }}
+    selector:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with $rules.namespaceSelector }}
+    namespaceSelector:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.lokistack.hashRing }}
+  hashRing:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .Values.lokistack.infra_enabled }}
+  template:
+    {{- range tuple "compactor" "distributor" "gateway" "indexGateway" "ingester" "querier" "queryFrontend" "ruler" }}
+    {{ . }}:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+        - effect: NoExecute
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+    {{- end }}
+  {{- end }}
+  {{- with .Values.lokistack.extraSpec }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end -}}
