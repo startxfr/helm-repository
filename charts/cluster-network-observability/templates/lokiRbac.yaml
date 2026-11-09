@@ -1,0 +1,49 @@
+{{- if .Values.lokiRbac -}}{{- if .Values.lokiRbac.enabled -}}
+{{- $fc := .Values.flowcollector | default dict -}}
+{{- $loki := $fc.loki | default dict -}}
+{{- $lokiStack := $loki.lokiStack | default dict -}}
+{{- $namespace := $fc.namespace | default "netobserv" -}}
+{{- $lokiNamespace := $lokiStack.namespace | default $namespace -}}
+{{- $operatorNamespace := .Values.lokiRbac.operatorNamespace | default "openshift-netobserv-operator" -}}
+{{- $serviceAccount := .Values.lokiRbac.serviceAccount | default "netobserv-controller-manager" -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "netobserv-secret-watcher"
+  namespace: {{ $lokiNamespace | quote }}
+  labels:
+    {{- include "cluster-network-observability.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "netobserv-secret-watcher-rolebinding"
+  annotations:
+    {{- include "cluster-network-observability.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: netobserv-secret-watcher
+subjects:
+  - kind: ServiceAccount
+    name: {{ $serviceAccount | quote }}
+    namespace: {{ $operatorNamespace | quote }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "netobserv-secret-creator"
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-network-observability.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "netobserv-secret-creator-rolebinding"
+  annotations:
+    {{- include "cluster-network-observability.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "25"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: netobserv-secret-creator
+subjects:
+  - kind: ServiceAccount
+    name: {{ $serviceAccount | quote }}
+    namespace: {{ $operatorNamespace | quote }}
+{{- end -}}{{- end -}}

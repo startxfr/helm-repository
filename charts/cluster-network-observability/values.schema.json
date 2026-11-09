@@ -1,0 +1,570 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Context",
+            "description": "Application deployment context",
+            "properties": {
+                "scope": {
+                    "title": "Scope",
+                    "type": "string",
+                    "default": "myscope",
+                    "description": "Name of the global scope for this application (organizational tenant)"
+                },
+                "cluster": {
+                    "title": "Cluster",
+                    "type": "string",
+                    "default": "default",
+                    "description": "Name of the cluster running this application (platform tenant)"
+                },
+                "environment": {
+                    "title": "Environment",
+                    "type": "string",
+                    "default": "myenv",
+                    "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                },
+                "component": {
+                    "title": "Component",
+                    "type": "string",
+                    "default": "mycomponent",
+                    "description": "Component name of this application (logical tenant)"
+                },
+                "app": {
+                    "title": "App",
+                    "type": "string",
+                    "default": "default-netobserv",
+                    "description": "Application name (functional tenant, default use Chart name)"
+                },
+                "version": {
+                    "title": "Version",
+                    "type": "string",
+                    "default": "2.0.0",
+                    "description": "Version name of this application (default use Chart appVersion)"
+                }
+            }
+        },
+        "flowcollector": {
+            "type": "object",
+            "title": "Flowcollector",
+            "description": "Deploy the FlowCollector CR driving the Network Observability operator (eBPF agents, flow processor, console plugin)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the FlowCollector CR (cluster-scoped, a single FlowCollector is allowed per cluster)"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resource as a helm hook"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "cluster",
+                    "description": "Name of the FlowCollector (must be \"cluster\" for the operator to reconcile it)"
+                },
+                "namespace": {
+                    "title": "Namespace",
+                    "type": "string",
+                    "default": "netobserv",
+                    "description": "Namespace where the operator deploys the netobserv components (flow processor, console plugin). The operator creates it when it does not exist and runs the eBPF agents in the <namespace>-privileged namespace. Immutable once created"
+                },
+                "deploymentModel": {
+                    "title": "Deployment Model",
+                    "type": "string",
+                    "default": "Service",
+                    "description": "Flow processing deployment model. Service (operator default) runs the processor behind a Service backed by a scalable Deployment, Direct pairs a processor DaemonSet with the agents through the host network (small clusters below 15 nodes only), Kafka sends the flows to a Kafka topic consumed by the processor (large clusters, see the kafka block)"
+                },
+                "infra_enabled": {
+                    "title": "Infra enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Place the flow processor and the console plugin on the infra nodes (nodeSelector and tolerations). The eBPF agents are never constrained (the DaemonSet must run on every node and tolerates every taint by default) and the processor is not constrained either when deploymentModel is Direct (it then runs as a DaemonSet paired with the agents)"
+                },
+                "networkPolicy": {
+                    "type": "object",
+                    "title": "Network Policy",
+                    "description": "Network policies protecting the netobserv namespaces (spec.networkPolicy)",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true,
+                            "description": "Deploy the network policies isolating the netobserv components (enabled by default by the operator on OVN-Kubernetes)"
+                        },
+                        "additionalNamespaces": {
+                            "type": "array",
+                            "title": "Additional Namespaces",
+                            "description": "Additional namespaces allowed to connect to the netobserv namespace (raw list of namespace names)",
+                            "default": []
+                        }
+                    }
+                },
+                "agent": {
+                    "type": "object",
+                    "title": "Agent",
+                    "description": "Configuration of the eBPF agents (spec.agent.ebpf)",
+                    "properties": {
+                        "sampling": {
+                            "title": "Sampling",
+                            "type": "integer",
+                            "default": 50,
+                            "description": "Sampling interval of the eBPF probe (50 means one packet out of 50 is sampled, 0 or 1 means all packets are sampled)"
+                        },
+                        "privileged": {
+                            "title": "Privileged",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Run the eBPF agent pods as privileged. Required by the PacketDrop, NetworkEvents and UDNMapping features and to capture SR-IOV secondary interfaces, otherwise the agent only gets the BPF, PERFMON and NET_ADMIN capabilities"
+                        },
+                        "features": {
+                            "type": "array",
+                            "title": "Features",
+                            "description": "Additional eBPF features to enable among PacketDrop (privileged), DNSTracking, FlowRTT, NetworkEvents (privileged, OVN-Kubernetes observability), PacketTranslation, EbpfManager (requires the eBPF Manager operator), UDNMapping (privileged), IPSec and TLSTracking. Every feature increases the CPU, memory and storage footprint",
+                            "default": []
+                        },
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources",
+                            "description": "Compute resources of the eBPF agent container (raw map, empty keeps the operator default of 800Mi memory limit)",
+                            "default": {}
+                        }
+                    }
+                },
+                "processor": {
+                    "type": "object",
+                    "title": "Processor",
+                    "description": "Configuration of the flow processor flowlogs-pipeline (spec.processor)",
+                    "properties": {
+                        "logTypes": {
+                            "title": "Log Types",
+                            "type": "string",
+                            "default": "Flows",
+                            "description": "Record types to generate: Flows (regular flows), Conversations, EndedConversations or All"
+                        },
+                        "consumerReplicas": {
+                            "title": "Consumer Replicas",
+                            "type": "integer",
+                            "default": 0,
+                            "description": "Number of processor replicas in the Service and Kafka deployment models (0 keeps the operator default of 3, ignored in the Direct deployment model)"
+                        },
+                        "metrics": {
+                            "type": "object",
+                            "title": "Metrics",
+                            "description": "Prometheus metrics generated by the processor (spec.processor.metrics)",
+                            "properties": {
+                                "includeList": {
+                                    "type": "array",
+                                    "title": "Include List",
+                                    "description": "Metrics to generate, named without the netobserv_ prefix (raw list, empty keeps the operator default list)",
+                                    "default": []
+                                }
+                            }
+                        },
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources",
+                            "description": "Compute resources of the processor container (raw map, empty keeps the operator default of 800Mi memory limit)",
+                            "default": {}
+                        }
+                    }
+                },
+                "loki": {
+                    "type": "object",
+                    "title": "Loki",
+                    "description": "Storage of the raw flows in Loki (spec.loki)",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Store the flows in Loki. When disabled only the Prometheus metrics are kept and the console plugin loses the raw flows table and the per-pod details"
+                        },
+                        "mode": {
+                            "title": "Mode",
+                            "type": "string",
+                            "default": "LokiStack",
+                            "description": "Loki installation mode: LokiStack (Loki operator), Monolithic, Microservices or Manual (see extraSpec for their URLs)"
+                        },
+                        "lokiStack": {
+                            "type": "object",
+                            "title": "Loki Stack",
+                            "description": "Reference of the LokiStack CR used by the LokiStack mode. Deploy it with the cluster-loki chart using tenants.mode openshift-network (a LokiStack must not be shared with the OpenShift Logging stack)",
+                            "properties": {
+                                "name": {
+                                    "title": "Name",
+                                    "type": "string",
+                                    "default": "loki",
+                                    "description": "Name of the LokiStack CR"
+                                },
+                                "namespace": {
+                                    "title": "Namespace",
+                                    "type": "string",
+                                    "default": "netobserv",
+                                    "description": "Namespace of the LokiStack CR (default is the flowcollector namespace, see lokiRbac when it differs)"
+                                }
+                            }
+                        },
+                        "extraSpec": {
+                            "type": "object",
+                            "title": "Extra Spec",
+                            "description": "Additional spec.loki fields appended as is (raw map): monolithic, microservices or manual URLs, timeouts, batch sizes",
+                            "default": {}
+                        }
+                    }
+                },
+                "consolePlugin": {
+                    "type": "object",
+                    "title": "Console Plugin",
+                    "description": "OpenShift console plugin (spec.consolePlugin)",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true,
+                            "description": "Deploy the Network Traffic console plugin (requires Loki or the Prometheus metrics)"
+                        },
+                        "quickFilters": {
+                            "type": "array",
+                            "title": "Quick Filters",
+                            "description": "Quick filter presets displayed in the console plugin (raw list of name, filter and default, empty keeps the operator defaults)",
+                            "default": []
+                        }
+                    }
+                },
+                "kafka": {
+                    "type": "object",
+                    "title": "Kafka",
+                    "description": "Kafka connection used when deploymentModel is Kafka (raw map rendered as spec.kafka: address, topic, tls, sasl). The Kafka cluster and the topic must exist (deploy them with the cluster-kafka chart)",
+                    "default": {}
+                },
+                "exporters": {
+                    "type": "array",
+                    "title": "Exporters",
+                    "description": "Exporters receiving a copy of the enriched flows (raw list rendered as spec.exporters: Kafka, IPFIX or OpenTelemetry)",
+                    "default": []
+                },
+                "extraSpec": {
+                    "type": "object",
+                    "title": "Extra Spec",
+                    "description": "Additional FlowCollector spec fields appended as is at the end of the spec (raw map). Never repeat a field managed by the values above (namespace, deploymentModel, networkPolicy, agent, processor, loki, consolePlugin, kafka, exporters)",
+                    "default": {}
+                }
+            }
+        },
+        "flowMetrics": {
+            "type": "object",
+            "title": "Flow Metrics",
+            "description": "Deploy FlowMetric CRs generating custom Prometheus metrics from the flow fields",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the FlowMetric CRs"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of the FlowMetric CRs to create (they must live in the flowcollector namespace to be picked up by the processor)",
+                    "default": []
+                }
+            }
+        },
+        "lokiRbac": {
+            "type": "object",
+            "title": "Loki Rbac",
+            "description": "RoleBindings letting the operator read the LokiStack certificates when the LokiStack lives in another namespace than the flowcollector namespace (secret-watcher in the LokiStack namespace, secret-creator in the flowcollector namespace). Not needed when both share the same namespace. The flowcollector namespace must exist (the operator creates it once the FlowCollector is reconciled, so with Helm enable this block on a second upgrade)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the RoleBindings"
+                },
+                "operatorNamespace": {
+                    "title": "Operator Namespace",
+                    "type": "string",
+                    "default": "openshift-netobserv-operator",
+                    "description": "Namespace hosting the Network Observability operator (operator.subscription.namespace)"
+                },
+                "serviceAccount": {
+                    "title": "Service Account",
+                    "type": "string",
+                    "default": "netobserv-controller-manager",
+                    "description": "Service account of the operator controller manager"
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-netobserv",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "2.0.0",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "project": {
+                    "type": "object",
+                    "title": "Project",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "type": {
+                            "title": "Type",
+                            "type": "string",
+                            "default": "namespace"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "openshift-netobserv-operator"
+                        },
+                        "display_name": {
+                            "title": "Display name",
+                            "type": "string",
+                            "default": "Operator Network Observability"
+                        },
+                        "description": {
+                            "title": "Description",
+                            "type": "string",
+                            "default": "Network Observability operator configured by STARTX"
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "title": "Operator",
+            "description": "Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-netobserv",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "2.0.0",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "title": "Subscription",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "netobserv-operator"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-netobserv-operator"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "2.0.0"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "title": "Operator",
+                            "properties": {
+                                "channel": {
+                                    "title": "Channel",
+                                    "type": "string",
+                                    "default": "stable"
+                                },
+                                "name": {
+                                    "title": "Name",
+                                    "type": "string",
+                                    "default": "netobserv-operator"
+                                },
+                                "installPlanApproval": {
+                                    "title": "Install Plan Approval",
+                                    "type": "string",
+                                    "default": "Manual"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "title": "Source",
+                                    "properties": {
+                                        "name": {
+                                            "title": "Name",
+                                            "type": "string",
+                                            "default": "redhat-operators"
+                                        },
+                                        "namespace": {
+                                            "title": "Namespace",
+                                            "type": "string",
+                                            "default": "openshift-marketplace"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "title": "Config",
+                                    "properties": {
+                                        "infra": {
+                                            "title": "Infra",
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "title": "Operator Group",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "target": {
+                            "title": "Target",
+                            "type": "string",
+                            "default": "all-ns"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "openshift-netobserv-operator"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-netobserv-operator"
+                        },
+                        "providedAPIs": {
+                            "title": "Provided APIs",
+                            "type": "string",
+                            "default": "FlowCollector.v1beta2.flows.netobserv.io,FlowMetric.v1alpha1.flows.netobserv.io"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
