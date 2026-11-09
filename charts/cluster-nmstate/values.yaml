@@ -2,7 +2,7 @@
 
 # Application deployment context
 context:  &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -53,6 +53,29 @@ nncp:
     #     port:
     #     - name: enp1s0
 
+
+# NetworkAttachmentDefinitions (Multus secondary networks) attached to the node interfaces configured by the policy
+nads:
+  # Enable the creation of the NetworkAttachmentDefinition list
+  enabled: false
+  # Activate the resources as a helm hook
+  hooked: false
+  # List of NetworkAttachmentDefinition to create. Example: a linux-bridge network on the br1 bridge created
+  # by a NodeNetworkConfigurationPolicy, available to every namespace (namespace default)
+  # list:
+  #   - name: br1-network
+  #     # Namespace of the network attachment (default is "default": usable from every namespace)
+  #     namespace: default
+  #     # Additional annotations (ex: k8s.v1.cni.cncf.io/resourceName for SR-IOV networks)
+  #     annotations: {}
+  #     # CNI configuration as a YAML/JSON text or as a map (name defaults to the resource name), stored as the JSON string expected by Multus
+  #     config: |
+  #       cniVersion: "0.3.1"
+  #       type: bridge
+  #       bridge: br1
+  #       macspoofchk: true
+  #       ipam: {}
+  list: []
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project:
