@@ -19,7 +19,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "description": "Name of the global scope for this application. Define an organizational tenant.",
                     "default": "myscope",
                     "examples": [
                         "myscope",
@@ -42,8 +42,8 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 25,
-                    "title": "Environement name",
-                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "title": "Environment name",
+                    "description": "Name of the environment for this application. Define a stage tenant.",
                     "default": "dev",
                     "examples": [
                         "dev",
@@ -69,7 +69,7 @@
                     "minLength": 1,
                     "maxLength": 40,
                     "title": "Application name",
-                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "description": "Name of the application name. Define a functional tenant.",
                     "default": "default-sxapi",
                     "examples": [
                         "myapp",
@@ -106,6 +106,61 @@
                 },
                 "storageClass": {
                     "type": "string"
+                },
+                "evictionStrategy": {
+                    "title": "Eviction Strategy",
+                    "type": "string",
+                    "default": "None",
+                    "description": "Eviction strategy applied to the virtual machines when a node is drained: None (VMs are shut down), LiveMigrate (VMs are live migrated, they must be migratable) or LiveMigrateIfPossible"
+                },
+                "liveMigration": {
+                    "type": "object",
+                    "title": "Live Migration",
+                    "description": "Live migration settings (spec.liveMigrationConfig of the HyperConverged CR)",
+                    "properties": {
+                        "network": {
+                            "title": "Network",
+                            "type": "string",
+                            "default": "",
+                            "description": "Name of a NetworkAttachmentDefinition, in the HyperConverged namespace, carrying the live migration traffic on a dedicated network (ex: a bond interface). Empty uses the pod network. See the nads block"
+                        },
+                        "allowAutoConverge": {
+                            "title": "Allow Auto Converge",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Allow the migration to slow down the virtual machine so that it converges"
+                        },
+                        "allowPostCopy": {
+                            "title": "Allow Post Copy",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Allow post-copy migrations"
+                        },
+                        "completionTimeoutPerGiB": {
+                            "title": "Completion Timeout Per Gi B",
+                            "type": "integer",
+                            "default": 800,
+                            "description": "Maximum time in seconds, per GiB of memory, for a migration to complete"
+                        },
+                        "parallelMigrationsPerCluster": {
+                            "title": "Parallel Migrations Per Cluster",
+                            "type": "integer",
+                            "default": 5,
+                            "description": "Maximum number of migrations running in parallel in the cluster"
+                        },
+                        "parallelOutboundMigrationsPerNode": {
+                            "title": "Parallel Outbound Migrations Per Node",
+                            "type": "integer",
+                            "default": 2,
+                            "description": "Maximum number of outbound migrations per node"
+                        },
+                        "progressTimeout": {
+                            "title": "Progress Timeout",
+                            "type": "integer",
+                            "default": 150,
+                            "description": "Time in seconds without progress before a migration is aborted"
+                        }
+                    }
                 }
             }
         },
@@ -199,7 +254,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 30,
-                                    "title": "Version name",
+                            "title": "Version name",
                             "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
                             "default": "0.0.1",
                             "examples": [
@@ -372,6 +427,31 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "nads": {
+            "type": "object",
+            "title": "Nads",
+            "description": "NetworkAttachmentDefinitions (Multus secondary networks) used by the virtual machines or by the live migration network",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the NetworkAttachmentDefinition list"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as a helm hook"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of NetworkAttachmentDefinition to create. Example: a macvlan network on the bond1 interface dedicated to live migrations, referenced by hyperconvergedCluster.liveMigration.network",
+                    "default": []
                 }
             }
         }

@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -43,6 +43,74 @@ Complete deployment of a KubeVirt configuration with the following characteristi
 - 1 **operator** named **kubevirt-hyperconverged** deployed under **openshift-cnv**
 - 1 **HyperConverged** cluster instance enabling OpenShift Virtualization
 - Optional **VirtualMachine** instances configurable via the vms list
+- Optional **NetworkAttachmentDefinition** resources configurable via the nads list
+
+### Live migration on a dedicated network
+
+The live migration traffic can leave the pod network and use a dedicated interface of the nodes
+(a bond, a VLAN or a physical NIC present on every node hosting virtual machines). Declare a
+NetworkAttachmentDefinition in the HyperConverged namespace and reference it in the live migration
+settings:
+
+```yaml
+hyperconvergedCluster:
+  enabled: true
+  liveMigration:
+    # NetworkAttachmentDefinition created by the nads block below
+    network: live-migration
+    parallelOutboundMigrationsPerNode: 2
+nads:
+  enabled: true
+  list:
+    - name: live-migration
+      config: |
+        cniVersion: "0.3.1"
+        type: macvlan
+        master: bond1
+        mode: bridge
+        ipam:
+          type: whereabouts
+          range: 192.168.250.0/24
+```
+
+The interface (`master`) must exist with the same name on every node hosting virtual machines and the
+IPAM range must be dedicated to the migration network. The virt-handler pods are restarted with an
+additional interface on this network; running virtual machines are not affected. Check a migration with
+`oc get vmi <name> -o jsonpath='{.status.migrationState.targetNodeAddress}'`: the address must belong to
+the migration range.
+
+The `config` field accepts the CNI configuration in YAML or JSON; it is stored as the JSON string expected
+by Multus and its `name` defaults to the resource name. Any CNI type is accepted (bridge, macvlan, ipvlan,
+sriov, ovn-k8s-cni-overlay...). The default namespace of a network attachment is the project namespace
+(`openshift-cnv`); use `namespace: default` to make a network available to every namespace.
+
+### hyperconvergedCluster values dictionary
+
+| Key                                                              | Default                  | Description                                                                                            |
+| ---------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| hyperconvergedCluster.enabled                                    | `true`                   | Enable the HyperConverged CR                                                                           |
+| hyperconvergedCluster.hooked                                     | `false`                  | Deploy the CR as a Helm/ArgoCD post-sync hook                                                          |
+| hyperconvergedCluster.name                                       | `kubevirt-hyperconverged` | Name of the HyperConverged CR                                                                         |
+| hyperconvergedCluster.evictionStrategy                           | `None`                   | Eviction strategy of the virtual machines on node drain (None, LiveMigrate, LiveMigrateIfPossible)    |
+| hyperconvergedCluster.liveMigration.network                      | `""`                     | NetworkAttachmentDefinition carrying the live migration traffic (empty = pod network)                 |
+| hyperconvergedCluster.liveMigration.allowAutoConverge            | `false`                  | Allow the migration to slow down the virtual machine so that it converges                              |
+| hyperconvergedCluster.liveMigration.allowPostCopy                | `false`                  | Allow post-copy migrations                                                                             |
+| hyperconvergedCluster.liveMigration.completionTimeoutPerGiB      | `800`                    | Maximum time in seconds, per GiB of memory, for a migration to complete                                |
+| hyperconvergedCluster.liveMigration.parallelMigrationsPerCluster | `5`                      | Maximum number of migrations running in parallel in the cluster                                        |
+| hyperconvergedCluster.liveMigration.parallelOutboundMigrationsPerNode | `2`                 | Maximum number of outbound migrations per node                                                         |
+| hyperconvergedCluster.liveMigration.progressTimeout              | `150`                    | Time in seconds without progress before a migration is aborted                                         |
+
+### nads values dictionary
+
+| Key                      | Default | Description                                                                                 |
+| ------------------------ | ------- | ------------------------------------------------------------------------------------------- |
+| nads.enabled             | `false` | Enable the creation of the NetworkAttachmentDefinition list                                 |
+| nads.hooked              | `false` | Deploy the resources as a Helm/ArgoCD post-sync hook                                        |
+| nads.list                | `[]`    | List of NetworkAttachmentDefinition to create                                               |
+| nads.list[].name         |         | Name of the NetworkAttachmentDefinition                                                     |
+| nads.list[].namespace    | project | Namespace of the NetworkAttachmentDefinition (default is the project namespace)             |
+| nads.list[].annotations  | `{}`    | Additional annotations (ex: `k8s.v1.cni.cncf.io/resourceName` for SR-IOV networks)          |
+| nads.list[].config       |         | CNI configuration (YAML/JSON text or map), stored as the JSON string expected by Multus     |
 
 ## Deploy with ArgoCD
 
@@ -106,3 +174,4 @@ oc apply -k .
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
+| 21.3.321 | 2026-11-08 | Add live migration settings (dedicated network, eviction strategy) and NetworkAttachmentDefinition list |
