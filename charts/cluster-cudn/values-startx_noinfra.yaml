@@ -1,0 +1,91 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: cudn
+  app: startx-cudn
+  version: "4.22.0"
+
+namespaces:
+  enabled: false
+  list:
+    - name: startx-cudn-blue
+      display_name: "Startx CUDN blue tenant"
+      description: "Tenant namespace attached to the startx-blue primary user-defined network"
+      labels:
+        app.startx.fr/network: blue
+    - name: startx-cudn-green
+      display_name: "Startx UDN green tenant"
+      description: "Tenant namespace served by the startx-green namespaced user-defined network"
+      labels: {}
+
+clusterNetworks:
+  enabled: false
+  list:
+    - name: startx-blue
+      labels: {}
+      namespaceSelector:
+        matchLabels:
+          app.startx.fr/network: blue
+      network:
+        topology: Layer2
+        layer2:
+          role: Primary
+          subnets:
+            - 10.200.0.0/16
+          ipam:
+            lifecycle: Persistent
+          mtu: 1400
+    # Localnet secondary network bridged to a physical VLAN. Requires an OVS bridge mapping on the nodes
+    # (cluster-nmstate NNCP with ovn.bridge-mappings localnet: localnet-datacenter)
+    # - name: startx-datacenter
+    #   labels: {}
+    #   namespaceSelector:
+    #     matchLabels:
+    #       app.startx.fr/network: datacenter
+    #   network:
+    #     topology: Localnet
+    #     localnet:
+    #       role: Secondary
+    #       physicalNetworkName: localnet-datacenter
+    #       vlan:
+    #         mode: Access
+    #         access:
+    #           id: 100
+    #       subnets:
+    #         - 192.168.100.0/24
+    #       excludeSubnets:
+    #         - 192.168.100.0/26
+    #       ipam:
+    #         lifecycle: Persistent
+    #       mtu: 1500
+
+networks:
+  enabled: false
+  list:
+    - name: startx-green
+      namespace: startx-cudn-green
+      labels: {}
+      network:
+        topology: Layer3
+        layer3:
+          role: Primary
+          subnets:
+            - cidr: 10.210.0.0/16
+              hostSubnet: 24
+          mtu: 1400
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-cudn"
+    display_name: "Startx user-defined networks"
+    requester: startx
+    description: OVN-Kubernetes user-defined networks configured by STARTX

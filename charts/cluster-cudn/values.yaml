@@ -1,0 +1,154 @@
+# Default values for cluster-cudn.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-cudn
+  # Version name of this application (default use Chart appVersion)
+  version: "4.22.0"
+
+# Namespaces attached to a primary user-defined network. OVN-Kubernetes only accepts a primary network
+# for namespaces created with the k8s.ovn.org/primary-user-defined-network label (the label cannot be added
+# afterwards), so the chart creates these namespaces itself (sync-wave -10, kept on uninstall)
+namespaces:
+  # Enable the creation of the namespaces listed below
+  enabled: false
+  # List of namespaces to create, labelled k8s.ovn.org/primary-user-defined-network unless primary is false
+  list: []
+  #   # Name of the namespace (never default or openshift-*)
+  # - name: demo-cudn-blue
+  #   # Display name of the namespace (openshift.io/display-name annotation)
+  #   display_name: "Demo blue tenant"
+  #   # Description of the namespace (openshift.io/description annotation)
+  #   description: "Tenant namespace attached to the blue primary user-defined network"
+  #   # Set the k8s.ovn.org/primary-user-defined-network label (default true). Set it to false for a namespace that only
+  #   # consumes secondary networks (Localnet, Layer2 with the Secondary role): with the label and no primary network,
+  #   # the pods of the namespace never start
+  #   primary: true
+  #   # Additional labels set on the namespace (used by the ClusterUserDefinedNetwork namespaceSelector)
+  #   labels:
+  #     app.startx.fr/network: blue
+  #   # Name of the namespace
+  # - name: demo-cudn-green
+  #   # Display name of the namespace (openshift.io/display-name annotation)
+  #   display_name: "Demo green tenant"
+  #   # Description of the namespace (openshift.io/description annotation)
+  #   description: "Tenant namespace served by the green namespaced user-defined network"
+  #   # Additional labels set on the namespace
+  #   labels: {}
+
+# Cluster-scoped user-defined networks shared across namespaces (ClusterUserDefinedNetwork, cluster-admin only)
+clusterNetworks:
+  # Enable the creation of the ClusterUserDefinedNetwork resources listed below
+  enabled: false
+  # List of ClusterUserDefinedNetwork resources (spec.namespaceSelector and spec.network are rendered as is)
+  list: []
+  #   # Name of the ClusterUserDefinedNetwork (Layer2 primary network with persistent IP addresses, suited for virtual machines)
+  # - name: blue-layer2
+  #   # Additional labels set on the ClusterUserDefinedNetwork
+  #   labels: {}
+  #   # Label selector of the namespaces attached to this network (spec.namespaceSelector, must not select default or openshift-*)
+  #   namespaceSelector:
+  #     matchLabels:
+  #       app.startx.fr/network: blue
+  #   # Network definition (spec.network). Immutable once created
+  #   network:
+  #     # Network topology (Layer2, Layer3 or Localnet)
+  #     topology: Layer2
+  #     # Layer2 topology: one logical switch shared by all nodes
+  #     layer2:
+  #       # Primary replaces the default pod network of the selected namespaces, Secondary is attached on demand
+  #       role: Primary
+  #       # Pod subnets (one IPv4 and/or one IPv6 CIDR, must not overlap the cluster, service, join or masquerade subnets)
+  #       subnets:
+  #         - 10.200.0.0/16
+  #       # IP address management (lifecycle Persistent keeps the IP of virtual machines across restarts and live migrations)
+  #       ipam:
+  #         lifecycle: Persistent
+  #       # Maximum transmission unit of the network (default 1400)
+  #       mtu: 1400
+  #   # Name of the ClusterUserDefinedNetwork (Localnet secondary network bridged to a physical VLAN)
+  # - name: datacenter-vlan100
+  #   # Additional labels set on the ClusterUserDefinedNetwork
+  #   labels: {}
+  #   # Label selector of the namespaces allowed to attach this network
+  #   namespaceSelector:
+  #     matchLabels:
+  #       app.startx.fr/network: datacenter
+  #   # Network definition (spec.network). Immutable once created
+  #   network:
+  #     # Localnet topology: logical switch bridged to a physical network through an OVS bridge mapping
+  #     topology: Localnet
+  #     # Localnet configuration (only available with ClusterUserDefinedNetwork)
+  #     localnet:
+  #       # Localnet only supports the Secondary role (pods attach it with the k8s.v1.cni.cncf.io/networks annotation)
+  #       role: Secondary
+  #       # Must match the localnet value of an ovn.bridge-mappings item of a NodeNetworkConfigurationPolicy (see cluster-nmstate)
+  #       physicalNetworkName: localnet-datacenter
+  #       # VLAN tagging (optional, the physical ports must accept this VLAN ID)
+  #       vlan:
+  #         mode: Access
+  #         access:
+  #           id: 100
+  #       # Subnet of the physical network used to assign pod IP addresses (omit it and set ipam.mode Disabled when a DHCP server exists)
+  #       subnets:
+  #         - 192.168.100.0/24
+  #       # IP ranges of the physical network that OVN-Kubernetes must never assign (gateway, static hosts...)
+  #       excludeSubnets:
+  #         - 192.168.100.0/26
+  #       # IP address management (lifecycle Persistent keeps the IP of virtual machines across restarts and live migrations)
+  #       ipam:
+  #         lifecycle: Persistent
+  #       # Maximum transmission unit, must match the MTU of the physical interface (default 1500 for Localnet)
+  #       mtu: 1500
+
+# Namespace-scoped user-defined networks (UserDefinedNetwork, Layer2 or Layer3 topology only)
+networks:
+  # Enable the creation of the UserDefinedNetwork resources listed below
+  enabled: false
+  # List of UserDefinedNetwork resources (spec is rendered as is from the network key)
+  list: []
+  #   # Name of the UserDefinedNetwork (Layer3 primary network: one subnet per node, routed between nodes)
+  # - name: green-layer3
+  #   # Namespace of the UserDefinedNetwork (default is the project name, must carry the primary-user-defined-network label)
+  #   namespace: demo-cudn-green
+  #   # Additional labels set on the UserDefinedNetwork
+  #   labels: {}
+  #   # Network definition (spec). Immutable once created
+  #   network:
+  #     # Network topology (Layer2 or Layer3)
+  #     topology: Layer3
+  #     # Layer3 topology: a layer 2 segment per node, each with its own subnet
+  #     layer3:
+  #       # Primary replaces the default pod network of the namespace, Secondary is attached on demand
+  #       role: Primary
+  #       # Cluster subnets split into one hostSubnet per node (mandatory for Layer3)
+  #       subnets:
+  #         - cidr: 10.210.0.0/16
+  #           hostSubnet: 24
+  #       # Maximum transmission unit of the network (default 1400)
+  #       mtu: 1400
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-cudn"
+    display_name: User-defined networks
+    description: OVN-Kubernetes user-defined networks configured by STARTX
+    # # Attach the project namespace itself to a primary user-defined network (string value, set at creation time only)
+    # additionalLabels: |-
+    #   k8s.ovn.org/primary-user-defined-network: ""

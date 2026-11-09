@@ -1,0 +1,27 @@
+{{- if .Values.clusterNetworks.enabled -}}
+{{ range .Values.clusterNetworks.list }}
+---
+apiVersion: k8s.ovn.org/v1
+kind: ClusterUserDefinedNetwork
+metadata:
+  name: {{ .name | default "default-cudn" | quote }}
+  labels:
+    {{- include "cluster-cudn.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "default-cudn" }}-cudn"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-cudn.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- with .namespaceSelector }}
+  namespaceSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .network }}
+  network:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end -}}
+{{- end -}}
