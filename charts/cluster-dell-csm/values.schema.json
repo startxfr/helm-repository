@@ -1,0 +1,714 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Context",
+            "description": "Application deployment context",
+            "properties": {
+                "scope": {
+                    "title": "Scope",
+                    "type": "string",
+                    "default": "myscope",
+                    "description": "Name of the global scope for this application (organizational tenant)"
+                },
+                "cluster": {
+                    "title": "Cluster",
+                    "type": "string",
+                    "default": "default",
+                    "description": "Name of the cluster running this application (platform tenant)"
+                },
+                "environment": {
+                    "title": "Environment",
+                    "type": "string",
+                    "default": "myenv",
+                    "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                },
+                "component": {
+                    "title": "Component",
+                    "type": "string",
+                    "default": "mycomponent",
+                    "description": "Component name of this application (logical tenant)"
+                },
+                "app": {
+                    "title": "App",
+                    "type": "string",
+                    "default": "default-dell-csm",
+                    "description": "Application name (functional tenant, default use Chart name)"
+                },
+                "version": {
+                    "title": "Version",
+                    "type": "string",
+                    "default": "1.13.2",
+                    "description": "Version name of this application (default use Chart appVersion)"
+                }
+            }
+        },
+        "externalSecretDefaults": {
+            "type": "object",
+            "title": "External Secret Defaults",
+            "description": "Default settings applied to every ExternalSecret rendered by this chart when a secret is sourced from an external store (`externalSecret.enabled: true`). Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.",
+            "properties": {
+                "apiVersion": {
+                    "title": "Api Version",
+                    "type": "string",
+                    "default": "external-secrets.io/v1",
+                    "description": "API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)"
+                },
+                "refreshInterval": {
+                    "title": "Refresh Interval",
+                    "type": "string",
+                    "default": "1h",
+                    "description": "How often the Secret is refreshed from the external store"
+                },
+                "secretStoreRef": {
+                    "type": "object",
+                    "title": "Secret Store Ref",
+                    "description": "Store to read from (name is required as soon as a secret uses externalSecret)",
+                    "properties": {
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": ""
+                        },
+                        "kind": {
+                            "title": "Kind",
+                            "type": "string",
+                            "default": "ClusterSecretStore"
+                        }
+                    }
+                }
+            }
+        },
+        "csm": {
+            "type": "object",
+            "title": "Csm",
+            "description": "Deploy the ContainerStorageModule CR (the Dell CSI driver managed by the CSM operator)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the ContainerStorageModule CR in the project namespace"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resource as a helm hook"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "powerstore",
+                    "description": "Name of the ContainerStorageModule CR (the driver reads the array credentials from the Secret \"<name>-config\")"
+                },
+                "driverType": {
+                    "title": "Driver Type",
+                    "type": "string",
+                    "default": "powerstore",
+                    "description": "Dell CSI driver to deploy (csiDriverType) : powerstore, powermax, powerflex, isilon (PowerScale) or unity"
+                },
+                "version": {
+                    "title": "Version",
+                    "type": "string",
+                    "default": "v1.18.2",
+                    "description": "CSM release deployed by the operator (spec.version, ex: v1.18.2). The installed operator only accepts the CSM releases listed in its operatorconfig/common/csm-releases.yaml (https://github.com/dell/csm-operator) ; operator 1.13.x supports CSM v1.16.0 to v1.18.2"
+                },
+                "configVersion": {
+                    "title": "Config Version",
+                    "type": "string",
+                    "default": "",
+                    "description": "Deprecated driver configuration version (spec.driver.configVersion, ex: v2.18.1 for PowerStore). Leave empty to rely on `version` ; only used by operators older than CSM 1.16"
+                },
+                "replicas": {
+                    "title": "Replicas",
+                    "type": "integer",
+                    "default": 2,
+                    "description": "Number of replicas of the controller plugin"
+                },
+                "authSecret": {
+                    "title": "Auth Secret",
+                    "type": "string",
+                    "default": "",
+                    "description": "Name of the Secret holding the array credentials (empty means \"<name>-config\"). Without authSecret the operator would look for \"<name>-config\" (PowerStore, PowerFlex) or \"<name>-creds\" (PowerMax, PowerScale, Unity)"
+                },
+                "common": {
+                    "type": "object",
+                    "title": "Common",
+                    "description": "Settings shared by the controller and the node plugins",
+                    "properties": {
+                        "image": {
+                            "title": "Image",
+                            "type": "string",
+                            "default": "",
+                            "description": "Custom driver image (empty means the image shipped with the operator release)"
+                        },
+                        "imagePullPolicy": {
+                            "title": "Image Pull Policy",
+                            "type": "string",
+                            "default": "IfNotPresent",
+                            "description": "Pull policy of the driver image"
+                        },
+                        "envs": {
+                            "type": "array",
+                            "title": "Envs",
+                            "description": "Environment variables merged in spec.driver.common.envs (raw list, operator defaults apply when empty)",
+                            "default": []
+                        }
+                    }
+                },
+                "dnsPolicy": {
+                    "title": "Dns Policy",
+                    "type": "string",
+                    "default": "ClusterFirstWithHostNet",
+                    "description": "DNS policy of the node plugin daemonset"
+                },
+                "forceRemoveDriver": {
+                    "title": "Force Remove Driver",
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Remove the driver deployment when the CR is deleted"
+                },
+                "csiDriverSpec": {
+                    "type": "object",
+                    "title": "Csi Driver Spec",
+                    "description": "CSIDriver object created by the operator",
+                    "properties": {
+                        "fSGroupPolicy": {
+                            "title": "F SGroup Policy",
+                            "type": "string",
+                            "default": "ReadWriteOnceWithFSType",
+                            "description": "fsGroupPolicy of the CSIDriver (ReadWriteOnceWithFSType, File or None ; immutable on OCP 4.16 and older)"
+                        },
+                        "storageCapacity": {
+                            "title": "Storage Capacity",
+                            "type": "boolean",
+                            "default": true,
+                            "description": "Enable storage capacity tracking used by the scheduler"
+                        }
+                    }
+                },
+                "controller": {
+                    "type": "object",
+                    "title": "Controller",
+                    "description": "Controller plugin (deployment talking to the array management API)",
+                    "properties": {
+                        "infra_enabled": {
+                            "title": "Infra enabled",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Run the controller plugin on infra nodes (infra nodeSelector and toleration)"
+                        },
+                        "nodeSelector": {
+                            "type": "object",
+                            "title": "Node Selector",
+                            "description": "Node selector of the controller plugin (ignored when infra_enabled is true)",
+                            "default": {}
+                        },
+                        "tolerations": {
+                            "type": "array",
+                            "title": "Tolerations",
+                            "description": "Tolerations of the controller plugin (ignored when infra_enabled is true)",
+                            "default": []
+                        },
+                        "envs": {
+                            "type": "array",
+                            "title": "Envs",
+                            "description": "Environment variables merged in spec.driver.controller.envs (raw list)",
+                            "default": []
+                        }
+                    }
+                },
+                "node": {
+                    "type": "object",
+                    "title": "Node",
+                    "description": "Node plugin (daemonset mounting the volumes on every node)",
+                    "properties": {
+                        "infra_enabled": {
+                            "title": "Infra enabled",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Let the node plugin run on infra nodes too (adds the infra toleration, no nodeSelector)"
+                        },
+                        "nodeSelector": {
+                            "type": "object",
+                            "title": "Node Selector",
+                            "description": "Node selector of the node plugin",
+                            "default": {}
+                        },
+                        "tolerations": {
+                            "type": "array",
+                            "title": "Tolerations",
+                            "description": "Tolerations of the node plugin (ignored when infra_enabled is true)",
+                            "default": []
+                        },
+                        "envs": {
+                            "type": "array",
+                            "title": "Envs",
+                            "description": "Environment variables merged in spec.driver.node.envs (raw list)",
+                            "default": []
+                        }
+                    }
+                },
+                "sideCars": {
+                    "type": "array",
+                    "title": "Side Cars",
+                    "description": "CSI sidecar containers overrides (raw list rendered in spec.driver.sideCars, operator defaults apply when empty)",
+                    "default": []
+                },
+                "modules": {
+                    "type": "array",
+                    "title": "Modules",
+                    "description": "CSM modules (raw list rendered in spec.modules) : replication, observability, resiliency, authorization",
+                    "default": []
+                },
+                "extraSpec": {
+                    "type": "object",
+                    "title": "Extra Spec",
+                    "description": "Extra fields appended to the ContainerStorageModule spec (raw map, ex: upgrade, customRegistry)",
+                    "default": {}
+                }
+            }
+        },
+        "arraySecret": {
+            "type": "object",
+            "title": "Array Secret",
+            "description": "Credentials of the Dell storage arrays used by the driver (Secret mounted by the controller and node plugins)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the array credentials Secret"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "",
+                    "description": "Name of the Secret (empty means csm.authSecret, then \"<csm.name>-config\")"
+                },
+                "config": {
+                    "title": "Config",
+                    "type": "string",
+                    "default": "arrays:\n  - endpoint: \"https://powerstore.example.com/api/rest\"\n    globalID: \"PS000000000000\"\n    username: \"csmadmin\"\n    password: \"changeme\"\n    skipCertificateValidation: true\n    isDefault: true\n    blockProtocol: \"auto\"\n    nasName: \"nas-server\"\n",
+                    "description": "Dell array configuration stored in the \"config\" key of the Secret (raw YAML text, one entry per array). PowerStore fields: endpoint, globalID, username, password, skipCertificateValidation, isDefault, blockProtocol (FC, ISCSI, NVMeTCP, NVMeFC, None or auto), nasName (NFS). PowerFlex, PowerScale and Unity use the same \"config\" key with their own layout (see the Dell CSM documentation)"
+                },
+                "externalSecret": {
+                    "type": "object",
+                    "title": "External Secret",
+                    "description": "Source this Secret from an external store instead of the values above: renders an ExternalSecret producing the same Secret (key \"config\")",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                }
+            }
+        },
+        "storageClasses": {
+            "type": "object",
+            "title": "Storage Classes",
+            "description": "StorageClasses provisioned by the Dell CSI driver",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the StorageClasses"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the StorageClasses as a helm hook"
+                },
+                "provisioner": {
+                    "title": "Provisioner",
+                    "type": "string",
+                    "default": "",
+                    "description": "CSIDriver name used as provisioner (empty means the driver of csm.driverType : csi-powerstore.dellemc.com, csi-powermax.dellemc.com, csi-vxflexos.dellemc.com, csi-isilon.dellemc.com or csi-unity.dellemc.com)"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of StorageClasses to create",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "title": "Name",
+                                "type": "string",
+                                "default": "powerstore-xfs",
+                                "description": "Name of the StorageClass"
+                            },
+                            "isDefault": {
+                                "title": "Is Default",
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Make this StorageClass the default one of the cluster (must be unique)"
+                            },
+                            "parameters": {
+                                "title": "Parameters",
+                                "type": "string",
+                                "default": "csi.storage.k8s.io/fstype: \"xfs\"\n",
+                                "description": "Driver specific parameters (raw YAML text). PowerStore: arrayID (globalID of the array, optional when the array is flagged isDefault in the secret), csi.storage.k8s.io/fstype (ext4, xfs or nfs), nasName, allowRoot, nfsAcls"
+                            },
+                            "reclaimPolicy": {
+                                "title": "Reclaim Policy",
+                                "type": "string",
+                                "default": "Delete",
+                                "description": "Reclaim policy of the provisioned volumes (Delete or Retain)"
+                            },
+                            "allowVolumeExpansion": {
+                                "title": "Allow Volume Expansion",
+                                "type": "boolean",
+                                "default": true,
+                                "description": "Enable the expansion of the provisioned volumes"
+                            },
+                            "volumeBindingMode": {
+                                "title": "Volume Binding Mode",
+                                "type": "string",
+                                "default": "Immediate",
+                                "description": "Binding mode of the provisioned volumes (Immediate or WaitForFirstConsumer)"
+                            },
+                            "mountOptions": {
+                                "type": "array",
+                                "title": "Mount Options",
+                                "description": "Mount options applied to the provisioned volumes",
+                                "default": []
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "volumeSnapshotClasses": {
+            "type": "object",
+            "title": "Volume Snapshot Classes",
+            "description": "VolumeSnapshotClasses used to snapshot the volumes of the Dell CSI driver",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the VolumeSnapshotClasses"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the VolumeSnapshotClasses as a helm hook"
+                },
+                "driver": {
+                    "title": "Driver",
+                    "type": "string",
+                    "default": "",
+                    "description": "CSIDriver name handling the snapshots (empty means the driver of csm.driverType)"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of VolumeSnapshotClasses to create",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "title": "Name",
+                                "type": "string",
+                                "default": "powerstore-snapshot",
+                                "description": "Name of the VolumeSnapshotClass"
+                            },
+                            "isDefault": {
+                                "title": "Is Default",
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Make this VolumeSnapshotClass the default one of the cluster (must be unique)"
+                            },
+                            "veleroEnabled": {
+                                "title": "Velero Enabled",
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Label the class for the CSI snapshots of Velero / OADP"
+                            },
+                            "deletionPolicy": {
+                                "title": "Deletion Policy",
+                                "type": "string",
+                                "default": "Delete",
+                                "description": "Deletion policy of the snapshots (Delete or Retain)"
+                            },
+                            "parameters": {
+                                "title": "Parameters",
+                                "type": "string",
+                                "default": "",
+                                "description": "Driver specific parameters (raw YAML text)"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-dell-csm",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "1.13.2",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "project": {
+                    "type": "object",
+                    "title": "Project",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "type": {
+                            "title": "Type",
+                            "type": "string",
+                            "default": "namespace"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "default-dell-csm"
+                        },
+                        "display_name": {
+                            "title": "Display name",
+                            "type": "string",
+                            "default": "Dell CSM storage"
+                        },
+                        "description": {
+                            "title": "Description",
+                            "type": "string",
+                            "default": "Dell Container Storage Modules configured by STARTX"
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "title": "Operator",
+            "description": "Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator) The certified Dell CSM operator is installed in openshift-operators (AllNamespaces mode, global OperatorGroup)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-dell-csm",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "1.13.2",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "title": "Subscription",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "dell-csm-operator-certified"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-operators"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "v1.13.2"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "title": "Operator",
+                            "properties": {
+                                "channel": {
+                                    "title": "Channel",
+                                    "type": "string",
+                                    "default": "stable"
+                                },
+                                "name": {
+                                    "title": "Name",
+                                    "type": "string",
+                                    "default": "dell-csm-operator-certified"
+                                },
+                                "installPlanApproval": {
+                                    "title": "Install Plan Approval",
+                                    "type": "string",
+                                    "default": "Manual"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "title": "Source",
+                                    "properties": {
+                                        "name": {
+                                            "title": "Name",
+                                            "type": "string",
+                                            "default": "certified-operators"
+                                        },
+                                        "namespace": {
+                                            "title": "Namespace",
+                                            "type": "string",
+                                            "default": "openshift-marketplace"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "title": "Config",
+                                    "properties": {
+                                        "infra": {
+                                            "title": "Infra",
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "title": "Operator Group",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "dell-csm-operator"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-operators"
+                        },
+                        "target": {
+                            "title": "Target",
+                            "type": "string",
+                            "default": "all-ns"
+                        },
+                        "providedAPIs": {
+                            "title": "Provided APIs",
+                            "type": "string",
+                            "default": "ContainerStorageModule.v1.storage.dell.com"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,107 @@
+{{- if .Values.csm.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-dell-csm" -}}
+{{- $name := .Values.csm.name | default "powerstore" -}}
+{{- $controller := .Values.csm.controller | default dict -}}
+{{- $node := .Values.csm.node | default dict -}}
+apiVersion: storage.dell.com/v1
+kind: ContainerStorageModule
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-dell-csm.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-csm"
+  annotations:
+    {{- include "cluster-dell-csm.annotations" . | nindent 4 }}
+    {{- if .Values.csm.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- if .Values.csm.version }}
+  version: {{ .Values.csm.version | quote }}
+  {{- end }}
+  driver:
+    csiDriverType: {{ .Values.csm.driverType | default "powerstore" | quote }}
+    {{- if .Values.csm.configVersion }}
+    configVersion: {{ .Values.csm.configVersion | quote }}
+    {{- end }}
+    authSecret: {{ .Values.csm.authSecret | default (printf "%s-config" $name) | quote }}
+    replicas: {{ .Values.csm.replicas | default 2 }}
+    dnsPolicy: {{ .Values.csm.dnsPolicy | default "ClusterFirstWithHostNet" | quote }}
+    forceRemoveDriver: {{ .Values.csm.forceRemoveDriver | default false }}
+    {{- with .Values.csm.csiDriverSpec }}
+    csiDriverSpec:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    common:
+      {{- with .Values.csm.common.image }}
+      image: {{ . | quote }}
+      {{- end }}
+      imagePullPolicy: {{ .Values.csm.common.imagePullPolicy | default "IfNotPresent" | quote }}
+      {{- with .Values.csm.common.envs }}
+      envs:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- if or $controller.infra_enabled $controller.nodeSelector $controller.tolerations $controller.envs }}
+    controller:
+      {{- if $controller.infra_enabled }}
+      nodeSelector:
+        node-role.kubernetes.io/infra: ''
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- else }}
+      {{- with $controller.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $controller.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- with $controller.envs }}
+      envs:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- if or $node.infra_enabled $node.nodeSelector $node.tolerations $node.envs }}
+    node:
+      {{- with $node.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $node.infra_enabled }}
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/infra
+          operator: Exists
+      {{- else }}
+      {{- with $node.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- with $node.envs }}
+      envs:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- with .Values.csm.sideCars }}
+    sideCars:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- with .Values.csm.modules }}
+  modules:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.csm.extraSpec }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end -}}

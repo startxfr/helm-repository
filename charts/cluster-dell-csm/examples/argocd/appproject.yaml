@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-dell-csm
+  namespace: openshift-gitops
+spec:
+  description: Deploy the Dell Container Storage Modules operator and CSI driver on OpenShift
+  sourceRepos:
+    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: default-dell-csm
+    - server: https://kubernetes.default.svc
+      namespace: openshift-operators
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: operators.coreos.com
+      kind: OperatorGroup
+    - group: operators.coreos.com
+      kind: Subscription
+    - group: storage.k8s.io
+      kind: StorageClass
+    - group: snapshot.storage.k8s.io
+      kind: VolumeSnapshotClass

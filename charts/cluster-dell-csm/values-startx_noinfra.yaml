@@ -1,0 +1,167 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: dell-csm
+  app: startx-dell-csm
+  version: "1.13.2"
+
+externalSecretDefaults:
+  apiVersion: external-secrets.io/v1
+  refreshInterval: 1h
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+csm:
+  enabled: true
+  hooked: false
+  name: powerstore
+  driverType: powerstore
+  version: "v1.18.2"
+  configVersion: ""
+  replicas: 2
+  authSecret: ""
+  common:
+    image: ""
+    imagePullPolicy: IfNotPresent
+    envs: []
+  dnsPolicy: ClusterFirstWithHostNet
+  forceRemoveDriver: true
+  csiDriverSpec:
+    fSGroupPolicy: ReadWriteOnceWithFSType
+    storageCapacity: true
+  controller:
+    infra_enabled: false
+    nodeSelector: {}
+    tolerations: []
+    envs: []
+  node:
+    infra_enabled: false
+    nodeSelector: {}
+    tolerations: []
+    envs: []
+  sideCars: []
+  modules:
+    - name: resiliency
+      enabled: false
+    - name: replication
+      enabled: false
+    - name: observability
+      enabled: false
+    - name: authorization
+      enabled: false
+  extraSpec: {}
+
+# The array credentials are cluster specific: provide arraySecret.config (or arraySecret.externalSecret)
+# in a dedicated values file and enable the secret there
+arraySecret:
+  enabled: false
+  name: ""
+  config: |
+    arrays:
+      - endpoint: "https://powerstore.example.com/api/rest"
+        globalID: "PS000000000000"
+        username: "csmadmin"
+        password: "changeme"
+        skipCertificateValidation: true
+        isDefault: true
+        blockProtocol: "auto"
+        nasName: "nas-server"
+  externalSecret:
+    enabled: false
+
+storageClasses:
+  enabled: true
+  hooked: false
+  provisioner: ""
+  list:
+    - name: startx-dell-block-delete
+      isDefault: true
+      parameters: |
+        csi.storage.k8s.io/fstype: "xfs"
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+    - name: startx-dell-block-retain
+      isDefault: false
+      parameters: |
+        csi.storage.k8s.io/fstype: "xfs"
+      reclaimPolicy: Retain
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+    - name: startx-dell-nfs-delete
+      isDefault: false
+      parameters: |
+        csi.storage.k8s.io/fstype: "nfs"
+        allowRoot: "false"
+      reclaimPolicy: Delete
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+    - name: startx-dell-nfs-retain
+      isDefault: false
+      parameters: |
+        csi.storage.k8s.io/fstype: "nfs"
+        allowRoot: "false"
+      reclaimPolicy: Retain
+      allowVolumeExpansion: true
+      volumeBindingMode: Immediate
+
+volumeSnapshotClasses:
+  enabled: true
+  hooked: false
+  driver: ""
+  list:
+    - name: startx-dell-snapshot
+      isDefault: true
+      veleroEnabled: true
+      deletionPolicy: Delete
+      parameters: ""
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-dell-csm"
+    display_name: "Startx Dell CSM storage"
+    requester: startx
+    description: Dell Container Storage Modules configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "dell-csm-operator-certified"
+    namespace: "openshift-operators"
+    version: "v1.13.2"
+    operator:
+      channel: "stable"
+      name: dell-csm-operator-certified
+      installPlanApproval: Manual
+      # csv: dell-csm-operator-certified
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+        # resources:
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "dell-csm-operator"
+    namespace: "openshift-operators"
+    target: "all-ns"
+    providedAPIs: "ContainerStorageModule.v1.storage.dell.com"
