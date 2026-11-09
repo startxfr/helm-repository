@@ -1,0 +1,84 @@
+# Values for the Magellium OpenShift console customization (OpenShift 4.19+ per-theme logos)
+# see values.yaml for explanation on each params
+context: &context
+  scope: magellium
+  cluster: default
+  environment: prod
+  component: console
+  app: magellium-console
+  version: "4.22.0"
+
+console:
+  enabled: true
+  namespace: openshift-config
+  state: Managed
+  customize:
+    name: Magellium OpenShift
+    logos:
+      enabled: true
+      configMap: console-logos
+      masthead:
+        # Original Magellium logo for the light theme
+        light:
+          file: webtpl/magellium-logo.png
+        # Same logo with the dark blue text turned white for the dark theme
+        dark:
+          file: webtpl/magellium-logo-dark.png
+      # No square symbol in the Magellium logo: the OpenShift favicon is kept
+      favicon:
+        light:
+          file: ""
+        dark:
+          file: ""
+    # Clean home page: no Getting started banner and no guided tour
+    capabilities:
+      GettingStartedBanner: Disabled
+      GuidedTour: Disabled
+  links:
+    - name: magellium-website
+      spec: |
+        href: 'https://www.magellium.com'
+        location: ApplicationMenu
+        text: Magellium
+        applicationMenu:
+          section: Magellium
+    - name: magellium-helpmenu
+      spec: |
+        href: 'https://www.magellium.com'
+        location: HelpMenu
+        text: Magellium support
+  logLinks: []
+  notifications:
+    - name: magellium-environment-banner
+      spec: |
+        location: BannerTop
+        text: Magellium OpenShift platform
+        color: '#ffffff'
+        backgroundColor: '#001a28'
+
+webTerminal:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "web-terminal"
+    namespace: "openshift-operators"
+    version: "v1.13.0"
+    operator:
+      channel: fast
+      name: web-terminal
+      installPlanApproval: Manual
+      csv: web-terminal
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "global-operators"
+    namespace: "openshift-operators"
+    providedAPIs: ""
