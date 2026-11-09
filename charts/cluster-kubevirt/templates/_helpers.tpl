@@ -33,3 +33,8 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{ end }}
 {{- end }}{{- end }}
 {{- end -}}
+
+{{/* Value of a key of a map when it is set (0 and false included), else the default (dict: map, key, default) */}}
+{{- define "cluster-kubevirt.setOrDefault" -}}
+{{- if and (hasKey .map .key) (not (kindIs "invalid" (get .map .key))) }}{{ get .map .key }}{{ else }}{{ .default }}{{ end }}
+{{- end -}}
