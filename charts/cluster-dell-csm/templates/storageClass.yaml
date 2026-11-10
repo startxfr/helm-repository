@@ -1,0 +1,42 @@
+{{- if .Values.storageClasses.enabled -}}
+{{- $provisioner := .Values.storageClasses.provisioner | default (include "cluster-dell-csm.provisioner" .) -}}
+{{- range .Values.storageClasses.list }}
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: {{ .name | quote }}
+  labels:
+    {{- include "cluster-dell-csm.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name -}}-storageclass"
+  annotations:
+    {{- include "cluster-dell-csm.annotations" $ | nindent 4 }}
+    {{- if .isDefault }}
+    storageclass.kubernetes.io/is-default-class: "true"
+    {{- end }}
+    {{- if $.Values.storageClasses.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "30"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "40"
+provisioner: {{ .provisioner | default $provisioner | quote }}
+{{- if .parameters }}
+parameters:
+  {{- .parameters | trim | nindent 2 }}
+{{- else }}
+parameters: {}
+{{- end }}
+reclaimPolicy: {{ .reclaimPolicy | default "Delete" | quote }}
+{{- if hasKey . "allowVolumeExpansion" }}
+allowVolumeExpansion: {{ .allowVolumeExpansion }}
+{{- end }}
+volumeBindingMode: {{ .volumeBindingMode | default "Immediate" | quote }}
+{{- with .mountOptions }}
+mountOptions:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}

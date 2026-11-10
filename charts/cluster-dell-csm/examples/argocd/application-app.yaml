@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-dell-csm-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default-dell-csm
+    server: https://kubernetes.default.svc
+  project: cluster-dell-csm
+  source:
+    chart: cluster-dell-csm
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: false
+        csm:
+          enabled: true
+        # The driver needs the array credentials Secret "powerstore-config" in default-dell-csm:
+        # enable arraySecret with your own arraySecret.config (or arraySecret.externalSecret with
+        # externalSecretDefaults.secretStoreRef.name) or create the Secret outside of ArgoCD
+        arraySecret:
+          enabled: false
+        storageClasses:
+          enabled: true
+        volumeSnapshotClasses:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.321
+  ignoreDifferences:
+    - group: storage.dell.com
+      kind: ContainerStorageModule
+      jsonPointers:
+        - /metadata/finalizers
+      jqPathExpressions:
+        - .metadata.annotations["storage.dell.com/CSMOperatorConfigVersion"]
+        - .metadata.annotations["storage.dell.com/PreviouslyAppliedConfiguration"]
+        - .metadata.annotations["storage.dell.com/PreUpgradeSnapshot"]
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - SkipDryRunOnMissingResource=true

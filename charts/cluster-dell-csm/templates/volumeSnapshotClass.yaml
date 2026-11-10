@@ -1,0 +1,35 @@
+{{- if .Values.volumeSnapshotClasses.enabled -}}
+{{- $driver := .Values.volumeSnapshotClasses.driver | default (include "cluster-dell-csm.provisioner" .) -}}
+{{- range .Values.volumeSnapshotClasses.list }}
+---
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: {{ .name | quote }}
+  labels:
+    {{- include "cluster-dell-csm.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- .name -}}-volumesnapshotclass"
+    {{- if .veleroEnabled }}
+    velero.io/csi-volumesnapshot-class: "true"
+    {{- end }}
+  annotations:
+    {{- include "cluster-dell-csm.annotations" $ | nindent 4 }}
+    {{- if .isDefault }}
+    snapshot.storage.kubernetes.io/is-default-class: "true"
+    {{- end }}
+    {{- if $.Values.volumeSnapshotClasses.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "31"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "40"
+driver: {{ .driver | default $driver | quote }}
+deletionPolicy: {{ .deletionPolicy | default "Delete" | quote }}
+{{- if .parameters }}
+parameters:
+  {{- .parameters | trim | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
