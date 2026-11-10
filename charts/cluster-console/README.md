@@ -69,14 +69,14 @@ published in a single ConfigMap of `openshift-config` (`console.customize.logos.
 console:
   enabled: true
   customize:
-    name: Magellium OpenShift
+    name: Example OpenShift
     logos:
       enabled: true
       masthead:
         light:
-          file: webtpl/magellium-logo.png
+          file: webtpl/example-logo.png
         dark:
-          file: webtpl/magellium-logo-dark.png
+          file: webtpl/example-logo-dark.png
       favicon:
         light:
           content: |
@@ -131,7 +131,6 @@ If a logo was previously set with `customLogoFile`, remove it from the cluster b
 ## Other available values
 
 - **startx** : Startx Openshift Console customization (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml))
-- **magellium** : Magellium console with per-theme logos, clean home page, banner and links (see [values-magellium.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-magellium.yaml))
 
 ```bash
 helm install cluster-console startx/cluster-console -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml
@@ -200,4 +199,4 @@ oc apply -k .
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.321 | 2026-11-08 | Per-theme logos and favicon (OpenShift 4.19+ logos API, PNG support), capabilities, documentation URL, extra customization and plugins; Magellium values |
+| 21.3.321 | 2026-11-08 | Per-theme logos and favicon (OpenShift 4.19+ logos API, PNG support), capabilities, documentation URL, extra customization and plugins; examples values |
