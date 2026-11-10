@@ -200,3 +200,4 @@ oc apply -k .
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
 | 21.3.321 | 2026-11-08 | Per-theme logos and favicon (OpenShift 4.19+ logos API, PNG support), capabilities, documentation URL, extra customization and plugins; examples values |
+| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
