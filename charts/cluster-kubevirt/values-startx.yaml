@@ -164,6 +164,19 @@ hyperconvergedCluster:
   hooked: false
   name: "kubevirt-hyperconverged" 
   storageClass: "gp3--csi" 
+  evictionStrategy: None
+  liveMigration:
+    network: ""
+    allowAutoConverge: false
+    allowPostCopy: false
+    completionTimeoutPerGiB: 800
+    parallelMigrationsPerCluster: 5
+    parallelOutboundMigrationsPerNode: 2
+    progressTimeout: 150
+nads:
+  enabled: false
+  hooked: false
+  list: []
 vms:
   enabled: false
   list: 

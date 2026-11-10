@@ -2,7 +2,7 @@
 
 # Application deployment context
 context: &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: hyperconverged-cluster
@@ -25,6 +25,51 @@ hyperconvergedCluster:
   name: "kubevirt-hyperconverged"
   # name of the local storage class used as default storage
   storageClass: "gp3-csi" 
+  # Eviction strategy applied to the virtual machines when a node is drained: None (VMs are shut down),
+  # LiveMigrate (VMs are live migrated, they must be migratable) or LiveMigrateIfPossible
+  evictionStrategy: None
+  # Live migration settings (spec.liveMigrationConfig of the HyperConverged CR)
+  liveMigration:
+    # Name of a NetworkAttachmentDefinition, in the HyperConverged namespace, carrying the live migration
+    # traffic on a dedicated network (ex: a bond interface). Empty uses the pod network. See the nads block
+    network: ""
+    # Allow the migration to slow down the virtual machine so that it converges
+    allowAutoConverge: false
+    # Allow post-copy migrations
+    allowPostCopy: false
+    # Maximum time in seconds, per GiB of memory, for a migration to complete
+    completionTimeoutPerGiB: 800
+    # Maximum number of migrations running in parallel in the cluster
+    parallelMigrationsPerCluster: 5
+    # Maximum number of outbound migrations per node
+    parallelOutboundMigrationsPerNode: 2
+    # Time in seconds without progress before a migration is aborted
+    progressTimeout: 150
+
+# NetworkAttachmentDefinitions (Multus secondary networks) used by the virtual machines or by the live migration network
+nads:
+  # Enable the creation of the NetworkAttachmentDefinition list
+  enabled: false
+  # Activate the resources as a helm hook
+  hooked: false
+  # List of NetworkAttachmentDefinition to create. Example: a macvlan network on the bond1 interface
+  # dedicated to live migrations, referenced by hyperconvergedCluster.liveMigration.network
+  # list:
+  #   - name: live-migration
+  #     # Namespace of the network attachment (default is the project namespace)
+  #     namespace: openshift-cnv
+  #     # Additional annotations (ex: k8s.v1.cni.cncf.io/resourceName for SR-IOV networks)
+  #     annotations: {}
+  #     # CNI configuration as a YAML/JSON text or as a map (name defaults to the resource name), stored as the JSON string expected by Multus
+  #     config: |
+  #       cniVersion: "0.3.1"
+  #       type: macvlan
+  #       master: bond1
+  #       mode: bridge
+  #       ipam:
+  #         type: whereabouts
+  #         range: 192.168.250.0/24
+  list: []
 
 # Configuration of VM to deploy
 vms:
