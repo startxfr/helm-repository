@@ -1,0 +1,17 @@
+{{- if .Values.rulerConfig.enabled -}}
+{{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
+{{- $name := .Values.rulerConfig.name | default "logging-loki-ruler" -}}
+apiVersion: loki.grafana.com/v1
+kind: RulerConfig
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-loki.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-rulerconfig"
+  annotations:
+    {{- include "cluster-loki.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- .Values.rulerConfig.spec | default "evaluationInterval: 1m" | nindent 2 }}
+{{- end -}}

@@ -1,0 +1,324 @@
+# Default values for cluster-loki.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-loki
+  # Version name of this application (default use Chart appVersion)
+  version: "6.5.1"
+
+# Default settings of the ExternalSecret objects rendered by this chart when a
+# secret is sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+# Namespace hosting the Red Hat Loki operator (shared by every Red Hat operator installed in AllNamespaces mode)
+operatorNamespace:
+  # Enable the creation of the operator namespace. Keep it disabled when the cluster-config chart
+  # (`redhat.operators: true`) or another chart already manages the openshift-operators-redhat namespace
+  enabled: false
+  # Name of the operator namespace (must match operator.subscription.namespace)
+  name: openshift-operators-redhat
+
+# Deploy the LokiStack instance (the Loki log store used by the OpenShift Logging collector)
+lokistack:
+  # Enable the creation of the LokiStack CR
+  enabled: false
+  # Activate the resource as a helm hook
+  hooked: false
+  # Name of the LokiStack (the ClusterLogForwarder lokiStack output must reference this name)
+  name: logging-loki
+  # Deployment size, sets the replicas and resources of every Loki component
+  # (1x.demo for demo purpose only, 1x.pico, 1x.extra-small, 1x.small or 1x.medium)
+  size: 1x.small
+  # Storage class used by the persistent volumes of the ingester, querier, ruler and compactor
+  storageClassName: gp3-csi
+  # Management state of the LokiStack (Managed or Unmanaged)
+  managementState: Managed
+  # Place every Loki component (compactor, distributor, gateway, indexGateway, ingester,
+  # querier, queryFrontend and ruler) on the infra nodes with the matching tolerations
+  infra_enabled: false
+  # Multi-tenancy configuration of the LokiStack
+  tenants:
+    # Tenancy mode of the gateway. openshift-logging is the mode used by the OpenShift Logging
+    # collector (application, infrastructure and audit tenants), openshift-network is the mode used
+    # by the Network Observability operator, static and dynamic are the generic OIDC/OPA modes
+    mode: openshift-logging
+  # Object storage configuration of the LokiStack
+  storage:
+    # List of the storage schemas (version v11, v12 or v13 and the date it comes into effect).
+    # Add a new entry with a future effectiveDate to migrate an existing stack to a new schema
+    schemas:
+      - version: v13
+        effectiveDate: "2024-10-01"
+    # Secret holding the object storage credentials, read by the Loki operator (see the storageSecret block to create it)
+    secret:
+      # Name of the object storage secret (must exist in the LokiStack namespace)
+      name: logging-loki-s3
+      # Type of the object storage provider (s3, azure, gcs, swift or alibabacloud)
+      type: s3
+      # Credential mode of the object storage secret (static, token or token-cco). Empty keeps the operator default
+      credentialMode: ""
+    # TLS configuration used to reach the object storage endpoint (only rendered when caName is set)
+    tls:
+      # Name of the ConfigMap (in the LokiStack namespace) holding the CA certificate of the object storage endpoint
+      caName: ""
+      # Key of the CA certificate inside the ConfigMap (empty uses the operator default service-ca.crt)
+      caKey: ""
+  # Global retention of the logs stored in the LokiStack
+  retention:
+    # Number of days the logs are kept before deletion by the compactor (0 disables the retention policy, logs are never pruned)
+    days: 7
+    # List of per-stream retention rules ({days, priority, selector}), rendered only when days is set
+    streams: []
+    #   # Retention in days of the streams matching the selector
+    # - days: 1
+    #   # Priority of this rule when several selectors match the same stream (higher wins)
+    #   priority: 1
+    #   # Stream selector (LogQL label matcher)
+    #   selector: '{kubernetes_namespace_name=~"test.+"}'
+  # Global limits applied to every tenant of the LokiStack
+  limits:
+    # Ingestion limits (raw map rendered under limits.global.ingestion, see the LokiStack CRD for the available fields)
+    ingestion: {}
+    # ingestionRate: 8
+    # ingestionBurstSize: 16
+    # maxLabelNameLength: 1024
+    # maxLabelValueLength: 2048
+    # maxLabelNamesPerSeries: 30
+    # maxGlobalStreamsPerTenant: 25000
+    # maxLineSize: 256000
+    # perStreamRateLimit: 5
+    # perStreamRateLimitBurst: 15
+    # Query limits (raw map rendered under limits.global.queries, see the LokiStack CRD for the available fields)
+    queries: {}
+    # queryTimeout: 3m
+    # maxEntriesLimitPerQuery: 5000
+    # maxChunksPerQuery: 2000000
+    # maxQuerySeries: 500
+  # Replication of the ingested data across the ingesters
+  replication:
+    # Replication factor of the ingested data (0 keeps the default of the selected size)
+    factor: 0
+  # Configuration of the Loki ruler (evaluation of the AlertingRule and RecordingRule CRs)
+  rules:
+    # Enable the ruler component and the discovery of the rule CRs
+    enabled: false
+    # Label selector of the AlertingRule and RecordingRule CRs evaluated by the ruler (empty selects every rule CR)
+    selector: {}
+      # matchLabels:
+      #   openshift.io/cluster-monitoring: "true"
+    # Label selector of the namespaces where the rule CRs are discovered (empty selects every namespace)
+    namespaceSelector: {}
+      # matchLabels:
+      #   openshift.io/cluster-monitoring: "true"
+  # Hash ring configuration of the Loki members (raw map rendered under spec.hashRing, empty keeps the operator default)
+  hashRing: {}
+  # type: memberlist
+  # memberlist:
+  #   instanceAddrType: podIP
+  #   enableIPv6: false
+  # Additional LokiStack spec fields appended as is at the end of the spec (raw map). Never repeat
+  # a field managed by the values above (size, storage, storageClassName, managementState, tenants,
+  # replication, limits, rules, hashRing or template when infra_enabled is true)
+  extraSpec: {}
+  # proxy:
+  #   httpProxy: http://proxy.example.com:3128
+  #   httpsProxy: http://proxy.example.com:3128
+  #   noProxy: .cluster.local,.svc,10.0.0.0/8
+  # networkPolicies:
+  #   ruleSet: RestrictIngressEgress
+
+# Object storage secret read by the LokiStack (lokistack.storage.secret)
+storageSecret:
+  # Enable the creation of the object storage secret
+  enabled: false
+  # Name of the secret (default is the lokistack.storage.secret.name value)
+  name: ""
+  # Key/value pairs of the secret, rendered as stringData. The expected keys depend on the object
+  # storage provider (see https://github.com/openshift/loki/blob/release-6.6/operator/docs/lokistack/object_storage.md)
+  data: {}
+    # # Name of the S3 bucket storing the logs
+    # bucketnames: logging-loki
+    # # URL of the S3 endpoint
+    # endpoint: https://s3.eu-west-3.amazonaws.com
+    # # Region of the S3 bucket
+    # region: eu-west-3
+    # # Access key of the S3 credentials
+    # access_key_id: myaccesskey
+    # # Secret key of the S3 credentials
+    # access_key_secret: mysecretkey
+    # # Optional S3 keys are forcepathstyle ("true" for S3 compatible services like MinIO or ODF),
+    # # sse_type (SSE-S3 or SSE-KMS), sse_kms_key_id and sse_kms_encryption_context
+  # Source this Secret from an external store instead of the data above: renders an
+  # ExternalSecret producing the same Secret (keys of your choice, see externalSecretDefaults)
+  externalSecret:
+    # Enable the ExternalSecret mode
+    enabled: false
+    # Store to read from (default is externalSecretDefaults.secretStoreRef)
+    secretStoreRef: {}
+    #   name: vault-backend
+    #   kind: ClusterSecretStore
+    # How often the Secret is refreshed (default is externalSecretDefaults.refreshInterval)
+    refreshInterval: ""
+    # Map of the secret keys to the remote references ({key, property, version}) of the external store
+    remoteRefs: {}
+    #   bucketnames:
+    #     key: ocp/logging/loki-s3
+    #     property: bucketnames
+    #   endpoint:
+    #     key: ocp/logging/loki-s3
+    #     property: endpoint
+    #   region:
+    #     key: ocp/logging/loki-s3
+    #     property: region
+    #   access_key_id:
+    #     key: ocp/logging/loki-s3
+    #     property: access_key_id
+    #   access_key_secret:
+    #     key: ocp/logging/loki-s3
+    #     property: access_key_secret
+    # Raw ExternalSecret spec.data list (alternative to remoteRefs)
+    data: []
+    # Raw ExternalSecret spec.dataFrom list, fetches every key of the external secret at once
+    dataFrom: []
+    # - extract:
+    #     key: ocp/logging/loki-s3
+    # Raw ExternalSecret spec.target.template (type, metadata, data)
+    template: {}
+
+# Deploy AlertingRule CRs evaluated by the LokiStack ruler (requires lokistack.rules.enabled)
+alertingRules:
+  # Enable the creation of the AlertingRule CRs
+  enabled: false
+  # List of the AlertingRule CRs to create
+  list: []
+  #   # Name of the AlertingRule
+  # - name: loki-operator-alerts
+  #   # Namespace of the AlertingRule (default is the LokiStack namespace). In openshift-logging tenancy mode,
+  #   # the application rules must live in the namespace of the logs they query
+  #   namespace: openshift-logging
+  #   # Labels of the AlertingRule (must match the lokistack.rules.selector)
+  #   labels:
+  #     openshift.io/cluster-monitoring: "true"
+  #   # Raw spec of the AlertingRule (tenantID is application, infrastructure or audit in openshift-logging mode)
+  #   spec: |
+  #     tenantID: infrastructure
+  #     groups:
+  #       - name: loki-operator-errors
+  #         interval: 1m
+  #         rules:
+  #           - alert: LokiOperatorHighErrorRate
+  #             expr: |
+  #               sum(rate({kubernetes_namespace_name="openshift-operators-redhat", kubernetes_pod_name=~"loki-operator-controller-manager.*"} |= "error" [1m])) by (job)
+  #                 / sum(rate({kubernetes_namespace_name="openshift-operators-redhat", kubernetes_pod_name=~"loki-operator-controller-manager.*"}[1m])) by (job)
+  #                 > 0.01
+  #             for: 10s
+  #             labels:
+  #               severity: critical
+  #             annotations:
+  #               summary: High Loki operator error rate
+  #               description: More than 1% of the Loki operator log lines are errors
+
+# Deploy RecordingRule CRs evaluated by the LokiStack ruler (requires lokistack.rules.enabled)
+recordingRules:
+  # Enable the creation of the RecordingRule CRs
+  enabled: false
+  # List of the RecordingRule CRs to create
+  list: []
+  #   # Name of the RecordingRule
+  # - name: loki-operator-records
+  #   # Namespace of the RecordingRule (default is the LokiStack namespace)
+  #   namespace: openshift-logging
+  #   # Labels of the RecordingRule (must match the lokistack.rules.selector)
+  #   labels:
+  #     openshift.io/cluster-monitoring: "true"
+  #   # Raw spec of the RecordingRule (tenantID is application, infrastructure or audit in openshift-logging mode)
+  #   spec: |
+  #     tenantID: infrastructure
+  #     groups:
+  #       - name: loki-operator-records
+  #         interval: 1m
+  #         rules:
+  #           - record: loki_operator:log_lines:rate1m
+  #             expr: |
+  #               sum(rate({kubernetes_namespace_name="openshift-operators-redhat"}[1m])) by (kubernetes_pod_name)
+
+# Deploy the RulerConfig CR tuning the LokiStack ruler (evaluation intervals, Alertmanager and remote write)
+rulerConfig:
+  # Enable the creation of the RulerConfig CR
+  enabled: false
+  # Name of the RulerConfig (it is read by the LokiStack of the same namespace)
+  name: logging-loki-ruler
+  # Raw spec of the RulerConfig (see the RulerConfig CRD for the alertmanager and remoteWrite fields)
+  spec: |
+    evaluationInterval: 1m
+    pollInterval: 1m
+    # alertmanager:
+    #   enableV2: true
+    #   endpoints:
+    #     - https://_web._tcp.alertmanager-operated.openshift-monitoring.svc
+    #   discovery:
+    #     enableSRV: true
+    #     refreshInterval: 1m
+    #   notificationQueue:
+    #     capacity: 1000
+    #     timeout: 30s
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-logging"
+    display_name: Loki log store
+    description: Loki log store configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "loki-operator"
+    namespace: "openshift-operators-redhat"
+    version: "6.5.1"
+    operator:
+      channel: "stable-6.5"
+      name: loki-operator
+      installPlanApproval: Manual
+      # csv: loki-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "openshift-operators-redhat"
+    namespace: "openshift-operators-redhat"
+    providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"

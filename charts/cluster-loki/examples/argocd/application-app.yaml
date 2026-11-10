@@ -1,0 +1,51 @@
+# Creates the LokiStack in openshift-logging. The object storage secret (logging-loki-s3) must exist
+# in this namespace: create it with storageSecret.enabled (values or ExternalSecret) or by hand.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-loki-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-logging
+    server: https://kubernetes.default.svc
+  project: cluster-loki
+  source:
+    chart: cluster-loki
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operatorNamespace:
+          enabled: false
+        operator:
+          enabled: false
+        lokistack:
+          enabled: true
+        storageSecret:
+          enabled: false
+        alertingRules:
+          enabled: false
+        recordingRules:
+          enabled: false
+        rulerConfig:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.321
+  ignoreDifferences:
+    - group: loki.grafana.com
+      kind: LokiStack
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - SkipDryRunOnMissingResource=true
