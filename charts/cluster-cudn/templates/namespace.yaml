@@ -1,0 +1,26 @@
+{{- if .Values.namespaces.enabled -}}
+{{ range .Values.namespaces.list }}
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ .name | default "default-cudn" | quote }}
+  labels:
+    {{- include "cluster-cudn.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "default-cudn" }}-namespace"
+    {{- /* the label is required before any pod starts in a namespace served by a primary UDN; a namespace
+           that only consumes secondary (Localnet, Layer2 role Secondary) networks must not carry it */ -}}
+    {{- if or (not (hasKey . "primary")) .primary }}
+    k8s.ovn.org/primary-user-defined-network: ""
+    {{- end }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-cudn.annotations" $ | nindent 4 }}
+    openshift.io/description: {{ .description | default (ternary "Namespace attached to a primary user-defined network" "Namespace consuming secondary user-defined networks" (or (not (hasKey . "primary")) .primary)) | quote }}
+    openshift.io/display-name: {{ .display_name | default .name | default "default-cudn" | quote }}
+    helm.sh/resource-policy: keep
+    argocd.argoproj.io/sync-wave: "-10"
+{{- end -}}
+{{- end -}}

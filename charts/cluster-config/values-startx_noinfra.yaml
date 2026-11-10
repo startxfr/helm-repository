@@ -39,7 +39,19 @@ monitoring:
   infra_enabled: true
   storageClass: gp3-csi
   storageSize: "30Gi"
+  storageSizeAlert: "5Gi"
   enableUserWorkload: true
+  retentionPeriod: 7d
+  retentionSize: ""
+  externalLabels:
+    contextLabels: true
+    custom: {}
+  alertmanager:
+    enabled: true
+  userWorkload:
+    enabled: false
+    retentionPeriod: 24h
+    storageSize: "10Gi"
 imageprunner:
   enabled: false
   schedule: "15 * * * *"

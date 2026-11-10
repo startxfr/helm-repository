@@ -1,0 +1,44 @@
+# Deploys the Red Hat Loki operator in openshift-operators-redhat (AllNamespaces OperatorGroup).
+# Set operator.operatorGroup.enabled to false when an OperatorGroup already exists in this namespace.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-loki-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-operators-redhat
+    server: https://kubernetes.default.svc
+  project: cluster-loki
+  source:
+    chart: cluster-loki
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operatorNamespace:
+          enabled: false
+        operator:
+          enabled: true
+        lokistack:
+          enabled: false
+        storageSecret:
+          enabled: false
+        alertingRules:
+          enabled: false
+        recordingRules:
+          enabled: false
+        rulerConfig:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.321
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -19,7 +19,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "description": "Name of the global scope for this application. Define an organizational tenant.",
                     "default": "myscope",
                     "examples": [
                         "myscope",
@@ -42,8 +42,8 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 25,
-                    "title": "Environement name",
-                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "title": "Environment name",
+                    "description": "Name of the environment for this application. Define a stage tenant.",
                     "default": "dev",
                     "examples": [
                         "dev",
@@ -69,7 +69,7 @@
                     "minLength": 1,
                     "maxLength": 40,
                     "title": "Application name",
-                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "description": "Name of the application name. Define a functional tenant.",
                     "default": "default-sxapi",
                     "examples": [
                         "myapp",
@@ -250,18 +250,160 @@
         },
         "monitoring": {
             "type": "object",
+            "title": "Monitoring",
+            "description": "Configuration of the cluster monitoring feature (ConfigMap openshift-monitoring/cluster-monitoring-config)",
             "properties": {
                 "enabled": {
-                    "type": "boolean"
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the cluster monitoring customization"
                 },
                 "infra_enabled": {
-                    "type": "boolean"
+                    "title": "Infra enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Deploy the monitoring components (except node-exporter) on the infra nodes"
                 },
                 "storageClass": {
-                    "type": "string"
+                    "title": "Storage Class",
+                    "type": "string",
+                    "default": "gp3-csi",
+                    "description": "Storage class of the Prometheus and Alertmanager persistent volumes (default is gp3-csi)"
                 },
                 "storageSize": {
-                    "type": "string"
+                    "title": "Storage Size",
+                    "type": "string",
+                    "default": "20Gi",
+                    "description": "Size of the Prometheus persistent volume, one per replica (default is 20Gi)"
+                },
+                "storageSizeAlert": {
+                    "title": "Storage Size Alert",
+                    "type": "string",
+                    "default": "5Gi",
+                    "description": "Size of the Alertmanager persistent volume, one per replica (default is 5Gi)"
+                },
+                "enableUserWorkload": {
+                    "title": "Enable User Workload",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the monitoring of user-defined projects (see the userWorkload block for its configuration)"
+                },
+                "retentionPeriod": {
+                    "title": "Retention Period",
+                    "type": "string",
+                    "default": "7d",
+                    "description": "Prometheus data retention duration (default is 7d)"
+                },
+                "retentionSize": {
+                    "title": "Retention Size",
+                    "type": "string",
+                    "default": "",
+                    "description": "Prometheus maximum data size on disk, ex: 40GB (about 80% of storageSize). Empty keeps only the time-based retention"
+                },
+                "resources": {
+                    "type": "object",
+                    "title": "Resources",
+                    "description": "Resource requests and limits of the Prometheus pods",
+                    "default": {
+                        "requests": {
+                            "cpu": "200m",
+                            "memory": "2Gi"
+                        }
+                    }
+                },
+                "externalLabels": {
+                    "type": "object",
+                    "title": "External Labels",
+                    "description": "Labels added by Prometheus to every metric and alert leaving the cluster (remote write, federation, alert receivers)",
+                    "properties": {
+                        "contextLabels": {
+                            "title": "Context Labels",
+                            "type": "boolean",
+                            "default": true,
+                            "description": "Add the scope, environment and cluster_name labels from the deployment context. The keys prometheus, prometheus_replica and cluster are reserved by OpenShift 4.19+ and rejected by the monitoring webhook"
+                        },
+                        "custom": {
+                            "type": "object",
+                            "title": "Custom",
+                            "description": "Additional labels (key: value)",
+                            "default": {}
+                        }
+                    }
+                },
+                "remoteWrite": {
+                    "type": "array",
+                    "title": "Remote Write",
+                    "description": "Remote write endpoints of the platform Prometheus (list of remoteWrite settings, see the OpenShift documentation)",
+                    "default": []
+                },
+                "alertmanager": {
+                    "type": "object",
+                    "title": "Alertmanager",
+                    "description": "Platform Alertmanager",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true,
+                            "description": "Deploy the platform Alertmanager (false removes it, alerts must then be sent to an external Alertmanager)"
+                        }
+                    }
+                },
+                "extraConfig": {
+                    "type": "object",
+                    "title": "Extra Config",
+                    "description": "Additional cluster-monitoring-config settings added as-is at the end of config.yaml (keys managed by this chart must not be repeated)",
+                    "default": {}
+                },
+                "userWorkload": {
+                    "type": "object",
+                    "title": "User Workload",
+                    "description": "Monitoring of user-defined projects (ConfigMap openshift-user-workload-monitoring/user-workload-monitoring-config), requires enableUserWorkload",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Manage the user-workload-monitoring-config ConfigMap"
+                        },
+                        "retentionPeriod": {
+                            "title": "Retention Period",
+                            "type": "string",
+                            "default": "24h",
+                            "description": "Data retention duration of the user workload Prometheus (default is 24h)"
+                        },
+                        "retentionSize": {
+                            "title": "Retention Size",
+                            "type": "string",
+                            "default": "",
+                            "description": "Maximum data size on disk of the user workload Prometheus. Empty keeps only the time-based retention"
+                        },
+                        "storageClass": {
+                            "title": "Storage Class",
+                            "type": "string",
+                            "default": "",
+                            "description": "Storage class of the user workload Prometheus persistent volume (empty uses monitoring.storageClass)"
+                        },
+                        "storageSize": {
+                            "title": "Storage Size",
+                            "type": "string",
+                            "default": "10Gi",
+                            "description": "Size of the user workload Prometheus persistent volume, one per replica (default is 10Gi)"
+                        },
+                        "resources": {
+                            "type": "object",
+                            "title": "Resources",
+                            "description": "Resource requests and limits of the user workload Prometheus pods",
+                            "default": {}
+                        },
+                        "extraConfig": {
+                            "type": "object",
+                            "title": "Extra Config",
+                            "description": "Additional user-workload-monitoring-config settings added as-is at the end of its config.yaml",
+                            "default": {}
+                        }
+                    }
                 }
             }
         },

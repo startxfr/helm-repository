@@ -1,0 +1,119 @@
+{{- if .Values.flowcollector.enabled -}}
+{{- $fc := .Values.flowcollector -}}
+{{- $name := $fc.name | default "cluster" -}}
+{{- $namespace := $fc.namespace | default "netobserv" -}}
+{{- $model := $fc.deploymentModel | default "Service" -}}
+{{- $networkPolicy := $fc.networkPolicy | default dict -}}
+{{- $agent := $fc.agent | default dict -}}
+{{- $processor := $fc.processor | default dict -}}
+{{- $metrics := $processor.metrics | default dict -}}
+{{- $loki := $fc.loki | default dict -}}
+{{- $lokiMode := $loki.mode | default "LokiStack" -}}
+{{- $lokiStack := $loki.lokiStack | default dict -}}
+{{- $plugin := $fc.consolePlugin | default dict -}}
+apiVersion: flows.netobserv.io/v1beta2
+kind: FlowCollector
+metadata:
+  name: {{ $name | quote }}
+  labels:
+    {{- include "cluster-network-observability.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-flowcollector"
+  annotations:
+    {{- include "cluster-network-observability.annotations" . | nindent 4 }}
+    {{- if $fc.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "20"
+spec:
+  namespace: {{ $namespace | quote }}
+  deploymentModel: {{ $model | quote }}
+  networkPolicy:
+    enable: {{ ternary $networkPolicy.enabled true (hasKey $networkPolicy "enabled") }}
+    {{- if $networkPolicy.additionalNamespaces }}
+    additionalNamespaces:
+      {{- toYaml $networkPolicy.additionalNamespaces | nindent 6 }}
+    {{- end }}
+  agent:
+    type: eBPF
+    ebpf:
+      sampling: {{ include "cluster-network-observability.setOrDefault" (dict "map" $agent "key" "sampling" "default" 50) }}
+      privileged: {{ $agent.privileged | default false }}
+      {{- if $agent.features }}
+      features:
+        {{- toYaml $agent.features | nindent 8 }}
+      {{- else }}
+      features: []
+      {{- end }}
+      {{- if $agent.resources }}
+      resources:
+        {{- toYaml $agent.resources | nindent 8 }}
+      {{- end }}
+  processor:
+    logTypes: {{ $processor.logTypes | default "Flows" | quote }}
+    {{- if and $processor.consumerReplicas (ne $model "Direct") }}
+    consumerReplicas: {{ $processor.consumerReplicas }}
+    {{- end }}
+    {{- if $metrics.includeList }}
+    metrics:
+      includeList:
+        {{- toYaml $metrics.includeList | nindent 8 }}
+    {{- end }}
+    {{- if $processor.resources }}
+    resources:
+      {{- toYaml $processor.resources | nindent 6 }}
+    {{- end }}
+    {{- if and $fc.infra_enabled (ne $model "Direct") }}
+    advanced:
+      scheduling:
+        nodeSelector:
+          node-role.kubernetes.io/infra: ''
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/infra
+            operator: Exists
+    {{- end }}
+  loki:
+    enable: {{ $loki.enabled | default false }}
+    mode: {{ $lokiMode | quote }}
+    {{- if $loki.enabled }}
+    {{- if eq $lokiMode "LokiStack" }}
+    lokiStack:
+      name: {{ $lokiStack.name | default "loki" | quote }}
+      namespace: {{ $lokiStack.namespace | default $namespace | quote }}
+    {{- end }}
+    {{- if $loki.extraSpec }}
+    {{- toYaml $loki.extraSpec | nindent 4 }}
+    {{- end }}
+    {{- end }}
+  consolePlugin:
+    enable: {{ ternary $plugin.enabled true (hasKey $plugin "enabled") }}
+    {{- if $plugin.quickFilters }}
+    quickFilters:
+      {{- toYaml $plugin.quickFilters | nindent 6 }}
+    {{- end }}
+    {{- if $fc.infra_enabled }}
+    advanced:
+      scheduling:
+        nodeSelector:
+          node-role.kubernetes.io/infra: ''
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/infra
+            operator: Exists
+    {{- end }}
+  {{- if and (eq $model "Kafka") $fc.kafka }}
+  kafka:
+    {{- toYaml $fc.kafka | nindent 4 }}
+  {{- end }}
+  {{- if $fc.exporters }}
+  exporters:
+    {{- toYaml $fc.exporters | nindent 4 }}
+  {{- end }}
+  {{- if $fc.extraSpec }}
+  {{- toYaml $fc.extraSpec | nindent 2 }}
+  {{- end }}
+{{- end -}}

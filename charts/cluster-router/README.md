@@ -134,3 +134,4 @@ oc apply -k .
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
+| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |

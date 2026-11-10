@@ -22,4 +22,7 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- if .nncp }}{{- if .nncp.enabled }}
           nncp : {{ .nncp.name | default "default-network-policy" }}
 {{- end }}{{- end }}
+{{- if .nads }}{{- if .nads.enabled }}
+          nads : {{ range .nads.list }}{{ .name }} {{ end }}
+{{- end }}{{- end }}
 {{- end -}}

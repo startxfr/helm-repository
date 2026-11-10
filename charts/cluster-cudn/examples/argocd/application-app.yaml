@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-cudn-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default-cudn
+    server: https://kubernetes.default.svc
+  project: cluster-cudn
+  source:
+    chart: cluster-cudn
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        namespaces:
+          enabled: true
+        clusterNetworks:
+          enabled: true
+        networks:
+          enabled: true
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.321
+  ignoreDifferences:
+    - group: k8s.ovn.org
+      kind: ClusterUserDefinedNetwork
+      jsonPointers:
+        - /metadata/finalizers
+    - group: k8s.ovn.org
+      kind: UserDefinedNetwork
+      jsonPointers:
+        - /metadata/finalizers
+  # Never add CreateNamespace=true here: the tenant namespaces must be created by the chart
+  # so that they carry the k8s.ovn.org/primary-user-defined-network label from the start
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

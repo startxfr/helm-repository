@@ -1,6 +1,7 @@
 {{- if .Values.console.enabled -}}{{- if .Values.console.customize -}}
 {{- $files := .Files }}
 {{- $namespace := .Values.console.namespace | default "openshift-config" -}}
+{{- $logos := .Values.console.customize.logos | default dict -}}
 {{- with .Values.console.customize -}}
 ---
 kind: Console
@@ -16,10 +17,50 @@ metadata:
     helm.sh/resource-policy: keep
 spec:
   managementState: {{ $.Values.console.state | default "Managed" | quote }}
+  {{- with $.Values.console.plugins }}
+  plugins:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   customization:
+    {{- if not $logos.enabled }}
     customLogoFile:
       key: "{{- .logo.name | default "default-logo" -}}.{{- .logo.format | default "svg" -}}"
       name: "{{- .logo.name | default "default-logo" -}}"
+    {{- else }}
+    logos:
+      {{- range $type, $themes := dict "Masthead" ($logos.masthead | default dict) "Favicon" ($logos.favicon | default dict) }}
+      {{- $set := false }}
+      {{- range $theme, $entry := $themes }}{{ if include "cluster-console.logoSet" $entry }}{{ $set = true }}{{ end }}{{ end }}
+      {{- if $set }}
+      - type: {{ $type }}
+        themes:
+          {{- range $theme, $entry := $themes }}
+          {{- if include "cluster-console.logoSet" $entry }}
+          - mode: {{ $theme | title }}
+            source:
+              from: ConfigMap
+              configMap:
+                name: {{ $logos.configMap | default "console-logos" | quote }}
+                key: {{ include "cluster-console.logoKey" (dict "entry" $entry "type" (lower $type) "theme" $theme) | quote }}
+          {{- end }}
+          {{- end }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
     customProductName: "{{- .name | default "default console" -}}"
+    {{- with .capabilities }}
+    capabilities:
+      {{- range $name, $state := . }}
+      - name: {{ $name }}
+        visibility:
+          state: {{ $state }}
+      {{- end }}
+    {{- end }}
+    {{- with .documentationBaseURL }}
+    documentationBaseURL: {{ . | quote }}
+    {{- end }}
+    {{- with .extraCustomization }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
 {{- end -}}{{- end -}}

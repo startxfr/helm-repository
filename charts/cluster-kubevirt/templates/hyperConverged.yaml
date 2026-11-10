@@ -26,13 +26,17 @@ spec:
     disableSerialConsoleLog: true
   higherWorkloadDensity:
     memoryOvercommitPercentage: 100
+  {{- $migration := .Values.hyperconvergedCluster.liveMigration | default dict }}
   liveMigrationConfig:
-    allowAutoConverge: false
-    allowPostCopy: false
-    completionTimeoutPerGiB: 800
-    parallelMigrationsPerCluster: 5
-    parallelOutboundMigrationsPerNode: 2
-    progressTimeout: 150
+    allowAutoConverge: {{ $migration.allowAutoConverge | default false }}
+    allowPostCopy: {{ $migration.allowPostCopy | default false }}
+    completionTimeoutPerGiB: {{ include "cluster-kubevirt.setOrDefault" (dict "map" $migration "key" "completionTimeoutPerGiB" "default" 800) }}
+    parallelMigrationsPerCluster: {{ include "cluster-kubevirt.setOrDefault" (dict "map" $migration "key" "parallelMigrationsPerCluster" "default" 5) }}
+    parallelOutboundMigrationsPerNode: {{ include "cluster-kubevirt.setOrDefault" (dict "map" $migration "key" "parallelOutboundMigrationsPerNode" "default" 2) }}
+    progressTimeout: {{ include "cluster-kubevirt.setOrDefault" (dict "map" $migration "key" "progressTimeout" "default" 150) }}
+    {{- with $migration.network }}
+    network: {{ . | quote }}
+    {{- end }}
   certConfig:
     ca:
       duration: 48h0m0s
@@ -44,7 +48,7 @@ spec:
   applicationAwareConfig:
     allowApplicationAwareClusterResourceQuota: false
     vmiCalcConfigName: DedicatedVirtualResources
-  evictionStrategy: None
+  evictionStrategy: {{ .Values.hyperconvergedCluster.evictionStrategy | default "None" }}
   featureGates:
     deployTektonTaskResources: false
     enableCommonBootImageImport: true

@@ -2,7 +2,7 @@
 
 # Application deployment context
 context:  &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -42,6 +42,57 @@ console:
         <?xml><svg></svg>
       # Create sub-resource custom-logo in ns openshift-console
       manageSubresource: true
+    # Logos per theme (OpenShift 4.19+): masthead logo for the light and dark themes and favicon. Replaces the
+    # single logo above (customLogoFile, deprecated) which is not rendered when logos.enabled is true.
+    # Each logo is a file of the chart (file), an inline SVG text (content) or an inline base64 image (base64)
+    logos:
+      # Enable the per-theme logos
+      enabled: false
+      # Name of the ConfigMap (namespace openshift-config) holding every logo file
+      configMap: console-logos
+      # Masthead logo (top bar and About dialog), one entry per theme
+      masthead:
+        # Logo displayed with the light theme
+        light:
+          # File of the chart: svg, png, jpg, gif or webp (the ConfigMap key is the file name)
+          file: webtpl/default-logo.svg
+          # Inline SVG content (takes precedence over file, the ConfigMap key is then <type>-<theme>.svg)
+          content: ""
+          # Inline base64 content of a binary image (takes precedence over file, the ConfigMap key is then <type>-<theme>.png)
+          base64: ""
+          # ConfigMap key of this logo, with its extension (empty: the file name, <type>-<theme>.svg for content or <type>-<theme>.png for base64)
+          key: ""
+        # Logo displayed with the dark theme
+        dark:
+          file: webtpl/default-logo.svg
+          content: ""
+          base64: ""
+          key: ""
+      # Favicon (browser tab icon), one entry per theme. Empty entries keep the OpenShift favicon
+      favicon:
+        # Favicon displayed with the light theme
+        light:
+          file: ""
+          content: ""
+          base64: ""
+          key: ""
+        # Favicon displayed with the dark theme
+        dark:
+          file: ""
+          content: ""
+          base64: ""
+          key: ""
+    # Console capabilities (OpenShift 4.19+), each set to Enabled or Disabled: LightspeedButton,
+    # GettingStartedBanner (home page banner), GuidedTour (tour shown at the first login)
+    capabilities: {}
+    # Base URL of the documentation links of the console (empty keeps the OpenShift documentation)
+    documentationBaseURL: ""
+    # Additional customization settings added as-is to spec.customization: perspectives, developerCatalog,
+    # projectAccess, quickStarts, addPage... (keys managed by this chart must not be repeated)
+    extraCustomization: {}
+  # Console plugins to enable (spec.plugins). Caution: this list replaces the plugins enabled by hand or by
+  # other operators (OpenShift Virtualization, NMState, GitOps...). Empty leaves the list untouched
+  plugins: []
   # configuration of the console links
   links:
     # name of the console link

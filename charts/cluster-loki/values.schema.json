@@ -1,0 +1,721 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Context",
+            "description": "Application deployment context",
+            "properties": {
+                "scope": {
+                    "title": "Scope",
+                    "type": "string",
+                    "default": "myscope",
+                    "description": "Name of the global scope for this application (organizational tenant)"
+                },
+                "cluster": {
+                    "title": "Cluster",
+                    "type": "string",
+                    "default": "default",
+                    "description": "Name of the cluster running this application (platform tenant)"
+                },
+                "environment": {
+                    "title": "Environment",
+                    "type": "string",
+                    "default": "myenv",
+                    "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                },
+                "component": {
+                    "title": "Component",
+                    "type": "string",
+                    "default": "mycomponent",
+                    "description": "Component name of this application (logical tenant)"
+                },
+                "app": {
+                    "title": "App",
+                    "type": "string",
+                    "default": "default-loki",
+                    "description": "Application name (functional tenant, default use Chart name)"
+                },
+                "version": {
+                    "title": "Version",
+                    "type": "string",
+                    "default": "6.5.1",
+                    "description": "Version name of this application (default use Chart appVersion)"
+                }
+            }
+        },
+        "externalSecretDefaults": {
+            "type": "object",
+            "title": "External Secret Defaults",
+            "description": "Default settings of the ExternalSecret objects rendered by this chart when a secret is sourced from an external store (`externalSecret.enabled: true`). Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.",
+            "properties": {
+                "apiVersion": {
+                    "title": "Api Version",
+                    "type": "string",
+                    "default": "external-secrets.io/v1",
+                    "description": "API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)"
+                },
+                "refreshInterval": {
+                    "title": "Refresh Interval",
+                    "type": "string",
+                    "default": "1h",
+                    "description": "How often the Secret is refreshed from the external store"
+                },
+                "secretStoreRef": {
+                    "type": "object",
+                    "title": "Secret Store Ref",
+                    "description": "Store to read from (name is required as soon as a secret uses externalSecret)",
+                    "properties": {
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": ""
+                        },
+                        "kind": {
+                            "title": "Kind",
+                            "type": "string",
+                            "default": "ClusterSecretStore"
+                        }
+                    }
+                }
+            }
+        },
+        "operatorNamespace": {
+            "type": "object",
+            "title": "Operator Namespace",
+            "description": "Namespace hosting the Red Hat Loki operator (shared by every Red Hat operator installed in AllNamespaces mode)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the operator namespace. Keep it disabled when the cluster-config chart (`redhat.operators: true`) or another chart already manages the openshift-operators-redhat namespace"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "openshift-operators-redhat",
+                    "description": "Name of the operator namespace (must match operator.subscription.namespace)"
+                }
+            }
+        },
+        "lokistack": {
+            "type": "object",
+            "title": "Lokistack",
+            "description": "Deploy the LokiStack instance (the Loki log store used by the OpenShift Logging collector)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the LokiStack CR"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resource as a helm hook"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "logging-loki",
+                    "description": "Name of the LokiStack (the ClusterLogForwarder lokiStack output must reference this name)"
+                },
+                "size": {
+                    "title": "Size",
+                    "type": "string",
+                    "default": "1x.small",
+                    "description": "Deployment size, sets the replicas and resources of every Loki component (1x.demo for demo purpose only, 1x.pico, 1x.extra-small, 1x.small or 1x.medium)"
+                },
+                "storageClassName": {
+                    "title": "Storage Class Name",
+                    "type": "string",
+                    "default": "gp3-csi",
+                    "description": "Storage class used by the persistent volumes of the ingester, querier, ruler and compactor"
+                },
+                "managementState": {
+                    "title": "Management State",
+                    "type": "string",
+                    "default": "Managed",
+                    "description": "Management state of the LokiStack (Managed or Unmanaged)"
+                },
+                "infra_enabled": {
+                    "title": "Infra enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Place every Loki component (compactor, distributor, gateway, indexGateway, ingester, querier, queryFrontend and ruler) on the infra nodes with the matching tolerations"
+                },
+                "tenants": {
+                    "type": "object",
+                    "title": "Tenants",
+                    "description": "Multi-tenancy configuration of the LokiStack",
+                    "properties": {
+                        "mode": {
+                            "title": "Mode",
+                            "type": "string",
+                            "default": "openshift-logging",
+                            "description": "Tenancy mode of the gateway. openshift-logging is the mode used by the OpenShift Logging collector (application, infrastructure and audit tenants), openshift-network is the mode used by the Network Observability operator, static and dynamic are the generic OIDC/OPA modes"
+                        }
+                    }
+                },
+                "storage": {
+                    "type": "object",
+                    "title": "Storage",
+                    "description": "Object storage configuration of the LokiStack",
+                    "properties": {
+                        "schemas": {
+                            "type": "array",
+                            "title": "Schemas",
+                            "description": "List of the storage schemas (version v11, v12 or v13 and the date it comes into effect). Add a new entry with a future effectiveDate to migrate an existing stack to a new schema",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "version": {
+                                        "title": "Version",
+                                        "type": "string",
+                                        "default": "v13"
+                                    },
+                                    "effectiveDate": {
+                                        "title": "Effective Date",
+                                        "type": "string",
+                                        "default": "2024-10-01"
+                                    }
+                                }
+                            }
+                        },
+                        "secret": {
+                            "type": "object",
+                            "title": "Secret",
+                            "description": "Secret holding the object storage credentials, read by the Loki operator (see the storageSecret block to create it)",
+                            "properties": {
+                                "name": {
+                                    "title": "Name",
+                                    "type": "string",
+                                    "default": "logging-loki-s3",
+                                    "description": "Name of the object storage secret (must exist in the LokiStack namespace)"
+                                },
+                                "type": {
+                                    "title": "Type",
+                                    "type": "string",
+                                    "default": "s3",
+                                    "description": "Type of the object storage provider (s3, azure, gcs, swift or alibabacloud)"
+                                },
+                                "credentialMode": {
+                                    "title": "Credential Mode",
+                                    "type": "string",
+                                    "default": "",
+                                    "description": "Credential mode of the object storage secret (static, token or token-cco). Empty keeps the operator default"
+                                }
+                            }
+                        },
+                        "tls": {
+                            "type": "object",
+                            "title": "Tls",
+                            "description": "TLS configuration used to reach the object storage endpoint (only rendered when caName is set)",
+                            "properties": {
+                                "caName": {
+                                    "title": "Ca Name",
+                                    "type": "string",
+                                    "default": "",
+                                    "description": "Name of the ConfigMap (in the LokiStack namespace) holding the CA certificate of the object storage endpoint"
+                                },
+                                "caKey": {
+                                    "title": "Ca Key",
+                                    "type": "string",
+                                    "default": "",
+                                    "description": "Key of the CA certificate inside the ConfigMap (empty uses the operator default service-ca.crt)"
+                                }
+                            }
+                        }
+                    }
+                },
+                "retention": {
+                    "type": "object",
+                    "title": "Retention",
+                    "description": "Global retention of the logs stored in the LokiStack",
+                    "properties": {
+                        "days": {
+                            "title": "Days",
+                            "type": "integer",
+                            "default": 7,
+                            "description": "Number of days the logs are kept before deletion by the compactor (0 disables the retention policy, logs are never pruned)"
+                        },
+                        "streams": {
+                            "type": "array",
+                            "title": "Streams",
+                            "description": "List of per-stream retention rules ({days, priority, selector}), rendered only when days is set",
+                            "default": []
+                        }
+                    }
+                },
+                "limits": {
+                    "type": "object",
+                    "title": "Limits",
+                    "description": "Global limits applied to every tenant of the LokiStack",
+                    "properties": {
+                        "ingestion": {
+                            "type": "object",
+                            "title": "Ingestion",
+                            "description": "Ingestion limits (raw map rendered under limits.global.ingestion, see the LokiStack CRD for the available fields)",
+                            "default": {}
+                        },
+                        "queries": {
+                            "type": "object",
+                            "title": "Queries",
+                            "description": "Query limits (raw map rendered under limits.global.queries, see the LokiStack CRD for the available fields)",
+                            "default": {}
+                        }
+                    }
+                },
+                "replication": {
+                    "type": "object",
+                    "title": "Replication",
+                    "description": "Replication of the ingested data across the ingesters",
+                    "properties": {
+                        "factor": {
+                            "title": "Factor",
+                            "type": "integer",
+                            "default": 0,
+                            "description": "Replication factor of the ingested data (0 keeps the default of the selected size)"
+                        }
+                    }
+                },
+                "rules": {
+                    "type": "object",
+                    "title": "Rules",
+                    "description": "Configuration of the Loki ruler (evaluation of the AlertingRule and RecordingRule CRs)",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Enable the ruler component and the discovery of the rule CRs"
+                        },
+                        "selector": {
+                            "type": "object",
+                            "title": "Selector",
+                            "description": "Label selector of the AlertingRule and RecordingRule CRs evaluated by the ruler (empty selects every rule CR)",
+                            "default": {}
+                        },
+                        "namespaceSelector": {
+                            "type": "object",
+                            "title": "Namespace Selector",
+                            "description": "Label selector of the namespaces where the rule CRs are discovered (empty selects every namespace)",
+                            "default": {}
+                        }
+                    }
+                },
+                "hashRing": {
+                    "type": "object",
+                    "title": "Hash Ring",
+                    "description": "Hash ring configuration of the Loki members (raw map rendered under spec.hashRing, empty keeps the operator default)",
+                    "default": {}
+                },
+                "extraSpec": {
+                    "type": "object",
+                    "title": "Extra Spec",
+                    "description": "Additional LokiStack spec fields appended as is at the end of the spec (raw map). Never repeat a field managed by the values above (size, storage, storageClassName, managementState, tenants, replication, limits, rules, hashRing or template when infra_enabled is true)",
+                    "default": {}
+                }
+            }
+        },
+        "storageSecret": {
+            "type": "object",
+            "title": "Storage Secret",
+            "description": "Object storage secret read by the LokiStack (lokistack.storage.secret)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the object storage secret"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "",
+                    "description": "Name of the secret (default is the lokistack.storage.secret.name value)"
+                },
+                "data": {
+                    "type": "object",
+                    "title": "Data",
+                    "description": "Key/value pairs of the secret, rendered as stringData. The expected keys depend on the object storage provider (see https://github.com/openshift/loki/blob/release-6.6/operator/docs/lokistack/object_storage.md)",
+                    "default": {}
+                },
+                "externalSecret": {
+                    "type": "object",
+                    "title": "External Secret",
+                    "description": "Source this Secret from an external store instead of the data above: renders an ExternalSecret producing the same Secret (keys of your choice, see externalSecretDefaults)",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Enable the ExternalSecret mode"
+                        },
+                        "secretStoreRef": {
+                            "type": "object",
+                            "title": "Secret Store Ref",
+                            "description": "Store to read from (default is externalSecretDefaults.secretStoreRef)",
+                            "default": {}
+                        },
+                        "refreshInterval": {
+                            "title": "Refresh Interval",
+                            "type": "string",
+                            "default": "",
+                            "description": "How often the Secret is refreshed (default is externalSecretDefaults.refreshInterval)"
+                        },
+                        "remoteRefs": {
+                            "type": "object",
+                            "title": "Remote Refs",
+                            "description": "Map of the secret keys to the remote references ({key, property, version}) of the external store",
+                            "default": {}
+                        },
+                        "data": {
+                            "type": "array",
+                            "title": "Data",
+                            "description": "Raw ExternalSecret spec.data list (alternative to remoteRefs)",
+                            "default": []
+                        },
+                        "dataFrom": {
+                            "type": "array",
+                            "title": "Data From",
+                            "description": "Raw ExternalSecret spec.dataFrom list, fetches every key of the external secret at once",
+                            "default": []
+                        },
+                        "template": {
+                            "type": "object",
+                            "title": "Template",
+                            "description": "Raw ExternalSecret spec.target.template (type, metadata, data)",
+                            "default": {}
+                        }
+                    }
+                }
+            }
+        },
+        "alertingRules": {
+            "type": "object",
+            "title": "Alerting Rules",
+            "description": "Deploy AlertingRule CRs evaluated by the LokiStack ruler (requires lokistack.rules.enabled)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the AlertingRule CRs"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of the AlertingRule CRs to create",
+                    "default": []
+                }
+            }
+        },
+        "recordingRules": {
+            "type": "object",
+            "title": "Recording Rules",
+            "description": "Deploy RecordingRule CRs evaluated by the LokiStack ruler (requires lokistack.rules.enabled)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the RecordingRule CRs"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of the RecordingRule CRs to create",
+                    "default": []
+                }
+            }
+        },
+        "rulerConfig": {
+            "type": "object",
+            "title": "Ruler Config",
+            "description": "Deploy the RulerConfig CR tuning the LokiStack ruler (evaluation intervals, Alertmanager and remote write)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the RulerConfig CR"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "logging-loki-ruler",
+                    "description": "Name of the RulerConfig (it is read by the LokiStack of the same namespace)"
+                },
+                "spec": {
+                    "title": "Spec",
+                    "type": "string",
+                    "default": "evaluationInterval: 1m\npollInterval: 1m\n# alertmanager:\n#   enableV2: true\n#   endpoints:\n#     - https://_web._tcp.alertmanager-operated.openshift-monitoring.svc\n#   discovery:\n#     enableSRV: true\n#     refreshInterval: 1m\n#   notificationQueue:\n#     capacity: 1000\n#     timeout: 30s\n",
+                    "description": "Raw spec of the RulerConfig (see the RulerConfig CRD for the alertmanager and remoteWrite fields)"
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-loki",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "6.5.1",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "project": {
+                    "type": "object",
+                    "title": "Project",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "type": {
+                            "title": "Type",
+                            "type": "string",
+                            "default": "namespace"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "openshift-logging"
+                        },
+                        "display_name": {
+                            "title": "Display name",
+                            "type": "string",
+                            "default": "Loki log store"
+                        },
+                        "description": {
+                            "title": "Description",
+                            "type": "string",
+                            "default": "Loki log store configured by STARTX"
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "title": "Operator",
+            "description": "Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-loki",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "6.5.1",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "title": "Subscription",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "loki-operator"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-operators-redhat"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "6.5.1"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "title": "Operator",
+                            "properties": {
+                                "channel": {
+                                    "title": "Channel",
+                                    "type": "string",
+                                    "default": "stable-6.5"
+                                },
+                                "name": {
+                                    "title": "Name",
+                                    "type": "string",
+                                    "default": "loki-operator"
+                                },
+                                "installPlanApproval": {
+                                    "title": "Install Plan Approval",
+                                    "type": "string",
+                                    "default": "Manual"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "title": "Source",
+                                    "properties": {
+                                        "name": {
+                                            "title": "Name",
+                                            "type": "string",
+                                            "default": "redhat-operators"
+                                        },
+                                        "namespace": {
+                                            "title": "Namespace",
+                                            "type": "string",
+                                            "default": "openshift-marketplace"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "title": "Config",
+                                    "properties": {
+                                        "infra": {
+                                            "title": "Infra",
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "title": "Operator Group",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "target": {
+                            "title": "Target",
+                            "type": "string",
+                            "default": "all-ns"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "openshift-operators-redhat"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-operators-redhat"
+                        },
+                        "providedAPIs": {
+                            "title": "Provided APIs",
+                            "type": "string",
+                            "default": "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -59,3 +59,34 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
  - Cluster OpenTracing namespace disabled
 {{ end }}
 {{- end -}}
+
+{{/* Scheduling of a monitoring component on the infra nodes (nodeSelector and tolerations) */}}
+{{- define "cluster-config.monitoring.infraPlacement" -}}
+nodeSelector:
+  node-role.kubernetes.io/infra: ''
+tolerations:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/infra
+    operator: Exists
+  - effect: NoExecute
+    key: node-role.kubernetes.io/infra
+    operator: Exists
+{{- end -}}
+
+{{/* External labels of the platform Prometheus: context labels plus custom labels, reserved keys rejected */}}
+{{- define "cluster-config.monitoring.externalLabels" -}}
+{{- $labels := dict -}}
+{{- $cfg := .Values.monitoring.externalLabels | default dict -}}
+{{- if ne (toString $cfg.contextLabels) "false" }}
+{{- $_ := set $labels "scope" (include "startx.appScope" .) -}}
+{{- $_ := set $labels "environment" (include "startx.appEnvironment" .) -}}
+{{- $_ := set $labels "cluster_name" (include "startx.appCluster" .) -}}
+{{- end }}
+{{- range $key, $value := $cfg.custom | default dict }}
+{{- if has $key (list "prometheus" "prometheus_replica" "cluster") }}
+{{- fail (printf "monitoring.externalLabels.custom: the key %q is reserved by OpenShift (prometheus, prometheus_replica, cluster)" $key) }}
+{{- end }}
+{{- $_ := set $labels $key (toString $value) -}}
+{{- end }}
+{{- toYaml $labels -}}
+{{- end -}}

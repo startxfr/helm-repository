@@ -1,0 +1,24 @@
+{{- if .Values.networks.enabled -}}
+{{- $defaultns := .Values.project.project.name | default "default-cudn" -}}
+{{ range .Values.networks.list }}
+---
+apiVersion: k8s.ovn.org/v1
+kind: UserDefinedNetwork
+metadata:
+  name: {{ .name | default "default-udn" | quote }}
+  namespace: {{ .namespace | default $defaultns | quote }}
+  labels:
+    {{- include "cluster-cudn.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name | default "default-udn" }}-udn"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-cudn.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- with .network }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,45 @@
+{{- if .Values.monitoring.enabled }}{{- if .Values.monitoring.userWorkload }}{{- if .Values.monitoring.userWorkload.enabled -}}
+{{- $m := .Values.monitoring -}}
+{{- $u := $m.userWorkload -}}
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: user-workload-monitoring-config
+  namespace: openshift-user-workload-monitoring
+  labels:
+    {{- include "cluster-config.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-user-workload-monitoring-{{- include "startx.appVersion" . -}}"
+  annotations:
+    {{- include "cluster-config.annotations" . | nindent 4 }}
+data:
+  config.yaml: |
+    {{- if $m.infra_enabled }}
+    prometheusOperator:
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
+    thanosRuler:
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
+    {{- end }}
+    prometheus:
+      retention: {{ $u.retentionPeriod | default "24h" }}
+      {{- with $u.retentionSize }}
+      retentionSize: {{ . }}
+      {{- end }}
+      {{- with $u.resources }}
+      resources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $m.infra_enabled }}
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
+      {{- end }}
+      volumeClaimTemplate:
+        spec:
+          storageClassName: {{ $u.storageClass | default $m.storageClass | default "gp3-csi" }}
+          volumeMode: Filesystem
+          resources:
+            requests:
+              storage: {{ $u.storageSize | default "10Gi" }}
+    {{- with $u.extraConfig }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}{{- end }}{{- end -}}

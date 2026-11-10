@@ -1,0 +1,18 @@
+{{- if .Values.operatorNamespace.enabled -}}
+{{- $name := .Values.operatorNamespace.name | default "openshift-operators-redhat" -}}
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  labels:
+    {{- include "cluster-loki.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-project"
+    openshift.io/cluster-monitoring: "true"
+  annotations:
+    {{- include "cluster-loki.annotations" . | nindent 4 }}
+    openshift.io/description: "Red Hat operator namespace"
+    openshift.io/display-name: "RedHat"
+    helm.sh/resource-policy: keep
+    argocd.argoproj.io/sync-wave: "-10"
+    openshift.io/node-selector: ""
+{{- end -}}

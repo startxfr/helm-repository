@@ -1,0 +1,248 @@
+# Default values for cluster-dell-csm.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-dell-csm
+  # Version name of this application (default use Chart appVersion)
+  version: "1.13.2"
+
+# Default settings applied to every ExternalSecret rendered by this chart when a
+# secret is sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+# Deploy the ContainerStorageModule CR (the Dell CSI driver managed by the CSM operator)
+csm:
+  # Enable the creation of the ContainerStorageModule CR in the project namespace
+  enabled: false
+  # Activate the resource as a helm hook
+  hooked: false
+  # Name of the ContainerStorageModule CR (the driver reads the array credentials from the Secret "<name>-config")
+  name: powerstore
+  # Dell CSI driver to deploy (csiDriverType): powerstore, powermax, powerflex, isilon (PowerScale) or unity
+  driverType: powerstore
+  # CSM release deployed by the operator (spec.version, ex: v1.18.2). The installed operator only accepts the CSM
+  # releases listed in its operatorconfig/common/csm-releases.yaml (https://github.com/dell/csm-operator);
+  # operator 1.13.x supports CSM v1.16.0 to v1.18.2
+  version: "v1.18.2"
+  # Deprecated driver configuration version (spec.driver.configVersion, ex: v2.18.1 for PowerStore). Leave empty
+  # to rely on `version`; only used by operators older than CSM 1.16
+  configVersion: ""
+  # Number of replicas of the controller plugin
+  replicas: 2
+  # Name of the Secret holding the array credentials (empty means "<name>-config"). Without authSecret the operator
+  # would look for "<name>-config" (PowerStore, PowerFlex) or "<name>-creds" (PowerMax, PowerScale, Unity)
+  authSecret: ""
+  # Settings shared by the controller and the node plugins
+  common:
+    # Custom driver image (empty means the image shipped with the operator release)
+    image: ""
+    # Pull policy of the driver image
+    imagePullPolicy: IfNotPresent
+    # Environment variables merged in spec.driver.common.envs (raw list, operator defaults apply when empty)
+    envs: []
+    # envs:
+    #   - name: X_CSI_POWERSTORE_SKIP_CERTIFICATE_VALIDATION
+    #     value: "true"
+    #   - name: CSI_LOG_LEVEL
+    #     value: debug
+  # DNS policy of the node plugin daemonset
+  dnsPolicy: ClusterFirstWithHostNet
+  # Remove the driver deployment when the CR is deleted
+  forceRemoveDriver: true
+  # CSIDriver object created by the operator
+  csiDriverSpec:
+    # fsGroupPolicy of the CSIDriver (ReadWriteOnceWithFSType, File or None; immutable on OCP 4.16 and older)
+    fSGroupPolicy: ReadWriteOnceWithFSType
+    # Enable storage capacity tracking used by the scheduler
+    storageCapacity: true
+  # Controller plugin (deployment talking to the array management API)
+  controller:
+    # Run the controller plugin on infra nodes (infra nodeSelector and toleration)
+    infra_enabled: false
+    # Node selector of the controller plugin (ignored when infra_enabled is true)
+    nodeSelector: {}
+    # Tolerations of the controller plugin (ignored when infra_enabled is true)
+    tolerations: []
+    # Environment variables merged in spec.driver.controller.envs (raw list)
+    envs: []
+  # Node plugin (daemonset mounting the volumes on every node)
+  node:
+    # Let the node plugin run on infra nodes too (adds the infra toleration, no nodeSelector)
+    infra_enabled: false
+    # Node selector of the node plugin
+    nodeSelector: {}
+    # Tolerations of the node plugin (ignored when infra_enabled is true)
+    tolerations: []
+    # Environment variables merged in spec.driver.node.envs (raw list)
+    envs: []
+  # CSI sidecar containers overrides (raw list rendered in spec.driver.sideCars, operator defaults apply when empty)
+  sideCars: []
+  # sideCars:
+  #   - name: provisioner
+  #     args: ["--volume-name-prefix=csivol"]
+  #   - name: external-health-monitor
+  #     enabled: false
+  # CSM modules (raw list rendered in spec.modules): replication, observability, resiliency, authorization
+  modules: []
+  # modules:
+  #   - name: resiliency
+  #     enabled: true
+  #   - name: replication
+  #     enabled: false
+  #   - name: observability
+  #     enabled: false
+  #   - name: authorization
+  #     enabled: false
+  #     components:
+  #       - name: karavi-authorization-proxy
+  #         envs:
+  #           - name: PROXY_HOST
+  #             value: authorization-gateway-nginx.authorization.svc.cluster.local
+  # Extra fields appended to the ContainerStorageModule spec (raw map, ex: upgrade, customRegistry)
+  extraSpec: {}
+  # extraSpec:
+  #   upgrade: auto
+  #   customRegistry: registry.example.com/dell
+
+# Credentials of the Dell storage arrays used by the driver (Secret mounted by the controller and node plugins)
+arraySecret:
+  # Enable the creation of the array credentials Secret
+  enabled: false
+  # Name of the Secret (empty means csm.authSecret, then "<csm.name>-config")
+  name: ""
+  # Dell array configuration stored in the "config" key of the Secret (raw YAML text, one entry per array).
+  # PowerStore fields: endpoint, globalID, username, password, skipCertificateValidation, isDefault, blockProtocol
+  # (FC, ISCSI, NVMeTCP, NVMeFC, None or auto), nasName (NFS). PowerFlex, PowerScale and Unity use the same "config"
+  # key with their own layout (see the Dell CSM documentation)
+  config: |
+    arrays:
+      - endpoint: "https://powerstore.example.com/api/rest"
+        globalID: "PS000000000000"
+        username: "csmadmin"
+        password: "changeme"
+        skipCertificateValidation: true
+        isDefault: true
+        blockProtocol: "auto"
+        nasName: "nas-server"
+  # Source this Secret from an external store instead of the values above:
+  # renders an ExternalSecret producing the same Secret (key "config")
+  externalSecret:
+    enabled: false
+    # remoteRefs:
+    #   config:
+    #     key: ocp/storage/powerstore
+    #     property: config
+    # # ...or fetch every key of the external secret at once
+    # dataFrom:
+    #   - extract:
+    #       key: ocp/storage/powerstore
+
+# StorageClasses provisioned by the Dell CSI driver
+storageClasses:
+  # Enable the creation of the StorageClasses
+  enabled: false
+  # Activate the StorageClasses as a helm hook
+  hooked: false
+  # CSIDriver name used as provisioner (empty means the driver of csm.driverType: csi-powerstore.dellemc.com,
+  # csi-powermax.dellemc.com, csi-vxflexos.dellemc.com, csi-isilon.dellemc.com or csi-unity.dellemc.com)
+  provisioner: ""
+  # List of StorageClasses to create
+  list:
+    # Name of the StorageClass
+    - name: powerstore-xfs
+      # Make this StorageClass the default one of the cluster (must be unique)
+      isDefault: false
+      # Driver specific parameters (raw YAML text). PowerStore: arrayID (globalID of the array, optional when the
+      # array is flagged isDefault in the secret), csi.storage.k8s.io/fstype (ext4, xfs or nfs), nasName, allowRoot, nfsAcls
+      parameters: |
+        csi.storage.k8s.io/fstype: "xfs"
+      # Reclaim policy of the provisioned volumes (Delete or Retain)
+      reclaimPolicy: Delete
+      # Enable the expansion of the provisioned volumes
+      allowVolumeExpansion: true
+      # Binding mode of the provisioned volumes (Immediate or WaitForFirstConsumer)
+      volumeBindingMode: Immediate
+      # Mount options applied to the provisioned volumes
+      mountOptions: []
+
+# VolumeSnapshotClasses used to snapshot the volumes of the Dell CSI driver
+volumeSnapshotClasses:
+  # Enable the creation of the VolumeSnapshotClasses
+  enabled: false
+  # Activate the VolumeSnapshotClasses as a helm hook
+  hooked: false
+  # CSIDriver name handling the snapshots (empty means the driver of csm.driverType)
+  driver: ""
+  # List of VolumeSnapshotClasses to create
+  list:
+    # Name of the VolumeSnapshotClass
+    - name: powerstore-snapshot
+      # Make this VolumeSnapshotClass the default one of the cluster (must be unique)
+      isDefault: false
+      # Label the class for the CSI snapshots of Velero / OADP
+      veleroEnabled: false
+      # Deletion policy of the snapshots (Delete or Retain)
+      deletionPolicy: Delete
+      # Driver specific parameters (raw YAML text)
+      parameters: ""
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-dell-csm"
+    display_name: Dell CSM storage
+    description: Dell Container Storage Modules configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+# The certified Dell CSM operator is installed in openshift-operators (AllNamespaces mode, global OperatorGroup)
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "dell-csm-operator-certified"
+    namespace: "openshift-operators"
+    version: "v1.13.2"
+    operator:
+      channel: "stable"
+      name: dell-csm-operator-certified
+      installPlanApproval: Manual
+      # csv: dell-csm-operator-certified
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "dell-csm-operator"
+    namespace: "openshift-operators"
+    target: "all-ns"
+    providedAPIs: "ContainerStorageModule.v1.storage.dell.com"

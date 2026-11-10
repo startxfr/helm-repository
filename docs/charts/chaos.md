@@ -297,3 +297,5 @@ helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.313 | 2026-11-04 | Add cluster-unifai and cluster-qdrant, align all charts to 21.3.313 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
+| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
+| 21.3.361 | 2026-11-10 | Fix chaos-mesh dependency pin |

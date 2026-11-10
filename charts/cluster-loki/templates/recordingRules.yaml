@@ -1,0 +1,23 @@
+{{- if .Values.recordingRules.enabled -}}
+{{- $root := . -}}
+{{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
+{{- range .Values.recordingRules.list }}
+---
+apiVersion: loki.grafana.com/v1
+kind: RecordingRule
+metadata:
+  name: {{ .name | quote }}
+  namespace: {{ .namespace | default $namespace | quote }}
+  labels:
+    {{- include "cluster-loki.labels" $root | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name }}-recordingrule"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-loki.annotations" $root | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- .spec | default "tenantID: application" | nindent 2 }}
+{{- end }}
+{{- end -}}

@@ -158,31 +158,61 @@
                 "context": {
                     "type": "object",
                     "properties": {
-                        "app": { "type": "string" },
-                        "cluster": { "type": "string" },
-                        "component": { "type": "string" },
-                        "environment": { "type": "string" },
-                        "scope": { "type": "string" }
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        }
                     }
                 },
-                "enabled": { "type": "boolean" },
+                "enabled": {
+                    "type": "boolean"
+                },
                 "operatorGroup": {
                     "type": "object",
                     "properties": {
-                        "enabled": { "type": "boolean" },
-                        "hooked": { "type": "boolean" },
-                        "name": { "type": "string" },
-                        "namespace": { "type": "string" },
-                        "providedAPIs": { "type": "string" }
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "providedAPIs": {
+                            "type": "string"
+                        }
                     }
                 },
                 "subscription": {
                     "type": "object",
                     "properties": {
-                        "enabled": { "type": "boolean" },
-                        "hooked": { "type": "boolean" },
-                        "name": { "type": "string" },
-                        "namespace": { "type": "string" },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
                         "version": {
                             "type": "string",
                             "minLength": 1,
@@ -194,14 +224,24 @@
                         "operator": {
                             "type": "object",
                             "properties": {
-                                "channel": { "type": "string" },
-                                "csv": { "type": "string" },
-                                "name": { "type": "string" },
+                                "channel": {
+                                    "type": "string"
+                                },
+                                "csv": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
                                 "source": {
                                     "type": "object",
                                     "properties": {
-                                        "name": { "type": "string" },
-                                        "namespace": { "type": "string" }
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "namespace": {
+                                            "type": "string"
+                                        }
                                     }
                                 }
                             }
@@ -216,24 +256,73 @@
                 "context": {
                     "type": "object",
                     "properties": {
-                        "app": { "type": "string" },
-                        "cluster": { "type": "string" },
-                        "component": { "type": "string" },
-                        "environment": { "type": "string" },
-                        "scope": { "type": "string" }
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        }
                     }
                 },
-                "enabled": { "type": "boolean" },
+                "enabled": {
+                    "type": "boolean"
+                },
                 "project": {
                     "type": "object",
                     "properties": {
-                        "description": { "type": "string" },
-                        "display_name": { "type": "string" },
-                        "enabled": { "type": "boolean" },
-                        "hooked": { "type": "boolean" },
-                        "name": { "type": "string" },
-                        "type": { "type": "string" }
+                        "description": {
+                            "type": "string"
+                        },
+                        "display_name": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
                     }
+                }
+            }
+        },
+        "nads": {
+            "type": "object",
+            "title": "Nads",
+            "description": "NetworkAttachmentDefinitions (Multus secondary networks) attached to the node interfaces configured by the policy",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the NetworkAttachmentDefinition list"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as a helm hook"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of NetworkAttachmentDefinition to create. Example: a linux-bridge network on the br1 bridge created by a NodeNetworkConfigurationPolicy, available to every namespace (namespace default)",
+                    "default": []
                 }
             }
         }

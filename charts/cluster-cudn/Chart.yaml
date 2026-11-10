@@ -1,0 +1,75 @@
+apiVersion: v2
+# Name of this Helm chart
+name: cluster-cudn
+# Description of this Helm chart
+description: Configure OVN-Kubernetes user-defined networks (ClusterUserDefinedNetwork and UserDefinedNetwork)
+# Helm chart application
+type: application
+# Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
+version: 21.3.361
+# Version of the OpenShift release providing the OVN-Kubernetes user-defined network API (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
+appVersion: "4.22.0"
+# Icon of this helm-chart
+icon: https://helm-repository.readthedocs.io/en/latest/img/cluster-cudn.svg
+# Kube minimum version (OpenShift 4.18 is the first release where user-defined networks are generally available)
+kubeVersion: ">=1.31.0-0"
+# Keyword list for this chart
+keywords:
+  - kubernetes
+  - helm
+  - startx
+  - cluster-chart
+  - cluster
+  - infrastructure
+  - ovn
+  - network
+  - udn
+  - cudn
+  - layer2
+  - localnet
+  - virtualization
+# STARTX helm chart repository homepage
+home: https://helm-repository.readthedocs.io/en/latest
+# Sources and documentation for this chart
+sources:
+  - https://helm-repository.readthedocs.io/en/latest/charts/cluster-cudn
+  - https://github.com/startxfr/helm-repository/tree/master/charts/cluster-cudn
+# Main maintainer contact for this helm chart
+maintainers:
+  - name: "STARTX"
+    email: "dev@startx.fr"
+    url: "https://www.startx.fr"
+
+dependencies:
+  - name: project
+    repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+    version: "21.3.222"
+    alias: project
+    condition: project.enabled
+
+annotations:
+  # category associated to this package
+  category: cluster
+  # Artifacthub category associated to this package
+  artifacthub.io/category: integration-delivery
+  # Artifacthub license
+  artifacthub.io/license: "GPL-3.0-or-later"
+  # Artifacthub is this release a pre-release
+  artifacthub.io/prerelease: "true"
+  # Artifacthub is an operator chart
+  artifacthub.io/operator: "false"
+  # Artifacthub chart recommendations
+  startx.io/recommendations: |
+    - name: Startx basic chart - Project
+      url: https://helm-repository.readthedocs.io/en/latest/charts/project
+    - name: Startx cluster chart - NMState (OVS bridge mappings for Localnet networks)
+      url: https://helm-repository.readthedocs.io/en/latest/charts/cluster-nmstate
+  # Artifacthub signing keys
+  artifacthub.io/signKey: |
+    fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+    url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+  # Artifacthub changes logs
+  artifacthub.io/changes: |
+    - kind: added
+      description: "[cluster-cudn] Initial chart creation"
+  artifacthub.io/containsSecurityUpdates: "false"

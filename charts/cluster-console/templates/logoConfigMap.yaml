@@ -1,6 +1,56 @@
-{{- if .Values.console.enabled -}}{{- if .Values.console.customize -}}{{-  if .Values.console.customize.logo -}}
+{{- if .Values.console.enabled -}}{{- if .Values.console.customize -}}
 {{- $files := .Files }}
 {{- $namespace := .Values.console.namespace | default "openshift-config" -}}
+{{- $logos := .Values.console.customize.logos | default dict -}}
+{{- if $logos.enabled }}
+{{- /* Per-theme logos (OpenShift 4.19+): one ConfigMap, SVG and inline texts in data, images in binaryData */ -}}
+{{- $entries := dict }}
+{{- range $type, $themes := dict "masthead" ($logos.masthead | default dict) "favicon" ($logos.favicon | default dict) }}
+{{- range $theme, $entry := $themes }}
+{{- if include "cluster-console.logoSet" $entry }}
+{{- $_ := set $entries (include "cluster-console.logoKey" (dict "entry" $entry "type" $type "theme" $theme)) $entry }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
+kind: ConfigMap
+apiVersion: v1
+immutable: false
+metadata:
+  name: {{ $logos.configMap | default "console-logos" | quote }}
+  namespace: "{{- $namespace -}}"
+  labels:
+    {{- include "cluster-console.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $logos.configMap | default "console-logos" -}}-configmap"
+  annotations:
+    {{- include "cluster-console.annotations" $ | nindent 4 }}
+{{- $texts := dict }}
+{{- $binaries := dict }}
+{{- range $key, $entry := $entries }}
+{{- if include "cluster-console.logoIsText" $entry }}{{ $_ := set $texts $key $entry }}{{ else }}{{ $_ := set $binaries $key $entry }}{{ end }}
+{{- end }}
+{{- with $texts }}
+data:
+  {{- range $key, $entry := . }}
+  {{ $key }}: |-
+    {{- if $entry.content }}
+    {{- $entry.content | nindent 4 }}
+    {{- else }}
+    {{- $files.Get $entry.file | required (printf "console.customize.logos: file %s not found in the chart" $entry.file) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- with $binaries }}
+binaryData:
+  {{- range $key, $entry := . }}
+  {{- if $entry.base64 }}
+  {{ $key }}: {{ $entry.base64 | replace "\n" "" | replace " " "" }}
+  {{- else }}
+  {{ $key }}: {{ $files.Get $entry.file | required (printf "console.customize.logos: file %s not found in the chart" $entry.file) | b64enc }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- else if .Values.console.customize.logo }}
 {{- with .Values.console.customize.logo -}}
 ---
 kind: ConfigMap
@@ -45,4 +95,5 @@ data:
 {{- end }}
 {{- end }}
 {{- end }}
-{{- end -}}{{- end -}}{{- end -}}
+{{- end }}
+{{- end -}}{{- end -}}

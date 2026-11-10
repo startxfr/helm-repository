@@ -1,0 +1,196 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Context",
+            "description": "Application deployment context",
+            "properties": {
+                "scope": {
+                    "title": "Scope",
+                    "type": "string",
+                    "default": "myscope",
+                    "description": "Name of the global scope for this application (organizational tenant)"
+                },
+                "cluster": {
+                    "title": "Cluster",
+                    "type": "string",
+                    "default": "default",
+                    "description": "Name of the cluster running this application (platform tenant)"
+                },
+                "environment": {
+                    "title": "Environment",
+                    "type": "string",
+                    "default": "myenv",
+                    "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                },
+                "component": {
+                    "title": "Component",
+                    "type": "string",
+                    "default": "mycomponent",
+                    "description": "Component name of this application (logical tenant)"
+                },
+                "app": {
+                    "title": "App",
+                    "type": "string",
+                    "default": "default-cudn",
+                    "description": "Application name (functional tenant, default use Chart name)"
+                },
+                "version": {
+                    "title": "Version",
+                    "type": "string",
+                    "default": "4.22.0",
+                    "description": "Version name of this application (default use Chart appVersion)"
+                }
+            }
+        },
+        "namespaces": {
+            "type": "object",
+            "title": "Namespaces",
+            "description": "Namespaces attached to a primary user-defined network. OVN-Kubernetes only accepts a primary network for namespaces created with the k8s.ovn.org/primary-user-defined-network label (the label cannot be added afterwards), so the chart creates these namespaces itself (sync-wave -10, kept on uninstall)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the namespaces listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of namespaces to create, labelled k8s.ovn.org/primary-user-defined-network unless primary is false",
+                    "default": []
+                }
+            }
+        },
+        "clusterNetworks": {
+            "type": "object",
+            "title": "Cluster Networks",
+            "description": "Cluster-scoped user-defined networks shared across namespaces (ClusterUserDefinedNetwork, cluster-admin only)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the ClusterUserDefinedNetwork resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of ClusterUserDefinedNetwork resources (spec.namespaceSelector and spec.network are rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "networks": {
+            "type": "object",
+            "title": "Networks",
+            "description": "Namespace-scoped user-defined networks (UserDefinedNetwork, Layer2 or Layer3 topology only)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the UserDefinedNetwork resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of UserDefinedNetwork resources (spec is rendered as is from the network key)",
+                    "default": []
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-cudn",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "4.22.0",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "project": {
+                    "type": "object",
+                    "title": "Project",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "type": {
+                            "title": "Type",
+                            "type": "string",
+                            "default": "namespace"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "default-cudn"
+                        },
+                        "display_name": {
+                            "title": "Display name",
+                            "type": "string",
+                            "default": "User-defined networks"
+                        },
+                        "description": {
+                            "title": "Description",
+                            "type": "string",
+                            "default": "OVN-Kubernetes user-defined networks configured by STARTX"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

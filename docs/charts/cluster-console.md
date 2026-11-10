@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -50,7 +50,85 @@ Complete deployment of a cluster console configuration with the following charac
 helm install cluster-console startx/cluster-console
 ```
 
-## Others values availables
+## Console customization (OpenShift 4.19+)
+
+The masthead of the console follows the theme chosen by each user (light or dark) since OpenShift 4.19,
+and a single logo is rarely readable in both themes. The `console.customize.logos` block declares one
+logo per theme for the masthead and for the favicon through the `logos` API of the Console operator;
+the legacy `console.customize.logo` block (`customLogoFile`, deprecated) is kept for existing deployments
+and is not rendered when `logos.enabled` is true (OpenShift refuses both settings together).
+
+Every logo is a file of the chart (`file: webtpl/...`, SVG or binary image such as PNG), an inline SVG
+text (`content`) or an inline base64 image (`base64`). When several sources are set, `content` wins over
+`base64` which wins over `file`, so an inline logo can be set without clearing the default file. The
+ConfigMap key is the file name, `<type>-<theme>.svg` for an inline SVG, `<type>-<theme>.png` for a base64
+image, or the explicit `key` (use it to carry another extension such as `.jpg` or `.webp`). The files are
+published in a single ConfigMap of `openshift-config` (`console.customize.logos.configMap`).
+
+```yaml
+console:
+  enabled: true
+  customize:
+    name: Example OpenShift
+    logos:
+      enabled: true
+      masthead:
+        light:
+          file: webtpl/example-logo.png
+        dark:
+          file: webtpl/example-logo-dark.png
+      favicon:
+        light:
+          content: |
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">...</svg>
+    # Console UI elements, Enabled or Disabled
+    capabilities:
+      GettingStartedBanner: Disabled
+      GuidedTour: Disabled
+      LightspeedButton: Disabled
+    # Any other spec.customization setting (perspectives, developerCatalog, projectAccess, quickStarts...)
+    extraCustomization:
+      perspectives:
+        - id: dev
+          visibility:
+            state: Disabled
+```
+
+`console.plugins` enables console plugins (`spec.plugins` of the Console operator). The list replaces the
+plugins enabled by hand or by other operators (OpenShift Virtualization, NMState, GitOps...), so it must
+contain every plugin of the cluster; leave it empty to keep the list untouched. With ArgoCD self-healing,
+a plugin enabled later by an operator is reverted at the next sync unless the Application ignores the
+field:
+
+```yaml
+  ignoreDifferences:
+    - group: operator.openshift.io
+      kind: Console
+      jsonPointers:
+        - /spec/plugins
+```
+
+If a logo was previously set with `customLogoFile`, remove it from the cluster before switching to
+`logos`: `oc patch consoles.operator.openshift.io cluster --type=json -p '[{"op":"remove","path":"/spec/customization/customLogoFile"}]'`.
+
+### console.customize values dictionary
+
+| Key                                                 | Default                   | Description                                                                                  |
+| --------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------- |
+| console.customize.name                              | `Example Console`         | Product name displayed by the console                                                        |
+| console.customize.logo                              |                           | Legacy single logo (`customLogoFile`), ignored when `logos.enabled` is true                  |
+| console.customize.logos.enabled                     | `false`                   | Enable the per-theme logos (OpenShift 4.19+)                                                 |
+| console.customize.logos.configMap                   | `console-logos`           | Name of the ConfigMap (openshift-config) holding the logo files                              |
+| console.customize.logos.masthead.light              | `webtpl/default-logo.svg` | Masthead logo of the light theme (`file`, `content` or `base64`, optional `key`)             |
+| console.customize.logos.masthead.dark               | `webtpl/default-logo.svg` | Masthead logo of the dark theme                                                              |
+| console.customize.logos.favicon.light               | empty                     | Favicon of the light theme (empty keeps the OpenShift favicon)                               |
+| console.customize.logos.favicon.dark                | empty                     | Favicon of the dark theme                                                                    |
+| console.customize.capabilities                      | `{}`                      | Console capabilities set to Enabled or Disabled (LightspeedButton, GettingStartedBanner, GuidedTour) |
+| console.customize.documentationBaseURL              | `""`                      | Base URL of the documentation links (empty keeps the OpenShift documentation)                |
+| console.customize.extraCustomization                | `{}`                      | Additional spec.customization settings added as-is                                           |
+| console.plugins                                     | `[]`                      | Console plugins to enable (replaces the whole list, empty leaves it untouched)               |
+
+## Other available values
 
 - **startx** : Startx Openshift Console customization (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml))
 
@@ -121,3 +199,5 @@ oc apply -k .
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
+| 21.3.321 | 2026-11-08 | Per-theme logos and favicon (OpenShift 4.19+ logos API, PNG support), capabilities, documentation URL, extra customization and plugins; examples values |
+| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |

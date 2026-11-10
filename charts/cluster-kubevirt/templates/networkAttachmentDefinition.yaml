@@ -1,0 +1,42 @@
+{{- if .Values.nads }}{{- if .Values.nads.enabled }}
+{{- $namespace := .Values.project.project.name | default "openshift-cnv" -}}
+{{- range .Values.nads.list }}
+{{- /* the CNI configuration is given as a YAML/JSON text or directly as a map */ -}}
+{{- $config := dict }}
+{{- if kindIs "map" .config }}
+{{- $config = deepCopy .config }}
+{{- else }}
+{{- $config = .config | default "{}" | toString | fromYaml }}
+{{- if hasKey $config "Error" }}
+{{- fail (printf "nads: the config of the network attachment %s is not valid YAML/JSON: %s" .name (get $config "Error")) }}
+{{- end }}
+{{- end }}
+{{- if not (hasKey $config "name") }}
+{{- $_ := set $config "name" .name }}
+{{- end }}
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: {{ .name | quote }}
+  namespace: {{ .namespace | default $namespace | quote }}
+  labels:
+    {{- include "cluster-kubevirt.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ .name }}-nad"
+  annotations:
+    {{- include "cluster-kubevirt.annotations" $ | nindent 4 }}
+    {{- with .annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- if $.Values.nads.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  config: {{ $config | toJson | quote }}
+{{- end }}
+{{- end }}{{- end }}
