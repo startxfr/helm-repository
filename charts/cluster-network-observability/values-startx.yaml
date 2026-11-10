@@ -1,0 +1,103 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: netobserv
+  app: startx-netobserv
+  version: "2.0.0"
+
+flowcollector:
+  enabled: true
+  hooked: false
+  name: cluster
+  namespace: netobserv
+  deploymentModel: Service
+  infra_enabled: true
+  networkPolicy:
+    enabled: true
+    additionalNamespaces: []
+  agent:
+    sampling: 50
+    privileged: false
+    features:
+      - DNSTracking
+      - FlowRTT
+    resources: {}
+  processor:
+    logTypes: Flows
+    consumerReplicas: 0
+    metrics:
+      includeList: []
+    resources: {}
+  loki:
+    enabled: false
+    mode: LokiStack
+    lokiStack:
+      name: loki
+      namespace: netobserv
+    extraSpec: {}
+  consolePlugin:
+    enabled: true
+    quickFilters: []
+  kafka: {}
+  exporters: []
+  extraSpec: {}
+
+flowMetrics:
+  enabled: false
+  hooked: false
+  list: []
+
+lokiRbac:
+  enabled: false
+  operatorNamespace: openshift-netobserv-operator
+  serviceAccount: netobserv-controller-manager
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "openshift-netobserv-operator"
+    display_name: "Startx - Operator Network Observability"
+    requester: startx
+    description: Network Observability operator configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "netobserv-operator"
+    namespace: "openshift-netobserv-operator"
+    version: "2.0.0"
+    operator:
+      channel: "stable"
+      name: netobserv-operator
+      installPlanApproval: Manual
+      # csv: network-observability-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+        # resources:
+        #   limits:
+        #     memory: 800Mi
+        #   requests:
+        #     cpu: 100m
+        #     memory: 100Mi
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "openshift-netobserv-operator"
+    namespace: "openshift-netobserv-operator"
+    providedAPIs: "FlowCollector.v1beta2.flows.netobserv.io,FlowMetric.v1alpha1.flows.netobserv.io"

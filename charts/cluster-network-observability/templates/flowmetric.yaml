@@ -1,0 +1,29 @@
+{{- if .Values.flowMetrics -}}{{- if .Values.flowMetrics.enabled -}}
+{{- $defaultns := .Values.flowcollector.namespace | default "netobserv" -}}
+{{ range .Values.flowMetrics.list }}
+{{- $name := .name | default "default-flowmetric" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{- $spec := .spec | default "type: Counter" -}}
+---
+apiVersion: flows.netobserv.io/v1alpha1
+kind: FlowMetric
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-network-observability.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-flowmetric"
+  annotations:
+    {{- include "cluster-network-observability.annotations" $ | nindent 4 }}
+    {{- if $.Values.flowMetrics.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "20"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- $spec | nindent 2 }}
+{{ end }}
+{{- end -}}{{- end -}}
