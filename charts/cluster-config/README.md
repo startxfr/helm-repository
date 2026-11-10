@@ -242,3 +242,4 @@ is set or when a required key is not provided.
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
 | 21.3.321 | 2026-11-08 | Monitoring: configurable retention size, resources, external labels (cluster_name replaces the reserved cluster label), remote write, Alertmanager toggle, extra settings and user workload monitoring storage. With monitoring.enabled the rendered ConfigMap changes: metricsServer and monitoringPlugin replace k8sPrometheusAdapter, label app.kubernetes.io/name ends with -monitoring- |
+| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
