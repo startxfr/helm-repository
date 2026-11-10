@@ -107,6 +107,50 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | nncp.nodeSelector | `{}`                     | Node selector to target specific nodes (empty = all)      |
 | nncp.desiredState | `interfaces: []`         | Desired network state in NMState YAML format              |
 
+### nads values dictionary
+
+| Key                     | Default   | Description                                                                        |
+| ----------------------- | --------- | ---------------------------------------------------------------------------------- |
+| nads.enabled            | `false`   | Enable the creation of the NetworkAttachmentDefinition list                        |
+| nads.hooked             | `false`   | Deploy the resources as a Helm/ArgoCD post-sync hook                               |
+| nads.list               | `[]`      | List of NetworkAttachmentDefinition to create                                      |
+| nads.list[].name        |           | Name of the NetworkAttachmentDefinition                                            |
+| nads.list[].namespace   | `default` | Namespace of the NetworkAttachmentDefinition (`default` = usable from every namespace) |
+| nads.list[].annotations | `{}`      | Additional annotations (ex: `k8s.v1.cni.cncf.io/resourceName` for SR-IOV networks) |
+| nads.list[].config      |           | CNI configuration (YAML/JSON text or map), stored as the JSON string expected by Multus |
+
+A network attachment usually completes a NodeNetworkConfigurationPolicy: the policy creates the bridge
+or the VLAN interface on the nodes, the network attachment exposes it to the pods and virtual machines
+(the attachments are synced after the policies, ArgoCD wave 35). The `config` field accepts any CNI
+type (bridge, macvlan, ipvlan, sriov, ovn-k8s-cni-overlay...); its `name` defaults to the resource name.
+
+```yaml
+nncp:
+  enabled: true
+  name: br1-policy
+  desiredState: |
+    interfaces:
+      - name: br1
+        type: linux-bridge
+        state: up
+        bridge:
+          options:
+            stp:
+              enabled: false
+          port:
+            - name: bond1
+nads:
+  enabled: true
+  list:
+    - name: br1-network
+      config: |
+        cniVersion: "0.3.1"
+        type: bridge
+        bridge: br1
+        macspoofchk: true
+        ipam: {}
+```
+
 ## History
 
 | Release | Date       | Description                                             |
@@ -142,3 +186,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
+| 21.3.321 | 2026-11-08 | Add the NetworkAttachmentDefinition list (nads) |
