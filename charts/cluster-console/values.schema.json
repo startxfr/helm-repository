@@ -19,7 +19,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "description": "Name of the global scope for this application. Define an organizational tenant.",
                     "default": "myscope",
                     "examples": [
                         "myscope",
@@ -42,8 +42,8 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 25,
-                    "title": "Environement name",
-                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "title": "Environment name",
+                    "description": "Name of the environment for this application. Define a stage tenant.",
                     "default": "dev",
                     "examples": [
                         "dev",
@@ -69,7 +69,7 @@
                     "minLength": 1,
                     "maxLength": 40,
                     "title": "Application name",
-                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "description": "Name of the application name. Define a functional tenant.",
                     "default": "default-sxapi",
                     "examples": [
                         "myapp",
@@ -111,6 +111,169 @@
                         },
                         "name": {
                             "type": "string"
+                        },
+                        "logos": {
+                            "type": "object",
+                            "title": "Logos",
+                            "description": "Logos per theme (OpenShift 4.19+): masthead logo for the light and dark themes and favicon. Replaces the single logo above (customLogoFile, deprecated) which is not rendered when logos.enabled is true. Each logo is a file of the chart (file), an inline SVG text (content) or an inline base64 image (base64)",
+                            "properties": {
+                                "enabled": {
+                                    "title": "Enabled",
+                                    "type": "boolean",
+                                    "default": false,
+                                    "description": "Enable the per-theme logos"
+                                },
+                                "configMap": {
+                                    "title": "Config Map",
+                                    "type": "string",
+                                    "default": "console-logos",
+                                    "description": "Name of the ConfigMap (namespace openshift-config) holding every logo file"
+                                },
+                                "masthead": {
+                                    "type": "object",
+                                    "title": "Masthead",
+                                    "description": "Masthead logo (top bar and About dialog), one entry per theme",
+                                    "properties": {
+                                        "light": {
+                                            "type": "object",
+                                            "title": "Light",
+                                            "description": "Logo displayed with the light theme",
+                                            "properties": {
+                                                "file": {
+                                                    "title": "File",
+                                                    "type": "string",
+                                                    "default": "webtpl/default-logo.svg",
+                                                    "description": "File of the chart: svg, png, jpg, gif or webp (the ConfigMap key is the file name)"
+                                                },
+                                                "content": {
+                                                    "title": "Content",
+                                                    "type": "string",
+                                                    "default": "",
+                                                    "description": "Inline SVG content (alternative to file)"
+                                                },
+                                                "base64": {
+                                                    "title": "Base64",
+                                                    "type": "string",
+                                                    "default": "",
+                                                    "description": "Inline base64 content of a binary image (alternative to file)"
+                                                },
+                                                "key": {
+                                                    "title": "Key",
+                                                    "type": "string",
+                                                    "default": "",
+                                                    "description": "ConfigMap key of this logo, with its extension (default is the file name, or <type>-<theme>.svg|png)"
+                                                }
+                                            }
+                                        },
+                                        "dark": {
+                                            "type": "object",
+                                            "title": "Dark",
+                                            "description": "Logo displayed with the dark theme",
+                                            "properties": {
+                                                "file": {
+                                                    "title": "File",
+                                                    "type": "string",
+                                                    "default": "webtpl/default-logo.svg"
+                                                },
+                                                "content": {
+                                                    "title": "Content",
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "base64": {
+                                                    "title": "Base64",
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "key": {
+                                                    "title": "Key",
+                                                    "type": "string",
+                                                    "default": ""
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "favicon": {
+                                    "type": "object",
+                                    "title": "Favicon",
+                                    "description": "Favicon (browser tab icon), one entry per theme. Empty entries keep the OpenShift favicon",
+                                    "properties": {
+                                        "light": {
+                                            "type": "object",
+                                            "title": "Light",
+                                            "description": "Favicon displayed with the light theme",
+                                            "properties": {
+                                                "file": {
+                                                    "title": "File",
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "content": {
+                                                    "title": "Content",
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "base64": {
+                                                    "title": "Base64",
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "key": {
+                                                    "title": "Key",
+                                                    "type": "string",
+                                                    "default": ""
+                                                }
+                                            }
+                                        },
+                                        "dark": {
+                                            "type": "object",
+                                            "title": "Dark",
+                                            "description": "Favicon displayed with the dark theme",
+                                            "properties": {
+                                                "file": {
+                                                    "title": "File",
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "content": {
+                                                    "title": "Content",
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "base64": {
+                                                    "title": "Base64",
+                                                    "type": "string",
+                                                    "default": ""
+                                                },
+                                                "key": {
+                                                    "title": "Key",
+                                                    "type": "string",
+                                                    "default": ""
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "capabilities": {
+                            "type": "object",
+                            "title": "Capabilities",
+                            "description": "Console capabilities (OpenShift 4.19+), each set to Enabled or Disabled: LightspeedButton, GettingStartedBanner (home page banner), GuidedTour (tour shown at the first login)",
+                            "default": {}
+                        },
+                        "documentationBaseURL": {
+                            "title": "Documentation Base URL",
+                            "type": "string",
+                            "default": "",
+                            "description": "Base URL of the documentation links of the console (empty keeps the OpenShift documentation)"
+                        },
+                        "extraCustomization": {
+                            "type": "object",
+                            "title": "Extra Customization",
+                            "description": "Additional customization settings added as-is to spec.customization: perspectives, developerCatalog, projectAccess, quickStarts, addPage... (keys managed by this chart must not be repeated)",
+                            "default": {}
                         }
                     }
                 },
@@ -164,6 +327,12 @@
                 },
                 "state": {
                     "type": "string"
+                },
+                "plugins": {
+                    "type": "array",
+                    "title": "Plugins",
+                    "description": "Console plugins to enable (spec.plugins). Caution: this list replaces the plugins enabled by hand or by other operators (OpenShift Virtualization, NMState, GitOps...). Empty leaves the list untouched",
+                    "default": []
                 }
             }
         }
