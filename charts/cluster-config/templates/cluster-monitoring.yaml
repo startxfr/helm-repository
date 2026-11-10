@@ -1,4 +1,6 @@
 {{- if .Values.monitoring.enabled -}}
+{{- $m := .Values.monitoring -}}
+{{- $alertmanager := $m.alertmanager | default dict -}}
 kind: ConfigMap
 apiVersion: v1
 immutable: false
@@ -7,133 +9,76 @@ metadata:
   namespace: openshift-monitoring
   labels:
     {{- include "cluster-config.labels" . | nindent 4 }}
-    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-alertmanager-{{- include "startx.appVersion" . -}}"
+    app.kubernetes.io/name: "{{- include "startx.appName" . -}}-monitoring-{{- include "startx.appVersion" . -}}"
   annotations:
     {{- include "cluster-config.annotations" . | nindent 4 }}
 data:
   config.yaml: |
-    prometheusOperator:
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector:
-        node-role.kubernetes.io/infra: '' 
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-      {{- end }}
-    {{- if .Values.monitoring.enableUserWorkload }}
+    {{- if $m.enableUserWorkload }}
     enableUserWorkload: true
     {{- end }}
-    k8sPrometheusAdapter:
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector: 
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-      {{- end }}
+    {{- if $m.infra_enabled }}
+    prometheusOperator:
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
+    metricsServer:
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
     kubeStateMetrics:
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector: 
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-      {{- end }}
-    telemeterClient:
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector: 
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-      {{- end }}
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
     openshiftStateMetrics:
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector: 
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-      {{- end }}
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
+    telemeterClient:
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
     thanosQuerier:
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector: 
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
+    monitoringPlugin:
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
+    {{- end }}
+    prometheusK8s:
+      retention: {{ $m.retentionPeriod | default "7d" }}
+      {{- with $m.retentionSize }}
+      retentionSize: {{ . }}
       {{- end }}
-    prometheusK8s: 
-      retention: {{ default "7d" .Values.monitoring.retentionPeriod }}
+      {{- with $m.resources }}
       resources:
-        requests:
-          cpu: 200m 
-          memory: 2Gi
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector: 
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $m.infra_enabled }}
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
       {{- end }}
       volumeClaimTemplate:
-       spec:
-         storageClassName: {{ default "gp3-csi" .Values.monitoring.storageClass }}
-         volumeMode: Filesystem
-         resources:
-           requests:
-             storage: {{ default "20Gi" .Values.monitoring.storageSize }}
+        spec:
+          storageClassName: {{ $m.storageClass | default "gp3-csi" }}
+          volumeMode: Filesystem
+          resources:
+            requests:
+              storage: {{ $m.storageSize | default "20Gi" }}
+      {{- $externalLabels := include "cluster-config.monitoring.externalLabels" . }}
+      {{- if ne $externalLabels "{}" }}
       externalLabels:
-        scope: {{ include "startx.appScope" . | quote }}
-        cluster: {{ include "startx.appCluster" . | quote }}
-        environment: {{ include "startx.appEnvironment" . | quote }}
-    alertmanagerMain:
-      {{- if .Values.monitoring.infra_enabled }}
-      nodeSelector: 
-        node-role.kubernetes.io/infra: ''
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/infra
-          operator: Exists
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          operator: Exists
+        {{- $externalLabels | nindent 8 }}
       {{- end }}
-      {{- if .Values.monitoring.enableUserWorkload }}
+      {{- with $m.remoteWrite }}
+      remoteWrite:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    alertmanagerMain:
+      {{- if eq (toString $alertmanager.enabled) "false" }}
+      enabled: false
+      {{- else }}
+      {{- if $m.infra_enabled }}
+      {{- include "cluster-config.monitoring.infraPlacement" . | nindent 6 }}
+      {{- end }}
+      {{- if $m.enableUserWorkload }}
       enableUserAlertmanagerConfig: true
       {{- end }}
       volumeClaimTemplate:
         spec:
-          storageClassName: {{ default "gp3-csi" .Values.monitoring.storageClass }}
+          storageClassName: {{ $m.storageClass | default "gp3-csi" }}
           resources:
             requests:
-             storage: {{ default "5Gi" .Values.monitoring.storageSizeAlert }}
+              storage: {{ $m.storageSizeAlert | default "5Gi" }}
+      {{- end }}
+    {{- with $m.extraConfig }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end -}}
