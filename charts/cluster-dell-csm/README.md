@@ -269,3 +269,4 @@ Rendering fails when no store is set or when the `config` key is not provided.
 | Release  | Date       | Description            |
 | -------- | ---------- | ---------------------- |
 | 21.3.321 | 2026-11-08 | Initial chart creation |
+| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
