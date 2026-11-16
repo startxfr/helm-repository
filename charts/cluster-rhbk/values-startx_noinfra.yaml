@@ -1,0 +1,142 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: rhbk
+  app: startx-rhbk
+  version: "26.6.7"
+externalSecretDefaults:
+  apiVersion: external-secrets.io/v1
+  refreshInterval: 1h
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+database:
+  enabled: false
+  name: ""
+  image: registry.redhat.io/rhel9/postgresql-16:latest
+  database: keycloak
+  storageClassName: ""
+  size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+rhbk:
+  enabled: false
+  hooked: false
+  apiVersion: k8s.keycloak.org/v2beta1
+  name: startx
+  dbSecret:
+    enabled: true
+    name: ""
+    username: keycloak
+    # Demo password only: override it with an Argo CD Vault Plugin placeholder
+    # (<path:kv/data/rhbk#db_password>) or use externalSecret outside of demo environments
+    password: "startx-rhbk-demo"
+    externalSecret:
+      enabled: false
+      remoteRefs: {}
+  adminSecret:
+    enabled: false
+    name: ""
+    username: admin
+    password: ""
+    externalSecret:
+      enabled: false
+      remoteRefs: {}
+  spec: |
+    instances: 1
+    http:
+      httpEnabled: true
+    hostname:
+      strict: false
+    proxy:
+      headers: xforwarded
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1700Mi
+      limits:
+        memory: 2Gi
+route:
+  enabled: false
+  name: ""
+  host: ""
+  termination: edge
+  insecureEdgeTerminationPolicy: Redirect
+  targetPort: ""
+  annotations: {}
+rhbk_realms:
+  enabled: false
+  list:
+    - name: startx
+      enabled: true
+      keycloakCRName: ""
+      placeholders: {}
+      realm: |
+        realm: startx
+        displayName: STARTX
+        enabled: true
+        registrationAllowed: false
+        loginWithEmailAllowed: true
+        sslRequired: external
+        clients:
+          - clientId: startx-demo
+            name: STARTX demo application
+            enabled: true
+            protocol: openid-connect
+            publicClient: true
+            standardFlowEnabled: true
+            directAccessGrantsEnabled: false
+            redirectUris:
+              - "https://startx-demo.example.com/*"
+            webOrigins:
+              - "https://startx-demo.example.com"
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-rhbk"
+    display_name: "Startx RHBK"
+    requester: startx
+    description: Red Hat build of Keycloak configured by STARTX
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "rhbk-operator"
+    namespace: "default-rhbk"
+    version: "v26.6.7-opr.1"
+    operator:
+      channel: stable-v26.6
+      name: rhbk-operator
+      installPlanApproval: Manual
+      csv: rhbk-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+        # resources:
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "rhbk-operator"
+    namespace: "default-rhbk"
+    providedAPIs: "Keycloak.v2beta1.k8s.keycloak.org,KeycloakRealmImport.v2beta1.k8s.keycloak.org"

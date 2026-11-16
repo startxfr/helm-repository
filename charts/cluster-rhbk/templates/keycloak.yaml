@@ -1,0 +1,41 @@
+{{- if .Values.rhbk.enabled -}}
+{{- $namespace := include "cluster-rhbk.namespace" . -}}
+{{- $name := include "cluster-rhbk.keycloakName" . -}}
+{{- $secret := include "cluster-rhbk.dbSecretName" . -}}
+{{- /* Base spec generated from the other values of the chart */ -}}
+{{- $base := dict -}}
+{{- if or .Values.rhbk.dbSecret.enabled .Values.database.enabled }}
+{{- $db := dict "vendor" "postgres" "usernameSecret" (dict "name" $secret "key" "username") "passwordSecret" (dict "name" $secret "key" "password") -}}
+{{- if .Values.database.enabled }}
+{{- $_ := set $db "host" (include "cluster-rhbk.databaseName" .) -}}
+{{- $_ := set $db "port" 5432 -}}
+{{- $_ := set $db "database" (.Values.database.database | default "keycloak") -}}
+{{- end }}
+{{- $_ := set $base "db" $db -}}
+{{- end }}
+{{- if .Values.rhbk.adminSecret.enabled }}
+{{- $_ := set $base "bootstrapAdmin" (dict "user" (dict "secret" (include "cluster-rhbk.adminSecretName" .))) -}}
+{{- end }}
+{{- if .Values.route.enabled }}
+{{- $_ := set $base "ingress" (dict "enabled" false) -}}
+{{- end }}
+{{- /* User spec takes precedence over the generated base */ -}}
+{{- $spec := mustMergeOverwrite $base (fromYaml (.Values.rhbk.spec | default "{}")) -}}
+---
+apiVersion: {{ .Values.rhbk.apiVersion | default "k8s.keycloak.org/v2beta1" }}
+kind: Keycloak
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-rhbk.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-keycloak" $name | quote }}
+  annotations:
+    {{- include "cluster-rhbk.annotations" . | nindent 4 }}
+    {{- if .Values.rhbk.hooked }}
+    {{- include "cluster-rhbk.hookAnnotations" . | nindent 4 }}
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- toYaml $spec | nindent 2 }}
+{{- end -}}
