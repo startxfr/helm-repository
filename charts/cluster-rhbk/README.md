@@ -229,10 +229,15 @@ route:
 
 ### Operator update
 
-The subscription uses a manual install plan approval and a pinned `startingCSV`. To move to a new release, update
-`operator.subscription.version` (and `operator.subscription.operator.channel` for a new minor stream), sync, then approve
-the install plan. When the `Keycloak` uses the default image, the operator upgrade also upgrades Keycloak: back up the
-database first.
+The subscription uses a manual install plan approval and a `startingCSV` (`operator.subscription.version`). The
+`startingCSV` only pins the first installation: right after it, OLM creates a new install plan, left unapproved, for
+the next release of the channel (the operator `skipRange` usually points it to the latest z-stream, for example
+`v26.6.9-opr.1` from `v26.6.7-opr.1`). Leave it unapproved to stay on the pinned release.
+
+To upgrade, approve that pending install plan; changing `operator.subscription.version` alone does not trigger any
+upgrade. Then set `operator.subscription.version` to the installed release, so that a fresh installation gets the same
+version. For a new minor stream, change `operator.subscription.operator.channel` first. When the `Keycloak` uses the
+default image, the operator upgrade also upgrades Keycloak: back up the database first.
 
 ```bash
 oc get installplan -n default-rhbk
