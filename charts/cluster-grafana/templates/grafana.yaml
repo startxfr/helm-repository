@@ -1,0 +1,80 @@
+{{- if .Values.grafana.enabled -}}
+{{- $namespace := include "cluster-grafana.namespace" . -}}
+{{- $name := include "cluster-grafana.grafanaName" . -}}
+{{- $oidc := .Values.oidc -}}
+{{- /* Base spec generated from the other values of the chart */ -}}
+{{- $base := dict -}}
+{{- $config := dict -}}
+{{- $env := list -}}
+{{- $volumes := list -}}
+{{- $mounts := list -}}
+{{- with .Values.grafana.version }}
+{{- $_ := set $base "version" (toString .) -}}
+{{- end }}
+{{- if .Values.route.enabled }}
+{{- $tls := dict "termination" (.Values.route.termination | default "edge") "insecureEdgeTerminationPolicy" (.Values.route.insecureEdgeTerminationPolicy | default "Redirect") -}}
+{{- $routeSpec := dict "tls" $tls -}}
+{{- with .Values.route.host }}
+{{- $_ := set $routeSpec "host" . -}}
+{{- end }}
+{{- $_ := set $base "route" (dict "spec" $routeSpec) -}}
+{{- end }}
+{{- $rootUrl := "" -}}
+{{- if and .Values.route.enabled .Values.route.host }}
+{{- $rootUrl = printf "https://%s/" .Values.route.host -}}
+{{- $_ := set $config "server" (dict "root_url" $rootUrl) -}}
+{{- end }}
+{{- if .Values.grafana.adminSecret.enabled }}
+{{- $secret := include "cluster-grafana.adminSecretName" . -}}
+{{- $_ := set $base "disableDefaultAdminSecret" true -}}
+{{- $env = append $env (dict "name" "GF_SECURITY_ADMIN_USER" "valueFrom" (dict "secretKeyRef" (dict "name" $secret "key" "username"))) -}}
+{{- $env = append $env (dict "name" "GF_SECURITY_ADMIN_PASSWORD" "valueFrom" (dict "secretKeyRef" (dict "name" $secret "key" "password"))) -}}
+{{- end }}
+{{- if $oidc.enabled }}
+{{- $issuer := required "oidc.issuerUrl is required when oidc.enabled (https://<keycloak host>/realms/<realm>)" $oidc.issuerUrl | trimSuffix "/" -}}
+{{- if not $rootUrl }}
+{{- fail "oidc.enabled requires route.enabled and route.host (Grafana root_url, used to build the OIDC callback URL)" -}}
+{{- end }}
+{{- $endpoint := printf "%s/protocol/openid-connect" $issuer -}}
+{{- $go := dict "enabled" "true" "name" ($oidc.name | default "Keycloak") "allow_sign_up" "true" "client_id" ($oidc.clientId | default "grafana") "scopes" ($oidc.scopes | default "openid email profile") "auth_url" (printf "%s/auth" $endpoint) "token_url" (printf "%s/token" $endpoint) "api_url" (printf "%s/userinfo" $endpoint) "signout_redirect_url" (printf "%s/logout?post_logout_redirect_uri=%s&client_id=%s" $endpoint (printf "%slogin" $rootUrl | urlquery) ($oidc.clientId | default "grafana")) "email_attribute_path" "email" "login_attribute_path" "preferred_username" "name_attribute_path" "name" "role_attribute_path" $oidc.roleAttributePath "allow_assign_grafana_admin" "true" "use_pkce" "true" -}}
+{{- if eq (include "cluster-grafana.oidcCaEnabled" .) "true" }}
+{{- $caKey := ternary "ca-bundle.crt" ($oidc.ca.key | default "ca-bundle.crt") (and $oidc.ca.injectTrustedBundle (not $oidc.ca.configMap)) -}}
+{{- $_ := set $go "tls_client_ca" (printf "/etc/grafana-oidc-ca/%s" $caKey) -}}
+{{- $volumes = append $volumes (dict "name" "oidc-ca" "configMap" (dict "name" (include "cluster-grafana.oidcCaName" .))) -}}
+{{- $mounts = append $mounts (dict "name" "oidc-ca" "mountPath" "/etc/grafana-oidc-ca" "readOnly" true) -}}
+{{- end }}
+{{- $_ := set $config "auth.generic_oauth" $go -}}
+{{- $env = append $env (dict "name" "GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET" "valueFrom" (dict "secretKeyRef" (dict "name" (include "cluster-grafana.oidcSecretName" .) "key" "client-secret"))) -}}
+{{- end }}
+{{- with $config }}
+{{- $_ := set $base "config" . -}}
+{{- end }}
+{{- if or $env $mounts }}
+{{- $container := dict "name" "grafana" -}}
+{{- with $env }}{{ $_ := set $container "env" . }}{{ end -}}
+{{- with $mounts }}{{ $_ := set $container "volumeMounts" . }}{{ end -}}
+{{- $podSpec := dict "containers" (list $container) -}}
+{{- with $volumes }}{{ $_ := set $podSpec "volumes" . }}{{ end -}}
+{{- $_ := set $base "deployment" (dict "spec" (dict "template" (dict "spec" $podSpec))) -}}
+{{- end }}
+{{- /* User spec takes precedence over the generated base */ -}}
+{{- $spec := mustMergeOverwrite $base (fromYaml (.Values.grafana.spec | default "{}")) -}}
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-grafana.labels" . | nindent 4 }}
+    {{- include "cluster-grafana.instanceLabels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-grafana" $name | quote }}
+  annotations:
+    {{- include "cluster-grafana.annotations" . | nindent 4 }}
+    {{- if .Values.grafana.hooked }}
+    {{- include "cluster-grafana.hookAnnotations" . | nindent 4 }}
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- toYaml $spec | nindent 2 }}
+{{- end -}}

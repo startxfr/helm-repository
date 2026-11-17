@@ -218,6 +218,7 @@ ignoreDifferences:
 | cluster-istio      | `maistra.io`                          | `ServiceMeshControlPlane` |
 | cluster-logging    | `logging.openshift.io`                | `ClusterLogging`          |
 | cluster-sso        | `keycloak.org`                        | `Keycloak`                |
+| cluster-grafana    | `grafana.integreatly.org`             | `Grafana`                 |
 | cluster-quay       | `quay.redhat.com`                     | `QuayRegistry`            |
 | cluster-crunchy    | `postgres-operator.crunchydata.com`   | `PostgresCluster`         |
 | cluster-mongo      | `mongodbcommunity.mongodb.com`        | `MongoDBCommunity`        |
