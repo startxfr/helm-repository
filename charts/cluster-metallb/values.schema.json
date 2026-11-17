@@ -1,0 +1,544 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Context",
+            "description": "Application deployment context",
+            "properties": {
+                "scope": {
+                    "title": "Scope",
+                    "type": "string",
+                    "default": "myscope",
+                    "description": "Name of the global scope for this application (organizational tenant)"
+                },
+                "cluster": {
+                    "title": "Cluster",
+                    "type": "string",
+                    "default": "default",
+                    "description": "Name of the cluster running this application (platform tenant)"
+                },
+                "environment": {
+                    "title": "Environment",
+                    "type": "string",
+                    "default": "myenv",
+                    "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                },
+                "component": {
+                    "title": "Component",
+                    "type": "string",
+                    "default": "mycomponent",
+                    "description": "Component name of this application (logical tenant)"
+                },
+                "app": {
+                    "title": "App",
+                    "type": "string",
+                    "default": "default-metallb",
+                    "description": "Application name (functional tenant, default use Chart name)"
+                },
+                "version": {
+                    "title": "Version",
+                    "type": "string",
+                    "default": "4.22.0",
+                    "description": "Version name of this application (default use Chart appVersion)"
+                }
+            }
+        },
+        "externalSecretDefaults": {
+            "type": "object",
+            "title": "External Secret Defaults",
+            "description": "Default settings of the ExternalSecret objects rendered by this chart when a secret is sourced from an external store (`externalSecret.enabled: true`). Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.",
+            "properties": {
+                "apiVersion": {
+                    "title": "Api Version",
+                    "type": "string",
+                    "default": "external-secrets.io/v1",
+                    "description": "API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)"
+                },
+                "refreshInterval": {
+                    "title": "Refresh Interval",
+                    "type": "string",
+                    "default": "1h",
+                    "description": "How often the Secret is refreshed from the external store"
+                },
+                "secretStoreRef": {
+                    "type": "object",
+                    "title": "Secret Store Ref",
+                    "description": "Store to read from (name is required as soon as a secret uses externalSecret)",
+                    "properties": {
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": ""
+                        },
+                        "kind": {
+                            "title": "Kind",
+                            "type": "string",
+                            "default": "ClusterSecretStore"
+                        }
+                    }
+                }
+            }
+        },
+        "metallb": {
+            "type": "object",
+            "title": "Metallb",
+            "description": "Deploy the MetalLB instance (controller deployment and speaker daemonset started by the MetalLB operator)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the MetalLB CR"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resource as a helm hook"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "metallb",
+                    "description": "Name of the MetalLB instance (the operator only reconciles the instance named metallb)"
+                },
+                "spec": {
+                    "type": "object",
+                    "title": "Spec",
+                    "description": "Specification of the MetalLB instance, rendered as is (see the MetalLB CRD). Empty keeps the operator",
+                    "default": {}
+                }
+            }
+        },
+        "ipAddressPools": {
+            "type": "object",
+            "title": "Ip Address Pools",
+            "description": "Pools of IP addresses that MetalLB assigns to the services of type LoadBalancer (IPAddressPool). A pool is only reachable once an advertisement (layer 2 or BGP) announces it",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the IPAddressPool resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of IPAddressPool resources, created in the MetalLB namespace (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "l2Advertisements": {
+            "type": "object",
+            "title": "L2 Advertisements",
+            "description": "Layer 2 announcements of the pools (L2Advertisement): one speaker answers the ARP (IPv4) and NDP (IPv6) requests of an address, on the network the nodes are attached to. No network equipment to configure",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the L2Advertisement resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of L2Advertisement resources, created in the MetalLB namespace (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "bgpPeers": {
+            "type": "object",
+            "title": "Bgp Peers",
+            "description": "BGP routers MetalLB peers with (BGPPeer). Required by the BGP advertisements",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the BGPPeer resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of BGPPeer resources, created in the MetalLB namespace (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "bgpAdvertisements": {
+            "type": "object",
+            "title": "Bgp Advertisements",
+            "description": "BGP announcements of the pools (BGPAdvertisement): every speaker announces the addresses to the BGP peers",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the BGPAdvertisement resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of BGPAdvertisement resources, created in the MetalLB namespace (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "bfdProfiles": {
+            "type": "object",
+            "title": "Bfd Profiles",
+            "description": "Bidirectional forwarding detection profiles referenced by the BGP peers (BFDProfile)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the BFDProfile resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of BFDProfile resources, created in the MetalLB namespace (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "communities": {
+            "type": "object",
+            "title": "Communities",
+            "description": "Aliases of BGP communities referenced by the BGP advertisements (Community)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the Community resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of Community resources, created in the MetalLB namespace (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "secrets": {
+            "type": "object",
+            "title": "Secrets",
+            "description": "Secrets referenced by the resources of this chart (ex: the password of a BGP session). A secret is rendered from its data, or by an ExternalSecret reading an external store",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the secrets listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of secrets, created in the MetalLB namespace",
+                    "default": []
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-metallb",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "4.22.0",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "project": {
+                    "type": "object",
+                    "title": "Project",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "type": {
+                            "title": "Type",
+                            "type": "string",
+                            "default": "namespace"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "metallb-system"
+                        },
+                        "display_name": {
+                            "title": "Display name",
+                            "type": "string",
+                            "default": "Operator MetalLB"
+                        },
+                        "description": {
+                            "title": "Description",
+                            "type": "string",
+                            "default": "MetalLB load balancer configured by STARTX"
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "title": "Operator",
+            "description": "Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator) The MetalLB operator only supports the AllNamespaces install mode: its OperatorGroup has no target namespace",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-metallb",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "4.22.0",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "title": "Subscription",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "metallb-operator"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "metallb-system"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "4.22.0"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "title": "Operator",
+                            "properties": {
+                                "channel": {
+                                    "title": "Channel",
+                                    "type": "string",
+                                    "default": "stable"
+                                },
+                                "name": {
+                                    "title": "Name",
+                                    "type": "string",
+                                    "default": "metallb-operator"
+                                },
+                                "installPlanApproval": {
+                                    "title": "Install Plan Approval",
+                                    "type": "string",
+                                    "default": "Manual"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "title": "Source",
+                                    "properties": {
+                                        "name": {
+                                            "title": "Name",
+                                            "type": "string",
+                                            "default": "redhat-operators"
+                                        },
+                                        "namespace": {
+                                            "title": "Namespace",
+                                            "type": "string",
+                                            "default": "openshift-marketplace"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "title": "Config",
+                                    "properties": {
+                                        "infra": {
+                                            "title": "Infra",
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "title": "Operator Group",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "metallb-operator"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "metallb-system"
+                        },
+                        "target": {
+                            "title": "Target",
+                            "type": "string",
+                            "default": "all-ns"
+                        },
+                        "providedAPIs": {
+                            "title": "Provided APIs",
+                            "type": "string",
+                            "default": "BFDProfile.v1beta1.metallb.io,BGPAdvertisement.v1beta1.metallb.io,BGPPeer.v1beta2.metallb.io,Community.v1beta1.metallb.io,IPAddressPool.v1beta1.metallb.io,L2Advertisement.v1beta1.metallb.io,MetalLB.v1beta1.metallb.io"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

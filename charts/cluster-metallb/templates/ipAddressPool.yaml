@@ -1,0 +1,30 @@
+{{- if .Values.ipAddressPools.enabled -}}
+{{- $namespace := .Values.project.project.name | default "metallb-system" -}}
+{{- range .Values.ipAddressPools.list }}
+{{- $name := required "ipAddressPools.list: every item needs a name" .name }}
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-metallb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-ipaddresspool"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-metallb.annotations" $ | nindent 4 }}
+    {{- if $.Values.ipAddressPools.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "30"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- include "cluster-metallb.spec" (dict "kind" "IPAddressPool" "name" $name "spec" .spec "required" true) | nindent 2 }}
+{{- end }}
+{{- end -}}

@@ -1,0 +1,112 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: metallb
+  app: startx-metallb
+  version: "4.22.0"
+
+externalSecretDefaults:
+  apiVersion: external-secrets.io/v1
+  refreshInterval: 1h
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+metallb:
+  enabled: true
+  hooked: false
+  name: metallb
+  spec:
+    logLevel: info
+
+# The address ranges are specific to each cluster: replace the 192.0.2.x documentation range with free
+# addresses of the node network, then enable ipAddressPools and l2Advertisements
+ipAddressPools:
+  enabled: false
+  hooked: false
+  list:
+    - name: startx
+      labels: {}
+      spec:
+        addresses:
+          - 192.0.2.240-192.0.2.250
+        autoAssign: true
+        avoidBuggyIPs: true
+
+l2Advertisements:
+  enabled: false
+  hooked: false
+  list:
+    - name: startx
+      labels: {}
+      spec:
+        ipAddressPools:
+          - startx
+
+bgpPeers:
+  enabled: false
+  hooked: false
+  list: []
+
+bgpAdvertisements:
+  enabled: false
+  hooked: false
+  list: []
+
+bfdProfiles:
+  enabled: false
+  hooked: false
+  list: []
+
+communities:
+  enabled: false
+  hooked: false
+  list: []
+
+secrets:
+  enabled: false
+  list: []
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "metallb-system"
+    display_name: "Startx MetalLB"
+    requester: startx
+    description: MetalLB load balancer configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "metallb-operator"
+    namespace: "metallb-system"
+    version: "4.22.0"
+    operator:
+      channel: "stable"
+      name: metallb-operator
+      installPlanApproval: Manual
+      # csv: metallb-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "metallb-operator"
+    namespace: "metallb-system"
+    target: "all-ns"
+    providedAPIs: "BFDProfile.v1beta1.metallb.io,BGPAdvertisement.v1beta1.metallb.io,BGPPeer.v1beta2.metallb.io,Community.v1beta1.metallb.io,IPAddressPool.v1beta1.metallb.io,L2Advertisement.v1beta1.metallb.io,MetalLB.v1beta1.metallb.io"
