@@ -1,0 +1,17 @@
+{{- if .Values.operatorObservabilityNamespace }}{{- if .Values.operatorObservabilityNamespace.enabled }}
+{{- $name := .Values.operatorObservabilityNamespace.name | default "openshift-cluster-observability-operator" -}}
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  labels:
+    {{- include "cluster-logging.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-project" $name | trunc 63 | trimSuffix "-" | quote }}
+    openshift.io/cluster-monitoring: "true"
+  annotations:
+    {{- include "cluster-logging.annotations" . | nindent 4 }}
+    openshift.io/description: "Cluster Observability Operator namespace"
+    openshift.io/display-name: "Cluster Observability Operator"
+    helm.sh/resource-policy: keep
+    argocd.argoproj.io/sync-wave: "-10"
+{{- end }}{{- end }}

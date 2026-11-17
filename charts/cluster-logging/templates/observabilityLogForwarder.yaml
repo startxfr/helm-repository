@@ -1,0 +1,55 @@
+{{- if include "cluster-logging.observability" . }}
+{{- with .Values.observability.forwarder }}{{- if .enabled }}
+{{- $name := .name | default "instance" -}}
+{{- $namespace := $.Values.project.project.name | default "openshift-logging" -}}
+{{- $serviceAccount := dig "serviceAccount" "name" "" $.Values.observability | default "logging-collector" -}}
+{{- $spec := .spec | default dict -}}
+{{- if kindIs "map" $spec -}}
+{{- $spec = deepCopy $spec -}}
+{{- if not (hasKey $spec "serviceAccount") -}}
+{{- $_ := set $spec "serviceAccount" (dict "name" $serviceAccount) -}}
+{{- end -}}
+{{- if or (not $spec.outputs) (not $spec.pipelines) -}}
+{{- fail (printf "ClusterLogForwarder %s: spec.outputs and spec.pipelines are required" $name) -}}
+{{- end -}}
+{{- /* outputs and pipelines are lists replaced as a whole by the user values: detect the pipelines left with a reference to a removed item */ -}}
+{{- $refs := dict "outputRefs" list "inputRefs" (list "application" "infrastructure" "audit") "filterRefs" list -}}
+{{- range $spec.outputs }}{{- $_ := set $refs "outputRefs" (append $refs.outputRefs .name) }}{{- end -}}
+{{- range $spec.inputs }}{{- $_ := set $refs "inputRefs" (append $refs.inputRefs .name) }}{{- end -}}
+{{- range $spec.filters }}{{- $_ := set $refs "filterRefs" (append $refs.filterRefs .name) }}{{- end -}}
+{{- range $pipeline := $spec.pipelines -}}
+{{- range $kind, $known := $refs -}}
+{{- range (index $pipeline $kind) -}}
+{{- if not (has . $known) -}}
+{{- fail (printf "ClusterLogForwarder %s: pipeline %s has a reference to %s in %s, which is not defined in the spec" $name $pipeline.name . $kind) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end }}
+---
+apiVersion: observability.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-logging.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-clusterlogforwarder" $name | trunc 63 | trimSuffix "-" | quote }}
+  annotations:
+    {{- include "cluster-logging.annotations" $ | nindent 4 }}
+    {{- range $key, $value := .annotations }}
+    {{ $key }}: {{ $value | toString | quote }}
+    {{- end }}
+    {{- if $.Values.observability.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "25"
+spec:
+  {{- include "cluster-logging.spec" (dict "kind" "ClusterLogForwarder" "name" $name "spec" $spec "required" true) | nindent 2 }}
+{{- end }}{{- end }}
+{{- end }}

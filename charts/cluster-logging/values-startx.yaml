@@ -88,6 +88,51 @@ logforwarder:
       - audit
       outputRefs:
       - default
+observability:
+  enabled: false
+  hooked: false
+  serviceAccount:
+    enabled: true
+    name: logging-collector
+    clusterRoles:
+      - collect-application-logs
+      - collect-infrastructure-logs
+      - logging-collector-logs-writer
+  forwarder:
+    enabled: true
+    name: instance
+    annotations: {}
+    spec:
+      outputs:
+        - name: lokistack-out
+          type: lokiStack
+          lokiStack:
+            target:
+              name: logging-loki
+              namespace: openshift-logging
+            authentication:
+              token:
+                from: serviceAccount
+          tls:
+            ca:
+              key: service-ca.crt
+              configMapName: openshift-service-ca.crt
+      pipelines:
+        - name: infra-app-logs
+          inputRefs:
+            - application
+            - infrastructure
+          outputRefs:
+            - lokistack-out
+  uiplugin:
+    enabled: true
+    spec:
+      logging:
+        lokiStack:
+          name: logging-loki
+        logsLimit: 50
+        timeout: 30s
+        schema: otel
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -226,3 +271,40 @@ operatorLoki:
     name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"
+
+# Configuration of the Cluster Observability Operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operatorObservability:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cluster-observability-operator"
+    namespace: "openshift-cluster-observability-operator"
+    version: "v1.5.5"
+    operator:
+      channel: "stable"
+      name: cluster-observability-operator
+      installPlanApproval: Manual
+      # csv: cluster-observability-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+        # resources:
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "openshift-cluster-observability-operator"
+    namespace: "openshift-cluster-observability-operator"
+    providedAPIs: "AlertmanagerConfig.v1alpha1.monitoring.rhobs,MonitoringStack.v1alpha1.monitoring.rhobs,PodMonitor.v1.monitoring.rhobs,PrometheusRule.v1.monitoring.rhobs,ScrapeConfig.v1alpha1.monitoring.rhobs,ServiceMonitor.v1.monitoring.rhobs,ThanosQuerier.v1alpha1.monitoring.rhobs,UIPlugin.v1alpha1.observability.openshift.io"
+operatorObservabilityNamespace:
+  enabled: false
+  name: openshift-cluster-observability-operator

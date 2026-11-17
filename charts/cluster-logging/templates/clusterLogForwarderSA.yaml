@@ -1,4 +1,4 @@
-{{- if .Values.logforwarder.sa.enabled }}
+{{- if and .Values.logforwarder.sa.enabled (not (include "cluster-logging.observability" .)) }}
 {{- $name := .Values.logforwarder.sa.name | default "logging-admin" -}}
 {{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
 ---
