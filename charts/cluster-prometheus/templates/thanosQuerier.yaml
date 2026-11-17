@@ -1,0 +1,30 @@
+{{- if .Values.thanosQueriers.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-prometheus" -}}
+{{- range .Values.thanosQueriers.list }}
+{{- $name := required "thanosQueriers.list: every item needs a name" .name }}
+---
+apiVersion: monitoring.rhobs/v1alpha1
+kind: ThanosQuerier
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ .namespace | default $namespace | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-thanosquerier"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    {{- if $.Values.thanosQueriers.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "30"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- include "cluster-prometheus.spec" (dict "kind" "ThanosQuerier" "name" $name "spec" .spec "required" true) | nindent 2 }}
+{{- end }}
+{{- end -}}

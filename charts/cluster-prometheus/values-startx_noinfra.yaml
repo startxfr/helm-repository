@@ -1,0 +1,141 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: prometheus
+  app: startx-prometheus
+  version: "1.5.5"
+
+externalSecretDefaults:
+  apiVersion: external-secrets.io/v1
+  refreshInterval: 1h
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+operatorNamespace:
+  enabled: false
+  name: openshift-cluster-observability-operator
+
+# One stack for the application workloads. A namespace is monitored once it carries the label
+# monitoring.rhobs/stack: startx, with ServiceMonitor or PodMonitor resources carrying the same label
+monitoringStacks:
+  enabled: true
+  hooked: false
+  list:
+    - name: startx
+      labels: {}
+      clusterMonitoringView: false
+      monitoredNamespaces: []
+      spec:
+        logLevel: info
+        retention: 7d
+        retentionSize: 15GB
+        resourceSelector:
+          matchLabels:
+            monitoring.rhobs/stack: startx
+        namespaceSelector:
+          matchLabels:
+            monitoring.rhobs/stack: startx
+        resources:
+          requests:
+            cpu: 200m
+            memory: 1Gi
+          limits:
+            memory: 4Gi
+        prometheusConfig:
+          replicas: 2
+          scrapeInterval: 30s
+          persistentVolumeClaim:
+            resources:
+              requests:
+                storage: 20Gi
+        alertmanagerConfig:
+          disabled: false
+          replicas: 2
+
+thanosQueriers:
+  enabled: false
+  hooked: false
+  list:
+    - name: startx
+      labels: {}
+      spec:
+        selector:
+          matchLabels:
+            app.startx.fr/app: startx-prometheus
+
+serviceMonitors:
+  enabled: false
+  list: []
+
+podMonitors:
+  enabled: false
+  list: []
+
+scrapeConfigs:
+  enabled: false
+  list: []
+
+prometheusRules:
+  enabled: false
+  list: []
+
+alertmanagerConfigs:
+  enabled: false
+  list: []
+
+networkPolicies:
+  enabled: false
+  list: []
+
+routes:
+  enabled: false
+  list: []
+
+secrets:
+  enabled: false
+  list: []
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-prometheus"
+    display_name: "Startx Prometheus"
+    requester: startx
+    description: Prometheus monitoring stacks configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cluster-observability-operator"
+    namespace: "openshift-cluster-observability-operator"
+    version: "v1.5.5"
+    operator:
+      channel: "stable"
+      name: cluster-observability-operator
+      installPlanApproval: Manual
+      # csv: cluster-observability-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-cluster-observability-operator"
+    namespace: "openshift-cluster-observability-operator"
+    target: "all-ns"
+    providedAPIs: "AlertmanagerConfig.v1alpha1.monitoring.rhobs,MonitoringStack.v1alpha1.monitoring.rhobs,PodMonitor.v1.monitoring.rhobs,PrometheusRule.v1.monitoring.rhobs,ScrapeConfig.v1alpha1.monitoring.rhobs,ServiceMonitor.v1.monitoring.rhobs,ThanosQuerier.v1alpha1.monitoring.rhobs"

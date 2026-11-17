@@ -1,0 +1,44 @@
+{{- if .Values.routes.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-prometheus" -}}
+{{- range .Values.routes.list }}
+{{- $name := required "routes.list: every item needs a name" .name }}
+{{- $termination := .termination | default "edge" }}
+{{- $tls := deepCopy (.tls | default dict) }}
+{{- $_ := set $tls "termination" $termination }}
+{{- /* plain HTTP requests are redirected to HTTPS unless the tls block says otherwise */ -}}
+{{- if not (hasKey $tls "insecureEdgeTerminationPolicy") }}
+{{- $_ := set $tls "insecureEdgeTerminationPolicy" "Redirect" }}
+{{- end }}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ .namespace | default $namespace | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-route"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "20"
+    {{- with .annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- with .host }}
+  host: {{ . | quote }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ required (printf "routes.list: the route %s needs a service" $name) .service | quote }}
+    weight: 100
+  port:
+    targetPort: {{ .port | default "web" }}
+  tls:
+    {{- toYaml $tls | nindent 4 }}
+  wildcardPolicy: None
+{{- end }}
+{{- end -}}

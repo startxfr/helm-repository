@@ -1,0 +1,439 @@
+# Default values for cluster-prometheus.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-prometheus
+  # Version name of this application (default use Chart appVersion)
+  version: "1.5.5"
+
+# Default settings of the ExternalSecret objects rendered by this chart when a
+# secret is sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+# Namespace hosting the Cluster Observability Operator (the operator watches every namespace)
+operatorNamespace:
+  # Enable the creation of the operator namespace, labelled openshift.io/cluster-monitoring. Keep it disabled
+  # when the namespace already exists or is managed by another chart
+  enabled: false
+  # Name of the operator namespace (must match operator.subscription.namespace)
+  name: openshift-cluster-observability-operator
+
+# Monitoring stacks of the application workloads (MonitoringStack): each stack runs its own Prometheus, with a
+# Thanos sidecar, and its own Alertmanager, independent from the platform and user workload monitoring of OpenShift
+monitoringStacks:
+  # Enable the creation of the MonitoringStack resources listed below
+  enabled: false
+  # Activate the resources as helm hooks
+  hooked: false
+  # List of MonitoringStack resources (spec is rendered as is)
+  list: []
+  #   # Name of the stack. The operator names its objects after it: services <name>-prometheus (port 9090, web) and
+  #   # <name>-alertmanager (port 9093, web), service account <name>-prometheus
+  # - name: apps
+  #   # Namespace of the stack (default is the project namespace). It must be a namespace of the default pod
+  #   # network, never a namespace attached to a primary user-defined network (see README)
+  #   namespace: ""
+  #   # Additional labels set on the stack (matched by the selector of a ThanosQuerier)
+  #   labels: {}
+  #   # Bind the cluster-monitoring-view cluster role to the Prometheus service account of the stack. Required to
+  #   # federate metrics of the platform monitoring (containers CPU and memory, kube-state-metrics)
+  #   clusterMonitoringView: false
+  #   # Namespaces where the Prometheus service account of the stack is allowed to discover the targets, with a
+  #   # RoleBinding. Use it with spec.createClusterRoleBindings: NoClusterRoleBindings
+  #   monitoredNamespaces: []
+  #   # Specification of the stack
+  #   spec:
+  #     # Label selector of the ServiceMonitor, PodMonitor, ScrapeConfig, PrometheusRule and AlertmanagerConfig
+  #     # resources handled by the stack. When the key is not set, this chart selects the label
+  #     # monitoring.rhobs/stack: <name>, the one it sets on the resources declared with stack: <name>.
+  #     # An empty selector ({}) selects every resource
+  #     resourceSelector:
+  #       matchLabels:
+  #         monitoring.rhobs/stack: apps
+  #     # Label selector of the namespaces where these resources are discovered. Not set: the namespace of the stack
+  #     # only. An empty selector ({}) selects every namespace
+  #     namespaceSelector:
+  #       matchLabels:
+  #         monitoring.rhobs/stack: apps
+  #     # With a namespaceSelector, the operator binds the Prometheus service account to a cluster role reading the
+  #     # services, endpoints and pods of every namespace (CreateClusterRoleBindings, default). NoClusterRoleBindings
+  #     # keeps this access to the namespaces listed in monitoredNamespaces
+  #     createClusterRoleBindings: CreateClusterRoleBindings
+  #     # Log level of the components (debug, info, warn or error)
+  #     logLevel: info
+  #     # Retention of the metrics (default 120h) and maximum size of the data (default unlimited): the first reached applies
+  #     retention: 120h
+  #     retentionSize: 15GB
+  #     # Resources of the Prometheus container (default requests 100m and 256Mi, limits 500m and 512Mi)
+  #     resources:
+  #       requests:
+  #         cpu: 500m
+  #         memory: 1Gi
+  #       limits:
+  #         memory: 4Gi
+  #     # Node selector and tolerations of the Prometheus and Alertmanager pods
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #       - key: node-role.kubernetes.io/infra
+  #         operator: Exists
+  #         effect: NoSchedule
+  #     # Prometheus settings
+  #     prometheusConfig:
+  #       # Number of Prometheus pods (default 2, always scheduled on distinct nodes)
+  #       replicas: 2
+  #       # Default interval between two scrapes
+  #       scrapeInterval: 30s
+  #       # Labels added to every metric and alert leaving this Prometheus (remote write, federation, alerts)
+  #       externalLabels:
+  #         cluster: default
+  #       # Persistent volume of each Prometheus pod (without it, the metrics are lost when a pod is deleted or rescheduled)
+  #       persistentVolumeClaim:
+  #         storageClassName: gp3-csi
+  #         resources:
+  #           requests:
+  #             storage: 20Gi
+  #       # Send the metrics to a remote storage (see the secrets block for the credentials)
+  #       remoteWrite:
+  #         - url: https://metrics.example.com/api/v1/write
+  #       # Accept metrics pushed with the remote write protocol or with OTLP over HTTP
+  #       enableRemoteWriteReceiver: false
+  #       enableOtlpHttpReceiver: false
+  #     # Alertmanager settings
+  #     alertmanagerConfig:
+  #       # Do not deploy Alertmanager
+  #       disabled: false
+  #       # Number of Alertmanager pods (default 2)
+  #       replicas: 2
+
+# Global query endpoints (ThanosQuerier): one Thanos Querier deduplicates the Prometheus replicas of a stack
+# and federates several stacks behind a single Prometheus compatible API
+thanosQueriers:
+  # Enable the creation of the ThanosQuerier resources listed below
+  enabled: false
+  # Activate the resources as helm hooks
+  hooked: false
+  # List of ThanosQuerier resources (spec is rendered as is)
+  list: []
+  #   # Name of the querier. The operator creates the service thanos-querier-<name> (port 10902, http)
+  # - name: default
+  #   # Namespace of the querier (default is the project namespace)
+  #   namespace: ""
+  #   # Additional labels set on the querier
+  #   labels: {}
+  #   # Specification of the querier
+  #   spec:
+  #     # Label selector of the MonitoringStack resources to query (required, {} selects every stack)
+  #     selector:
+  #       matchLabels:
+  #         app.startx.fr/component: mycomponent
+  #     # Namespaces where the stacks are discovered (default is the namespace of the querier)
+  #     namespaceSelector:
+  #       matchNames:
+  #         - default-prometheus
+  #     # Additional labels identifying the replicas (prometheus_replica is always used)
+  #     replicaLabels: []
+
+# Scraping of the services exposing metrics (ServiceMonitor of the monitoring.rhobs API group). The stacks ignore
+# the ServiceMonitor resources of the monitoring.coreos.com API group, handled by the monitoring of OpenShift
+serviceMonitors:
+  # Enable the creation of the ServiceMonitor resources listed below
+  enabled: false
+  # List of ServiceMonitor resources (spec is rendered as is)
+  list: []
+  #   # Name of the ServiceMonitor
+  # - name: my-app
+  #   # Namespace of the ServiceMonitor: the one of the monitored services (default is the project namespace).
+  #   # It must be selected by the namespaceSelector of the stack
+  #   namespace: my-app
+  #   # Name of the stack handling this resource (sets the label monitoring.rhobs/stack)
+  #   stack: apps
+  #   # Additional labels (ex: the labels of a custom resourceSelector)
+  #   labels: {}
+  #   # Specification of the ServiceMonitor (same fields as the monitoring.coreos.com one)
+  #   spec:
+  #     # Label selector of the services to scrape
+  #     selector:
+  #       matchLabels:
+  #         app.kubernetes.io/name: my-app
+  #     # Ports of the services to scrape (name of the service port)
+  #     endpoints:
+  #       - port: metrics
+  #         path: /metrics
+  #         interval: 30s
+
+# Scraping of the pods exposing metrics without a service (PodMonitor of the monitoring.rhobs API group)
+podMonitors:
+  # Enable the creation of the PodMonitor resources listed below
+  enabled: false
+  # List of PodMonitor resources (spec is rendered as is)
+  list: []
+  #   # Name of the PodMonitor
+  # - name: my-job
+  #   # Namespace of the PodMonitor: the one of the monitored pods (default is the project namespace)
+  #   namespace: my-app
+  #   # Name of the stack handling this resource (sets the label monitoring.rhobs/stack)
+  #   stack: apps
+  #   # Additional labels
+  #   labels: {}
+  #   # Specification of the PodMonitor
+  #   spec:
+  #     # Label selector of the pods to scrape
+  #     selector:
+  #       matchLabels:
+  #         app.kubernetes.io/name: my-job
+  #     # Ports of the pods to scrape (name of the container port)
+  #     podMetricsEndpoints:
+  #       - port: metrics
+  #         interval: 30s
+
+# Scraping of targets that are not discovered from a service or a pod: static addresses, DNS, HTTP service
+# discovery (ScrapeConfig of the monitoring.rhobs API group)
+scrapeConfigs:
+  # Enable the creation of the ScrapeConfig resources listed below
+  enabled: false
+  # List of ScrapeConfig resources (spec is rendered as is)
+  list: []
+  #   # Name of the ScrapeConfig
+  # - name: external-exporters
+  #   # Namespace of the ScrapeConfig (default is the project namespace)
+  #   namespace: ""
+  #   # Name of the stack handling this resource (sets the label monitoring.rhobs/stack)
+  #   stack: apps
+  #   # Additional labels
+  #   labels: {}
+  #   # Specification of the ScrapeConfig
+  #   spec:
+  #     # Static list of targets and the labels added to their metrics
+  #     staticConfigs:
+  #       - targets:
+  #           - exporter.example.com:9100
+  #         labels:
+  #           environment: prod
+  #     # Path, scheme and interval of the scrape
+  #     metricsPath: /metrics
+  #     scheme: HTTP
+  #     scrapeInterval: 30s
+
+# Recording and alerting rules evaluated by the stacks (PrometheusRule of the monitoring.rhobs API group)
+prometheusRules:
+  # Enable the creation of the PrometheusRule resources listed below
+  enabled: false
+  # List of PrometheusRule resources (spec is rendered as is)
+  list: []
+  #   # Name of the PrometheusRule
+  # - name: my-app
+  #   # Namespace of the PrometheusRule (default is the project namespace)
+  #   namespace: my-app
+  #   # Name of the stack handling this resource (sets the label monitoring.rhobs/stack)
+  #   stack: apps
+  #   # Additional labels
+  #   labels: {}
+  #   # Specification of the PrometheusRule
+  #   spec:
+  #     # Groups of rules
+  #     groups:
+  #       - name: my-app
+  #         rules:
+  #           - alert: MyAppDown
+  #             expr: up{job="my-app"} == 0
+  #             for: 5m
+  #             labels:
+  #               severity: critical
+  #             annotations:
+  #               summary: my-app is down
+
+# Routing of the alerts to the receivers (AlertmanagerConfig of the monitoring.rhobs API group). The default
+# matcher strategy of a stack is None: every AlertmanagerConfig receives the alerts of every namespace
+alertmanagerConfigs:
+  # Enable the creation of the AlertmanagerConfig resources listed below
+  enabled: false
+  # List of AlertmanagerConfig resources (spec is rendered as is)
+  list: []
+  #   # Name of the AlertmanagerConfig
+  # - name: default
+  #   # Namespace of the AlertmanagerConfig (default is the project namespace)
+  #   namespace: ""
+  #   # Name of the stack handling this resource (sets the label monitoring.rhobs/stack)
+  #   stack: apps
+  #   # Additional labels
+  #   labels: {}
+  #   # Specification of the AlertmanagerConfig
+  #   spec:
+  #     # Routing tree of the alerts
+  #     route:
+  #       receiver: webhook
+  #       groupBy:
+  #         - alertname
+  #         - namespace
+  #       groupWait: 30s
+  #       groupInterval: 5m
+  #       repeatInterval: 12h
+  #     # Receivers of the notifications (webhook, email, slack, pagerduty, msteams...)
+  #     receivers:
+  #       - name: webhook
+  #         webhookConfigs:
+  #           - url: https://alerts.example.com/hook
+
+# Network policies opening the metrics ports of the workloads to the stacks, for the monitored namespaces
+# that restrict their ingress traffic
+networkPolicies:
+  # Enable the creation of the NetworkPolicy resources listed below
+  enabled: false
+  # List of NetworkPolicy resources (spec is rendered as is)
+  list: []
+  #   # Name of the NetworkPolicy
+  # - name: allow-from-prometheus
+  #   # Namespace of the NetworkPolicy: a monitored namespace (required)
+  #   namespace: my-app
+  #   # Additional labels
+  #   labels: {}
+  #   # Specification of the NetworkPolicy
+  #   spec:
+  #     podSelector: {}
+  #     policyTypes:
+  #       - Ingress
+  #     ingress:
+  #       - from:
+  #           - namespaceSelector:
+  #               matchLabels:
+  #                 kubernetes.io/metadata.name: default-prometheus
+  #             podSelector:
+  #               matchLabels:
+  #                 app.kubernetes.io/component: prometheus
+  #         ports:
+  #           - protocol: TCP
+  #             port: 8080
+
+# Routes publishing the web interface and the API of Prometheus, Alertmanager or Thanos Querier outside of the
+# cluster. These components have no authentication: restrict the clients, or keep them inside the cluster
+routes:
+  # Enable the creation of the Route resources listed below
+  enabled: false
+  # List of Route resources
+  list: []
+  #   # Name of the route
+  # - name: apps-prometheus
+  #   # Namespace of the route: the one of the exposed service (default is the project namespace)
+  #   namespace: ""
+  #   # Additional labels
+  #   labels: {}
+  #   # Additional annotations (ex: only accept the clients of a network)
+  #   annotations:
+  #     haproxy.router.openshift.io/ip_allowlist: 192.0.2.0/24
+  #   # Name of the exposed service: <stack>-prometheus, <stack>-alertmanager or thanos-querier-<name> (required)
+  #   service: apps-prometheus
+  #   # Port of the service: web (Prometheus and Alertmanager, default) or http (Thanos Querier)
+  #   port: web
+  #   # Hostname of the route (empty: generated by OpenShift)
+  #   host: ""
+  #   # TLS termination: edge (default), or reencrypt and passthrough when the component serves TLS (webTLSConfig)
+  #   termination: edge
+  #   # Additional fields of the tls block of the route (certificate, key, caCertificate, destinationCACertificate,
+  #   # externalCertificate, insecureEdgeTerminationPolicy)
+  #   tls: {}
+
+# Secrets referenced by the resources of this chart (ex: credentials of a remote write, of an alert receiver or
+# of a scrape, web TLS certificates). A secret is rendered from its data, or by an ExternalSecret reading an
+# external store
+secrets:
+  # Enable the creation of the secrets listed below
+  enabled: false
+  # List of secrets
+  list: []
+  #   # Name of the secret
+  # - name: remote-write
+  #   # Namespace of the secret: the one of the resource referencing it (default is the project namespace)
+  #   namespace: ""
+  #   # Type of the secret (default Opaque)
+  #   type: Opaque
+  #   # Additional labels set on the secret
+  #   labels: {}
+  #   # Key/value pairs of the secret, rendered as stringData. Never commit a real credential: use externalSecret,
+  #   # or keep the secret out of the chart and create it by hand
+  #   data:
+  #     username: ""
+  #     password: ""
+  #   # Source this secret from an external store instead of the data above: renders an ExternalSecret
+  #   # producing the same secret (see externalSecretDefaults)
+  #   externalSecret:
+  #     # Enable the ExternalSecret mode
+  #     enabled: false
+  #     # Store to read from (default is externalSecretDefaults.secretStoreRef)
+  #     secretStoreRef: {}
+  #     # How often the secret is refreshed (default is externalSecretDefaults.refreshInterval)
+  #     refreshInterval: ""
+  #     # Map of the secret keys to the remote references ({key, property, version}) of the external store
+  #     remoteRefs:
+  #       username:
+  #         key: ocp/prometheus/remote-write
+  #         property: username
+  #       password:
+  #         key: ocp/prometheus/remote-write
+  #         property: password
+  #     # Raw ExternalSecret spec.data, spec.dataFrom and spec.target.template (alternatives to remoteRefs)
+  #     data: []
+  #     dataFrom: []
+  #     template: {}
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+# Namespace of the monitoring stacks: a standard namespace, attached to the default pod network
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-prometheus"
+    display_name: Prometheus
+    description: Prometheus monitoring stacks configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+# The Cluster Observability Operator only supports the AllNamespaces install mode: its OperatorGroup has no target namespace
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cluster-observability-operator"
+    namespace: "openshift-cluster-observability-operator"
+    version: "v1.5.5"
+    operator:
+      channel: "stable"
+      name: cluster-observability-operator
+      installPlanApproval: Manual
+      # csv: cluster-observability-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "openshift-cluster-observability-operator"
+    namespace: "openshift-cluster-observability-operator"
+    target: "all-ns"
+    providedAPIs: "AlertmanagerConfig.v1alpha1.monitoring.rhobs,MonitoringStack.v1alpha1.monitoring.rhobs,PodMonitor.v1.monitoring.rhobs,PrometheusRule.v1.monitoring.rhobs,ScrapeConfig.v1alpha1.monitoring.rhobs,ServiceMonitor.v1.monitoring.rhobs,ThanosQuerier.v1alpha1.monitoring.rhobs"

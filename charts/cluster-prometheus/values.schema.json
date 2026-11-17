@@ -1,0 +1,565 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Context",
+            "description": "Application deployment context",
+            "properties": {
+                "scope": {
+                    "title": "Scope",
+                    "type": "string",
+                    "default": "myscope",
+                    "description": "Name of the global scope for this application (organizational tenant)"
+                },
+                "cluster": {
+                    "title": "Cluster",
+                    "type": "string",
+                    "default": "default",
+                    "description": "Name of the cluster running this application (platform tenant)"
+                },
+                "environment": {
+                    "title": "Environment",
+                    "type": "string",
+                    "default": "myenv",
+                    "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                },
+                "component": {
+                    "title": "Component",
+                    "type": "string",
+                    "default": "mycomponent",
+                    "description": "Component name of this application (logical tenant)"
+                },
+                "app": {
+                    "title": "App",
+                    "type": "string",
+                    "default": "default-prometheus",
+                    "description": "Application name (functional tenant, default use Chart name)"
+                },
+                "version": {
+                    "title": "Version",
+                    "type": "string",
+                    "default": "1.5.5",
+                    "description": "Version name of this application (default use Chart appVersion)"
+                }
+            }
+        },
+        "externalSecretDefaults": {
+            "type": "object",
+            "title": "External Secret Defaults",
+            "description": "Default settings of the ExternalSecret objects rendered by this chart when a secret is sourced from an external store (`externalSecret.enabled: true`). Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.",
+            "properties": {
+                "apiVersion": {
+                    "title": "Api Version",
+                    "type": "string",
+                    "default": "external-secrets.io/v1",
+                    "description": "API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)"
+                },
+                "refreshInterval": {
+                    "title": "Refresh Interval",
+                    "type": "string",
+                    "default": "1h",
+                    "description": "How often the Secret is refreshed from the external store"
+                },
+                "secretStoreRef": {
+                    "type": "object",
+                    "title": "Secret Store Ref",
+                    "description": "Store to read from (name is required as soon as a secret uses externalSecret)",
+                    "properties": {
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": ""
+                        },
+                        "kind": {
+                            "title": "Kind",
+                            "type": "string",
+                            "default": "ClusterSecretStore"
+                        }
+                    }
+                }
+            }
+        },
+        "operatorNamespace": {
+            "type": "object",
+            "title": "Operator Namespace",
+            "description": "Namespace hosting the Cluster Observability Operator (the operator watches every namespace)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the operator namespace, labelled openshift.io/cluster-monitoring. Keep it disabled when the namespace already exists or is managed by another chart"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "openshift-cluster-observability-operator",
+                    "description": "Name of the operator namespace (must match operator.subscription.namespace)"
+                }
+            }
+        },
+        "monitoringStacks": {
+            "type": "object",
+            "title": "Monitoring Stacks",
+            "description": "Monitoring stacks of the application workloads (MonitoringStack): each stack runs its own Prometheus, with a Thanos sidecar, and its own Alertmanager, independent from the platform and user workload monitoring of OpenShift",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the MonitoringStack resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of MonitoringStack resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "thanosQueriers": {
+            "type": "object",
+            "title": "Thanos Queriers",
+            "description": "Global query endpoints (ThanosQuerier): one Thanos Querier deduplicates the Prometheus replicas of a stack and federates several stacks behind a single Prometheus compatible API",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the ThanosQuerier resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of ThanosQuerier resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "serviceMonitors": {
+            "type": "object",
+            "title": "Service Monitors",
+            "description": "Scraping of the services exposing metrics (ServiceMonitor of the monitoring.rhobs API group). The stacks ignore the ServiceMonitor resources of the monitoring.coreos.com API group, handled by the monitoring of OpenShift",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the ServiceMonitor resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of ServiceMonitor resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "podMonitors": {
+            "type": "object",
+            "title": "Pod Monitors",
+            "description": "Scraping of the pods exposing metrics without a service (PodMonitor of the monitoring.rhobs API group)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the PodMonitor resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of PodMonitor resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "scrapeConfigs": {
+            "type": "object",
+            "title": "Scrape Configs",
+            "description": "Scraping of targets that are not discovered from a service or a pod: static addresses, DNS, HTTP service discovery (ScrapeConfig of the monitoring.rhobs API group)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the ScrapeConfig resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of ScrapeConfig resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "prometheusRules": {
+            "type": "object",
+            "title": "Prometheus Rules",
+            "description": "Recording and alerting rules evaluated by the stacks (PrometheusRule of the monitoring.rhobs API group)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the PrometheusRule resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of PrometheusRule resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "alertmanagerConfigs": {
+            "type": "object",
+            "title": "Alertmanager Configs",
+            "description": "Routing of the alerts to the receivers (AlertmanagerConfig of the monitoring.rhobs API group). The default matcher strategy of a stack is None: every AlertmanagerConfig receives the alerts of every namespace",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the AlertmanagerConfig resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of AlertmanagerConfig resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "networkPolicies": {
+            "type": "object",
+            "title": "Network Policies",
+            "description": "Network policies opening the metrics ports of the workloads to the stacks, for the monitored namespaces that restrict their ingress traffic",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the NetworkPolicy resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of NetworkPolicy resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "routes": {
+            "type": "object",
+            "title": "Routes",
+            "description": "Routes publishing the web interface and the API of Prometheus, Alertmanager or Thanos Querier outside of the cluster. These components have no authentication: restrict the clients, or keep them inside the cluster",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the Route resources listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of Route resources",
+                    "default": []
+                }
+            }
+        },
+        "secrets": {
+            "type": "object",
+            "title": "Secrets",
+            "description": "Secrets referenced by the resources of this chart (ex: credentials of a remote write, of an alert receiver or of a scrape, web TLS certificates). A secret is rendered from its data, or by an ExternalSecret reading an external store",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the secrets listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of secrets",
+                    "default": []
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project) Namespace of the monitoring stacks: a standard namespace, attached to the default pod network",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-prometheus",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "1.5.5",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "project": {
+                    "type": "object",
+                    "title": "Project",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "type": {
+                            "title": "Type",
+                            "type": "string",
+                            "default": "namespace"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "default-prometheus"
+                        },
+                        "display_name": {
+                            "title": "Display name",
+                            "type": "string",
+                            "default": "Prometheus"
+                        },
+                        "description": {
+                            "title": "Description",
+                            "type": "string",
+                            "default": "Prometheus monitoring stacks configured by STARTX"
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "title": "Operator",
+            "description": "Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator) The Cluster Observability Operator only supports the AllNamespaces install mode: its OperatorGroup has no target namespace",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-prometheus",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "1.5.5",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "title": "Subscription",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "cluster-observability-operator"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-cluster-observability-operator"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "v1.5.5"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "title": "Operator",
+                            "properties": {
+                                "channel": {
+                                    "title": "Channel",
+                                    "type": "string",
+                                    "default": "stable"
+                                },
+                                "name": {
+                                    "title": "Name",
+                                    "type": "string",
+                                    "default": "cluster-observability-operator"
+                                },
+                                "installPlanApproval": {
+                                    "title": "Install Plan Approval",
+                                    "type": "string",
+                                    "default": "Manual"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "title": "Source",
+                                    "properties": {
+                                        "name": {
+                                            "title": "Name",
+                                            "type": "string",
+                                            "default": "redhat-operators"
+                                        },
+                                        "namespace": {
+                                            "title": "Namespace",
+                                            "type": "string",
+                                            "default": "openshift-marketplace"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "title": "Config",
+                                    "properties": {
+                                        "infra": {
+                                            "title": "Infra",
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "title": "Operator Group",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "openshift-cluster-observability-operator"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-cluster-observability-operator"
+                        },
+                        "target": {
+                            "title": "Target",
+                            "type": "string",
+                            "default": "all-ns"
+                        },
+                        "providedAPIs": {
+                            "title": "Provided APIs",
+                            "type": "string",
+                            "default": "AlertmanagerConfig.v1alpha1.monitoring.rhobs,MonitoringStack.v1alpha1.monitoring.rhobs,PodMonitor.v1.monitoring.rhobs,PrometheusRule.v1.monitoring.rhobs,ScrapeConfig.v1alpha1.monitoring.rhobs,ServiceMonitor.v1.monitoring.rhobs,ThanosQuerier.v1alpha1.monitoring.rhobs"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

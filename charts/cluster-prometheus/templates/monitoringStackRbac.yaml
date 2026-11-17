@@ -1,0 +1,56 @@
+{{- if .Values.monitoringStacks.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-prometheus" -}}
+{{- range .Values.monitoringStacks.list }}
+{{- $name := required "monitoringStacks.list: every item needs a name" .name }}
+{{- $ns := .namespace | default $namespace }}
+{{- /* service account created by the operator for the Prometheus pods of the stack */ -}}
+{{- $sa := printf "%s-prometheus" $name }}
+{{- if .clusterMonitoringView }}
+---
+# Allows the Prometheus of the stack to query the platform monitoring (federation of the in-cluster metrics)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: "{{ $ns }}-{{ $sa }}-cluster-monitoring-view"
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-cluster-monitoring-view-clusterrolebinding"
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-monitoring-view
+subjects:
+  - kind: ServiceAccount
+    name: {{ $sa | quote }}
+    namespace: {{ $ns | quote }}
+{{- end }}
+{{- /* the operator already binds the cluster role in the namespace of the stack */ -}}
+{{- range without (.monitoredNamespaces | default list) $ns }}
+---
+# Allows the Prometheus of the stack to discover the services, endpoints and pods of this namespace
+# (cluster role created by the operator, bound here instead of cluster wide)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $sa | quote }}
+  namespace: {{ . | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-prometheus-rolebinding"
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ $sa | quote }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $sa | quote }}
+    namespace: {{ $ns | quote }}
+{{- end }}
+{{- end }}
+{{- end -}}

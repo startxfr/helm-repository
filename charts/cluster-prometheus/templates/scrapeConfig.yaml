@@ -1,0 +1,26 @@
+{{- if .Values.scrapeConfigs.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-prometheus" -}}
+{{- range .Values.scrapeConfigs.list }}
+{{- $name := required "scrapeConfigs.list: every item needs a name" .name }}
+---
+apiVersion: monitoring.rhobs/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ .namespace | default $namespace | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-scrapeconfig"
+    {{- with .stack }}
+    monitoring.rhobs/stack: {{ . | quote }}
+    {{- end }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- include "cluster-prometheus.spec" (dict "kind" "ScrapeConfig" "name" $name "spec" .spec "required" true) | nindent 2 }}
+{{- end }}
+{{- end -}}
