@@ -2,15 +2,16 @@
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_cluster--rhbk-8A2BE2.svg)](https://artifacthub.io/packages/search?ts_query_web=cluster+rhbk+startx)
 
 This helm chart is used to deploy the Red Hat build of Keycloak (RHBK), the successor of Red Hat Single Sign-On, managed by
-the `rhbk-operator`. It installs the operator, a `Keycloak` instance (API `k8s.keycloak.org/v2beta1`) wired to its
-database and bootstrap admin secrets, an OpenShift `Route` exposing it, and `KeycloakRealmImport` objects describing the
-realms. A single pod development PostgreSQL database can be deployed by the chart for demo environments; production
-instances connect to an external database or to a PostgreSQL cluster managed by
-[cluster-percona](https://helm-repository.readthedocs.io/en/latest/charts/cluster-percona). The secrets are rendered from
+the `rhbk-operator`. It installs the operator, a `Keycloak` instance (API `k8s.keycloak.org/v2beta1`) with its database
+and bootstrap admin secrets, an OpenShift `Route` in front of it, and `KeycloakRealmImport` objects for the realms.
+
+For demo environments the chart can also deploy a single pod PostgreSQL database. In production, Keycloak connects to an
+external database or to a PostgreSQL cluster managed by
+[cluster-percona](https://helm-repository.readthedocs.io/en/latest/charts/cluster-percona). Secrets are rendered from
 the values, or sourced from an external store with the External Secrets Operator.
 
-This chart replaces [cluster-sso](https://helm-repository.readthedocs.io/en/latest/charts/cluster-sso), based on the
-Red Hat Single Sign-On 7.6 operator (API `keycloak.org/v1alpha1`) which is no longer developed.
+This chart replaces [cluster-sso](https://helm-repository.readthedocs.io/en/latest/charts/cluster-sso), which is based on
+the Red Hat Single Sign-On 7.6 operator (API `keycloak.org/v1alpha1`), no longer developed.
 
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
@@ -22,12 +23,12 @@ more information on how to use these resources.
 | Requirement | Detail |
 | --- | --- |
 | OpenShift 4.19+ (Kubernetes 1.30+) | `kubeVersion` of the chart |
-| Red Hat build of Keycloak operator 26.6 | `redhat-operators` catalog, package `rhbk-operator`, channel `stable-v26.6`, installed by the `operator` sub-chart in the namespace of the instances (OwnNamespace: the operator does not support watching all namespaces) |
-| API version | `k8s.keycloak.org/v2beta1` is the storage version of the 26.6 operator; set `rhbk.apiVersion: k8s.keycloak.org/v2alpha1` (and the matching `providedAPIs`) with an older channel such as `stable-v26.4` |
-| Network policy | The 26.6 operator creates the NetworkPolicy `<rhbk.name>-network-policy` on the Keycloak pods: HTTP(S) and management ports open to every source (the router included) unless rules are set, cluster (JGroups) ports restricted to the Keycloak pods. Restrict it with `spec.networkPolicy.httpRules` / `httpsRules` / `managementRules`, or disable it with `spec.networkPolicy.enabled: false` |
+| Red Hat build of Keycloak operator 26.6 | `redhat-operators` catalog, package `rhbk-operator`, channel `stable-v26.6`. Installed by the `operator` sub-chart in the namespace of the instances (OwnNamespace, the operator cannot watch all namespaces) |
+| API version | `k8s.keycloak.org/v2beta1` is the storage version of the 26.6 operator. With an older channel such as `stable-v26.4`, set `rhbk.apiVersion: k8s.keycloak.org/v2alpha1` and the matching `providedAPIs` |
+| Network policy | The 26.6 operator creates the NetworkPolicy `<rhbk.name>-network-policy` on the Keycloak pods. HTTP(S) and management ports are open to every source, the router included, unless rules are set. Cluster (JGroups) ports are restricted to the Keycloak pods. Restrict it with `spec.networkPolicy.httpRules` / `httpsRules` / `managementRules`, or disable it with `spec.networkPolicy.enabled: false` |
 | Database | PostgreSQL reachable from the Keycloak pods. `database.enabled` deploys a development instance (image `registry.redhat.io/rhel9/postgresql-16`, pulled with the cluster pull secret) |
-| FIPS | The operator CSV declares `features.operators.openshift.io/fips-compliant: "false"`. Keycloak runs on a FIPS enabled cluster (tested on OpenShift 4.22), but the RHBK image does not ship the BouncyCastle FIPS providers: a FIPS compliant deployment needs a custom image with these providers (`spec.image`), the `fips` feature and `fips-mode: strict` (see the [FIPS guide](https://www.keycloak.org/server/fips)) |
-| Secrets | Database and admin passwords are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`), supplied by a values file kept out of Git, or sourced with the External Secrets Operator (`externalSecret.enabled`). The `startx` values files carry a demo database password only |
+| FIPS | The operator CSV declares `features.operators.openshift.io/fips-compliant: "false"`. Keycloak runs on a FIPS enabled cluster (tested on OpenShift 4.22), but the RHBK image does not ship the BouncyCastle FIPS providers. A FIPS compliant deployment needs a custom image with these providers (`spec.image`), the `fips` feature and `fips-mode: strict` (see the [FIPS guide](https://www.keycloak.org/server/fips)) |
+| Secrets | Database and admin passwords are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`), from a values file kept out of Git, or from the External Secrets Operator (`externalSecret.enabled`). The `startx` values files only carry a demo database password |
 
 ## Deploy this helm chart on openshift
 
@@ -67,7 +68,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **database:** named **startx-postgresql** (development only), PostgreSQL 16, a **2Gi** data volume
 - 1 **keycloak:** named **startx** configured with
   - one instance, database credentials read from the Secret **startx-db-secret**
-  - HTTP enabled behind the route, `X-Forwarded-*` headers trusted, hostname derived from the request
+  - HTTP enabled behind the route, `X-Forwarded-*` headers trusted, hostname taken from the request
   - the operator ingress disabled
 - 1 **route:** named **startx** with edge TLS termination and a generated host
 - 1 **realm import:** named **startx** with a public OpenID Connect client **startx-demo**
@@ -87,7 +88,7 @@ helm install cluster-rhbk-instance startx/cluster-rhbk -f https://raw.githubuser
 
 - **startx** : rhbk operator on infra nodes, demo instance, development database and startx realm (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml))
 - **startx_noinfra** : the same without the infra node placement of the operator (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx_noinfra.yaml))
-- **startx_noinfra-grafana** : the same, with a confidential `grafana` client in the startx realm, used by the `values-startx_noinfra-rhbk.yaml` values of [cluster-grafana](https://helm-repository.readthedocs.io/en/latest/charts/cluster-grafana) (see [values-startx_noinfra-grafana.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx_noinfra-grafana.yaml))
+- **startx_noinfra-grafana** : the same, plus a confidential `grafana` client in the startx realm, used by the `values-startx_noinfra-rhbk.yaml` values of [cluster-grafana](https://helm-repository.readthedocs.io/en/latest/charts/cluster-grafana) (see [values-startx_noinfra-grafana.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx_noinfra-grafana.yaml))
 
 ```bash
 helm install cluster-rhbk startx/cluster-rhbk -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml
@@ -100,7 +101,7 @@ helm install cluster-rhbk startx/cluster-rhbk -f https://raw.githubusercontent.c
 | Key | Default | Description |
 | --- | --- | --- |
 | `context.*` | `default-rhbk` app | STARTX deployment context (labels of every object) |
-| `externalSecretDefaults` | `external-secrets.io/v1`, `1h`, `ClusterSecretStore` | Defaults of every secret sourced from an external store; `secretStoreRef.name` is required as soon as a secret uses `externalSecret` |
+| `externalSecretDefaults` | `external-secrets.io/v1`, `1h`, `ClusterSecretStore` | Defaults for every secret sourced from an external store. `secretStoreRef.name` is required as soon as a secret uses `externalSecret` |
 
 ### Development database (`database`)
 
@@ -119,16 +120,16 @@ The database reads its credentials from the database Secret of the Keycloak inst
 
 | Key | Default | Description |
 | --- | --- | --- |
-| `enabled`, `hooked` | `false`, `false` | Render the `Keycloak` and its secrets; render the `Keycloak` as a post-install hook |
+| `enabled`, `hooked` | `false`, `false` | Render the `Keycloak` and its secrets. `hooked` renders the `Keycloak` as a post-install hook |
 | `apiVersion` | `k8s.keycloak.org/v2beta1` | API version of the `Keycloak` and `KeycloakRealmImport` objects |
-| `name` | `default` | Name of the `Keycloak`; the operator names its objects after it (`<name>-service`, `<name>-initial-admin`...) |
-| `dbSecret.enabled`, `name`, `username`, `password` | `false`, `<name>-db-secret`, `keycloak`, `""` | Database Secret (keys `username` and `password`) referenced by `spec.db`; `password` is required unless `externalSecret` is used |
-| `adminSecret.enabled`, `name`, `username`, `password` | `false`, `<name>-bootstrap-admin`, `admin`, `""` | Temporary admin Secret referenced by `spec.bootstrapAdmin.user.secret`. Disabled: the operator generates `<name>-initial-admin` (user `temp-admin`) |
-| `*.externalSecret.enabled`, `remoteRefs` | `false`, `{}` | Produce the Secret with an `ExternalSecret` instead (keys `username` and `password` required in `remoteRefs`; `data`, `dataFrom` and `template` are also accepted) |
+| `name` | `default` | Name of the `Keycloak`. The operator names its objects after it (`<name>-service`, `<name>-initial-admin`...) |
+| `dbSecret.enabled`, `name`, `username`, `password` | `false`, `<name>-db-secret`, `keycloak`, `""` | Database Secret (keys `username` and `password`) referenced by `spec.db`. `password` is required unless `externalSecret` is used |
+| `adminSecret.enabled`, `name`, `username`, `password` | `false`, `<name>-bootstrap-admin`, `admin`, `""` | Temporary admin Secret referenced by `spec.bootstrapAdmin.user.secret`. When disabled, the operator generates `<name>-initial-admin` (user `temp-admin`) |
+| `*.externalSecret.enabled`, `remoteRefs` | `false`, `{}` | Produce the Secret with an `ExternalSecret` instead (keys `username` and `password` required in `remoteRefs`. `data`, `dataFrom` and `template` are also accepted) |
 | `spec` | one instance, HTTP, non strict hostname, `xforwarded` proxy headers | `Keycloak` spec merged over a base generated by the chart (see below) |
 
-The chart generates part of the `Keycloak` spec from the other values, and merges `rhbk.spec` over it (keys of
-`rhbk.spec` win):
+The chart builds part of the `Keycloak` spec from the other values, then merges `rhbk.spec` over it. Keys set in
+`rhbk.spec` win.
 
 | Generated key | When |
 | --- | --- |
@@ -142,7 +143,7 @@ The chart generates part of the `Keycloak` spec from the other values, and merge
 | Key | Default | Description |
 | --- | --- | --- |
 | `enabled` | `false` | Expose the instance with a Route to the `<rhbk.name>-service` Service, and disable the operator ingress |
-| `name`, `host` | `rhbk.name`, `""` | Name of the route; host (empty: generated by OpenShift) |
+| `name`, `host` | `rhbk.name`, `""` | Name of the route, and its host (empty: generated by OpenShift) |
 | `termination` | `edge` | `edge` (to the `http` port, needs `http.httpEnabled: true`), `reencrypt` or `passthrough` (to the `https` port, needs `http.tlsSecret`) |
 | `insecureEdgeTerminationPolicy`, `targetPort`, `annotations` | `Redirect`, `""`, `{}` | Plain HTTP policy, explicit target port, extra annotations |
 
@@ -151,22 +152,22 @@ The chart generates part of the `Keycloak` spec from the other values, and merge
 | Key | Default | Description |
 | --- | --- | --- |
 | `enabled` | `false` | Render the `KeycloakRealmImport` objects |
-| `list[].name`, `enabled` | `myrealm`, `true` | Name of the import, switch |
+| `list[].name`, `enabled` | `myrealm`, `true` | Name of the import, and its switch |
 | `list[].keycloakCRName` | `rhbk.name` | Target `Keycloak` in the same namespace |
 | `list[].placeholders` | `{}` | `${KEY}` placeholders of the realm resolved from Secrets (`KEY: {secret: {name, key}}`) |
 | `list[].realm` | minimal realm | Full `RealmRepresentation` (YAML) |
 | `secrets[].name`, `enabled`, `data` | `[]` | Secrets read by the placeholders (client secrets...), rendered at wave 1 before the imports |
 | `secrets[].externalSecret.enabled`, `remoteRefs` | `false`, `{}` | Produce the Secret with an `ExternalSecret` instead |
 
-A `KeycloakRealmImport` only creates a realm: it never updates or overwrites an existing realm. Changing a realm in the
-values after its first import has no effect; apply later changes with the admin console or the admin API, or delete the
+A `KeycloakRealmImport` only creates a realm. It never updates or overwrites an existing one, so changing a realm in the
+values after its first import has no effect. Apply later changes with the admin console or the admin API, or delete the
 realm before a new import.
 
 ### Sub-charts
 
 `project` (namespace) and `operator` (OLM subscription and OperatorGroup of the rhbk operator) are the STARTX basic
-charts; see their documentation. The chart objects use Argo CD sync waves: Secrets and ExternalSecrets (1), development
-database (10), `Keycloak` (15), `Route` (20), `KeycloakRealmImport` (30).
+charts, see their own documentation. The chart objects use Argo CD sync waves: Secrets and ExternalSecrets (1),
+development database (10), `Keycloak` (15), `Route` (20), `KeycloakRealmImport` (30).
 
 ## Procedures
 
@@ -180,14 +181,14 @@ oc get secret startx-initial-admin -n default-rhbk -o jsonpath='{.data.username}
 oc get secret startx-initial-admin -n default-rhbk -o jsonpath='{.data.password}' | base64 -d; echo
 ```
 
-The bootstrap admin is temporary: create a permanent administrator in the master realm (or federate an identity
+The bootstrap admin is temporary. Create a permanent administrator in the master realm (or federate an identity
 provider), then remove the temporary user.
 
 ### Production database with cluster-percona
 
 Deploy the database with [cluster-percona](https://helm-repository.readthedocs.io/en/latest/charts/cluster-percona) in
-the `default-rhbk` namespace, keep `database.enabled: false`, and point the `Keycloak` to the Secret generated by the
-Percona operator (`<cluster>-pguser-<user>`, keys `user` and `password`):
+the `default-rhbk` namespace and keep `database.enabled: false`. Then point the `Keycloak` to the Secret generated by
+the Percona operator (`<cluster>-pguser-<user>`, keys `user` and `password`):
 
 ```yaml
 rhbk:
@@ -215,7 +216,7 @@ rhbk:
 
 ### End to end TLS (reencrypt)
 
-Let the OpenShift service CA issue the certificate of the Keycloak Service, serve HTTPS only, and use a `reencrypt`
+Let the OpenShift service CA issue the certificate of the Keycloak Service and serve HTTPS only, behind a `reencrypt`
 route (the router trusts the service CA):
 
 ```yaml
@@ -237,7 +238,7 @@ route:
 
 ### Connect Grafana (cluster-grafana)
 
-The `values-startx_noinfra-grafana.yaml` values add a confidential `grafana` client to the startx realm, for the
+`values-startx_noinfra-grafana.yaml` adds a confidential `grafana` client to the startx realm. It goes with the
 `values-startx_noinfra-rhbk.yaml` values of [cluster-grafana](https://helm-repository.readthedocs.io/en/latest/charts/cluster-grafana):
 
 - client secret read from the Secret `startx-grafana-client` (`rhbk_realms.secrets`, placeholder `${GRAFANA_CLIENT_SECRET}`),
@@ -246,24 +247,24 @@ The `values-startx_noinfra-grafana.yaml` values add a confidential `grafana` cli
 - client roles `grafanaadmin`, `admin`, `editor` and `viewer`, copied by a client role mapper into a top-level `roles`
   claim of the ID token, the access token and the userinfo, read by the Grafana `role_attribute_path`
 
-Replace `apps.example.com` by the apps domain of the cluster in both values files, then assign the client roles to the
+Replace `apps.example.com` with the apps domain of the cluster in both values files, then assign the client roles to the
 users (Users > Role mapping > Assign role > Filter by clients). A user without any role logs in as Grafana `Viewer`.
 
-To check the claims of a client without an application, use Clients > `<client>` > Client scopes > Evaluate. The
-`admin-cli` client is not a good witness: it uses lightweight access tokens since Keycloak 26.0 (no `sub`, no
+To check the claims of a client without an application, use Clients > `<client>` > Client scopes > Evaluate. Don't use
+the `admin-cli` client for this check: since Keycloak 26.0 it uses lightweight access tokens (no `sub`, no
 `preferred_username`).
 
 ### Operator update
 
 The subscription uses a manual install plan approval and a `startingCSV` (`operator.subscription.version`). The
-`startingCSV` only pins the first installation: right after it, OLM creates a new install plan, left unapproved, for
-the next release of the channel (the operator `skipRange` usually points it to the latest z-stream, skipping the
-intermediate ones). Leave it unapproved to stay on the pinned release.
+`startingCSV` only pins the first installation. Right after it, OLM creates a new install plan for the next release of
+the channel and leaves it unapproved (the operator `skipRange` usually points it to the latest z-stream, skipping the
+ones in between). Leave it unapproved to stay on the pinned release.
 
-To upgrade, approve that pending install plan; changing `operator.subscription.version` alone does not trigger any
-upgrade. Then set `operator.subscription.version` to the installed release, so that a fresh installation gets the same
-version. For a new minor stream, change `operator.subscription.operator.channel` first. When the `Keycloak` uses the
-default image, the operator upgrade also upgrades Keycloak: back up the database first.
+To upgrade, approve that pending install plan. Changing `operator.subscription.version` alone does not trigger any
+upgrade. Afterwards, set `operator.subscription.version` to the installed release so that a fresh installation gets the
+same version. For a new minor stream, change `operator.subscription.operator.channel` first. If the `Keycloak` uses the
+default image, the operator upgrade also upgrades Keycloak, so back up the database first.
 
 ```bash
 oc get installplan -n default-rhbk
@@ -281,17 +282,17 @@ helm uninstall cluster-rhbk-project
 oc wait --for=delete namespace/default-rhbk --timeout=300s
 ```
 
-1. **Instance wave**: the `Keycloak` and `KeycloakRealmImport` objects carry no finalizer. The operator deletes the
-   objects it generated (StatefulSet, Services, NetworkPolicy, `<name>-initial-admin` and realm Secrets), and the
-   service CA certificate Secret goes with its Service. The PVC of the development database
-   (`data-<rhbk.name>-postgresql-0`) is kept: its database still holds the realms, and the import of an existing realm
-   is ignored on a new installation. Delete the PVC (or the namespace) to start from scratch.
-2. **Operator wave**: the Subscription, the OperatorGroup and the install plans are deleted, but the CSV stays (phase
-   `Failed`, reason `NoOperatorGroup`) with its running operator pod. When the namespace is kept, delete it with
+1. Instance: the `Keycloak` and `KeycloakRealmImport` objects have no finalizer. The operator deletes the objects it
+   generated (StatefulSet, Services, NetworkPolicy, `<name>-initial-admin` and realm Secrets), and the service CA
+   certificate Secret goes away with its Service. The PVC of the development database (`data-<rhbk.name>-postgresql-0`)
+   is kept. Its database still holds the realms, and the import of an existing realm is ignored on a new installation,
+   so delete the PVC (or the namespace) to start from scratch.
+2. Operator: the Subscription, the OperatorGroup and the install plans are deleted, but the CSV stays (phase `Failed`,
+   reason `NoOperatorGroup`) and its operator pod keeps running. If the namespace is kept, delete the CSV with
    `oc delete csv <csv> -n default-rhbk`.
-3. **Project wave**: the namespace is deleted with everything left in it (CSV, operator pod, PVC).
+3. Project: the namespace is deleted with everything left in it (CSV, operator pod, PVC).
 
-The `keycloaks.k8s.keycloak.org` and `keycloakrealmimports.k8s.keycloak.org` CRDs stay on the cluster: OLM never
+The `keycloaks.k8s.keycloak.org` and `keycloakrealmimports.k8s.keycloak.org` CRDs stay on the cluster, since OLM never
 removes the CRDs of an operator.
 
 ## Deploy with ArgoCD
@@ -306,7 +307,7 @@ oc apply -k .
 
 ### Applications
 
-The `examples/argocd` folder holds the AppProject and the three Applications of the standard pattern, using
+The `examples/argocd` folder contains the AppProject and the three Applications of the standard pattern, using
 `values-startx_noinfra.yaml`:
 
 | Application | Wave | Enabled flags | Finalizer |
@@ -315,9 +316,9 @@ The `examples/argocd` folder holds the AppProject and the three Applications of 
 | `cluster-rhbk-operator` | `5` | `operator` | yes |
 | `cluster-rhbk-app` | `10` | `database`, `rhbk`, `route`, `rhbk_realms` | yes |
 
-Every Application explicitly disables the flags of the other waves. The first install plan of the operator must be
-approved (see Operator update) before the `cluster-rhbk-app` Application can sync. Delete the Applications in reverse
-order (`-app`, then `-operator`, then `-project`) so that the operator removes the finalizers of its objects.
+Each Application explicitly disables the flags of the other waves. The first install plan of the operator has to be
+approved (see Operator update) before `cluster-rhbk-app` can sync. Delete the Applications in reverse order (`-app`,
+then `-operator`, then `-project`) so that the operator can remove the finalizers of its objects.
 
 ## History
 
