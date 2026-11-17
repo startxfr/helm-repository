@@ -79,7 +79,7 @@ helm install cluster-grafana-instance startx/cluster-grafana -f https://raw.gith
 
 ## Other available values
 
-- **startx** : grafana operator and grafana instance on infra nodes, startx dashboard (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml))
+- **startx** : grafana operator and grafana instance on infra nodes, startx dashboard, no download of the plugins preinstalled from grafana.com (`plugins.preinstall_disabled`, the pod may have no internet access) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml))
 - **startx_noinfra** : the same without the infra node placement (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra.yaml))
 - **startx_noinfra-rhbk** : the same, plus the OpenID Connect authentication against the startx realm of `cluster-rhbk` (`values-startx_noinfra-grafana.yaml`), the cluster trusted CA bundle and a demo client secret (see [values-startx_noinfra-rhbk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra-rhbk.yaml))
 

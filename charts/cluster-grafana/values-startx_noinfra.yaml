@@ -34,6 +34,9 @@ grafana:
         reporting_enabled: "false"
         check_for_updates: "false"
         check_for_plugin_updates: "false"
+      plugins:
+        # No download of the plugins preinstalled from grafana.com at startup (the pod may have no internet access)
+        preinstall_disabled: "true"
 route:
   enabled: false
   host: ""
