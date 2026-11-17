@@ -270,6 +270,30 @@ oc get installplan -n default-rhbk
 oc patch installplan <name> -n default-rhbk --type merge -p '{"spec":{"approved":true}}'
 ```
 
+### Uninstall
+
+Remove the waves in reverse order (tested on OpenShift 4.22 with the 26.6 operator):
+
+```bash
+helm uninstall cluster-rhbk-instance
+helm uninstall cluster-rhbk-operator
+helm uninstall cluster-rhbk-project
+oc wait --for=delete namespace/default-rhbk --timeout=300s
+```
+
+1. **Instance wave**: the `Keycloak` and `KeycloakRealmImport` objects carry no finalizer. The operator deletes the
+   objects it generated (StatefulSet, Services, NetworkPolicy, `<name>-initial-admin` and realm Secrets), and the
+   service CA certificate Secret goes with its Service. The PVC of the development database
+   (`data-<rhbk.name>-postgresql-0`) is kept: its database still holds the realms, and the import of an existing realm
+   is ignored on a new installation. Delete the PVC (or the namespace) to start from scratch.
+2. **Operator wave**: the Subscription, the OperatorGroup and the install plans are deleted, but the CSV stays (phase
+   `Failed`, reason `NoOperatorGroup`) with its running operator pod. When the namespace is kept, delete it with
+   `oc delete csv <csv> -n default-rhbk`.
+3. **Project wave**: the namespace is deleted with everything left in it (CSV, operator pod, PVC).
+
+The `keycloaks.k8s.keycloak.org` and `keycloakrealmimports.k8s.keycloak.org` CRDs stay on the cluster: OLM never
+removes the CRDs of an operator.
+
 ## Deploy with ArgoCD
 
 ### AppProject
