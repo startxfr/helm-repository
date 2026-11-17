@@ -1,0 +1,471 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "title": "Context",
+            "description": "Application deployment context",
+            "properties": {
+                "scope": {
+                    "title": "Scope",
+                    "type": "string",
+                    "default": "myscope",
+                    "description": "Name of the global scope for this application (organizational tenant)"
+                },
+                "cluster": {
+                    "title": "Cluster",
+                    "type": "string",
+                    "default": "default",
+                    "description": "Name of the cluster running this application (platform tenant)"
+                },
+                "environment": {
+                    "title": "Environment",
+                    "type": "string",
+                    "default": "myenv",
+                    "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                },
+                "component": {
+                    "title": "Component",
+                    "type": "string",
+                    "default": "mycomponent",
+                    "description": "Component name of this application (logical tenant)"
+                },
+                "app": {
+                    "title": "App",
+                    "type": "string",
+                    "default": "default-eck",
+                    "description": "Application name (functional tenant, default use Chart name)"
+                },
+                "version": {
+                    "title": "Version",
+                    "type": "string",
+                    "default": "3.5.0",
+                    "description": "Version name of this application (default use Chart appVersion)"
+                }
+            }
+        },
+        "externalSecretDefaults": {
+            "type": "object",
+            "title": "External Secret Defaults",
+            "description": "Default settings of the ExternalSecret objects rendered by this chart when a secret is sourced from an external store (`externalSecret.enabled: true`). Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.",
+            "properties": {
+                "apiVersion": {
+                    "title": "Api Version",
+                    "type": "string",
+                    "default": "external-secrets.io/v1",
+                    "description": "API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)"
+                },
+                "refreshInterval": {
+                    "title": "Refresh Interval",
+                    "type": "string",
+                    "default": "1h",
+                    "description": "How often the Secret is refreshed from the external store"
+                },
+                "secretStoreRef": {
+                    "type": "object",
+                    "title": "Secret Store Ref",
+                    "description": "Store to read from (name is required as soon as a secret uses externalSecret)",
+                    "properties": {
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": ""
+                        },
+                        "kind": {
+                            "title": "Kind",
+                            "type": "string",
+                            "default": "ClusterSecretStore"
+                        }
+                    }
+                }
+            }
+        },
+        "tuned": {
+            "type": "object",
+            "title": "Tuned",
+            "description": "Kernel setting required by Elasticsearch on the nodes running it (Tuned resource of the Node Tuning Operator, applied without reboot). OpenShift nodes set vm.max_map_count to 262144; Elastic recommends 1048576 for Elasticsearch 8.16 and later in production",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the Tuned resource"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resource as a helm hook"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "default": "openshift-elasticsearch",
+                    "description": "Name of the Tuned resource and of its profile"
+                },
+                "maxMapCount": {
+                    "title": "Max Map Count",
+                    "type": "integer",
+                    "default": 1048576,
+                    "description": "Value of the vm.max_map_count kernel setting"
+                },
+                "include": {
+                    "title": "Include",
+                    "type": "string",
+                    "default": "openshift-node",
+                    "description": "Profile of OpenShift extended by this one: openshift-node for the worker nodes, openshift-control-plane for the infra and control plane nodes"
+                },
+                "priority": {
+                    "title": "Priority",
+                    "type": "integer",
+                    "default": 20,
+                    "description": "Priority of the profile, the lowest value wins (the profiles of OpenShift use 30 and 40)"
+                },
+                "match": {
+                    "type": "array",
+                    "title": "Match",
+                    "description": "Nodes receiving the profile: list of node labels, a node carrying one of them is selected (label is the key of the node label, the optional value restricts the match to this value)",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "label": {
+                                "title": "Label",
+                                "type": "string",
+                                "default": "node-role.kubernetes.io/worker"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "elasticsearch": {
+            "type": "object",
+            "title": "Elasticsearch",
+            "description": "Elasticsearch clusters (Elasticsearch resource of the ECK operator)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the Elasticsearch resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of Elasticsearch resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "kibana": {
+            "type": "object",
+            "title": "Kibana",
+            "description": "Kibana instances (Kibana resource of the ECK operator)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the Kibana resources listed below"
+                },
+                "hooked": {
+                    "title": "Hooked",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Activate the resources as helm hooks"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of Kibana resources (spec is rendered as is)",
+                    "default": []
+                }
+            }
+        },
+        "secrets": {
+            "type": "object",
+            "title": "Secrets",
+            "description": "Secrets referenced by the Elastic resources (ex: secure settings of a snapshot repository, users of the file realm, certificates of the HTTP layer). A secret is rendered from its data, or by an ExternalSecret reading an external store",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable the creation of the secrets listed below"
+                },
+                "list": {
+                    "type": "array",
+                    "title": "List",
+                    "description": "List of secrets",
+                    "default": []
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "title": "Project",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-eck",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "3.5.0",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "project": {
+                    "type": "object",
+                    "title": "Project",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "type": {
+                            "title": "Type",
+                            "type": "string",
+                            "default": "namespace"
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "default-eck"
+                        },
+                        "display_name": {
+                            "title": "Display name",
+                            "type": "string",
+                            "default": "Elasticsearch"
+                        },
+                        "description": {
+                            "title": "Description",
+                            "type": "string",
+                            "default": "Elasticsearch clusters configured by STARTX"
+                        }
+                    }
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "title": "Operator",
+            "description": "Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator) The certified ECK operator is installed in openshift-operators (AllNamespaces mode, global OperatorGroup)",
+            "properties": {
+                "enabled": {
+                    "title": "Enabled",
+                    "type": "boolean",
+                    "default": false
+                },
+                "context": {
+                    "type": "object",
+                    "title": "Context",
+                    "properties": {
+                        "scope": {
+                            "title": "Scope",
+                            "type": "string",
+                            "default": "myscope",
+                            "description": "Name of the global scope for this application (organizational tenant)"
+                        },
+                        "cluster": {
+                            "title": "Cluster",
+                            "type": "string",
+                            "default": "default",
+                            "description": "Name of the cluster running this application (platform tenant)"
+                        },
+                        "environment": {
+                            "title": "Environment",
+                            "type": "string",
+                            "default": "myenv",
+                            "description": "Name of the environment for this application (ex: dev, factory, preprod or prod)"
+                        },
+                        "component": {
+                            "title": "Component",
+                            "type": "string",
+                            "default": "mycomponent",
+                            "description": "Component name of this application (logical tenant)"
+                        },
+                        "app": {
+                            "title": "App",
+                            "type": "string",
+                            "default": "default-eck",
+                            "description": "Application name (functional tenant, default use Chart name)"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "3.5.0",
+                            "description": "Version name of this application (default use Chart appVersion)"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "title": "Subscription",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": true
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "elasticsearch-eck-operator-certified"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-operators"
+                        },
+                        "version": {
+                            "title": "Version",
+                            "type": "string",
+                            "default": "v3.5.0"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "title": "Operator",
+                            "properties": {
+                                "channel": {
+                                    "title": "Channel",
+                                    "type": "string",
+                                    "default": "stable"
+                                },
+                                "name": {
+                                    "title": "Name",
+                                    "type": "string",
+                                    "default": "elasticsearch-eck-operator-certified"
+                                },
+                                "installPlanApproval": {
+                                    "title": "Install Plan Approval",
+                                    "type": "string",
+                                    "default": "Manual"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "title": "Source",
+                                    "properties": {
+                                        "name": {
+                                            "title": "Name",
+                                            "type": "string",
+                                            "default": "certified-operators"
+                                        },
+                                        "namespace": {
+                                            "title": "Namespace",
+                                            "type": "string",
+                                            "default": "openshift-marketplace"
+                                        }
+                                    }
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "title": "Config",
+                                    "properties": {
+                                        "infra": {
+                                            "title": "Infra",
+                                            "type": "boolean",
+                                            "default": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "title": "Operator Group",
+                    "properties": {
+                        "enabled": {
+                            "title": "Enabled",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "hooked": {
+                            "title": "Hooked",
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "name": {
+                            "title": "Name",
+                            "type": "string",
+                            "default": "elasticsearch-eck-operator-certified"
+                        },
+                        "namespace": {
+                            "title": "Namespace",
+                            "type": "string",
+                            "default": "openshift-operators"
+                        },
+                        "target": {
+                            "title": "Target",
+                            "type": "string",
+                            "default": "all-ns"
+                        },
+                        "providedAPIs": {
+                            "title": "Provided APIs",
+                            "type": "string",
+                            "default": "Elasticsearch.v1.elasticsearch.k8s.elastic.co,Kibana.v1.kibana.k8s.elastic.co"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
