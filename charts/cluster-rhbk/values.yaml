@@ -160,6 +160,20 @@ rhbk_realms:
         realm: myrealm
         displayName: My Realm
         enabled: true
+  # Secrets of the namespace read by the placeholders of the realm imports (client secrets...), rendered before the
+  # imports. Each entry renders a Secret from `data`, or an ExternalSecret when externalSecret.enabled is true
+  secrets: []
+  #   - name: myapp-client-secret
+  #     enabled: true
+  #     # Map key -> value (secret values: Argo CD Vault Plugin placeholders or a values file kept out of Git)
+  #     data:
+  #       secret: ""
+  #     externalSecret:
+  #       enabled: false
+  #       remoteRefs:
+  #         secret:
+  #           key: kv/rhbk/myapp
+  #           property: client_secret
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project:

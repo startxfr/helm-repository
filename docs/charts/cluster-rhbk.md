@@ -26,6 +26,7 @@ more information on how to use these resources.
 | API version | `k8s.keycloak.org/v2beta1` is the storage version of the 26.6 operator; set `rhbk.apiVersion: k8s.keycloak.org/v2alpha1` (and the matching `providedAPIs`) with an older channel such as `stable-v26.4` |
 | Network policy | The 26.6 operator creates the NetworkPolicy `<rhbk.name>-network-policy` on the Keycloak pods: HTTP(S) and management ports open to every source (the router included) unless rules are set, cluster (JGroups) ports restricted to the Keycloak pods. Restrict it with `spec.networkPolicy.httpRules` / `httpsRules` / `managementRules`, or disable it with `spec.networkPolicy.enabled: false` |
 | Database | PostgreSQL reachable from the Keycloak pods. `database.enabled` deploys a development instance (image `registry.redhat.io/rhel9/postgresql-16`, pulled with the cluster pull secret) |
+| FIPS | The operator CSV declares `features.operators.openshift.io/fips-compliant: "false"`. Keycloak runs on a FIPS enabled cluster (tested on OpenShift 4.22), but the RHBK image does not ship the BouncyCastle FIPS providers: a FIPS compliant deployment needs a custom image with these providers (`spec.image`), the `fips` feature and `fips-mode: strict` (see the [FIPS guide](https://www.keycloak.org/server/fips)) |
 | Secrets | Database and admin passwords are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`), supplied by a values file kept out of Git, or sourced with the External Secrets Operator (`externalSecret.enabled`). The `startx` values files carry a demo database password only |
 
 ## Deploy this helm chart on openshift
@@ -86,6 +87,7 @@ helm install cluster-rhbk-instance startx/cluster-rhbk -f https://raw.githubuser
 
 - **startx** : rhbk operator on infra nodes, demo instance, development database and startx realm (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml))
 - **startx_noinfra** : the same without the infra node placement of the operator (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx_noinfra.yaml))
+- **startx_noinfra-grafana** : the same, with a confidential `grafana` client in the startx realm, used by the `values-startx_noinfra-rhbk.yaml` values of [cluster-grafana](https://helm-repository.readthedocs.io/en/latest/charts/cluster-grafana) (see [values-startx_noinfra-grafana.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx_noinfra-grafana.yaml))
 
 ```bash
 helm install cluster-rhbk startx/cluster-rhbk -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml
@@ -153,6 +155,12 @@ The chart generates part of the `Keycloak` spec from the other values, and merge
 | `list[].keycloakCRName` | `rhbk.name` | Target `Keycloak` in the same namespace |
 | `list[].placeholders` | `{}` | `${KEY}` placeholders of the realm resolved from Secrets (`KEY: {secret: {name, key}}`) |
 | `list[].realm` | minimal realm | Full `RealmRepresentation` (YAML) |
+| `secrets[].name`, `enabled`, `data` | `[]` | Secrets read by the placeholders (client secrets...), rendered at wave 1 before the imports |
+| `secrets[].externalSecret.enabled`, `remoteRefs` | `false`, `{}` | Produce the Secret with an `ExternalSecret` instead |
+
+A `KeycloakRealmImport` only creates a realm: it never updates or overwrites an existing realm. Changing a realm in the
+values after its first import has no effect; apply later changes with the admin console or the admin API, or delete the
+realm before a new import.
 
 ### Sub-charts
 
@@ -226,6 +234,24 @@ route:
   host: sso.apps.example.com
   termination: reencrypt
 ```
+
+### Connect Grafana (cluster-grafana)
+
+The `values-startx_noinfra-grafana.yaml` values add a confidential `grafana` client to the startx realm, for the
+`values-startx_noinfra-rhbk.yaml` values of [cluster-grafana](https://helm-repository.readthedocs.io/en/latest/charts/cluster-grafana):
+
+- client secret read from the Secret `startx-grafana-client` (`rhbk_realms.secrets`, placeholder `${GRAFANA_CLIENT_SECRET}`),
+  identical to the `oidc.clientSecret` of cluster-grafana
+- redirect URI `https://<grafana host>/login/generic_oauth`, post logout redirect URI `https://<grafana host>/login`, PKCE
+- client roles `grafanaadmin`, `admin`, `editor` and `viewer`, copied by a client role mapper into a top-level `roles`
+  claim of the ID token, the access token and the userinfo, read by the Grafana `role_attribute_path`
+
+Replace `apps.example.com` by the apps domain of the cluster in both values files, then assign the client roles to the
+users (Users > Role mapping > Assign role > Filter by clients). A user without any role logs in as Grafana `Viewer`.
+
+To check the claims of a client without an application, use Clients > `<client>` > Client scopes > Evaluate. The
+`admin-cli` client is not a good witness: it uses lightweight access tokens since Keycloak 26.0 (no `sub`, no
+`preferred_username`).
 
 ### Operator update
 
