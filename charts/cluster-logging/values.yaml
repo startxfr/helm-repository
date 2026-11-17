@@ -28,7 +28,7 @@ externalSecretDefaults:
     name: ""
     kind: ClusterSecretStore
 
-# configuration of the logging service
+# configuration of the logging service (legacy generation, ignored when observability.enabled is true)
 logging:
   # Enable the deployment of the logging service
   enabled: false
@@ -126,7 +126,7 @@ eventrouter:
       cpu: "100m"
       memory: 128Mi
 
-# configuration of the logforwarder service
+# configuration of the logforwarder service (legacy generation, only the secret is used when observability.enabled is true)
 logforwarder:
   # Enable the deployment of the logforwarder service
   enabled: false
@@ -197,6 +197,103 @@ logforwarder:
       # dataFrom:
       #   - extract:
       #       key: ocp/logging/elasticsearch
+
+# Configuration of the new logging generation (Logging 6.x, API observability.openshift.io): collector service
+# account, ClusterLogForwarder and logging UIPlugin of the Cluster Observability Operator. It requires a
+# Logging 6.x operator, a LokiStack (see the cluster-loki chart) and, for the UIPlugin, the Cluster
+# Observability Operator (see operatorObservability)
+observability:
+  # Select the logging generation managed by this chart
+  #   false : legacy generation (Logging 5.x) configured by the logging and logforwarder blocks
+  #   true  : new generation (Logging 6.x) configured by this block. The ClusterLogging, its elasticsearch
+  #           route, the ClusterLogForwarder of the logforwarder block and its service account are not
+  #           deployed anymore (logforwarder.secret and eventrouter stay available)
+  enabled: false
+  # Activate the ClusterLogForwarder and the UIPlugin as helm hooks
+  hooked: false
+  # Service account used by the collector to read the logs and to write them into the LokiStack
+  serviceAccount:
+    # Enable the creation of the service account and of its cluster role bindings
+    enabled: true
+    # Name of the service account (used by the ClusterLogForwarder)
+    name: logging-collector
+    # Cluster roles, provided by the logging operator, bound to the service account
+    #   collect-application-logs, collect-infrastructure-logs and collect-audit-logs : kind of logs the collector can read
+    #   logging-collector-logs-writer : write the logs into a LokiStack
+    clusterRoles:
+      - collect-application-logs
+      - collect-infrastructure-logs
+      - logging-collector-logs-writer
+      # - collect-audit-logs
+  # Log forwarder (ClusterLogForwarder observability.openshift.io/v1), it deploys the collector on every node
+  forwarder:
+    # Enable the creation of the ClusterLogForwarder
+    enabled: true
+    # Name of the ClusterLogForwarder
+    name: instance
+    # Annotations added to the ClusterLogForwarder (ex: observability.openshift.io/log-level: debug)
+    annotations: {}
+    # Specification of the ClusterLogForwarder, rendered as is (spec.serviceAccount.name is set with
+    # serviceAccount.name when it is not defined). The default forwards the application and infrastructure
+    # logs to the LokiStack logging-loki. outputs and pipelines are lists, each one is replaced as a whole by
+    # your values (the rendering fails when a pipeline references an output, an input or a filter that is not defined)
+    spec:
+      # managementState: Managed
+      outputs:
+        - name: lokistack-out
+          type: lokiStack
+          lokiStack:
+            target:
+              name: logging-loki
+              namespace: openshift-logging
+            authentication:
+              token:
+                from: serviceAccount
+          tls:
+            ca:
+              key: service-ca.crt
+              configMapName: openshift-service-ca.crt
+      pipelines:
+        - name: infra-app-logs
+          inputRefs:
+            - application
+            - infrastructure
+            # - audit
+          outputRefs:
+            - lokistack-out
+      # # Resources and placement of the collector pods
+      # collector:
+      #   resources:
+      #     requests:
+      #       cpu: "100m"
+      #   tolerations:
+      #     - effect: NoSchedule
+      #       key: node-role.kubernetes.io/infra
+      #       operator: Exists
+  # Logging view of the OpenShift console (Observe > Logs), UIPlugin of the Cluster Observability Operator
+  uiplugin:
+    # Enable the creation of the UIPlugin
+    enabled: true
+    # Specification of the UIPlugin, rendered as is (the name is always logging and spec.type is always Logging)
+    spec:
+      logging:
+        # LokiStack displayed in the console (the plugin looks for it in the openshift-logging namespace)
+        lokiStack:
+          name: logging-loki
+        # Maximum number of entries returned by a query
+        logsLimit: 50
+        # Maximum duration of a query
+        timeout: 30s
+        # Schema used to query the logs (viaq, otel or select to let the user choose in the console)
+        schema: otel
+      # # Placement of the console plugin pods
+      # deployment:
+      #   nodeSelector:
+      #     node-role.kubernetes.io/infra: ''
+      #   tolerations:
+      #     - effect: NoSchedule
+      #       key: node-role.kubernetes.io/infra
+      #       operator: Exists
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -310,3 +407,41 @@ operatorLoki:
     name: "openshift-operators-redhat"
     namespace: "openshift-operators-redhat"
     providedAPIs: "AlertingRule.v1.loki.grafana.com,LokiStack.v1.loki.grafana.com,RecordingRule.v1.loki.grafana.com,RulerConfig.v1.loki.grafana.com"
+
+# Configuration of the Cluster Observability Operator required by observability.uiplugin (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+# Enable it only when this operator is not already deployed in the cluster
+operatorObservability:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "cluster-observability-operator"
+    namespace: "openshift-cluster-observability-operator"
+    version: "v1.5.5"
+    operator:
+      channel: "stable"
+      name: cluster-observability-operator
+      installPlanApproval: Manual
+      # csv: cluster-observability-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+  operatorGroup:
+    enabled: true
+    hooked: false
+    target: "all-ns"
+    name: "openshift-cluster-observability-operator"
+    namespace: "openshift-cluster-observability-operator"
+    providedAPIs: "AlertmanagerConfig.v1alpha1.monitoring.rhobs,MonitoringStack.v1alpha1.monitoring.rhobs,PodMonitor.v1.monitoring.rhobs,PrometheusRule.v1.monitoring.rhobs,ScrapeConfig.v1alpha1.monitoring.rhobs,ServiceMonitor.v1.monitoring.rhobs,ThanosQuerier.v1alpha1.monitoring.rhobs,UIPlugin.v1alpha1.observability.openshift.io"
+
+# Namespace hosting the Cluster Observability Operator (the operator watches every namespace)
+operatorObservabilityNamespace:
+  # Enable the creation of the operator namespace, labelled openshift.io/cluster-monitoring. Keep it disabled
+  # when the namespace already exists or is managed by another chart
+  enabled: false
+  # Name of the operator namespace (must match operatorObservability.subscription.namespace)
+  name: openshift-cluster-observability-operator

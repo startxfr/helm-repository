@@ -1,0 +1,39 @@
+{{- if include "cluster-logging.observability" . }}
+{{- with .Values.observability.serviceAccount }}{{- if .enabled }}
+{{- $name := .name | default "logging-collector" -}}
+{{- $namespace := $.Values.project.project.name | default "openshift-logging" -}}
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-logging.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-sa" $name | trunc 63 | trimSuffix "-" | quote }}
+  annotations:
+    {{- include "cluster-logging.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "5"
+{{- range .clusterRoles }}
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ printf "%s-%s-%s" $namespace $name . | quote }}
+  labels:
+    {{- include "cluster-logging.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-%s" $name . | trunc 63 | trimSuffix "-" | quote }}
+  annotations:
+    {{- include "cluster-logging.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "5"
+subjects:
+  - kind: ServiceAccount
+    name: {{ $name | quote }}
+    namespace: {{ $namespace | quote }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ . | quote }}
+{{- end }}
+{{- end }}{{- end }}
+{{- end }}

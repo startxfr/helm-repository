@@ -1,4 +1,4 @@
-{{- if .Values.logging.enabled }}
+{{- if and .Values.logging.enabled (not (include "cluster-logging.observability" .)) }}
 {{- $namespace := .Values.project.project.name | default "openshift-logging" -}}
 apiVersion: "{{- .Values.logging.apiVersion | default "logging.openshift.io/v1" -}}"
 kind: "ClusterLogging"

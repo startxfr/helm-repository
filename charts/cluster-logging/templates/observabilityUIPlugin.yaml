@@ -1,0 +1,28 @@
+{{- if include "cluster-logging.observability" . }}
+{{- with .Values.observability.uiplugin }}{{- if .enabled }}
+{{- $spec := .spec | default dict -}}
+{{- if kindIs "map" $spec -}}
+{{- $spec = mergeOverwrite (deepCopy $spec) (dict "type" "Logging") -}}
+{{- end }}
+---
+apiVersion: observability.openshift.io/v1alpha1
+kind: UIPlugin
+metadata:
+  name: "logging"
+  labels:
+    {{- include "cluster-logging.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "logging-uiplugin"
+  annotations:
+    {{- include "cluster-logging.annotations" $ | nindent 4 }}
+    {{- if $.Values.observability.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "15"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- include "cluster-logging.spec" (dict "kind" "UIPlugin" "name" "logging" "spec" $spec "required" true) | nindent 2 }}
+{{- end }}{{- end }}
+{{- end }}
