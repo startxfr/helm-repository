@@ -3,11 +3,13 @@
 
 This helm chart is used to deploy Grafana managed by the community `grafana-operator` (Grafana Labs). It installs the
 operator, a `Grafana` instance (API `grafana.integreatly.org/v1beta1`) exposed by an OpenShift `Route`, and
-`GrafanaDatasource` and `GrafanaDashboard` objects. Grafana works on its own with a local admin account, and can
-authenticate its users with OpenID Connect against a realm of the Red Hat build of Keycloak deployed by
-[cluster-rhbk](https://helm-repository.readthedocs.io/en/latest/charts/cluster-rhbk), with the Grafana role read from the
-roles of the user. The secrets are rendered from the values, or sourced from an external store with the External
-Secrets Operator.
+`GrafanaDatasource` and `GrafanaDashboard` objects.
+
+Grafana works on its own with a local admin account. It can also authenticate its users with OpenID Connect against a
+realm of the Red Hat build of Keycloak deployed by
+[cluster-rhbk](https://helm-repository.readthedocs.io/en/latest/charts/cluster-rhbk), and read the Grafana role from the
+roles of the user. Secrets are rendered from the values, or sourced from an external store with the External Secrets
+Operator.
 
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
@@ -19,11 +21,11 @@ more information on how to use these resources.
 | Requirement | Detail |
 | --- | --- |
 | OpenShift 4.19+ (Kubernetes 1.30+) | `kubeVersion` of the chart, tested on OpenShift 4.22 |
-| grafana-operator 5.25 | `community-operators` catalog (provider Grafana Labs, not supported by Red Hat), package `grafana-operator`, channel `v5`, installed by the `operator` sub-chart in the namespace of the instance (OwnNamespace). No Red Hat or certified Grafana operator exists: the Red Hat supported alternative for dashboards is the Cluster Observability Operator (Perses) |
-| Grafana version | Pinned with `grafana.version` (default `13.1.3`, the default of the 5.25 operator) so that an operator upgrade does not change the Grafana version |
-| FIPS | Grafana and the grafana-operator are not FIPS validated: they run on a FIPS enabled cluster, but their cryptography is not FIPS compliant |
-| OpenID Connect | A realm with a confidential client, such as the startx realm of `cluster-rhbk` with its `values-startx_noinfra-grafana.yaml` values. Grafana calls the issuer from its pod: it must trust the CA of the issuer route (`oidc.ca`) |
-| Secrets | Admin password and client secret are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`), supplied by a values file kept out of Git, or sourced with the External Secrets Operator (`externalSecret.enabled`). The `startx_noinfra-rhbk` values file carries a demo client secret only |
+| grafana-operator 5.25 | `community-operators` catalog (provider Grafana Labs, not supported by Red Hat), package `grafana-operator`, channel `v5`. Installed by the `operator` sub-chart in the namespace of the instance (OwnNamespace). There is no Red Hat or certified Grafana operator. The Red Hat supported alternative for dashboards is the Cluster Observability Operator (Perses) |
+| Grafana version | Pinned with `grafana.version` (default `13.1.3`, the default of the 5.25 operator), so an operator upgrade does not change the Grafana version |
+| FIPS | Grafana and the grafana-operator are not FIPS validated. They run on a FIPS enabled cluster, but their cryptography is not FIPS compliant |
+| OpenID Connect | A realm with a confidential client, such as the startx realm of `cluster-rhbk` with its `values-startx_noinfra-grafana.yaml` values. Grafana calls the issuer from its pod, so it must trust the CA of the issuer route (`oidc.ca`) |
+| Secrets | Admin password and client secret are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`), from a values file kept out of Git, or from the External Secrets Operator (`externalSecret.enabled`). The `startx_noinfra-rhbk` values file only carries a demo client secret |
 
 ## Deploy this helm chart on openshift
 
@@ -79,7 +81,7 @@ helm install cluster-grafana-instance startx/cluster-grafana -f https://raw.gith
 
 - **startx** : grafana operator and grafana instance on infra nodes, startx dashboard (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml))
 - **startx_noinfra** : the same without the infra node placement (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra.yaml))
-- **startx_noinfra-rhbk** : the same, with the OpenID Connect authentication against the startx realm of `cluster-rhbk` (`values-startx_noinfra-grafana.yaml`), the cluster trusted CA bundle and a demo client secret (see [values-startx_noinfra-rhbk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra-rhbk.yaml))
+- **startx_noinfra-rhbk** : the same, plus the OpenID Connect authentication against the startx realm of `cluster-rhbk` (`values-startx_noinfra-grafana.yaml`), the cluster trusted CA bundle and a demo client secret (see [values-startx_noinfra-rhbk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra-rhbk.yaml))
 
 ```bash
 helm install cluster-grafana startx/cluster-grafana -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml
@@ -92,21 +94,21 @@ helm install cluster-grafana startx/cluster-grafana -f https://raw.githubusercon
 | Key | Default | Description |
 | --- | --- | --- |
 | `context.*` | `default-grafana` app | STARTX deployment context (labels of every object) |
-| `externalSecretDefaults` | `external-secrets.io/v1`, `1h`, `ClusterSecretStore` | Defaults of every secret sourced from an external store; `secretStoreRef.name` is required as soon as a secret uses `externalSecret` |
+| `externalSecretDefaults` | `external-secrets.io/v1`, `1h`, `ClusterSecretStore` | Defaults for every secret sourced from an external store. `secretStoreRef.name` is required as soon as a secret uses `externalSecret` |
 
 ### Grafana instance (`grafana`)
 
 | Key | Default | Description |
 | --- | --- | --- |
-| `enabled`, `hooked` | `false`, `false` | Render the `Grafana` and its secrets; render the `Grafana` as a post-install hook |
-| `name` | `default` | Name of the `Grafana`; the operator names its objects after it (`<name>-deployment`, `<name>-service`, `<name>-route`, `<name>-admin-credentials`...) |
+| `enabled`, `hooked` | `false`, `false` | Render the `Grafana` and its secrets. `hooked` renders the `Grafana` as a post-install hook |
+| `name` | `default` | Name of the `Grafana`. The operator names its objects after it (`<name>-deployment`, `<name>-service`, `<name>-route`, `<name>-admin-credentials`...) |
 | `version` | `13.1.3` | Grafana image tag, or full image reference with or without digest |
-| `adminSecret.enabled`, `name`, `username`, `password` | `false`, `<name>-admin`, `admin`, `""` | Admin Secret (keys `username` and `password`) read by Grafana and by the operator. Disabled: the operator generates `<name>-admin-credentials` (user `admin`, random password) |
+| `adminSecret.enabled`, `name`, `username`, `password` | `false`, `<name>-admin`, `admin`, `""` | Admin Secret (keys `username` and `password`) read by Grafana and by the operator. When disabled, the operator generates `<name>-admin-credentials` (user `admin`, random password) |
 | `adminSecret.externalSecret.enabled`, `remoteRefs` | `false`, `{}` | Produce the Secret with an `ExternalSecret` instead (keys `username` and `password` required) |
 | `spec` | console logs | `Grafana` spec merged over a base generated by the chart (see below) |
 
-The chart generates part of the `Grafana` spec from the other values, and merges `grafana.spec` over it (keys of
-`grafana.spec` win, and a list such as `deployment.spec.template.spec.containers` replaces the generated one):
+The chart builds part of the `Grafana` spec from the other values, then merges `grafana.spec` over it. Keys set in
+`grafana.spec` win, and a list such as `deployment.spec.template.spec.containers` replaces the generated one.
 
 | Generated key | When |
 | --- | --- |
@@ -130,10 +132,10 @@ The chart generates part of the `Grafana` spec from the other values, and merges
 | --- | --- | --- |
 | `enabled` | `false` | Configure the Grafana `generic_oauth` authentication. Requires `grafana.enabled`, `route.enabled` and `route.host` |
 | `name` | `Keycloak` | Label of the login button |
-| `issuerUrl` | `""` | Issuer of the realm (`https://<keycloak host>/realms/<realm>`); the auth, token, userinfo and logout endpoints are derived from it |
+| `issuerUrl` | `""` | Issuer of the realm (`https://<keycloak host>/realms/<realm>`). The auth, token, userinfo and logout endpoints are derived from it |
 | `clientId`, `scopes` | `grafana`, `openid email profile` | Client of the realm and requested scopes |
 | `roleAttributePath` | `grafanaadmin`, `admin`, `editor` roles, else `Viewer` | JMESPath expression mapping the `roles` claim to a Grafana role |
-| `clientSecret.enabled`, `name`, `value` | `true`, `<grafana.name>-oidc-client`, `""` | Client secret Secret (key `client-secret`); `value` is required unless `externalSecret` is used |
+| `clientSecret.enabled`, `name`, `value` | `true`, `<grafana.name>-oidc-client`, `""` | Secret holding the client secret (key `client-secret`). `value` is required unless `externalSecret` is used |
 | `clientSecret.externalSecret.enabled`, `remoteRefs` | `false`, `{}` | Produce the Secret with an `ExternalSecret` instead (key `client-secret` required) |
 | `ca.certificate` | `""` | Inline PEM CA certificate(s) of the issuer route, rendered in the ConfigMap `<grafana.name>-oidc-ca` |
 | `ca.injectTrustedBundle` | `false` | Inject the cluster trusted CA bundle (system CAs and proxy `trustedCA`) in the ConfigMap `<grafana.name>-oidc-ca` |
@@ -141,21 +143,21 @@ The chart generates part of the `Grafana` spec from the other values, and merges
 
 The generated `generic_oauth` section also sets `login_attribute_path: preferred_username`, `email_attribute_path: email`,
 `name_attribute_path: name`, `use_pkce: true`, `allow_assign_grafana_admin: true` and the `signout_redirect_url` of the
-realm (single logout). Override any of them in `grafana.spec` (`config.auth.generic_oauth`).
+realm (single logout). Any of them can be overridden in `grafana.spec` (`config.auth.generic_oauth`).
 
 ### Datasources and dashboards (`grafana_datasources`, `grafana_dashboards`)
 
 | Key | Default | Description |
 | --- | --- | --- |
 | `enabled` | `false` | Render the `GrafanaDatasource` (or `GrafanaDashboard`) objects |
-| `list[].name`, `enabled` | `mydatasource` / `mydashboard`, `true` | Name of the object, switch |
-| `list[].spec` | example | Spec of the object; `instanceSelector` defaults to the label `app.startx.fr/grafana: <grafana.name>` of the `Grafana` of this chart |
+| `list[].name`, `enabled` | `mydatasource` / `mydashboard`, `true` | Name of the object, and its switch |
+| `list[].spec` | example | Spec of the object. `instanceSelector` defaults to the label `app.startx.fr/grafana: <grafana.name>` of the `Grafana` of this chart |
 
 ### Sub-charts
 
 `project` (namespace) and `operator` (OLM subscription and OperatorGroup of the grafana operator) are the STARTX basic
-charts; see their documentation. The chart objects use Argo CD sync waves: Secrets, ExternalSecrets and CA ConfigMap (1),
-`Grafana` (15), `GrafanaDatasource` and `GrafanaDashboard` (30).
+charts, see their own documentation. The chart objects use Argo CD sync waves: Secrets, ExternalSecrets and CA ConfigMap
+(1), `Grafana` (15), `GrafanaDatasource` and `GrafanaDashboard` (30).
 
 ## Procedures
 
@@ -173,11 +175,11 @@ The local admin account stays available next to the OpenID Connect login, as a b
 
 ### OpenID Connect with cluster-rhbk
 
-1. Deploy `cluster-rhbk` with its `values-startx_noinfra-grafana.yaml` values: the startx realm gets a confidential
-   `grafana` client, its client roles (`grafanaadmin`, `admin`, `editor`, `viewer`) and a mapper copying them into a
+1. Deploy `cluster-rhbk` with its `values-startx_noinfra-grafana.yaml` values. The startx realm then gets a confidential
+   `grafana` client, its client roles (`grafanaadmin`, `admin`, `editor`, `viewer`) and a mapper that copies them into a
    top-level `roles` claim.
-2. Deploy this chart with the `values-startx_noinfra-rhbk.yaml` values. In both files, replace `apps.example.com` by the
-   apps domain of the cluster, and keep the same client secret (`oidc.clientSecret` here, `rhbk_realms.secrets` there).
+2. Deploy this chart with the `values-startx_noinfra-rhbk.yaml` values. In both files, replace `apps.example.com` with the
+   apps domain of the cluster, and use the same client secret (`oidc.clientSecret` here, `rhbk_realms.secrets` in cluster-rhbk).
 3. Make Grafana trust the CA of the Keycloak route:
    - ingress certificate signed by a CA of the proxy `trustedCA` (enterprise PKI): `oidc.ca.injectTrustedBundle: true`
    - default self-signed ingress certificate of OpenShift: provide its CA inline
@@ -188,14 +190,14 @@ The local admin account stays available next to the OpenID Connect login, as a b
      ```
 4. Assign the client roles of `grafana` to the users in Keycloak. A user without any role logs in as `Viewer`.
 
-With `oidc.ca.injectTrustedBundle`, OpenShift writes the bundle into the ConfigMap after its creation: ignore its
-`/data` in the Argo CD Application (see the examples).
+With `oidc.ca.injectTrustedBundle`, OpenShift writes the bundle into the ConfigMap after it is created, so its `/data`
+must be ignored in the Argo CD Application (see the examples).
 
 ### Operator update
 
 The subscription uses a manual install plan approval and a `startingCSV` (`operator.subscription.version`) that only
 pins the first installation. To upgrade, approve the pending install plan, then align `operator.subscription.version`.
-The Grafana version does not change with the operator, as long as `grafana.version` is set.
+As long as `grafana.version` is set, the Grafana version does not change with the operator.
 
 ```bash
 oc get installplan -n default-grafana
@@ -214,7 +216,7 @@ oc apply -k .
 
 ### Applications
 
-The `examples/argocd` folder holds the AppProject and the three Applications of the standard pattern, using
+The `examples/argocd` folder contains the AppProject and the three Applications of the standard pattern, using
 `values-startx_noinfra.yaml`:
 
 | Application | Wave | Enabled flags | Finalizer |
@@ -223,9 +225,9 @@ The `examples/argocd` folder holds the AppProject and the three Applications of 
 | `cluster-grafana-operator` | `5` | `operator` | yes |
 | `cluster-grafana-app` | `10` | `grafana`, `route`, `grafana_datasources`, `grafana_dashboards` | yes |
 
-Every Application explicitly disables the flags of the other waves. The first install plan of the operator must be
-approved (see Operator update) before the `cluster-grafana-app` Application can sync. Delete the Applications in reverse
-order (`-app`, then `-operator`, then `-project`) so that the operator removes the finalizers of its objects.
+Each Application explicitly disables the flags of the other waves. The first install plan of the operator has to be
+approved (see Operator update) before `cluster-grafana-app` can sync. Delete the Applications in reverse order (`-app`,
+then `-operator`, then `-project`) so that the operator can remove the finalizers of its objects.
 
 ## History
 
