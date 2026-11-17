@@ -61,7 +61,7 @@ Complete deployment of a project with the following characteristics :
 - 1 **namespace:** named **default-rhbk** without constraints
 - 1 **operator:** named **rhbk-operator** configured with
   - The **stable-v26.6** channel of the redhat catalog, manual install plan approval
-  - The **v26.6.7-opr.1** version
+  - The **v26.6.9-opr.1** version
   - Deployed under the **default-rhbk** project (OwnNamespace OperatorGroup)
 - 1 **database:** named **startx-postgresql** (development only), PostgreSQL 16, a **2Gi** data volume
 - 1 **keycloak:** named **startx** configured with
@@ -231,8 +231,8 @@ route:
 
 The subscription uses a manual install plan approval and a `startingCSV` (`operator.subscription.version`). The
 `startingCSV` only pins the first installation: right after it, OLM creates a new install plan, left unapproved, for
-the next release of the channel (the operator `skipRange` usually points it to the latest z-stream, for example
-`v26.6.9-opr.1` from `v26.6.7-opr.1`). Leave it unapproved to stay on the pinned release.
+the next release of the channel (the operator `skipRange` usually points it to the latest z-stream, skipping the
+intermediate ones). Leave it unapproved to stay on the pinned release.
 
 To upgrade, approve that pending install plan; changing `operator.subscription.version` alone does not trigger any
 upgrade. Then set `operator.subscription.version` to the installed release, so that a fresh installation gets the same
