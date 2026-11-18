@@ -50,7 +50,11 @@ Complete deployment of an OpenShift Data Science (ODS) configuration with the fo
 helm install cluster-ods startx/cluster-ods
 ```
 
-## Others values availables
+### DataScienceCluster and DSCInitialization API version
+
+The `DataScienceCluster` and `DSCInitialization` resources use the `v2` API (`datasciencecluster.opendatahub.io/v2`, `dscinitialization.opendatahub.io/v2`), required by RHOAI 3.x. Set `DataScienceCluster.apiVersion` (or `DSCInitialization.apiVersion`) to the `v1` API for RHOAI 2.x, and adapt `DataScienceCluster.spec` accordingly. Both resources accept `labels` and `annotations` maps. `DSCInitialization.enabled` creates a cluster scoped `DSCInitialization` (free `spec`, `applicationsNamespace` overrides `spec.applicationsNamespace`) before the `DataScienceCluster`.
+
+## Other available values
 
 - **startx** : rh-ods cluster wide service configuration using rh-ods operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ods/values-startx.yaml))
 

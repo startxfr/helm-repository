@@ -4,7 +4,7 @@
 {{- $namespace := .namespace | default $ns -}}
 {{- $name := .name | default "default-dsc" -}}
 ---
-apiVersion: datasciencecluster.opendatahub.io/v1
+apiVersion: {{ .apiVersion | default "datasciencecluster.opendatahub.io/v2" }}
 kind: DataScienceCluster
 metadata:
   name: "{{ $name }}"
@@ -12,8 +12,12 @@ metadata:
   labels:
     {{- include "cluster-ods.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ $name }}-dsc"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
     {{- include "cluster-ods.annotations" $ | nindent 4 }}
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "15") (.annotations | default dict)) | nindent 4 }}
 spec:
   {{- .spec | nindent 2 }}
 {{- end }}
