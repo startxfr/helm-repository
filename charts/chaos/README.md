@@ -259,4 +259,3 @@ helm install my-chaos startx/chaos -f my-chaos-minimal-values.yaml
 | 21.3.361 | 2026-11-10 | Fix chaos-mesh dependency pin |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
-| 21.3.371 | 2026-11-18 | publish stable update for the full repository |
