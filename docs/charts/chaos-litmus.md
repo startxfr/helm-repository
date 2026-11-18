@@ -197,3 +197,4 @@ helm install chaos-litmus startx/chaos-litmus \
 | 21.3.313 | 2026-11-04 | Add cluster-unifai and cluster-qdrant, align all charts to 21.3.313 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
+| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
