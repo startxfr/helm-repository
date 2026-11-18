@@ -1,0 +1,57 @@
+# Deploys the Grafana instance, its route and the startx dashboard in default-grafana
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-grafana-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster-grafana
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-grafana
+    targetRevision: 21.3.361
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: false
+        grafana:
+          enabled: true
+        route:
+          enabled: true
+        grafana_datasources:
+          enabled: true
+        grafana_dashboards:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-grafana
+  ignoreDifferences:
+    - group: grafana.integreatly.org
+      kind: Grafana
+      jsonPointers:
+        - /metadata/finalizers
+    - group: grafana.integreatly.org
+      kind: GrafanaDatasource
+      jsonPointers:
+        - /metadata/finalizers
+    - group: grafana.integreatly.org
+      kind: GrafanaDashboard
+      jsonPointers:
+        - /metadata/finalizers
+    - group: ""
+      kind: ConfigMap
+      name: startx-oidc-ca
+      jsonPointers:
+        - /data
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -241,6 +241,7 @@ ignoreDifferences:
 | cluster-mongo      | `mongodbcommunity.mongodb.com`        | `MongoDBCommunity`        |
 | cluster-mustgather | `managed.openshift.io`                | `MustGather`              |
 | cluster-3scale     | `apps.3scale.net`                     | `APIManager`              |
+| cluster-grafana    | `grafana.integreatly.org`             | `Grafana`                 |
 
 ### CR template sync-waves
 

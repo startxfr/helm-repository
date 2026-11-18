@@ -1,0 +1,29 @@
+
+Grafana is enabled, at the cluster level, with the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+
+{{- if .Values.project }}{{- if .Values.project.enabled }}
+{{ include "project.notes" .Values.project }}
+{{- end }}{{- end }}
+
+{{- if .Values.operator }}{{- if .Values.operator.enabled }}
+{{ include "operator.notes" .Values.operator }}
+{{- end }}{{- end }}
+
+{{ include "cluster-grafana.notes" .Values }}
+{{- if .Values.grafana.enabled }}
+
+Admin credentials :
+{{- if .Values.grafana.adminSecret.enabled }}
+  oc get secret {{ include "cluster-grafana.adminSecretName" . }} -n {{ include "cluster-grafana.namespace" . }} -o jsonpath='{.data.password}' | base64 -d
+{{- else }}
+  oc get secret {{ include "cluster-grafana.grafanaName" . }}-admin-credentials -n {{ include "cluster-grafana.namespace" . }} -o jsonpath='{.data.GF_SECURITY_ADMIN_PASSWORD}' | base64 -d
+{{- end }}
+{{- end }}

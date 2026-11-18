@@ -1,0 +1,23 @@
+{{- if .Values.grafana_datasources.enabled -}}
+{{- $namespace := include "cluster-grafana.namespace" . -}}
+{{- $selector := dict "matchLabels" (fromYaml (include "cluster-grafana.instanceLabels" .)) -}}
+{{- range .Values.grafana_datasources.list }}
+{{- if .enabled }}
+{{- $spec := mustMergeOverwrite (dict "instanceSelector" $selector) (fromYaml (.spec | default "{}")) }}
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: {{ required "grafana_datasources.list[].name is required" .name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-grafana.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-datasource" .name | quote }}
+  annotations:
+    {{- include "cluster-grafana.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- toYaml $spec | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
