@@ -1,0 +1,102 @@
+{{- if .Values.database.enabled -}}
+{{- $namespace := include "cluster-rhbk.namespace" . -}}
+{{- $name := include "cluster-rhbk.databaseName" . -}}
+{{- $secret := include "cluster-rhbk.dbSecretName" . -}}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-rhbk.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ $name | quote }}
+  annotations:
+    {{- include "cluster-rhbk.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  selector:
+    app.kubernetes.io/name: {{ $name | quote }}
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: postgresql
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-rhbk.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ $name | quote }}
+  annotations:
+    {{- include "cluster-rhbk.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  serviceName: {{ $name | quote }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name | quote }}
+  template:
+    metadata:
+      labels:
+        {{- include "cluster-rhbk.labels" . | nindent 8 }}
+        app.kubernetes.io/name: {{ $name | quote }}
+    spec:
+      containers:
+        - name: postgresql
+          image: {{ .Values.database.image | default "registry.redhat.io/rhel9/postgresql-16:latest" | quote }}
+          ports:
+            - name: postgresql
+              containerPort: 5432
+          env:
+            - name: POSTGRESQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secret | quote }}
+                  key: username
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secret | quote }}
+                  key: password
+            - name: POSTGRESQL_DATABASE
+              value: {{ .Values.database.database | default "keycloak" | quote }}
+          readinessProbe:
+            exec:
+              command: ["/usr/libexec/check-container"]
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["/usr/libexec/check-container", "--live"]
+            initialDelaySeconds: 120
+            timeoutSeconds: 10
+          {{- with .Values.database.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/pgsql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        {{- with .Values.database.storageClassName }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.database.size | default "2Gi" | quote }}
+{{- end -}}

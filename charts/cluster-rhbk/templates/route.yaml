@@ -1,0 +1,37 @@
+{{- if and .Values.route.enabled .Values.rhbk.enabled -}}
+{{- $namespace := include "cluster-rhbk.namespace" . -}}
+{{- $keycloak := include "cluster-rhbk.keycloakName" . -}}
+{{- $name := .Values.route.name | default $keycloak -}}
+{{- $termination := .Values.route.termination | default "edge" -}}
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-rhbk.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-route" $name | quote }}
+  annotations:
+    {{- include "cluster-rhbk.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "20"
+    {{- with .Values.route.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- with .Values.route.host }}
+  host: {{ . | quote }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ printf "%s-service" $keycloak | quote }}
+    weight: 100
+  port:
+    targetPort: {{ .Values.route.targetPort | default (ternary "http" "https" (eq $termination "edge")) | quote }}
+  tls:
+    termination: {{ $termination | quote }}
+    {{- if ne $termination "passthrough" }}
+    insecureEdgeTerminationPolicy: {{ .Values.route.insecureEdgeTerminationPolicy | default "Redirect" | quote }}
+    {{- end }}
+  wildcardPolicy: None
+{{- end -}}

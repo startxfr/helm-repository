@@ -1,0 +1,217 @@
+# Default values for cluster-rhbk.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-rhbk
+  # Version name of this application (default use Chart appVersion)
+  version: "26.6.9"
+
+# Defaults applied to every secret of this chart sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+# Development PostgreSQL database (single pod StatefulSet based on the Red Hat rhel9/postgresql image).
+# Meant for demo and test environments only: no replication, no backup. For production, use an external
+# database or a PostgreSQL cluster managed by cluster-percona, cluster-crunchy or cluster-cloudnativedb.
+# The credentials are read from the database Secret of the Keycloak instance (rhbk.dbSecret).
+database:
+  # Enable the development database
+  enabled: false
+  # Name of the StatefulSet and of the Service (default: <rhbk.name>-postgresql)
+  name: ""
+  # PostgreSQL image (pin a digest or a tag in production-like environments)
+  image: registry.redhat.io/rhel9/postgresql-16:latest
+  # Name of the database created at initialization
+  database: keycloak
+  # StorageClass of the data volume (empty: default StorageClass of the cluster)
+  storageClassName: ""
+  # Size of the data volume
+  size: 2Gi
+  # Resources of the database container
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+# Deploy a Red Hat build of Keycloak instance (Keycloak CR)
+rhbk:
+  # Enable the Keycloak instance and its secrets
+  enabled: false
+  # Activate the Keycloak CR as a helm hook
+  hooked: false
+  # API version of the Keycloak CRD (k8s.keycloak.org/v2alpha1 for operators older than 26.6)
+  apiVersion: k8s.keycloak.org/v2beta1
+  # Name of the Keycloak instance (also prefix of the operator generated objects: <name>-service, <name>-initial-admin...)
+  name: default
+  # Database credentials Secret (keys username and password), referenced by spec.db of the Keycloak CR
+  # and by the development database when database.enabled is true
+  dbSecret:
+    # Render the database Secret (false: the Secret is expected to exist, or spec.db sets its own references)
+    enabled: false
+    # Name of the Secret (default: <rhbk.name>-db-secret)
+    name: ""
+    # Database user
+    username: keycloak
+    # Database password (secret, required unless externalSecret is used). Use an Argo CD Vault Plugin
+    # placeholder (<path:kv/data/...#key>) or a values file kept out of Git
+    password: ""
+    # Source the Secret from an external store instead (External Secrets Operator)
+    externalSecret:
+      # Use the External Secrets Operator to produce this Secret
+      enabled: false
+      # Map secretKey -> ESO remoteRef; the keys username and password are required
+      remoteRefs: {}
+      #   username:
+      #     key: kv/rhbk/db
+      #     property: username
+      #   password:
+      #     key: kv/rhbk/db
+      #     property: password
+  # Bootstrap admin Secret (keys username and password), referenced by spec.bootstrapAdmin.user.secret.
+  # When disabled, the operator generates the Secret <rhbk.name>-initial-admin (user temp-admin).
+  # Ignored by Keycloak once the master realm exists
+  adminSecret:
+    # Render the bootstrap admin Secret
+    enabled: false
+    # Name of the Secret (default: <rhbk.name>-bootstrap-admin)
+    name: ""
+    # Temporary admin user name
+    username: admin
+    # Temporary admin password (secret, required unless externalSecret is used)
+    password: ""
+    # Source the Secret from an external store instead (External Secrets Operator)
+    externalSecret:
+      # Use the External Secrets Operator to produce this Secret
+      enabled: false
+      # Map secretKey -> ESO remoteRef; the keys username and password are required
+      remoteRefs: {}
+  # Keycloak CR specifications. The chart merges this spec over a generated base:
+  # - db.vendor, db.usernameSecret and db.passwordSecret when dbSecret.enabled or database.enabled
+  # - db.host and db.database when database.enabled
+  # - bootstrapAdmin.user.secret when adminSecret.enabled
+  # - ingress.enabled false when route.enabled (the chart route replaces the operator ingress)
+  # Every key set here takes precedence over the generated base
+  spec: |
+    instances: 1
+    http:
+      httpEnabled: true
+    hostname:
+      strict: false
+    proxy:
+      headers: xforwarded
+
+# Expose the Keycloak instance with an OpenShift Route (the operator only manages a Kubernetes Ingress)
+route:
+  # Enable the route (also disables the operator ingress of the Keycloak CR)
+  enabled: false
+  # Name of the route (default: rhbk.name)
+  name: ""
+  # Host of the route (empty: generated by OpenShift). Set the same value in spec.hostname.hostname
+  # of the Keycloak CR when hostname.strict is true
+  host: ""
+  # TLS termination: edge (to the http port), reencrypt or passthrough (to the https port)
+  termination: edge
+  # Policy for plain HTTP requests (edge and reencrypt only)
+  insecureEdgeTerminationPolicy: Redirect
+  # Target port of the <rhbk.name>-service Service (empty: http for edge, https for reencrypt and passthrough)
+  targetPort: ""
+  # Additional route annotations (ex: haproxy.router.openshift.io/timeout)
+  annotations: {}
+
+# Import realms in the Keycloak instance (KeycloakRealmImport CR). An import never overwrites an existing realm
+rhbk_realms:
+  # Enable the realm imports
+  enabled: false
+  # List of realms to import
+  list:
+      # Name of the KeycloakRealmImport CR
+    - name: "myrealm"
+      # Enable this realm import
+      enabled: true
+      # Name of the target Keycloak CR (default: rhbk.name)
+      keycloakCRName: ""
+      # Map of placeholders (${KEY} in the realm) resolved from Secrets of the namespace
+      placeholders: {}
+      #   MYAPP_CLIENT_SECRET:
+      #     secret:
+      #       name: myapp-client-secret
+      #       key: secret
+      # The realm definition (full RealmRepresentation)
+      realm: |
+        realm: myrealm
+        displayName: My Realm
+        enabled: true
+  # Secrets of the namespace read by the placeholders of the realm imports (client secrets...), rendered before the
+  # imports. Each entry renders a Secret from `data`, or an ExternalSecret when externalSecret.enabled is true
+  secrets: []
+  #   - name: myapp-client-secret
+  #     enabled: true
+  #     # Map key -> value (secret values: Argo CD Vault Plugin placeholders or a values file kept out of Git)
+  #     data:
+  #       secret: ""
+  #     externalSecret:
+  #       enabled: false
+  #       remoteRefs:
+  #         secret:
+  #           key: kv/rhbk/myapp
+  #           property: client_secret
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-rhbk"
+    display_name: Default RHBK
+    description: Red Hat build of Keycloak configured by STARTX
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "rhbk-operator"
+    namespace: "default-rhbk"
+    version: "v26.6.9-opr.1"
+    operator:
+      channel: stable-v26.6
+      name: rhbk-operator
+      installPlanApproval: Manual
+      csv: rhbk-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "rhbk-operator"
+    namespace: "default-rhbk"
+    providedAPIs: "Keycloak.v2beta1.k8s.keycloak.org,KeycloakRealmImport.v2beta1.k8s.keycloak.org"
