@@ -1,0 +1,36 @@
+{{- if .Values.tuned.enabled -}}
+{{- $name := .Values.tuned.name | default "openshift-elasticsearch" -}}
+{{- /* a Tuned resource is only read in the namespace of the Node Tuning Operator */ -}}
+apiVersion: tuned.openshift.io/v1
+kind: Tuned
+metadata:
+  name: {{ $name | quote }}
+  namespace: "openshift-cluster-node-tuning-operator"
+  labels:
+    {{- include "cluster-eck.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-tuned"
+  annotations:
+    {{- include "cluster-eck.annotations" . | nindent 4 }}
+    {{- if .Values.tuned.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "5"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  profile:
+    - name: {{ $name | quote }}
+      data: |
+        [main]
+        summary=Kernel settings required by Elasticsearch
+        include={{ .Values.tuned.include | default "openshift-node" }}
+        [sysctl]
+        vm.max_map_count={{ .Values.tuned.maxMapCount | default 1048576 | int64 }}
+  recommend:
+    - profile: {{ $name | quote }}
+      priority: {{ .Values.tuned.priority | default 20 | int }}
+      match:
+        {{- toYaml (.Values.tuned.match | default (list (dict "label" "node-role.kubernetes.io/worker"))) | nindent 8 }}
+{{- end -}}

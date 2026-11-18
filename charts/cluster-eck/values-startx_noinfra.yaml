@@ -1,0 +1,131 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: eck
+  app: startx-eck
+  version: "3.5.0"
+
+externalSecretDefaults:
+  apiVersion: external-secrets.io/v1
+  refreshInterval: 1h
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+tuned:
+  enabled: true
+  hooked: false
+  name: openshift-elasticsearch
+  maxMapCount: 1048576
+  include: openshift-node
+  priority: 20
+  match:
+    - label: node-role.kubernetes.io/worker
+
+elasticsearch:
+  enabled: true
+  hooked: false
+  list:
+    - name: startx
+      labels: {}
+      route:
+        enabled: false
+      spec:
+        version: 9.5.0
+        nodeSets:
+          - name: default
+            count: 3
+            config:
+              node.roles: ["master", "data", "ingest"]
+            podTemplate:
+              spec:
+                containers:
+                  - name: elasticsearch
+                    resources:
+                      requests:
+                        cpu: "1"
+                        memory: 4Gi
+                      limits:
+                        memory: 4Gi
+            volumeClaimTemplates:
+              - metadata:
+                  name: elasticsearch-data
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 50Gi
+
+kibana:
+  enabled: true
+  hooked: false
+  list:
+    - name: startx
+      labels: {}
+      route:
+        enabled: true
+        termination: passthrough
+      spec:
+        version: 9.5.0
+        count: 1
+        elasticsearchRef:
+          name: startx
+        podTemplate:
+          spec:
+            containers:
+              - name: kibana
+                resources:
+                  requests:
+                    cpu: 500m
+                    memory: 1Gi
+                  limits:
+                    memory: 2Gi
+
+secrets:
+  enabled: false
+  list: []
+
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-eck"
+    display_name: "Startx Elasticsearch"
+    requester: startx
+    description: Elasticsearch clusters configured by STARTX
+
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "elasticsearch-eck-operator-certified"
+    namespace: "openshift-operators"
+    version: "v3.5.0"
+    operator:
+      channel: "stable"
+      name: elasticsearch-eck-operator-certified
+      installPlanApproval: Manual
+      # csv: elasticsearch-eck-operator-certified
+      source:
+        name: certified-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: false
+    hooked: false
+    name: "elasticsearch-eck-operator-certified"
+    namespace: "openshift-operators"
+    target: "all-ns"
+    providedAPIs: "Elasticsearch.v1.elasticsearch.k8s.elastic.co,Kibana.v1.kibana.k8s.elastic.co"
