@@ -270,3 +270,5 @@ the `k8s.ovn.org/user-defined-network-protection` finalizer added by OVN-Kuberne
 | -------- | ---------- | ------------------------------------------------------- |
 | 21.3.321 | 2026-11-08 | Initial chart creation                                  |
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
+| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
+| 21.3.370 | 2026-11-18 | publish stable update for the full repository |

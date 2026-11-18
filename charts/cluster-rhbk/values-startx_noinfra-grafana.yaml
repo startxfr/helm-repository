@@ -1,0 +1,198 @@
+# Default values for configuration of a STARTX cluster, startx realm with a grafana client for the cluster-grafana chart
+# (values-startx_noinfra-rhbk.yaml). Replace apps.example.com by the apps domain of the cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: rhbk
+  app: startx-rhbk
+  version: "26.6.9"
+externalSecretDefaults:
+  apiVersion: external-secrets.io/v1
+  refreshInterval: 1h
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+database:
+  enabled: false
+  name: ""
+  image: registry.redhat.io/rhel9/postgresql-16:latest
+  database: keycloak
+  storageClassName: ""
+  size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+rhbk:
+  enabled: false
+  hooked: false
+  apiVersion: k8s.keycloak.org/v2beta1
+  name: startx
+  dbSecret:
+    enabled: true
+    name: ""
+    username: keycloak
+    # Demo password only: override it with an Argo CD Vault Plugin placeholder
+    # (<path:kv/data/rhbk#db_password>) or use externalSecret outside of demo environments
+    password: "startx-rhbk-demo"
+    externalSecret:
+      enabled: false
+      remoteRefs: {}
+  adminSecret:
+    enabled: false
+    name: ""
+    username: admin
+    password: ""
+    externalSecret:
+      enabled: false
+      remoteRefs: {}
+  spec: |
+    instances: 1
+    http:
+      httpEnabled: true
+    hostname:
+      strict: false
+    proxy:
+      headers: xforwarded
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1700Mi
+      limits:
+        memory: 2Gi
+route:
+  enabled: false
+  name: ""
+  host: ""
+  termination: edge
+  insecureEdgeTerminationPolicy: Redirect
+  targetPort: ""
+  annotations: {}
+rhbk_realms:
+  enabled: false
+  list:
+    - name: startx
+      enabled: true
+      keycloakCRName: ""
+      placeholders:
+        GRAFANA_CLIENT_SECRET:
+          secret:
+            name: startx-grafana-client
+            key: client-secret
+      realm: |
+        realm: startx
+        displayName: STARTX
+        enabled: true
+        registrationAllowed: false
+        loginWithEmailAllowed: true
+        sslRequired: external
+        clients:
+          - clientId: startx-demo
+            name: STARTX demo application
+            enabled: true
+            protocol: openid-connect
+            publicClient: true
+            standardFlowEnabled: true
+            directAccessGrantsEnabled: false
+            redirectUris:
+              - "https://startx-demo.example.com/*"
+            webOrigins:
+              - "https://startx-demo.example.com"
+          - clientId: grafana
+            name: Grafana
+            enabled: true
+            protocol: openid-connect
+            publicClient: false
+            clientAuthenticatorType: client-secret
+            secret: "${GRAFANA_CLIENT_SECRET}"
+            standardFlowEnabled: true
+            directAccessGrantsEnabled: false
+            rootUrl: "https://startx-default-grafana.apps.example.com"
+            redirectUris:
+              - "https://startx-default-grafana.apps.example.com/login/generic_oauth"
+            webOrigins:
+              - "https://startx-default-grafana.apps.example.com"
+            attributes:
+              post.logout.redirect.uris: "https://startx-default-grafana.apps.example.com/login"
+              pkce.code.challenge.method: S256
+            protocolMappers:
+              - name: grafana roles
+                protocol: openid-connect
+                protocolMapper: oidc-usermodel-client-role-mapper
+                consentRequired: false
+                config:
+                  usermodel.clientRoleMapping.clientId: grafana
+                  claim.name: roles
+                  jsonType.label: String
+                  multivalued: "true"
+                  id.token.claim: "true"
+                  access.token.claim: "true"
+                  userinfo.token.claim: "true"
+        roles:
+          client:
+            grafana:
+              - name: grafanaadmin
+                description: Grafana server administrator
+              - name: admin
+                description: Grafana organization administrator
+              - name: editor
+                description: Grafana editor
+              - name: viewer
+                description: Grafana viewer
+  secrets:
+    - name: startx-grafana-client
+      enabled: true
+      data:
+        # Demo secret only, identical to oidc.clientSecret.value of the cluster-grafana values-startx_noinfra-rhbk.yaml:
+        # override it with an Argo CD Vault Plugin placeholder or use externalSecret outside of demo environments
+        client-secret: "startx-grafana-demo-secret"
+      externalSecret:
+        enabled: false
+        remoteRefs: {}
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-rhbk"
+    display_name: "Startx RHBK"
+    requester: startx
+    description: Red Hat build of Keycloak configured by STARTX
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "rhbk-operator"
+    namespace: "default-rhbk"
+    version: "v26.6.9-opr.1"
+    operator:
+      channel: stable-v26.6
+      name: rhbk-operator
+      installPlanApproval: Manual
+      csv: rhbk-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+        # resources:
+        #   limits:
+        #     cpu: 400m
+        #   requests:
+        #     cpu: 400m
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "rhbk-operator"
+    namespace: "default-rhbk"
+    providedAPIs: "Keycloak.v2beta1.k8s.keycloak.org,KeycloakRealmImport.v2beta1.k8s.keycloak.org"

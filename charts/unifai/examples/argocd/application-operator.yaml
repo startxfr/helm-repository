@@ -1,0 +1,30 @@
+# Operator : cluster-wide, installed once
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: unifai-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: unifai
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: unifai-operator
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: unifai
+    targetRevision: 21.3.363
+    helm:
+      values: |
+        stack:
+          enabled: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

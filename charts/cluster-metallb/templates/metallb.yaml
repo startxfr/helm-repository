@@ -1,0 +1,28 @@
+{{- if .Values.metallb.enabled -}}
+{{- $namespace := .Values.project.project.name | default "metallb-system" -}}
+{{- $name := .Values.metallb.name | default "metallb" -}}
+apiVersion: metallb.io/v1beta1
+kind: MetalLB
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-metallb.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-instance"
+  annotations:
+    {{- include "cluster-metallb.annotations" . | nindent 4 }}
+    {{- if .Values.metallb.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "15"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "15"
+{{- if .Values.metallb.spec }}
+spec:
+  {{- include "cluster-metallb.spec" (dict "kind" "MetalLB" "name" $name "spec" .Values.metallb.spec) | nindent 2 }}
+{{- else }}
+spec: {}
+{{- end }}
+{{- end -}}

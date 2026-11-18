@@ -1,0 +1,39 @@
+{{- if .Values.monitoringStacks.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-prometheus" -}}
+{{- range .Values.monitoringStacks.list }}
+{{- $name := required "monitoringStacks.list: every item needs a name" .name }}
+{{- $spec := deepCopy (.spec | default dict) -}}
+{{- if not (kindIs "map" $spec) -}}
+{{- fail (printf "MonitoringStack %s: spec must be a YAML map, not a text block" $name) -}}
+{{- end -}}
+{{- /* without an explicit resourceSelector the stack would not discover anything: select the label set by
+       this chart on the resources declared with stack: <name> */ -}}
+{{- if not (hasKey $spec "resourceSelector") -}}
+{{- $_ := set $spec "resourceSelector" (dict "matchLabels" (dict "monitoring.rhobs/stack" $name)) -}}
+{{- end }}
+---
+apiVersion: monitoring.rhobs/v1alpha1
+kind: MonitoringStack
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ .namespace | default $namespace | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-monitoringstack"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    {{- if $.Values.monitoringStacks.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "15"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- toYaml $spec | nindent 2 }}
+{{- end }}
+{{- end -}}

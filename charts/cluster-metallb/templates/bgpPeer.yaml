@@ -1,0 +1,30 @@
+{{- if .Values.bgpPeers.enabled -}}
+{{- $namespace := .Values.project.project.name | default "metallb-system" -}}
+{{- range .Values.bgpPeers.list }}
+{{- $name := required "bgpPeers.list: every item needs a name" .name }}
+---
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-metallb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-bgppeer"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-metallb.annotations" $ | nindent 4 }}
+    {{- if $.Values.bgpPeers.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "35"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "35"
+spec:
+  {{- include "cluster-metallb.spec" (dict "kind" "BGPPeer" "name" $name "spec" .spec "required" true) | nindent 2 }}
+{{- end }}
+{{- end -}}

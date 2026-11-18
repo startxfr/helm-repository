@@ -17,7 +17,7 @@ export
 # -- Tunables ------------------------------------------------------------------
 CHART       ?=
 VERSION     ?=
-DESC        ?= "publish stable update for the full repository"
+DESC        ?= publish stable update for the full repository
 INTERACTIVE ?= false
 
 SX          := ./sx-helm
@@ -140,7 +140,7 @@ package-all:
 
 release: _require-chart
 	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC="$(DESC)" \
-	  $(SX) $(CHART) release $(VERSION) "$(DESC)"
+	  $(SX) $(CHART) release
 
 release-all:
 	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC="$(DESC)" \

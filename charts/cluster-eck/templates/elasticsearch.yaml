@@ -1,0 +1,34 @@
+{{- if .Values.elasticsearch.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-eck" -}}
+{{- range .Values.elasticsearch.list }}
+{{- $name := required "elasticsearch.list: every item needs a name" .name }}
+{{- $ns := .namespace | default $namespace }}
+---
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $ns | quote }}
+  labels:
+    {{- include "cluster-eck.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-elasticsearch"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-eck.annotations" $ | nindent 4 }}
+    {{- if $.Values.elasticsearch.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "15"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- include "cluster-eck.spec" (dict "kind" "Elasticsearch" "name" $name "spec" .spec "required" true) | nindent 2 }}
+{{- if dig "route" "enabled" false . }}
+{{ include "cluster-eck.route" (dict "root" $ "name" (printf "%s-es" $name) "namespace" $ns "service" (printf "%s-es-http" $name) "config" .route "wave" "20") }}
+{{- end }}
+{{- end }}
+{{- end -}}

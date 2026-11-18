@@ -1,0 +1,37 @@
+# Example values for a plain Kubernetes cluster (experimental, see README).
+# Replace every example.com value, the storage classes and the Ingress settings with yours.
+
+exposure:
+  type: ingress
+  # Hosts become unifai-ui-<namespace>.<domain> and unifai-identity-<namespace>.<domain>
+  domain: apps.example.com
+  ingress:
+    className: nginx
+    # TLS Secret valid for both hosts, created beforehand in the release namespace
+    tlsSecretName: unifai-tls
+    # The operator needs the Route API to exist
+    installRouteCRD: true
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    uiAnnotations:
+      # The web interface serves HTTPS on its internal port
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+
+stack:
+  spec:
+    identity:
+      # The managed Keycloak needs OpenShift : bring your own Keycloak realm
+      external:
+        url: https://keycloak.example.com
+        realm: unifai
+        clientId: unifai
+        clientSecret:
+          name: unifai-oidc
+          key: client-secret
+    exposure:
+      # The default policies only admit the OpenShift router ; they would block your Ingress controller
+      networkPolicy: false
+    storage:
+      className: standard
+      # Must support ReadWriteMany
+      sharedClassName: nfs

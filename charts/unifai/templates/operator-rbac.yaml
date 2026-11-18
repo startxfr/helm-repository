@@ -1,0 +1,160 @@
+{{- if .Values.operator.enabled -}}
+# Names and rules follow the upstream manifests (fork/unifai-operator/config/rbac, prefix unifai-operator-).
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: unifai-operator-controller-manager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+{{- with .Values.operator.imagePullSecrets }}
+imagePullSecrets:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: unifai-operator-manager-role
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+rules:
+{{ .Files.Get "files/manager-rules.yaml" }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: unifai-operator-manager-rolebinding
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: unifai-operator-manager-role
+subjects:
+  - kind: ServiceAccount
+    name: unifai-operator-controller-manager
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: unifai-operator-manager-role
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+rules:
+  - apiGroups: ["monitoring.coreos.com"]
+    resources: ["servicemonitors"]
+    verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: unifai-operator-manager-rolebinding
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: unifai-operator-manager-role
+subjects:
+  - kind: ServiceAccount
+    name: unifai-operator-controller-manager
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: unifai-operator-leader-election-role
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: unifai-operator-leader-election-rolebinding
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: unifai-operator-leader-election-role
+subjects:
+  - kind: ServiceAccount
+    name: unifai-operator-controller-manager
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: unifai-operator-metrics-auth-role
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+rules:
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["tokenreviews"]
+    verbs: ["create"]
+  - apiGroups: ["authorization.k8s.io"]
+    resources: ["subjectaccessreviews"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: unifai-operator-metrics-auth-rolebinding
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: unifai-operator-metrics-auth-role
+subjects:
+  - kind: ServiceAccount
+    name: unifai-operator-controller-manager
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: unifai-operator-metrics-reader
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+rules:
+  - nonResourceURLs: ["/metrics"]
+    verbs: ["get"]
+{{- end }}

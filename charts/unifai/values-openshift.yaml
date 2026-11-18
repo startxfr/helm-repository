@@ -1,0 +1,17 @@
+# Example values for OpenShift : Routes, a Keycloak managed by the operator, explicit storage classes.
+# Replace the storage classes with the ones of your cluster.
+
+exposure:
+  type: route
+
+stack:
+  spec:
+    profile: dev
+    identity:
+      adminUsers:
+        - admin
+      keycloak: {}
+    storage:
+      className: gp3-csi
+      # Must support ReadWriteMany
+      sharedClassName: nfs

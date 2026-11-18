@@ -1,0 +1,23 @@
+UnifAI {{ .Chart.AppVersion }} is being deployed in namespace {{ .Release.Namespace }}.
+
+{{ include "unifai.notes" . }}
+{{- if .Values.project }}{{- if .Values.project.enabled }}
+{{ include "project.notes" .Values.project }}
+{{- end }}{{- end }}
+{{- if .Values.stack.enabled }}
+
+The operator deploys the platform in the background, which takes several minutes on a first install.
+Follow the progress with :
+
+  kubectl -n {{ .Release.Namespace }} get unifaistack unifai -w
+
+Once the phase is Ready, the published addresses are listed by :
+
+  kubectl -n {{ .Release.Namespace }} get unifaistack unifai -o jsonpath='{.status.endpoints}'
+
+Before uninstalling this release, delete the stack first and wait for it to be gone,
+otherwise the uninstall hangs :
+
+  helm upgrade {{ .Release.Name }} <chart> -n {{ .Release.Namespace }} --reuse-values --set stack.enabled=false
+  kubectl -n {{ .Release.Namespace }} wait --for=delete unifaistack/unifai --timeout=15m
+{{- end }}

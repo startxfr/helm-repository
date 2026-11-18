@@ -96,7 +96,7 @@ function routerArchiveLegacy {
 # Publish the devel sub-repo only (S3 devel path + docs/repos/devel/index.yaml).
 # Called from devel branch; does not touch stable/noschema/release-XX repos.
 function routerPublishDevel {
-    doHelmrepositoryRefresh "$HELM_REPO_SUBDEV" "$HELM_REPO_SUBDEV" "$HELM_REPO_BASEURL" Publish 36
+    doHelmrepositoryRefresh "$HELM_REPO_SUBDEV" "$HELM_REPO_SUBDEV" "$HELM_REPO_BASEURL" Publish 36 no
 }
 
 # Release all charts on the current branch without the full repository flow.
@@ -206,10 +206,18 @@ function doHelmrepositoryRefresh {
     local helmrepourl="${3:-$HELM_REPO_BASEURL}"
     local action="${4:-Publish}"
     local color="${5:-36}"
+    local domerge="${6:-yes}"
     doHelmrepositoryGenerate "${reponame}" "${subrepo}" "${helmrepourl}" "${action}" "${color}"
     echo -e "\e[${color}m${action}\e[0m update index for \e[1m${reponame}\e[0m in \e[1m$HELM_REPO_LOCALIDX\e[0m"
     git add "$HELM_REPO_LOCALIDX" &>/dev/null
     git commit -m "[docs] update repository ${reponame} index" "$HELM_REPO_LOCALIDX" &>/dev/null
+    if [[ "$domerge" == "no" ]]; then
+        # devel pre-release: only push the work branch, master is left untouched
+        echo -e "\e[${color}m${action}\e[0m push \e[1m$WORK_BRANCH\e[0m (no merge to $MASTER_BRANCH)"
+        git push $GITHUB_REPONAME $WORK_BRANCH
+        git push $GITLAB_REPONAME $WORK_BRANCH
+        return 0
+    fi
     echo -e "\e[${color}m${action}\e[0m merge \e[1m$WORK_BRANCH\e[0m → \e[1m$MASTER_BRANCH\e[0m"
     git checkout $MASTER_BRANCH &>/dev/null
     git merge --commit --no-edit $WORK_BRANCH

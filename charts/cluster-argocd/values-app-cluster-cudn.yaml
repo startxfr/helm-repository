@@ -1,0 +1,102 @@
+# Auto-generated values-app file for deploying cluster-cudn via argocd
+# Source: examples/argocd/ from the cluster-cudn chart
+
+argocd_project:
+  enabled: true
+  list:
+    - name: 'infra-cudn'
+      namespace: 'openshift-gitops'
+      wave: "-10"
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'default-cudn'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles:
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, proj:infra-cudn:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+
+# Applications
+application:
+  enabled: true
+  list:
+    # Application configuration and instances
+    - name: 'infra-cudn-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "10"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-cudn'
+      source:
+        path: 'charts/cluster-cudn'
+        repo: 'https://gitlab.com/startx1/helm.git'
+        rev: 'stable'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          namespaces:
+            enabled: true
+          clusterNetworks:
+            enabled: true
+          networks:
+            enabled: true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+      ignoreDifferences: |
+        - group: k8s.ovn.org
+          jsonPointers:
+          - /metadata/finalizers
+          kind: ClusterUserDefinedNetwork
+        - group: k8s.ovn.org
+          jsonPointers:
+          - /metadata/finalizers
+          kind: UserDefinedNetwork
+    # Creates project namespace and RBAC
+    - name: 'infra-cudn-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      wave: "1"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-cudn'
+      source:
+        path: 'charts/cluster-cudn'
+        repo: 'https://gitlab.com/startx1/helm.git'
+        rev: 'stable'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          namespaces:
+            enabled: false
+          clusterNetworks:
+            enabled: false
+          networks:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: true
+  list: []

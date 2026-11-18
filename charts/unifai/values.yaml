@@ -1,0 +1,134 @@
+# Default values for unifai.
+#
+# This chart installs the UnifAI operator and creates one UnifaiStack resource ;
+# the operator then deploys the whole UnifAI platform in the release namespace.
+# Defaults target OpenShift. For plain Kubernetes start from values-kubernetes.yaml.
+
+# Application deployment context
+context: &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: unifai
+  # Application name (functional tenant, default use Chart name)
+  app: unifai
+  # Version name of this application (default use Chart appVersion)
+  version: "0.1.71"
+
+# UnifAI operator (cluster-wide : install it once per cluster)
+operator:
+  # Install the operator (Deployment, RBAC). Set to false when the operator already runs on
+  # the cluster (installed by OLM or by another release of this chart).
+  enabled: true
+  # Operator image, pinned by digest to the UnifAI release v0.1.71
+  image: quay.io/zuno/unifai-operator@sha256:7f23d864dd4125ecbeb6bb2354ce540221c917966114e1888aee76529cc95ed6
+  # Image pull policy of the operator
+  imagePullPolicy: IfNotPresent
+  # Pull secrets for the operator image (list of {name: ...})
+  imagePullSecrets: []
+  # Resources of the operator container
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      cpu: 50m
+      memory: 192Mi
+  # Node selector of the operator pod
+  nodeSelector: {}
+  # Tolerations of the operator pod
+  tolerations: []
+  # Create the unifai-view, unifai-edit and unifai-admin ClusterRoles for end users
+  userRoles: true
+  # Prometheus scraping of the operator metrics
+  metrics:
+    # Create a ServiceMonitor (requires the prometheus-operator CRDs)
+    serviceMonitor: false
+
+# UnifAI platform, described by one UnifaiStack resource named "unifai" in the release namespace
+stack:
+  # Create the UnifaiStack resource
+  enabled: true
+  # Content of the UnifaiStack "spec", passed as is to the operator and validated by its CRD.
+  # Full reference : kubectl explain unifaistack.spec --recursive
+  spec:
+    # Sizing profile : dev (small requests, no autoscaling) or prod
+    profile: dev
+    # Tag of the UnifAI application images
+    version: v0.1.71
+    # Registry holding the UnifAI application images
+    imageRegistry: quay.io/zuno
+    # Application images pinned by digest (UnifAI release v0.1.71, linux/amd64 only)
+    images:
+      rag: quay.io/zuno/unifai-rag@sha256:d5f846d3b338a948c127d039c6a68982e91c6ea37385b8a784e3d51e14adb4e7
+      multiagent: quay.io/zuno/unifai-multiagent@sha256:3bbeb9fa46b8a9ab678e1425d2bd31e3d3438858e009fcaf57c0377660556ca0
+      backend: quay.io/zuno/unifai-backend@sha256:bdf39cc0495060069f5317644010bfbc9169a18dedcf84125a5da6816dde9496
+      identity: quay.io/zuno/unifai-identity@sha256:e57be1af139efcbad8c42424693772109dcb79d479e6025d564caa66fd242e1f
+      ui: quay.io/zuno/unifai-ui@sha256:d7c7c37a2e03dece368dff131156d4bd926bfed0a32f52ac536e887b2cdad136
+    # Identity provider. UnifAI always needs a Keycloak realm : either "keycloak" (deployed by
+    # the operator, OpenShift only) or "external" (your own Keycloak). Setting "external"
+    # replaces the default "keycloak" block.
+    identity:
+      # Keycloak user names granted the UnifAI administrator role
+      adminUsers:
+        - admin
+      # Keycloak deployed and configured by the operator (requires OpenShift and OLM)
+      keycloak: {}
+      # external:
+      #   url: https://keycloak.example.com
+      #   realm: unifai
+      #   clientId: unifai
+      #   clientSecret:
+      #     name: unifai-oidc
+      #     key: client-secret
+    # Storage classes ; empty means the cluster default class
+    storage:
+      # Class for ReadWriteOnce volumes (databases)
+      className: ""
+      # Class for ReadWriteMany volumes (shared uploads and logs)
+      sharedClassName: ""
+
+# How the UnifAI web interface and identity service are published
+exposure:
+  # route   : OpenShift Routes created by the operator (default)
+  # ingress : Kubernetes Ingresses created by this chart
+  # none    : nothing published, reach the Services with port-forward
+  type: route
+  # DNS domain of the published hosts (unifai-ui-<namespace>.<domain>). Empty on OpenShift
+  # means the cluster apps domain ; required with type ingress.
+  domain: ""
+  # Settings used with type ingress
+  ingress:
+    # Ingress class name ; empty means the cluster default class
+    className: ""
+    # Annotations added to both Ingresses
+    annotations: {}
+    # Annotations added to the web interface Ingress only (its backend speaks HTTPS)
+    uiAnnotations: {}
+    # Existing TLS Secret presented by the Ingresses for both hosts (required : UnifAI only
+    # generates https:// URLs)
+    tlsSecretName: ""
+    # Install a schema-less Route CRD : the operator always creates Routes and fails without
+    # that API. Never enable it on OpenShift.
+    installRouteCRD: false
+    # Generate the self-signed certificate (Secret unifai-ui-tls) the web interface serves on
+    # its internal port, as the OpenShift service CA would. Disable it to provide that Secret
+    # yourself (for example with cert-manager), which is required under ArgoCD.
+    createUiServingCert: true
+
+# Configuration of the project (namespace, see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "unifai"
+    display_name: UnifAI
+    description: UnifAI multi-agent AI platform
+    additionalLabels: ""

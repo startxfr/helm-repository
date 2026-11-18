@@ -23,6 +23,7 @@ Helm chart without prefix are basic chart. Basic charts configure basic element 
 | **[project](charts/project.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/project)  | create a project with limits, quotas, networkpolicy and rbac set |
 | **[operator](charts/operator.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/operator) | create an operator with subscription (openshift) or CRD (k8s)    |
 | **[sxapi](charts/sxapi.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi)    | deploy a small micro-service endpoint                            |
+| **[unifai](charts/unifai.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/unifai)   | deploy the UnifAI multi-agent AI platform (operator and stack)   |
 
 
 ### Cluster Charts
@@ -50,6 +51,7 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-3scale](charts/cluster-3scale.md)**               | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-3scale)        | deploy a 3Scale infrastructure at the cluster level                                                                                   |
 | **[cluster-vpa](charts/cluster-vpa.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-vpa)           | enable VerticalPodAutoscaler at the cluster level                                                                                     |
 | **[cluster-sso](charts/cluster-sso.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-sso)           | enable Redhat-SSO at the cluster level                                                                                                |
+| **[cluster-rhbk](charts/cluster-rhbk.md)**                   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-rhbk)          | enable Red Hat build of Keycloak (RHBK) at the cluster level                                                                          |
 | **[cluster-ptp](charts/cluster-ptp.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ptp)           | enable Precision Time Protocol at the cluster level                                                                                   |
 | **[cluster-nexus](charts/cluster-nexus.md)**                 | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-nexus)         | enable Nexus at the cluster level                                                                                                     |
 | **[cluster-keycloak](charts/cluster-keycloak.md)**           | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-keycloak)      | enable Keycloak at the cluster level                                                                                                  |
@@ -80,11 +82,26 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-dvo](charts/cluster-dvo.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-dvo)           | enable Deployment Validation Operator (DVO)  to checks deployments and other resources against a curated collection of best practices |
 | **[cluster-kargo](charts/cluster-kargo.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kargo)           | enable Kargo builds upon GitOps principles to manage and automate the promotion of stage lifecycle  |
 | **[cluster-keepalived](charts/cluster-keepalived.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-keepalived)           | enable keepalived builds upon GitOps principles to manage and automate the keepalived lifecycle  |
-| **[cluster-unifai](charts/cluster-unifai.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-unifai)           | deploy UnifAI multi-agent AI platform at the cluster level  |
 | **[cluster-qdrant](charts/cluster-qdrant.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-qdrant)           | deploy Qdrant vector database at the cluster level  |
 | **[cluster-etcdbackup](charts/cluster-etcdbackup.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-etcdbackup)           | deploy a periodic etcd backup CronJob to an S3-compatible object store  |
 | **[cluster-trident](charts/cluster-trident.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-trident)           | enable NetApp Trident CSI storage (operator, backends, storage classes) at the cluster level  |
 | **[cluster-kasten](charts/cluster-kasten.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kasten)           | enable Kasten K10 backup and data management at the cluster level  |
+| **[cluster-cudn](charts/cluster-cudn.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-cudn) | configure OVN-Kubernetes user-defined networks (ClusterUserDefinedNetwork and UserDefinedNetwork) |
+| **[cluster-dell-csm](charts/cluster-dell-csm.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-dell-csm) | configure the Dell Container Storage Modules (CSM) operator and a Dell CSI storage driver |
+| **[cluster-eck](charts/cluster-eck.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-eck) | configure the Elastic Cloud on Kubernetes (ECK) operator, Elasticsearch clusters and Kibana |
+| **[cluster-loki](charts/cluster-loki.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-loki) | configure the Loki log store (LokiStack) of OpenShift Logging |
+| **[cluster-metallb](charts/cluster-metallb.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metallb) | configure MetalLB address pools, layer 2 and BGP advertisements on bare metal |
+| **[cluster-network-observability](charts/cluster-network-observability.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-network-observability) | configure Network Observability and its FlowCollector to visualize network flows |
+| **[cluster-prometheus](charts/cluster-prometheus.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-prometheus) | configure the Cluster Observability Operator and Prometheus monitoring stacks |
+| **[cluster-acm](charts/cluster-acm.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-acm) | configure Advanced Cluster Manager at the cluster level |
+| **[cluster-acs](charts/cluster-acs.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-acs) | configure Advanced Cluster Security (ACS/Stackrox) at the cluster level |
+| **[cluster-argocd](charts/cluster-argocd.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-argocd) | configure ArgoCD using the openshift gitops operator at the cluster level |
+| **[cluster-kafka](charts/cluster-kafka.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kafka) | configure Kafka at the cluster level |
+| **[cluster-odf](charts/cluster-odf.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-odf) | configure Openshift Data Foundation storage at the cluster level |
+| **[cluster-ods](charts/cluster-ods.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ods) | configure OpenDataScience at the cluster level |
+| **[cluster-percona](charts/cluster-percona.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-percona) | configure highly available PostgreSQL clusters with the Percona Operator for PostgreSQL |
+| **[cluster-redis](charts/cluster-redis.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-redis) | configure Redis clusters using the Opstree operator (and optionally redislabs operator) |
+| **[cluster-storage-efs](charts/cluster-storage-efs.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-storage-efs) | configure AWS EFS storage at the cluster level |
 
 ### Chaos Charts
 
@@ -118,6 +135,7 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 | **[example-fruitapp-project](charts/example-fruitapp-project.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-project) | Deploy fruitapp CI/CD demo with common and project structure (like namespaces)        |
 | **[example-fruitapp-shared](charts/example-fruitapp-shared.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-shared)  | Deploy shared component like database and secrets                                     |
 | **[example-fruitapp-app](charts/example-fruitapp-app.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-app)     | Deploy application stack into an environment                                          |
+| **[example-couchbase](charts/example-couchbase.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-couchbase) | An example of a simple micro-service using the couchbase backend chart |
 
 ### Deprecated Charts
 
@@ -126,6 +144,7 @@ List of the deprecated helm charts.
 | Chart                                              | Source                                                                                | Description                |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------- |
 | **[cluster-metering](charts/cluster-metering.md)** | [source](https://github.com/startxfr/helm-repository/tree/14/charts/cluster-metering) | REPLACED by costManagement |
+| **[cluster-unifai](charts/cluster-unifai.md)**     | [source](https://github.com/startxfr/helm-repository/tree/21.3.361/charts/cluster-unifai) | REPLACED by unifai         |
 | **[cluster-jenkins](charts/cluster-jenkins.md)**   | [source](https://github.com/startxfr/helm-repository/tree/14/charts/cluster-jenkins)  | NOT used anymore           |  | **[cluster-workspace](charts/cluster-workspace.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace) | REPLACED by cluster-devworkspaces chart |
 
 

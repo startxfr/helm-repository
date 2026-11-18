@@ -1,0 +1,250 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.18.0
+  name: unifaischedules.unifai.startx.fr
+spec:
+  group: unifai.startx.fr
+  names:
+    categories:
+    - unifai
+    kind: UnifaiSchedule
+    listKind: UnifaiScheduleList
+    plural: unifaischedules
+    shortNames:
+    - usch
+    singular: unifaischedule
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    - jsonPath: .spec.workflow
+      name: Workflow
+      type: string
+    - jsonPath: .status.scheduleId
+      name: ScheduleId
+      type: string
+    - jsonPath: .status.message
+      name: Message
+      priority: 1
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: UnifaiSchedule is a scheduled workflow (Temporal schedule).
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UnifaiScheduleSpec defines a scheduled run of a workflow.
+            properties:
+              inputs:
+                additionalProperties:
+                  type: string
+                description: Workflow inputs; `user_prompt` is required by UnifAI.
+                type: object
+                x-kubernetes-validations:
+                - message: inputs needs user_prompt
+                  rule: '''user_prompt'' in self'
+              owner:
+                default: admin
+                description: UnifAI user owning the object (workspace identity).
+                type: string
+              schedule:
+                description: 'ScheduleDefinition mirrors UnifAI''s ScheduleDefinition:
+                  exactly one of interval or cron_expression.'
+                properties:
+                  cron_expression:
+                    description: 5-field cron expression.
+                    maxLength: 64
+                    type: string
+                    x-kubernetes-validations:
+                    - message: cron_expression has 5 fields
+                      rule: self.matches('^\\s*\\S+(\\s+\\S+){4}\\s*$')
+                  end_at:
+                    maxLength: 64
+                    type: string
+                  interval:
+                    description: ISO-8601 duration, minimum PT1M.
+                    maxLength: 64
+                    type: string
+                    x-kubernetes-validations:
+                    - message: interval is an ISO-8601 duration of at least PT1M
+                      rule: self.matches('^P(T(\\d+H)?(\\d+M)?(\\d+S)?|\\d+D(T(\\d+H)?(\\d+M)?(\\d+S)?)?)$')
+                        && !self.matches('^P(0+D)?(T(0+H)?(0+M)?(0*[0-5]?[0-9]S)?)?$')
+                  overlap_policy:
+                    enum:
+                    - skip
+                    - buffer_one
+                    - cancel_other
+                    type: string
+                  remaining_actions:
+                    type: integer
+                    x-kubernetes-validations:
+                    - message: remaining_actions is at least 1
+                      rule: self >= 1
+                  start_at:
+                    maxLength: 64
+                    type: string
+                  timezone:
+                    type: string
+                type: object
+                x-kubernetes-validations:
+                - message: set exactly one of interval or cron_expression
+                  rule: has(self.interval) != has(self.cron_expression)
+                - message: end_at is after start_at
+                  rule: '!has(self.start_at) || !has(self.end_at) || !self.start_at.matches(''^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$'')
+                    || !self.end_at.matches(''^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$'')
+                    || timestamp(self.start_at) < timestamp(self.end_at)'
+              suspend:
+                description: Pause the schedule.
+                type: boolean
+              teamId:
+                description: Team workspace to use instead of the user's personal
+                  one.
+                type: string
+              teamRef:
+                description: |-
+                  UnifaiTeam (same namespace) whose team workspace to use; the object waits until the team is Ready.
+                  Exclusive with teamId.
+                type: string
+              unifaiName:
+                description: Name in UnifAI (defaults to metadata.name).
+                type: string
+              workflow:
+                description: UnifAI workflow (blueprint) name.
+                type: string
+            required:
+            - inputs
+            - schedule
+            - workflow
+            type: object
+            x-kubernetes-validations:
+            - message: teamId and teamRef are exclusive
+              rule: '!has(self.teamId) || !has(self.teamRef) || size(self.teamId)
+                == 0 || size(self.teamRef) == 0'
+          status:
+            description: ObjectStatus is the status of every UnifAI object kind.
+            properties:
+              blueprintId:
+                type: string
+              conditions:
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              hash:
+                description: Truncated SHA-256 of the resolved spec last pushed to
+                  UnifAI.
+                type: string
+              lastReconciled:
+                format: date-time
+                type: string
+              message:
+                type: string
+              observedGeneration:
+                format: int64
+                type: integer
+              phase:
+                description: Ready, Error, Pending, Running, Completed, Failed, Submitted,
+                  Suspended.
+                type: string
+              response:
+                description: RAG pipeline dispatch response (truncated JSON).
+                type: string
+              result:
+                description: Chat transcript (truncated JSON).
+                type: string
+              rid:
+                description: Id of the UnifAI library resource.
+                type: string
+              scheduleId:
+                type: string
+              sessionId:
+                type: string
+              teamId:
+                description: Id of the identity team (UnifaiTeam).
+                type: string
+              templateId:
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

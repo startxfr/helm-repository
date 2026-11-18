@@ -1,3 +1,64 @@
 apiVersion: v1
-entries: {}
-generated: "2026-06-16T00:00:00.000000000Z"
+entries:
+  unifai:
+  - annotations:
+      artifacthub.io/category: ai-machine-learning
+      artifacthub.io/changes: |
+        - kind: added
+          description: "Create chart unifai, replacing cluster-unifai : installs the UnifAI operator v0.1.71 and a UnifaiStack resource"
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/crds: |
+        - kind: UnifaiStack
+          version: v1alpha1
+          name: unifaistacks.unifai.startx.fr
+          displayName: UnifAI stack
+          description: A complete UnifAI platform deployed in one namespace
+      artifacthub.io/images: |
+        - name: unifai-operator
+          image: quay.io/zuno/unifai-operator@sha256:7f23d864dd4125ecbeb6bb2354ce540221c917966114e1888aee76529cc95ed6
+      artifacthub.io/license: GPL-3.0-or-later
+      artifacthub.io/operator: "true"
+      artifacthub.io/prerelease: "true"
+      artifacthub.io/signKey: |
+        fingerprint: FAC998719FEFFB2E03E119EE0F36B25015D3A34D
+        url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
+      category: basic
+    apiVersion: v2
+    appVersion: 0.1.71
+    created: "2026-11-18T13:35:31.476783605+01:00"
+    dependencies:
+    - alias: project
+      condition: project.enabled
+      name: project
+      repository: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/21
+      version: 21.3.309
+    description: Deploy the UnifAI multi-agent AI platform on OpenShift or Kubernetes,
+      by installing the UnifAI operator and a UnifaiStack resource
+    digest: d820bab0450bd22df9ee9fb317b51402ef0a22e0141b454d8e29df3038c03606
+    home: https://helm-repository.readthedocs.io/en/latest/charts/unifai
+    icon: https://helm-repository.readthedocs.io/en/latest/img/unifai.svg
+    keywords:
+    - kubernetes
+    - helm
+    - startx
+    - basic-chart
+    - unifai
+    - ai
+    - multi-agent
+    - rag
+    - operator
+    kubeVersion: '>=1.30.0-0'
+    maintainers:
+    - email: dev@startx.fr
+      name: STARTX
+      url: https://www.startx.fr
+    name: unifai
+    sources:
+    - https://github.com/startxfr/UnifAI
+    - https://github.com/redhat-community-ai-tools/UnifAI
+    - https://github.com/startxfr/helm-repository/tree/master/charts/unifai
+    type: application
+    urls:
+    - https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/devel/unifai-21.3.363.tgz
+    version: 21.3.363
+generated: "2026-11-18T13:35:31.468524322+01:00"

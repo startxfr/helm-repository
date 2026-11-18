@@ -1,0 +1,81 @@
+# values-app file for deploying unifai via argocd
+# Source: examples/argocd/ from the unifai chart
+# Two Applications from the same chart : the cluster-wide operator, then one stack.
+
+argocd_project:
+  enabled: true
+  list:
+    - name: 'unifai'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'unifai-operator'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'unifai'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles:
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, proj:unifai:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+
+# Applications
+application:
+  enabled: true
+  list:
+    # UnifAI operator and its custom resource definitions (cluster-wide, once per cluster)
+    - name: 'unifai-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "5"
+      server: 'https://kubernetes.default.svc'
+      project: 'unifai'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/unifai'
+        targetRevision: stable
+      helm: |
+        values: |
+          stack:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+    # UnifAI platform : one UnifaiStack, deployed by the operator. Delete it before the operator.
+    - name: 'unifai-stack'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "10"
+      server: 'https://kubernetes.default.svc'
+      project: 'unifai'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/unifai'
+        targetRevision: stable
+      helm: |
+        skipCrds: true
+        values: |
+          operator:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: true
+  list: []

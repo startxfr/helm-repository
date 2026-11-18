@@ -14,6 +14,7 @@
 | `operator`  | Generic operator subscription chart                                             |
 | `project`   | Base chart: namespace + RBAC + NetworkPolicy + Quotas + LimitRange              |
 | `sxapi`     | Micro-service deployment based on the sxapi nodejs engine                       |
+| `unifai`    | UnifAI platform: installs the UnifAI operator + one `UnifaiStack` (standalone docs and icon) |
 
 ## Chart structure
 
@@ -218,6 +219,7 @@ ignoreDifferences:
 | cluster-istio      | `maistra.io`                          | `ServiceMeshControlPlane` |
 | cluster-logging    | `logging.openshift.io`                | `ClusterLogging`          |
 | cluster-sso        | `keycloak.org`                        | `Keycloak`                |
+| cluster-rhbk       | `k8s.keycloak.org`                    | `Keycloak`                |
 | cluster-quay       | `quay.redhat.com`                     | `QuayRegistry`            |
 | cluster-crunchy    | `postgres-operator.crunchydata.com`   | `PostgresCluster`         |
 | cluster-mongo      | `mongodbcommunity.mongodb.com`        | `MongoDBCommunity`        |
@@ -367,7 +369,7 @@ application:
 **Generated 2026-06-23**: 60 values-app-*.yaml files covering all charts with ArgoCD examples.
 - cluster-* (50 charts)
 - chaos-* (4 charts)
-- other (operator, project, sxapi) (6 files)
+- other (operator, project, sxapi, unifai) (7 files)
 
 Example-* charts (11 total) have no ArgoCD examples — not included.
 
