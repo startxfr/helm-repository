@@ -1,0 +1,54 @@
+# Creates the default-prometheus namespace of the stacks (standard namespace, default pod network) and the
+# openshift-cluster-observability-operator namespace of the operator.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-prometheus-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  destination:
+    namespace: default-prometheus
+    server: https://kubernetes.default.svc
+  project: cluster-prometheus
+  source:
+    chart: cluster-prometheus
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        operatorNamespace:
+          enabled: true
+        operator:
+          enabled: false
+        monitoringStacks:
+          enabled: false
+        thanosQueriers:
+          enabled: false
+        serviceMonitors:
+          enabled: false
+        podMonitors:
+          enabled: false
+        scrapeConfigs:
+          enabled: false
+        prometheusRules:
+          enabled: false
+        alertmanagerConfigs:
+          enabled: false
+        networkPolicies:
+          enabled: false
+        routes:
+          enabled: false
+        secrets:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.361
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

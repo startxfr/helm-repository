@@ -1,0 +1,26 @@
+{{- if .Values.serviceMonitors.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-prometheus" -}}
+{{- range .Values.serviceMonitors.list }}
+{{- $name := required "serviceMonitors.list: every item needs a name" .name }}
+---
+apiVersion: monitoring.rhobs/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ .namespace | default $namespace | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-servicemonitor"
+    {{- with .stack }}
+    monitoring.rhobs/stack: {{ . | quote }}
+    {{- end }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- include "cluster-prometheus.spec" (dict "kind" "ServiceMonitor" "name" $name "spec" .spec "required" true) | nindent 2 }}
+{{- end }}
+{{- end -}}

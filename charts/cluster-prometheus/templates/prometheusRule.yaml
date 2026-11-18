@@ -1,0 +1,26 @@
+{{- if .Values.prometheusRules.enabled -}}
+{{- $namespace := .Values.project.project.name | default "default-prometheus" -}}
+{{- range .Values.prometheusRules.list }}
+{{- $name := required "prometheusRules.list: every item needs a name" .name }}
+---
+apiVersion: monitoring.rhobs/v1
+kind: PrometheusRule
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ .namespace | default $namespace | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-prometheusrule"
+    {{- with .stack }}
+    monitoring.rhobs/stack: {{ . | quote }}
+    {{- end }}
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  {{- include "cluster-prometheus.spec" (dict "kind" "PrometheusRule" "name" $name "spec" .spec "required" true) | nindent 2 }}
+{{- end }}
+{{- end -}}

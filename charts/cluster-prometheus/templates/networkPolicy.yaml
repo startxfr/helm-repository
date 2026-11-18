@@ -1,0 +1,22 @@
+{{- if .Values.networkPolicies.enabled -}}
+{{- range .Values.networkPolicies.list }}
+{{- $name := required "networkPolicies.list: every item needs a name" .name }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ required (printf "networkPolicies.list: the policy %s needs a namespace" $name) .namespace | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-networkpolicy"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- include "cluster-prometheus.spec" (dict "kind" "NetworkPolicy" "name" $name "spec" .spec "required" true) | nindent 2 }}
+{{- end }}
+{{- end -}}

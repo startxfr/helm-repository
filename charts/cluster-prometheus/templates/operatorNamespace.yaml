@@ -1,0 +1,17 @@
+{{- if .Values.operatorNamespace.enabled -}}
+{{- $name := .Values.operatorNamespace.name | default "openshift-cluster-observability-operator" -}}
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  labels:
+    {{- include "cluster-prometheus.labels" . | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-project"
+    openshift.io/cluster-monitoring: "true"
+  annotations:
+    {{- include "cluster-prometheus.annotations" . | nindent 4 }}
+    openshift.io/description: "Cluster Observability Operator namespace"
+    openshift.io/display-name: "Cluster Observability Operator"
+    helm.sh/resource-policy: keep
+    argocd.argoproj.io/sync-wave: "-10"
+{{- end -}}
