@@ -125,7 +125,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.362
+    targetRevision: 21.3.363
     helm:
       values: |
         stack:
@@ -156,7 +156,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.362
+    targetRevision: 21.3.363
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -315,3 +315,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | Release  | Date       | Description                                                                              |
 | -------- | ---------- | ---------------------------------------------------------------------------------------- |
 | 21.3.362 | 2026-11-18 | Create chart unifai, replacing cluster-unifai : UnifAI operator v0.1.71 and a UnifaiStack |
+| 21.3.363 | 2026-11-18 | Create chart unifai, replacing cluster-unifai : UnifAI operator v0.1.71 and a UnifaiStack |
