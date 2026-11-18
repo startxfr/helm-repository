@@ -34,6 +34,19 @@
 {{- if not $rootUrl }}
 {{- fail "oidc.enabled requires route.enabled and route.host (Grafana root_url, used to build the OIDC callback URL)" -}}
 {{- end }}
+{{- $caSources := list -}}
+{{- if $oidc.ca.certificate }}
+{{- $caSources = append $caSources "oidc.ca.certificate" -}}
+{{- end }}
+{{- if $oidc.ca.injectTrustedBundle }}
+{{- $caSources = append $caSources "oidc.ca.injectTrustedBundle" -}}
+{{- end }}
+{{- if $oidc.ca.configMap }}
+{{- $caSources = append $caSources "oidc.ca.configMap" -}}
+{{- end }}
+{{- if gt (len $caSources) 1 }}
+{{- fail (printf "oidc.ca.certificate, oidc.ca.injectTrustedBundle and oidc.ca.configMap are mutually exclusive (set: %s)" (join ", " $caSources)) -}}
+{{- end }}
 {{- $clientId := $oidc.clientId | default "grafana" -}}
 {{- $issuer := $oidc.issuerUrl | default "" | trimSuffix "/" -}}
 {{- /* Explicit endpoints take precedence over the ones derived from issuerUrl (Keycloak layout) */ -}}

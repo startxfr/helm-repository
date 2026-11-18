@@ -102,7 +102,8 @@ oidc:
   tokenUrl: ""
   # Userinfo endpoint (overrides the one derived from issuerUrl, required when issuerUrl is empty)
   apiUrl: ""
-  # Logout URL Grafana redirects to after sign out, used as is (overrides the one derived from issuerUrl, optional)
+  # Logout URL Grafana redirects to after sign out, used as is (overrides the one derived from issuerUrl, optional).
+  # Add post_logout_redirect_uri and client_id to it when the provider expects them
   signoutUrl: ""
   # Client ID registered in the provider
   clientId: grafana
@@ -128,7 +129,7 @@ oidc:
       #   client-secret:
       #     key: kv/grafana/oidc
       #     property: client_secret
-  # CA bundle Grafana trusts to reach the provider endpoints (e.g. route certificate of Keycloak). Use one of:
+  # CA bundle Grafana trusts to reach the provider endpoints (e.g. route certificate of Keycloak). Set only one of:
   ca:
     # Inline PEM certificate(s), rendered in the ConfigMap <grafana.name>-oidc-ca
     certificate: ""
@@ -136,7 +137,7 @@ oidc:
     injectTrustedBundle: false
     # Name of an existing ConfigMap holding the CA bundle
     configMap: ""
-    # Key of the CA bundle in the ConfigMap
+    # Key of the CA bundle in the ConfigMap (always ca-bundle.crt with injectTrustedBundle)
     key: ca-bundle.crt
 
 # Grafana datasources (GrafanaDatasource CR), attached to the Grafana instance of this chart
