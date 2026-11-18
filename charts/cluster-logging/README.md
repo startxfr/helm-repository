@@ -112,3 +112,4 @@ fails when no store is set or when no key source is provided.
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
+| 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
