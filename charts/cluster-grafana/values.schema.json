@@ -145,6 +145,91 @@
                 }
             }
         },
+        "oauthProxy": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "upstream": {
+                    "type": "string"
+                },
+                "serviceAccountName": {
+                    "type": "string"
+                },
+                "tlsSecretName": {
+                    "type": "string"
+                },
+                "sar": {
+                    "type": "object",
+                    "properties": {
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "resource": {
+                            "type": "string"
+                        },
+                        "verb": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "emailDomain": {
+                    "type": "string"
+                },
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resources": {
+                    "type": "object"
+                },
+                "authProxy": {
+                    "type": "object",
+                    "properties": {
+                        "disableLoginForm": {
+                            "type": "boolean"
+                        },
+                        "whitelist": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "cookieSecret": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        },
+                        "externalSecret": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "remoteRefs": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "oidc": {
             "type": "object",
             "properties": {
