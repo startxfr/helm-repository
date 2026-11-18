@@ -22,13 +22,13 @@ more information on how to use these resources.
 
 | Requirement | Detail |
 | --- | --- |
-| OpenShift 4.19+ (Kubernetes 1.30+) | `kubeVersion` of the chart |
+| OpenShift 4.17+ (Kubernetes 1.30+) | `kubeVersion` of the chart, tested on OpenShift 4.22 |
 | Red Hat build of Keycloak operator 26.6 | `redhat-operators` catalog, package `rhbk-operator`, channel `stable-v26.6`. Installed by the `operator` sub-chart in the namespace of the instances (OwnNamespace, the operator cannot watch all namespaces) |
 | API version | `k8s.keycloak.org/v2beta1` is the storage version of the 26.6 operator. With an older channel such as `stable-v26.4`, set `rhbk.apiVersion: k8s.keycloak.org/v2alpha1` and the matching `providedAPIs` |
 | Network policy | The 26.6 operator creates the NetworkPolicy `<rhbk.name>-network-policy` on the Keycloak pods. HTTP(S) and management ports are open to every source, the router included, unless rules are set. Cluster (JGroups) ports are restricted to the Keycloak pods. Restrict it with `spec.networkPolicy.httpRules` / `httpsRules` / `managementRules`, or disable it with `spec.networkPolicy.enabled: false` |
 | Database | PostgreSQL reachable from the Keycloak pods. `database.enabled` deploys a development instance (image `registry.redhat.io/rhel9/postgresql-16`, pulled with the cluster pull secret) |
 | FIPS | The operator CSV declares `features.operators.openshift.io/fips-compliant: "false"`. Keycloak runs on a FIPS enabled cluster (tested on OpenShift 4.22), but the RHBK image does not ship the BouncyCastle FIPS providers. A FIPS compliant deployment needs a custom image with these providers (`spec.image`), the `fips` feature and `fips-mode: strict` (see the [FIPS guide](https://www.keycloak.org/server/fips)) |
-| Secrets | Database and admin passwords are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`), from a values file kept out of Git, or from the External Secrets Operator (`externalSecret.enabled`). The `startx` values files only carry a demo database password |
+| Secrets | Database and admin passwords are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`), from a values file kept out of Git, or from the External Secrets Operator (`externalSecret.enabled`). The `startx` values files only carry demo secrets (database password, and the grafana client secret of `values-startx_noinfra-grafana.yaml`) |
 
 ## Deploy this helm chart on openshift
 
@@ -58,7 +58,7 @@ helm install cluster-rhbk startx/cluster-rhbk
 
 ## Default values
 
-Complete deployment of a project with the following characteristics :
+Complete deployment of a project with the following characteristics, using the `values-startx.yaml` values :
 
 - 1 **namespace:** named **default-rhbk** without constraints
 - 1 **operator:** named **rhbk-operator** configured with
@@ -77,7 +77,7 @@ Complete deployment of a project with the following characteristics :
 # Create the project
 helm install cluster-rhbk-project startx/cluster-rhbk -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml --set project.enabled=true
 # Deploy the rhbk operator
-helm install cluster-rhbk-operator startx/cluster-rhbk -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml --set operator.enabled=true
+helm install cluster-rhbk-operator startx/cluster-rhbk -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml --set operator.enabled=true && sleep 30
 # Approve the first install plan (manual approval)
 oc patch installplan $(oc get installplan -n default-rhbk -o jsonpath='{.items[0].metadata.name}') -n default-rhbk --type merge -p '{"spec":{"approved":true}}'
 # Deploy the database, the keycloak instance, its route and the startx realm
@@ -284,7 +284,7 @@ oc wait --for=delete namespace/default-rhbk --timeout=300s
 
 1. Instance: the `Keycloak` and `KeycloakRealmImport` objects have no finalizer. The operator deletes the objects it
    generated (StatefulSet, Services, NetworkPolicy, `<name>-initial-admin` and realm Secrets), and the service CA
-   certificate Secret goes away with its Service. The PVC of the development database (`data-<rhbk.name>-postgresql-0`)
+   certificate Secret goes away with its Service. The PVC of the development database (`data-<database name>-0`)
    is kept. Its database still holds the realms, and the import of an existing realm is ignored on a new installation,
    so delete the PVC (or the namespace) to start from scratch.
 2. Operator: the Subscription, the OperatorGroup and the install plans are deleted, but the CSV stays (phase `Failed`,
@@ -307,18 +307,19 @@ oc apply -k .
 
 ### Applications
 
-The `examples/argocd` folder contains the AppProject and the three Applications of the standard pattern, using
-`values-startx_noinfra.yaml`:
+The `examples/argocd` folder holds the AppProject and the three Applications (project, operator, app) of the standard
+pattern, using `values-startx_noinfra.yaml`.
 
-| Application | Wave | Enabled flags | Finalizer |
-| --- | --- | --- | --- |
-| `cluster-rhbk-project` | `1` | `project` | no |
-| `cluster-rhbk-operator` | `5` | `operator` | yes |
-| `cluster-rhbk-app` | `10` | `database`, `rhbk`, `route`, `rhbk_realms` | yes |
+| Application             | Wave   | Enabled flags                                                                    | Destination    |
+| ----------------------- | ------ | -------------------------------------------------------------------------------- | -------------- |
+| `cluster-rhbk-project`  | `"1"`  | `project.enabled: true`, all others `false`                                      | `default-rhbk` |
+| `cluster-rhbk-operator` | `"5"`  | `operator.enabled: true`, all others `false`                                     | `default-rhbk` |
+| `cluster-rhbk-app`      | `"10"` | `database`, `rhbk`, `route`, `rhbk_realms` enabled, `project`/`operator` `false` | `default-rhbk` |
 
-Each Application explicitly disables the flags of the other waves. The first install plan of the operator has to be
-approved (see Operator update) before `cluster-rhbk-app` can sync. Delete the Applications in reverse order (`-app`,
-then `-operator`, then `-project`) so that the operator can remove the finalizers of its objects.
+The `-operator` and `-app` Applications carry the `resources-finalizer.argocd.argoproj.io` finalizer, the `-project`
+Application has none. The first install plan of the operator has to be approved (see Operator update) before
+`cluster-rhbk-app` can sync. Delete the Applications in reverse order (`-app`, then `-operator`, then `-project`) so
+that the operator deletes the objects it generated before it is removed.
 
 ## History
 
