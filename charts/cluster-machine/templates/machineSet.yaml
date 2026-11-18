@@ -168,6 +168,14 @@ spec:
           loadBalancers:
             {{- .loadBalancers | nindent 12 }}
           {{- end }}
+          {{- if hasKey . "spotMarketOptions" }}
+          spotMarketOptions:
+            {{- if kindIs "string" .spotMarketOptions }}
+            {{- .spotMarketOptions | nindent 12 }}
+            {{- else }}
+            {{- toYaml (.spotMarketOptions | default dict) | nindent 12 }}
+            {{- end }}
+          {{- end }}
           tags:
             - name: kubernetes.io/cluster/{{ $.Values.cluster.id }}
               value: owned
