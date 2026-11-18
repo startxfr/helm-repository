@@ -359,3 +359,4 @@ Rendering fails when no store is set or when no key source is provided.
 | -------- | ---------- | ---------------------- |
 | 21.3.361 | 2026-11-17 | Initial chart creation |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
+| 21.3.370 | 2026-11-18 | publish stable update for the full repository |
