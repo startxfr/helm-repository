@@ -5,11 +5,11 @@ This helm chart is used to deploy Grafana managed by the community `grafana-oper
 operator, a `Grafana` instance (API `grafana.integreatly.org/v1beta1`) exposed by an OpenShift `Route`, and
 `GrafanaDatasource` and `GrafanaDashboard` objects.
 
-Grafana works on its own with a local admin account. It can also authenticate its users with OpenID Connect against a
-realm of the Red Hat build of Keycloak deployed by
-[cluster-rhbk](https://helm-repository.readthedocs.io/en/latest/charts/cluster-rhbk), and read the Grafana role from the
-roles of the user. Secrets are rendered from the values, or sourced from an external store with the External Secrets
-Operator.
+Grafana works on its own with a local admin account. It can also authenticate its users with OpenID Connect, and read
+the Grafana role from the claims of the user. The provider is either a realm of the Red Hat build of Keycloak, such as
+the one deployed by [cluster-rhbk](https://helm-repository.readthedocs.io/en/latest/charts/cluster-rhbk), or any other
+OpenID Connect provider with explicit endpoint URLs. Secrets are rendered from the values, or sourced from an external
+store with the External Secrets Operator.
 
 This chart is part of the [cluster-xxx startx helm chart series](https://helm-repository.readthedocs.io#cluster-helm-charts) that doesn't necessarily deploy pods but rather represent a cluster configuration state orchestrated by gitops tools like ArgoCD.
 
@@ -24,7 +24,7 @@ more information on how to use these resources.
 | grafana-operator 5.25 | `community-operators` catalog (provider Grafana Labs, not supported by Red Hat), package `grafana-operator`, channel `v5`. Installed by the `operator` sub-chart in the namespace of the instance (OwnNamespace). There is no Red Hat or certified Grafana operator. The Red Hat supported alternative for dashboards is the Cluster Observability Operator (Perses) |
 | Grafana version | Pinned with `grafana.version` (default `13.1.3`, the default of the 5.25 operator), so an operator upgrade does not change the Grafana version |
 | FIPS | Grafana and the grafana-operator are not FIPS validated. They run on a FIPS enabled cluster, but their cryptography is not FIPS compliant |
-| OpenID Connect | A realm with a confidential client, such as the startx realm of `cluster-rhbk` with its `values-startx_noinfra-grafana.yaml` values. Grafana calls the issuer from its pod, so it must trust the CA of the issuer route (`oidc.ca`) |
+| OpenID Connect | A confidential client in a Keycloak realm, such as the startx realm of `cluster-rhbk` with its `values-startx_noinfra-grafana.yaml` values, or in any other OpenID Connect provider. Grafana calls the token and userinfo endpoints from its pod, so it must trust the CA of their certificate (`oidc.ca`) |
 | Secrets | Admin password and client secret are expected as [Argo CD Vault Plugin](https://argocd-vault-plugin.readthedocs.io/) placeholders (`<path:kv/data/...#key>`), from a values file kept out of Git, or from the External Secrets Operator (`externalSecret.enabled`). The `startx_noinfra-rhbk` values file only carries a demo client secret |
 
 ## Deploy this helm chart on openshift
@@ -132,20 +132,36 @@ The chart builds part of the `Grafana` spec from the other values, then merges `
 | Key | Default | Description |
 | --- | --- | --- |
 | `enabled` | `false` | Configure the Grafana `generic_oauth` authentication. Requires `grafana.enabled`, `route.enabled` and `route.host` |
-| `name` | `Keycloak` | Label of the login button |
-| `issuerUrl` | `""` | Issuer of the realm (`https://<keycloak host>/realms/<realm>`). The auth, token, userinfo and logout endpoints are derived from it |
-| `clientId`, `scopes` | `grafana`, `openid email profile` | Client of the realm and requested scopes |
-| `roleAttributePath` | `grafanaadmin`, `admin`, `editor` roles, else `Viewer` | JMESPath expression mapping the `roles` claim to a Grafana role |
+| `name` | `OpenID Connect` | Label of the login button |
+| `issuerUrl` | `""` | Issuer of a Keycloak realm (`https://<keycloak host>/realms/<realm>`). The endpoints not given below are derived from it with the Keycloak layout (`<issuerUrl>/protocol/openid-connect/...`) |
+| `authUrl` | `""` | Authorization endpoint. Required when `issuerUrl` is empty |
+| `tokenUrl` | `""` | Token endpoint. Required when `issuerUrl` is empty |
+| `apiUrl` | `""` | Userinfo endpoint. Required when `issuerUrl` is empty |
+| `signoutUrl` | `""` | Logout endpoint, used as is (no parameter added). Empty with an empty `issuerUrl`: Grafana only logs out locally |
+| `clientId`, `scopes` | `grafana`, `openid email profile` | Client registered in the provider and requested scopes |
+| `roleAttributePath` | `grafanaadmin`, `admin`, `editor` roles, else `Viewer` | JMESPath expression mapping the claims of the user to a Grafana role. The default reads a top-level `roles` claim |
 | `clientSecret.enabled`, `name`, `value` | `true`, `<grafana.name>-oidc-client`, `""` | Secret holding the client secret (key `client-secret`). `value` is required unless `externalSecret` is used |
 | `clientSecret.externalSecret.enabled`, `remoteRefs` | `false`, `{}` | Produce the Secret with an `ExternalSecret` instead (key `client-secret` required) |
-| `ca.certificate` | `""` | Inline PEM CA certificate(s) of the issuer route, rendered in the ConfigMap `<grafana.name>-oidc-ca` |
+| `ca.certificate` | `""` | Inline PEM CA certificate(s) of the provider endpoints, rendered in the ConfigMap `<grafana.name>-oidc-ca` |
 | `ca.injectTrustedBundle` | `false` | Inject the cluster trusted CA bundle (system CAs and proxy `trustedCA`) in the ConfigMap `<grafana.name>-oidc-ca` |
 | `ca.configMap`, `ca.key` | `""`, `ca-bundle.crt` | Existing ConfigMap holding the CA bundle, and its key |
 
+The endpoints come from two modes, which can be mixed:
+
+- **Keycloak issuer**: set `issuerUrl` only. The chart derives the endpoints from it: `/auth`, `/token`, `/userinfo`,
+  and `/logout` with the `post_logout_redirect_uri` and `client_id` parameters (single logout).
+- **Explicit URLs**: set `authUrl`, `tokenUrl` and `apiUrl`, and optionally `signoutUrl`, for any OpenID Connect
+  provider. Take them from the discovery document of the provider (`.well-known/openid-configuration`:
+  `authorization_endpoint`, `token_endpoint`, `userinfo_endpoint`, `end_session_endpoint`). With an `issuerUrl` as
+  well, each URL given replaces only its own derived endpoint.
+
+The rendering fails when `oidc.enabled` is set, `issuerUrl` is empty and one of `authUrl`, `tokenUrl` or `apiUrl` is
+missing.
+
 The generated `generic_oauth` section also sets `login_attribute_path: preferred_username`, `email_attribute_path: email`,
-`name_attribute_path: name`, `use_pkce: true`, `allow_assign_grafana_admin: true`, `allow_sign_up: true` (every realm
-user gets a Grafana account at the first login) and the `signout_redirect_url` of the realm (single logout). Any of
-them can be overridden in `grafana.spec` (`config.auth.generic_oauth`).
+`name_attribute_path: name`, `use_pkce: true`, `allow_assign_grafana_admin: true` and `allow_sign_up: true` (every user
+of the provider gets a Grafana account at the first login). Any of them can be overridden in `grafana.spec`
+(`config.auth.generic_oauth`), for instance when the provider does not send `preferred_username`.
 
 ### Datasources and dashboards (`grafana_datasources`, `grafana_dashboards`)
 
@@ -195,6 +211,50 @@ helm upgrade ... --set oidc.ca.injectTrustedBundle=false --set-file oidc.ca.cert
 
 With `oidc.ca.injectTrustedBundle`, OpenShift writes the bundle into the ConfigMap after it is created, so its `/data`
 must be ignored in the Argo CD Application (see the examples).
+
+### OpenID Connect with another provider
+
+1. Register a confidential client in the provider (for example SimpleSAMLphp with its OpenID Connect module), with
+   `https://<route.host>/login/generic_oauth` as redirect URI and, for the single logout, `https://<route.host>/login`
+   as post logout redirect URI.
+2. Read the endpoints from the discovery document of the provider, and set them in `oidc.authUrl`, `oidc.tokenUrl`,
+   `oidc.apiUrl` and `oidc.signoutUrl`. Leave `oidc.issuerUrl` empty.
+3. Adapt `oidc.roleAttributePath` and `oidc.scopes` to the claims of the provider (see below).
+4. Make Grafana trust the CA of the provider endpoints with `oidc.ca`, as for Keycloak.
+
+```bash
+curl -s https://idp.example.com/.well-known/openid-configuration | jq '{authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint}'
+```
+
+```yaml
+route:
+  enabled: true
+  host: grafana.apps.example.com
+oidc:
+  enabled: true
+  name: Company SSO
+  issuerUrl: ""
+  authUrl: https://idp.example.com/oidc/authorize
+  tokenUrl: https://idp.example.com/oidc/token
+  apiUrl: https://idp.example.com/oidc/userinfo
+  signoutUrl: https://idp.example.com/oidc/logout?post_logout_redirect_uri=https%3A%2F%2Fgrafana.apps.example.com%2Flogin&client_id=grafana
+  clientId: grafana
+  scopes: openid email profile groups
+  roleAttributePath: "contains(groups[*], 'grafana-admins') && 'Admin' || contains(groups[*], 'grafana-editors') && 'Editor' || 'Viewer'"
+  clientSecret:
+    value: "<path:kv/data/grafana/oidc#client_secret>"
+  ca:
+    injectTrustedBundle: true
+```
+
+The URLs above are placeholders: the paths depend on the provider and its version. `signoutUrl` is used as is, so add
+the parameters the logout endpoint of the provider expects, such as `post_logout_redirect_uri` and `client_id`.
+
+`roleAttributePath` must follow the claims the provider really sends. The default expression reads a top-level `roles`
+claim filled by the `cluster-rhbk` mapper, which other providers do not send: without a matching claim, every user logs
+in as `Viewer`. Grafana evaluates the expression on the ID token, then on the userinfo response. Check the claims of a
+test user first, and request the scope that releases them in `oidc.scopes` (with SimpleSAMLphp, attributes become claims
+through its translate table, and a custom claim has to belong to a custom scope).
 
 ### Operator update
 
