@@ -1,0 +1,76 @@
+{{- if .Values.operator.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifai-operator-controller-manager-metrics-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+    {{- include "unifai.operatorSelector" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+spec:
+  ports:
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+  selector:
+    {{- include "unifai.operatorSelector" . | nindent 4 }}
+{{- if .Values.operator.metrics.serviceMonitor }}
+---
+# The operator writes the scraping token (Secret unifai-operator-metrics-token) for this exact account name.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: unifai-operator-metrics-scraper
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: unifai-operator-metrics-scraper
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: unifai-operator-metrics-reader
+subjects:
+  - kind: ServiceAccount
+    name: unifai-operator-metrics-scraper
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: unifai-operator-controller-manager-metrics-monitor
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+    {{- include "unifai.operatorSelector" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+spec:
+  endpoints:
+    - path: /metrics
+      port: https
+      scheme: https
+      authorization:
+        type: Bearer
+        credentials:
+          name: unifai-operator-metrics-token
+          key: token
+      tlsConfig:
+        insecureSkipVerify: true
+  selector:
+    matchLabels:
+      {{- include "unifai.operatorSelector" . | nindent 6 }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,317 @@
+# ![unifai](https://helm-repository.readthedocs.io/en/latest/img/unifai.svg "UnifAI") UnifAI Helm chart
+
+Deploy [UnifAI](https://github.com/redhat-community-ai-tools/UnifAI), a multi-agent AI platform with a built-in
+RAG pipeline, on OpenShift or Kubernetes, with Helm or ArgoCD.
+
+This chart installs two things :
+
+- the **UnifAI operator** (cluster-wide), with its custom resource definitions ;
+- one **`UnifaiStack`** resource, from which the operator deploys the whole platform in the release namespace :
+  web interface, backend, multi-agent engine, RAG services, identity service, and their datastores (MongoDB,
+  Qdrant, RabbitMQ, Redis, Temporal).
+
+It deploys UnifAI release **v0.1.71** ; every UnifAI image is pinned by digest.
+
+## Requirements
+
+|                    | OpenShift (validated)                              | Kubernetes (experimental)                                    |
+| ------------------ | -------------------------------------------------- | ------------------------------------------------------------ |
+| Version            | Kubernetes 1.30 or later (OpenShift 4.17 or later) | Kubernetes 1.30 or later                                     |
+| Architecture       | linux/amd64 nodes                                  | linux/amd64 nodes                                            |
+| Storage            | a ReadWriteOnce class and a ReadWriteMany class    | a ReadWriteOnce class and a ReadWriteMany class              |
+| Identity           | a Keycloak deployed by the operator, or your own   | your own Keycloak realm (see [Identity](#identity))          |
+| Publication        | Routes, created by the operator                    | Ingresses, created by this chart, and a TLS Secret           |
+| Rights             | cluster administrator (the operator is cluster-wide) | cluster administrator                                      |
+
+UnifAI has no mode without single sign-on : a Keycloak realm is always required.
+
+Install the operator **once per cluster**. To deploy UnifAI in several namespaces, install this chart again
+with `operator.enabled=false`.
+
+## Quick start on OpenShift
+
+```bash
+helm repo add unifai https://helm-repository.readthedocs.io/en/latest/repos/stable/
+helm repo update
+
+helm install unifai unifai/unifai \
+  --namespace unifai --create-namespace \
+  --set stack.spec.storage.className=<ReadWriteOnce class> \
+  --set stack.spec.storage.sharedClassName=<ReadWriteMany class>
+```
+
+Leave the two storage settings out to use the default class of the cluster ; it must then support ReadWriteMany.
+
+The operator deploys the platform in the background. Follow it until the phase is `Ready` :
+
+```bash
+oc -n unifai get unifaistack unifai -w
+```
+
+Then get the address of the web interface and the password of the `admin` user :
+
+```bash
+oc -n unifai get unifaistack unifai -o jsonpath='{.status.endpoints.ui}{"\n"}'
+oc -n unifai get secret unifai-generated -o jsonpath='{.data.keycloak-admin-password}' | base64 -d
+```
+
+With these defaults the operator also deploys Keycloak (Red Hat build of Keycloak, installed through the
+OpenShift operator catalog) and creates the `unifai` realm and the `admin` user.
+
+## Quick start on Kubernetes (experimental)
+
+The operator is developed and released for OpenShift. On plain Kubernetes it has only been run on throwaway
+[kind](https://kind.sigs.k8s.io) clusters by its own test suite, without anything reaching it from outside.
+This path works around what Kubernetes lacks ; treat it as a starting point and test it on your cluster.
+
+1. Have a Keycloak realm ready, with a confidential client whose redirect URIs allow
+   `https://unifai-ui-<namespace>.<domain>/*` and `https://unifai-identity-<namespace>.<domain>/*`.
+2. Create the namespace, the client secret and a TLS Secret valid for both hosts :
+
+   ```bash
+   kubectl create namespace unifai
+   kubectl -n unifai create secret generic unifai-oidc --from-literal=client-secret=<client secret>
+   kubectl -n unifai create secret tls unifai-tls --cert=<certificate> --key=<private key>
+   ```
+
+3. Copy [values-kubernetes.yaml](https://github.com/startxfr/helm-repository/blob/master/charts/unifai/values-kubernetes.yaml),
+   set your domain, Keycloak address, storage classes and Ingress class, then install :
+
+   ```bash
+   helm repo add unifai https://helm-repository.readthedocs.io/en/latest/repos/stable/
+   helm install unifai unifai/unifai --namespace unifai -f values-kubernetes.yaml
+   ```
+
+What that values file does, and why :
+
+| Setting                                         | Reason                                                                                   |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `exposure.type: ingress`                        | the operator only creates OpenShift Routes ; the chart creates Ingresses instead         |
+| `exposure.ingress.installRouteCRD: true`        | the operator fails if the Route API does not exist ; a schema-less definition satisfies it |
+| `exposure.domain`                               | the operator cannot discover a domain outside OpenShift                                  |
+| `exposure.ingress.tlsSecretName`                | UnifAI only generates `https://` addresses                                               |
+| `stack.spec.identity.external`                  | the managed Keycloak needs the OpenShift operator catalog                                |
+| `stack.spec.exposure.networkPolicy: false`      | the default network policies only admit the OpenShift router                             |
+| `uiAnnotations` (backend protocol HTTPS)        | the web interface serves HTTPS on its internal port                                      |
+
+Known limits on Kubernetes : scheduled backups do not run (their jobs rely on the user identifier OpenShift
+assigns), and the example Ingress annotations are for ingress-nginx.
+
+## Install with ArgoCD
+
+Use two Applications, so that the operator is in place before the stack and removed after it. The manifests are
+in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/unifai/examples/argocd) :
+
+```bash
+kubectl apply -k https://github.com/startxfr/helm-repository/charts/unifai/examples/argocd
+```
+
+```yaml
+# Operator : cluster-wide, installed once
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: unifai-operator
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: unifai
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: unifai-operator
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: unifai
+    targetRevision: 21.3.362
+    helm:
+      values: |
+        stack:
+          enabled: false
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+---
+# Platform : one per namespace
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: unifai-stack
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: unifai
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: unifai
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: unifai
+    targetRevision: 21.3.362
+    helm:
+      # The definitions belong to the operator Application
+      skipCrds: true
+      values: |
+        operator:
+          enabled: false
+        stack:
+          spec:
+            storage:
+              className: gp3-csi
+              sharedClassName: nfs
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+Delete `unifai-stack` first and wait for it to disappear before deleting `unifai-operator` : the operator is
+what removes the platform.
+
+Do not name an Application after a UnifAI component (`unifai-ui`, `unifai-rag`, `unifai-mongodb`...) : the
+operator uses those names for its own releases in the namespace.
+
+With `exposure.type=ingress`, set `exposure.ingress.createUiServingCert=false` and provide the `unifai-ui-tls`
+Secret yourself (for example with cert-manager) : ArgoCD cannot keep a generated certificate stable.
+
+## Configuration
+
+### Chart settings
+
+| Key                                    | Default                 | Description                                                                 |
+| -------------------------------------- | ----------------------- | --------------------------------------------------------------------------- |
+| `operator.enabled`                     | `true`                  | install the operator ; `false` when it already runs on the cluster          |
+| `operator.image`                       | pinned digest           | operator image                                                              |
+| `operator.imagePullPolicy`             | `IfNotPresent`          | pull policy of the operator                                                 |
+| `operator.imagePullSecrets`            | `[]`                    | pull secrets of the operator                                                |
+| `operator.resources`                   | 50m / 192Mi, limit 1Gi  | resources of the operator                                                   |
+| `operator.nodeSelector`, `tolerations` | empty                   | scheduling of the operator                                                  |
+| `operator.userRoles`                   | `true`                  | create the `unifai-view`, `unifai-edit` and `unifai-admin` ClusterRoles     |
+| `operator.metrics.serviceMonitor`      | `false`                 | create a ServiceMonitor (requires the prometheus-operator definitions)      |
+| `stack.enabled`                        | `true`                  | create the `UnifaiStack`                                                    |
+| `stack.spec`                           | see below               | content of the `UnifaiStack`, passed as is to the operator                  |
+| `exposure.type`                        | `route`                 | `route`, `ingress` or `none`                                                |
+| `exposure.domain`                      | empty                   | domain of the published hosts ; required with `ingress`                     |
+| `exposure.ingress.className`           | empty                   | Ingress class                                                               |
+| `exposure.ingress.annotations`         | `{}`                    | annotations of both Ingresses                                               |
+| `exposure.ingress.uiAnnotations`       | `{}`                    | annotations of the web interface Ingress                                    |
+| `exposure.ingress.tlsSecretName`       | empty                   | TLS Secret of the Ingresses ; required with `ingress`                       |
+| `exposure.ingress.installRouteCRD`     | `false`                 | install a schema-less Route definition ; never on OpenShift                 |
+| `exposure.ingress.createUiServingCert` | `true`                  | generate the internal certificate of the web interface (`unifai-ui-tls`)    |
+| `project.enabled`                      | `false`                 | create the namespace with the optional `project` sub-chart                  |
+
+The `context` block only sets descriptive labels on the objects this chart creates.
+
+### Platform settings (`stack.spec`)
+
+`stack.spec` is the specification of the `UnifaiStack` resource. The full reference is on the cluster :
+
+```bash
+kubectl explain unifaistack.spec --recursive
+```
+
+The settings most installs need :
+
+| Key                               | Default            | Description                                                                    |
+| --------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
+| `profile`                         | `dev`              | `dev` (small requests, no autoscaling) or `prod`                               |
+| `version`, `images`               | v0.1.71, digests   | UnifAI images ; change them together when upgrading                            |
+| `identity.adminUsers`             | `[admin]`          | Keycloak users granted the administrator role                                  |
+| `identity.keycloak`               | `{}`               | Keycloak deployed by the operator (OpenShift only)                             |
+| `identity.external`               | not set            | your own Keycloak ; replaces `identity.keycloak`                               |
+| `storage.className`               | cluster default    | class of the database volumes                                                  |
+| `storage.sharedClassName`         | cluster default    | class of the shared volumes ; must support ReadWriteMany                       |
+| `storage.sizes`                   | set by the profile | size per volume                                                                |
+| `rag.gpu`                         | `false`            | give the RAG workers a GPU                                                     |
+| `integrations`                    | not set            | Slack, Langfuse, Umami                                                         |
+| `backup`                          | not set            | scheduled backups to S3                                                        |
+| `deletionPolicy`                  | `Retain`           | `Delete` to remove volumes and generated secrets with the stack                |
+
+### Identity
+
+Choose one of the two.
+
+**Keycloak deployed by the operator** (default, OpenShift only) : nothing to prepare. The operator creates the
+`unifai` realm and one user per entry of `identity.adminUsers`.
+
+**Your own Keycloak** : create a confidential client whose redirect URIs allow both UnifAI hosts, store its
+secret in the release namespace, and reference it :
+
+```yaml
+stack:
+  spec:
+    identity:
+      adminUsers: [alice]
+      external:
+        url: https://keycloak.example.com
+        realm: unifai
+        clientId: unifai
+        clientSecret:
+          name: unifai-oidc
+          key: client-secret
+```
+
+## Upgrade
+
+```bash
+helm repo update
+helm show crds unifai/unifai | kubectl apply --server-side -f -
+helm upgrade unifai unifai/unifai --namespace unifai --reuse-values
+```
+
+Helm never updates custom resource definitions on its own, hence the second command. ArgoCD does.
+
+## Uninstall
+
+The operator is what removes the platform, so remove the stack first :
+
+```bash
+helm upgrade unifai unifai/unifai --namespace unifai --reuse-values --set stack.enabled=false
+kubectl -n unifai wait --for=delete unifaistack/unifai --timeout=15m
+helm uninstall unifai --namespace unifai
+```
+
+By default the volumes and the generated secrets are kept (`deletionPolicy: Retain`), so that reinstalling
+finds the data again. Set `stack.spec.deletionPolicy=Delete` before removing the stack to delete them too.
+
+The custom resource definitions are left in place by Helm. To remove them, and every UnifAI resource of the
+cluster with them :
+
+```bash
+kubectl get crd -o name | grep unifai.startx.fr | xargs kubectl delete
+```
+
+## Troubleshooting
+
+| Symptom                                               | Cause and fix                                                                                   |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| stack phase `Error`, "no OpenShift ingress domain found" | set `exposure.domain`                                                                        |
+| stack phase `Error` on a Route object                 | the Route API is missing : set `exposure.ingress.installRouteCRD=true`                          |
+| volumes stay `Pending`                                | `storage.sharedClassName` does not support ReadWriteMany                                        |
+| web interface pod does not start, missing `unifai-ui-tls` | outside OpenShift that Secret must exist : keep `createUiServingCert=true` or provide it    |
+| `helm uninstall` hangs                                | the stack was not removed first ; see [Uninstall](#uninstall)                                   |
+| phase `Ready` but login fails                         | `Ready` does not test the identity provider : check the Keycloak address, client and redirect URIs |
+
+The operator reports what it is doing on the resource itself and in its logs :
+
+```bash
+kubectl -n unifai describe unifaistack unifai
+kubectl -n unifai logs deploy/unifai-operator-controller-manager
+```
+
+## History
+
+| Release  | Date       | Description                                                                              |
+| -------- | ---------- | ---------------------------------------------------------------------------------------- |
+| 21.3.362 | 2026-11-18 | Create chart unifai, replacing cluster-unifai : UnifAI operator v0.1.71 and a UnifaiStack |

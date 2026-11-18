@@ -23,6 +23,7 @@ Helm chart without prefix are basic chart. Basic charts configure basic element 
 | **[project](charts/project.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/project)  | create a project with limits, quotas, networkpolicy and rbac set |
 | **[operator](charts/operator.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/operator) | create an operator with subscription (openshift) or CRD (k8s)    |
 | **[sxapi](charts/sxapi.md)**       | [source](https://github.com/startxfr/helm-repository/tree/master/charts/sxapi)    | deploy a small micro-service endpoint                            |
+| **[unifai](charts/unifai.md)**     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/unifai)   | deploy the UnifAI multi-agent AI platform (operator and stack)   |
 
 
 ### Cluster Charts
@@ -80,7 +81,6 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-dvo](charts/cluster-dvo.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-dvo)           | enable Deployment Validation Operator (DVO)  to checks deployments and other resources against a curated collection of best practices |
 | **[cluster-kargo](charts/cluster-kargo.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kargo)           | enable Kargo builds upon GitOps principles to manage and automate the promotion of stage lifecycle  |
 | **[cluster-keepalived](charts/cluster-keepalived.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-keepalived)           | enable keepalived builds upon GitOps principles to manage and automate the keepalived lifecycle  |
-| **[cluster-unifai](charts/cluster-unifai.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-unifai)           | deploy UnifAI multi-agent AI platform at the cluster level  |
 | **[cluster-qdrant](charts/cluster-qdrant.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-qdrant)           | deploy Qdrant vector database at the cluster level  |
 | **[cluster-etcdbackup](charts/cluster-etcdbackup.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-etcdbackup)           | deploy a periodic etcd backup CronJob to an S3-compatible object store  |
 | **[cluster-trident](charts/cluster-trident.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-trident)           | enable NetApp Trident CSI storage (operator, backends, storage classes) at the cluster level  |
@@ -143,6 +143,7 @@ List of the deprecated helm charts.
 | Chart                                              | Source                                                                                | Description                |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------- |
 | **[cluster-metering](charts/cluster-metering.md)** | [source](https://github.com/startxfr/helm-repository/tree/14/charts/cluster-metering) | REPLACED by costManagement |
+| **[cluster-unifai](charts/cluster-unifai.md)**     | [source](https://github.com/startxfr/helm-repository/tree/21.3.361/charts/cluster-unifai) | REPLACED by unifai         |
 | **[cluster-jenkins](charts/cluster-jenkins.md)**   | [source](https://github.com/startxfr/helm-repository/tree/14/charts/cluster-jenkins)  | NOT used anymore           |  | **[cluster-workspace](charts/cluster-workspace.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-workspace) | REPLACED by cluster-devworkspaces chart |
 
 

@@ -22,12 +22,15 @@ Must match the chart name, not `sxapi`. Charts affected: `chaos-*`, `cluster-vau
 - `cluster-certmanager` (11.7.18), `cluster-nfd` (11.7.18), `cluster-crunchy` (11.28.68)
 - `project` (0.3.155, 0.3.189, 0.3.217, 7.22.27)
 
-## cluster-unifai : vendored rabbitmq chart has a broken dependency upstream
+## unifai : files copied from the UnifAI operator, hand-written schema
 
-`charts/cluster-unifai/vendor/shared-resources/rabbitmq/Chart.yaml` (vendored from `startxfr/UnifAI`) ships with its
-`common` Bitnami library chart dependency commented out, which breaks `helm template`/`helm install` (its templates
-call `common.names.fullname` etc.). `.tools/sync-unifai-vendor.sh` re-applies the fix (un-comments the dependency,
-pinned to `oci://registry-1.docker.io/bitnamicharts` `2.41.0`) automatically on every resync, along with a rename of
-the vendored `multiagent/temporal-worker` chart (both `multiagent/be` and `multiagent/temporal-worker` declare
-`name: multiagent` upstream, which collides when Helm packages dependencies by `<name>-<version>.tgz`). If a future
-manual edit to the vendor tree reverts either fix, re-run the sync script instead of hand-patching.
+- `charts/unifai/crds/*.yaml` and `charts/unifai/files/manager-rules.yaml` are copied from `startxfr/UnifAI`
+  (`fork/unifai-operator`, one release tag). Never edit them by hand : run `.tools/sync-unifai-operator.sh <tag>`,
+  then report the image digests it prints in `values.yaml` and `Chart.yaml` (`appVersion`, `artifacthub.io/images`).
+- `charts/unifai/values.schema.json` is hand-written (descriptions, enums). Do **not** run `make schema CHART=unifai` :
+  it overwrites the file with an auto-generated one.
+- The chart README deliberately does not follow the repository README layout : it is written for readers who
+  only care about UnifAI. Keep `## History` last (the release tooling appends rows at the end of the file).
+- Helm does not upgrade the CRDs in `crds/`. When the operator version changes, say so in the release notes
+  (`helm show crds ... | kubectl apply --server-side -f -`).
+- `cluster-unifai` (packages up to 21.3.362) is deprecated and replaced by `unifai` ; its packages stay published.

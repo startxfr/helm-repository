@@ -1,0 +1,97 @@
+{{- if eq .Values.exposure.type "ingress" -}}
+{{- $ingress := .Values.exposure.ingress -}}
+# The operator publishes UnifAI with OpenShift Routes only : these Ingresses stand in for them.
+# Backends are the Services the operator creates : unifai-ui (HTTPS on 8443) and identity (HTTP on 13456).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unifai-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+    {{- with $ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with $ingress.uiAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- with $ingress.className }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  tls:
+    - hosts:
+        - {{ include "unifai.uiHost" . | quote }}
+      secretName: {{ $ingress.tlsSecretName }}
+  rules:
+    - host: {{ include "unifai.uiHost" . | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: unifai-ui
+                port:
+                  number: 8443
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unifai-identity
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+    {{- with $ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- with $ingress.className }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  tls:
+    - hosts:
+        - {{ include "unifai.identityHost" . | quote }}
+      secretName: {{ $ingress.tlsSecretName }}
+  rules:
+    - host: {{ include "unifai.identityHost" . | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: identity
+                port:
+                  number: 13456
+{{- if $ingress.createUiServingCert }}
+---
+{{- /* Kept across upgrades by lookup ; ArgoCD renders without cluster access and would regenerate it */ -}}
+{{- $existing := lookup "v1" "Secret" .Release.Namespace "unifai-ui-tls" }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: unifai-ui-tls
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+    helm.sh/resource-policy: keep
+type: kubernetes.io/tls
+data:
+  {{- if $existing }}
+  tls.crt: {{ index $existing.data "tls.crt" }}
+  tls.key: {{ index $existing.data "tls.key" }}
+  {{- else }}
+  {{- $svc := printf "unifai-ui.%s.svc" .Release.Namespace }}
+  {{- $cert := genSelfSignedCert $svc nil (list "unifai-ui" $svc (printf "%s.cluster.local" $svc)) 3650 }}
+  tls.crt: {{ $cert.Cert | b64enc }}
+  tls.key: {{ $cert.Key | b64enc }}
+  {{- end }}
+{{- end }}
+{{- end }}

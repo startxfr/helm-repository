@@ -1,0 +1,73 @@
+{{- if .Values.operator.enabled -}}
+# Follows the upstream manifest (fork/unifai-operator/config/manager/manager.yaml + metrics patch).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifai-operator-controller-manager
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+    {{- include "unifai.operatorSelector" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "unifai.operatorSelector" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        {{- include "unifai.operatorSelector" . | nindent 8 }}
+    spec:
+      serviceAccountName: unifai-operator-controller-manager
+      terminationGracePeriodSeconds: 10
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: manager
+          image: {{ .Values.operator.image | quote }}
+          imagePullPolicy: {{ .Values.operator.imagePullPolicy }}
+          command:
+            - /manager
+          args:
+            - --metrics-bind-address=:8443
+            - --leader-elect
+            - --health-probe-bind-address=:8081
+          env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.operator.resources | nindent 12 }}
+      {{- with .Values.operator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.operator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -1,0 +1,36 @@
+# Platform : one per namespace. Delete it, and wait for it to be gone, before deleting unifai-operator.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: unifai-stack
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: unifai
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: unifai
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: unifai
+    targetRevision: 21.3.362
+    helm:
+      # The definitions belong to the operator Application
+      skipCrds: true
+      values: |
+        operator:
+          enabled: false
+        stack:
+          spec:
+            storage:
+              className: gp3-csi
+              sharedClassName: nfs
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

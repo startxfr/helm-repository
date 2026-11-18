@@ -1,0 +1,214 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Values of the unifai chart",
+  "type": "object",
+  "properties": {
+    "context": {
+      "title": "Deployment context",
+      "description": "Labels describing where this release runs. They only affect the labels of the objects this chart creates.",
+      "type": "object",
+      "properties": {
+        "scope": { "type": "string", "description": "Organizational tenant" },
+        "cluster": { "type": "string", "description": "Name of the cluster" },
+        "environment": { "type": "string", "description": "Environment name (dev, preprod, prod...)" },
+        "component": { "type": "string", "description": "Logical component name" },
+        "app": { "type": "string", "description": "Application name" },
+        "version": { "type": "string", "description": "Application version" }
+      }
+    },
+    "operator": {
+      "title": "UnifAI operator",
+      "description": "The operator is cluster-wide : install it once per cluster.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Install the operator. Set to false when it already runs on the cluster."
+        },
+        "image": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Operator image reference, preferably pinned by digest."
+        },
+        "imagePullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "description": "Image pull policy of the operator."
+        },
+        "imagePullSecrets": {
+          "type": "array",
+          "description": "Pull secrets for the operator image.",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": { "name": { "type": "string" } }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "description": "Resource requests and limits of the operator container."
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "Node selector of the operator pod."
+        },
+        "tolerations": {
+          "type": "array",
+          "description": "Tolerations of the operator pod.",
+          "items": { "type": "object" }
+        },
+        "userRoles": {
+          "type": "boolean",
+          "description": "Create the unifai-view, unifai-edit and unifai-admin ClusterRoles."
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "serviceMonitor": {
+              "type": "boolean",
+              "description": "Create a ServiceMonitor for the operator metrics (requires the prometheus-operator CRDs)."
+            }
+          }
+        }
+      }
+    },
+    "stack": {
+      "title": "UnifAI platform",
+      "description": "One UnifaiStack resource named unifai, created in the release namespace.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Create the UnifaiStack resource."
+        },
+        "spec": {
+          "type": "object",
+          "description": "Content of the UnifaiStack spec, passed as is to the operator. It is validated by the UnifaiStack CRD ; see kubectl explain unifaistack.spec --recursive.",
+          "required": ["identity"],
+          "properties": {
+            "profile": {
+              "type": "string",
+              "enum": ["dev", "prod"],
+              "description": "Sizing profile."
+            },
+            "version": {
+              "type": "string",
+              "description": "Tag of the UnifAI application images."
+            },
+            "imageRegistry": {
+              "type": "string",
+              "description": "Registry holding the UnifAI application images."
+            },
+            "images": {
+              "type": "object",
+              "description": "Image overrides per component (rag, multiagent, backend, identity, ui, mongodb, qdrant, rabbitmq, redis, redisInsight, temporal, docling, embedding, reranker).",
+              "additionalProperties": { "type": "string" }
+            },
+            "identity": {
+              "type": "object",
+              "description": "Identity provider : keycloak (managed by the operator, OpenShift only) or external (your own Keycloak). Setting external replaces keycloak.",
+              "properties": {
+                "adminUsers": {
+                  "type": "array",
+                  "description": "Keycloak user names granted the UnifAI administrator role.",
+                  "items": { "type": "string" }
+                },
+                "keycloak": {
+                  "type": ["object", "null"],
+                  "description": "Keycloak deployed by the operator."
+                },
+                "external": {
+                  "type": "object",
+                  "description": "Existing Keycloak realm.",
+                  "properties": {
+                    "url": { "type": "string", "description": "Base URL of Keycloak." },
+                    "realm": { "type": "string" },
+                    "clientId": { "type": "string" },
+                    "clientSecret": {
+                      "type": "object",
+                      "description": "Secret holding the OIDC client secret, created beforehand in the release namespace.",
+                      "properties": {
+                        "name": { "type": "string" },
+                        "key": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "storage": {
+              "type": "object",
+              "description": "Storage classes and volume sizes.",
+              "properties": {
+                "className": {
+                  "type": "string",
+                  "description": "Class for ReadWriteOnce volumes ; empty means the cluster default."
+                },
+                "sharedClassName": {
+                  "type": "string",
+                  "description": "Class for ReadWriteMany volumes ; empty means the cluster default."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "exposure": {
+      "title": "Publication of UnifAI",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["route", "ingress", "none"],
+          "description": "route : OpenShift Routes created by the operator. ingress : Ingresses created by this chart. none : nothing published."
+        },
+        "domain": {
+          "type": "string",
+          "description": "DNS domain of the published hosts. Required with type ingress ; empty on OpenShift means the cluster apps domain."
+        },
+        "ingress": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "className": {
+              "type": "string",
+              "description": "Ingress class name ; empty means the cluster default."
+            },
+            "annotations": {
+              "type": "object",
+              "description": "Annotations added to both Ingresses.",
+              "additionalProperties": { "type": "string" }
+            },
+            "uiAnnotations": {
+              "type": "object",
+              "description": "Annotations added to the web interface Ingress only.",
+              "additionalProperties": { "type": "string" }
+            },
+            "tlsSecretName": {
+              "type": "string",
+              "description": "Existing TLS Secret presented by the Ingresses. Required with type ingress."
+            },
+            "installRouteCRD": {
+              "type": "boolean",
+              "description": "Install a schema-less Route CRD for clusters without the OpenShift Route API. Never enable it on OpenShift."
+            },
+            "createUiServingCert": {
+              "type": "boolean",
+              "description": "Generate the self-signed Secret unifai-ui-tls served by the web interface on its internal port."
+            }
+          }
+        }
+      }
+    },
+    "project": {
+      "title": "Namespace creation",
+      "description": "Optional project sub-chart creating the namespace. Disabled by default.",
+      "type": "object"
+    }
+  }
+}

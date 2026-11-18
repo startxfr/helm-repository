@@ -72,7 +72,7 @@ For each family in scope (based on `TARGET_FAMILY`):
 
 Run:
 ```bash
-grep -rl "name: project\|name: operator\|name: sxapi" charts/chaos/ charts/chaos-*/ charts/cluster-*/ charts/example-*/ 2>/dev/null | grep "Chart.yaml"
+grep -rl "name: project\|name: operator\|name: sxapi" charts/chaos/ charts/chaos-*/ charts/cluster-*/ charts/example-*/ charts/unifai/ 2>/dev/null | grep "Chart.yaml"
 ```
 
 For each matching file, check whether any dependency version differs from the latest:

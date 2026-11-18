@@ -1,0 +1,61 @@
+{{- if and .Values.operator.enabled .Values.operator.userRoles -}}
+# End-user roles on the UnifAI resources, as shipped upstream (fork/unifai-operator/config/rbac/unifai_user_roles.yaml).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: unifai-view
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+rules:
+  - apiGroups: ["unifai.startx.fr"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: unifai-edit
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+rules:
+  - apiGroups: ["unifai.startx.fr"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["unifai.startx.fr"]
+    resources:
+      - unifaillms
+      - unifaiproviders
+      - unifaitools
+      - unifaiconditions
+      - unifairetrievers
+      - unifaisandboxes
+      - unifaiagents
+      - unifaiworkflows
+      - unifaischedules
+      - unifaitemplates
+      - unifaichats
+      - unifairagpipelines
+      - unifairagsources
+      - unifaiteams
+    verbs: ["create", "update", "patch", "delete", "deletecollection"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: unifai-admin
+  labels:
+    {{- include "unifai.labels" . | nindent 4 }}
+  annotations:
+    {{- include "unifai.annotations" . | nindent 4 }}
+rules:
+  - apiGroups: ["unifai.startx.fr"]
+    resources: ["*"]
+    verbs: ["*"]
+{{- end }}
