@@ -53,7 +53,11 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-ansible startx/cluster-ansible
 ```
 
-## Others values availables
+### AnsibleAutomationPlatform spec and annotations
+
+`ansibleAAP.spec` accepts a YAML string or a YAML map. `ansibleAAP.annotations` is a map merged over the default ArgoCD sync-wave (`1`), for example to set `argocd.argoproj.io/sync-wave` or `argocd.argoproj.io/sync-options: Prune=false`.
+
+## Other available values
 
 - **startx** : Startx ansible cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml))
 
