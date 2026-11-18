@@ -241,8 +241,8 @@ oidc:
   apiUrl: https://idp.example.com/oidc/userinfo
   signoutUrl: https://idp.example.com/oidc/logout?post_logout_redirect_uri=https%3A%2F%2Fgrafana.apps.example.com%2Flogin&client_id=grafana
   clientId: grafana
-  scopes: openid email profile groups
-  roleAttributePath: "contains(groups[*], 'grafana-admins') && 'Admin' || contains(groups[*], 'grafana-editors') && 'Editor' || 'Viewer'"
+  scopes: openid email profile roles
+  roleAttributePath: "contains(roles[*], 'grafana-admin') && 'GrafanaAdmin' || contains(roles[*], 'admin') && 'Admin' || 'Viewer'"
   clientSecret:
     value: "<path:kv/data/grafana/oidc#client_secret>"
   ca:
@@ -255,9 +255,13 @@ adds the `id_token_hint` parameter itself.
 
 `roleAttributePath` must follow the claims the provider really sends. The default expression reads a top-level `roles`
 claim filled by the `cluster-rhbk` mapper, which other providers do not send: without a matching claim, every user logs
-in as `Viewer`. Grafana evaluates the expression on the ID token, then on the userinfo response. Check the claims of a
-test user first, and request the scope that releases them in `oidc.scopes` (with SimpleSAMLphp, attributes become claims
-through its translate table, and a custom claim has to belong to a custom scope).
+in as `Viewer`. Check the claims of a test user first, and request the scope that releases them in `oidc.scopes`.
+
+Some providers only return the claims in the userinfo response. With SimpleSAMLphp, attributes become claims through
+its translate table, and a custom claim has to belong to a private scope, such as the `roles` scope of the example
+above. `oidc.apiUrl` is then essential. Grafana keeps the first valid role, from the ID token, then from the userinfo
+response: do not guard the claim with a default such as ``roles || `[]` ``, otherwise the expression already returns
+`Viewer` on the ID token and the userinfo response is never read.
 
 ### Operator update
 
