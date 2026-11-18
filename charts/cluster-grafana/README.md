@@ -333,3 +333,4 @@ generated before it is removed.
 | Release  | Date       | Description                                            |
 | -------- | ---------- | ------------------------------------------------------ |
 | 21.3.361 | 2026-11-17 | Initial chart creation |
+| 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
