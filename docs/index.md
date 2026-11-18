@@ -85,6 +85,22 @@ Helm chart prefixed with `cluster-` are Cluster chart. Cluster charts configure 
 | **[cluster-etcdbackup](charts/cluster-etcdbackup.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-etcdbackup)           | deploy a periodic etcd backup CronJob to an S3-compatible object store  |
 | **[cluster-trident](charts/cluster-trident.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-trident)           | enable NetApp Trident CSI storage (operator, backends, storage classes) at the cluster level  |
 | **[cluster-kasten](charts/cluster-kasten.md)**                     | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kasten)           | enable Kasten K10 backup and data management at the cluster level  |
+| **[cluster-cudn](charts/cluster-cudn.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-cudn) | configure OVN-Kubernetes user-defined networks (ClusterUserDefinedNetwork and UserDefinedNetwork) |
+| **[cluster-dell-csm](charts/cluster-dell-csm.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-dell-csm) | configure the Dell Container Storage Modules (CSM) operator and a Dell CSI storage driver |
+| **[cluster-eck](charts/cluster-eck.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-eck) | configure the Elastic Cloud on Kubernetes (ECK) operator, Elasticsearch clusters and Kibana |
+| **[cluster-loki](charts/cluster-loki.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-loki) | configure the Loki log store (LokiStack) of OpenShift Logging |
+| **[cluster-metallb](charts/cluster-metallb.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-metallb) | configure MetalLB address pools, layer 2 and BGP advertisements on bare metal |
+| **[cluster-network-observability](charts/cluster-network-observability.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-network-observability) | configure Network Observability and its FlowCollector to visualize network flows |
+| **[cluster-prometheus](charts/cluster-prometheus.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-prometheus) | configure the Cluster Observability Operator and Prometheus monitoring stacks |
+| **[cluster-acm](charts/cluster-acm.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-acm) | configure Advanced Cluster Manager at the cluster level |
+| **[cluster-acs](charts/cluster-acs.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-acs) | configure Advanced Cluster Security (ACS/Stackrox) at the cluster level |
+| **[cluster-argocd](charts/cluster-argocd.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-argocd) | configure ArgoCD using the openshift gitops operator at the cluster level |
+| **[cluster-kafka](charts/cluster-kafka.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-kafka) | configure Kafka at the cluster level |
+| **[cluster-odf](charts/cluster-odf.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-odf) | configure Openshift Data Foundation storage at the cluster level |
+| **[cluster-ods](charts/cluster-ods.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-ods) | configure OpenDataScience at the cluster level |
+| **[cluster-percona](charts/cluster-percona.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-percona) | configure highly available PostgreSQL clusters with the Percona Operator for PostgreSQL |
+| **[cluster-redis](charts/cluster-redis.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-redis) | configure Redis clusters using the Opstree operator (and optionally redislabs operator) |
+| **[cluster-storage-efs](charts/cluster-storage-efs.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/cluster-storage-efs) | configure AWS EFS storage at the cluster level |
 
 ### Chaos Charts
 
@@ -118,6 +134,7 @@ Helm chart prefixed with `example-` are Example chart. Example are used in demo 
 | **[example-fruitapp-project](charts/example-fruitapp-project.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-project) | Deploy fruitapp CI/CD demo with common and project structure (like namespaces)        |
 | **[example-fruitapp-shared](charts/example-fruitapp-shared.md)**   | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-shared)  | Deploy shared component like database and secrets                                     |
 | **[example-fruitapp-app](charts/example-fruitapp-app.md)**         | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-fruitapp-app)     | Deploy application stack into an environment                                          |
+| **[example-couchbase](charts/example-couchbase.md)** | [source](https://github.com/startxfr/helm-repository/tree/master/charts/example-couchbase) | An example of a simple micro-service using the couchbase backend chart |
 
 ### Deprecated Charts
 

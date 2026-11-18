@@ -1,0 +1,150 @@
+# Auto-generated values-app file for deploying cluster-dell-csm via argocd
+# Source: examples/argocd/ from the cluster-dell-csm chart
+
+argocd_project:
+  enabled: true
+  list:
+    - name: 'infra-dell-csm'
+      namespace: 'openshift-gitops'
+      wave: "-10"
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'default-dell-csm'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-operators'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles:
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, proj:infra-dell-csm:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+
+# Applications
+application:
+  enabled: true
+  list:
+    # Application configuration and instances
+    - name: 'infra-dell-csm-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "10"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-dell-csm'
+      source:
+        path: 'charts/cluster-dell-csm'
+        repo: 'https://gitlab.com/startx1/helm.git'
+        rev: 'stable'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          csm:
+            enabled: true
+          # The driver needs the array credentials Secret "powerstore-config" in default-dell-csm:
+          # enable arraySecret with your own arraySecret.config (or arraySecret.externalSecret with
+          # externalSecretDefaults.secretStoreRef.name) or create the Secret outside of ArgoCD
+          arraySecret:
+            enabled: false
+          storageClasses:
+            enabled: true
+          volumeSnapshotClasses:
+            enabled: true
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - SkipDryRunOnMissingResource=true
+      ignoreDifferences: |
+        - group: storage.dell.com
+          jqPathExpressions:
+          - .metadata.annotations["storage.dell.com/CSMOperatorConfigVersion"]
+          - .metadata.annotations["storage.dell.com/PreviouslyAppliedConfiguration"]
+          - .metadata.annotations["storage.dell.com/PreUpgradeSnapshot"]
+          jsonPointers:
+          - /metadata/finalizers
+          kind: ContainerStorageModule
+    # Installs and configures the operator
+    - name: 'infra-dell-csm-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "5"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-dell-csm'
+      source:
+        path: 'charts/cluster-dell-csm'
+        repo: 'https://gitlab.com/startx1/helm.git'
+        rev: 'stable'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: true
+            operatorGroup:
+              enabled: false
+          csm:
+            enabled: false
+          arraySecret:
+            enabled: false
+          storageClasses:
+            enabled: false
+          volumeSnapshotClasses:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-dell-csm-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      wave: "1"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-dell-csm'
+      source:
+        path: 'charts/cluster-dell-csm'
+        repo: 'https://gitlab.com/startx1/helm.git'
+        rev: 'stable'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          operator:
+            enabled: false
+          csm:
+            enabled: false
+          arraySecret:
+            enabled: false
+          storageClasses:
+            enabled: false
+          volumeSnapshotClasses:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: true
+  list: []

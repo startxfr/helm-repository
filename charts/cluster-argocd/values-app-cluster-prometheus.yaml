@@ -1,0 +1,187 @@
+# Auto-generated values-app file for deploying cluster-prometheus via argocd
+# Source: examples/argocd/ from the cluster-prometheus chart
+
+argocd_project:
+  enabled: true
+  list:
+    - name: 'infra-prometheus'
+      namespace: 'openshift-gitops'
+      wave: "-10"
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'default-prometheus'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-cluster-observability-operator'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles:
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, proj:infra-prometheus:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+
+# Applications
+application:
+  enabled: true
+  list:
+    # Application configuration and instances
+    - name: 'infra-prometheus-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "10"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-prometheus'
+      source:
+        path: 'charts/cluster-prometheus'
+        repo: 'https://gitlab.com/startx1/helm.git'
+        rev: 'stable'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          operatorNamespace:
+            enabled: false
+          operator:
+            enabled: false
+          monitoringStacks:
+            enabled: true
+          thanosQueriers:
+            enabled: false
+          serviceMonitors:
+            enabled: false
+          podMonitors:
+            enabled: false
+          scrapeConfigs:
+            enabled: false
+          prometheusRules:
+            enabled: false
+          alertmanagerConfigs:
+            enabled: false
+          networkPolicies:
+            enabled: false
+          routes:
+            enabled: false
+          secrets:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - SkipDryRunOnMissingResource=true
+      ignoreDifferences: |
+        - group: monitoring.rhobs
+          jsonPointers:
+          - /metadata/finalizers
+          kind: MonitoringStack
+        - group: monitoring.rhobs
+          jsonPointers:
+          - /metadata/finalizers
+          kind: ThanosQuerier
+    # Installs and configures the operator
+    - name: 'infra-prometheus-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "5"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-prometheus'
+      source:
+        path: 'charts/cluster-prometheus'
+        repo: 'https://gitlab.com/startx1/helm.git'
+        rev: 'stable'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          operatorNamespace:
+            enabled: false
+          operator:
+            enabled: true
+          monitoringStacks:
+            enabled: false
+          thanosQueriers:
+            enabled: false
+          serviceMonitors:
+            enabled: false
+          podMonitors:
+            enabled: false
+          scrapeConfigs:
+            enabled: false
+          prometheusRules:
+            enabled: false
+          alertmanagerConfigs:
+            enabled: false
+          networkPolicies:
+            enabled: false
+          routes:
+            enabled: false
+          secrets:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Creates project namespace and RBAC
+    - name: 'infra-prometheus-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      wave: "1"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-prometheus'
+      source:
+        path: 'charts/cluster-prometheus'
+        repo: 'https://gitlab.com/startx1/helm.git'
+        rev: 'stable'
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          operatorNamespace:
+            enabled: true
+          operator:
+            enabled: false
+          monitoringStacks:
+            enabled: false
+          thanosQueriers:
+            enabled: false
+          serviceMonitors:
+            enabled: false
+          podMonitors:
+            enabled: false
+          scrapeConfigs:
+            enabled: false
+          prometheusRules:
+            enabled: false
+          alertmanagerConfigs:
+            enabled: false
+          networkPolicies:
+            enabled: false
+          routes:
+            enabled: false
+          secrets:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+
+argocd_repocreds:
+  enabled: true
+  list: []
