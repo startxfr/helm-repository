@@ -1,0 +1,28 @@
+{{- if .Values.rhbk_realms.enabled -}}
+{{- $namespace := include "cluster-rhbk.namespace" . -}}
+{{- $keycloak := include "cluster-rhbk.keycloakName" . -}}
+{{- range .Values.rhbk_realms.list }}
+{{- if ne (toString .enabled) "false" }}
+---
+apiVersion: {{ $.Values.rhbk.apiVersion | default "k8s.keycloak.org/v2beta1" }}
+kind: KeycloakRealmImport
+metadata:
+  name: {{ .name | default "myrealm" | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-rhbk.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-realmimport" (.name | default "myrealm") | quote }}
+  annotations:
+    {{- include "cluster-rhbk.annotations" $ | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "30"
+spec:
+  keycloakCRName: {{ .keycloakCRName | default $keycloak | quote }}
+  {{- with .placeholders }}
+  placeholders:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  realm:
+    {{- required (printf "rhbk_realms.list[%s].realm is required" .name) .realm | nindent 4 }}
+{{- end }}
+{{- end }}
+{{- end -}}
