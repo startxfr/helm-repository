@@ -137,14 +137,14 @@ The chart builds part of the `Grafana` spec from the other values, then merges `
 | `authUrl` | `""` | Authorization endpoint. Required when `issuerUrl` is empty |
 | `tokenUrl` | `""` | Token endpoint. Required when `issuerUrl` is empty |
 | `apiUrl` | `""` | Userinfo endpoint. Required when `issuerUrl` is empty |
-| `signoutUrl` | `""` | Logout endpoint, used as is (no parameter added). Empty with an empty `issuerUrl`: Grafana only logs out locally |
+| `signoutUrl` | `""` | Logout endpoint, used as is (the chart adds no parameter). Empty with an empty `issuerUrl`: Grafana only logs out locally |
 | `clientId`, `scopes` | `grafana`, `openid email profile` | Client registered in the provider and requested scopes |
 | `roleAttributePath` | `grafanaadmin`, `admin`, `editor` roles, else `Viewer` | JMESPath expression mapping the claims of the user to a Grafana role. The default reads a top-level `roles` claim |
 | `clientSecret.enabled`, `name`, `value` | `true`, `<grafana.name>-oidc-client`, `""` | Secret holding the client secret (key `client-secret`). `value` is required unless `externalSecret` is used |
 | `clientSecret.externalSecret.enabled`, `remoteRefs` | `false`, `{}` | Produce the Secret with an `ExternalSecret` instead (key `client-secret` required) |
 | `ca.certificate` | `""` | Inline PEM CA certificate(s) of the provider endpoints, rendered in the ConfigMap `<grafana.name>-oidc-ca` |
 | `ca.injectTrustedBundle` | `false` | Inject the cluster trusted CA bundle (system CAs and proxy `trustedCA`) in the ConfigMap `<grafana.name>-oidc-ca` |
-| `ca.configMap`, `ca.key` | `""`, `ca-bundle.crt` | Existing ConfigMap holding the CA bundle, and its key |
+| `ca.configMap`, `ca.key` | `""`, `ca-bundle.crt` | Existing ConfigMap holding the CA bundle, and its key. `ca.key` is ignored with `ca.injectTrustedBundle`, which always uses `ca-bundle.crt` |
 
 The endpoints come from two modes, which can be mixed:
 
@@ -155,8 +155,9 @@ The endpoints come from two modes, which can be mixed:
   `authorization_endpoint`, `token_endpoint`, `userinfo_endpoint`, `end_session_endpoint`). With an `issuerUrl` as
   well, each URL given replaces only its own derived endpoint.
 
-The rendering fails when `oidc.enabled` is set, `issuerUrl` is empty and one of `authUrl`, `tokenUrl` or `apiUrl` is
-missing.
+With `oidc.enabled`, the rendering fails when `issuerUrl` is empty and one of `authUrl`, `tokenUrl` or `apiUrl` is
+missing. It also fails when more than one CA source is set: `ca.certificate`, `ca.injectTrustedBundle` and
+`ca.configMap` are mutually exclusive.
 
 The generated `generic_oauth` section also sets `login_attribute_path: preferred_username`, `email_attribute_path: email`,
 `name_attribute_path: name`, `use_pkce: true`, `allow_assign_grafana_admin: true` and `allow_sign_up: true` (every user
@@ -200,7 +201,8 @@ The local admin account stays available next to the OpenID Connect login, as a b
    apps domain of the cluster, and use the same client secret (`oidc.clientSecret` here, `rhbk_realms.secrets` in cluster-rhbk).
 3. Make Grafana trust the CA of the Keycloak route. When the ingress certificate is signed by a CA of the proxy
    `trustedCA` (enterprise PKI), `oidc.ca.injectTrustedBundle: true` is enough. With the default self-signed ingress
-   certificate of OpenShift, give its CA inline (commands below).
+   certificate of OpenShift, give its CA inline instead (commands below). Set only one CA source: the chart rejects
+   `oidc.ca.certificate`, `oidc.ca.injectTrustedBundle` and `oidc.ca.configMap` together.
 4. Assign the client roles of `grafana` to the users in Keycloak. A user without any role logs in as `Viewer`.
 
 ```bash
@@ -220,7 +222,7 @@ must be ignored in the Argo CD Application (see the examples).
 2. Read the endpoints from the discovery document of the provider, and set them in `oidc.authUrl`, `oidc.tokenUrl`,
    `oidc.apiUrl` and `oidc.signoutUrl`. Leave `oidc.issuerUrl` empty.
 3. Adapt `oidc.roleAttributePath` and `oidc.scopes` to the claims of the provider (see below).
-4. Make Grafana trust the CA of the provider endpoints with `oidc.ca`, as for Keycloak.
+4. Make Grafana trust the CA of the provider endpoints with one of the `oidc.ca` sources, as for Keycloak.
 
 ```bash
 curl -s https://idp.example.com/.well-known/openid-configuration | jq '{authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint}'
@@ -248,7 +250,8 @@ oidc:
 ```
 
 The URLs above are placeholders: the paths depend on the provider and its version. `signoutUrl` is used as is, so add
-the parameters the logout endpoint of the provider expects, such as `post_logout_redirect_uri` and `client_id`.
+the parameters the logout endpoint of the provider expects, such as `post_logout_redirect_uri` and `client_id`. Grafana
+adds the `id_token_hint` parameter itself.
 
 `roleAttributePath` must follow the claims the provider really sends. The default expression reads a top-level `roles`
 claim filled by the `cluster-rhbk` mapper, which other providers do not send: without a matching claim, every user logs
