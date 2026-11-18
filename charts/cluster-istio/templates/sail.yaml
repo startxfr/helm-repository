@@ -1,0 +1,78 @@
+{{- /* Sail operator (Service Mesh 3, sailoperator.io) resources: IstioCNI, Istio and Telemetry */ -}}
+{{- if .Values.sail -}}{{- if .Values.sail.enabled -}}
+{{- $defaultns := .Values.project.project.name | default "default-istio" -}}
+{{- with .Values.sail.istioCNI }}{{- if .enabled }}
+{{- range .list }}
+{{- $name := .name | default "default" -}}
+{{- $spec := (.spec | default "{}") | fromYaml | default dict -}}
+{{- if .version }}{{- $_ := set $spec "version" (toString .version) -}}{{- end }}
+{{- if .namespace }}{{- $_ := set $spec "namespace" .namespace -}}{{- end }}
+{{ "" }}
+---
+apiVersion: {{ .apiVersion | default "sailoperator.io/v1" }}
+kind: IstioCNI
+metadata:
+  name: {{ $name | quote }}
+  labels:
+    {{- include "cluster-istio.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-istiocni"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-istio.annotations" $ | nindent 4 }}
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "20") (.annotations | default dict)) | nindent 4 }}
+spec:
+  {{- toYaml $spec | nindent 2 }}
+{{- end }}
+{{- end }}{{- end }}
+{{- with .Values.sail.istio }}{{- if .enabled }}
+{{- range .list }}
+{{- $name := .name | default "default" -}}
+{{- $spec := (.spec | default "{}") | fromYaml | default dict -}}
+{{- if .version }}{{- $_ := set $spec "version" (toString .version) -}}{{- end }}
+{{- if .namespace }}{{- $_ := set $spec "namespace" .namespace -}}{{- end }}
+{{ "" }}
+---
+apiVersion: {{ .apiVersion | default "sailoperator.io/v1" }}
+kind: Istio
+metadata:
+  name: {{ $name | quote }}
+  labels:
+    {{- include "cluster-istio.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-istio"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-istio.annotations" $ | nindent 4 }}
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "25") (.annotations | default dict)) | nindent 4 }}
+spec:
+  {{- toYaml $spec | nindent 2 }}
+{{- end }}
+{{- end }}{{- end }}
+{{- with .Values.sail.telemetry }}{{- if .enabled }}
+{{- range .list }}
+{{- $name := .name | default "default" -}}
+{{- $namespace := .namespace | default $defaultns -}}
+{{ "" }}
+---
+apiVersion: {{ .apiVersion | default "telemetry.istio.io/v1" }}
+kind: Telemetry
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-istio.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-telemetry"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-istio.annotations" $ | nindent 4 }}
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "30") (.annotations | default dict)) | nindent 4 }}
+spec:
+  {{- .spec | default "{}" | nindent 2 }}
+{{- end }}
+{{- end }}{{- end }}
+{{- end }}{{- end }}

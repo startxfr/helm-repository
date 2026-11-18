@@ -42,6 +42,72 @@ istio:
       # Namespace where the control plane is deployed
       controlePlaneNS: default-istio
 
+# Sail operator resources (Service Mesh 3, sailoperator.io). Alternative to the istio ServiceMeshControlPlane (maistra.io)
+sail:
+  # Enable the deployment of the Sail resources
+  enabled: false
+  # IstioCNI resources (cluster scoped, applied before the Istio resources)
+  istioCNI:
+    # Enable the IstioCNI resources
+    enabled: false
+    # List of IstioCNI resources
+    list:
+      # Name of the IstioCNI (the Sail operator expects default)
+    - name: default
+      # # API version (default is sailoperator.io/v1)
+      # apiVersion: sailoperator.io/v1
+      # # Istio version (override spec.version)
+      # version: v1.24.3
+      # # Namespace where the CNI is installed (override spec.namespace)
+      # namespace: istio-cni
+      # # Additional labels and annotations (maps, annotations override the default sync-wave 20)
+      # labels: {}
+      # annotations: {}
+      # Free spec of the IstioCNI (YAML string)
+      spec: |
+        namespace: istio-cni
+  # Istio resources (cluster scoped control planes)
+  istio:
+    # Enable the Istio resources
+    enabled: false
+    # List of Istio resources
+    list:
+      # Name of the Istio control plane
+    - name: default
+      # # API version (default is sailoperator.io/v1)
+      # apiVersion: sailoperator.io/v1
+      # # Istio version (override spec.version)
+      # version: v1.24.3
+      # # Namespace of the control plane (override spec.namespace)
+      # namespace: istio-system
+      # # Additional labels and annotations (maps, annotations override the default sync-wave 25)
+      # labels: {}
+      # annotations: {}
+      # Free spec of the Istio (YAML string)
+      spec: |
+        namespace: istio-system
+        updateStrategy:
+          type: InPlace
+  # Telemetry resources (telemetry.istio.io)
+  telemetry:
+    # Enable the Telemetry resources
+    enabled: false
+    # List of Telemetry resources
+    list:
+      # Name of the Telemetry
+    - name: default
+      # # Namespace of the Telemetry (default is the project name)
+      # namespace: istio-system
+      # # Additional labels and annotations (maps, annotations override the default sync-wave 30)
+      # labels: {}
+      # annotations: {}
+      # Free spec of the Telemetry (YAML string)
+      spec: |
+        tracing:
+          - providers:
+              - name: jaeger
+            randomSamplingPercentage: 10
+
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
   enabled: false

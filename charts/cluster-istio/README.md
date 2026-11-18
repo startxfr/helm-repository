@@ -72,6 +72,10 @@ helm install cluster-gpu-operator startx/cluster-gpu --set project.enabled=false
 helm install cluster-gpu-instance startx/cluster-gpu --set project.enabled=false,operator.enabled=false,gpu.enabled=true
 ```
 
+### Sail operator (Service Mesh 3)
+
+The `sail` values deploy the `sailoperator.io/v1` `IstioCNI` and `Istio` resources and the `telemetry.istio.io/v1` `Telemetry` resources, as an alternative to the `maistra.io` `ServiceMeshControlPlane`. Each list item accepts `labels`, `annotations` (override the default sync-wave 20, 25 and 30) and a free `spec`. The Sail operator subscription itself is not part of this chart.
+
 ## Other available values
 
 - **startx** : Startx Istio service configuration using service-mesh operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-istio/values-startx.yaml))
