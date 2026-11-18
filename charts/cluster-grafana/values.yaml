@@ -92,11 +92,19 @@ oidc:
   # Enable the OpenID Connect authentication
   enabled: false
   # Label of the login button
-  name: Keycloak
-  # Issuer URL of the realm (https://<keycloak host>/realms/<realm>). The auth, token, userinfo and logout
-  # endpoints are derived from it (Keycloak layout)
+  name: OpenID Connect
+  # Issuer URL of a Keycloak realm (https://<keycloak host>/realms/<realm>). The auth, token, userinfo and logout
+  # endpoints are derived from it (Keycloak layout). Leave it empty with another provider and set the URLs below
   issuerUrl: ""
-  # Client ID registered in the realm
+  # Authorization endpoint (overrides the one derived from issuerUrl, required when issuerUrl is empty)
+  authUrl: ""
+  # Token endpoint (overrides the one derived from issuerUrl, required when issuerUrl is empty)
+  tokenUrl: ""
+  # Userinfo endpoint (overrides the one derived from issuerUrl, required when issuerUrl is empty)
+  apiUrl: ""
+  # Logout URL Grafana redirects to after sign out, used as is (overrides the one derived from issuerUrl, optional)
+  signoutUrl: ""
+  # Client ID registered in the provider
   clientId: grafana
   # Requested scopes
   scopes: openid email profile
@@ -109,7 +117,7 @@ oidc:
     enabled: true
     # Name of the Secret (default: <grafana.name>-oidc-client)
     name: ""
-    # Client secret (secret, required unless externalSecret is used). Must match the secret of the client in the realm
+    # Client secret (secret, required unless externalSecret is used). Must match the client secret in the provider
     value: ""
     # Source the Secret from an external store instead (External Secrets Operator)
     externalSecret:
@@ -120,7 +128,7 @@ oidc:
       #   client-secret:
       #     key: kv/grafana/oidc
       #     property: client_secret
-  # CA bundle Grafana trusts to reach the issuer (route certificate of Keycloak). Use one of:
+  # CA bundle Grafana trusts to reach the provider endpoints (e.g. route certificate of Keycloak). Use one of:
   ca:
     # Inline PEM certificate(s), rendered in the ConfigMap <grafana.name>-oidc-ca
     certificate: ""

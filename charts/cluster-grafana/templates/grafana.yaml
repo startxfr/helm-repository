@@ -31,12 +31,38 @@
 {{- $env = append $env (dict "name" "GF_SECURITY_ADMIN_PASSWORD" "valueFrom" (dict "secretKeyRef" (dict "name" $secret "key" "password"))) -}}
 {{- end }}
 {{- if $oidc.enabled }}
-{{- $issuer := required "oidc.issuerUrl is required when oidc.enabled (https://<keycloak host>/realms/<realm>)" $oidc.issuerUrl | trimSuffix "/" -}}
 {{- if not $rootUrl }}
 {{- fail "oidc.enabled requires route.enabled and route.host (Grafana root_url, used to build the OIDC callback URL)" -}}
 {{- end }}
+{{- $clientId := $oidc.clientId | default "grafana" -}}
+{{- $issuer := $oidc.issuerUrl | default "" | trimSuffix "/" -}}
+{{- /* Explicit endpoints take precedence over the ones derived from issuerUrl (Keycloak layout) */ -}}
+{{- $urls := dict "auth" ($oidc.authUrl | default "") "token" ($oidc.tokenUrl | default "") "api" ($oidc.apiUrl | default "") "signout" ($oidc.signoutUrl | default "") -}}
+{{- if $issuer }}
 {{- $endpoint := printf "%s/protocol/openid-connect" $issuer -}}
-{{- $go := dict "enabled" "true" "name" ($oidc.name | default "Keycloak") "allow_sign_up" "true" "client_id" ($oidc.clientId | default "grafana") "scopes" ($oidc.scopes | default "openid email profile") "auth_url" (printf "%s/auth" $endpoint) "token_url" (printf "%s/token" $endpoint) "api_url" (printf "%s/userinfo" $endpoint) "signout_redirect_url" (printf "%s/logout?post_logout_redirect_uri=%s&client_id=%s" $endpoint (printf "%slogin" $rootUrl | urlquery) ($oidc.clientId | default "grafana")) "email_attribute_path" "email" "login_attribute_path" "preferred_username" "name_attribute_path" "name" "role_attribute_path" $oidc.roleAttributePath "allow_assign_grafana_admin" "true" "use_pkce" "true" -}}
+{{- $_ := set $urls "auth" ($urls.auth | default (printf "%s/auth" $endpoint)) -}}
+{{- $_ := set $urls "token" ($urls.token | default (printf "%s/token" $endpoint)) -}}
+{{- $_ := set $urls "api" ($urls.api | default (printf "%s/userinfo" $endpoint)) -}}
+{{- $_ := set $urls "signout" ($urls.signout | default (printf "%s/logout?post_logout_redirect_uri=%s&client_id=%s" $endpoint (printf "%slogin" $rootUrl | urlquery) $clientId)) -}}
+{{- else }}
+{{- $missing := list -}}
+{{- if not $urls.auth }}
+{{- $missing = append $missing "oidc.authUrl" -}}
+{{- end }}
+{{- if not $urls.token }}
+{{- $missing = append $missing "oidc.tokenUrl" -}}
+{{- end }}
+{{- if not $urls.api }}
+{{- $missing = append $missing "oidc.apiUrl" -}}
+{{- end }}
+{{- with $missing }}
+{{- fail (printf "oidc.authUrl, oidc.tokenUrl and oidc.apiUrl are required when oidc.issuerUrl is empty (missing: %s)" (join ", " .)) -}}
+{{- end }}
+{{- end }}
+{{- $go := dict "enabled" "true" "name" ($oidc.name | default "OpenID Connect") "allow_sign_up" "true" "client_id" $clientId "scopes" ($oidc.scopes | default "openid email profile") "auth_url" $urls.auth "token_url" $urls.token "api_url" $urls.api "email_attribute_path" "email" "login_attribute_path" "preferred_username" "name_attribute_path" "name" "role_attribute_path" $oidc.roleAttributePath "allow_assign_grafana_admin" "true" "use_pkce" "true" -}}
+{{- with $urls.signout }}
+{{- $_ := set $go "signout_redirect_url" . -}}
+{{- end }}
 {{- if eq (include "cluster-grafana.oidcCaEnabled" .) "true" }}
 {{- $caKey := ternary "ca-bundle.crt" ($oidc.ca.key | default "ca-bundle.crt") (and $oidc.ca.injectTrustedBundle (not $oidc.ca.configMap)) -}}
 {{- $_ := set $go "tls_client_ca" (printf "/etc/grafana-oidc-ca/%s" $caKey) -}}

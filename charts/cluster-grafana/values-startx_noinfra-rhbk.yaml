@@ -48,6 +48,10 @@ oidc:
   name: Keycloak
   # Realm startx of the cluster-rhbk chart (values-startx_noinfra-grafana.yaml), replace apps.example.com
   issuerUrl: "https://startx-default-rhbk.apps.example.com/realms/startx"
+  authUrl: ""
+  tokenUrl: ""
+  apiUrl: ""
+  signoutUrl: ""
   clientId: grafana
   scopes: openid email profile
   roleAttributePath: "contains(roles[*], 'grafanaadmin') && 'GrafanaAdmin' || contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'"

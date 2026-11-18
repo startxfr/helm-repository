@@ -44,8 +44,12 @@ route:
   insecureEdgeTerminationPolicy: Redirect
 oidc:
   enabled: false
-  name: Keycloak
+  name: OpenID Connect
   issuerUrl: ""
+  authUrl: ""
+  tokenUrl: ""
+  apiUrl: ""
+  signoutUrl: ""
   clientId: grafana
   scopes: openid email profile
   roleAttributePath: "contains(roles[*], 'grafanaadmin') && 'GrafanaAdmin' || contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'"

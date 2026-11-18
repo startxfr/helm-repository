@@ -67,7 +67,7 @@ argocd.argoproj.io/hook-delete-policy: HookFailed
        route : enabled ({{ .route.termination | default "edge" }})
 {{- end }}{{- end }}
 {{- if .oidc }}{{- if .oidc.enabled }}
-        oidc : enabled ({{ .oidc.issuerUrl }})
+        oidc : enabled ({{ .oidc.issuerUrl | default .oidc.authUrl }})
 {{- end }}{{- end }}
 {{- if .grafana_datasources }}{{- if .grafana_datasources.enabled }}
  datasources : enabled ({{ len .grafana_datasources.list }} datasource(s))
