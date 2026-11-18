@@ -326,3 +326,4 @@ that the operator deletes the objects it generated before it is removed.
 | Release  | Date       | Description                                            |
 | -------- | ---------- | ------------------------------------------------------ |
 | 21.3.361 | 2026-11-16 | Initial chart creation |
+| 21.3.370 | 2026-11-18 | publish stable update for the full repository |
