@@ -1,0 +1,23 @@
+{{- if and .Values.grafana.enabled .Values.oidc.enabled (not .Values.oidc.ca.configMap) (or .Values.oidc.ca.certificate .Values.oidc.ca.injectTrustedBundle) -}}
+{{- $name := include "cluster-grafana.oidcCaName" . -}}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ include "cluster-grafana.namespace" . | quote }}
+  labels:
+    {{- include "cluster-grafana.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ printf "%s-configmap" $name | quote }}
+    {{- if .Values.oidc.ca.injectTrustedBundle }}
+    config.openshift.io/inject-trusted-cabundle: "true"
+    {{- end }}
+  annotations:
+    {{- include "cluster-grafana.annotations" . | nindent 4 }}
+    argocd.argoproj.io/sync-wave: "1"
+{{- if not .Values.oidc.ca.injectTrustedBundle }}
+data:
+  {{ .Values.oidc.ca.key | default "ca-bundle.crt" }}: |
+    {{- .Values.oidc.ca.certificate | trim | nindent 4 }}
+{{- end }}
+{{- end -}}
