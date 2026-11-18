@@ -62,8 +62,10 @@ clusterIssuer:
   list:
       # name of the clusterIssuer
     - name: letsencrypt-demo
-      # # namespace of the clusterIssuer (cluster scoped resource: not rendered when empty)
-      # namespace: openshift-certmanager
+      # namespace of the clusterIssuer (default is project namespace)
+      namespace: openshift-certmanager
+      # # set to true to omit metadata.namespace (a ClusterIssuer is cluster scoped, default is false)
+      # clusterScoped: false
       # # additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options: Prune=false
       # # override the default sync-wave 1)
       # annotations: {}

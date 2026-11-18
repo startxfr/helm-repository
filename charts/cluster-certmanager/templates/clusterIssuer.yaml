@@ -1,4 +1,5 @@
 {{- if .Values.clusterIssuer -}}{{- if .Values.clusterIssuer.enabled -}}
+{{- $defaultns := .Values.project.project.name | default "openshift-certmanager" -}}
 {{ range .Values.clusterIssuer.list }}
 {{- $name := .name | default "cert-issuer" -}}
 {{- $spec := .spec | default "{}" -}}
@@ -7,9 +8,9 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: {{ .name | default "default_issuer" | quote }}
-  {{- /* ClusterIssuer is cluster scoped: the namespace is only rendered when set on the item */}}
-  {{- if .namespace }}
-  namespace: {{ .namespace | quote }}
+  {{- /* clusterScoped: true omits metadata.namespace (ClusterIssuer is cluster scoped) */}}
+  {{- if not .clusterScoped }}
+  namespace: {{ .namespace | default $defaultns | quote }}
   {{- end }}
   labels:
     {{- include "cluster-certmanager.labels" $ | nindent 4 }}
