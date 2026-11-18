@@ -150,6 +150,19 @@ function routerPublishDevel {
     doHelmrepositoryRefresh "$HELM_REPO_SUBDEV" "$HELM_REPO_SUBDEV" "$HELM_REPO_BASEURL" Publish 36 no
 }
 
+# Release every chart, keep going after a failure, and report all failed charts at the end
+function releaseAllCharts {
+    local failed=()
+    local chart
+    for chart in $(chartList); do
+        routerChartRelease "$chart" "auto" "$1" "$2" || failed+=("$chart")
+    done
+    if [[ ${#failed[@]} -gt 0 ]]; then
+        echo -e "\e[31mRelease\e[0m ERROR ${#failed[@]} chart(s) failed : ${failed[*]}" >&2
+        return 1
+    fi
+}
+
 # Release all charts on the current branch without the full repository flow.
 # Bumps every chart version, packages, uploads .tgz to S3, commits repo-release.
 # Does NOT merge to master/stable, does NOT create a tag, does NOT push.
@@ -173,9 +186,10 @@ function routerReleaseChartsOnly {
         [[ "$nextDesc" != "" ]] && next_description=$nextDesc
     fi
 
-    for chart in $(chartList); do
-        routerChartRelease "$chart" "auto" "$next_release" "$next_description"
-    done
+    releaseAllCharts "$next_release" "$next_description" || {
+        echo -e "\e[31mRelease\e[0m $WORK_BRANCH not finalized ($PROJECT_PATH/.tools/repo-release unchanged) : fix the failed charts first" >&2
+        return 1
+    }
 
     echo "$next_release" > "${PROJECT_PATH}/.tools/repo-release"
     git add "${PROJECT_PATH}/.tools/repo-release" &>/dev/null
@@ -210,9 +224,10 @@ function routerRelease {
     fi
 
     echo -e "\e[36mRelease\e[0m committing release to all charts"
-    for chart in $(chartList); do
-        routerChartRelease "$chart" "auto" "$next_release" "$next_description"
-    done
+    releaseAllCharts "$next_release" "$next_description" || {
+        echo -e "\e[31mRelease\e[0m repository release stopped before merge and tag : fix the failed charts first" >&2
+        return 1
+    }
 
     echo -e "\e[36mRelease\e[0m update $WORK_BRANCH to $next_release"
     echo "$next_release" > "${PROJECT_PATH}/.tools/repo-release"
@@ -460,18 +475,28 @@ function routerChartPackage {
         git add "$chart_name"/* &>/dev/null
         git commit -m "[chart/$chart_name] package version $current_release" "$chart_name" &>/dev/null
         echo -e "\e[34mPackage\e[0m download dependencies for \e[1m$chart_name\e[0m"
-        helm dependency update "$chart_dir"
+        # A package built without its dependencies must never reach the repository
+        if ! helm dependency update "$chart_dir"; then
+            echo -e "\e[34mPackage\e[0m \e[31mERROR\e[0m dependencies of \e[1m$chart_name\e[0m cannot be resolved, nothing packaged" >&2
+            cd - &>/dev/null || exit 1
+            return 1
+        fi
+        local package_status=0
         if [[ "$SXHELM_SIGN" == "enabled" ]]; then
             echo -e "\e[34mPackage\e[0m sign and package \e[1m$chart_name\e[0m v$current_release"
             helm package "$chart_name" --sign \
                 --key "$SXHELM_SIGN_KEY" \
                 --keyring "$SXHELM_SIGN_KEYRING" \
-                --passphrase-file "$SXHELM_SIGN_KEYPASSPHRASEFILE"
+                --passphrase-file "$SXHELM_SIGN_KEYPASSPHRASEFILE" || package_status=1
         else
             echo -e "\e[34mPackage\e[0m package \e[1m$chart_name\e[0m v$current_release"
-            helm package "$chart_name"
+            helm package "$chart_name" || package_status=1
         fi
         cd - &>/dev/null || exit 1
+        if [[ $package_status -ne 0 ]]; then
+            echo -e "\e[34mPackage\e[0m \e[31mERROR\e[0m packaging \e[1m$chart_name\e[0m failed" >&2
+            return 1
+        fi
     else
         echo -e "\e[34mPackage\e[0m \e[31mERROR\e[0m chart \e[1m$chart_name\e[0m not found in $chart_dir"
         routerList
@@ -534,7 +559,8 @@ function routerChartRelease {
         local packagename="${chart_name}-${next_release}.tgz"
         git checkout $WORK_BRANCH &>/dev/null
         echo -e "\e[35mRelease\e[0m bump \e[1m$chart_name\e[0m: $current_release → $next_release"
-        sed -i "s/$current_release/$next_release/" "$chart_dir/Chart.yaml"
+        # Only the chart own version : a dependency pinned to the same version must not jump to a release that is not published yet
+        sed -i -E "s/^version:.*/version: $next_release/" "$chart_dir/Chart.yaml"
         sed -i "s/targetRevision: .*/targetRevision: $next_release/" "$chart_dir/README.md"
         if [[ $DOC_ADD_HISTORY == "true" ]]; then
             if ! readmeHistoryUpdate "$chart_name" "$next_release|$(date +%Y-%m-%d)|$next_description"; then
@@ -547,7 +573,10 @@ function routerChartRelease {
         git add "$chart_dir"
         git commit -m "[chart/$chart_name] $current_release → $next_release : $next_description" \
             "$chart_dir" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
-        routerChartPackage "$chart_name"
+        routerChartPackage "$chart_name" || {
+            echo -e "\e[35mRelease\e[0m \e[31mERROR\e[0m \e[1m$chart_name\e[0m not uploaded : the bump commit stays in git, fix the chart and release it again" >&2
+            return 1
+        }
         echo -e "\e[35mRelease\e[0m move \e[1m$packagename\e[0m → $pkgdestpath"
         mv "${PROJECT_CHARTPATH}/${packagename}" "${pkgdestpath}/${packagename}"
         awsS3FileUpload "${pkgdestpath}/${packagename}" "${subrepo}" $HELM_REPO_AWSBUCKET
