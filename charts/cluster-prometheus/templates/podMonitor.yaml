@@ -19,7 +19,7 @@ metadata:
     {{- end }}
   annotations:
     {{- include "cluster-prometheus.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "30"
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "30") (.annotations | default dict)) | nindent 4 }}
 spec:
   {{- include "cluster-prometheus.spec" (dict "kind" "PodMonitor" "name" $name "spec" .spec "required" true) | nindent 2 }}
 {{- end }}

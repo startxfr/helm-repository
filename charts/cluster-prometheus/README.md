@@ -298,6 +298,10 @@ Only federate the metrics you need: the request is evaluated by the platform Pro
 helm install cluster-prometheus startx/cluster-prometheus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-prometheus/values-startx.yaml
 ```
 
+### Annotations and sync-waves
+
+Every resource list (`monitoringStacks`, `serviceMonitors`, `podMonitors`, `prometheusRules`, `scrapeConfigs`, `alertmanagerConfigs`, `thanosQueriers`, `networkPolicies`, `routes` and `secrets`) accepts an `annotations` map per item. It is merged over the default ArgoCD sync-wave of the resource, so `argocd.argoproj.io/sync-wave` and `argocd.argoproj.io/sync-options` can be overridden. A `MonitoringStack` also accepts an explicit `spec.resourceSelector`.
+
 ## ArgoCD deployment
 
 ### Deploy via ArgoCD Application

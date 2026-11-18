@@ -23,7 +23,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "30"
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "30") (.annotations | default dict)) | nindent 4 }}
 spec:
   {{- include "cluster-prometheus.spec" (dict "kind" "ThanosQuerier" "name" $name "spec" .spec "required" true) | nindent 2 }}
 {{- end }}

@@ -53,6 +53,8 @@ monitoringStacks:
   #   namespace: ""
   #   # Additional labels set on the stack (matched by the selector of a ThanosQuerier)
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Bind the cluster-monitoring-view cluster role to the Prometheus service account of the stack. Required to
   #   # federate metrics of the platform monitoring (containers CPU and memory, kube-state-metrics)
   #   clusterMonitoringView: false
@@ -139,6 +141,8 @@ thanosQueriers:
   #   namespace: ""
   #   # Additional labels set on the querier
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Specification of the querier
   #   spec:
   #     # Label selector of the MonitoringStack resources to query (required, {} selects every stack)
@@ -168,6 +172,8 @@ serviceMonitors:
   #   stack: apps
   #   # Additional labels (ex: the labels of a custom resourceSelector)
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Specification of the ServiceMonitor (same fields as the monitoring.coreos.com one)
   #   spec:
   #     # Label selector of the services to scrape
@@ -194,6 +200,8 @@ podMonitors:
   #   stack: apps
   #   # Additional labels
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Specification of the PodMonitor
   #   spec:
   #     # Label selector of the pods to scrape
@@ -220,6 +228,8 @@ scrapeConfigs:
   #   stack: apps
   #   # Additional labels
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Specification of the ScrapeConfig
   #   spec:
   #     # Static list of targets and the labels added to their metrics
@@ -247,6 +257,8 @@ prometheusRules:
   #   stack: apps
   #   # Additional labels
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Specification of the PrometheusRule
   #   spec:
   #     # Groups of rules
@@ -276,6 +288,8 @@ alertmanagerConfigs:
   #   stack: apps
   #   # Additional labels
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Specification of the AlertmanagerConfig
   #   spec:
   #     # Routing tree of the alerts
@@ -306,6 +320,8 @@ networkPolicies:
   #   namespace: my-app
   #   # Additional labels
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Specification of the NetworkPolicy
   #   spec:
   #     podSelector: {}
@@ -336,7 +352,7 @@ routes:
   #   namespace: ""
   #   # Additional labels
   #   labels: {}
-  #   # Additional annotations (ex: only accept the clients of a network)
+  #   # Additional annotations (map, override the default argocd sync-wave, ex: only accept the clients of a network)
   #   annotations:
   #     haproxy.router.openshift.io/ip_allowlist: 192.0.2.0/24
   #   # Name of the exposed service: <stack>-prometheus, <stack>-alertmanager or thanos-querier-<name> (required)
@@ -367,6 +383,8 @@ secrets:
   #   type: Opaque
   #   # Additional labels set on the secret
   #   labels: {}
+  #   # Additional annotations (map, ex: argocd.argoproj.io/sync-wave or argocd.argoproj.io/sync-options override the defaults)
+  #   annotations: {}
   #   # Key/value pairs of the secret, rendered as stringData. Never commit a real credential: use externalSecret,
   #   # or keep the secret out of the chart and create it by hand
   #   data:
