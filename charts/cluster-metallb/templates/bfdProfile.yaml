@@ -1,0 +1,34 @@
+{{- if .Values.bfdProfiles.enabled -}}
+{{- $namespace := .Values.project.project.name | default "metallb-system" -}}
+{{- range .Values.bfdProfiles.list }}
+{{- $name := required "bfdProfiles.list: every item needs a name" .name }}
+---
+apiVersion: metallb.io/v1beta1
+kind: BFDProfile
+metadata:
+  name: {{ $name | quote }}
+  namespace: {{ $namespace | quote }}
+  labels:
+    {{- include "cluster-metallb.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{- $name -}}-bfdprofile"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-metallb.annotations" $ | nindent 4 }}
+    {{- if $.Values.bfdProfiles.hooked }}
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "30"
+    helm.sh/hook-delete-policy: hook-failed
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookFailed
+    {{- end }}
+    argocd.argoproj.io/sync-wave: "30"
+{{- if .spec }}
+spec:
+  {{- include "cluster-metallb.spec" (dict "kind" "BFDProfile" "name" $name "spec" .spec) | nindent 2 }}
+{{- else }}
+spec: {}
+{{- end }}
+{{- end }}
+{{- end -}}

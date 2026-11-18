@@ -1,0 +1,56 @@
+# Starts MetalLB (controller and speakers). The address pools and their advertisements are specific to each
+# cluster: set ipAddressPools.list and l2Advertisements.list (or the BGP blocks) in your own values and
+# switch ipAddressPools.enabled and l2Advertisements.enabled to true.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-metallb-app
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: metallb-system
+    server: https://kubernetes.default.svc
+  project: cluster-metallb
+  source:
+    chart: cluster-metallb
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: false
+        operator:
+          enabled: false
+        metallb:
+          enabled: true
+        ipAddressPools:
+          enabled: false
+        l2Advertisements:
+          enabled: false
+        bgpPeers:
+          enabled: false
+        bgpAdvertisements:
+          enabled: false
+        bfdProfiles:
+          enabled: false
+        communities:
+          enabled: false
+        secrets:
+          enabled: false
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    targetRevision: 21.3.361
+  ignoreDifferences:
+    - group: metallb.io
+      kind: MetalLB
+      jsonPointers:
+        - /metadata/finalizers
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - SkipDryRunOnMissingResource=true

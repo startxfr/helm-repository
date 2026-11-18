@@ -1,0 +1,335 @@
+# Default values for cluster-metallb.
+
+# Application deployment context
+context:  &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: myscope
+  # Name of the cluster running this application (platform tenant)
+  cluster: default
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: myenv
+  # Component name of this application (logical tenant)
+  component: mycomponent
+  # Application name (functional tenant, default use Chart name)
+  app: default-metallb
+  # Version name of this application (default use Chart appVersion)
+  version: "4.22.0"
+
+# Default settings of the ExternalSecret objects rendered by this chart when a
+# secret is sourced from an external store (`externalSecret.enabled: true`).
+# Requires the External Secrets Operator and a SecretStore/ClusterSecretStore.
+externalSecretDefaults:
+  # API version of the ExternalSecret CRD (external-secrets.io/v1beta1 for ESO releases without the v1 API)
+  apiVersion: external-secrets.io/v1
+  # How often the Secret is refreshed from the external store
+  refreshInterval: 1h
+  # Store to read from (name is required as soon as a secret uses externalSecret)
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+
+# Deploy the MetalLB instance (controller deployment and speaker daemonset started by the MetalLB operator)
+metallb:
+  # Enable the creation of the MetalLB CR
+  enabled: false
+  # Activate the resource as a helm hook
+  hooked: false
+  # Name of the MetalLB instance (the operator only reconciles the instance named metallb)
+  name: metallb
+  # Specification of the MetalLB instance, rendered as is (see the MetalLB CRD). Empty keeps the operator
+  # defaults: one controller pod and one speaker pod on every node, control plane included
+  spec: {}
+  #   # Verbosity of the controller and of the speakers (all, debug, info, warn, error or none)
+  #   logLevel: info
+  #   # Node selector of the speaker daemonset. Only the nodes running a speaker announce the load balancer
+  #   # addresses: select the nodes connected to the network of the address pools
+  #   nodeSelector:
+  #     node-role.kubernetes.io/worker: ""
+  #   # Tolerations of the speaker daemonset
+  #   speakerTolerations:
+  #     - key: node-role.kubernetes.io/infra
+  #       operator: Exists
+  #       effect: NoSchedule
+  #   # Node selector of the controller deployment (the controller only allocates the addresses, it carries no traffic)
+  #   controllerNodeSelector:
+  #     node-role.kubernetes.io/infra: ""
+  #   # Tolerations of the controller deployment
+  #   controllerTolerations:
+  #     - key: node-role.kubernetes.io/infra
+  #       operator: Exists
+  #       effect: NoSchedule
+  #   # Only handle the services requesting this load balancer class (spec.loadBalancerClass of the Service)
+  #   loadBalancerClass: metallb.io/metallb
+  #   # Interval of the periodic gratuitous ARP and unsolicited NDP announcements of the layer 2 addresses (0 disables them)
+  #   speakerGratuitousARPInterval: 30s
+  #   # Additional settings of the controller pod (priorityClassName, runtimeClassName, affinity, resources, annotations)
+  #   controllerConfig:
+  #     resources:
+  #       limits:
+  #         cpu: 200m
+  #   # Additional settings of the speaker pods (priorityClassName, runtimeClassName, affinity, resources, annotations)
+  #   speakerConfig:
+  #     resources:
+  #       limits:
+  #         cpu: 300m
+
+# Pools of IP addresses that MetalLB assigns to the services of type LoadBalancer (IPAddressPool).
+# A pool is only reachable once an advertisement (layer 2 or BGP) announces it
+ipAddressPools:
+  # Enable the creation of the IPAddressPool resources listed below
+  enabled: false
+  # Activate the resources as helm hooks
+  hooked: false
+  # List of IPAddressPool resources, created in the MetalLB namespace (spec is rendered as is)
+  list: []
+  #   # Name of the pool (a service selects it with the metallb.io/address-pool annotation)
+  # - name: default
+  #   # Additional labels set on the pool (matched by the ipAddressPoolSelectors of the advertisements)
+  #   labels: {}
+  #   # Specification of the pool
+  #   spec:
+  #     # IP ranges of the pool, as CIDR or start-end ranges (IPv4 and/or IPv6). Only list free addresses, never the
+  #     # gateway, the nodes, the API and ingress virtual IP or a DHCP range
+  #     addresses:
+  #       - 192.0.2.240-192.0.2.250
+  #     # Assign the addresses of this pool automatically (default true). With false, the pool only serves the
+  #     # services requesting it by name (metallb.io/address-pool) or by address (metallb.io/loadBalancerIPs)
+  #     autoAssign: true
+  #     # Never assign the addresses ending with .0 or .255 (default false)
+  #     avoidBuggyIPs: true
+  #     # Reserve the pool for some namespaces or services (lower priority values are preferred)
+  #     serviceAllocation:
+  #       priority: 50
+  #       namespaces:
+  #         - my-namespace
+  #       namespaceSelectors:
+  #         - matchLabels:
+  #             app.startx.fr/environment: prod
+
+# Layer 2 announcements of the pools (L2Advertisement): one speaker answers the ARP (IPv4) and NDP (IPv6)
+# requests of an address, on the network the nodes are attached to. No network equipment to configure
+l2Advertisements:
+  # Enable the creation of the L2Advertisement resources listed below
+  enabled: false
+  # Activate the resources as helm hooks
+  hooked: false
+  # List of L2Advertisement resources, created in the MetalLB namespace (spec is rendered as is)
+  list: []
+  #   # Name of the advertisement
+  # - name: default
+  #   # Additional labels set on the advertisement
+  #   labels: {}
+  #   # Specification of the advertisement. An empty spec announces every pool from every speaker node and interface
+  #   spec:
+  #     # Names of the pools announced by this advertisement (empty: every pool)
+  #     ipAddressPools:
+  #       - default
+  #     # Label selectors of the pools announced by this advertisement
+  #     ipAddressPoolSelectors: []
+  #     # Host interfaces the addresses are announced from (empty: every interface). Set it when the nodes have
+  #     # several interfaces or VLAN, to keep the announcement on the network of the pool
+  #     interfaces:
+  #       - br-ex
+  #     # Nodes allowed to announce the addresses (empty: every speaker node)
+  #     nodeSelectors:
+  #       - matchLabels:
+  #           node-role.kubernetes.io/worker: ""
+
+# BGP routers MetalLB peers with (BGPPeer). Required by the BGP advertisements
+bgpPeers:
+  # Enable the creation of the BGPPeer resources listed below
+  enabled: false
+  # Activate the resources as helm hooks
+  hooked: false
+  # List of BGPPeer resources, created in the MetalLB namespace (spec is rendered as is)
+  list: []
+  #   # Name of the peer
+  # - name: router-1
+  #   # Additional labels set on the peer
+  #   labels: {}
+  #   # Specification of the peer
+  #   spec:
+  #     # Autonomous system number of the cluster side of the session
+  #     myASN: 64512
+  #     # Autonomous system number of the router (use dynamicASN internal or external instead to detect it)
+  #     peerASN: 64500
+  #     # IP address of the router
+  #     peerAddress: 192.0.2.1
+  #     # TCP port of the router (default 179)
+  #     peerPort: 179
+  #     # Name of the secret (type kubernetes.io/basic-auth, key password, MetalLB namespace) holding the session
+  #     # password. See the secrets block to create it
+  #     passwordSecret:
+  #       name: bgp-router-1
+  #     # Name of the BFDProfile used to detect the path failures faster than the BGP timers
+  #     bfdProfile: default
+  #     # Hold time and keepalive time of the session
+  #     holdTime: 90s
+  #     keepaliveTime: 30s
+  #     # The router is several hops away
+  #     ebgpMultiHop: false
+  #     # Nodes establishing the session (empty: every speaker node)
+  #     nodeSelectors:
+  #       - matchLabels:
+  #           node-role.kubernetes.io/worker: ""
+  #     # Name of the host VRF used to establish the session
+  #     vrf: ""
+
+# BGP announcements of the pools (BGPAdvertisement): every speaker announces the addresses to the BGP peers
+bgpAdvertisements:
+  # Enable the creation of the BGPAdvertisement resources listed below
+  enabled: false
+  # Activate the resources as helm hooks
+  hooked: false
+  # List of BGPAdvertisement resources, created in the MetalLB namespace (spec is rendered as is)
+  list: []
+  #   # Name of the advertisement
+  # - name: default
+  #   # Additional labels set on the advertisement
+  #   labels: {}
+  #   # Specification of the advertisement. An empty spec announces every pool to every peer
+  #   spec:
+  #     # Names of the pools announced by this advertisement (empty: every pool)
+  #     ipAddressPools:
+  #       - default
+  #     # Names of the BGPPeer the pools are announced to (empty: every peer)
+  #     peers:
+  #       - router-1
+  #     # Prefix length of the announced routes (default 32 for IPv4 and 128 for IPv6: one route per address)
+  #     aggregationLength: 32
+  #     aggregationLengthV6: 128
+  #     # BGP communities attached to the routes, as values (64512:100) or as Community aliases
+  #     communities:
+  #       - no-advertise
+  #     # BGP local preference of the routes (iBGP sessions only)
+  #     localPref: 100
+  #     # Nodes announced as next hop (empty: every speaker node)
+  #     nodeSelectors: []
+
+# Bidirectional forwarding detection profiles referenced by the BGP peers (BFDProfile)
+bfdProfiles:
+  # Enable the creation of the BFDProfile resources listed below
+  enabled: false
+  # Activate the resources as helm hooks
+  hooked: false
+  # List of BFDProfile resources, created in the MetalLB namespace (spec is rendered as is)
+  list: []
+  #   # Name of the profile (bfdProfile of a BGP peer)
+  # - name: default
+  #   # Additional labels set on the profile
+  #   labels: {}
+  #   # Specification of the profile
+  #   spec:
+  #     # Minimum transmission and reception intervals, in milliseconds (default 300)
+  #     transmitInterval: 300
+  #     receiveInterval: 300
+  #     # Number of missed packets before the session is declared down (default 3)
+  #     detectMultiplier: 3
+  #     # Echo mode and interval in milliseconds (single hop sessions only)
+  #     echoMode: false
+  #     echoInterval: 50
+  #     # Do not initiate the session, wait for the router
+  #     passiveMode: false
+  #     # Minimum expected TTL of the incoming packets (multi hop sessions only)
+  #     minimumTtl: 254
+
+# Aliases of BGP communities referenced by the BGP advertisements (Community)
+communities:
+  # Enable the creation of the Community resources listed below
+  enabled: false
+  # Activate the resources as helm hooks
+  hooked: false
+  # List of Community resources, created in the MetalLB namespace (spec is rendered as is)
+  list: []
+  #   # Name of the resource
+  # - name: default
+  #   # Additional labels set on the resource
+  #   labels: {}
+  #   # Specification of the resource
+  #   spec:
+  #     # List of aliases (name used in the advertisements, value as <asn>:<value> or as a large community)
+  #     communities:
+  #       - name: no-advertise
+  #         value: 65535:65282
+
+# Secrets referenced by the resources of this chart (ex: the password of a BGP session). A secret is rendered
+# from its data, or by an ExternalSecret reading an external store
+secrets:
+  # Enable the creation of the secrets listed below
+  enabled: false
+  # List of secrets, created in the MetalLB namespace
+  list: []
+  #   # Name of the secret (passwordSecret.name of a BGP peer)
+  # - name: bgp-router-1
+  #   # Type of the secret (default Opaque; the password of a BGP session requires kubernetes.io/basic-auth)
+  #   type: kubernetes.io/basic-auth
+  #   # Additional labels set on the secret
+  #   labels: {}
+  #   # Key/value pairs of the secret, rendered as stringData. Never commit a real password: use externalSecret,
+  #   # or keep the secret out of the chart and create it by hand
+  #   data:
+  #     password: ""
+  #   # Source this secret from an external store instead of the data above: renders an ExternalSecret
+  #   # producing the same secret (see externalSecretDefaults)
+  #   externalSecret:
+  #     # Enable the ExternalSecret mode
+  #     enabled: false
+  #     # Store to read from (default is externalSecretDefaults.secretStoreRef)
+  #     secretStoreRef: {}
+  #     # How often the secret is refreshed (default is externalSecretDefaults.refreshInterval)
+  #     refreshInterval: ""
+  #     # Map of the secret keys to the remote references ({key, property, version}) of the external store
+  #     remoteRefs:
+  #       password:
+  #         key: ocp/metallb/bgp-router-1
+  #         property: password
+  #     # Raw ExternalSecret spec.data, spec.dataFrom and spec.target.template (alternatives to remoteRefs)
+  #     data: []
+  #     dataFrom: []
+  #     template: {}
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "metallb-system"
+    display_name: Operator MetalLB
+    description: MetalLB load balancer configured by STARTX
+    # # Run the speakers on every node when the cluster defines a default node selector (string value)
+    # additionalAnnotations: |-
+    #   openshift.io/node-selector: ""
+
+# Configuration of the operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+# The MetalLB operator only supports the AllNamespaces install mode: its OperatorGroup has no target namespace
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "metallb-operator"
+    namespace: "metallb-system"
+    version: "4.22.0"
+    operator:
+      channel: "stable"
+      name: metallb-operator
+      installPlanApproval: Manual
+      # csv: metallb-operator
+      source:
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "metallb-operator"
+    namespace: "metallb-system"
+    target: "all-ns"
+    providedAPIs: "BFDProfile.v1beta1.metallb.io,BGPAdvertisement.v1beta1.metallb.io,BGPPeer.v1beta2.metallb.io,Community.v1beta1.metallb.io,IPAddressPool.v1beta1.metallb.io,L2Advertisement.v1beta1.metallb.io,MetalLB.v1beta1.metallb.io"
