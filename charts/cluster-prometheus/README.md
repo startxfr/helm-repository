@@ -523,3 +523,4 @@ relative to the block (sync-wave `30`):
 | Release  | Date       | Description            |
 | -------- | ---------- | ---------------------- |
 | 21.3.361 | 2026-11-17 | Initial chart creation |
+| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
