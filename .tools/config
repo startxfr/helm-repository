@@ -34,6 +34,17 @@ SXHELM_SIGN_KEYPASSPHRASEFILE="${HOME}/.ssh/pgp-dev_startx-private_key-passphras
 # Set to "true" to auto-append history rows and sync README to docs/charts/
 DOC_ADD_HISTORY="true"
 
+# -- README History table pruning ----------------------------------------------
+# "true" = prune the History table of a chart README each time a row is added.
+# Kept rows: last row of every older branch, first row + HISTORY_KEEP_RECENT
+# latest rows of the current branch, versions used as dependencies by any chart,
+# and non generic rows (de-duplicated by description).
+HISTORY_PRUNE="true"
+HISTORY_KEEP_RECENT=5
+# Descriptions (case-insensitive python regex, full match) that carry no information.
+# No anchors and no dollar sign: this file is also included by the Makefile.
+HISTORY_GENERIC_REGEX='(publish stable update for the full repository|align all charts?( .*)?|update (basic|all charts?) dependencies.*|(upgrade|prepare) .*dependenc.*|release [0-9.]+ for all charts|[0-9.]+)'
+
 # -- Repository archive lists --------------------------------------------------
 # Space-separated OCP minor release numbers for "active archive" repos.
 # These are published by: sx-helm archive / make archive

@@ -157,35 +157,9 @@ nads:
 | ------- | ---------- | ------------------------------------------------------- |
 | 21.3.3  | 2026-06-16 | Initial chart creation for NMState operator on OCP 4.21 |
 | 21.3.4  | 2026-06-17 | Improve cluster-nmstate options                         |
-| 21.3.11 | 2026-06-17 | publish stable update for the full repository           |
-| 21.3.27 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.55 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.67 | 2026-06-20 | publish stable update for the full repository |
-| 21.3.68 | 2026-06-20 | update basic dependencies to v21.3.70 |
-| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
-| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
-| 21.3.102 | 2026-06-20 | publish stable update for the full repository |
-| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.104 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.106 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.181 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.182 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.199 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.201 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.202 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.205 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.229 | 2026-08-08 | publish stable update for the full repository |
-| 21.3.273 | 2026-08-09 | publish stable update for the full repository |
-| 21.3.277 | 2026-08-09 | Align all charts to v21.3.277 |
 | 21.3.278 | 2026-08-14 | add centigpu |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
-| 21.3.321 | 2026-11-05 | Adding external secret management |
 | 21.3.321 | 2026-11-08 | Add the NetworkAttachmentDefinition list (nads) |
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |

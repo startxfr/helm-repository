@@ -47,6 +47,57 @@ function chartNextVersion {
         awk -F. -v OFS=. 'NF==1{print ++$NF}; NF>1{if(length($NF+1)>length($NF))$(NF-1)++; $NF=sprintf("%0*d", length($NF), ($NF+1)%(10^length($NF))); print}'
 }
 
+# Collect "<chart> <version>" for every dependency declared by any chart.
+# The result is cached in HISTORY_DEPS_FILE for the lifetime of the process.
+function readmeHistoryDeps {
+    if [[ -z "$HISTORY_DEPS_FILE" || ! -s "$HISTORY_DEPS_FILE" ]]; then
+        HISTORY_DEPS_FILE=$(mktemp)
+        trap 'rm -f "$HISTORY_DEPS_FILE"' EXIT
+        for f in "$PROJECT_CHARTPATH"/*/Chart.yaml; do
+            yq '.dependencies[]? | .name + " " + .version' "$f" >> "$HISTORY_DEPS_FILE" 2>/dev/null
+        done
+        [[ -s "$HISTORY_DEPS_FILE" ]] || echo "none 0" > "$HISTORY_DEPS_FILE"
+    fi
+}
+
+# Maintain the History table of a chart README (insert a row and/or prune).
+# Args: chart_name [row "release|date|description"] [--dry-run]
+# Tunables: HISTORY_PRUNE, HISTORY_KEEP_RECENT, HISTORY_GENERIC_REGEX (.tools/config)
+function readmeHistoryUpdate {
+    local chart_name=${1#./} row=$2 dryrun=$3
+    local chart_dir=$PROJECT_CHARTPATH/$chart_name
+    [[ "$row" == "--dry-run" ]] && { dryrun=$row; row=""; }
+    local version
+    version=$(yq .version "$chart_dir/Chart.yaml" | tr -d '"')
+    local args=("$chart_dir/README.md" --chart "$chart_name" \
+        --branch "$(echo "$version" | cut -d. -f1-2)" \
+        --keep-recent "${HISTORY_KEEP_RECENT:-5}" \
+        --generic-regex "$HISTORY_GENERIC_REGEX")
+    [[ -n "$row" ]] && args+=(--add-row "$row")
+    [[ "$HISTORY_PRUNE" != "true" ]] && args+=(--no-prune)
+    [[ -n "$dryrun" ]] && args+=(--dry-run --verbose)
+    readmeHistoryDeps
+    args+=(--deps-file "$HISTORY_DEPS_FILE")
+    python3 "$PROJECT_PATH/.tools/history-prune.py" "${args[@]}"
+}
+
+# Prune the History table of every chart README (README files only).
+# Args: [--dry-run]
+function routerHistoryPruneAll {
+    local dryrun=$1 failed=0
+    echo -e "\e[33mHistory\e[0m prune all chart README files ${dryrun:+(dry-run)}"
+    for chart in $(chartList); do
+        readmeHistoryUpdate "$chart" "" "$dryrun" || failed=$((failed + 1))
+    done
+    [[ $failed -gt 0 ]] && { echo -e "\e[31mHistory\e[0m $failed chart(s) failed"; return 1; }
+    return 0
+}
+
+# Prune the History table of a single chart README. Args: chart_name [--dry-run]
+function routerChartHistoryPrune {
+    readmeHistoryUpdate "$1" "" "$2"
+}
+
 # List all charts (excludes _prefixed dirs and docs)
 function chartList {
     cd "$PROJECT_CHARTPATH" || exit 1
@@ -486,8 +537,10 @@ function routerChartRelease {
         sed -i "s/$current_release/$next_release/" "$chart_dir/Chart.yaml"
         sed -i "s/targetRevision: .*/targetRevision: $next_release/" "$chart_dir/README.md"
         if [[ $DOC_ADD_HISTORY == "true" ]]; then
-            [[ -n "$(tail -c1 "${chart_dir}/README.md")" ]] && echo "" >> "${chart_dir}/README.md"
-            echo "| $next_release | $(date +%Y-%m-%d) | $next_description |" >> "${chart_dir}/README.md"
+            if ! readmeHistoryUpdate "$chart_name" "$next_release|$(date +%Y-%m-%d)|$next_description"; then
+                [[ -n "$(tail -c1 "${chart_dir}/README.md")" ]] && echo "" >> "${chart_dir}/README.md"
+                echo "| $next_release | $(date +%Y-%m-%d) | $next_description |" >> "${chart_dir}/README.md"
+            fi
             cp "$chart_dir/README.md" "$PROJECT_PATH/docs/charts/${chart_name}.md" &>/dev/null
             git add "$PROJECT_PATH/docs/charts/${chart_name}.md"
         fi
@@ -603,6 +656,7 @@ Global actions:
   lint-all             Lint all charts with helm lint
   test-all             Template + lint all charts
   package-all          Package all charts
+  history-prune-all    Prune the History table of all chart README files  [--dry-run]
   syncfroms3           Download full S3 repo to local .reposync/
   synctos3             Upload local .reposync/ to S3 (with delete)
   version              Print tool, oc and helm versions
@@ -615,6 +669,7 @@ Chart actions:
   <chart> package      Commit, resolve deps, package (signed)
   <chart> release      Bump version, history row, package, upload to S3
   <chart> publish      Release + publish all repos
+  <chart> history-prune Prune the README history table
   <chart> delete       Delete chart from disk, git, and optionally S3
 
 Environment variables:
@@ -650,6 +705,7 @@ Actions:
   package              Commit, resolve deps, sign and package
   release [v] [desc]   Bump version, add history, package, upload to S3
   publish              Release + publish all repos
+  history-prune [--dry-run] Prune the README history table
   delete [-r]          Delete chart; -r also removes from S3
 
 Examples:
