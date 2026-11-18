@@ -51,13 +51,17 @@ helm install cluster-certmanager-operator startx/cluster-certmanager --set proje
 helm install cluster-certmanager-instance startx/cluster-certmanager --set project.enabled=false,operator.enabled=false,certmanager.enabled=true
 ```
 
-#### Others values availables
+#### Other available values
 
 - **startx** : CertManager operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml))
 
 ```bash
 helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml
 ```
+
+### ClusterIssuer
+
+`clusterIssuer.list[]` items accept an `annotations` map merged over the default ArgoCD sync-wave (`1`), for example `argocd.argoproj.io/sync-wave: "19"` or `argocd.argoproj.io/sync-options: Prune=false`. The `spec` is a YAML string or a YAML map. A `ClusterIssuer` is cluster scoped, so `metadata.namespace` is rendered only when `namespace` is set on the item (it was always rendered before).
 
 ## Deploy with ArgoCD
 
