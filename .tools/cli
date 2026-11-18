@@ -171,21 +171,41 @@ function routerRelease {
     echo -e "\e[37mRelease\e[0m commit all changes to $GITHUB_REPOSITORY $WORK_BRANCH"
     git commit -m "[docs] update repository content to $next_release" "$PROJECT_PATH" &>/dev/null
     echo -e "\e[37mRelease\e[0m merge to $MASTER_BRANCH"
-    git checkout $MASTER_BRANCH &>/dev/null
-    git merge $WORK_BRANCH --commit --no-edit
+    git checkout $MASTER_BRANCH &>/dev/null || { echo "Release: cannot checkout $MASTER_BRANCH" >&2; return 1; }
+    gitMergeBranch $WORK_BRANCH || { git checkout $WORK_BRANCH &>/dev/null; return 1; }
     echo -e "\e[37mRelease\e[0m merge to $STABLE_BRANCH"
-    git checkout $STABLE_BRANCH &>/dev/null
-    git merge $MASTER_BRANCH --commit --no-edit
-    echo -e "\e[37mRelease\e[0m checkout $current_release branch"
-    git checkout "$current_release" &>/dev/null
-    echo -e "\e[37mRelease\e[0m merge $STABLE_BRANCH into $current_release"
-    git merge --commit --no-edit $STABLE_BRANCH &>/dev/null
-    echo -e "\e[37mRelease\e[0m create tag $next_release"
-    git tag "$next_release" -m "[release/$next_release] $next_description"
+    git checkout $STABLE_BRANCH &>/dev/null || { echo "Release: cannot checkout $STABLE_BRANCH" >&2; return 1; }
+    gitMergeBranch $MASTER_BRANCH || { git checkout $WORK_BRANCH &>/dev/null; return 1; }
+    # Legacy: a branch named after the previous release only exists on some clones
+    if git show-ref --verify --quiet "refs/heads/$current_release"; then
+        echo -e "\e[37mRelease\e[0m merge $STABLE_BRANCH into $current_release"
+        git checkout "$current_release" &>/dev/null && git merge --commit --no-edit $STABLE_BRANCH &>/dev/null
+    fi
+    echo -e "\e[37mRelease\e[0m create tag $next_release on $STABLE_BRANCH"
+    git tag "$next_release" "$STABLE_BRANCH" -m "[release/$next_release] $next_description" || { git checkout $WORK_BRANCH &>/dev/null; return 1; }
     echo -e "\e[37mRelease\e[0m push to $GITHUB_REPONAME and $GITLAB_REPONAME"
     git push $GITHUB_REPONAME "$next_release" $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
     git push $GITLAB_REPONAME "$next_release" $MASTER_BRANCH $WORK_BRANCH $STABLE_BRANCH
     git checkout $WORK_BRANCH
+}
+
+# Merge a branch into the current one. docs/repos/*/index.yaml are generated files that several branches
+# rewrite, so a conflict limited to them keeps the incoming version (the next publish regenerates them).
+# Any other conflict aborts the merge and returns 1, so a release never continues on a half-merged tree.
+function gitMergeBranch {
+    local from="$1"
+    local unmerged other
+    git merge "$from" --commit --no-edit && return 0
+    unmerged=$(git diff --name-only --diff-filter=U)
+    other=$(grep -vE '^docs/repos/[^/]+/index\.yaml$' <<<"$unmerged")
+    if [[ -z "$unmerged" || -n "$other" ]]; then
+        echo -e "\e[31mMerge\e[0m cannot merge $from, aborting${other:+ (conflicts: $other)}" >&2
+        git merge --abort &>/dev/null
+        return 1
+    fi
+    echo -e "\e[33mMerge\e[0m generated index conflict, keeping the version of $from"
+    # shellcheck disable=SC2086
+    git checkout --theirs -- $unmerged && git add -- $unmerged && git commit --no-edit
 }
 
 # Regenerate a helm repo index, commit to docs/repos/, merge to master, push to both remotes
@@ -219,8 +239,8 @@ function doHelmrepositoryRefresh {
         return 0
     fi
     echo -e "\e[${color}m${action}\e[0m merge \e[1m$WORK_BRANCH\e[0m → \e[1m$MASTER_BRANCH\e[0m"
-    git checkout $MASTER_BRANCH &>/dev/null
-    git merge --commit --no-edit $WORK_BRANCH
+    git checkout $MASTER_BRANCH &>/dev/null || { echo "Publish: cannot checkout $MASTER_BRANCH" >&2; return 1; }
+    gitMergeBranch $WORK_BRANCH || { git checkout $WORK_BRANCH &>/dev/null; return 1; }
     echo -e "\e[${color}m${action}\e[0m push \e[1m$WORK_BRANCH\e[0m and \e[1m$MASTER_BRANCH\e[0m"
     git push $GITHUB_REPONAME $MASTER_BRANCH $WORK_BRANCH
     git push $GITLAB_REPONAME $MASTER_BRANCH $WORK_BRANCH
