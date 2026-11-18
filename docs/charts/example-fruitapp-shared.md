@@ -131,3 +131,4 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
+| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
