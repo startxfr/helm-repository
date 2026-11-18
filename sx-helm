@@ -24,6 +24,7 @@ main() {
             lint-all)        routerLintAll;;
             test-all)        routerTestAll;;
             package-all)     routerPackageAll;;
+            history-prune-all) routerHistoryPruneAll "$2";;
             syncfroms3)      routerSyncFromS3 "$@";;
             synctos3)        routerSyncToS3 "$@";;
             version)         routerVersion;;
@@ -34,6 +35,7 @@ main() {
                     schemagen)  routerChartSchemagen "$1" "$3";;
                     test)       routerChartTest "$1" "$3" "$4";;
                     package)    routerChartPackage "$1";;
+                    history-prune) routerChartHistoryPrune "$1" "$3";;
                     release)    routerChartRelease "$1" "$3" "$4" "$5";;
                     delete)     routerChartDelete "$1" "$3";;
                     publish)    routerChartPublish "$@";;
