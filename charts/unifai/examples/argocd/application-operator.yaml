@@ -16,7 +16,8 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.363
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
     helm:
       values: |
         stack:
