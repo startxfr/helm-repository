@@ -167,7 +167,7 @@ List of the deprecated helm charts.
     |                 |                                                                                                 |
     | --------------- | ----------------------------------------------------------------------------------------------- |
     | **Repository**  | **[noschema](https://helm-repository.readthedocs.io/en/latest/repos/noschema/index.yaml)**      |
-    | **Description** | Repository without schema definition                                                            |
+    | **Description** | **Legacy**: repository without schema definition, frozen at the 18.11.71 release. It receives no new chart or version, use `stable` or a release repository instead |
     | **Command**     | `helm repo add startx-noschema https://helm-repository.readthedocs.io/en/latest/repos/noschema` |
 
 === "21"

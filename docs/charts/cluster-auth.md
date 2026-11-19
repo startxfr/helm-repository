@@ -87,7 +87,12 @@ cd helm-repository/charts/cluster-auth/examples/argocd/
 oc apply -k .
 ```
 
-The automated sync policy ensures ArgoCD reconciles the OAuth configuration whenever the chart or values drift from the desired state.
+The automated sync policy keeps the `OAuth` configuration aligned with the chart values.
+
+With `manageSubresource: true` (used by `values-startx_noinfra.yaml`) the chart also writes the Secrets the
+OpenShift authentication operator copies into `openshift-authentication` (`v4-0-config-user-idp-N-file-data`,
+`v4-0-config-user-template-*`). The operator rewrites them after each sync, so the example Application declares
+an `ignoreDifferences` on those Secrets : without it they show as permanently OutOfSync.
 
 ## External secrets
 
