@@ -123,6 +123,17 @@ Switching from the default ephemeral storage to persistent volumes restarts the 
 Alertmanager pods: the metrics history and the active silences are lost. Growing `storageSize` later
 does not resize existing PersistentVolumeClaims.
 
+## Ownership of the cluster singletons
+
+The resources of this chart are cluster singletons: `openshift-monitoring/cluster-monitoring-config`, the
+`HelmChartRepository` list, the image pruner, the registry and ingress settings, the cluster autoscaler or the cluster
+proxy. A cluster has one of each, so exactly **one** owner must render them. Two owners (two Applications, or this chart
+and another one) overwrite each other and make the Application permanently OutOfSync.
+
+A consumer that already manages one of these resources itself must leave the matching flag `false`: for example
+`monitoring.enabled` for `cluster-monitoring-config`, which is `false` by default. Enable a feature only in the one
+Application that owns it.
+
 ## Other available values
 
 - **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml))
