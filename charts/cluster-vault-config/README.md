@@ -36,6 +36,15 @@ helm show chart startx/cluster-vault-config
 helm install cluster-vault-config startx/cluster-vault-config
 ```
 
+## Other available values
+
+- **startx** : [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx.yaml)
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx_noinfra.yaml)
+
+```bash
+helm install cluster-vault-config startx/cluster-vault-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
