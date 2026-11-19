@@ -328,3 +328,4 @@ that the operator deletes the objects it generated before it is removed.
 | 21.3.361 | 2026-11-16 | Initial chart creation |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
+| 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
