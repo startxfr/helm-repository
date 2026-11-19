@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -41,8 +41,8 @@ helm install cluster-argocd startx/cluster-argocd
 Complete deployment of a project with the following characteristics :
 
 - 1 **project:** named **openshift-gitops** with the following properties
-  - 1 **LimitRange:** defined for this projet
-  - 1 **Quotas:** defined for this projet
+  - 1 **LimitRange:** defined for this project
+  - 1 **Quotas:** defined for this project
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **openshift-gitops-operator** configured with
   - The **gitops-1.19** channel
@@ -58,7 +58,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-argocd startx/cluster-argocd
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Startx argocd cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx.yaml))
 

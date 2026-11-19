@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -55,7 +55,7 @@ helm install cluster-couchbase-operator startx/cluster-couchbase --set project.e
 helm install cluster-couchbase-instance startx/cluster-couchbase --set project.enabled=false,operator.enabled=false,couchbase.enabled=true
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Couchbase operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml))
 

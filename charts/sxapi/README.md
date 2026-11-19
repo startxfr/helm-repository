@@ -71,7 +71,7 @@ helm install sxapi startx/sxapi
 
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
 | context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
 | context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
 | context.component   | demo      | Component name of this application (logical tenant)                               |

@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -41,8 +41,8 @@ helm install cluster-3scale startx/cluster-3scale
 Complete deployment of a project with the following characteristics :
 
 - 1 **project:** named **startx-3scale** with the following properties
-  - 1 **LimitRange:** defined for this projet
-  - 1 **Quotas:** defined for this projet
+  - 1 **LimitRange:** defined for this project
+  - 1 **Quotas:** defined for this project
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **3scale-operator** configured with
   - The **threescale-2.13** channel

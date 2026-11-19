@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -51,7 +51,7 @@ Complete deployment of an OpenShift Data Foundation (ODF) configuration with the
 helm install cluster-odf startx/cluster-odf
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Startx ODF cluster wide service configuration using ODF operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-odf/values-startx.yaml))
 

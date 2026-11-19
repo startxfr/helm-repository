@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -57,7 +57,7 @@ helm install cluster-costs-operator startx/cluster-costs --set project.enabled=f
 helm install cluster-costs-instance startx/cluster-costs --set project.enabled=false,operator.enabled=false,costs.enabled=true
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : costs operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-costs/values-startx.yaml))
 

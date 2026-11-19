@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-mtc startx/cluster-mtc
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : MTC operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mtc/values-startx.yaml))
 
