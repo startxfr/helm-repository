@@ -310,7 +310,7 @@
                     "description": "Must be within clusterNetwork.externalIP.allowedCIDRs",
                     "items": {"type": "string", "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"}
                 },
-                "clusterIP": {"type": "string", "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$", "title": "Cluster IP"},
+                "clusterIP": {"type": "string", "pattern": "^(?:|None|(?:[0-9]{1,3}\\.){3}[0-9]{1,3})$", "title": "Cluster IP", "description": "Empty lets Kubernetes pick one ; None makes the service headless"},
                 "clusterIPs": {
                     "type": "array",
                     "items": {"type": "string", "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"}

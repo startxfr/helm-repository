@@ -210,74 +210,26 @@ oc apply -k .
 | Release  | Date       | Description                                                                                                                      |
 | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release |
-| 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release |
 | 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version |
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas |
 | 18.23.0 | 2026-02-28 | Start 4.19 branch |
-| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11 |
 | 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11 |
-| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0 |
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
-| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
-| 21.3.4 | 2026-06-17 | 21.3.9 |
-| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
-| 21.3.27 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.55 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.56 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.56 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.67 | 2026-06-20 | publish stable update for the full repository |
-| 21.3.68 | 2026-06-20 | update basic dependencies to v21.3.70 |
-| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
-| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
-| 21.3.102 | 2026-06-20 | publish stable update for the full repository |
-| 21.3.103 | 2026-06-20 | Improve chaos-kraken options |
-| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.107 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.108 | 2026-06-22 | Improve chaos-kraken options |
-| 21.3.108 | 2026-06-22 | Improve chaos-kraken options |
-| 21.3.108 | 2026-06-22 | Improve chaos-kraken options |
-| 21.3.109 | 2026-06-22 | Improve chaos-kraken options |
-| 21.3.109 | 2026-06-22 | Improve chaos-kraken options |
-| 21.3.110 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.111 | 2026-06-22 | fix mountPath: use /home/krkn instead of /root for kraken image paths |
-| 21.3.112 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.113 | 2026-06-22 | fix: add missing elastic and telemetry sections to kraken-config-all |
-| 21.3.114 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.115 | 2026-06-22 | fix: replace plugin_scenarios with pod_disruption_scenarios for krkn v5 compatibility |
-| 21.3.116 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.117 | 2026-06-22 | fix scenarios: correct pod labels for monitoring/machines, rewrite machines to krkn v5 format |
-| 21.3.118 | 2026-06-22 | Improve chaos-kraken options |
-| 21.3.119 | 2026-06-22 | split logging scenario into loki and elastic variants |
-| 21.3.120 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.121 | 2026-06-22 | split logging scenario into loki and elastic variants |
-| 21.3.122 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.123 | 2026-06-22 | migrate kraken-scenarios-all to individual kraken-scenario-<name> ConfigMaps |
-| 21.3.124 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.125 | 2026-06-22 | split scenario and chaos-config ConfigMaps into grouped template files by category |
-| 21.3.126 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.127 | 2026-06-22 | tuning scenarios timings |
 | 21.3.128 | 2026-06-22 | reduce wait_duration 60s and monitoring kill |
-| 21.3.129 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.130 | 2026-06-22 | add ingress, OVN and kube-apiserver chaos scenarios |
 | 21.3.131 | 2026-06-22 | fix container scenarios syntax and add ingress OVN kube-apiserver scenarios |
-| 21.3.132 | 2026-06-22 | Improve chaos-kraken options |
-| 21.3.133 | 2026-06-22 | Improve chaos-kraken options |
 | 21.3.134 | 2026-06-22 | improve monitoring apiserver machines podmonkey and app-outage scenarios |
-| 21.3.135 | 2026-06-22 | Improve chaos-kraken options |
-| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.181 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.182 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.199 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.201 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.202 | 2026-06-24 | publish stable update for the full repository |
 | 21.3.203 | 2026-06-24 | Improve chaos-kraken options |
-| 21.3.205 | 2026-06-24 | publish stable update for the full repository |
 | 21.3.229 | 2026-08-08 | publish stable update for the full repository |
-| 21.3.273 | 2026-08-09 | publish stable update for the full repository |
-| 21.3.277 | 2026-08-09 | Align all charts to v21.3.277 |
 | 21.3.278 | 2026-08-14 | add centigpu |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
@@ -286,3 +238,4 @@ oc apply -k .
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
+| 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |

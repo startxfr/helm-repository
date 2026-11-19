@@ -32,7 +32,7 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "15"
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "15") (.annotations | default dict)) | nindent 4 }}
 spec:
   {{- toYaml $spec | nindent 2 }}
 {{- end }}

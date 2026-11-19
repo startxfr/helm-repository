@@ -23,6 +23,12 @@ DataScienceCluster:
   name: "default-dsc"
   # Namespace used for the DataScienceCluster (default is the project)
   namespace: "rhods-operator"
+  # API version of the DataScienceCluster (RHOAI 3.x requires v2, use datasciencecluster.opendatahub.io/v1 for RHOAI 2.x)
+  apiVersion: "datasciencecluster.opendatahub.io/v2"
+  # Additional labels of the DataScienceCluster (map)
+  labels: {}
+  # Additional annotations of the DataScienceCluster (map, e.g. argocd sync-wave override)
+  annotations: {}
   # Spec of the DataScienceCluster
   spec: |
     components:
@@ -58,6 +64,28 @@ DataScienceCluster:
         managementState: Managed
       trainingoperator:
         managementState: Managed
+
+# Configuration of the rh-ods DSCInitialization (cluster scoped, created before the DataScienceCluster)
+DSCInitialization:
+  # Enable the creation of a DSCInitialization (the operator creates a default one when none exists)
+  enabled: false
+  # Name of the DSCInitialization
+  name: "default-dsci"
+  # API version of the DSCInitialization
+  apiVersion: "dscinitialization.opendatahub.io/v2"
+  # Additional labels of the DSCInitialization (map)
+  labels: {}
+  # Additional annotations of the DSCInitialization (map)
+  annotations: {}
+  # Namespace of the RHOAI applications (when set, override spec.applicationsNamespace)
+  applicationsNamespace: ""
+  # Free spec of the DSCInitialization (YAML string)
+  spec: |
+    monitoring:
+      managementState: Managed
+      namespace: redhat-ods-monitoring
+    trustedCABundle:
+      managementState: Managed
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 

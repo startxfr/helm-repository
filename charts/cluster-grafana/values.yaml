@@ -86,6 +86,65 @@ route:
   # Policy for plain HTTP requests
   insecureEdgeTerminationPolicy: Redirect
 
+# Put an OpenShift oauth-proxy sidecar in front of Grafana: the users sign in with the OpenShift OAuth server (itself
+# federated to an identity provider) and Grafana trusts the X-Forwarded-User header (auth.proxy). The chart adds the
+# sidecar to the Grafana CR without redeclaring the grafana container, a dedicated ServiceAccount carrying the OAuth
+# redirect reference, a serving-cert Service port and a reencrypt Route. Requires grafana.enabled and route.enabled,
+# and cannot be combined with oidc.enabled. The Grafana Deployment mounts a ReadWriteOnce volume when you add a
+# persistentVolumeClaim in grafana.spec: set deployment.spec.strategy.type to Recreate in that case
+oauthProxy:
+  # Enable the oauth-proxy sidecar
+  enabled: false
+  # Image of the oauth-proxy (the ImageStream of the openshift namespace by default)
+  image: image-registry.openshift-image-registry.svc:5000/openshift/oauth-proxy:v4.4
+  # Port the proxy listens on (HTTPS, exposed as the Service port oauth-proxy)
+  port: 8443
+  # Grafana URL the proxy forwards the authenticated requests to
+  upstream: http://localhost:3000
+  # Name of the ServiceAccount used by the Grafana pod and by the proxy (default: <grafana.name>-oauth-proxy)
+  serviceAccountName: ""
+  # Name of the Secret holding the serving certificate of the Service, created by the service-ca operator
+  # (default: <grafana.name>-oauth-tls)
+  tlsSecretName: ""
+  # Only the OpenShift users allowed by this SubjectAccessReview can sign in (--openshift-sar). The namespace
+  # defaults to the one of the Grafana instance. Any other key of the SubjectAccessReview resourceAttributes can be set
+  sar:
+    # Namespace of the SubjectAccessReview (default: namespace of the project)
+    namespace: ""
+    # Resource the user must be able to access
+    resource: pods
+    # Verb the user must be allowed on the resource
+    verb: get
+  # Allowed e-mail domains of the signed in users (--email-domain)
+  emailDomain: "*"
+  # Additional arguments of the oauth-proxy
+  args: []
+  # Resources of the oauth-proxy container (requests and limits)
+  resources: {}
+  # Grafana auth.proxy configuration
+  authProxy:
+    # Hide the login form (the sign in goes through the proxy)
+    disableLoginForm: true
+    # Addresses Grafana accepts the proxy header from. Both loopback families are needed: localhost can resolve to ::1
+    whitelist: "127.0.0.1,::1"
+  # Secret holding the cookie secret of the proxy (key cookie_secret, 16, 24 or 32 bytes), read as COOKIE_SECRET
+  cookieSecret:
+    # Render the cookie secret Secret (false: the Secret is expected to exist)
+    enabled: true
+    # Name of the Secret (default: <grafana.name>-oauth-cookie)
+    name: ""
+    # Cookie secret (secret, required unless externalSecret is used)
+    value: ""
+    # Source the Secret from an external store instead (External Secrets Operator)
+    externalSecret:
+      # Use the External Secrets Operator to produce this Secret
+      enabled: false
+      # Map secretKey -> ESO remoteRef; the key cookie_secret is required
+      remoteRefs: {}
+      #   cookie_secret:
+      #     key: grafana/oauth-proxy
+      #     property: cookie_secret
+
 # Authenticate the Grafana users with an OpenID Connect provider, such as a Red Hat build of Keycloak realm
 # deployed by the cluster-rhbk chart (Grafana generic_oauth). Requires grafana.enabled and route.host
 oidc:

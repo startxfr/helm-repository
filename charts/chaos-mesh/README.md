@@ -242,7 +242,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.370
+    targetRevision: 21.3.371
   syncPolicy:
     automated:
       prune: true
@@ -272,7 +272,7 @@ spec:
           prometheus:
             create: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.370
+    targetRevision: 21.3.371
   syncPolicy:
     automated:
       prune: true
@@ -304,3 +304,4 @@ kubectl apply -f chaos-mesh-argocd.yaml -n openshift-gitops
 | 21.3.361 | 2026-11-10 | Release chaos-mesh restored chart |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
+| 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |

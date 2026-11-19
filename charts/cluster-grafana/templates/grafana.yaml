@@ -8,6 +8,8 @@
 {{- $env := list -}}
 {{- $volumes := list -}}
 {{- $mounts := list -}}
+{{- $containers := list -}}
+{{- $oap := .Values.oauthProxy | default dict -}}
 {{- with .Values.grafana.version }}
 {{- $_ := set $base "version" (toString .) -}}
 {{- end }}
@@ -16,6 +18,12 @@
 {{- $routeSpec := dict "tls" $tls -}}
 {{- with .Values.route.host }}
 {{- $_ := set $routeSpec "host" . -}}
+{{- end }}
+{{- if $oap.enabled }}
+{{- /* The route targets the oauth-proxy port of the Service, re-encrypted with the serving certificate */ -}}
+{{- $_ := set $tls "termination" "reencrypt" -}}
+{{- $_ := set $routeSpec "to" (dict "kind" "Service" "name" (printf "%s-service" $name) "weight" 100) -}}
+{{- $_ := set $routeSpec "port" (dict "targetPort" "oauth-proxy") -}}
 {{- end }}
 {{- $_ := set $base "route" (dict "spec" $routeSpec) -}}
 {{- end }}
@@ -85,6 +93,33 @@
 {{- $_ := set $config "auth.generic_oauth" $go -}}
 {{- $env = append $env (dict "name" "GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET" "valueFrom" (dict "secretKeyRef" (dict "name" (include "cluster-grafana.oidcSecretName" .) "key" "client-secret"))) -}}
 {{- end }}
+{{- $saName := "" -}}
+{{- if $oap.enabled }}
+{{- if $oidc.enabled }}
+{{- fail "oauthProxy.enabled and oidc.enabled cannot be combined: use one authentication method" -}}
+{{- end }}
+{{- if not .Values.route.enabled }}
+{{- fail "oauthProxy.enabled requires route.enabled (the OAuth redirect reference targets the route of the Grafana instance)" -}}
+{{- end }}
+{{- $saName = include "cluster-grafana.oauthProxySaName" . -}}
+{{- $port := $oap.port | default 8443 | int -}}
+{{- $sar := dict "resource" "pods" "verb" "get" "namespace" $namespace -}}
+{{- range $k, $v := ($oap.sar | default dict) }}{{ if $v }}{{ $_ := set $sar $k $v }}{{ end }}{{ end -}}
+{{- $_ := set $config "auth" (dict "disable_login_form" (toString ($oap.authProxy.disableLoginForm | default false))) -}}
+{{- $_ := set $config "auth.proxy" (dict "enabled" "true" "header_name" "X-Forwarded-User" "header_property" "username" "auto_sign_up" "true" "whitelist" ($oap.authProxy.whitelist | default "127.0.0.1,::1")) -}}
+{{- $args := list (printf "--https-address=:%d" $port) "--http-address=" "--provider=openshift" (printf "--openshift-service-account=%s" $saName) (printf "--upstream=%s" ($oap.upstream | default "http://localhost:3000")) "--tls-cert=/etc/tls/private/tls.crt" "--tls-key=/etc/tls/private/tls.key" "--cookie-secret=$(COOKIE_SECRET)" (printf "--openshift-sar=%s" (toJson $sar)) "--pass-user-headers=true" (printf "--email-domain=%s" ($oap.emailDomain | default "*")) -}}
+{{- range ($oap.args | default list) }}{{ $args = append $args . }}{{ end -}}
+{{- $proxy := dict "name" "oauth-proxy" "image" $oap.image "args" $args -}}
+{{- $_ := set $proxy "env" (list (dict "name" "COOKIE_SECRET" "valueFrom" (dict "secretKeyRef" (dict "name" (include "cluster-grafana.oauthProxyCookieName" .) "key" "cookie_secret")))) -}}
+{{- $_ := set $proxy "ports" (list (dict "containerPort" $port "name" "oauth-proxy" "protocol" "TCP")) -}}
+{{- $_ := set $proxy "volumeMounts" (list (dict "name" "oauth-tls" "mountPath" "/etc/tls/private")) -}}
+{{- with $oap.resources }}{{ $_ := set $proxy "resources" . }}{{ end -}}
+{{- $containers = append $containers $proxy -}}
+{{- $volumes = append $volumes (dict "name" "oauth-tls" "secret" (dict "secretName" (include "cluster-grafana.oauthProxyTlsName" .))) -}}
+{{- /* protocol is written explicitly even if it is the API default, otherwise Argo CD sees a permanent drift */ -}}
+{{- $svcPort := dict "name" "oauth-proxy" "port" $port "protocol" "TCP" "targetPort" "oauth-proxy" -}}
+{{- $_ := set $base "service" (dict "metadata" (dict "annotations" (dict "service.beta.openshift.io/serving-cert-secret-name" (include "cluster-grafana.oauthProxyTlsName" .))) "spec" (dict "ports" (list $svcPort))) -}}
+{{- end }}
 {{- with $config }}
 {{- $_ := set $base "config" . -}}
 {{- end }}
@@ -92,8 +127,12 @@
 {{- $container := dict "name" "grafana" -}}
 {{- with $env }}{{ $_ := set $container "env" . }}{{ end -}}
 {{- with $mounts }}{{ $_ := set $container "volumeMounts" . }}{{ end -}}
-{{- $podSpec := dict "containers" (list $container) -}}
+{{- $containers = prepend $containers $container -}}
+{{- end }}
+{{- if $containers }}
+{{- $podSpec := dict "containers" $containers -}}
 {{- with $volumes }}{{ $_ := set $podSpec "volumes" . }}{{ end -}}
+{{- if $saName }}{{ $_ := set $podSpec "serviceAccountName" $saName }}{{ end -}}
 {{- $_ := set $base "deployment" (dict "spec" (dict "template" (dict "spec" $podSpec))) -}}
 {{- end }}
 {{- /* User spec takes precedence over the generated base */ -}}

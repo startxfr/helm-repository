@@ -25,7 +25,10 @@ ansibleAAP:
   name: demo
   # Namespace of the AAP instance (default is project name)
   namespace: startx-ansible
-  # The applyed AAP specifications
+  # Additional annotations of the AnsibleAutomationPlatform (map, ex: argocd.argoproj.io/sync-wave or
+  # argocd.argoproj.io/sync-options: Prune=false override the default sync-wave 1)
+  annotations: {}
+  # The applyed AAP specifications (YAML string or YAML map)
   spec: |
     eda:
       disabled: false

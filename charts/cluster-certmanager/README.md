@@ -51,13 +51,17 @@ helm install cluster-certmanager-operator startx/cluster-certmanager --set proje
 helm install cluster-certmanager-instance startx/cluster-certmanager --set project.enabled=false,operator.enabled=false,certmanager.enabled=true
 ```
 
-#### Others values availables
+#### Other available values
 
 - **startx** : CertManager operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml))
 
 ```bash
 helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-certmanager/values-startx.yaml
 ```
+
+### ClusterIssuer
+
+`clusterIssuer.list[]` items accept an `annotations` map merged over the default ArgoCD sync-wave (`1`), for example `argocd.argoproj.io/sync-wave: "19"` or `argocd.argoproj.io/sync-options: Prune=false`. The `spec` is a YAML string or a YAML map. A `ClusterIssuer` is cluster scoped: set `clusterScoped: true` on an item to omit `metadata.namespace` (default is `false`, the namespace defaults to the project one).
 
 ## Deploy with ArgoCD
 
@@ -90,3 +94,4 @@ oc apply -k .
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
+| 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |

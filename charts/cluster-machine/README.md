@@ -52,7 +52,11 @@ Deployment of machine classes :
 helm install cluster-machine startx/cluster-machine
 ```
 
-## Others values availables
+### AWS spot instances
+
+An AWS `machineSet.list` item accepts `spotMarketOptions` (map or YAML string) rendered in the provider spec. Use an empty map (`spotMarketOptions: {}`) to request spot instances at the on-demand maximum price, or set `maxPrice`. The `machineAutoscaler` is managed independently.
+
+## Other available values
 
 <!-- - **startx** : Startx machine classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml)) creating the following machine classes
   - **startx-aws-generic-retain** (AWS EBS gp3-csi level with encryption and expansion enabled with retain policy)
@@ -111,3 +115,4 @@ oc apply -k .
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
+| 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |

@@ -33,6 +33,21 @@ app.kubernetes.io/instance: {{ include "startx.appNameVersion" . | quote }}
 {{- .Values.oidc.clientSecret.name | default (printf "%s-oidc-client" (include "cluster-grafana.grafanaName" .)) -}}
 {{- end -}}
 
+{{/* Name of the ServiceAccount of the oauth-proxy sidecar */}}
+{{- define "cluster-grafana.oauthProxySaName" -}}
+{{- .Values.oauthProxy.serviceAccountName | default (printf "%s-oauth-proxy" (include "cluster-grafana.grafanaName" .)) -}}
+{{- end -}}
+
+{{/* Name of the Secret holding the serving certificate of the Service */}}
+{{- define "cluster-grafana.oauthProxyTlsName" -}}
+{{- .Values.oauthProxy.tlsSecretName | default (printf "%s-oauth-tls" (include "cluster-grafana.grafanaName" .)) -}}
+{{- end -}}
+
+{{/* Name of the oauth-proxy cookie secret Secret */}}
+{{- define "cluster-grafana.oauthProxyCookieName" -}}
+{{- .Values.oauthProxy.cookieSecret.name | default (printf "%s-oauth-cookie" (include "cluster-grafana.grafanaName" .)) -}}
+{{- end -}}
+
 {{/* Name of the ConfigMap holding the CA bundle trusted to reach the issuer */}}
 {{- define "cluster-grafana.oidcCaName" -}}
 {{- .Values.oidc.ca.configMap | default (printf "%s-oidc-ca" (include "cluster-grafana.grafanaName" .)) -}}
@@ -68,6 +83,9 @@ argocd.argoproj.io/hook-delete-policy: HookFailed
 {{- end }}{{- end }}
 {{- if .oidc }}{{- if .oidc.enabled }}
         oidc : enabled ({{ .oidc.issuerUrl | default .oidc.authUrl }})
+{{- end }}{{- end }}
+{{- if .oauthProxy }}{{- if .oauthProxy.enabled }}
+ oauthProxy : enabled ({{ .oauthProxy.image }})
 {{- end }}{{- end }}
 {{- if .grafana_datasources }}{{- if .grafana_datasources.enabled }}
  datasources : enabled ({{ len .grafana_datasources.list }} datasource(s))

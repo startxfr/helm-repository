@@ -1,0 +1,23 @@
+{{- if .Values.DSCInitialization -}}{{- if .Values.DSCInitialization.enabled -}}
+{{- with .Values.DSCInitialization }}
+{{- $name := .name | default "default-dsci" -}}
+{{- $spec := (.spec | default "{}") | fromYaml | default dict -}}
+{{- if .applicationsNamespace }}{{- $_ := set $spec "applicationsNamespace" .applicationsNamespace -}}{{- end }}
+---
+apiVersion: {{ .apiVersion | default "dscinitialization.opendatahub.io/v2" }}
+kind: DSCInitialization
+metadata:
+  name: "{{ $name }}"
+  labels:
+    {{- include "cluster-ods.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: "{{ $name }}-dsci"
+    {{- with .labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "cluster-ods.annotations" $ | nindent 4 }}
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "14") (.annotations | default dict)) | nindent 4 }}
+spec:
+  {{- toYaml $spec | nindent 2 }}
+{{- end }}
+{{- end -}}{{- end -}}
