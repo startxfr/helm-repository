@@ -49,3 +49,14 @@ jobs:
         env:
           CI_JOBS: 4
         run: .github/scripts/ci-check.sh charts "${{ matrix.group }}"
+
+  contract:
+    name: Contract tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.19.0
+      - name: Contract tests of the charts consumed by zuno-demo
+        run: tests/contract/run.sh
