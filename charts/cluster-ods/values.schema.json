@@ -19,7 +19,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "description": "Name of the global scope for this application. Define an organizational tenant.",
                     "default": "myscope",
                     "examples": [
                         "myscope",
@@ -43,7 +43,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Environement name",
-                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "description": "Name of the environment for this application. Define a stage tenant.",
                     "default": "dev",
                     "examples": [
                         "dev",
@@ -69,7 +69,7 @@
                     "minLength": 1,
                     "maxLength": 40,
                     "title": "Application name",
-                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "description": "Name of the application name. Define a functional tenant.",
                     "default": "default-sxapi",
                     "examples": [
                         "myapp",
@@ -391,6 +391,95 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "DataScienceCluster": {
+            "type": "object",
+            "title": "DataScienceCluster",
+            "description": "RHOAI DataScienceCluster. apiVersion defaults to datasciencecluster.opendatahub.io/v2 (RHOAI 3.x), use v1 for RHOAI 2.x.",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable the resource"
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Name of the resource"
+                },
+                "labels": {
+                    "type": "object",
+                    "title": "Additional labels",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "annotations": {
+                    "type": "object",
+                    "title": "Additional annotations, merged over the default argocd sync-wave",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "spec": {
+                    "type": "string",
+                    "title": "Spec of the resource, as a YAML string"
+                },
+                "namespace": {
+                    "type": "string",
+                    "title": "Namespace of the resource (default is the project)"
+                },
+                "apiVersion": {
+                    "type": "string",
+                    "title": "API version",
+                    "default": "datasciencecluster.opendatahub.io/v2"
+                },
+                "clusterScoped": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Omit metadata.namespace (a DataScienceCluster is cluster scoped)"
+                }
+            }
+        },
+        "DSCInitialization": {
+            "type": "object",
+            "title": "DSCInitialization",
+            "description": "Cluster scoped RHOAI DSCInitialization created before the DataScienceCluster (sync-wave 14).",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "title": "Enable the resource"
+                },
+                "name": {
+                    "type": "string",
+                    "title": "Name of the resource"
+                },
+                "labels": {
+                    "type": "object",
+                    "title": "Additional labels",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "annotations": {
+                    "type": "object",
+                    "title": "Additional annotations, merged over the default argocd sync-wave",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "spec": {
+                    "type": "string",
+                    "title": "Spec of the resource, as a YAML string"
+                },
+                "apiVersion": {
+                    "type": "string",
+                    "title": "API version",
+                    "default": "dscinitialization.opendatahub.io/v2"
+                },
+                "applicationsNamespace": {
+                    "type": "string",
+                    "title": "Namespace of the RHOAI applications, overrides spec.applicationsNamespace"
                 }
             }
         }

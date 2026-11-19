@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -61,7 +61,7 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 
 ### ClusterIssuer
 
-`clusterIssuer.list[]` items accept an `annotations` map merged over the default ArgoCD sync-wave (`1`), for example `argocd.argoproj.io/sync-wave: "19"` or `argocd.argoproj.io/sync-options: Prune=false`. The `spec` is a YAML string or a YAML map. A `ClusterIssuer` is cluster scoped: set `clusterScoped: true` on an item to omit `metadata.namespace` (default is `false`, the namespace defaults to the project one).
+`clusterIssuer.list[]` items accept an `annotations` map merged over the default ArgoCD sync-wave (`1`), for example `argocd.argoproj.io/sync-wave: "19"` or `argocd.argoproj.io/sync-options: Prune=false`. The `spec` is a YAML string or a YAML map. A `ClusterIssuer` is cluster scoped: set `clusterScoped: true` on an item to omit `metadata.namespace` (default is `false`, the namespace defaults to the project one). `certmanager.list[]` items also accept an `annotations` map that overrides the default sync-wave (`20`).
 
 ## Deploy with ArgoCD
 
@@ -91,8 +91,8 @@ oc apply -k .
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
+| 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |

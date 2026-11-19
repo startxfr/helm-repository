@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-istio
-    targetRevision: 21.3.199
+    targetRevision: 21.3.372
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -26,6 +26,14 @@ spec:
   ignoreDifferences:
     - group: maistra.io
       kind: ServiceMeshControlPlane
+      jsonPointers:
+        - /metadata/finalizers
+    - group: sailoperator.io
+      kind: Istio
+      jsonPointers:
+        - /metadata/finalizers
+    - group: sailoperator.io
+      kind: IstioCNI
       jsonPointers:
         - /metadata/finalizers
   syncPolicy:

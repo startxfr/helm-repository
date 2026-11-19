@@ -10,7 +10,7 @@ This chart is part of the [example-fruitapp-xxx startx helm chart series](https:
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -44,7 +44,7 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
 | context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
 | context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
@@ -55,7 +55,7 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 
 | Key                   | Default          | Description                                                                                 |
 | --------------------- | ---------------- | ------------------------------------------------------------------------------------------- |
-| namespace             | fruitapp-preprod | Project used fot theses resources                                                           |
+| namespace             | fruitapp-preprod | Project used fot these resources                                                           |
 | frontend              | {}               | Configuration of the frontend components                                                    |
 | frontend.enabled      | true             | Enable frontend for this project                                                            |
 | frontend.name         | fruitapp         | Microservice name used                                                                      |
@@ -99,3 +99,4 @@ helm install example-fruitapp-app startx/example-fruitapp-app
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
+| 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |

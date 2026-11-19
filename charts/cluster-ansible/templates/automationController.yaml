@@ -19,7 +19,11 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookFailed
     {{- end }}
-    argocd.argoproj.io/sync-wave: "5"
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "5") (.Values.ansibleController.annotations | default dict)) | nindent 4 }}
 spec:
+  {{- if kindIs "string" $spec }}
   {{- $spec | nindent 2 }}
+  {{- else }}
+  {{- toYaml $spec | nindent 2 }}
+  {{- end }}
 {{- end -}}

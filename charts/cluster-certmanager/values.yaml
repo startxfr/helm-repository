@@ -2,7 +2,7 @@
 
 # Application deployment context
 context:  &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -25,6 +25,8 @@ certmanager:
     - name: example-manual-demo-certmanager
       # namespace of the certificate (default is project namespace)
       namespace: demo-certmanager
+      # # additional annotations (map, ex: argocd.argoproj.io/sync-wave override, default 20)
+      # annotations: {}
       # kind of certificate (manual or ingress)
       kind: manual
       # Properties for a manual kind

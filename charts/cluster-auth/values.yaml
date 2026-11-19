@@ -2,7 +2,7 @@
 
 # Application deployment context
 context:
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -32,7 +32,8 @@ externalSecretDefaults:
 auth:
   # Enable the configuration of the auth service
   enabled: false
-  # namespace were to deploy the auth artifacts
+  # Namespace of the Secrets and ConfigMaps of the auth artifacts (LDAP, OIDC, htpasswd, console, templates).
+  # It does not apply to the OAuth resource itself, which is cluster scoped
   namespace: openshift-config
   # # Control the lifetime of accesss tokens. The default lifetime is 24 hours (86400 seconds)
   tokenMaxAge: 86400

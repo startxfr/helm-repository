@@ -2,7 +2,7 @@
 
 # Application deployment context
 context:  &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -55,6 +55,8 @@ ansibleHub:
   name: ansible-hub
   # Namespace of the AutomationHub instance (default is project name)
   namespace: startx-ansible
+  # Additional annotations of the AutomationHub (map, ex: argocd.argoproj.io/sync-wave override, default 10)
+  annotations: {}
   # the persistant storage size (default is 20Gi)
   storageSize: "20Gi"
   # the persistant storage class (default is efs-sc)
@@ -76,7 +78,9 @@ ansibleController:
   name: ansible-controller
   # Namespace of the AutomationController instance (default is project name)
   namespace: startx-ansible
-  # The applyed AutomationController specifications
+  # Additional annotations of the AutomationController (map, ex: argocd.argoproj.io/sync-wave override, default 5)
+  annotations: {}
+  # The applyed AutomationController specifications (YAML string or YAML map)
   spec: |
     admin_user: admin
     replicas: 1

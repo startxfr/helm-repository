@@ -2,7 +2,7 @@
 
 # Application deployment context
 context:  &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -23,13 +23,16 @@ DataScienceCluster:
   name: "default-dsc"
   # Namespace used for the DataScienceCluster (default is the project)
   namespace: "rhods-operator"
+  # Set to true to omit metadata.namespace (a DataScienceCluster is cluster scoped, default is false)
+  clusterScoped: false
   # API version of the DataScienceCluster (RHOAI 3.x requires v2, use datasciencecluster.opendatahub.io/v1 for RHOAI 2.x)
   apiVersion: "datasciencecluster.opendatahub.io/v2"
   # Additional labels of the DataScienceCluster (map)
   labels: {}
   # Additional annotations of the DataScienceCluster (map, e.g. argocd sync-wave override)
   annotations: {}
-  # Spec of the DataScienceCluster
+  # Spec of the DataScienceCluster. The default components below are the ones of RHOAI 2.x: with the v2 API
+  # (RHOAI 3.x) replace this spec with the components of your RHOAI release
   spec: |
     components:
       codeflare:
@@ -138,4 +141,4 @@ operator:
     target: "all-ns"
     name: "rhods-operator"
     namespace: "rhods-operator"
-    providedAPIs: "DSCInitialization.v1.dscinitialization.opendatahub.io,DataScienceCluster.v1.datasciencecluster.opendatahub.io,FeatureTracker.v1.features.opendatahub.io"
+    providedAPIs: "DSCInitialization.v1.dscinitialization.opendatahub.io,DSCInitialization.v2.dscinitialization.opendatahub.io,DataScienceCluster.v1.datasciencecluster.opendatahub.io,DataScienceCluster.v2.datasciencecluster.opendatahub.io,FeatureTracker.v1.features.opendatahub.io"

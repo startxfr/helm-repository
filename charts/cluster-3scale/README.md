@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -41,8 +41,8 @@ helm install cluster-3scale startx/cluster-3scale
 Complete deployment of a project with the following characteristics :
 
 - 1 **project:** named **startx-3scale** with the following properties
-  - 1 **LimitRange:** defined for this projet
-  - 1 **Quotas:** defined for this projet
+  - 1 **LimitRange:** defined for this project
+  - 1 **Quotas:** defined for this project
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **3scale-operator** configured with
   - The **threescale-2.13** channel
@@ -99,8 +99,8 @@ oc apply -k .
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
 | 21.3.373 | 2026-11-19 | align inter-chart dependency pins |
+| 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |

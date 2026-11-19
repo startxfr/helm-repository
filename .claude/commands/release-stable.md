@@ -24,6 +24,8 @@ No arguments. The version is inherited from the master branch state (already pro
 **Does NOT** bump chart versions (that was done by `/release-devel`).
 **Requires** `/release-master` to have been run first.
 
+> **Note (2026-11)**: the `stable-4.x` propagation of Step 6 has the same ambiguity risk as `master-4.x` (see `release-master.md`). It was skipped for the 21.3.373 release: those branches map to old OpenShift releases. Also set `.tools/repo-release` to the highest released version before this step: the tag is created from it and an existing tag cannot be reused.
+
 ## Instructions
 
 You are executing the release-stable command. No arguments expected.

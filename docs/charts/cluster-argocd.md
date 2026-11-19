@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -41,8 +41,8 @@ helm install cluster-argocd startx/cluster-argocd
 Complete deployment of a project with the following characteristics :
 
 - 1 **project:** named **openshift-gitops** with the following properties
-  - 1 **LimitRange:** defined for this projet
-  - 1 **Quotas:** defined for this projet
+  - 1 **LimitRange:** defined for this project
+  - 1 **Quotas:** defined for this project
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **openshift-gitops-operator** configured with
   - The **gitops-1.19** channel
@@ -58,7 +58,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-argocd startx/cluster-argocd
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Startx argocd cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx.yaml))
 
@@ -87,6 +87,12 @@ oc apply -k .
 
 The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
 
+### Source of the generated Applications
+
+In `application.list[].source`, the repository is read from `repo` (or its alias `repoURL`, default `https://gitlab.com/startx1/helm.git`)
+and the revision from `rev` (or its alias `targetRevision`, default `master`). The `values-app-*.yaml` files use these keys to pick the
+`stable` branch.
+
 ## History
 
 | Release  | Date       | Description                                                                                                |
@@ -106,8 +112,8 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
+| 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |

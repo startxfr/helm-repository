@@ -125,7 +125,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.372
+    targetRevision: 21.3.377
     helm:
       values: |
         stack:
@@ -156,7 +156,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.372
+    targetRevision: 21.3.377
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -319,3 +319,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
+| 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
