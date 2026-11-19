@@ -1,0 +1,82 @@
+# Overlay for RHOAI 3.x (v2 API): DSCInitialization and DataScienceCluster, to use after values-startx_noinfra.yaml
+#   helm install cluster-ods startx/cluster-ods -f values-startx_noinfra.yaml -f values-startx_noinfra-rhoai3.yaml
+# The components are the ones of a DataScienceCluster that runs on OpenShift with rhods-operator 3.6.0-ea.2 (beta
+# channel). Check them against your RHOAI release before applying: a component unknown to your operator is rejected
+# or pruned. Not tested with RHOAI 3.5 GA. Create the DSCInitialization after the operator Subscription is approved.
+# DSCInitialization is cluster scoped and created before the DataScienceCluster (argocd sync-waves 14 and 15)
+DSCInitialization:
+  enabled: true
+  name: default-dsci
+  apiVersion: dscinitialization.opendatahub.io/v2
+  applicationsNamespace: redhat-ods-applications
+  spec: |
+    monitoring:
+      managementState: Managed
+      namespace: redhat-ods-monitoring
+      metrics:
+        storage:
+          retention: 15d
+          size: 25Gi
+    trustedCABundle:
+      managementState: Managed
+DataScienceCluster:
+  enabled: true
+  name: default-dsc
+  apiVersion: datasciencecluster.opendatahub.io/v2
+  spec: |
+    components:
+      aigateway:
+        managementState: Managed
+        batchGateway:
+          managementState: Managed
+        modelsAsAService:
+          managementState: Managed
+      aipipelines:
+        managementState: Managed
+        argoWorkflowsControllers:
+          managementState: Managed
+      dashboard:
+        managementState: Managed
+        maasConsumerPortal:
+          managementState: Managed
+      feastoperator:
+        managementState: Managed
+      kserve:
+        managementState: Managed
+        modelCache:
+          managementState: Removed
+        modelsAsService:
+          managementState: Managed
+        nim:
+          managementState: Managed
+          airGapped: false
+        rawDeploymentServiceConfig: Headless
+        wva:
+          managementState: Managed
+      kueue:
+        managementState: Unmanaged
+        autoCreateQueues: false
+        defaultClusterQueueName: default
+        defaultLocalQueueName: default
+      mlflowoperator:
+        managementState: Managed
+      modelregistry:
+        managementState: Managed
+        registriesNamespace: rhoai-model-registries
+      ogx:
+        managementState: Managed
+      ray:
+        managementState: Managed
+      sparkoperator:
+        managementState: Managed
+      trainer:
+        managementState: Managed
+      trainingoperator:
+        managementState: Managed
+      trustyai:
+        managementState: Managed
+        mcpGuardrailsMode: false
+      workbenches:
+        managementState: Managed
+        workbenchesV2:
+          managementState: Removed

@@ -8,7 +8,10 @@ apiVersion: {{ .apiVersion | default "datasciencecluster.opendatahub.io/v2" }}
 kind: DataScienceCluster
 metadata:
   name: "{{ $name }}"
+  {{- /* clusterScoped: true omits metadata.namespace (a DataScienceCluster is cluster scoped) */}}
+  {{- if not .clusterScoped }}
   namespace: "{{- $namespace -}}"
+  {{- end }}
   labels:
     {{- include "cluster-ods.labels" $ | nindent 4 }}
     app.kubernetes.io/name: "{{ $name }}-dsc"
