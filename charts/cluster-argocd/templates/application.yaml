@@ -4,6 +4,7 @@
 ---
 {{- $name := .name | default "default-application" -}}
 {{- $namespace := .namespace | default $defaultns -}}
+{{- $destinationNamespace := .destinationNamespace | default $namespace -}}
 {{- $server := .server | default "https://kubernetes.default.svc" -}}
 {{- $project := .project | default "cluster-admin" -}}
 {{- $wave := .wave | default "10" -}}
@@ -25,7 +26,7 @@ metadata:
   {{- end }}
 spec:
   destination:
-    namespace:  {{ $namespace | quote }}
+    namespace: {{ $destinationNamespace | quote }}
     server: {{ $server | quote }}
   info:
     - name: teammail
