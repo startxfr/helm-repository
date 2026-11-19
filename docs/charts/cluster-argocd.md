@@ -87,6 +87,12 @@ oc apply -k .
 
 The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
 
+### Source of the generated Applications
+
+In `application.list[].source`, the repository is read from `repo` (or its alias `repoURL`, default `https://gitlab.com/startx1/helm.git`)
+and the revision from `rev` (or its alias `targetRevision`, default `master`). The `values-app-*.yaml` files use these keys to pick the
+`stable` branch.
+
 ## History
 
 | Release  | Date       | Description                                                                                                |
