@@ -65,6 +65,20 @@ helm show chart startx/sxapi
 helm install sxapi startx/sxapi
 ```
 
+## Other available values
+
+- **demo-sxapi-deploy** : [values-demo-sxapi-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-demo-sxapi-deploy.yaml)
+- **dev** : [values-dev.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml)
+- **pprod-v1** : [values-pprod-v1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml)
+- **pprod-v2** : [values-pprod-v2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml)
+- **prod-v1** : [values-prod-v1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml)
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-startx_noinfra.yaml)
+- **test** : [values-test.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml)
+
+```bash
+helm install sxapi startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-demo-sxapi-deploy.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary

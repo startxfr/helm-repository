@@ -36,6 +36,22 @@ helm show chart startx/operator
 helm install operator startx/operator
 ```
 
+## Other available values
+
+- **3scale-0.12.13** : [values-3scale-0.12.13.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml)
+- **3scale-0.6.0** : [values-3scale-0.6.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml)
+- **couchbase-1.2.2** : [values-couchbase-1.2.2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-1.2.2.yaml)
+- **couchbase-2.1.0** : [values-couchbase-2.1.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-2.1.0.yaml)
+- **couchbase-2.8.0** : [values-couchbase-2.8.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-2.8.0.yaml)
+- **crunchy-5.2.0** : [values-crunchy-5.2.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crunchy-5.2.0.yaml)
+- **crunchy-5.8.1** : [values-crunchy-5.8.1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crunchy-5.8.1.yaml)
+- **crw-2.11.0** : [values-crw-2.11.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.11.0.yaml)
+- and 12 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/operator)
+
+```bash
+helm install operator startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary

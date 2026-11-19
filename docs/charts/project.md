@@ -36,6 +36,22 @@ helm show chart startx/project
 helm install project startx/project
 ```
 
+## Other available values
+
+- **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml)
+- **demo-3scale** : [values-demo-3scale.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-3scale.yaml)
+- **demo-affinity** : [values-demo-affinity.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-affinity.yaml)
+- **demo-argocd** : [values-demo-argocd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml)
+- **demo-automation-runner** : [values-demo-automation-runner.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-automation-runner.yaml)
+- **demo-automation** : [values-demo-automation.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-automation.yaml)
+- **demo-compliance** : [values-demo-compliance.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-compliance.yaml)
+- **demo-costs** : [values-demo-costs.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-costs.yaml)
+- and 35 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/project)
+
+```bash
+helm install project startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
