@@ -87,6 +87,13 @@ oc apply -k .
 
 The automated sync policy ensures ArgoCD reconciles each concern independently whenever the chart or values drift from the desired state.
 
+### Chart version of the examples
+
+The Applications of the `examples/argocd/` folders of every chart pull the Helm chart from the startx repository and use the
+semver range `targetRevision: 21.3.x`, so that they follow the latest 21.3 release of the chart. Argo CD resolves the range at
+each refresh: pin an exact version in production (ADR-0004). Examples that read a chart from a git `path` and a branch are
+unchanged.
+
 ### Source of the generated Applications
 
 In `application.list[].source`, the repository is read from `repo` (or its alias `repoURL`, default `https://gitlab.com/startx1/helm.git`)
