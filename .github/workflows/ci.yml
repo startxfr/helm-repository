@@ -71,3 +71,11 @@ jobs:
           version: v3.19.0
       - name: Render the values-app files and check the ArgoCD examples
         run: .github/scripts/ci-check.sh argocd
+
+  schema:
+    name: Schema drift (informational)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: List the values.yaml keys missing from values.schema.json
+        run: .github/scripts/ci-check.sh schema
