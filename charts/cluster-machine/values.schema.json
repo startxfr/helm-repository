@@ -143,7 +143,19 @@
                     "type": "boolean"
                 },
                 "list": {
-                    "type": "array"
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "spotMarketOptions": {
+                                "type": [
+                                    "object",
+                                    "string"
+                                ],
+                                "description": "AWS spot request options (maxPrice...), an empty map requests spot at the on-demand price"
+                            }
+                        }
+                    }
                 }
             }
         }
