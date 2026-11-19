@@ -5,7 +5,8 @@
 # Usage:
 #   .github/scripts/ci-check.sh static                   JSON schemas, docs/charts copies, misspellings
 #   .github/scripts/ci-check.sh charts ["pattern ..."]   helm lint + helm template of the matching charts (default: all)
-#   .github/scripts/ci-check.sh all                      static + charts
+#   .github/scripts/ci-check.sh argocd                   render the values-app files and check the ArgoCD examples
+#   .github/scripts/ci-check.sh all                      static + charts + argocd
 #   .github/scripts/ci-check.sh chart-one <chart>        one chart (used by the parallel run)
 #
 # Patterns are shell globs on the chart names, for example: "cluster-[a-f]*" or "chaos* example-*".
@@ -148,10 +149,58 @@ charts() {
     [[ $fails -eq 0 ]]
 }
 
+
+# argocd: every charts/cluster-argocd/values-app-*.yaml is rendered with the cluster-argocd chart and every rendered
+# Application must have a spec.source.repoURL, a spec.destination.namespace and a revision that is not the implicit
+# default (master) unless the values file asks for it; every charts/*/examples/argocd/*.yaml must parse and an
+# Application that reads a Helm chart must use the range 21.3.x (pin an exact version in production, ADR-0004)
+check_argocd() {
+    local tmp f name rc=0 app repo rev dest n explicit
+    tmp=$(mktemp -d)
+    cp -r charts/cluster-argocd "$tmp/cluster-argocd"
+    rm -rf "$tmp/cluster-argocd/charts" "$tmp/cluster-argocd/Chart.lock"
+    sed -i "s#$S3_HTTP#$S3_HTTPS#g" "$tmp/cluster-argocd/Chart.yaml"
+    if ! { helm dependency update "$tmp/cluster-argocd" >"$tmp/dep.log" 2>&1 || { sleep 3; helm dependency update "$tmp/cluster-argocd" >"$tmp/dep.log" 2>&1; }; }; then
+        log "FAIL argocd: the dependencies of cluster-argocd cannot be resolved ($(tail -1 "$tmp/dep.log"))"; rm -rf "$tmp"; return 1
+    fi
+    for f in charts/cluster-argocd/values-app-*.yaml; do
+        name=${f##*/}
+        if ! helm template argocd-ci "$tmp/cluster-argocd" -f "$f" >"$tmp/out.yaml" 2>"$tmp/err.log"; then
+            log "FAIL $name: helm template failed: $(tail -1 "$tmp/err.log")"; rc=1; continue
+        fi
+        yq e '.application.list[] | .name + "\t" + ((.source.rev // .source.targetRevision // "") | tostring)' "$f" >"$tmp/explicit.tsv" 2>/dev/null
+        yq e 'select(.kind == "Application") | .metadata.name + "\t" + (.spec.source.repoURL // "") + "\t" + (.spec.source.targetRevision // "") + "\t" + (.spec.destination.namespace // "")' "$tmp/out.yaml" >"$tmp/apps.tsv" 2>/dev/null
+        n=0
+        while IFS=$'\t' read -r app repo rev dest; do
+            [[ -z $app || $app == '---' ]] && continue
+            n=$((n + 1))
+            [[ -n $repo ]] || { log "FAIL $name: Application $app has no spec.source.repoURL"; rc=1; }
+            [[ -n $dest ]] || { log "FAIL $name: Application $app has no spec.destination.namespace"; rc=1; }
+            if [[ -z $rev ]]; then log "FAIL $name: Application $app has no spec.source.targetRevision"; rc=1
+            elif [[ $rev == master ]]; then
+                explicit=$(awk -F'\t' -v a="$app" '$1 == a {print $2; exit}' "$tmp/explicit.tsv")
+                [[ $explicit == master ]] || { log "FAIL $name: Application $app uses the implicit revision master (set source.rev)"; rc=1; }
+            fi
+        done <"$tmp/apps.tsv"
+        [[ $n -gt 0 ]] || { log "FAIL $name: no Application is rendered"; rc=1; }
+    done
+    for f in charts/*/examples/argocd/*.yaml; do
+        if ! yq e '.' "$f" >/dev/null 2>"$tmp/err.log"; then log "FAIL $f does not parse: $(head -1 "$tmp/err.log")"; rc=1; continue; fi
+        while IFS= read -r rev; do
+            [[ -z $rev || $rev == '---' ]] && continue
+            [[ $rev == '21.3.x' ]] || { log "FAIL $f: targetRevision '$rev' of a Helm chart source must be the range 21.3.x"; rc=1; }
+        done < <(yq e 'select(.kind == "Application" and ((.spec.source.chart // "") != "")) | .spec.source.targetRevision' "$f" 2>/dev/null)
+    done
+    rm -rf "$tmp"
+    [[ $rc -eq 0 ]] && log "ok   argocd: $(ls charts/cluster-argocd/values-app-*.yaml | wc -l) values-app files render, $(ls charts/*/examples/argocd/*.yaml | wc -l) examples are valid"
+    return $rc
+}
+
 case "${1:-all}" in
     static)    static ;;
     charts)    shift; charts "$@" ;;
     chart-one) shift; chart_one "$@" ;;
-    all)       rc=0; static || rc=1; charts || rc=1; exit $rc ;;
-    *)         sed -n '2,16p' "${BASH_SOURCE[0]}"; exit 2 ;;
+    argocd)    check_argocd ;;
+    all)       rc=0; static || rc=1; charts || rc=1; check_argocd || rc=1; exit $rc ;;
+    *)         sed -n '2,17p' "${BASH_SOURCE[0]}"; exit 2 ;;
 esac
