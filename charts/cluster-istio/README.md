@@ -74,7 +74,7 @@ helm install cluster-gpu-instance startx/cluster-gpu --set project.enabled=false
 
 ### Sail operator (Service Mesh 3)
 
-The `sail` values deploy the `sailoperator.io/v1` `IstioCNI` and `Istio` resources and the `telemetry.istio.io/v1` `Telemetry` resources, as an alternative to the `maistra.io` `ServiceMeshControlPlane`. Each list item accepts `labels`, `annotations` (override the default sync-wave 20, 25 and 30) and a free `spec`. The Sail operator subscription itself is not part of this chart.
+The `sail` values deploy the `sailoperator.io/v1` `IstioCNI` and `Istio` resources and the `telemetry.istio.io/v1` `Telemetry` resources, as an alternative to the `maistra.io` `ServiceMeshControlPlane`. Each list item accepts `labels`, `annotations` (override the default sync-wave 20, 25 and 30) and a free `spec`. The Sail operator is installed by `operatorSail.enabled` (package `servicemeshoperator3`, `openshift-operators`, no OperatorGroup): check the package and channel of your catalog before enabling it.
 
 ## Other available values
 
