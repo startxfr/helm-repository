@@ -19,6 +19,7 @@ echo "info  last release tag: ${last:-none}, .tools/repo-release: $(cat .tools/r
 echo "info  charts that would be released: $(./sx-helm changed-charts 2>/dev/null | tail -n +2 | wc -l) (RELEASE_ALL=true for every chart)"
 .github/scripts/ci-check.sh static >/tmp/preflight-static.log 2>&1 && ok "ci-check static" || bad "ci-check static (see /tmp/preflight-static.log)"
 .github/scripts/ci-check.sh argocd >/tmp/preflight-argocd.log 2>&1 && ok "ci-check argocd" || bad "ci-check argocd (see /tmp/preflight-argocd.log)"
+.github/scripts/ci-check.sh schema >/tmp/preflight-schema.log 2>&1 && ok "ci-check schema (no drift)" || bad "ci-check schema (see /tmp/preflight-schema.log)"
 if [[ "${PREFLIGHT_CONTRACT:-true}" == "true" ]]; then
   tests/contract/run.sh >/tmp/preflight-contract.log 2>&1 && ok "contract tests" || bad "contract tests (see /tmp/preflight-contract.log)"
 fi
