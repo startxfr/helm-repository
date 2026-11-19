@@ -123,7 +123,7 @@ spec:
     server: https://kubernetes.default.svc
     namespace: unifai-operator
   source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
     targetRevision: 21.3.379
     helm:
@@ -154,7 +154,7 @@ spec:
     server: https://kubernetes.default.svc
     namespace: unifai
   source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
     targetRevision: 21.3.379
     helm:
