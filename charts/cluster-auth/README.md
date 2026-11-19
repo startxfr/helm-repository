@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -52,7 +52,7 @@ Complete configuration of the OCP authentification with the following characteri
 helm install cluster-auth startx/cluster-auth
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Startx auth cluster wide service configuration using startx group (dev, devops and ops) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml))
   - 3 auth templates in **openshift-config**
