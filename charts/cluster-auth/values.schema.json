@@ -350,6 +350,17 @@
                     "type": "string",
                     "default": "openshift-config",
                     "description": "Namespace of the Secrets and ConfigMaps of the auth artifacts (LDAP, OIDC, htpasswd, console, templates). It does not apply to the OAuth resource itself, which is cluster scoped."
+                },
+                "oauth": {
+                    "type": "object",
+                    "description": "Ownership of the OAuth/cluster resource. With enabled false the resource is not rendered, the Secrets and ConfigMaps still are.",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "default": true,
+                            "description": "Render the OAuth/cluster resource"
+                        }
+                    }
                 }
             }
         },

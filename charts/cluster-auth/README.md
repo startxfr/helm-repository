@@ -94,6 +94,13 @@ OpenShift authentication operator copies into `openshift-authentication` (`v4-0-
 `v4-0-config-user-template-*`). The operator rewrites them after each sync, so the example Application declares
 an `ignoreDifferences` on those Secrets : without it they show as permanently OutOfSync.
 
+### Let another owner manage OAuth/cluster
+
+A cluster has exactly one `OAuth/cluster` resource. When another chart or tool owns it (the consumer only references the
+htpasswd and template Secrets of this chart), set `auth.oauth.enabled: false` in the values of the Application: the
+`OAuth` resource is not rendered, while the Secrets and ConfigMaps of `auth.authBackend` and `auth.templates` still are.
+The default is `true`, which keeps the current behaviour.
+
 ## External secrets
 
 The secret of each identity provider can come from an external store (Vault,
