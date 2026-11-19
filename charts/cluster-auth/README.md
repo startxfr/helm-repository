@@ -79,7 +79,7 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 
 ### Deploy via ArgoCD Application
 
-`cluster-auth` is a configuration-only chart (no operator, no dedicated namespace). It configures the cluster `OAuth` CR and related secrets in `openshift-config`. A single Application is sufficient:
+`cluster-auth` is a configuration-only chart (no operator, no dedicated namespace). It configures the cluster `OAuth` CR and related secrets in `openshift-config`. `auth.namespace` sets the namespace of those Secrets and ConfigMaps; it does not apply to the `OAuth` resource, which is cluster scoped and rendered without a namespace. A single Application is sufficient:
 
 ```bash
 git clone https://gitlab.com/startx1/helm.git
