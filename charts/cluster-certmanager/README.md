@@ -61,7 +61,7 @@ helm install cluster-certmanager startx/cluster-certmanager -f https://raw.githu
 
 ### ClusterIssuer
 
-`clusterIssuer.list[]` items accept an `annotations` map merged over the default ArgoCD sync-wave (`1`), for example `argocd.argoproj.io/sync-wave: "19"` or `argocd.argoproj.io/sync-options: Prune=false`. The `spec` is a YAML string or a YAML map. A `ClusterIssuer` is cluster scoped: set `clusterScoped: true` on an item to omit `metadata.namespace` (default is `false`, the namespace defaults to the project one).
+`clusterIssuer.list[]` items accept an `annotations` map merged over the default ArgoCD sync-wave (`1`), for example `argocd.argoproj.io/sync-wave: "19"` or `argocd.argoproj.io/sync-options: Prune=false`. The `spec` is a YAML string or a YAML map. A `ClusterIssuer` is cluster scoped: set `clusterScoped: true` on an item to omit `metadata.namespace` (default is `false`, the namespace defaults to the project one). `certmanager.list[]` items also accept an `annotations` map that overrides the default sync-wave (`20`).
 
 ## Deploy with ArgoCD
 

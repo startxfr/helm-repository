@@ -182,7 +182,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 30,
-                                    "title": "Version name",
+                            "title": "Version name",
                             "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
                             "default": "0.0.1",
                             "examples": [
@@ -291,6 +291,56 @@
                                         "type": "integer"
                                     }
                                 }
+                            },
+                            "annotations": {
+                                "type": "object",
+                                "title": "Additional annotations, merged over the default argocd sync-wave (20)",
+                                "additionalProperties": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "clusterIssuer": {
+            "type": "object",
+            "title": "ClusterIssuer resources",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "description": "Rendered as metadata.namespace (default is the project namespace) unless clusterScoped is true"
+                            },
+                            "clusterScoped": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Omit metadata.namespace (a ClusterIssuer is cluster scoped)"
+                            },
+                            "annotations": {
+                                "type": "object",
+                                "title": "Additional annotations, merged over the default argocd sync-wave (1)",
+                                "additionalProperties": {
+                                    "type": "string"
+                                }
+                            },
+                            "spec": {
+                                "type": [
+                                    "string",
+                                    "object"
+                                ],
+                                "description": "Spec of the ClusterIssuer, YAML string or YAML map"
                             }
                         }
                     }
