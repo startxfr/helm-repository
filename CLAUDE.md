@@ -72,17 +72,17 @@ The active table is the last table of the `## History` section (`cluster-acm` an
 | ------------- | ------------------------------ | ---------------------------------------------------------- |
 | `devel`       | Pre-release from devel branch  | `make publish-devel` / `/release-chart` / `/release-devel` |
 | `stable`      | Production stable              | `make publish`                                             |
-| `noschema`    | **Legacy**, frozen at 18.11.71 | `make publish` (index only, see below)                     |
+| `noschema`    | **Legacy**, frozen at 18.11.71 | not republished (`HELM_REPO_REPUBLISH_NOSCHEMA=true` forces it) |
 | `release-<N>` | Charts for OCP minor release N | `make publish` / `make archive`                            |
 
-**`noschema` is legacy.** Its packages (`<chart>-<version>-noschema.tgz`, 1194 files) were built once, up to 18.11.71 (OCP 4.18), by a process that no longer exists in this repository: nothing generates new `-noschema` packages, and `make release` / `make release-all` never touch it. `make publish` only re-indexes the frozen files (`docs/repos/noschema/index.yaml`), so its index never contains a 21.x chart. Do not expect a new chart or version there, do not add it to new documentation, and send users of recent releases to `stable` or `release-<N>`. Keep the S3 path and the index published so that existing `helm repo add` commands keep working. Reviving it would require a new build step that strips `values.schema.json` from each package.
+**`noschema` is legacy.** Its packages (`<chart>-<version>-noschema.tgz`, 1194 files) were built once, up to 18.11.71 (OCP 4.18), by a process that no longer exists in this repository: nothing generates new `-noschema` packages, and `make release` / `make release-all` never touch it. `make publish` no longer touches it (set `HELM_REPO_REPUBLISH_NOSCHEMA=true` to re-index the frozen files in `docs/repos/noschema/index.yaml`); its index never contains a 21.x chart. Do not expect a new chart or version there, do not add it to new documentation, and send users of recent releases to `stable` or `release-<N>`. Keep the S3 path and the index published so that existing `helm repo add` commands keep working. Reviving it would require a new build step that strips `values.schema.json` from each package.
 
 ### Makefile usage
 
 ```bash
 make release   CHART=cluster-nmstate [VERSION=21.3.199] [DESC="fix"]
 make release-all                     [VERSION=21.3.199] [DESC="stable update"]
-make publish        # regenerates stable/noschema/release-N S3 repos
+make publish        # regenerates stable/release-N S3 repos (noschema is frozen)
 make publish-chart  CHART=cluster-nmstate
 make lint/test/schema/package  CHART=cluster-nmstate
 make lint-all / test-all / package-all
@@ -97,7 +97,7 @@ make delete     CHART=cluster-nmstate [FORCE_DELETE=yes]
 ### Release flow (single chart)
 
 1. `make release CHART=<name>` — bumps Chart.yaml, replaces `targetRevision` in README, appends history row, syncs to `docs/charts/`, signs, packages, uploads `.tgz`+`.prov` to `.reposync/stable/` **and** `.reposync/$STABLE_MAINRELEASE/`, uploads to S3.
-2. `make publish` — regenerates Helm index for stable/noschema/current repos, syncs to S3.
+2. `make publish` — regenerates Helm index for stable/current repos (noschema is frozen), syncs to S3.
 3. Commit and push (`devel` → `master` → `stable` → tag).
 
 **Dual S3 copy**: every package lands in both `stable/` and `release-N/` immediately after `make release`.
