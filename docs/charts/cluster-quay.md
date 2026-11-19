@@ -469,3 +469,4 @@ the `project` sub-chart (`crunchy.project.enabled: false`) when they must stay w
 | 21.3.373 | 2026-11-19 | align inter-chart dependency pins |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
 | 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
+| 21.3.389 | 2026-11-19 | full repository release: HTTPS dependency URLs, dependency-ordered release, schema guard, docs and examples |
