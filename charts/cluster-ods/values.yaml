@@ -23,6 +23,8 @@ DataScienceCluster:
   name: "default-dsc"
   # Namespace used for the DataScienceCluster (default is the project)
   namespace: "rhods-operator"
+  # Set to true to omit metadata.namespace (a DataScienceCluster is cluster scoped, default is false)
+  clusterScoped: false
   # API version of the DataScienceCluster (RHOAI 3.x requires v2, use datasciencecluster.opendatahub.io/v1 for RHOAI 2.x)
   apiVersion: "datasciencecluster.opendatahub.io/v2"
   # Additional labels of the DataScienceCluster (map)
