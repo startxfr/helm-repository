@@ -14,7 +14,7 @@ metadata:
     app.kubernetes.io/name: "{{- .name | default "default-certificate" -}}-certificate"
   annotations:
     {{- include "cluster-certmanager.annotations" $ | nindent 4 }}
-    argocd.argoproj.io/sync-wave: "20"
+    {{- toYaml (mergeOverwrite (dict "argocd.argoproj.io/sync-wave" "20") (.annotations | default dict)) | nindent 4 }}
 {{- if eq .kind "ingress" }}
 spec:
   commonName: {{ .ingress.host | default "default.example.com" | quote }}

@@ -1,0 +1,122 @@
+# Auto-generated values-app file for deploying cluster-percona via argocd
+# Source: examples/argocd/ from the cluster-percona chart
+
+argocd_project:
+  enabled: true
+  list:
+    - name: 'infra-percona'
+      namespace: 'openshift-gitops'
+      sourceRepos:
+        - 'https://gitlab.com/startx1/helm.git'
+      destinations:
+        - namespace: 'default-percona'
+          server: 'https://kubernetes.default.svc'
+        - namespace: 'openshift-gitops'
+          server: 'https://kubernetes.default.svc'
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+      roles:
+      - name: admin
+        description: All privileges to group admin in project
+        policies:
+        - p, proj:infra-percona:admin, *, *, */*, allow
+        - g, system:cluster-admins, role:admin
+        groups:
+        - system:cluster-admins
+        - admin
+
+# Applications
+application:
+  enabled: true
+  list:
+    # Creates namespace default-percona
+    - name: 'infra-percona-project'
+      namespace: 'openshift-gitops'
+      finalizer: false
+      wave: "1"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-percona'
+      source:
+        repo: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-percona'
+        rev: stable
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: true
+          operator:
+            enabled: false
+          cluster:
+            enabled: false
+          loader:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Deploys the Percona Postgres operator in default-percona
+    - name: 'infra-percona-operator'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "5"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-percona'
+      source:
+        repo: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-percona'
+        rev: stable
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: true
+          cluster:
+            enabled: false
+          loader:
+            enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+    # Deploys PerconaPGCluster instances in default-percona
+    - name: 'infra-percona-app'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "10"
+      server: 'https://kubernetes.default.svc'
+      project: 'infra-percona'
+      source:
+        repo: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/cluster-percona'
+        rev: stable
+      helm: |
+        valueFiles:
+          - values-startx_noinfra.yaml
+        values: |
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          cluster:
+            enabled: true
+          loader:
+            enabled: false
+      ignoreDifferences: |
+        - group: pgv2.percona.com
+          kind: PerconaPGCluster
+          jsonPointers:
+            - /metadata/finalizers
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+
+argocd_repocreds:
+  enabled: true
+  list: []

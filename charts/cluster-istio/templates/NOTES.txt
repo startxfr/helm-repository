@@ -33,4 +33,8 @@ Service-mesh (istio) is enabled, at the cluster level, with the following charac
 {{ include "operator.notes" .Values.operatorIstio }}
 {{- end }}{{- end }}
 
+{{- if .Values.operatorSail }}{{- if .Values.operatorSail.enabled }}
+{{ include "operator.notes" .Values.operatorSail }}
+{{- end }}{{- end }}
+
 {{ include "cluster-istio.notes" .Values }}

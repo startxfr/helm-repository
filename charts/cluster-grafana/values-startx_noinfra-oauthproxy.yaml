@@ -1,0 +1,180 @@
+# Values of a STARTX cluster: Grafana behind the OpenShift oauth-proxy (users sign in with the OpenShift OAuth server)
+# Same as values-startx_noinfra.yaml with oauthProxy enabled and the cookie secret read from an external store.
+# see values.yaml for explanation on each params. Not validated on a cluster, only with helm template.
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: grafana
+  app: startx-grafana
+  version: "5.25.0"
+externalSecretDefaults:
+  apiVersion: external-secrets.io/v1
+  refreshInterval: 1h
+  secretStoreRef:
+    # Replace with the store holding the cookie secret
+    name: my-secret-store
+    kind: ClusterSecretStore
+grafana:
+  enabled: true
+  hooked: false
+  name: startx
+  version: "13.1.3"
+  adminSecret:
+    enabled: false
+    name: ""
+    username: admin
+    password: ""
+    externalSecret:
+      enabled: false
+      remoteRefs: {}
+  spec: |
+    config:
+      log:
+        mode: console
+      analytics:
+        reporting_enabled: "false"
+        check_for_updates: "false"
+        check_for_plugin_updates: "false"
+      plugins:
+        # No download of the plugins preinstalled from grafana.com at startup (the pod may have no internet access)
+        preinstall_disabled: "true"
+    # Keep the Grafana data on a ReadWriteOnce volume: the strategy must be Recreate (a rolling update would fail with
+    # "index is locked by another process"). A volumes list replaces the generated one: declare oauth-tls again
+    persistentVolumeClaim:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+    deployment:
+      spec:
+        strategy:
+          type: Recreate
+        template:
+          spec:
+            volumes:
+              - name: oauth-tls
+                secret:
+                  secretName: startx-oauth-tls
+              - name: grafana-data
+                persistentVolumeClaim:
+                  claimName: startx-pvc
+route:
+  enabled: true
+  host: ""
+  termination: edge
+  insecureEdgeTerminationPolicy: Redirect
+oidc:
+  enabled: false
+  name: OpenID Connect
+  issuerUrl: ""
+  authUrl: ""
+  tokenUrl: ""
+  apiUrl: ""
+  signoutUrl: ""
+  clientId: grafana
+  scopes: openid email profile
+  roleAttributePath: "contains(roles[*], 'grafanaadmin') && 'GrafanaAdmin' || contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'"
+  clientSecret:
+    enabled: true
+    name: ""
+    value: ""
+    externalSecret:
+      enabled: false
+      remoteRefs: {}
+  ca:
+    certificate: ""
+    injectTrustedBundle: false
+    configMap: ""
+    key: ca-bundle.crt
+oauthProxy:
+  enabled: true
+  image: image-registry.openshift-image-registry.svc:5000/openshift/oauth-proxy:v4.4
+  port: 8443
+  upstream: http://localhost:3000
+  serviceAccountName: ""
+  tlsSecretName: ""
+  # Only the users able to get pods in the namespace of the instance can sign in
+  sar:
+    namespace: ""
+    resource: pods
+    verb: get
+  emailDomain: "*"
+  args: []
+  resources: {}
+  authProxy:
+    disableLoginForm: true
+    whitelist: "127.0.0.1,::1"
+  cookieSecret:
+    enabled: true
+    name: ""
+    value: ""
+    externalSecret:
+      enabled: true
+      remoteRefs:
+        cookie_secret:
+          key: grafana/oauth-proxy
+          property: cookie_secret
+grafana_datasources:
+  enabled: false
+  list: []
+grafana_dashboards:
+  enabled: false
+  list:
+    - name: startx-welcome
+      enabled: true
+      spec: |
+        json: |
+          {
+            "title": "STARTX welcome",
+            "uid": "startx-welcome",
+            "schemaVersion": 39,
+            "panels": [
+              {
+                "type": "text",
+                "title": "STARTX",
+                "gridPos": {"h": 6, "w": 24, "x": 0, "y": 0},
+                "options": {"mode": "markdown", "content": "Grafana deployed by the STARTX **cluster-grafana** helm chart."}
+              }
+            ]
+          }
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-grafana"
+    display_name: "Startx Grafana"
+    requester: startx
+    description: Grafana configured by STARTX
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "grafana-operator"
+    namespace: "default-grafana"
+    version: "v5.25.0"
+    operator:
+      channel: v5
+      name: grafana-operator
+      installPlanApproval: Manual
+      csv: grafana-operator
+      source:
+        name: community-operators
+        namespace: openshift-marketplace
+      config:
+        infra: false
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "grafana-operator"
+    namespace: "default-grafana"
+    providedAPIs: "Grafana.v1beta1.grafana.integreatly.org,GrafanaAlertRuleGroup.v1beta1.grafana.integreatly.org,GrafanaContactPoint.v1beta1.grafana.integreatly.org,GrafanaDashboard.v1beta1.grafana.integreatly.org,GrafanaDatasource.v1beta1.grafana.integreatly.org,GrafanaFolder.v1beta1.grafana.integreatly.org,GrafanaLibraryPanel.v1beta1.grafana.integreatly.org,GrafanaManifest.v1beta1.grafana.integreatly.org,GrafanaMuteTiming.v1beta1.grafana.integreatly.org,GrafanaNotificationPolicy.v1beta1.grafana.integreatly.org,GrafanaNotificationPolicyRoute.v1beta1.grafana.integreatly.org,GrafanaNotificationTemplate.v1beta1.grafana.integreatly.org,GrafanaServiceAccount.v1beta1.grafana.integreatly.org"

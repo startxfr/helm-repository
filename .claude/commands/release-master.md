@@ -23,6 +23,8 @@ No arguments. The version is inherited from the devel branch state (already bump
 **Does NOT** bump chart versions (that was done by `/release-devel`).
 **Does NOT** touch `stable`. Use `/release-stable` to promote to stable.
 
+> **Note (2026-11)**: `make publish` already merges `devel` into `master` and pushes both, so Step 4 only matters when `master` must be merged without publishing. The `master-4.x` propagation of Step 6 failed once (the same `refs/remotes/origin/*` refspec is shared by several remotes, so `origin/master-4.x` can be ambiguous) and left the working tree on the wrong branch content. Use explicit `refs/remotes/origin/...` references and check `git status` after each branch, or skip the step as decided for the 21.3.373 release.
+
 ## Instructions
 
 You are executing the release-master command. No arguments expected.

@@ -2,7 +2,7 @@
 
 # Application deployment context
 context:  &context
-  # Name of the global scope for this application (organisational tenant)
+  # Name of the global scope for this application (organizational tenant)
   scope: myscope
   # Name of the cluster running this application (platform tenant)
   cluster: default
@@ -280,3 +280,30 @@ operatorIstio:
     name: "istio-operators"
     namespace: "istio-operators"
     providedAPIs: "ServiceMeshControlPlane.v2.maistra.io,ServiceMeshMember.v2.maistra.io,ServiceMeshMemberRoll.v2.maistra.io"
+
+# Configuration of the Sail operator, Service Mesh 3 (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
+# Installs the operator that serves the sail values (sailoperator.io Istio and IstioCNI). AllNamespaces install mode in
+# the global openshift-operators namespace, so no OperatorGroup is created. Check the package and channel of your
+# cluster with: oc get packagemanifest servicemeshoperator3 -n openshift-marketplace
+operatorSail:
+  enabled: false
+  context: 
+    <<: *context
+    version: "3.1.0"
+  subscription:
+    enabled: true
+    hooked: false
+    name: "servicemeshoperator3"
+    namespace: "openshift-operators"
+    version: "v3.1.0"
+    operator: 
+      channel: "stable"
+      name: servicemeshoperator3
+      installPlanApproval: Manual
+      source: 
+        name: redhat-operators
+        namespace: openshift-marketplace
+      config: 
+        infra: false
+  operatorGroup:
+    enabled: false

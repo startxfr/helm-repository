@@ -19,7 +19,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organisational tenant.",
+                    "description": "Name of the global scope for this application. Define an organizational tenant.",
                     "default": "myscope",
                     "examples": [
                         "myscope",
@@ -43,7 +43,7 @@
                     "minLength": 1,
                     "maxLength": 25,
                     "title": "Environement name",
-                    "description": "Name of the environement for this application. Define a stage tenant.",
+                    "description": "Name of the environment for this application. Define a stage tenant.",
                     "default": "dev",
                     "examples": [
                         "dev",
@@ -69,7 +69,7 @@
                     "minLength": 1,
                     "maxLength": 40,
                     "title": "Application name",
-                    "description": "Name of the application name. Define a functionnal tenant.",
+                    "description": "Name of the application name. Define a functional tenant.",
                     "default": "default-sxapi",
                     "examples": [
                         "myapp",
@@ -345,6 +345,11 @@
                             }
                         }
                     }
+                },
+                "namespace": {
+                    "type": "string",
+                    "default": "openshift-config",
+                    "description": "Namespace of the Secrets and ConfigMaps of the auth artifacts (LDAP, OIDC, htpasswd, console, templates). It does not apply to the OAuth resource itself, which is cluster scoped."
                 }
             }
         },

@@ -34,8 +34,8 @@ spec:
   source:
     {{- with .source }} 
     path: {{ .path | default "charts/example-html/" | quote }}
-    repoURL: {{ .repo | default "https://gitlab.com/startx1/helm.git" | quote }}
-    targetRevision: {{ .rev | default "master" | quote }}
+    repoURL: {{ .repo | default .repoURL | default "https://gitlab.com/startx1/helm.git" | quote }}
+    targetRevision: {{ .rev | default .targetRevision | default "master" | quote }}
     {{- end }}
     {{- if .helm }}
     helm:

@@ -8,7 +8,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -55,7 +55,7 @@ helm install cluster-ansible startx/cluster-ansible
 
 ### AnsibleAutomationPlatform spec and annotations
 
-`ansibleAAP.spec` accepts a YAML string or a YAML map. `ansibleAAP.annotations` is a map merged over the default ArgoCD sync-wave (`1`), for example to set `argocd.argoproj.io/sync-wave` or `argocd.argoproj.io/sync-options: Prune=false`.
+`ansibleAAP.spec` accepts a YAML string or a YAML map. `ansibleAAP.annotations` is a map merged over the default ArgoCD sync-wave (`1`), for example to set `argocd.argoproj.io/sync-wave` or `argocd.argoproj.io/sync-options: Prune=false`. `ansibleController.spec` also accepts a YAML string or a YAML map, and `ansibleController.annotations` and `ansibleHub.annotations` override the default sync-waves (`5` and `10`). Helm prints a harmless `Ignoring non-table value` warning when a values file replaces the default string `spec` by a map.
 
 ## Other available values
 
@@ -96,8 +96,8 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
+| 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |

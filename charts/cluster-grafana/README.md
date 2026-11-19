@@ -83,6 +83,7 @@ helm install cluster-grafana-instance startx/cluster-grafana -f https://raw.gith
 - **startx** : grafana operator and grafana instance on infra nodes, startx dashboard, and no download of the plugins preinstalled from grafana.com with `plugins.preinstall_disabled`, since the pod may have no internet access (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml))
 - **startx_noinfra** : the same without the infra node placement (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra.yaml))
 - **startx_noinfra-rhbk** : the same, plus the OpenID Connect authentication against the startx realm of `cluster-rhbk` (`values-startx_noinfra-grafana.yaml`), the cluster trusted CA bundle and a demo client secret (see [values-startx_noinfra-rhbk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra-rhbk.yaml))
+- **startx_noinfra-oauthproxy** : the same without OpenID Connect, with the OpenShift oauth-proxy sidecar in front of Grafana (`oauthProxy`), the cookie secret read from an external store, and the data on a ReadWriteOnce volume with the `Recreate` strategy (see [values-startx_noinfra-oauthproxy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra-oauthproxy.yaml)). Replace the secret store name first. It is checked with `helm template` only, not on a cluster.
 
 ```bash
 helm install cluster-grafana startx/cluster-grafana -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml
@@ -335,3 +336,4 @@ generated before it is removed.
 | 21.3.361 | 2026-11-17 | Initial chart creation |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
+| 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |

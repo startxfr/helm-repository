@@ -102,6 +102,9 @@ make delete     CHART=cluster-nmstate [FORCE_DELETE=yes]
 
 **Dual S3 copy**: every package lands in both `stable/` and `release-N/` immediately after `make release`.
 
+**Repository version**: a single-chart release (`make release CHART=`) does **not** update `.tools/repo-release`. After a batch of partial releases, set it by hand to the highest released version and commit it (the tag of `/release-stable` uses it, and an existing tag cannot be reused).
+`make publish` itself merges `devel` into `master` and pushes both. Before releasing after a long network outage, make sure the Helm repository cache is fresh (`helm repo update`), otherwise dependency resolution fails and nothing is packaged.
+
 ### Environment variables (cli)
 
 | Variable       | Default | Purpose                                            |
@@ -297,7 +300,7 @@ for item in d['items']:
 
 ### Charts with ArgoCD examples (done)
 
-`cluster-nexus` · `cluster-nfd` · `cluster-nmstate` · `cluster-3scale` · `cluster-kubecost` · `cluster-mustgather` · `cluster-acm` · `cluster-acs` · `cluster-ansible` · `cluster-argocd` · `cluster-auth` · `cluster-certmanager` · `cluster-cloudnativedb` · `cluster-compliance` · `cluster-config` · `cluster-console` · `cluster-costs` · `cluster-couchbase` · `cluster-crunchy` · `cluster-descheduler` · `cluster-devworkspaces` · `cluster-dvo` · `cluster-etcdbackup` · `cluster-gitlab` · `cluster-gpu` · `cluster-istio` · `cluster-kafka` · `cluster-kargo` · `cluster-kasten` · `cluster-kepler` · `cluster-knative` · `cluster-kubevirt` · `cluster-localstorage` · `cluster-logging` · `cluster-machine` · `cluster-maintenance` · `cluster-mongo` · `cluster-mtc` · `cluster-mtr` · `cluster-mtv` · `cluster-oadp` · `cluster-odf` · `cluster-ods` · `cluster-pipeline` · `cluster-ptp` · `cluster-quay` · `cluster-rbac` · `cluster-redis` · `cluster-router` · `cluster-sso` · `cluster-storage` · `cluster-storage-efs` · `cluster-trident` · `cluster-vault` · `cluster-vault-config` · `cluster-vpa`
+`cluster-nexus` · `cluster-nfd` · `cluster-nmstate` · `cluster-3scale` · `cluster-kubecost` · `cluster-mustgather` · `cluster-acm` · `cluster-acs` · `cluster-ansible` · `cluster-argocd` · `cluster-auth` · `cluster-certmanager` · `cluster-cloudnativedb` · `cluster-compliance` · `cluster-config` · `cluster-console` · `cluster-costs` · `cluster-couchbase` · `cluster-crunchy` · `cluster-descheduler` · `cluster-devworkspaces` · `cluster-dvo` · `cluster-etcdbackup` · `cluster-gitlab` · `cluster-gpu` · `cluster-istio` · `cluster-kafka` · `cluster-kargo` · `cluster-kasten` · `cluster-kepler` · `cluster-knative` · `cluster-kubevirt` · `cluster-localstorage` · `cluster-logging` · `cluster-machine` · `cluster-maintenance` · `cluster-mongo` · `cluster-mtc` · `cluster-mtr` · `cluster-mtv` · `cluster-oadp` · `cluster-odf` · `cluster-ods` · `cluster-pipeline` · `cluster-ptp` · `cluster-quay` · `cluster-rbac` · `cluster-redis` · `cluster-router` · `cluster-sso` · `cluster-storage` · `cluster-storage-efs` · `cluster-trident` · `cluster-vault` · `cluster-vault-config` · `cluster-vpa` · `cluster-cudn` · `cluster-dell-csm` · `cluster-eck` · `cluster-grafana` · `cluster-keepalived` · `cluster-loki` · `cluster-metallb` · `cluster-network-observability` · `cluster-percona` · `cluster-prometheus` · `cluster-qdrant` · `cluster-rhbk`
 
 ### Atomic update process per chart
 
@@ -381,14 +384,13 @@ application:
    ```
 4. **Optional variants** (e.g., security, custom values): `values-app-<chart>-<variant>.yaml`
    - Example: `values-app-cluster-quay-sec.yaml` (uses `values-startx_noinfra-secvuln.yaml` instead of `values-startx_noinfra-quay.yaml`)
-5. Add entry to `infra-min.yaml` (or other values files) to test/deploy the chart
+5. Add an entry to `values-aoa-infra-min.yaml` / `values-aoa-infra-all.yaml` (or other `values-aoa-infra-*.yaml` files) to test/deploy the chart
 
-### Current coverage (60 charts)
+### Current coverage (77 values-app files)
 
-**Generated 2026-06-23**: 60 values-app-*.yaml files covering all charts with ArgoCD examples.
-- cluster-* (50 charts)
-- chaos-* (4 charts)
-- other (operator, project, sxapi, unifai) (7 files)
+One `values-app-<chart>.yaml` per chart with ArgoCD examples (updated 2026-11): cluster-* charts, chaos-* (4), and operator, project, sxapi, unifai.
+Variants such as `values-app-cluster-quay-sec.yaml` come on top. In `application.list[].source` the template reads `repo` / `rev`
+(aliases `repoURL` / `targetRevision`, default repository `https://gitlab.com/startx1/helm.git` on `master`): set the revision explicitly (`stable`).
 
 Example-* charts (11 total) have no ArgoCD examples — not included.
 

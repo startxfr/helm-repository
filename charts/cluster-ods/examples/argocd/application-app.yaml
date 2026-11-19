@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
     chart: cluster-ods
-    targetRevision: 21.3.199
+    targetRevision: 21.3.372
     helm:
       valueFiles:
         - values-startx_noinfra.yaml
@@ -25,6 +25,10 @@ spec:
   ignoreDifferences:
     - group: datasciencecluster.opendatahub.io
       kind: DataScienceCluster
+      jsonPointers:
+        - /metadata/finalizers
+    - group: dscinitialization.opendatahub.io
+      kind: DSCInitialization
       jsonPointers:
         - /metadata/finalizers
   syncPolicy:
