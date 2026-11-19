@@ -6,8 +6,8 @@
 #   .github/scripts/ci-check.sh static                   JSON schemas, docs/charts copies, misspellings
 #   .github/scripts/ci-check.sh charts ["pattern ..."]   helm lint + helm template of the matching charts (default: all)
 #   .github/scripts/ci-check.sh argocd                   render the values-app files and check the ArgoCD examples
-#   .github/scripts/ci-check.sh schema                   values.yaml keys missing from values.schema.json (informational;
-#                                                        CI_SCHEMA_STRICT=true makes it fail)
+#   .github/scripts/ci-check.sh schema                   values.yaml keys missing from values.schema.json (blocking;
+#                                                        fails by default; CI_SCHEMA_STRICT=false = report only)
 #   .github/scripts/ci-check.sh all                      static + charts + argocd
 #   .github/scripts/ci-check.sh chart-one <chart>        one chart (used by the parallel run)
 #
@@ -196,7 +196,7 @@ case "${1:-all}" in
     charts)    shift; charts "$@" ;;
     chart-one) shift; chart_one "$@" ;;
     argocd)    check_argocd ;;
-    schema)    python3 .github/scripts/schema-drift.py $([[ ${CI_SCHEMA_STRICT:-false} == true ]] && echo --strict) ;;
+    schema)    python3 .github/scripts/schema-drift.py $([[ ${CI_SCHEMA_STRICT:-true} == true ]] && echo --strict) ;;
     all)       rc=0; static || rc=1; charts || rc=1; check_argocd || rc=1; exit $rc ;;
     *)         sed -n '2,17p' "${BASH_SOURCE[0]}"; exit 2 ;;
 esac

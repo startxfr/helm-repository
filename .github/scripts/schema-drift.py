@@ -3,7 +3,9 @@
 
 Checked: the top level keys and the second level keys of the mappings that the schema describes as objects with
 `properties`. Skipped: charts whose schema is hand written and open (unifai) and the free-form `spec` blocks.
-Informational by default (exit 0); with --strict the exit code is 1 when something is missing.
+Explicit skip list (PASSTHROUGH below): blocks that are handed as is to an upstream subchart, whose keys belong to that
+subchart and not to this repository. Add an entry only with a reason; never skip a block silently.
+Exit code 1 when something is missing with --strict (the default of ci-check.sh schema), 0 otherwise.
 Usage: schema-drift.py [--strict] [--root DIR] [chart ...]"""
 import argparse
 import glob
@@ -15,6 +17,11 @@ import yaml
 
 OPEN_SCHEMAS = {'unifai'}
 FREE_FORM = {'spec'}
+# (chart, top level key): values of that block are passed through to an upstream subchart, so its second level keys
+# are documented by the upstream chart.
+PASSTHROUGH = {
+    ('cluster-kargo', 'kargo'),  # upstream kargo helm chart values (global, api, controller, webhooks, ...)
+}
 
 p = argparse.ArgumentParser(description=__doc__.split('\n')[0])
 p.add_argument('charts', nargs='*')
@@ -40,6 +47,8 @@ for d in sorted(glob.glob(os.path.join(a.root, 'charts', '*'))):
             miss.append(k)
             continue
         sub = props[k]
+        if (c, k) in PASSTHROUGH:
+            continue
         if isinstance(v, dict) and sub.get('type') == 'object' and 'properties' in sub:
             miss += [f'{k}.{k2}' for k2 in v if k2 not in sub['properties'] and k2 not in FREE_FORM]
     if miss:
