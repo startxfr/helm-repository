@@ -31,6 +31,7 @@ the consumers; `helm-assist` prepares chart and documentation changes in local c
 
 ## Next
 
+- Release window agreed with the consumers: Wednesday 2026-11-25, 10:00-12:00 CET (nothing re-rendering the shared demo cluster on 2026-11-22 to 11-24): HTTPS dependency URLs, release order and pins automation, schema guard, GitLab pipeline set to manual.
 - First CI run on GitHub, then fix what it reports.
 - Validate `cluster-ods` on RHOAI 3.5 GA and choose the default component list (RHOAI 2.x components are still the default).
 - Install the `unifai` operator through the chart on a real cluster.
