@@ -9,7 +9,8 @@ The generated file follows the pattern documented in CLAUDE.md ("cluster-argocd 
     `repo` and `rev: stable` source keys, the helm values of the example and, in these values, every top level
     `<flag>.enabled` of the chart values.yaml that the example does not mention set explicitly to false (an omitted
     flag causes SharedResourceWarning and secrets leaking across waves);
-  - the syncPolicy and the ignoreDifferences of the example.
+  - the syncPolicy and the ignoreDifferences of the example;
+  - destinationNamespace when the example deploys in another namespace than openshift-gitops.
 
 Usage:
   .tools/generate-values-app.py [chart ...]            generate in --out (default charts/cluster-argocd) every chart
@@ -74,6 +75,12 @@ def application_entry(chart, project, example_path, flags):
         f"      finalizer: {'false' if suffix == 'project' else 'true'}",
         f'      wave: "{wave}"',
         "      server: 'https://kubernetes.default.svc'",
+    ]
+    dest = (spec.get('destination') or {}).get('namespace')
+    if dest and dest != 'openshift-gitops':
+        # namespace the Application deploys into (cluster-argocd application.list[].destinationNamespace)
+        lines.append(f"      destinationNamespace: '{dest}'")
+    lines += [
         f"      project: '{project}'",
         '      source:',
         f"        path: 'charts/{chart}'",
