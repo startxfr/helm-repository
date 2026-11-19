@@ -1,6 +1,6 @@
 # release-stable
 
-Promote `master` to `stable`: merge, publish stable/noschema/current repos, and propagate to all `stable-4.x` branches.
+Promote `master` to `stable`: merge, publish stable/noschema/current repos.
 
 ## Usage
 
@@ -15,8 +15,6 @@ No arguments. The version is inherited from the master branch state (already pro
 1. Verifies `master` is clean, committed, and pushed
 2. Merges `master` → `stable`
 3. Runs `make publish` - regenerates stable + noschema + release-XX repos and uploads to S3
-4. Discovers all `stable-4.x` remote branches dynamically
-5. Merges `stable` into each `stable-4.x` branch and pushes
 6. Pushes `stable` to `origin` and `gitlab`
 7. Creates a git tag for the release
 8. Returns to `devel`
@@ -24,7 +22,7 @@ No arguments. The version is inherited from the master branch state (already pro
 **Does NOT** bump chart versions (that was done by `/release-devel`).
 **Requires** `/release-master` to have been run first.
 
-> **Note (2026-11)**: the `stable-4.x` propagation of Step 6 has the same ambiguity risk as `master-4.x` (see `release-master.md`). It was skipped for the 21.3.373 release: those branches map to old OpenShift releases. Also set `.tools/repo-release` to the highest released version before this step: the tag is created from it and an existing tag cannot be reused.
+> **Note (2026-11)**: set `.tools/repo-release` to the highest released version before this step: the tag is created from it and an existing tag cannot be reused.
 
 ## Instructions
 
@@ -57,7 +55,7 @@ Read `.tools/repo-release` for the version being promoted.
 Merging master → stable
 Version   : <version from .tools/repo-release>
 Repos     : stable, noschema, release-<STABLE_MAINRELEASE>
-Branches  : stable + all stable-4.x
+Branches  : stable only
 Tag       : <version>
 
 ⚠ This is the production-facing release. Proceed? [y/N]
@@ -77,29 +75,9 @@ git merge master --no-edit -m "chore: merge master into stable for release <vers
 make publish
 ```
 
-**Step 6 - Propagate to stable-4.x branches**
+**Step 6 - stable-4.x branches (retired)**
 
-Discover branches:
-```bash
-git fetch --all --prune
-git branch -r | grep 'origin/stable-4\.'
-```
-
-For each `origin/stable-4.X` found:
-```bash
-git checkout -B stable-4.X origin/stable-4.X
-git merge stable --no-edit -m "chore: auto-merge stable into stable-4.X for release <version>"
-git push origin stable-4.X
-git push gitlab stable-4.X
-```
-
-If a merge fails (conflict):
-```
-⚠ Conflict on stable-4.X - skipped. Resolve manually:
-  git checkout stable-4.X
-  git merge stable
-```
-Continue with remaining branches (do not stop).
+The propagation to the `stable-4.x` branches is retired (decision 2026-11-19): those branches map to old OpenShift releases and the step failed on ambiguous refs. Do nothing here; tell the user if a `stable-4.x` branch must be updated and do it manually with explicit `refs/remotes/origin/...` references.
 
 **Step 7 - Create release tag**
 
@@ -124,7 +102,7 @@ git checkout devel
 
 Tag             : <version>
 Published repos : stable, noschema, release-<STABLE_MAINRELEASE>
-Propagated to   : stable-4.11, stable-4.12, ... (list successful branches)
+Propagated to   : (retired)
 Skipped (conflict): ... (list failed branches, if any)
 
 Release complete. To install from stable:
