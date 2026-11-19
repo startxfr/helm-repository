@@ -101,7 +101,7 @@ git push gitlab devel
 ```
 ✓ $CHART_NAME released to <new_version>
 
-Published to : http://<HELM_REPO_AWSBUCKET>.s3-website.<HELM_REPO_AWSDC>.amazonaws.com/devel
+Published to : https://<HELM_REPO_AWSBUCKET>.s3.<HELM_REPO_AWSDC>.amazonaws.com/devel
 Index        : docs/repos/devel/index.yaml
 
 To install (pre-release):
