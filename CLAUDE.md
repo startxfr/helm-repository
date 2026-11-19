@@ -72,8 +72,10 @@ The active table is the last table of the `## History` section (`cluster-acm` an
 | ------------- | ------------------------------ | ---------------------------------------------------------- |
 | `devel`       | Pre-release from devel branch  | `make publish-devel` / `/release-chart` / `/release-devel` |
 | `stable`      | Production stable              | `make publish`                                             |
-| `noschema`    | Stable, no schema validation   | `make publish`                                             |
+| `noschema`    | **Legacy**, frozen at 18.11.71 | `make publish` (index only, see below)                     |
 | `release-<N>` | Charts for OCP minor release N | `make publish` / `make archive`                            |
+
+**`noschema` is legacy.** Its packages (`<chart>-<version>-noschema.tgz`, 1194 files) were built once, up to 18.11.71 (OCP 4.18), by a process that no longer exists in this repository: nothing generates new `-noschema` packages, and `make release` / `make release-all` never touch it. `make publish` only re-indexes the frozen files (`docs/repos/noschema/index.yaml`), so its index never contains a 21.x chart. Do not expect a new chart or version there, do not add it to new documentation, and send users of recent releases to `stable` or `release-<N>`. Keep the S3 path and the index published so that existing `helm repo add` commands keep working. Reviving it would require a new build step that strips `values.schema.json` from each package.
 
 ### Makefile usage
 

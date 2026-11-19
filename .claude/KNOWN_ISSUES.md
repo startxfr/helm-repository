@@ -22,6 +22,15 @@ Must match the chart name, not `sxapi`. Charts affected: `chaos-*`, `cluster-vau
 - `cluster-certmanager` (11.7.18), `cluster-nfd` (11.7.18), `cluster-crunchy` (11.28.68)
 - `project` (0.3.155, 0.3.189, 0.3.217, 7.22.27)
 
+## cluster-config / cluster-auth : OpenShift-owned fields
+
+- `cluster-config` `monitoring.externalLabels` : `prometheus`, `prometheus_replica` and `cluster` are reserved by OpenShift
+  (webhook `monitoringconfigmaps.openshift.io` fails the sync). The chart emits `cluster_name` and rejects those keys in
+  `externalLabels.custom` (helper `cluster-config.monitoring.externalLabels`). Never reintroduce a `cluster` label.
+- `cluster-auth` with `manageSubresource: true` writes Secrets in `openshift-authentication` that the authentication
+  operator rewrites : the ArgoCD Application needs `ignoreDifferences` on them (see `examples/argocd/`). The `OAuth`
+  resource is cluster-scoped : never set a namespace on it.
+
 ## unifai : files copied from the UnifAI operator, hand-written schema
 
 - `charts/unifai/crds/*.yaml` and `charts/unifai/files/manager-rules.yaml` are copied from `startxfr/UnifAI`

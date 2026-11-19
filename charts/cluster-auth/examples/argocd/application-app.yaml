@@ -19,7 +19,17 @@ spec:
         auth:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.199
+    targetRevision: 21.3.372
+  ignoreDifferences:
+    # Secrets copied into openshift-authentication (manageSubresource) are rewritten by the OpenShift
+    # authentication operator after each sync
+    - kind: Secret
+      namespace: openshift-authentication
+      jqPathExpressions:
+        - .data
+        - .stringData
+        - .metadata.annotations
+        - .metadata.labels
   syncPolicy:
     automated:
       prune: true
