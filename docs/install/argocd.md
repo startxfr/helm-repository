@@ -82,7 +82,7 @@ metadata:
 spec:
   description: Configure Crunchy PostgreSQL operator
   sourceRepos:
-    - http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    - https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
   destinations:
     - namespace: openshift-gitops
       server: https://kubernetes.default.svc
@@ -115,7 +115,7 @@ metadata:
 spec:
   project: cluster-crunchy
   source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: cluster-crunchy
     targetRevision: 21.3.27
     helm:
@@ -154,7 +154,7 @@ metadata:
 spec:
   project: cluster-crunchy
   source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: cluster-crunchy
     targetRevision: 21.3.27
     helm:
@@ -191,7 +191,7 @@ metadata:
 spec:
   project: cluster-crunchy
   source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: cluster-crunchy
     targetRevision: 21.3.27
     helm:

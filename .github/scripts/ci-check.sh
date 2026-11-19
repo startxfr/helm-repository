@@ -20,11 +20,6 @@ cd "$ROOT" || exit 2
 CI_JOBS=${CI_JOBS:-4}
 CI_SPELLING=${CI_SPELLING:-all}
 
-# The charts declare their dependencies on the S3 website endpoint (http only): the public HTTPS endpoint of the same
-# bucket is used for the dependency resolution of the copy that is checked.
-S3_HTTP='http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com'
-S3_HTTPS='https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com'
-
 # Misspellings that CLAUDE.md asks to fix on sight (ERE, case insensitive)
 SPELLING='theses resources|environement|plateform|ressource|functionnal|organisational|recommandations|others values availables|projet'
 SPELLING_GRAPHANA='graphana'
@@ -104,7 +99,6 @@ chart_one() {
         cp -r "charts/$c" "$tmp/$c"
         rm -rf "$tmp/$c/charts" "$tmp/$c/Chart.lock"
         if grep -q '^dependencies:' "$tmp/$c/Chart.yaml"; then
-            sed -i "s#$S3_HTTP#$S3_HTTPS#g" "$tmp/$c/Chart.yaml"
             if ! { helm dependency update "$tmp/$c" >"$tmp/dep.log" 2>&1 || { sleep 3; helm dependency update "$tmp/$c" >"$tmp/dep.log" 2>&1; }; }; then
                 echo "SKIP $c: dependencies not resolvable ($(tail -1 "$tmp/dep.log"))"
                 echo "SKIPPED" >"$tmp/status"
@@ -159,7 +153,6 @@ check_argocd() {
     tmp=$(mktemp -d)
     cp -r charts/cluster-argocd "$tmp/cluster-argocd"
     rm -rf "$tmp/cluster-argocd/charts" "$tmp/cluster-argocd/Chart.lock"
-    sed -i "s#$S3_HTTP#$S3_HTTPS#g" "$tmp/cluster-argocd/Chart.yaml"
     if ! { helm dependency update "$tmp/cluster-argocd" >"$tmp/dep.log" 2>&1 || { sleep 3; helm dependency update "$tmp/cluster-argocd" >"$tmp/dep.log" 2>&1; }; }; then
         log "FAIL argocd: the dependencies of cluster-argocd cannot be resolved ($(tail -1 "$tmp/dep.log"))"; rm -rf "$tmp"; return 1
     fi
