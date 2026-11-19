@@ -57,7 +57,7 @@ sail:
       # # API version (default is sailoperator.io/v1)
       # apiVersion: sailoperator.io/v1
       # # Istio version (override spec.version)
-      # version: v1.24.3
+      # version: v1.30.3
       # # Namespace where the CNI is installed (override spec.namespace)
       # namespace: istio-cni
       # # Additional labels and annotations (maps, annotations override the default sync-wave 20)
@@ -77,7 +77,7 @@ sail:
       # # API version (default is sailoperator.io/v1)
       # apiVersion: sailoperator.io/v1
       # # Istio version (override spec.version)
-      # version: v1.24.3
+      # version: v1.30.3
       # # Namespace of the control plane (override spec.namespace)
       # namespace: istio-system
       # # Additional labels and annotations (maps, annotations override the default sync-wave 25)
@@ -284,18 +284,20 @@ operatorIstio:
 # Configuration of the Sail operator, Service Mesh 3 (see https://helm-repository.readthedocs.io/en/latest/charts/operator)
 # Installs the operator that serves the sail values (sailoperator.io Istio and IstioCNI). AllNamespaces install mode in
 # the global openshift-operators namespace, so no OperatorGroup is created. Check the package and channel of your
-# cluster with: oc get packagemanifest servicemeshoperator3 -n openshift-marketplace
+# cluster with: oc get packagemanifest servicemeshoperator3 -n openshift-marketplace. Checked on a cluster running
+# servicemeshoperator3.v3.5.0 (channel stable, source redhat-operators, AllNamespaces through the global-operators
+# OperatorGroup: this operator only supports AllNamespaces). installPlanApproval is Manual here, Automatic on that cluster
 operatorSail:
   enabled: false
   context: 
     <<: *context
-    version: "3.1.0"
+    version: "3.5.0"
   subscription:
     enabled: true
     hooked: false
     name: "servicemeshoperator3"
     namespace: "openshift-operators"
-    version: "v3.1.0"
+    version: "v3.5.0"
     operator: 
       channel: "stable"
       name: servicemeshoperator3
