@@ -36,6 +36,19 @@ helm show chart startx/example-imagestreams
 helm install example-imagestreams startx/example-imagestreams
 ```
 
+## Other available values
+
+- **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-cdf-poc.yaml)
+- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-demo.yaml)
+- **prgmk** : [values-prgmk.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-prgmk.yaml)
+- **startx** : [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-startx.yaml)
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-startx_noinfra.yaml)
+- **sxcm** : [values-sxcm.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-sxcm.yaml)
+
+```bash
+helm install example-imagestreams startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-imagestreams/values-cdf-poc.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -161,6 +174,43 @@ Imagestreams of container image used in the sxv4 project (depend on the sxtartx 
 # configuration for the sxv4 project
 helm install example-imagestreams-sxv4 startx/example-imagestreams -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-sxv4.yaml
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-imagestreams` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-imagestreams
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-imagestreams
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-imagestreams
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 
 ## History
 

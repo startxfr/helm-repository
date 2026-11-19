@@ -36,6 +36,14 @@ helm show chart startx/example-fruitapp-shared
 helm install example-fruitapp-shared startx/example-fruitapp-shared
 ```
 
+## Other available values
+
+- **mc** : [values-mc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-shared/values-mc.yaml)
+
+```bash
+helm install example-fruitapp-shared startx/example-fruitapp-shared -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-shared/values-mc.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -83,6 +91,43 @@ Deploy all shared services for a given namespace with the following characterist
 # base configuration running default configuration
 helm install example-fruitapp-shared startx/example-fruitapp-shared
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-fruitapp-shared` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-fruitapp-shared
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-fruitapp-shared
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-fruitapp-shared
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 
 ## History
 

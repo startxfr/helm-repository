@@ -36,6 +36,16 @@ helm show chart startx/example-sxapi
 helm install example-sxapi startx/example-sxapi
 ```
 
+## Other available values
+
+- **dev** : [values-dev.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml)
+- **v0.0.1** : [values-v0.0.1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.1.yaml)
+- **v0.0.2** : [values-v0.0.2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml)
+
+```bash
+helm install example-sxapi startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -113,6 +123,43 @@ Complete deployment of a sxapi production application (v0.0.2) with the followin
 # base configuration running tekton v0.0.2 configuration
 helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-sxapi` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-sxapi
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-sxapi
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-sxapi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 
 ## History
 

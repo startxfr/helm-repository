@@ -36,6 +36,14 @@ helm show chart startx/example-php
 helm install example-php startx/example-php
 ```
 
+## Other available values
+
+- **demo-hpa** : [values-demo-hpa.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-php/values-demo-hpa.yaml)
+
+```bash
+helm install example-php startx/example-php -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-php/values-demo-hpa.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -87,6 +95,43 @@ Complete deployment of a php demo application for stress test (used in HPA test)
 # base configuration running tekton v1.0.1 configuration
 helm install example-php-hpa startx/example-php -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-php/values-demo-hpa.yaml
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-php` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-php
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-php
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-php
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 
 ## History
 

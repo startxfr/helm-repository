@@ -36,6 +36,17 @@ helm show chart startx/example-deployment
 helm install example-deployment startx/example-deployment
 ```
 
+## Other available values
+
+- **apache** : [values-apache.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-apache.yaml)
+- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-demo.yaml)
+- **mariadb** : [values-mariadb.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-mariadb.yaml)
+- **quay-secvuln** : [values-quay-secvuln.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-quay-secvuln.yaml)
+
+```bash
+helm install example-deployment startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-apache.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -108,6 +119,43 @@ Deployment of an mariadb container image with the following characteristics :
 # Configuration running mariadb example configuration
 helm install example-deployment-mariadb startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-deployment` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-deployment
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-deployment
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-deployment
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 
 ## History
 

@@ -36,6 +36,22 @@ helm show chart startx/example-html
 helm install example-html startx/example-html
 ```
 
+## Other available values
+
+- **demo-3scale-manpage** : [values-demo-3scale-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml)
+- **demo-aap-manpage** : [values-demo-aap-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-aap-manpage.yaml)
+- **demo-affinity-manpage** : [values-demo-affinity-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-affinity-manpage.yaml)
+- **demo-argocd-manpage** : [values-demo-argocd-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-argocd-manpage.yaml)
+- **demo-automation-runner-manpage** : [values-demo-automation-runner-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-automation-runner-manpage.yaml)
+- **demo-chaos-manpage** : [values-demo-chaos-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-chaos-manpage.yaml)
+- **demo-compliance-manpage** : [values-demo-compliance-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-compliance-manpage.yaml)
+- **demo-costs-manpage** : [values-demo-costs-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-costs-manpage.yaml)
+- and 28 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/example-html)
+
+```bash
+helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -87,6 +103,43 @@ Complete deployment of a html demo application for stress test (used in HPA test
 # base configuration running tekton v1.0.1 configuration
 helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-hpa.yaml
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-html` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-html
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-html
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-html
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 
 ## History
 

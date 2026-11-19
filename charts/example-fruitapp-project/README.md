@@ -36,6 +36,14 @@ helm show chart startx/example-fruitapp-project
 helm install example-fruitapp-project startx/example-fruitapp-project
 ```
 
+## Other available values
+
+- **mc** : [values-mc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-project/values-mc.yaml)
+
+```bash
+helm install example-fruitapp-project startx/example-fruitapp-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-project/values-mc.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -78,6 +86,43 @@ Deploy the full fruitapp CI/CD context with the following characteristics :
 # base configuration running default configuration
 helm install example-fruitapp-project startx/example-fruitapp-project
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-fruitapp-project` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-fruitapp-project
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-fruitapp-project
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-fruitapp-project
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 
 ## History
 
