@@ -1,0 +1,138 @@
+# Default values for configuration of a STARTX cluster
+# see values.yaml for explanation on each params
+context: &context
+  scope: startx
+  cluster: default
+  environment: infra
+  component: grafana
+  app: startx-grafana
+  version: "5.25.0"
+externalSecretDefaults:
+  apiVersion: external-secrets.io/v1
+  refreshInterval: 1h
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+grafana:
+  enabled: false
+  hooked: false
+  name: startx
+  version: "13.1.3"
+  adminSecret:
+    enabled: false
+    name: ""
+    username: admin
+    password: ""
+    externalSecret:
+      enabled: false
+      remoteRefs: {}
+  spec: |
+    config:
+      log:
+        mode: console
+      analytics:
+        reporting_enabled: "false"
+        check_for_updates: "false"
+        check_for_plugin_updates: "false"
+      plugins:
+        # No download of the plugins preinstalled from grafana.com at startup (the pod may have no internet access)
+        preinstall_disabled: "true"
+    deployment:
+      spec:
+        template:
+          spec:
+            nodeSelector:
+              node-role.kubernetes.io/infra: ""
+            tolerations:
+              - key: node-role.kubernetes.io/infra
+                operator: Exists
+                effect: NoSchedule
+route:
+  enabled: false
+  host: ""
+  termination: edge
+  insecureEdgeTerminationPolicy: Redirect
+oidc:
+  enabled: false
+  name: OpenID Connect
+  issuerUrl: ""
+  authUrl: ""
+  tokenUrl: ""
+  apiUrl: ""
+  signoutUrl: ""
+  clientId: grafana
+  scopes: openid email profile
+  roleAttributePath: "contains(roles[*], 'grafanaadmin') && 'GrafanaAdmin' || contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'"
+  clientSecret:
+    enabled: true
+    name: ""
+    value: ""
+    externalSecret:
+      enabled: false
+      remoteRefs: {}
+  ca:
+    certificate: ""
+    injectTrustedBundle: false
+    configMap: ""
+    key: ca-bundle.crt
+grafana_datasources:
+  enabled: false
+  list: []
+grafana_dashboards:
+  enabled: false
+  list:
+    - name: startx-welcome
+      enabled: true
+      spec: |
+        json: |
+          {
+            "title": "STARTX welcome",
+            "uid": "startx-welcome",
+            "schemaVersion": 39,
+            "panels": [
+              {
+                "type": "text",
+                "title": "STARTX",
+                "gridPos": {"h": 6, "w": 24, "x": 0, "y": 0},
+                "options": {"mode": "markdown", "content": "Grafana deployed by the STARTX **cluster-grafana** helm chart."}
+              }
+            ]
+          }
+project:
+  enabled: false
+  context:
+    <<: *context
+  project:
+    enabled: true
+    hooked: false
+    type: namespace
+    name: "default-grafana"
+    display_name: "Startx Grafana"
+    requester: startx
+    description: Grafana configured by STARTX
+operator:
+  enabled: false
+  context:
+    <<: *context
+  subscription:
+    enabled: true
+    hooked: false
+    name: "grafana-operator"
+    namespace: "default-grafana"
+    version: "v5.25.0"
+    operator:
+      channel: v5
+      name: grafana-operator
+      installPlanApproval: Manual
+      csv: grafana-operator
+      source:
+        name: community-operators
+        namespace: openshift-marketplace
+      config:
+        infra: true
+  operatorGroup:
+    enabled: true
+    hooked: false
+    name: "grafana-operator"
+    namespace: "default-grafana"
+    providedAPIs: "Grafana.v1beta1.grafana.integreatly.org,GrafanaAlertRuleGroup.v1beta1.grafana.integreatly.org,GrafanaContactPoint.v1beta1.grafana.integreatly.org,GrafanaDashboard.v1beta1.grafana.integreatly.org,GrafanaDatasource.v1beta1.grafana.integreatly.org,GrafanaFolder.v1beta1.grafana.integreatly.org,GrafanaLibraryPanel.v1beta1.grafana.integreatly.org,GrafanaManifest.v1beta1.grafana.integreatly.org,GrafanaMuteTiming.v1beta1.grafana.integreatly.org,GrafanaNotificationPolicy.v1beta1.grafana.integreatly.org,GrafanaNotificationPolicyRoute.v1beta1.grafana.integreatly.org,GrafanaNotificationTemplate.v1beta1.grafana.integreatly.org,GrafanaServiceAccount.v1beta1.grafana.integreatly.org"

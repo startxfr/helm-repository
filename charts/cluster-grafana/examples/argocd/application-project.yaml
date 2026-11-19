@@ -1,0 +1,45 @@
+# Creates the default-grafana namespace (no finalizer: avoids a deadlock while the namespace terminates)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-grafana-project
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: cluster-grafana
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: cluster-grafana
+    targetRevision: 21.3.361
+    helm:
+      valueFiles:
+        - values-startx_noinfra.yaml
+      values: |
+        project:
+          enabled: true
+        operator:
+          enabled: false
+        grafana:
+          enabled: false
+        route:
+          enabled: false
+        grafana_datasources:
+          enabled: false
+        grafana_dashboards:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-grafana
+  ignoreDifferences:
+    - group: ""
+      kind: ServiceAccount
+      jsonPointers:
+        - /imagePullSecrets
+        - /secrets
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -75,45 +75,13 @@ oc apply -k .
 | Release  | Date       | Description                                                      |
 | -------- | ---------- | ---------------------------------------------------------------- |
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release |
-| 17.14.19 | 2025-03-12 | Align all chart to the 17.14.19 release |
 | 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version |
 | 18.11.71 | 2025-11-27 | Align all charts to the same releas |
 | 18.23.0 | 2026-02-28 | Start 4.19 branch |
-| 19.23.15 | 2026-03-02 | Prepare upgrading dependency to 19.23.11 |
 | 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11 |
-| 20.14.7 | 2026-03-02 | Update dependencies to version 20.14.0 |
 | 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
-| 21.3.1 | 2026-03-02 | Prepare release 21.3.x with 21.x dependencies |
-| 21.3.3 | 2026-03-02 | Upgrade dependencies to v21.3.0 |
-| 21.3.4 | 2026-06-17 | 21.3.9 |
-| 21.3.11 | 2026-06-17 | publish stable update for the full repository |
 | 21.3.12 | 2026-06-18 | Improve cluster-gitlab options |
-| 21.3.27 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.55 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.56 | 2026-06-19 | publish stable update for the full repository |
-| 21.3.67 | 2026-06-20 | publish stable update for the full repository |
-| 21.3.68 | 2026-06-20 | update basic dependencies to v21.3.70 |
-| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
-| 21.3.68 | 2026-06-20 | update all charts dependencies to v21.3.70 |
-| 21.3.102 | 2026-06-20 | publish stable update for the full repository |
-| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.103 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.104 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.105 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.106 | 2026-06-21 | publish stable update for the full repository |
-| 21.3.167 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.181 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.182 | 2026-06-23 | publish stable update for the full repository |
-| 21.3.199 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.201 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.202 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.205 | 2026-06-24 | publish stable update for the full repository |
-| 21.3.229 | 2026-08-08 | publish stable update for the full repository |
-| 21.3.273 | 2026-08-09 | publish stable update for the full repository |
-| 21.3.277 | 2026-08-09 | Align all charts to v21.3.277 |
 | 21.3.278 | 2026-08-14 | add centigpu |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
@@ -121,3 +89,4 @@ oc apply -k .
 | 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
+| 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |

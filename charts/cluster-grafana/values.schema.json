@@ -1,0 +1,489 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "context": {
+            "type": "object",
+            "properties": {
+                "app": {
+                    "type": "string"
+                },
+                "cluster": {
+                    "type": "string"
+                },
+                "component": {
+                    "type": "string"
+                },
+                "environment": {
+                    "type": "string"
+                },
+                "scope": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "externalSecretDefaults": {
+            "type": "object",
+            "properties": {
+                "apiVersion": {
+                    "type": "string"
+                },
+                "refreshInterval": {
+                    "type": "string"
+                },
+                "secretStoreRef": {
+                    "type": "object",
+                    "properties": {
+                        "kind": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "grafana": {
+            "type": "object",
+            "properties": {
+                "adminSecret": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "externalSecret": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "remoteRefs": {
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "hooked": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "spec": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "grafana_dashboards": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "spec": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "grafana_datasources": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "spec": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "oauthProxy": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "upstream": {
+                    "type": "string"
+                },
+                "serviceAccountName": {
+                    "type": "string"
+                },
+                "tlsSecretName": {
+                    "type": "string"
+                },
+                "sar": {
+                    "type": "object",
+                    "properties": {
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "resource": {
+                            "type": "string"
+                        },
+                        "verb": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "emailDomain": {
+                    "type": "string"
+                },
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "resources": {
+                    "type": "object"
+                },
+                "authProxy": {
+                    "type": "object",
+                    "properties": {
+                        "disableLoginForm": {
+                            "type": "boolean"
+                        },
+                        "whitelist": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "cookieSecret": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        },
+                        "externalSecret": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "remoteRefs": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "oidc": {
+            "type": "object",
+            "properties": {
+                "apiUrl": {
+                    "type": "string"
+                },
+                "authUrl": {
+                    "type": "string"
+                },
+                "ca": {
+                    "type": "object",
+                    "properties": {
+                        "certificate": {
+                            "type": "string"
+                        },
+                        "configMap": {
+                            "type": "string"
+                        },
+                        "injectTrustedBundle": {
+                            "type": "boolean"
+                        },
+                        "key": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "clientId": {
+                    "type": "string"
+                },
+                "clientSecret": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "externalSecret": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "remoteRefs": {
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "issuerUrl": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "roleAttributePath": {
+                    "type": "string"
+                },
+                "scopes": {
+                    "type": "string"
+                },
+                "signoutUrl": {
+                    "type": "string"
+                },
+                "tokenUrl": {
+                    "type": "string"
+                }
+            }
+        },
+        "operator": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "operatorGroup": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "providedAPIs": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "subscription": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "namespace": {
+                            "type": "string"
+                        },
+                        "operator": {
+                            "type": "object",
+                            "properties": {
+                                "channel": {
+                                    "type": "string"
+                                },
+                                "config": {
+                                    "type": "object",
+                                    "properties": {
+                                        "infra": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "csv": {
+                                    "type": "string"
+                                },
+                                "installPlanApproval": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "source": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "namespace": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "project": {
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "properties": {
+                        "app": {
+                            "type": "string"
+                        },
+                        "cluster": {
+                            "type": "string"
+                        },
+                        "component": {
+                            "type": "string"
+                        },
+                        "environment": {
+                            "type": "string"
+                        },
+                        "scope": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "project": {
+                    "type": "object",
+                    "properties": {
+                        "description": {
+                            "type": "string"
+                        },
+                        "display_name": {
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "hooked": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "route": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "insecureEdgeTerminationPolicy": {
+                    "type": "string"
+                },
+                "termination": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

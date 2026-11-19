@@ -14,3 +14,12 @@ context: &context
   app: default-config
   # Version name of this application (default use Chart appVersion)
   version: "4.18.11"
+
+# Route exposing the OpenShift internal image registry
+registryroute:
+  # Create the route
+  enabled: false
+  # Name of the route
+  name: external
+  # Namespace of the image registry
+  namespace: openshift-image-registry

@@ -29,7 +29,7 @@ charts/<name>/
 **values.yaml rules**: First line `# Default values for <chart>.`; `context:` always first key; every top-level key has a comment; no French words.
 
 **README.md sections (in order)**: title+badge → description → Requirements → Deploy on openshift (Connect/Install repo/Get info/Install) → Default values → Other values → ArgoCD deployment → History.  
-All history table rows must end with trailing `|`.
+All history table rows must end with trailing `|`. `## History` is the last section; its table is pruned at each release (see README History pruning).
 
 ## Recurring misspellings — fix on sight
 
@@ -42,13 +42,29 @@ sx-helm              ← main entrypoint, bash, routes to .tools/
 .tools/config        ← shared config (sourced by cli AND included by Makefile)
 .tools/cli           ← chart operations
 .tools/cli-s3        ← AWS S3 sync helpers
+.tools/history-prune.py ← README History table maintenance (called by cli)
 ```
 
 Never edit hardcoded values inside `.tools/cli` or `sx-helm`; all tunables are in `.tools/config`.
 
 ### Key .tools/config variables
 
-`STABLE_MAINRELEASE` / `STABLE_SUBRELEASE` · `WORK_BRANCH` / `MASTER_BRANCH` / `STABLE_BRANCH` · `HELM_REPO_AWSBUCKET` / `HELM_REPO_AWSDC` · `HELM_REPO_BASEURL` · `DOC_ADD_HISTORY` · `HELM_REPO_ARCHIVE_RELEASES` / `HELM_REPO_LEGACY_RELEASES`
+`STABLE_MAINRELEASE` / `STABLE_SUBRELEASE` · `WORK_BRANCH` / `MASTER_BRANCH` / `STABLE_BRANCH` · `HELM_REPO_AWSBUCKET` / `HELM_REPO_AWSDC` · `HELM_REPO_BASEURL` · `DOC_ADD_HISTORY` · `HELM_REPO_ARCHIVE_RELEASES` / `HELM_REPO_LEGACY_RELEASES` · `HISTORY_PRUNE` / `HISTORY_KEEP_RECENT` / `HISTORY_GENERIC_REGEX`
+
+### README History pruning
+
+Each release inserts its row in the active History table of the chart README, then prunes the table (`.tools/history-prune.py`, tunables in `.tools/config`). Kept rows:
+- the last row of every older branch (X.Y other than the chart's current branch)
+- on the current branch: the first row, the `HISTORY_KEEP_RECENT` latest rows, every version referenced in the `dependencies` of any chart, and all non generic rows (de-duplicated by description, last occurrence wins)
+- dropped: generic descriptions (`HISTORY_GENERIC_REGEX`), duplicated versions, rows without a valid `X.Y.Z` release
+
+The active table is the last table of the `## History` section (`cluster-acm` and `sxapi` have several tables). Pruning only touches README files, never S3 packages, so dropped versions stay installable.
+
+```bash
+./sx-helm history-prune-all --dry-run   # report only
+./sx-helm history-prune-all             # prune every chart README
+./sx-helm <chart> history-prune         # one chart
+```
 
 ### S3 sub-repos
 
@@ -225,6 +241,7 @@ ignoreDifferences:
 | cluster-mongo      | `mongodbcommunity.mongodb.com`        | `MongoDBCommunity`        |
 | cluster-mustgather | `managed.openshift.io`                | `MustGather`              |
 | cluster-3scale     | `apps.3scale.net`                     | `APIManager`              |
+| cluster-grafana    | `grafana.integreatly.org`             | `Grafana`                 |
 
 ### CR template sync-waves
 
