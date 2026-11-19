@@ -107,3 +107,4 @@ helm install example-catalog startx/example-catalog -f https://raw.githubusercon
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
+| 21.3.373 | 2026-11-19 | align inter-chart dependency pins |
