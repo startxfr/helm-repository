@@ -61,6 +61,17 @@ application:
                     image: quay.io/opstree/redis:v7.0.5
                     imagePullPolicy: IfNotPresent
                     updateStrategy: {}
+          project:
+            enabled: false
+          rbac:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: redis.redis.opstreelabs.in
+          kind: Redis
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-redis-operator'
       namespace: 'openshift-gitops'
@@ -80,6 +91,12 @@ application:
             enabled: true
             operatorGroup:
               enabled: false
+          cluster:
+            enabled: false
+          project:
+            enabled: false
+          rbac:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -102,6 +119,10 @@ application:
             enabled: true
           rbac:
             enabled: true
+          cluster:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

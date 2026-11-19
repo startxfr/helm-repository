@@ -48,6 +48,17 @@ application:
         values: |
           oadp:
             enabled: true
+          cloudcreds:
+            enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: oadp.openshift.io
+          kind: DataProtectionApplication
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-oadp-operator'
       namespace: 'openshift-gitops'
@@ -65,6 +76,12 @@ application:
         values: |
           operator:
             enabled: true
+          oadp:
+            enabled: false
+          cloudcreds:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -85,6 +102,12 @@ application:
         values: |
           project:
             enabled: true
+          oadp:
+            enabled: false
+          cloudcreds:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
