@@ -47,6 +47,19 @@ Complete deployment of a Logging configuration with the following characteristic
 - Optional **ClusterLogForwarder** for external log routing
 - Optional **EventRouter** for Kubernetes event collection
 
+## Other available values
+
+- **client1** : [values-client1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-client1.yaml)
+- **client2** : [values-client2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-client2.yaml)
+- **mgmt1** : [values-mgmt1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-mgmt1.yaml)
+- **pfd** : [values-pfd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-pfd.yaml)
+- **startx** : [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-startx.yaml)
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-startx_noinfra.yaml)
+
+```bash
+helm install cluster-logging startx/cluster-logging -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-client1.yaml
+```
+
 ## Deploy with ArgoCD
 
 ### AppProject
