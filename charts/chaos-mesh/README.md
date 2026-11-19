@@ -205,7 +205,7 @@ metadata:
 spec:
   description: Deploy Chaos Mesh chaos engineering platform on OpenShift
   sourceRepos:
-    - 'http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/*'
+    - 'https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/*'
     - 'https://charts.chaos-mesh.org'
   destinations:
     - server: https://kubernetes.default.svc
@@ -250,7 +250,7 @@ spec:
       values: |
         project:
           enabled: true
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.379
   syncPolicy:
     automated:
@@ -280,7 +280,7 @@ spec:
           # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
           prometheus:
             create: false
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     targetRevision: 21.3.379
   syncPolicy:
     automated:

@@ -179,7 +179,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: chaos-litmus
     # pin an exact version in production (ADR-0004)
     targetRevision: 21.3.379
