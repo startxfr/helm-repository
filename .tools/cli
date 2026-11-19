@@ -193,7 +193,7 @@ function routerListChanged {
 # Keep going after a failure and report all failed charts at the end.
 function releaseAllCharts {
     local failed=()
-    local chart selected names order released=""
+    local chart selected names order released="" indexed="" dep needs pkg
     selected=$(chartListToRelease)
     if [[ -z "${selected//[[:space:]]/}" ]]; then
         echo -e "\e[36mRelease\e[0m no chart changed since the last release tag : nothing to release (RELEASE_ALL=true forces a full release)"
@@ -207,8 +207,25 @@ function releaseAllCharts {
     }
     echo -e "\e[36mRelease\e[0m $(echo "$order" | wc -w) chart(s) selected, dependency order"
     for chart in $order; do
+        # Resumable : a package of this version already built and uploaded in a previous run is kept
+        pkg="$HELM_REPO_LOCALSYNC/$STABLE_MAINRELEASE/$chart-$1.tgz"
+        if [[ -f "$pkg" ]]; then
+            echo -e "\e[36mRelease\e[0m $chart already released as $1 : skipped"
+            released="${released:+$released,}$chart"
+            continue
+        fi
         if [[ -n "$released" ]]; then
             python3 -I "$PROJECT_LIBPATH/bump-pins.py" --apply --released "$released" --only "$chart" >/dev/null || true
+            # helm resolves a dependency through the index of its repository : publish the index of the packages released
+            # so far before a chart that depends on one of them (the full publish regenerates it again at the end)
+            needs=false
+            for dep in $(python3 -I "$PROJECT_LIBPATH/release-closure.py" --deps-of "$chart"); do
+                if [[ ",$released," == *",$dep,"* && ",$indexed," != *",$dep,"* ]]; then needs=true; fi
+            done
+            if [[ "$needs" == "true" ]]; then
+                releaseRefreshResolutionIndex || { failed+=("$chart"); continue; }
+                indexed="$released"
+            fi
         fi
         if routerChartRelease "$chart" "auto" "$1" "$2"; then
             released="${released:+$released,}$chart"
@@ -220,6 +237,15 @@ function releaseAllCharts {
         echo -e "\e[31mRelease\e[0m ERROR ${#failed[@]} chart(s) failed : ${failed[*]}" >&2
         return 1
     fi
+}
+
+# Regenerate the index of the release repository from the local packages and upload only that file, so that
+# `helm dependency update` finds the versions released earlier in the same run.
+function releaseRefreshResolutionIndex {
+    local path="$HELM_REPO_LOCALSYNC/$STABLE_MAINRELEASE"
+    echo -e "\e[36mRelease\e[0m refresh the index of ${HELM_REPO_BASEURL}/${STABLE_MAINRELEASE} for dependency resolution"
+    helm repo index --url "${HELM_REPO_BASEURL}/${STABLE_MAINRELEASE}" "$path" || return 1
+    awsS3FileUpload "$path/index.yaml" "$STABLE_MAINRELEASE" || return 1
 }
 
 # Release all charts on the current branch without the full repository flow.
