@@ -46,6 +46,14 @@ application:
         values: |
           auth:
             enabled: true
+      ignoreDifferences: |
+        - kind: Secret
+          namespace: openshift-authentication
+          jqPathExpressions:
+            - .data
+            - .stringData
+            - .metadata.annotations
+            - .metadata.labels
       syncPolicy: |
         automated:
           prune: true
