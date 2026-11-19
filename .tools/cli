@@ -124,7 +124,10 @@ function routerList {
 # Publish stable + noschema + current release repos to S3 and push to git
 function routerPublish {
     doHelmrepositoryRefresh "$HELM_REPO_SUBDEFAULT" "$HELM_REPO_SUBDEFAULT" "$HELM_REPO_BASEURL" Publish 36
-    doHelmrepositoryRefresh noschema                noschema                "$HELM_REPO_BASEURL" Publish 36
+    # noschema is a frozen legacy repository (18.11.71): it is only regenerated when explicitly asked for
+    if [[ "${HELM_REPO_REPUBLISH_NOSCHEMA:-false}" == "true" ]]; then
+        doHelmrepositoryRefresh noschema            noschema                "$HELM_REPO_BASEURL" Publish 36
+    fi
     doHelmrepositoryRefresh "release-$STABLE_MAINRELEASE" "$STABLE_MAINRELEASE" "$HELM_REPO_BASEURL" Publish 36
 }
 
@@ -718,7 +721,7 @@ Usage:
 Global actions:
   list                 List all managed helm charts
   release              Bump all charts, tag, merge and push  (INTERACTIVE=false VERSION=x DESC="...")
-  publish              Publish stable+noschema+current repos to S3
+  publish              Publish stable+current release repos to S3  (noschema is frozen: HELM_REPO_REPUBLISH_NOSCHEMA=true to regenerate it)
   publish-devel        Publish devel sub-repo to S3  (pre-release, from devel branch)
   release-charts       Bump+package the charts changed since the last release tag, no git merge/tag/push  (RELEASE_ALL=true for every chart)
   changed-charts       List the charts changed since the last release tag
