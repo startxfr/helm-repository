@@ -251,7 +251,7 @@ spec:
         project:
           enabled: true
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.377
+    targetRevision: 21.3.379
   syncPolicy:
     automated:
       prune: true
@@ -281,7 +281,7 @@ spec:
           prometheus:
             create: false
     repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.377
+    targetRevision: 21.3.379
   syncPolicy:
     automated:
       prune: true
@@ -311,8 +311,8 @@ kubectl apply -f chaos-mesh-argocd.yaml -n openshift-gitops
 | 21.3.313 | 2026-11-04 | Add cluster-unifai and cluster-qdrant, align all charts to 21.3.313 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
 | 21.3.361 | 2026-11-10 | Release chaos-mesh restored chart |
-| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
