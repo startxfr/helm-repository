@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "10"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-logging'
       project: 'infra-loki'
       source:
         path: 'charts/cluster-loki'
@@ -81,6 +82,7 @@ application:
       finalizer: true
       wave: "5"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-operators-redhat'
       project: 'infra-loki'
       source:
         path: 'charts/cluster-loki'
@@ -116,6 +118,7 @@ application:
       finalizer: false
       wave: "1"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-logging'
       project: 'infra-loki'
       source:
         path: 'charts/cluster-loki'

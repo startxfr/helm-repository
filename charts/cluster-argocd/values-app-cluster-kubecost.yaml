@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "29"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-kubecost'
       project: 'infra-kubecost'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -51,14 +52,24 @@ application:
           kubecost:
             enabled: true
             namespace: default-kubecost
+          project:
+            enabled: false
+          operator:
+            enabled: false
         syncOptions:
           - CreateNamespace=true
+      ignoreDifferences: |
+        - group: cost-analyzer.kubecost.com
+          kind: CostAnalyzer
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-kubecost-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "29"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-kubecost'
       project: 'infra-kubecost'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -70,6 +81,10 @@ application:
         values: |
           operator:
             enabled: true
+          kubecost:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -79,6 +94,7 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-kubecost'
       project: 'infra-kubecost'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -90,6 +106,10 @@ application:
         values: |
           project:
             enabled: true
+          kubecost:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

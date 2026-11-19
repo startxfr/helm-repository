@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "34"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-gitlab'
       project: 'infra-gitlab'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -48,10 +49,17 @@ application:
         values: |
           gitlab:
             enabled: true
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
           selfHeal: true
+      ignoreDifferences: |
+        - group: apps.gitlab.com
+          kind: GitLab
+          jsonPointers:
+          - /metadata/finalizers
     # Creates project namespace and RBAC
     - name: 'infra-gitlab-project'
       namespace: 'openshift-gitops'
@@ -68,6 +76,8 @@ application:
         values: |
           project:
             enabled: true
+          gitlab:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

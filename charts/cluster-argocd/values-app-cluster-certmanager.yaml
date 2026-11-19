@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "5"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'rhcertmanager-operator'
       project: 'infra-certmanager'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -50,6 +51,15 @@ application:
             enabled: false
           clusterIssuer:
             enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: cert-manager.io
+          kind: Certificate
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-certmanager-operator'
       namespace: 'openshift-gitops'
@@ -71,6 +81,10 @@ application:
             enabled: true
             operatorGroup:
               enabled: true
+          clusterIssuer:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -91,6 +105,12 @@ application:
         values: |
           project:
             enabled: true
+          certmanager:
+            enabled: false
+          clusterIssuer:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

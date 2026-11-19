@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "17"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'etcd-backup'
       project: 'infra-etcdbackup'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -55,6 +56,7 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'etcd-backup'
       project: 'infra-etcdbackup'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -72,6 +74,13 @@ application:
         automated:
           prune: true
           selfHeal: true
+      ignoreDifferences: |
+        - group: ''
+          kind: ServiceAccount
+          name: default
+          jsonPointers:
+          - /imagePullSecrets
+          - /secrets
 
 argocd_repocreds:
   enabled: true

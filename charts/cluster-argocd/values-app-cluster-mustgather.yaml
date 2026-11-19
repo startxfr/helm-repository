@@ -48,12 +48,24 @@ application:
         values: |
           report:
             enabled: true
+          redhatCreds:
+            enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: managed.openshift.io
+          kind: MustGather
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-mustgather-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "42"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-operators'
       project: 'infra-mustgather'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -67,6 +79,10 @@ application:
             enabled: false
           operator:
             enabled: true
+          redhatCreds:
+            enabled: false
+          report:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

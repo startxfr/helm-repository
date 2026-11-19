@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "37"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-mongo'
       project: 'infra-mongo'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -48,12 +49,24 @@ application:
         values: |
           cluster:
             enabled: true
+          loader:
+            enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: mongodbcommunity.mongodb.com
+          kind: MongoDBCommunity
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-mongo-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "37"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-mongo'
       project: 'infra-mongo'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -66,6 +79,10 @@ application:
           operator:
             enabled: true
           cluster:
+            enabled: false
+          loader:
+            enabled: false
+          project:
             enabled: false
       syncPolicy: |
         automated:
@@ -90,6 +107,8 @@ application:
           operator:
             enabled: false
           cluster:
+            enabled: false
+          loader:
             enabled: false
       syncPolicy: |
         automated:

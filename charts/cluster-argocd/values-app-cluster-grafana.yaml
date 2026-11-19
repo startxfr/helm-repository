@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "13"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-grafana'
       project: 'infra-grafana'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -58,12 +59,41 @@ application:
             enabled: true
           grafana_dashboards:
             enabled: true
+          oauthProxy:
+            enabled: false
+          oidc:
+            enabled: false
+      ignoreDifferences: |
+        - group: grafana.integreatly.org
+          kind: Grafana
+          jsonPointers:
+          - /metadata/finalizers
+        - group: grafana.integreatly.org
+          kind: GrafanaDatasource
+          jsonPointers:
+          - /metadata/finalizers
+        - group: grafana.integreatly.org
+          kind: GrafanaDashboard
+          jsonPointers:
+          - /metadata/finalizers
+        - group: ''
+          kind: ConfigMap
+          name: startx-oidc-ca
+          jsonPointers:
+          - /data
+        - group: ''
+          kind: ServiceAccount
+          name: startx-oauth-proxy
+          jsonPointers:
+          - /imagePullSecrets
+          - /secrets
     # Installs and configures the operator
     - name: 'infra-grafana-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "13"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-grafana'
       project: 'infra-grafana'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -84,6 +114,10 @@ application:
           grafana_datasources:
             enabled: false
           grafana_dashboards:
+            enabled: false
+          oauthProxy:
+            enabled: false
+          oidc:
             enabled: false
       syncPolicy: |
         automated:
@@ -94,6 +128,7 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-grafana'
       project: 'infra-grafana'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -115,12 +150,22 @@ application:
             enabled: false
           grafana_dashboards:
             enabled: false
+          oauthProxy:
+            enabled: false
+          oidc:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+      ignoreDifferences: |
+        - group: ''
+          kind: ServiceAccount
+          jsonPointers:
+          - /imagePullSecrets
+          - /secrets
 
 argocd_repocreds:
   enabled: true

@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "13"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-ansible'
       project: 'infra-ansible'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -50,12 +51,30 @@ application:
         values: |
           ansibleAAP:
             enabled: true
+          ansibleHub:
+            enabled: false
+          ansibleController:
+            enabled: false
+          ansibleSecrets:
+            enabled: false
+          project:
+            enabled: false
+          projectOperator:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: aap.ansible.com
+          kind: AnsibleAutomationPlatform
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-ansible-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "13"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'aap'
       project: 'infra-ansible'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -81,6 +100,16 @@ application:
               operator:
                 channel: stable-2.7
                 installPlanApproval: Manual
+          ansibleAAP:
+            enabled: false
+          ansibleHub:
+            enabled: false
+          ansibleController:
+            enabled: false
+          ansibleSecrets:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -90,6 +119,7 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-ansible'
       project: 'infra-ansible'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -101,6 +131,18 @@ application:
         values: |
           project:
             enabled: true
+          ansibleAAP:
+            enabled: false
+          ansibleHub:
+            enabled: false
+          ansibleController:
+            enabled: false
+          ansibleSecrets:
+            enabled: false
+          projectOperator:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

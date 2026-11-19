@@ -69,6 +69,14 @@ application:
                   unneededTime: 60s
           machineAutoscaler:
             enabled: true
+          machineConfigPool:
+            enabled: false
+          machineConfig:
+            enabled: false
+          machineHealthCheck:
+            enabled: false
+          machineSet:
+            enabled: false
     # Cluster configuration
     - name: 'infra-machine-config'
       namespace: 'openshift-gitops'
@@ -88,6 +96,12 @@ application:
             enabled: true
           machineConfig:
             enabled: true
+          machineAutoscaler:
+            enabled: false
+          machineHealthCheck:
+            enabled: false
+          machineSet:
+            enabled: false
     # Configures health checks
     - name: 'infra-machine-healthcheck'
       namespace: 'openshift-gitops'
@@ -108,6 +122,14 @@ application:
             region: eu-west-2
           machineHealthCheck:
             enabled: true
+          machineConfigPool:
+            enabled: false
+          machineConfig:
+            enabled: false
+          machineAutoscaler:
+            enabled: false
+          machineSet:
+            enabled: false
     # Application configuration and instances
     - name: 'infra-machine-machineset'
       namespace: 'openshift-gitops'
@@ -159,6 +181,14 @@ application:
               replicas: 1
               securityGroupName: "demo219-g866v-node"
               subnet_name: "demo219-g866v-subnet-private-eu-west-2c"
+          machineConfigPool:
+            enabled: false
+          machineConfig:
+            enabled: false
+          machineAutoscaler:
+            enabled: false
+          machineHealthCheck:
+            enabled: false
 
 argocd_repocreds:
   enabled: true
