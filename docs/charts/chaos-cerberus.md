@@ -40,6 +40,15 @@ helm install --set project.enabled=true chaos-cerberus-project  startx/chaos-cer
 helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-cerberus
 ```
 
+## Other available values
+
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml)
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml)
+
+```bash
+helm install chaos-cerberus startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary

@@ -83,6 +83,10 @@ oc apply -k .
 
 
 
+## Other available values
+
+This chart ships a single values file, [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos/values.yaml), described in the default values.
+
 ## Values dictionary
 
 ### context values dictionary

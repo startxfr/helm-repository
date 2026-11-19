@@ -40,6 +40,15 @@ helm install --set project.enabled=true chaos-litmus-project  startx/chaos-litmu
 helm install --set litmus.enabled=true -n chaos-litmus chaos-litmus-instance startx/chaos-litmus
 ```
 
+## Other available values
+
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml)
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-project.yaml)
+
+```bash
+helm install chaos-litmus startx/chaos-litmus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -151,6 +160,43 @@ helm install chaos-litmus startx/chaos-litmus \
   --set litmus.enabled=true \
   -n chaos-litmus
 ```
+
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`chaos-litmus` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-litmus
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: chaos-litmus
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: chaos-litmus
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
 
 ## History
 

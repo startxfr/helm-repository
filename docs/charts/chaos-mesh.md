@@ -40,6 +40,15 @@ helm install --set project.enabled=true chaos-mesh-project  startx/chaos-mesh
 helm install --set mesh.enabled=true -n chaos-mesh chaos-mesh-instance startx/chaos-mesh
 ```
 
+## Other available values
+
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml)
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml)
+
+```bash
+helm install chaos-mesh startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary

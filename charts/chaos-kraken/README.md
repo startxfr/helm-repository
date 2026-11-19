@@ -40,6 +40,16 @@ helm install --set project.enabled=true chaos-kraken-project  startx/chaos-krake
 helm install --set kraken.enabled=true -n chaos-kraken chaos-kraken-instance startx/chaos-kraken
 ```
 
+## Other available values
+
+- **startx-deploy-job** : [values-startx-deploy-job.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy-job.yaml)
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy.yaml)
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-project.yaml)
+
+```bash
+helm install chaos-kraken startx/chaos-kraken -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy-job.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary

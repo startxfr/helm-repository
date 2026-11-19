@@ -40,6 +40,15 @@ helm install --set project.enabled=true chaos-monkey-project  startx/chaos-monke
 helm install --set monkey.enabled=true  chaos-monkey-instance startx/chaos-monkey
 ```
 
+## Other available values
+
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-deploy.yaml)
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-project.yaml)
+
+```bash
+helm install chaos-monkey startx/chaos-monkey -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-deploy.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
