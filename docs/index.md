@@ -159,7 +159,7 @@ List of the deprecated helm charts.
     |                 |                                                                                                |
     | --------------- | ---------------------------------------------------------------------------------------------- |
     | **Repository**  | **[stable](https://helm-repository.readthedocs.io/en/latest/repos/stable/index.yaml)**         |
-    | **Description** | The default repository  with latest stable release for 18,17 and 16 releases |
+    | **Description** | The default repository, with the latest stable release of every chart (currently the 21.x series, compatible with OCP 4.21.x) |
     | **Command**     | `helm repo add startx https://helm-repository.readthedocs.io/en/latest/repos/stable`           |
 
 === "Noschema"
