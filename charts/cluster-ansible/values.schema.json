@@ -262,6 +262,34 @@
                     "additionalProperties": {
                         "type": "string"
                     }
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the AutomationHub instance (default is app name)."
+                },
+                "namespace": {
+                    "type": "string",
+                    "description": "Namespace of the AutomationHub instance (default is project name)."
+                },
+                "storageSize": {
+                    "type": "string",
+                    "description": "The persistant storage size (default is 20Gi)."
+                },
+                "storageClass": {
+                    "type": "string",
+                    "description": "The persistant storage class (default is efs-sc)."
+                },
+                "storageAccesssMode": {
+                    "type": "string",
+                    "description": "The persistant storage accesss mode (default is ReadWriteMany)."
+                },
+                "replicas": {
+                    "type": "integer",
+                    "description": "The number of replicas for default components (default is 1)."
+                },
+                "replicasHA": {
+                    "type": "integer",
+                    "description": "The number of replicas for HA components (default is 2)."
                 }
             }
         },
@@ -326,6 +354,22 @@
                     "description": "Spec of the AutomationController, YAML string or YAML map"
                 }
             }
+        },
+        "ansibleSecrets": {
+            "type": "object",
+            "description": "Create secrets used in ansible CRD."
+        },
+        "aapConfigs": {
+            "type": "object",
+            "description": "Use operator CRD to configure the AAP."
+        },
+        "projectOperator": {
+            "type": "object",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)."
+        },
+        "operatorAAP": {
+            "type": "object",
+            "description": "Additionnals resources for the AAP operator."
         }
     }
 }

@@ -100,6 +100,10 @@
                 },
                 "hooked": {
                     "type": "boolean"
+                },
+                "fileStorageClass": {
+                    "type": "string",
+                    "description": "StorageClass for system fileStorage PVC (must be a RWX / CephFS class)."
                 }
             }
         },
@@ -421,6 +425,18 @@
                     }
                 }
             }
+        },
+        "externalComponents": {
+            "type": "object",
+            "description": "External components for 3scale APIManager (required for threescale-2.16+) Enable this when deploying clusterRedis and/or clusterCrunchy dependencies."
+        },
+        "clusterRedis": {
+            "type": "object",
+            "description": "Optional: deploy a Redis cluster as a sub-dependency (Opstree operator required)."
+        },
+        "clusterCrunchy": {
+            "type": "object",
+            "description": "Optional: deploy a CrunchyDB PostgreSQL cluster as a sub-dependency."
         }
     }
 }
