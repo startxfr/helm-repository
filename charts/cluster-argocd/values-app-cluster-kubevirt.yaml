@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "3"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-cnv'
       project: 'infra-kubevirt'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -50,12 +51,24 @@ application:
             enabled: true
           vms:
             enabled: false
+          nads:
+            enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: hco.kubevirt.io
+          kind: HyperConverged
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-kubevirt-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "3"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-cnv'
       project: 'infra-kubevirt'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -70,6 +83,12 @@ application:
             operatorGroup:
               enabled: true
           hyperconvergedCluster:
+            enabled: false
+          nads:
+            enabled: false
+          vms:
+            enabled: false
+          project:
             enabled: false
       syncPolicy: |
         automated:
@@ -92,6 +111,12 @@ application:
           project:
             enabled: true
           hyperconvergedCluster:
+            enabled: false
+          nads:
+            enabled: false
+          vms:
+            enabled: false
+          operator:
             enabled: false
       syncPolicy: |
         automated:

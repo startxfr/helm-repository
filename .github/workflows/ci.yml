@@ -1,0 +1,62 @@
+name: CI
+
+# Lint and render every chart, validate the JSON schemas, keep docs/charts in sync with the README files and guard the
+# recurring misspellings. The logic lives in .github/scripts/ci-check.sh so that it can run locally and in GitLab CI.
+on:
+  pull_request:
+  push:
+    branches: [devel]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Static checks (schemas, docs copies, misspellings)
+        env:
+          CI_BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+        run: .github/scripts/ci-check.sh static
+
+  charts:
+    name: Charts ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - "chaos*"
+          - "cluster-[0-9a-f]*"
+          - "cluster-[g-m]*"
+          - "cluster-[n-r]*"
+          - "cluster-[s-z]*"
+          - "example-* operator project sxapi unifai"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.19.0
+      - name: helm lint and helm template
+        env:
+          CI_JOBS: 4
+        run: .github/scripts/ci-check.sh charts "${{ matrix.group }}"
+
+  contract:
+    name: Contract tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.19.0
+      - name: Contract tests of the charts consumed by zuno-demo
+        run: tests/contract/run.sh

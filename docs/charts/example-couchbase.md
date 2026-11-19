@@ -36,6 +36,15 @@ helm show chart startx/example-couchbase
 helm install example-couchbase startx/example-couchbase
 ```
 
+## Other available values
+
+- **demo-couchbase-yellow** : [values-demo-couchbase-yellow.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-couchbase-yellow.yaml)
+- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo.yaml)
+
+```bash
+helm install example-couchbase startx/example-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-couchbase-yellow.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -88,6 +97,43 @@ Complete deployment of a couchbase demo application for stress test (used in HPA
 helm install example-couchbase startx/example-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-hpa.yaml
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-couchbase` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-couchbase
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-couchbase
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.379
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-couchbase
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+
 ## History
 
 | Release  | Date       | Description                                                                                    |
@@ -103,8 +149,8 @@ helm install example-couchbase startx/example-couchbase -f https://raw.githubuse
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |

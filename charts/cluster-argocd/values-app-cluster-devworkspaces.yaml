@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "33"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-devworkspaces'
       project: 'infra-devworkspaces'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -50,12 +51,22 @@ application:
         values: |
           devworkspaces:
             enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: workspace.devfile.io
+          kind: DevWorkspace
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-devworkspaces-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "33"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-operators'
       project: 'infra-devworkspaces'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -71,6 +82,10 @@ application:
               enabled: true
             operatorGroup:
               enabled: false
+          devworkspaces:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -91,6 +106,10 @@ application:
         values: |
           project:
             enabled: true
+          devworkspaces:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

@@ -3,7 +3,7 @@
 - **MAJOR** version is aligned to the **minor** version of Openshift 4.x version. (ex:  chart version 8.x.x is stable for OCP 4.8.x releases)
 - **MINOR** version is aligned to the **patch** version of Openshift 4.x.x version. (ex:  chart version 8.13.x is stable for OCP 4.8.13 release)
 - PATCH version for major functionality ehancement added in a backwards compatible manner (ex: 8.13.x)
-- PRE-RELEASE version for bug, security and functionnals updates, backwards compatible for continous delivery (ex: 8.13.23-beta)
+- PRE-RELEASE version for bug, security and functionals updates, backwards compatible for continous delivery (ex: 8.13.23-beta)
 
 Only MAJOR, MINOR and PATCH are mandatory for naming a chart release.
 

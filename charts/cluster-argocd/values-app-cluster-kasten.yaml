@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "17"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'kasten-io'
       project: 'infra-kasten'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -56,12 +57,18 @@ application:
             enabled: true
           policies:
             enabled: true
+      ignoreDifferences: |
+        - group: apik10.kasten.io
+          kind: K10
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-kasten-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "17"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'kasten-io'
       project: 'infra-kasten'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -85,11 +92,19 @@ application:
         automated:
           prune: true
           selfHeal: true
+      ignoreDifferences: |
+        - group: operators.coreos.com
+          kind: OperatorGroup
+          name: kasten-io
+          namespace: kasten-io
+          jsonPointers:
+          - /metadata/annotations/olm.providedAPIs
     # Creates project namespace and RBAC
     - name: 'infra-kasten-project'
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'kasten-io'
       project: 'infra-kasten'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -113,6 +128,13 @@ application:
         automated:
           prune: true
           selfHeal: true
+      ignoreDifferences: |
+        - group: ''
+          kind: ServiceAccount
+          name: default
+          jsonPointers:
+          - /imagePullSecrets
+          - /secrets
 
 argocd_repocreds:
   enabled: true

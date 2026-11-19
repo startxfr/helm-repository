@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "13"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-rhbk'
       project: 'infra-rhbk'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -58,12 +59,22 @@ application:
             enabled: true
           rhbk_realms:
             enabled: true
+      ignoreDifferences: |
+        - group: k8s.keycloak.org
+          kind: Keycloak
+          jsonPointers:
+          - /metadata/finalizers
+        - group: k8s.keycloak.org
+          kind: KeycloakRealmImport
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-rhbk-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "13"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-rhbk'
       project: 'infra-rhbk'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -94,6 +105,7 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default-rhbk'
       project: 'infra-rhbk'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -121,6 +133,12 @@ application:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+      ignoreDifferences: |
+        - group: ''
+          kind: ServiceAccount
+          jsonPointers:
+          - /imagePullSecrets
+          - /secrets
 
 argocd_repocreds:
   enabled: true

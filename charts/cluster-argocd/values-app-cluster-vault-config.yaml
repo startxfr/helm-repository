@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "21"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-vault-config'
       project: 'infra-vault-config'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -54,12 +55,18 @@ application:
             enabled: false
           vault:
             enabled: true
+      ignoreDifferences: |
+        - group: secretsmanager.hashicorp.com
+          kind: SecretEngineMount
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-vault-config-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "21"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-operators'
       project: 'infra-vault-config'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'

@@ -48,6 +48,7 @@ application:
       finalizer: true
       wave: "50"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'chaos-cerberus'
       project: 'chaos'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -69,12 +70,19 @@ application:
           # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
           kraken:
             enabled: false
+          litmus:
+            enabled: false
+          mesh:
+            enabled: false
+          monkey:
+            enabled: false
     # Deploys service instances
     - name: 'chaos-all-kraken-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'chaos-kraken'
       project: 'chaos'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -95,12 +103,21 @@ application:
               token:
                 server: "https://api.<cluster>:6443"
                 token: "sha256~REPLACE_WITH_YOUR_TOKEN"
+          cerberus:
+            enabled: false
+          litmus:
+            enabled: false
+          mesh:
+            enabled: false
+          monkey:
+            enabled: false
     # Deploys service instances
     - name: 'chaos-all-litmus-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'chaos-litmus'
       project: 'chaos'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -121,12 +138,21 @@ application:
               architecture: standalone
               persistence:
                 enabled: false
+          cerberus:
+            enabled: false
+          kraken:
+            enabled: false
+          mesh:
+            enabled: false
+          monkey:
+            enabled: false
     # Deploys service instances
     - name: 'chaos-all-mesh-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'chaos-mesh'
       project: 'chaos'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -143,12 +169,21 @@ application:
             # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
             prometheus:
               create: false
+          cerberus:
+            enabled: false
+          kraken:
+            enabled: false
+          litmus:
+            enabled: false
+          monkey:
+            enabled: false
     # Deploys service instances
     - name: 'chaos-all-monkey-instance'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "50"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'chaos-monkey'
       project: 'chaos'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -167,6 +202,14 @@ application:
               timezone: Europe/Paris
               startHour: 9
               endHour: 17
+          cerberus:
+            enabled: false
+          kraken:
+            enabled: false
+          litmus:
+            enabled: false
+          mesh:
+            enabled: false
 
 argocd_repocreds:
   enabled: true

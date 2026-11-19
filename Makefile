@@ -146,6 +146,9 @@ release-all:
 	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC="$(DESC)" \
 	  $(SX) release auto
 
+changed-charts:
+	$(SX) changed-charts
+
 release-charts:
 	INTERACTIVE=$(INTERACTIVE) VERSION=$(VERSION) DESC="$(DESC)" \
 	  $(SX) release-charts

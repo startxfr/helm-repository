@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "23"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-vault'
       project: 'infra-vault'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -52,6 +53,13 @@ application:
             enabled: true
             global:
               enabled: true
+          route:
+            enabled: false
+      ignoreDifferences: |
+        - group: vault.banzaicloud.com
+          kind: Vault
+          jsonPointers:
+          - /metadata/finalizers
     # Creates project namespace and RBAC
     - name: 'infra-vault-project'
       namespace: 'openshift-gitops'
@@ -69,6 +77,8 @@ application:
           project:
             enabled: true
           vault:
+            enabled: false
+          route:
             enabled: false
       syncPolicy: |
         automated:

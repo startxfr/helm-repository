@@ -10,7 +10,7 @@ This chart was part of the [cluster-xxx startx helm chart series](https://helm-r
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -44,11 +44,11 @@ helm install cluster-workspace startx/cluster-workspace
 
 | Key                 | Default   | Description                                                                       |
 | ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organisational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (plateform tenant)                   |
-| context.environment | dev       | Name of the environement for this application (ex: dev, factory, preprod or prod) |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
 | context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | sxapi     | Application name (functionnal tenant, default use Chart name)                     |
+| context.app         | sxapi     | Application name (functional tenant, default use Chart name)                     |
 | context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
 
 ### cheCluster values dictionary
@@ -418,7 +418,7 @@ helm install cluster-workspace startx/cluster-workspace -f https://raw.githubuse
 | 14.6.109  | 2024-01-04 | Update all chart dependencies to version 14.6.105                                                                       |
 | 14.6.131  | 2024-01-18 | publish stable update for the full repository                                                                           |
 | 14.6.133  | 2024-01-18 | Update the documentation with artifacthub badge                                                                         |
-| 14.6.135  | 2024-01-18 | debug artifacthub recommandations                                                                                       |
+| 14.6.135  | 2024-01-18 | debug artifacthub recommendations                                                                                       |
 | 14.6.137  | 2024-01-18 | publish stable update for the full repository                                                                           |
 | 14.6.141  | 2024-02-03 | upgrade of the full startx repository                                                                                   |
 | 14.6.143  | 2024-02-03 | Align to 14.6.143 chart release                                                                                         |

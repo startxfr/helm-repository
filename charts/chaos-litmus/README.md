@@ -40,6 +40,15 @@ helm install --set project.enabled=true chaos-litmus-project  startx/chaos-litmu
 helm install --set litmus.enabled=true -n chaos-litmus chaos-litmus-instance startx/chaos-litmus
 ```
 
+## Other available values
+
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml)
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-project.yaml)
+
+```bash
+helm install chaos-litmus startx/chaos-litmus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -152,6 +161,43 @@ helm install chaos-litmus startx/chaos-litmus \
   -n chaos-litmus
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`chaos-litmus` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-litmus
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: chaos-litmus
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.379
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: chaos-litmus
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+
 ## History
 
 | Release  | Date       | Description                                                                                                                                            |
@@ -169,8 +215,8 @@ helm install chaos-litmus startx/chaos-litmus \
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.313 | 2026-11-04 | Add cluster-unifai and cluster-qdrant, align all charts to 21.3.313 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.373 | 2026-11-19 | align inter-chart dependency pins |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |

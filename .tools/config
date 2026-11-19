@@ -55,3 +55,7 @@ HELM_REPO_ARCHIVE_RELEASES="20 19 18 16 14"
 # These are published by: sx-helm archiveLegacy / make archive-legacy
 # Move numbers here from HELM_REPO_ARCHIVE_RELEASES when a release becomes legacy.
 HELM_REPO_LEGACY_RELEASES="17 15 13 12 11 10 9 8 7 6x"
+
+# Release policy (ADR-0001): a release only handles the charts changed since the latest release tag.
+# Set to false, or export RELEASE_ALL=true, to release every chart.
+RELEASE_CHANGED_ONLY="true"

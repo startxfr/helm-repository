@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "14"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-compliance'
       project: 'infra-compliance'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -51,6 +52,13 @@ application:
           project:
             project:
               name: "openshift-compliance"
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: compliance.openshift.io
+          kind: ScanSetting
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-compliance-operator'
       namespace: 'openshift-gitops'
@@ -74,6 +82,8 @@ application:
               enabled: true
             operatorGroup:
               enabled: true
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -98,6 +108,8 @@ application:
             enabled: true
             project:
               name: "openshift-compliance"
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

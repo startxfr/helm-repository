@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "37"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-vertical-pod-autoscaler'
       project: 'infra-vpa'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -52,12 +53,20 @@ application:
             enabled: false
           vpaController:
             enabled: true
+          vpa:
+            enabled: false
+      ignoreDifferences: |
+        - group: autoscaling.k8s.io
+          kind: VerticalPodAutoscaler
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-vpa-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "37"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-vertical-pod-autoscaler'
       project: 'infra-vpa'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -71,6 +80,10 @@ application:
             enabled: false
           operator:
             enabled: true
+          vpaController:
+            enabled: false
+          vpa:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -92,6 +105,10 @@ application:
           project:
             enabled: true
           operator:
+            enabled: false
+          vpaController:
+            enabled: false
+          vpa:
             enabled: false
       syncPolicy: |
         automated:

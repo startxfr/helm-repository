@@ -1,6 +1,6 @@
 # release-master
 
-Promote the `devel` branch to `master`: merge, publish stable/noschema/current repos, and propagate to all `master-4.x` branches.
+Promote the `devel` branch to `master`: merge, publish stable/noschema/current repos.
 
 ## Usage
 
@@ -15,15 +15,13 @@ No arguments. The version is inherited from the devel branch state (already bump
 1. Verifies `devel` is clean, committed, and pushed
 2. Merges `devel` → `master`
 3. Runs `make publish` - regenerates stable + noschema + release-XX repos and uploads to S3
-4. Discovers all `master-4.x` remote branches dynamically
-5. Merges `master` into each `master-4.x` branch and pushes
 6. Pushes `master` to `origin` and `gitlab`
 7. Returns to `devel`
 
 **Does NOT** bump chart versions (that was done by `/release-devel`).
 **Does NOT** touch `stable`. Use `/release-stable` to promote to stable.
 
-> **Note (2026-11)**: `make publish` already merges `devel` into `master` and pushes both, so Step 4 only matters when `master` must be merged without publishing. The `master-4.x` propagation of Step 6 failed once (the same `refs/remotes/origin/*` refspec is shared by several remotes, so `origin/master-4.x` can be ambiguous) and left the working tree on the wrong branch content. Use explicit `refs/remotes/origin/...` references and check `git status` after each branch, or skip the step as decided for the 21.3.373 release.
+> **Note (2026-11)**: `make publish` already merges `devel` into `master` and pushes both, so Step 4 only matters when `master` must be merged without publishing. The `-4.x` propagation is retired (Step 6).
 
 ## Instructions
 
@@ -59,7 +57,7 @@ Read `.tools/repo-release` for the version being promoted.
 Merging devel → master
 Version   : <version from .tools/repo-release>
 Repos     : stable, noschema, release-<STABLE_MAINRELEASE>
-Branches  : master + all master-4.x
+Branches  : master only
 
 Proceed? [y/N]
 ```
@@ -78,29 +76,9 @@ git merge devel --no-edit -m "chore: merge devel into master for release <versio
 make publish
 ```
 
-**Step 6 - Propagate to master-4.x branches**
+**Step 6 - master-4.x branches (retired)**
 
-Discover branches:
-```bash
-git fetch --all --prune
-git branch -r | grep 'origin/master-4\.'
-```
-
-For each `origin/master-4.X` found:
-```bash
-git checkout -B master-4.X origin/master-4.X
-git merge master --no-edit -m "chore: auto-merge master into master-4.X for release <version>"
-git push origin master-4.X
-git push gitlab master-4.X
-```
-
-If a merge fails (conflict):
-```
-⚠ Conflict on master-4.X - skipped. Resolve manually:
-  git checkout master-4.X
-  git merge master
-```
-Continue with remaining branches (do not stop).
+The propagation to the `master-4.x` branches is retired (decision 2026-11-19): those branches map to old OpenShift releases and the step failed on ambiguous refs. Do nothing here; tell the user if a `master-4.x` branch must be updated and do it manually with explicit `refs/remotes/origin/...` references.
 
 **Step 7 - Push master**
 
@@ -116,7 +94,7 @@ git checkout devel
 ✓ master released - version <version>
 
 Published repos : stable, noschema, release-<STABLE_MAINRELEASE>
-Propagated to   : master-4.11, master-4.12, ... (list successful branches)
+Propagated to   : (retired)
 Skipped (conflict): ... (list failed branches, if any)
 
 Next: run /release-stable to promote master → stable.

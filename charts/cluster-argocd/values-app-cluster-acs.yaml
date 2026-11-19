@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "12"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-acs'
       project: 'infra-acs'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -50,12 +51,26 @@ application:
         values: |
           acs:
             enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: platform.stackrox.io
+          kind: Central
+          jsonPointers:
+          - /metadata/finalizers
+        - group: platform.stackrox.io
+          kind: SecuredCluster
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-acs-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "12"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-operators'
       project: 'infra-acs'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -71,6 +86,8 @@ application:
             enabled: true
             operatorGroup:
               enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -80,6 +97,7 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-acs'
       project: 'infra-acs'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -93,6 +111,8 @@ application:
             enabled: false
           project:
             enabled: true
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

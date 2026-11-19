@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "4"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'nvidia-gpu-operator'
       project: 'infra-gpu'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -48,12 +49,22 @@ application:
         values: |
           gpu:
             enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: nvidia.com
+          kind: ClusterPolicy
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-gpu-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "4"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'nvidia-gpu-operator'
       project: 'infra-gpu'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -67,6 +78,10 @@ application:
             enabled: true
             operatorGroup:
               enabled: true
+          gpu:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -87,6 +102,10 @@ application:
         values: |
           project:
             enabled: true
+          gpu:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

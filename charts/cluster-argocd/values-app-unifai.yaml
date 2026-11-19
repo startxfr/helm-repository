@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "5"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'unifai-operator'
       project: 'unifai'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -45,6 +46,8 @@ application:
       helm: |
         values: |
           stack:
+            enabled: false
+          project:
             enabled: false
       syncPolicy: |
         automated:
@@ -59,6 +62,7 @@ application:
       finalizer: true
       wave: "10"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'unifai'
       project: 'unifai'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -68,6 +72,8 @@ application:
         skipCrds: true
         values: |
           operator:
+            enabled: false
+          project:
             enabled: false
       syncPolicy: |
         automated:

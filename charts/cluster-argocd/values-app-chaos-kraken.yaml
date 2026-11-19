@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "52"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'chaos-kraken'
       project: 'chaos-kraken'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -55,12 +56,15 @@ application:
               token:
                 server: https://api.demo219.startx.fr:6443
                 token: sha256~REPLACE_WITH_YOUR_TOKEN
+          project:
+            enabled: false
     # Creates project namespace and RBAC
     - name: 'chaos-kraken-project'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "52"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default'
       project: 'chaos-kraken'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -72,6 +76,8 @@ application:
         values: |
           project:
             enabled: true
+          kraken:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

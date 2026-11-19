@@ -6,7 +6,7 @@ This chart is part of the cluster-xxx startx helm chart that doesn't create appl
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://startxfr.github.io/helm-repository) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -45,7 +45,7 @@ xxxxxx TO DO xxxxxx
 helm install startx/cluster-keycloak
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Keycloak operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-keycloak/values-startx.yaml))
 

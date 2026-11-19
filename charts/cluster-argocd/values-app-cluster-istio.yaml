@@ -45,6 +45,7 @@ application:
       finalizer: true
       wave: "6"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'startx-istio'
       project: 'infra-istio'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -56,12 +57,44 @@ application:
         values: |
           istio:
             enabled: false
+          sail:
+            enabled: false
+          project:
+            enabled: false
+          projectOperator:
+            enabled: false
+          operatorElastic:
+            enabled: false
+          operatorLoki:
+            enabled: false
+          operatorKiali:
+            enabled: false
+          operatorJaeger:
+            enabled: false
+          operatorIstio:
+            enabled: false
+          operatorSail:
+            enabled: false
+      ignoreDifferences: |
+        - group: maistra.io
+          kind: ServiceMeshControlPlane
+          jsonPointers:
+          - /metadata/finalizers
+        - group: sailoperator.io
+          kind: Istio
+          jsonPointers:
+          - /metadata/finalizers
+        - group: sailoperator.io
+          kind: IstioCNI
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-istio-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "6"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'istio-operators'
       project: 'infra-istio'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -82,6 +115,14 @@ application:
           operatorIstio:
             enabled: true
           istio:
+            enabled: false
+          sail:
+            enabled: false
+          project:
+            enabled: false
+          projectOperator:
+            enabled: false
+          operatorSail:
             enabled: false
       syncPolicy: |
         automated:
@@ -106,6 +147,20 @@ application:
           projectOperator:
             enabled: true
           istio:
+            enabled: false
+          sail:
+            enabled: false
+          operatorElastic:
+            enabled: false
+          operatorLoki:
+            enabled: false
+          operatorKiali:
+            enabled: false
+          operatorJaeger:
+            enabled: false
+          operatorIstio:
+            enabled: false
+          operatorSail:
             enabled: false
       syncPolicy: |
         automated:

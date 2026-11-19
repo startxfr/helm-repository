@@ -51,6 +51,25 @@ application:
           rhn:
             user: "<your-rhn-username>"
             pwd: "<your-rhn-password>"
+          oidc:
+            enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          operatorsec:
+            enabled: false
+          crunchy:
+            enabled: false
+          cloudnativedb:
+            enabled: false
+          percona:
+            enabled: false
+      ignoreDifferences: |
+        - group: quay.redhat.com
+          kind: QuayRegistry
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-quay-operator'
       namespace: 'openshift-gitops'
@@ -68,6 +87,20 @@ application:
         values: |
           operator:
             enabled: true
+          quay:
+            enabled: false
+          oidc:
+            enabled: false
+          project:
+            enabled: false
+          operatorsec:
+            enabled: false
+          crunchy:
+            enabled: false
+          cloudnativedb:
+            enabled: false
+          percona:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -88,6 +121,20 @@ application:
         values: |
           project:
             enabled: true
+          quay:
+            enabled: false
+          oidc:
+            enabled: false
+          operator:
+            enabled: false
+          operatorsec:
+            enabled: false
+          crunchy:
+            enabled: false
+          cloudnativedb:
+            enabled: false
+          percona:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

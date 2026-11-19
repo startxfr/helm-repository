@@ -48,6 +48,15 @@ application:
         values: |
           mtr:
             enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: windup.jboss.org
+          kind: Windup
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-mtr-operator'
       namespace: 'openshift-gitops'
@@ -65,6 +74,10 @@ application:
         values: |
           operator:
             enabled: true
+          mtr:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -85,6 +98,10 @@ application:
         values: |
           project:
             enabled: true
+          mtr:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

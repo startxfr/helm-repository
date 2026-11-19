@@ -32,6 +32,12 @@ externalSecretDefaults:
 auth:
   # Enable the configuration of the auth service
   enabled: false
+  # Own the OAuth/cluster resource. A cluster has exactly one OAuth/cluster: when another chart or tool owns it, set
+  # enabled to false. The Secrets and ConfigMaps (htpasswd, LDAP, OIDC, console templates) are still rendered, so that
+  # the other owner can reference them. Default is true (no change for existing deployments)
+  oauth:
+    # Render the OAuth/cluster resource
+    enabled: true
   # Namespace of the Secrets and ConfigMaps of the auth artifacts (LDAP, OIDC, htpasswd, console, templates).
   # It does not apply to the OAuth resource itself, which is cluster scoped
   namespace: openshift-config

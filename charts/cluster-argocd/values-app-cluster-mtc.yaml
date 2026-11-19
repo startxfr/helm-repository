@@ -48,6 +48,15 @@ application:
         values: |
           mtc:
             enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: migration.openshift.io
+          kind: MigrationController
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-mtc-operator'
       namespace: 'openshift-gitops'
@@ -65,6 +74,10 @@ application:
         values: |
           operator:
             enabled: true
+          mtc:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -85,6 +98,10 @@ application:
         values: |
           project:
             enabled: true
+          mtc:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

@@ -48,6 +48,15 @@ application:
         values: |
           ptp:
             enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: ptp.openshift.io
+          kind: PtpConfig
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-ptp-operator'
       namespace: 'openshift-gitops'
@@ -65,6 +74,10 @@ application:
         values: |
           operator:
             enabled: true
+          ptp:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -85,6 +98,10 @@ application:
         values: |
           project:
             enabled: true
+          ptp:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

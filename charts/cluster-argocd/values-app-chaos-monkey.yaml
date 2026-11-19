@@ -38,6 +38,7 @@ application:
       finalizer: true
       wave: "54"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'chaos-monkey'
       project: 'chaos-monkey'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -54,12 +55,15 @@ application:
               timezone: Europe/Paris
               startHour: 9
               endHour: 17
+          project:
+            enabled: false
     # Creates project namespace and RBAC
     - name: 'chaos-monkey-project'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "54"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'default'
       project: 'chaos-monkey'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -71,6 +75,8 @@ application:
         values: |
           project:
             enabled: true
+          monkey:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

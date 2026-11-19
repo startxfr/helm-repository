@@ -136,8 +136,8 @@ devel → /release-chart <name>  (single chart: bump + S3 + publish-devel)
 | `/new-major-release` | `<N>`                 | Init OCP major release N: update config, create docs/repos/N/, merge to master                    |
 | `/new-chart`         | `<family>-<name>`     | New chart: gather inputs, copy, update Chart.yaml+README, clean templates, adjust values, publish |
 
-- `release-charts` (make target) = bump all versions **without** merging/tagging — safe to run multiple times on devel
-- `release-all` (make target) = full flow: bumps + merges devel→master→stable + tags + pushes
+- `release-charts` (make target) = bump the charts **changed since the latest release tag** (ADR-0001) **without** merging/tagging — safe to run multiple times on devel; `RELEASE_ALL=true` bumps every chart, `make changed-charts` lists the selection
+- `release-all` (make target) = full flow: bumps (same selection rule) + merges devel→master→stable + tags + pushes
 
 ---
 

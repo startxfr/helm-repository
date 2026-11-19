@@ -70,7 +70,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.377
+    targetRevision: 21.3.379
     helm:
     valueFiles:
     - values-demo.yaml
@@ -97,7 +97,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.377
+    targetRevision: 21.3.379
     helm:
     valueFiles:
     - values-demo.yaml
@@ -124,7 +124,7 @@ project: default
 source:
     path: charts/cluster-percona/
     repoURL: 'https://gitlab.com/startx1/helm.git'
-    targetRevision: 21.3.377
+    targetRevision: 21.3.379
     helm:
     valueFiles:
     - values-demo.yaml
@@ -308,8 +308,8 @@ pattern, using `values-startx_noinfra.yaml`. For a highly available cluster, rep
 | 21.3.279 | 2026-10-22 | Initial chart creation |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
