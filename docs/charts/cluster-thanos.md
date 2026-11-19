@@ -25,8 +25,8 @@ helm install startx/cluster-thanos
 Complete deployment of a project with the following characteristics :
 
 - 1 **project:** named **open-cluster-management-observability** with the following properties
-  - 1 **LimitRange:** defined for this projet
-  - 1 **Quotas:** defined for this projet
+  - 1 **LimitRange:** defined for this project
+  - 1 **Quotas:** defined for this project
   - 3 **RBAC:** allowing **mygroup_example** to **edit** resources
 - 1 **operator:** named **advanced-cluster-management** configured with
   - The **release-2.4** channel
@@ -42,7 +42,7 @@ Complete deployment of a project with the following characteristics :
 helm install startx/cluster-thanos
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Startx Thanos cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-thanos/values-startx.yaml))
 

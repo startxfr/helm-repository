@@ -12,12 +12,12 @@
 # Environment:
 #   CI_JOBS        number of charts checked in parallel (default 4)
 #   CI_BASE_REF    git ref the misspelling guard compares with (default origin/devel, falls back to HEAD~1)
-#   CI_SPELLING    changed (default: only the added lines) | all (the whole tree, listed, failing) | off
+#   CI_SPELLING    all (default: the whole tree, failing) | changed (only the lines added since CI_BASE_REF) | off
 set -uo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$ROOT" || exit 2
 CI_JOBS=${CI_JOBS:-4}
-CI_SPELLING=${CI_SPELLING:-changed}
+CI_SPELLING=${CI_SPELLING:-all}
 
 # The charts declare their dependencies on the S3 website endpoint (http only): the public HTTPS endpoint of the same
 # bucket is used for the dependency resolution of the copy that is checked.
@@ -25,8 +25,12 @@ S3_HTTP='http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com'
 S3_HTTPS='https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com'
 
 # Misspellings that CLAUDE.md asks to fix on sight (ERE, case insensitive)
-SPELLING='theses resources|environement|plateform|ressource|functionnal|organisational|recommandations|others values availables|graphana|projet'
-SPELLING_EXCLUDES=(':!CLAUDE.md' ':!webtpl' ':!**/webtpl/**' ':!docs/repos' ':!*.tgz' ':!*.prov' ':!*.asc' ':!.github/scripts/ci-check.sh')
+SPELLING='theses resources|environement|plateform|ressource|functionnal|organisational|recommandations|others values availables|projet'
+SPELLING_GRAPHANA='graphana'
+# Not checked: CLAUDE.md and the roadmap/ADR pages (they quote the misspellings), the generated indexes, the French
+# web templates, the French console links of cluster-console (plateforme, ressources...) and the cluster-dvo values
+# keys named graphana (kept for compatibility, never rename them)
+SPELLING_EXCLUDES=(':!CLAUDE.md' ':!webtpl' ':!**/webtpl/**' ':!docs/repos' ':!docs/roadmap' ':!docs/adr' ':!*.tgz' ':!*.prov' ':!*.asc' ':!.github/scripts/ci-check.sh' ':!charts/cluster-console/values-m*.yaml')
 
 log() { printf '%s\n' "$*"; }
 
@@ -50,20 +54,31 @@ check_docs() {
     return $bad
 }
 
+# spelling_hits_all: every offending line of the tree ("graphana" is allowed in cluster-dvo only)
+spelling_hits_all() {
+    git grep -nIiE -- "$SPELLING" -- . "${SPELLING_EXCLUDES[@]}" || true
+    git grep -nIiE -- "$SPELLING_GRAPHANA" -- . "${SPELLING_EXCLUDES[@]}" ':!charts/cluster-dvo' || true
+}
+
+# spelling_hits_added <base>: offending lines among the lines added since <base>
+spelling_hits_added() {
+    git diff -U0 "$1" -- . "${SPELLING_EXCLUDES[@]}" | grep -E '^\+[^+]' | grep -iE -- "$SPELLING|$SPELLING_GRAPHANA" || true
+}
+
 check_spelling() {
     case "$CI_SPELLING" in
         off) log "skip misspelling guard (CI_SPELLING=off)"; return 0 ;;
         all)
             local hits
-            hits=$(git grep -nIiE -- "$SPELLING" -- . "${SPELLING_EXCLUDES[@]}" || true)
-            if [[ -n "$hits" ]]; then log "FAIL misspellings in the tree ($(wc -l <<<"$hits") lines):"; head -60 <<<"$hits"; return 1; fi
+            hits=$(spelling_hits_all)
+            if [[ -n "$hits" ]]; then log "FAIL misspellings in the tree ($(wc -l <<<"$hits") lines, see CLAUDE.md):"; head -60 <<<"$hits"; return 1; fi
             log "ok   no misspelling in the tree"; return 0 ;;
     esac
     local base=${CI_BASE_REF:-origin/devel}
     git rev-parse --verify -q "$base" >/dev/null || base=HEAD~1
     git rev-parse --verify -q "$base" >/dev/null || { log "skip misspelling guard (no base ref)"; return 0; }
     local added
-    added=$(git diff -U0 "$base" -- . "${SPELLING_EXCLUDES[@]}" | grep -E '^\+[^+]' | grep -iE -- "$SPELLING" || true)
+    added=$(spelling_hits_added "$base")
     if [[ -n "$added" ]]; then
         log "FAIL misspellings in the lines added since $base (see CLAUDE.md):"; head -40 <<<"$added"; return 1
     fi

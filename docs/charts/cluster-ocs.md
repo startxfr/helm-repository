@@ -6,7 +6,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -45,7 +45,7 @@ xxxx to do xxxxxx
 helm install cluster-odfstartx/cluster-ocs
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Startx OCS cluster wide service configuration using OCS operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ocs/values-startx.yaml))
 
@@ -58,7 +58,7 @@ helm install cluster-odfstartx/cluster-odf-f https://raw.githubusercontent.com/s
 | Release  | Date       | Description                                                                                            |
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------ |
 | 0.3.18   | 2020-11-06 | Create chart cluster-ocs from cluster-quay (removed)                                                   |
-| 0.3.19   | 2020-11-06 | Add deployment of an OCS cluster using StorageCluster ressource                                        |
+| 0.3.19   | 2020-11-06 | Add deployment of an OCS cluster using StorageCluster resource                                        |
 | 0.3.21   | 2020-11-06 | Align all charts on the repository release 0.3.21                                                      |
 | 0.3.23   | 2020-11-07 | Add engineVersion to all chart (set to 4.5.12) and update all appVersion with the relevant information |
 | 0.3.29   | 2020-11-07 | Improve NOTES output and move to 0.3.25 dependencies                                                   |
