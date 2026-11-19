@@ -52,7 +52,7 @@ helm install cluster-ods startx/cluster-ods
 
 ### DataScienceCluster and DSCInitialization API version
 
-The `DataScienceCluster` and `DSCInitialization` resources use the `v2` API (`datasciencecluster.opendatahub.io/v2`, `dscinitialization.opendatahub.io/v2`), required by RHOAI 3.x. Set `DataScienceCluster.apiVersion` (or `DSCInitialization.apiVersion`) to the `v1` API for RHOAI 2.x, and adapt `DataScienceCluster.spec` accordingly. Both resources accept `labels` and `annotations` maps. `DSCInitialization.enabled` creates a cluster scoped `DSCInitialization` (free `spec`, `applicationsNamespace` overrides `spec.applicationsNamespace`) before the `DataScienceCluster`.
+The `DataScienceCluster` and `DSCInitialization` resources use the `v2` API (`datasciencecluster.opendatahub.io/v2`, `dscinitialization.opendatahub.io/v2`), required by RHOAI 3.x. Set `DataScienceCluster.apiVersion` (or `DSCInitialization.apiVersion`) to the `v1` API for RHOAI 2.x, and adapt `DataScienceCluster.spec` accordingly: the default `spec` lists the components of RHOAI 2.x, so with the `v2` API replace it with the components of your RHOAI release. The `OperatorGroup` `providedAPIs` list both the `v1` and `v2` APIs. Both resources accept `labels` and `annotations` maps. `DSCInitialization.enabled` creates a cluster scoped `DSCInitialization` (free `spec`, `applicationsNamespace` overrides `spec.applicationsNamespace`) before the `DataScienceCluster`.
 
 ## Other available values
 
