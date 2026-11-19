@@ -52,9 +52,22 @@ application:
               enabled: false
           operator:
             enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         syncOptions:
           - SkipDryRunOnMissingResource=true
+      ignoreDifferences: |
+        - group: ocs.openshift.io
+          kind: StorageCluster
+          jqPathExpressions:
+          - .metadata.finalizers
+          - .metadata.annotations["uninstall.ocs.openshift.io/cleanup-policy"]
+          - .metadata.annotations["uninstall.ocs.openshift.io/mode"]
+          - .spec.version
+          - .spec.encryption.keyRotation
+          - .spec.managedResources
+          - .spec.storageDeviceSets[].replica
     # Installs and configures the operator
     - name: 'infra-odf-operator'
       namespace: 'openshift-gitops'
@@ -75,12 +88,31 @@ application:
             subscription:
               operator:
                 channel: "stable-4.21"
+          odf:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
           selfHeal: true
         syncOptions:
           - SkipDryRunOnMissingResource=true
+      ignoreDifferences: |
+        - group: operators.coreos.com
+          kind: OperatorGroup
+          name: openshift-storage
+          namespace: openshift-storage
+          jsonPointers:
+          - /metadata/annotations/olm.providedAPIs
+          - /spec/upgradeStrategy
+        - group: console.openshift.io
+          kind: ConsolePlugin
+          name: odf-console
+          jqPathExpressions:
+          - .spec
+          - .metadata.annotations
+          - .metadata.labels
     # Creates project namespace and RBAC
     - name: 'infra-odf-project'
       namespace: 'openshift-gitops'
@@ -98,6 +130,8 @@ application:
           project:
             enabled: true
           operator:
+            enabled: false
+          odf:
             enabled: false
       syncPolicy: |
         automated:

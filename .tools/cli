@@ -150,11 +150,52 @@ function routerPublishDevel {
     doHelmrepositoryRefresh "$HELM_REPO_SUBDEV" "$HELM_REPO_SUBDEV" "$HELM_REPO_BASEURL" Publish 36 no
 }
 
-# Release every chart, keep going after a failure, and report all failed charts at the end
+# Charts whose content changed since the latest release tag (ADR-0001). Same output format as chartList.
+# Without any release tag, every chart is listed.
+function chartListChanged {
+    local last chart
+    last=$(git -C "$PROJECT_PATH" tag --list '[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
+    if [[ -z "$last" ]]; then
+        chartList
+        return
+    fi
+    for chart in $(chartList); do
+        if ! git -C "$PROJECT_PATH" diff --quiet "$last" HEAD -- "charts/${chart#./}"; then
+            echo " $chart"
+        fi
+    done
+}
+
+# Charts a release must handle : the changed ones by default (RELEASE_CHANGED_ONLY in .tools/config), all of them
+# when RELEASE_ALL=true is exported (new OpenShift release, change of the shared tooling).
+function chartListToRelease {
+    if [[ "${RELEASE_ALL:-}" == "true" || "${RELEASE_CHANGED_ONLY:-true}" != "true" ]]; then
+        chartList
+    else
+        chartListChanged
+    fi
+}
+
+# Print the charts changed since the latest release tag
+function routerListChanged {
+    local last
+    last=$(git -C "$PROJECT_PATH" tag --list '[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
+    echo "Charts changed since release tag ${last:-<none>} :"
+    chartListChanged
+}
+
+# Release the selected charts (see chartListToRelease), keep going after a failure, and report all failed charts at the end
 function releaseAllCharts {
     local failed=()
     local chart
-    for chart in $(chartList); do
+    local selected
+    selected=$(chartListToRelease)
+    if [[ -z "${selected//[[:space:]]/}" ]]; then
+        echo -e "\e[36mRelease\e[0m no chart changed since the last release tag : nothing to release (RELEASE_ALL=true forces a full release)"
+        return 0
+    fi
+    echo -e "\e[36mRelease\e[0m $(echo "$selected" | wc -w) chart(s) selected"
+    for chart in $selected; do
         routerChartRelease "$chart" "auto" "$1" "$2" || failed+=("$chart")
     done
     if [[ ${#failed[@]} -gt 0 ]]; then
@@ -679,7 +720,8 @@ Global actions:
   release              Bump all charts, tag, merge and push  (INTERACTIVE=false VERSION=x DESC="...")
   publish              Publish stable+noschema+current repos to S3
   publish-devel        Publish devel sub-repo to S3  (pre-release, from devel branch)
-  release-charts       Bump+package all charts, no git merge/tag/push  (use before publish-devel)
+  release-charts       Bump+package the charts changed since the last release tag, no git merge/tag/push  (RELEASE_ALL=true for every chart)
+  changed-charts       List the charts changed since the last release tag
   archive              Regenerate and push active archive repos  (see HELM_REPO_ARCHIVE_RELEASES in .tools/config)
   archiveLegacy        Regenerate and push legacy archive repos  (see HELM_REPO_LEGACY_RELEASES in .tools/config)
   lint-all             Lint all charts with helm lint

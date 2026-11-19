@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "12"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-kube-descheduler-operator'
       project: 'infra-descheduler'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -48,12 +49,17 @@ application:
         values: |
           descheduler:
             enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: false
     # Installs and configures the operator
     - name: 'infra-descheduler-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "12"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-kube-descheduler-operator'
       project: 'infra-descheduler'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -65,6 +71,10 @@ application:
         values: |
           operator:
             enabled: true
+          descheduler:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -85,6 +95,10 @@ application:
         values: |
           project:
             enabled: true
+          descheduler:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

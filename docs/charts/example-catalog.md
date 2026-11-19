@@ -36,6 +36,22 @@ helm show chart startx/example-catalog
 helm install example-catalog startx/example-catalog
 ```
 
+## Other available values
+
+- **aap** : [values-aap.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-aap.yaml)
+- **affinity** : [values-affinity.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-affinity.yaml)
+- **costs** : [values-costs.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-costs.yaml)
+- **elasticsearch** : [values-elasticsearch.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-elasticsearch.yaml)
+- **hugo** : [values-hugo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-hugo.yaml)
+- **istio-mg** : [values-istio-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-istio-mg.yaml)
+- **istio** : [values-istio.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-istio.yaml)
+- **keycloak** : [values-keycloak.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-keycloak.yaml)
+- and 16 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/example-catalog)
+
+```bash
+helm install example-catalog startx/example-catalog -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-aap.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -88,6 +104,43 @@ Complete deployment of a sxapi development application with the following charac
 helm install example-catalog startx/example-catalog -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-catalog/values-dev.yaml
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-catalog` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-catalog
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-catalog
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.379
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default-catalog
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+
 ## History
 
 | Release  | Date       | Description                                                                                       |
@@ -104,8 +157,8 @@ helm install example-catalog startx/example-catalog -f https://raw.githubusercon
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
 | 21.3.361 | 2026-11-10 | Fix dependency version pins |
-| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.373 | 2026-11-19 | align inter-chart dependency pins |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |

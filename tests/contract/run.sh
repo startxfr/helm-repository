@@ -1,0 +1,249 @@
+#!/usr/bin/env bash
+# Contract tests of the charts that zuno-demo consumes: cluster-ods, cluster-certmanager, cluster-gpu, cluster-nfd,
+# cluster-machine, cluster-prometheus, cluster-istio and operator. Each check renders a chart with helm template and
+# asserts a few expected facts with yq. Plain bash, helm, yq (mikefarah v4): no other dependency.
+#
+# Usage: tests/contract/run.sh [chart ...]     (default: every chart above)
+# The charts are copied to a temporary directory and their dependencies are resolved through the public HTTPS endpoint
+# of the S3 bucket, so the working tree stays untouched. A chart whose dependencies cannot be resolved is skipped.
+set -uo pipefail
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+cd "$ROOT" || exit 2
+S3_HTTP='http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com'
+S3_HTTPS='https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com'
+WORK=$(mktemp -d)
+trap 'rm -rf "$WORK"' EXIT
+PASS=0 FAIL=0 SKIP=0
+CURRENT=""
+
+ok()   { PASS=$((PASS + 1)); printf 'ok   %s\n' "$*"; }
+bad()  { FAIL=$((FAIL + 1)); printf 'FAIL %s\n' "$*"; }
+
+# prepare <chart>: copy the chart and resolve its dependencies; sets CHART_DIR, returns 1 when it cannot be resolved
+prepare() {
+    local c=$1
+    CHART_DIR=$WORK/$c
+    rm -rf "$CHART_DIR"; cp -r "charts/$c" "$CHART_DIR"
+    rm -rf "$CHART_DIR/charts" "$CHART_DIR/Chart.lock"
+    grep -q '^dependencies:' "$CHART_DIR/Chart.yaml" || return 0
+    sed -i "s#$S3_HTTP#$S3_HTTPS#g" "$CHART_DIR/Chart.yaml"
+    helm dependency update "$CHART_DIR" >"$WORK/dep.log" 2>&1 || { sleep 3; helm dependency update "$CHART_DIR" >"$WORK/dep.log" 2>&1; }
+}
+
+# render <name> [helm template args]: renders the current chart into $OUT (also kept as $WORK/<name>.yaml)
+render() {
+    local name=$1; shift
+    OUT=$WORK/$CURRENT.$name.yaml
+    if ! helm template contract "$CHART_DIR" "$@" >"$OUT" 2>"$WORK/err.log"; then
+        bad "$CURRENT/$name: helm template failed: $(tail -1 "$WORK/err.log")"
+        : >"$OUT"; return 1
+    fi
+}
+
+# kinds <file> <kind>: number of documents of that kind
+# (yq prints a --- line between documents and null for a document without kind: both are ignored)
+kinds() { yq e "select(.kind == \"$2\") | .kind" "$1" 2>/dev/null | grep -cvE '^(---|null|)$' || true; }
+
+# assert_count <label> <kind> <expected>   (on $OUT)
+assert_count() {
+    local n; n=$(kinds "$OUT" "$2")
+    [[ $n -eq $3 ]] && ok "$CURRENT: $1" || bad "$CURRENT: $1 (kind $2: expected $3, got $n)"
+}
+# assert_yq <label> <kind> <yq expression on the document> <expected value>   (on $OUT)
+assert_yq() {
+    local got; got=$(yq e "select(.kind == \"$2\") | $3" "$OUT" 2>/dev/null | head -1)
+    [[ "$got" == "$4" ]] && ok "$CURRENT: $1" || bad "$CURRENT: $1 ($2 $3: expected '$4', got '$got')"
+}
+# assert_empty <label>   (nothing at all rendered)
+assert_empty() {
+    local n; n=$(yq e '.kind' "$OUT" 2>/dev/null | grep -cvE '^(---|null|)$' || true)
+    [[ $n -eq 0 ]] && ok "$CURRENT: $1" || bad "$CURRENT: $1 (expected no resource, got $n)"
+}
+
+values() { cat >"$WORK/values.yaml"; }
+
+# ---------------------------------------------------------------------------------------------------------------
+test_operator() {
+    # WP-099: spec.config.resources of the Subscription is rendered when set, and absent otherwise
+    values <<'YAML'
+enabled: true
+subscription:
+  enabled: true
+  name: demo-operator
+  namespace: demo-ns
+  operator:
+    channel: stable
+    name: demo-operator
+    source: {name: redhat-operators, namespace: openshift-marketplace}
+    config:
+      resources:
+        limits: {memory: 1Gi}
+        requests: {cpu: 100m}
+YAML
+    render resources -f "$WORK/values.yaml" && {
+        assert_count "renders one Subscription" Subscription 1
+        assert_yq "spec.config.resources.limits.memory is rendered" Subscription '.spec.config.resources.limits.memory' 1Gi
+        assert_yq "spec.config.resources.requests.cpu is rendered" Subscription '.spec.config.resources.requests.cpu' 100m
+        assert_yq "installPlanApproval defaults to Manual" Subscription '.spec.installPlanApproval' Manual
+    }
+    values <<'YAML'
+enabled: true
+subscription:
+  enabled: true
+  name: demo-operator
+  namespace: demo-ns
+  operator: {channel: stable, name: demo-operator}
+YAML
+    render noresources -f "$WORK/values.yaml" && assert_yq "no spec.config without config" Subscription '.spec.config' null
+    render disabled && assert_empty "nothing is rendered by default"
+}
+
+test_cluster-ods() {
+    render default && {
+        assert_count "renders a DataScienceCluster by default" DataScienceCluster 1
+        assert_yq "DataScienceCluster apiVersion defaults to v2" DataScienceCluster '.apiVersion' datasciencecluster.opendatahub.io/v2
+        assert_yq "DataScienceCluster sync-wave is 15" DataScienceCluster '.metadata.annotations["argocd.argoproj.io/sync-wave"]' 15
+        assert_count "no DSCInitialization by default" DSCInitialization 0
+    }
+    render startx -f "$CHART_DIR/values-startx_noinfra.yaml" && assert_count "values-startx_noinfra.yaml renders no DataScienceCluster" DataScienceCluster 0
+    render startx-on -f "$CHART_DIR/values-startx_noinfra.yaml" --set DataScienceCluster.enabled=true && assert_count "DataScienceCluster.enabled=true renders one" DataScienceCluster 1
+    render scoped --set DataScienceCluster.clusterScoped=true && assert_yq "clusterScoped omits metadata.namespace" DataScienceCluster '.metadata.namespace' null
+    render dsci --set DSCInitialization.enabled=true --set DSCInitialization.applicationsNamespace=redhat-ods-applications && {
+        assert_count "DSCInitialization.enabled=true renders one" DSCInitialization 1
+        assert_yq "DSCInitialization is cluster scoped (no namespace)" DSCInitialization '.metadata.namespace' null
+        assert_yq "applicationsNamespace overrides the spec" DSCInitialization '.spec.applicationsNamespace' redhat-ods-applications
+        assert_yq "DSCInitialization sync-wave is 14" DSCInitialization '.metadata.annotations["argocd.argoproj.io/sync-wave"]' 14
+    }
+    render noops --set operator.enabled=false --set project.enabled=false && assert_count "operator and project flags false render no Subscription" Subscription 0
+}
+
+test_cluster-certmanager() {
+    values <<'YAML'
+clusterIssuer:
+  enabled: true
+  list:
+    - name: ci-map
+      annotations: {argocd.argoproj.io/sync-wave: "19", argocd.argoproj.io/sync-options: Prune=false}
+      spec: {selfSigned: {}}
+    - name: ci-str
+      clusterScoped: true
+      spec: |-
+        selfSigned: {}
+YAML
+    render issuers -f "$WORK/values.yaml" && {
+        assert_count "renders two ClusterIssuer" ClusterIssuer 2
+        yq e 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' "$OUT" | grep -qx 19 && ok "$CURRENT: annotations override the default sync-wave" || bad "$CURRENT: annotations override the default sync-wave"
+        yq e 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata.annotations["argocd.argoproj.io/sync-options"]' "$OUT" | grep -qx 'Prune=false' && ok "$CURRENT: Prune=false annotation is rendered" || bad "$CURRENT: Prune=false annotation is rendered"
+        yq e 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-str") | has("metadata") and (.metadata | has("namespace"))' "$OUT" | grep -qx false && ok "$CURRENT: clusterScoped omits metadata.namespace" || bad "$CURRENT: clusterScoped omits metadata.namespace"
+        yq e 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata | has("namespace")' "$OUT" | grep -qx true && ok "$CURRENT: namespace is kept by default" || bad "$CURRENT: namespace is kept by default"
+    }
+    render empty && assert_count "no ClusterIssuer by default" ClusterIssuer 0
+}
+
+test_cluster-gpu() {
+    render default && assert_empty "nothing is rendered by default (gpu.enabled false)"
+    render on --set gpu.enabled=true --set operator.enabled=false --set project.enabled=false && {
+        assert_count "gpu.enabled=true renders one ClusterPolicy" ClusterPolicy 1
+        assert_yq "ClusterPolicy is the nvidia.com/v1 API" ClusterPolicy '.apiVersion' nvidia.com/v1
+    }
+}
+
+test_cluster-nfd() {
+    render default && assert_count "no NodeFeatureDiscovery by default" NodeFeatureDiscovery 0
+    render on --set nfd.enabled=true --set operator.enabled=false --set project.enabled=false && assert_count "nfd.enabled=true renders the list" NodeFeatureDiscovery 1
+    render rule --set nfr.enabled=true --set operator.enabled=false --set project.enabled=false && assert_count "nfr.enabled=true renders the list" NodeFeatureRule 1
+}
+
+test_cluster-machine() {
+    render default && assert_empty "all toggles false render nothing"
+    values <<'YAML'
+cluster: {id: c1, region: eu-west-3}
+machineSet:
+  enabled: true
+  list:
+    - {name: spot-a, provider: aws, az: a, type: worker, ami: ami-1, instanceType: m6i.large, replicas: 1, spotMarketOptions: {maxPrice: "0.3"}}
+    - {name: spot-b, provider: aws, az: b, type: worker, ami: ami-1, instanceType: m6i.large, replicas: 1, spotMarketOptions: {}}
+    - {name: od-c, provider: aws, az: c, type: worker, ami: ami-1, instanceType: m6i.large, replicas: 1}
+YAML
+    render sets -f "$WORK/values.yaml" && {
+        assert_count "renders three MachineSet" MachineSet 3
+        yq e 'select(.metadata.name == "spot-a") | .spec.template.spec.providerSpec.value.spotMarketOptions.maxPrice' "$OUT" | grep -qx 0.3 && ok "$CURRENT: spotMarketOptions.maxPrice is rendered" || bad "$CURRENT: spotMarketOptions.maxPrice is rendered"
+        yq e 'select(.metadata.name == "spot-b") | .spec.template.spec.providerSpec.value | has("spotMarketOptions")' "$OUT" | grep -qx true && ok "$CURRENT: an empty spotMarketOptions requests spot" || bad "$CURRENT: an empty spotMarketOptions requests spot"
+        yq e 'select(.metadata.name == "od-c") | .spec.template.spec.providerSpec.value | has("spotMarketOptions")' "$OUT" | grep -qx false && ok "$CURRENT: no spotMarketOptions without the key" || bad "$CURRENT: no spotMarketOptions without the key"
+    }
+}
+
+test_cluster-prometheus() {
+    render default && assert_empty "nothing is rendered by default"
+    values <<'YAML'
+monitoringStacks:
+  enabled: true
+  list:
+    - name: mesh
+      annotations: {argocd.argoproj.io/sync-wave: "16"}
+      spec:
+        resourceSelector: {matchLabels: {zuno.io/mesh-monitoring: "true"}}
+    - name: apps
+      spec: {retention: 24h}
+serviceMonitors:
+  enabled: true
+  list:
+    - name: m1
+      labels: {zuno.io/mesh-monitoring: "true"}
+      annotations: {argocd.argoproj.io/sync-wave: "31"}
+      spec: {selector: {matchLabels: {a: b}}, endpoints: [{port: metrics}]}
+YAML
+    render stacks -f "$WORK/values.yaml" && {
+        assert_count "renders two MonitoringStack" MonitoringStack 2
+        yq e 'select(.kind == "MonitoringStack" and .metadata.name == "mesh") | .spec.resourceSelector.matchLabels["zuno.io/mesh-monitoring"]' "$OUT" | grep -qx true && ok "$CURRENT: an explicit resourceSelector is kept" || bad "$CURRENT: an explicit resourceSelector is kept"
+        yq e 'select(.kind == "MonitoringStack" and .metadata.name == "apps") | .spec.resourceSelector.matchLabels["monitoring.rhobs/stack"]' "$OUT" | grep -qx apps && ok "$CURRENT: the default resourceSelector selects the stack label" || bad "$CURRENT: the default resourceSelector selects the stack label"
+        yq e 'select(.kind == "MonitoringStack" and .metadata.name == "mesh") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' "$OUT" | grep -qx 16 && ok "$CURRENT: annotations override the stack sync-wave" || bad "$CURRENT: annotations override the stack sync-wave"
+        yq e 'select(.kind == "MonitoringStack" and .metadata.name == "apps") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' "$OUT" | grep -qx 15 && ok "$CURRENT: the default stack sync-wave is 15" || bad "$CURRENT: the default stack sync-wave is 15"
+        assert_yq "ServiceMonitor keeps its custom label" ServiceMonitor '.metadata.labels["zuno.io/mesh-monitoring"]' 'true'
+        assert_yq "ServiceMonitor sync-wave is overridable" ServiceMonitor '.metadata.annotations["argocd.argoproj.io/sync-wave"]' 31
+    }
+}
+
+test_cluster-istio() {
+    render default && assert_empty "nothing is rendered by default"
+    values <<'YAML'
+sail:
+  enabled: true
+  istioCNI: {enabled: true, list: [{name: default}]}
+  istio:
+    enabled: true
+    list:
+      - name: default
+        version: v1.30.3
+        annotations: {argocd.argoproj.io/sync-wave: "21"}
+  telemetry: {enabled: true, list: [{name: default, namespace: istio-system}]}
+YAML
+    render sail -f "$WORK/values.yaml" && {
+        assert_count "renders an Istio" Istio 1
+        assert_count "renders an IstioCNI" IstioCNI 1
+        assert_count "renders a Telemetry" Telemetry 1
+        assert_yq "Istio uses the sailoperator.io/v1 API" Istio '.apiVersion' sailoperator.io/v1
+        assert_yq "Istio version is set in the spec" Istio '.spec.version' v1.30.3
+        assert_yq "Istio sync-wave is overridable" Istio '.metadata.annotations["argocd.argoproj.io/sync-wave"]' 21
+        assert_yq "IstioCNI default sync-wave is 20" IstioCNI '.metadata.annotations["argocd.argoproj.io/sync-wave"]' 20
+        assert_yq "Istio is cluster scoped (no namespace)" Istio '.metadata.namespace' null
+    }
+    render operator --set operatorSail.enabled=true && {
+        assert_yq "operatorSail subscribes to servicemeshoperator3" Subscription '.spec.name' servicemeshoperator3
+        assert_yq "operatorSail installs in openshift-operators" Subscription '.metadata.namespace' openshift-operators
+        assert_count "operatorSail creates no OperatorGroup" OperatorGroup 0
+    }
+}
+
+# ---------------------------------------------------------------------------------------------------------------
+ALL=(operator cluster-ods cluster-certmanager cluster-gpu cluster-nfd cluster-machine cluster-prometheus cluster-istio)
+SELECTED=("$@"); [[ ${#SELECTED[@]} -eq 0 ]] && SELECTED=("${ALL[@]}")
+command -v yq >/dev/null || { echo "yq (mikefarah v4) is required"; exit 2; }
+for c in "${SELECTED[@]}"; do
+    declare -F "test_$c" >/dev/null || { echo "unknown chart: $c (known: ${ALL[*]})"; exit 2; }
+    CURRENT=$c
+    if ! prepare "$c"; then SKIP=$((SKIP + 1)); echo "SKIP $c: dependencies not resolvable ($(tail -1 "$WORK/dep.log"))"; continue; fi
+    "test_$c"
+done
+echo "summary: $PASS passed, $FAIL failed, $SKIP chart(s) skipped"
+[[ $FAIL -eq 0 ]]

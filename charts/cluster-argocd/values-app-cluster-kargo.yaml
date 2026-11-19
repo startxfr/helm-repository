@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "37"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'kargo-system'
       project: 'infra-kargo'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -54,6 +55,11 @@ application:
         automated:
           prune: true
           selfHeal: true
+      ignoreDifferences: |
+        - group: kargo.akuity.io
+          kind: Project
+          jsonPointers:
+          - /metadata/finalizers
     # Creates project namespace and RBAC
     - name: 'infra-kargo-project'
       namespace: 'openshift-gitops'

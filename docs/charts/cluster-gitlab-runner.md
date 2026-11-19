@@ -11,7 +11,7 @@ This chart is part of the [cluster-xxx startx helm chart series](https://helm-re
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
-more information on how to use theses resources.
+more information on how to use these resources.
 
 ## Deploy this helm chart on openshift
 
@@ -51,7 +51,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-gitlab startx/cluster-gitlab
 ```
 
-## Others values availables
+## Other available values
 
 - **startx** : Gitlab operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml))
 
@@ -276,7 +276,7 @@ helm install cluster-gitlab startx/cluster-gitlab -f https://raw.githubuserconte
 | 14.6.109 | 2024-01-04 | Update all chart dependencies to version 14.6.105
 | 14.6.131 | 2024-01-18 | publish stable update for the full repository
 | 14.6.133 | 2024-01-18 | Update the documentation with artifacthub badge
-| 14.6.135 | 2024-01-18 | debug artifacthub recommandations
+| 14.6.135 | 2024-01-18 | debug artifacthub recommendations
 | 14.6.137 | 2024-01-18 | publish stable update for the full repository
 | 14.6.141 | 2024-02-03 | upgrade of the full startx repository
 | 14.6.143 | 2024-02-03 | Align to 14.6.143 chart release

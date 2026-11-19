@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "9"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-logging'
       project: 'infra-logging'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -54,12 +55,26 @@ application:
             enabled: false
           eventrouter:
             enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+          operatorElastic:
+            enabled: false
+          operatorLoki:
+            enabled: false
+      ignoreDifferences: |
+        - group: logging.openshift.io
+          kind: ClusterLogging
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-logging-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "9"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-logging'
       project: 'infra-logging'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -75,6 +90,16 @@ application:
               enabled: true
           operatorLoki:
             enabled: true
+          logging:
+            enabled: false
+          eventrouter:
+            enabled: false
+          logforwarder:
+            enabled: false
+          project:
+            enabled: false
+          operatorElastic:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -95,6 +120,18 @@ application:
         values: |
           project:
             enabled: true
+          logging:
+            enabled: false
+          eventrouter:
+            enabled: false
+          logforwarder:
+            enabled: false
+          operator:
+            enabled: false
+          operatorElastic:
+            enabled: false
+          operatorLoki:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

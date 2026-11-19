@@ -65,6 +65,20 @@ helm show chart startx/sxapi
 helm install sxapi startx/sxapi
 ```
 
+## Other available values
+
+- **demo-sxapi-deploy** : [values-demo-sxapi-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-demo-sxapi-deploy.yaml)
+- **dev** : [values-dev.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml)
+- **pprod-v1** : [values-pprod-v1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml)
+- **pprod-v2** : [values-pprod-v2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml)
+- **prod-v1** : [values-prod-v1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml)
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-startx_noinfra.yaml)
+- **test** : [values-test.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml)
+
+```bash
+helm install sxapi startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-demo-sxapi-deploy.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -276,8 +290,8 @@ The automated sync policy ensures ArgoCD reconciles the microservice whenever th
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |

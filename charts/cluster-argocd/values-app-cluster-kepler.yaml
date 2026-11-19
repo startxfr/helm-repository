@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "27"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-operators'
       project: 'infra-kepler'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -50,6 +51,10 @@ application:
         values: |
           operator:
             enabled: true
+          kepler:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -70,6 +75,10 @@ application:
         values: |
           project:
             enabled: true
+          kepler:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

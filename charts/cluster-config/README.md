@@ -123,6 +123,17 @@ Switching from the default ephemeral storage to persistent volumes restarts the 
 Alertmanager pods: the metrics history and the active silences are lost. Growing `storageSize` later
 does not resize existing PersistentVolumeClaims.
 
+## Ownership of the cluster singletons
+
+The resources of this chart are cluster singletons: `openshift-monitoring/cluster-monitoring-config`, the
+`HelmChartRepository` list, the image pruner, the registry and ingress settings, the cluster autoscaler or the cluster
+proxy. A cluster has one of each, so exactly **one** owner must render them. Two owners (two Applications, or this chart
+and another one) overwrite each other and make the Application permanently OutOfSync.
+
+A consumer that already manages one of these resources itself must leave the matching flag `false`: for example
+`monitoring.enabled` for `cluster-monitoring-config`, which is `false` by default. Enable a feature only in the one
+Application that owns it.
+
 ## Other available values
 
 - **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml))
@@ -206,8 +217,8 @@ is set or when a required key is not provided.
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-08 | Monitoring: configurable retention size, resources, external labels (cluster_name replaces the reserved cluster label), remote write, Alertmanager toggle, extra settings and user workload monitoring storage. With monitoring.enabled the rendered ConfigMap changes: metricsServer and monitoringPlugin replace k8sPrometheusAdapter, label app.kubernetes.io/name ends with -monitoring- |
-| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |

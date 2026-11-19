@@ -48,6 +48,19 @@ application:
         values: |
           sso:
             enabled: true
+          sso_realms:
+            enabled: false
+          sso_clients:
+            enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: keycloak.org
+          kind: Keycloak
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-sso-operator'
       namespace: 'openshift-gitops'
@@ -65,6 +78,14 @@ application:
         values: |
           operator:
             enabled: true
+          sso:
+            enabled: false
+          sso_realms:
+            enabled: false
+          sso_clients:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -85,6 +106,14 @@ application:
         values: |
           project:
             enabled: true
+          sso:
+            enabled: false
+          sso_realms:
+            enabled: false
+          sso_clients:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

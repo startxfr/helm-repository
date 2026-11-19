@@ -50,6 +50,19 @@ application:
             enabled: true
           application:
             enabled: true
+          argocd_repocreds:
+            enabled: false
+          argocd_export:
+            enabled: false
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: argoproj.io
+          kind: ArgoCD
+          jsonPointers:
+          - /metadata/finalizers
 
 argocd_repocreds:
   enabled: true

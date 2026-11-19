@@ -42,7 +42,7 @@
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 25,
-                    "title": "Environement name",
+                    "title": "Environment name",
                     "description": "Name of the environment for this application. Define a stage tenant.",
                     "default": "dev",
                     "examples": [
@@ -136,6 +136,11 @@
                                     "openshift-gitops",
                                     "default"
                                 ]
+                            },
+                            "destinationNamespace": {
+                                "type": "string",
+                                "title": "Destination namespace",
+                                "description": "Namespace the Application deploys into (spec.destination.namespace). Defaults to the namespace of the Application itself."
                             },
                             "finalizer": {
                                 "type": "boolean",
@@ -630,8 +635,12 @@
                                     ]
                                 },
                                 "examples": [
-                                    ["*"],
-                                    ["https://gitlab.com/startx1/helm.git"]
+                                    [
+                                        "*"
+                                    ],
+                                    [
+                                        "https://gitlab.com/startx1/helm.git"
+                                    ]
                                 ]
                             },
                             "destinations": {
@@ -775,7 +784,7 @@
                             "minLength": 1,
                             "maxLength": 25,
                             "title": "Scope name",
-                            "description": "Organisational tenant name"
+                            "description": "Organizational tenant name"
                         },
                         "cluster": {
                             "type": "string",
@@ -1033,7 +1042,7 @@
                             "minLength": 1,
                             "maxLength": 25,
                             "title": "Scope name",
-                            "description": "Organisational tenant name"
+                            "description": "Organizational tenant name"
                         },
                         "cluster": {
                             "type": "string",
@@ -1176,7 +1185,9 @@
                                 [
                                     {
                                         "name": "allow-from-openshift",
-                                        "policyTypes": ["Ingress"]
+                                        "policyTypes": [
+                                            "Ingress"
+                                        ]
                                     }
                                 ]
                             ]

@@ -48,6 +48,15 @@ application:
         values: |
           mtv:
             enabled: true
+          project:
+            enabled: false
+          operator:
+            enabled: false
+      ignoreDifferences: |
+        - group: forklift.konveyor.io
+          kind: ForkliftController
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-mtv-operator'
       namespace: 'openshift-gitops'
@@ -65,6 +74,10 @@ application:
         values: |
           operator:
             enabled: true
+          mtv:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -85,6 +98,10 @@ application:
         values: |
           project:
             enabled: true
+          mtv:
+            enabled: false
+          operator:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true

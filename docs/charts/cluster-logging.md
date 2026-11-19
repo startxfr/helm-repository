@@ -47,6 +47,19 @@ Complete deployment of a Logging configuration with the following characteristic
 - Optional **ClusterLogForwarder** for external log routing
 - Optional **EventRouter** for Kubernetes event collection
 
+## Other available values
+
+- **client1** : [values-client1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-client1.yaml)
+- **client2** : [values-client2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-client2.yaml)
+- **mgmt1** : [values-mgmt1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-mgmt1.yaml)
+- **pfd** : [values-pfd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-pfd.yaml)
+- **startx** : [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-startx.yaml)
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-startx_noinfra.yaml)
+
+```bash
+helm install cluster-logging startx/cluster-logging -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-logging/values-client1.yaml
+```
+
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -109,8 +122,8 @@ fails when no store is set or when no key source is provided.
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |

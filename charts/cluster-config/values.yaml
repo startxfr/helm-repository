@@ -214,8 +214,11 @@ alertmanager:
     #         receiver: pagerduty
 
 # Configuration of the cluster monitoring feature (ConfigMap openshift-monitoring/cluster-monitoring-config)
+# Ownership: the cluster has exactly one cluster-monitoring-config, like every cluster singleton of this chart
+# (HelmChartRepository, image pruner, ingress controller, proxy, OAuth settings...). Exactly one owner must render it:
+# a consumer that has its own copy leaves this flag false
 monitoring:
-  # Enable the cluster monitoring customization
+  # Enable the cluster monitoring customization (leave false when another chart or tool owns the ConfigMap)
   enabled: false
   # Deploy the monitoring components (except node-exporter) on the infra nodes
   infra_enabled: false

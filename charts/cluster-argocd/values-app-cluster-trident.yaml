@@ -39,6 +39,7 @@ application:
       finalizer: true
       wave: "17"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'trident'
       project: 'infra-trident'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -60,12 +61,22 @@ application:
             enabled: true
           volumeSnapshotClasses:
             enabled: true
+      ignoreDifferences: |
+        - group: trident.netapp.io
+          kind: TridentOrchestrator
+          jsonPointers:
+          - /metadata/finalizers
+        - group: trident.netapp.io
+          kind: TridentBackendConfig
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-trident-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "17"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-operators'
       project: 'infra-trident'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -98,6 +109,7 @@ application:
       namespace: 'openshift-gitops'
       finalizer: false
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'trident'
       project: 'infra-trident'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -123,6 +135,13 @@ application:
         automated:
           prune: true
           selfHeal: true
+      ignoreDifferences: |
+        - group: ''
+          kind: ServiceAccount
+          name: default
+          jsonPointers:
+          - /imagePullSecrets
+          - /secrets
 
 argocd_repocreds:
   enabled: true

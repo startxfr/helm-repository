@@ -36,6 +36,22 @@ helm show chart startx/example-chaos
 helm install example-chaos startx/example-chaos
 ```
 
+## Other available values
+
+- **startx-cerberus** : [values-startx-cerberus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-cerberus.yaml)
+- **startx-kraken** : [values-startx-kraken.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-kraken.yaml)
+- **startx-litmus** : [values-startx-litmus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-litmus.yaml)
+- **startx-mesh** : [values-startx-mesh.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-mesh.yaml)
+- **startx-monkey** : [values-startx-monkey.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-monkey.yaml)
+- **startx-project-cerberus** : [values-startx-project-cerberus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-cerberus.yaml)
+- **startx-project-kraken** : [values-startx-project-kraken.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-kraken.yaml)
+- **startx-project-litmus** : [values-startx-project-litmus.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-project-litmus.yaml)
+- and 3 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/example-chaos)
+
+```bash
+helm install example-chaos startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-chaos/values-startx-cerberus.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -109,6 +125,43 @@ chaos of an mariadb container image with the following characteristics :
 helm install example-chaos startx/example-chaos -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
+## ArgoCD deployment
+
+### Deploy via ArgoCD Application
+
+`example-chaos` can be deployed by ArgoCD with a single `Application`. Adapt the destination namespace and the values to your
+cluster.
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: example-chaos
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    chart: example-chaos
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.379
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: example-chaos
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+
 ## History
 
 | Release  | Date       | Description                                                             |
@@ -124,8 +177,8 @@ helm install example-chaos startx/example-chaos -f https://raw.githubusercontent
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |

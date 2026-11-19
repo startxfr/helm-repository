@@ -37,6 +37,7 @@ application:
       finalizer: true
       wave: "-3"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-local-storage'
       project: 'infra-localstorage'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -54,12 +55,20 @@ application:
             enabled: false
           localstoragediscovery:
             enabled: false
+          project:
+            enabled: false
+      ignoreDifferences: |
+        - group: local.storage.openshift.io
+          kind: LocalVolume
+          jsonPointers:
+          - /metadata/finalizers
     # Installs and configures the operator
     - name: 'infra-localstorage-operator'
       namespace: 'openshift-gitops'
       finalizer: true
       wave: "-3"
       server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'openshift-local-storage'
       project: 'infra-localstorage'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
@@ -73,6 +82,14 @@ application:
             enabled: true
             operatorGroup:
               enabled: true
+          localstorage:
+            enabled: false
+          localstorageset:
+            enabled: false
+          localstoragediscovery:
+            enabled: false
+          project:
+            enabled: false
       syncPolicy: |
         automated:
           prune: true
@@ -94,6 +111,12 @@ application:
           project:
             enabled: true
           operator:
+            enabled: false
+          localstorage:
+            enabled: false
+          localstorageset:
+            enabled: false
+          localstoragediscovery:
             enabled: false
       syncPolicy: |
         automated:

@@ -36,6 +36,22 @@ helm show chart startx/operator
 helm install operator startx/operator
 ```
 
+## Other available values
+
+- **3scale-0.12.13** : [values-3scale-0.12.13.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml)
+- **3scale-0.6.0** : [values-3scale-0.6.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.6.0.yaml)
+- **couchbase-1.2.2** : [values-couchbase-1.2.2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-1.2.2.yaml)
+- **couchbase-2.1.0** : [values-couchbase-2.1.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-2.1.0.yaml)
+- **couchbase-2.8.0** : [values-couchbase-2.8.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-couchbase-2.8.0.yaml)
+- **crunchy-5.2.0** : [values-crunchy-5.2.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crunchy-5.2.0.yaml)
+- **crunchy-5.8.1** : [values-crunchy-5.8.1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crunchy-5.8.1.yaml)
+- **crw-2.11.0** : [values-crw-2.11.0.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-crw-2.11.0.yaml)
+- and 12 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/operator)
+
+```bash
+helm install operator startx/operator -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/operator/values-3scale-0.12.13.yaml
+```
+
 ## Values dictionary
 
 ### context values dictionary
@@ -162,8 +178,8 @@ The automated sync policy ensures ArgoCD reconciles the operator subscription wh
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
-| 21.3.361 | 2026-11-10 | Release 21.3.361 for all charts |
 | 21.3.362 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
+| 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |

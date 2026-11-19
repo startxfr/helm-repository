@@ -1,4 +1,5 @@
-{{- if .Values.auth.enabled }}
+{{- /* auth.oauth.enabled: false leaves the OAuth/cluster resource to another owner (the Secrets and ConfigMaps are still rendered) */ -}}
+{{- if and .Values.auth.enabled (ne (toString (dig "oauth" "enabled" true .Values.auth)) "false") }}
 kind: OAuth
 apiVersion: config.openshift.io/v1
 metadata:
