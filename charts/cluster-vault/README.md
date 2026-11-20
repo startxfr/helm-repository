@@ -183,3 +183,4 @@ oc apply -k .
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
 | 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
 | 21.3.389 | 2026-11-19 | full repository release: HTTPS dependency URLs, dependency-ordered release, schema guard, docs and examples |
+| 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
