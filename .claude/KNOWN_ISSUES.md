@@ -43,3 +43,8 @@ Must match the chart name, not `sxapi`. Charts affected: `chaos-*`, `cluster-vau
 - Helm does not upgrade the CRDs in `crds/`. When the operator version changes, say so in the release notes
   (`helm show crds ... | kubectl apply --server-side -f -`).
 - `cluster-unifai` (packages up to 21.3.362) is deprecated and replaced by `unifai` ; its packages stay published.
+
+## Chart.lock and charts/<chart>/charts/ are generated
+
+Never tracked (root `.gitignore`, ADR-0005). Pins in `Chart.yaml` dependencies are exact, so the lock adds nothing; the release and the CI run `helm dependency update` themselves.
+Do not `git add -f` a lock; after changing a pin there is nothing else to commit.

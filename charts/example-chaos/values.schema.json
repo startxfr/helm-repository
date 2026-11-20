@@ -108,6 +108,26 @@
                 },
                 "expose": {
                     "type": "boolean"
+                },
+                "mode": {
+                    "type": "string",
+                    "description": "Kraken mode (could be job or pipeline)."
+                },
+                "job": {
+                    "type": "object",
+                    "description": "Configuration of the job mode."
+                },
+                "pipeline": {
+                    "type": "object",
+                    "description": "Configuration of the pipeline mode."
+                },
+                "aws": {
+                    "type": "object",
+                    "description": "AWS configuration section."
+                },
+                "kubeconfig": {
+                    "type": "object",
+                    "description": "Kubeconfig of the chaos tested cluster (mandatory)."
                 }
             }
         },
@@ -701,6 +721,30 @@
                     }
                 }
             }
+        },
+        "cerberus_project": {
+            "type": "object",
+            "description": "Configuration of the cerberus project (see https://helm-repository.readthedocs.io/en/latest/charts/project)."
+        },
+        "cerberus": {
+            "type": "object",
+            "description": "Configuration of the cerberus deployment."
+        },
+        "monkey_project": {
+            "type": "object",
+            "description": "Configuration of the kubemonkey project (see https://helm-repository.readthedocs.io/en/latest/charts/project)."
+        },
+        "monkey": {
+            "type": "object",
+            "description": "Configuration of the kubemonkey deployment (see https://github.com/asobti/kube-monkey)."
+        },
+        "litmus_project": {
+            "type": "object",
+            "description": "Configuration of the litmuschaos project (see https://helm-repository.readthedocs.io/en/latest/charts/project)."
+        },
+        "litmus": {
+            "type": "object",
+            "description": "Configuration of the litmus deployment (see https://litmuschaos.github.io/litmus-helm)."
         }
     }
 }

@@ -1,0 +1,54 @@
+# GitLab CI checks of the helm repository: the same checks as .github/workflows/ci.yml, all of them run by
+# .github/scripts/ci-check.sh and tests/contract/run.sh (plain bash, helm, yq, python3).
+#
+# NOT TESTED, NOT INCLUDED: this file was written without access to a GitLab runner, and the root .gitlab-ci.yml (the
+# release pipeline: validate, release, publish, propagate) is left unchanged. To enable these checks add to the root
+# .gitlab-ci.yml:
+#
+#   include:
+#     - local: .gitlab/ci-checks.yml
+#
+# and add the `check` stage to its `stages:` list. The jobs run on merge requests and on the devel branch, like the
+# GitHub workflow. Adapt the image and the runner tags to your runners, then run a first pipeline on a merge request.
+
+.check-base:
+  stage: check
+  image: ubuntu:24.04
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "devel"
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends bash ca-certificates curl git python3 jq >/dev/null
+    - curl -fsSL https://get.helm.sh/helm-v3.19.0-linux-amd64.tar.gz | tar -xz -C /tmp && install /tmp/linux-amd64/helm /usr/local/bin/helm
+    - curl -fsSL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_amd64 && chmod +x /usr/local/bin/yq
+
+check:static:
+  extends: .check-base
+  script:
+    - .github/scripts/ci-check.sh static
+
+check:charts:
+  extends: .check-base
+  variables:
+    CI_JOBS: "4"
+  parallel:
+    matrix:
+      - GROUP:
+          - "chaos*"
+          - "cluster-[0-9a-f]*"
+          - "cluster-[g-m]*"
+          - "cluster-[n-r]*"
+          - "cluster-[s-z]*"
+          - "example-* operator project sxapi unifai"
+  script:
+    - .github/scripts/ci-check.sh charts "$GROUP"
+
+check:contract:
+  extends: .check-base
+  script:
+    - tests/contract/run.sh
+
+check:argocd:
+  extends: .check-base
+  script:
+    - .github/scripts/ci-check.sh argocd

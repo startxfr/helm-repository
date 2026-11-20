@@ -4,13 +4,11 @@
 # asserts a few expected facts with yq. Plain bash, helm, yq (mikefarah v4): no other dependency.
 #
 # Usage: tests/contract/run.sh [chart ...]     (default: every chart above)
-# The charts are copied to a temporary directory and their dependencies are resolved through the public HTTPS endpoint
-# of the S3 bucket, so the working tree stays untouched. A chart whose dependencies cannot be resolved is skipped.
+# The charts are copied to a temporary directory and their dependencies are resolved (public HTTPS endpoint of the S3
+# bucket, declared in Chart.yaml), so the working tree stays untouched. A chart whose dependencies cannot be resolved is skipped.
 set -uo pipefail
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$ROOT" || exit 2
-S3_HTTP='http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com'
-S3_HTTPS='https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com'
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
 PASS=0 FAIL=0 SKIP=0
@@ -26,7 +24,6 @@ prepare() {
     rm -rf "$CHART_DIR"; cp -r "charts/$c" "$CHART_DIR"
     rm -rf "$CHART_DIR/charts" "$CHART_DIR/Chart.lock"
     grep -q '^dependencies:' "$CHART_DIR/Chart.yaml" || return 0
-    sed -i "s#$S3_HTTP#$S3_HTTPS#g" "$CHART_DIR/Chart.yaml"
     helm dependency update "$CHART_DIR" >"$WORK/dep.log" 2>&1 || { sleep 3; helm dependency update "$CHART_DIR" >"$WORK/dep.log" 2>&1; }
 }
 

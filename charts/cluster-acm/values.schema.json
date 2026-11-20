@@ -275,6 +275,14 @@
                             }
                         }
                     }
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the cluster to import."
+                },
+                "namespace": {
+                    "type": "string",
+                    "description": "The name of the namespace to import."
                 }
             }
         },
@@ -411,6 +419,26 @@
                             }
                         }
                     }
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The name of the cluster to create."
+                },
+                "namespace": {
+                    "type": "string",
+                    "description": "The name of the namespace to create."
+                },
+                "config": {
+                    "type": "object",
+                    "description": "Configuration of the cluster basics."
+                },
+                "clusterPullSecret": {
+                    "type": "string",
+                    "description": "Cluster pull secret user by acm provisionner."
+                },
+                "aws_creds": {
+                    "type": "object",
+                    "description": "Additionnal labels added to the managed cluster."
                 }
             }
         },
@@ -614,6 +642,10 @@
                     }
                 }
             }
+        },
+        "projectObservability": {
+            "type": "object",
+            "description": "Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)."
         }
     }
 }
