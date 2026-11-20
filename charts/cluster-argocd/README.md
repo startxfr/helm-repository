@@ -90,7 +90,7 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 ### Chart version of the examples
 
 The Applications of the `examples/argocd/` folders of every chart pull the Helm chart from the startx repository and use the
-semver range `targetRevision: 21.3.389
+semver range `targetRevision: 21.3.390
 each refresh: pin an exact version in production (ADR-0004). Examples that read a chart from a git `path` and a branch are
 unchanged.
 
@@ -126,3 +126,4 @@ and the revision from `rev` (or its alias `targetRevision`, default `master`). T
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
 | 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
 | 21.3.389 | 2026-11-19 | full repository release: HTTPS dependency URLs, dependency-ordered release, schema guard, docs and examples |
+| 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
