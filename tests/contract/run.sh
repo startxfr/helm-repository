@@ -51,6 +51,14 @@ assert_yq() {
     local got; got=$(yq e "select(.kind == \"$2\") | $3" "$OUT" 2>/dev/null | head -1)
     [[ "$got" == "$4" ]] && ok "$CURRENT: $1" || bad "$CURRENT: $1 ($2 $3: expected '$4', got '$got')"
 }
+# assert_sel <label> <yq expression starting with select(...)> <expected first output line>   (on $OUT)
+# The output is captured in a variable (never `yq | grep -q` under pipefail: grep exits at the first match, yq may then
+# get SIGPIPE and the pipeline fails randomly). On failure the selected document is printed.
+assert_sel() {
+    local got sel="${2%% | *}"; got=$(yq e "$2" "$OUT" 2>/dev/null | head -1)
+    if [[ "$got" == "$3" ]]; then ok "$CURRENT: $1"; else
+        bad "$CURRENT: $1 (expected '$3', got '$got')"; printf -- '--- rendered document(s) for %s:\n' "$sel"; yq e "$sel" "$OUT" 2>&1 | head -40; fi
+}
 # assert_empty <label>   (nothing at all rendered)
 assert_empty() {
     local n; n=$(yq e '.kind' "$OUT" 2>/dev/null | grep -cvE '^(---|null|)$' || true)
@@ -129,10 +137,10 @@ clusterIssuer:
 YAML
     render issuers -f "$WORK/values.yaml" && {
         assert_count "renders two ClusterIssuer" ClusterIssuer 2
-        yq e 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' "$OUT" | grep -qx 19 && ok "$CURRENT: annotations override the default sync-wave" || bad "$CURRENT: annotations override the default sync-wave"
-        yq e 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata.annotations["argocd.argoproj.io/sync-options"]' "$OUT" | grep -qx 'Prune=false' && ok "$CURRENT: Prune=false annotation is rendered" || bad "$CURRENT: Prune=false annotation is rendered"
-        yq e 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-str") | has("metadata") and (.metadata | has("namespace"))' "$OUT" | grep -qx false && ok "$CURRENT: clusterScoped omits metadata.namespace" || bad "$CURRENT: clusterScoped omits metadata.namespace"
-        yq e 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata | has("namespace")' "$OUT" | grep -qx true && ok "$CURRENT: namespace is kept by default" || bad "$CURRENT: namespace is kept by default"
+        assert_sel "annotations override the default sync-wave" 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' 19
+        assert_sel "Prune=false annotation is rendered" 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata.annotations["argocd.argoproj.io/sync-options"]' Prune=false
+        assert_sel "clusterScoped omits metadata.namespace" 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-str") | .metadata | has("namespace")' false
+        assert_sel "namespace is kept by default" 'select(.kind == "ClusterIssuer" and .metadata.name == "ci-map") | .metadata | has("namespace")' true
     }
     render empty && assert_count "no ClusterIssuer by default" ClusterIssuer 0
 }
@@ -164,9 +172,9 @@ machineSet:
 YAML
     render sets -f "$WORK/values.yaml" && {
         assert_count "renders three MachineSet" MachineSet 3
-        yq e 'select(.metadata.name == "spot-a") | .spec.template.spec.providerSpec.value.spotMarketOptions.maxPrice' "$OUT" | grep -qx 0.3 && ok "$CURRENT: spotMarketOptions.maxPrice is rendered" || bad "$CURRENT: spotMarketOptions.maxPrice is rendered"
-        yq e 'select(.metadata.name == "spot-b") | .spec.template.spec.providerSpec.value | has("spotMarketOptions")' "$OUT" | grep -qx true && ok "$CURRENT: an empty spotMarketOptions requests spot" || bad "$CURRENT: an empty spotMarketOptions requests spot"
-        yq e 'select(.metadata.name == "od-c") | .spec.template.spec.providerSpec.value | has("spotMarketOptions")' "$OUT" | grep -qx false && ok "$CURRENT: no spotMarketOptions without the key" || bad "$CURRENT: no spotMarketOptions without the key"
+        assert_sel "spotMarketOptions.maxPrice is rendered" 'select(.metadata.name == "spot-a") | .spec.template.spec.providerSpec.value.spotMarketOptions.maxPrice' 0.3
+        assert_sel "an empty spotMarketOptions requests spot" 'select(.metadata.name == "spot-b") | .spec.template.spec.providerSpec.value | has("spotMarketOptions")' true
+        assert_sel "no spotMarketOptions without the key" 'select(.metadata.name == "od-c") | .spec.template.spec.providerSpec.value | has("spotMarketOptions")' false
     }
 }
 
@@ -192,10 +200,10 @@ serviceMonitors:
 YAML
     render stacks -f "$WORK/values.yaml" && {
         assert_count "renders two MonitoringStack" MonitoringStack 2
-        yq e 'select(.kind == "MonitoringStack" and .metadata.name == "mesh") | .spec.resourceSelector.matchLabels["zuno.io/mesh-monitoring"]' "$OUT" | grep -qx true && ok "$CURRENT: an explicit resourceSelector is kept" || bad "$CURRENT: an explicit resourceSelector is kept"
-        yq e 'select(.kind == "MonitoringStack" and .metadata.name == "apps") | .spec.resourceSelector.matchLabels["monitoring.rhobs/stack"]' "$OUT" | grep -qx apps && ok "$CURRENT: the default resourceSelector selects the stack label" || bad "$CURRENT: the default resourceSelector selects the stack label"
-        yq e 'select(.kind == "MonitoringStack" and .metadata.name == "mesh") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' "$OUT" | grep -qx 16 && ok "$CURRENT: annotations override the stack sync-wave" || bad "$CURRENT: annotations override the stack sync-wave"
-        yq e 'select(.kind == "MonitoringStack" and .metadata.name == "apps") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' "$OUT" | grep -qx 15 && ok "$CURRENT: the default stack sync-wave is 15" || bad "$CURRENT: the default stack sync-wave is 15"
+        assert_sel "an explicit resourceSelector is kept" 'select(.kind == "MonitoringStack" and .metadata.name == "mesh") | .spec.resourceSelector.matchLabels["zuno.io/mesh-monitoring"]' true
+        assert_sel "the default resourceSelector selects the stack label" 'select(.kind == "MonitoringStack" and .metadata.name == "apps") | .spec.resourceSelector.matchLabels["monitoring.rhobs/stack"]' apps
+        assert_sel "annotations override the stack sync-wave" 'select(.kind == "MonitoringStack" and .metadata.name == "mesh") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' 16
+        assert_sel "the default stack sync-wave is 15" 'select(.kind == "MonitoringStack" and .metadata.name == "apps") | .metadata.annotations["argocd.argoproj.io/sync-wave"]' 15
         assert_yq "ServiceMonitor keeps its custom label" ServiceMonitor '.metadata.labels["zuno.io/mesh-monitoring"]' 'true'
         assert_yq "ServiceMonitor sync-wave is overridable" ServiceMonitor '.metadata.annotations["argocd.argoproj.io/sync-wave"]' 31
     }
