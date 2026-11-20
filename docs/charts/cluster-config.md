@@ -217,8 +217,8 @@ is set or when a required key is not provided.
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-08 | Monitoring: configurable retention size, resources, external labels (cluster_name replaces the reserved cluster label), remote write, Alertmanager toggle, extra settings and user workload monitoring storage. With monitoring.enabled the rendered ConfigMap changes: metricsServer and monitoringPlugin replace k8sPrometheusAdapter, label app.kubernetes.io/name ends with -monitoring- |
-| 21.3.370 | 2026-11-18 | publish stable update for the full repository |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
 | 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
 | 21.3.389 | 2026-11-19 | full repository release: HTTPS dependency URLs, dependency-ordered release, schema guard, docs and examples |
+| 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |

@@ -30,6 +30,7 @@ the consumers; `helm-assist` prepares chart and documentation changes in local c
 | 21.3.377 | 2026-11-19 | full release: aligned dependency pins, schemas, docs; tag used by demo333 pins |
 | 21.3.378 | 2026-11-19 | `cluster-ods` (`clusterScoped`, RHOAI 3.x overlay), `cluster-istio` (Sail operator, tracked `Chart.lock`) |
 | 21.3.379 | 2026-11-19 | conventions wave (spelling, READMEs, ArgoCD examples, `values-app` files), `cluster-auth` `auth.oauth.enabled`, `cluster-argocd` `destinationNamespace` |
+| 21.3.389 | 2026-11-20 | full release: dependencies resolve over HTTPS (consumers pinning the old http URL must switch), dependency-ordered release with automatic pins, 33 schemas completed, blocking schema guard; no template or default change |
 
 ## Next
 
