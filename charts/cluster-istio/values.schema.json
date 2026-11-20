@@ -128,6 +128,14 @@
                 },
                 "name": {
                     "type": "string"
+                },
+                "infra_enabled": {
+                    "type": "boolean",
+                    "description": "Place the istio controlePlane onto infra node."
+                },
+                "enabledControlPlane": {
+                    "type": "boolean",
+                    "description": "Enable the deployment of the istio ServiceMeshControlPlane."
                 }
             }
         },
@@ -907,6 +915,10 @@
                     }
                 }
             }
+        },
+        "operatorLoki": {
+            "type": "object",
+            "description": "Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)."
         }
     }
 }

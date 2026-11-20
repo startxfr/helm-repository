@@ -105,10 +105,10 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: example-fruitapp-project
     # pin an exact version in production (ADR-0004)
-    targetRevision: 21.3.379
+    targetRevision: 21.3.389
     helm:
       valueFiles:
         - values.yaml
@@ -145,3 +145,4 @@ spec:
 | 21.3.373 | 2026-11-19 | align inter-chart dependency pins |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
 | 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
+| 21.3.389 | 2026-11-19 | full repository release: HTTPS dependency URLs, dependency-ordered release, schema guard, docs and examples |

@@ -1,7 +1,8 @@
 # ------------------------------------------------------------------------------
 # helm-repository - GitLab CI/CD pipeline
 #
-# Branch behaviour:
+# Branch behaviour (release, publish and propagate are MANUAL since 2026-11: a push to master or stable must never
+# start a full release by itself, see docs/adr/0001 and 0004; release and publish are done from a maintainer session):
 #   devel          → validate (test-all: helm template + lint on every chart)
 #   master/stable  → release-all (version bump, commit [skip ci], S3 upload)
 #                    publish (Helm index regeneration + S3 sync)
@@ -97,7 +98,7 @@ release:
     - make release-all
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-      when: always
+      when: manual
     - if: '$CI_COMMIT_BRANCH == "stable"'
       when: manual
 
@@ -115,9 +116,9 @@ publish:
     - make publish
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-      when: always
+      when: manual
     - if: '$CI_COMMIT_BRANCH == "stable"'
-      when: on_success
+      when: manual
 
 
 # ------------------------------------------------------------------------------
@@ -209,6 +210,6 @@ propagate:
       fi
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-      when: always
+      when: manual
     - if: '$CI_COMMIT_BRANCH == "stable"'
-      when: on_success
+      when: manual

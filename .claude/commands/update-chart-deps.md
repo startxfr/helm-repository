@@ -42,7 +42,7 @@ You are executing the update-chart-deps command. Arguments: `$ARGUMENTS`
 
 ```bash
 export PATH="/home/cl/.local/bin:$PATH"
-curl -s http://sx-helm-repository-prod.s3-website.eu-west-3.amazonaws.com/stable/index.yaml | awk '
+curl -s https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable/index.yaml | awk '
 /^entries:/ { in_entries=1; next }
 in_entries && /^  [a-z]/ && /:$/ { chart=substr($0,3,length($0)-3) }
 in_entries && chart ~ /^(project|operator|sxapi)$/ && /    version:/ && !seen[chart] {

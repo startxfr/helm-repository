@@ -122,6 +122,10 @@
                 },
                 "externalSecret": {
                     "$ref": "#/definitions/externalSecret"
+                },
+                "config": {
+                    "type": "string",
+                    "description": "Config specific params."
                 }
             }
         },
@@ -642,6 +646,26 @@
             "properties": {
                 "externalSecret": {
                     "$ref": "#/definitions/externalSecret"
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "See values.yaml."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "See values.yaml."
+                },
+                "url": {
+                    "type": "string",
+                    "description": "See values.yaml."
+                },
+                "certificateChain": {
+                    "type": "string",
+                    "description": "See values.yaml."
+                },
+                "privateKey": {
+                    "type": "string",
+                    "description": "CertificateChainRaw: >- LS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRVdqeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4 eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eAp4eHh4eHh4eHh4eHh4eHh4eHh4eHh4 eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4Cnh4eHh4eHh4eHh4eHh4 eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHgKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tL."
                 }
             }
         },
@@ -650,6 +674,50 @@
             "properties": {
                 "externalSecret": {
                     "$ref": "#/definitions/externalSecret"
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable the configuration of the registryconfig."
+                },
+                "infra_enabled": {
+                    "type": "boolean",
+                    "description": "Enable the configuration of the registry service into infra nodes."
+                },
+                "replicas": {
+                    "type": "integer",
+                    "description": "Number of replicas for the deployed registry (default is 1)."
+                },
+                "s3Storage": {
+                    "type": "boolean",
+                    "description": "The httpSecret used (default is null) httpSecret: d9a012ccd117b1e6616ceccb2c3bb66a5fed1b5e481623 Enable the configuration of the S3 backend storage."
+                },
+                "s3Bucket": {
+                    "type": "string",
+                    "description": "Define the S3 bucket to use for configuration."
+                },
+                "s3Region": {
+                    "type": "string",
+                    "description": "Define the S3 Region to use (default is us-east-1)."
+                },
+                "s3StorageEnableSecret": {
+                    "type": "boolean",
+                    "description": "Define the S3 Region endpoint to use (default is none) s3RegionEndpoint: \"\" Define the S3 Virtual Hosted Style to use (default is none) s3VirtualHostedStyle: \"\" Create the secret with S3 credentials (default is false)."
+                },
+                "s3BucketAccesssKey": {
+                    "type": "string",
+                    "description": "Set the AWS S3 accesss key credentials (default is myaccessskey)."
+                },
+                "s3BucketSecretKey": {
+                    "type": "string",
+                    "description": "Set the AWS S3 secret key credentials (default is mysecretkey)."
+                },
+                "pvcStorage": {
+                    "type": "boolean",
+                    "description": "Enable the configuration of the pvc backend storage."
+                },
+                "pvcName": {
+                    "type": "string",
+                    "description": "Define the pvc Name to use for configuration."
                 }
             }
         },
@@ -671,8 +739,36 @@
                             }
                         }
                     }
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable the configuration of the ingresscontroller."
                 }
             }
+        },
+        "proxy": {
+            "type": "object",
+            "description": "Configuration of the cluster proxy feature."
+        },
+        "priorityClass": {
+            "type": "object",
+            "description": "Configuration of a bunch of priorityClass resources."
+        },
+        "operatorLoki": {
+            "type": "object",
+            "description": "Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)."
+        },
+        "projectSosReport": {
+            "type": "object",
+            "description": "Configuration of the SosReport project (see https://helm-repository.readthedocs.io/en/latest/charts/project)."
+        },
+        "operatorSosReport": {
+            "type": "object",
+            "description": "Configuration of the sosreport operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)."
+        },
+        "operatorGlobal": {
+            "type": "object",
+            "description": "Configuration of the globals operators (see https://helm-repository.readthedocs.io/en/latest/charts/operator)."
         }
     },
     "definitions": {

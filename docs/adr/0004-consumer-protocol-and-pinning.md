@@ -24,6 +24,10 @@ cluster.
   pushes, releases, publishes and tags.
 - The public contract of the consumed charts (rendered kinds and key values) is covered by contract tests
   (`tests/contract/`).
+- Before a push, `.tools/render-compare.sh <last-tag>` compares the rendered manifests of the consumed charts with the
+  last release and its result is sent to the consumers. After a publish, `.tools/release-postflight.sh` checks that
+  the versions listed in `.tools/consumer-pins.txt` are still in the stable index with an unchanged digest and are
+  downloadable. Consumers can ask to add their pinned versions to that file.
 
 ## Consequences
 

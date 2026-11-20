@@ -122,6 +122,10 @@
                             "$ref": "#/definitions/externalSecret"
                         }
                     }
+                },
+                "sa": {
+                    "type": "object",
+                    "description": "Configure the service account for the forwarder."
                 }
             }
         },
@@ -206,6 +210,14 @@
                 },
                 "managementState": {
                     "type": "string"
+                },
+                "infra_enabled": {
+                    "type": "boolean",
+                    "description": "Enable the deployment of the logging service into infra nodes."
+                },
+                "expose": {
+                    "type": "object",
+                    "description": "Section for external exposition of elasticsearch."
                 }
             }
         },
@@ -284,6 +296,14 @@
                             ]
                         }
                     }
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "See values.yaml."
+                },
+                "context": {
+                    "type": "object",
+                    "description": "See values.yaml."
                 }
             }
         },
@@ -505,6 +525,10 @@
                     "$ref": "#/definitions/externalSecretStoreRef"
                 }
             }
+        },
+        "operatorLoki": {
+            "type": "object",
+            "description": "Configuration of the loki operator (see https://helm-repository.readthedocs.io/en/latest/charts/operator)."
         }
     },
     "definitions": {

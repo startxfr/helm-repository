@@ -60,3 +60,22 @@ jobs:
           version: v3.19.0
       - name: Contract tests of the charts consumed by zuno-demo
         run: tests/contract/run.sh
+
+  argocd:
+    name: ArgoCD values-app and examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.19.0
+      - name: Render the values-app files and check the ArgoCD examples
+        run: .github/scripts/ci-check.sh argocd
+
+  schema:
+    name: Schema drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: List the values.yaml keys missing from values.schema.json
+        run: .github/scripts/ci-check.sh schema
