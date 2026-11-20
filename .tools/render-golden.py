@@ -8,7 +8,8 @@ Usage:
 
 Cases rendered for a chart: the default values, every values-*.yaml of the chart, and every top level key of
 values.yaml that is a mapping with `enabled: false`, switched on alone (`--set <key>.enabled=true`).
-A case that fails to render is stored as a single line `ERROR: <first line of the helm error>`, so a snapshot also
+Every case is rendered twice: the lines that change between two renders (generated certificates, random
+passwords) are replaced by `<key>: <generated>`. A case that fails to render is stored as a single line `ERROR: <first line of the helm error>`, so a snapshot also
 records which cases are broken. The version labels are dropped: a version bump is not a difference.
 
 Typical refactoring session (the snapshot directory must be outside the repository):
@@ -31,7 +32,7 @@ import tempfile
 
 import yaml
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+ROOT = os.environ.get('GOLDEN_ROOT') or os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))  # GOLDEN_ROOT: another tree (tests)
 CHARTS = os.path.join(ROOT, 'charts')
 JOBS = int(os.environ.get('JOBS', '8'))
 IGNORE = re.compile(r'^\s+(app\.startx\.fr/version|app\.kubernetes\.io/version|helm\.sh/chart|startx\.fr/generated-by|'
@@ -118,6 +119,15 @@ def do_chart(chart, out, only_toggles=False):
             if only_toggles and not name.startswith('toggle.'):
                 continue
             text, err = render(d, args)
+            if err is None:
+                # generated material (certificates, random passwords): render twice and mask the lines that move
+                again, _ = render(d, args)
+                if again is not None and again != text:
+                    x, y = text.splitlines(True), again.splitlines(True)
+                    if len(x) == len(y):
+                        text = ''.join(l if l == m else l.split(':', 1)[0] + ': <generated>\n' for l, m in zip(x, y))
+                    else:
+                        text = 'UNSTABLE: the number of lines changes between two renders\n'
             # the temporary path must not leak in the snapshot
             if err:
                 err = err.replace(tmp + '/', '')
