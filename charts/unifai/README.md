@@ -272,7 +272,17 @@ helm upgrade unifai unifai/unifai --namespace unifai --reuse-values
 
 Helm never updates custom resource definitions on its own, hence the second command. ArgoCD does.
 
-Since v0.1.75 the orchestrator delegates at most 2 times per item by default (3 before) : set `MAS_MAX_DELEGATIONS_PER_ITEM` in `stack.spec.extraEnv` to change it.
+Since v0.1.75 the orchestrator delegates at most 2 times per item by default (3 before). `MAS_MAX_DELEGATIONS_PER_ITEM`
+changes it (`0` = unlimited) ; `stack.spec.extraEnv` is a map keyed by component, the variable is read by the multi-agent code :
+
+```yaml
+stack:
+  spec:
+    extraEnv:
+      multiagent:
+        - name: MAS_MAX_DELEGATIONS_PER_ITEM
+          value: "3"
+```
 
 ## Uninstall
 
