@@ -1,0 +1,106 @@
+{{- if .Values.pipeline.enabled -}}
+{{- $namespace := .Values.project.project.name -}}
+{{- $k := .Values.pipeline -}}
+{{- $rbac := $k.rbac | default dict -}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chaos-pipeline
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "chaos-pipeline-serviceaccount"
+    {{- include "chaos-pipeline.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-pipeline.annotations" $ | nindent 4 }}
+{{- if $k.privileged }}
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: chaos-pipeline-scc-privileged
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "chaos-pipeline-scc-privileged-rb"
+    {{- include "chaos-pipeline.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-pipeline.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: chaos-pipeline
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- if true }}
+{{- if not $rbac.clusterAdmin }}
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "chaos-pipeline-{{ $namespace }}"
+  labels:
+    app.kubernetes.io/name: "chaos-pipeline-cr"
+    {{- include "chaos-pipeline.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-pipeline.annotations" $ | nindent 4 }}
+rules:
+  # Read access used to select the targets and to watch the recovery
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "services", "endpoints", "configmaps", "events", "persistentvolumeclaims", "persistentvolumes", "serviceaccounts", "namespaces", "nodes", "nodes/status"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["config.openshift.io"]
+    resources: ["clusterversions", "clusteroperators", "infrastructures", "networks"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["route.openshift.io"]
+    resources: ["routes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["machine.openshift.io"]
+    resources: ["machines", "machinesets"]
+    verbs: ["get", "list", "watch"]
+  # Chaos injection: pod, container, application outage, service disruption, pvc and helper pods
+  - apiGroups: [""]
+    resources: ["pods", "pods/exec", "pods/eviction", "services", "configmaps", "serviceaccounts"]
+    verbs: ["create", "delete", "deletecollection", "patch", "update"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+    verbs: ["delete", "deletecollection", "patch", "update"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["networkpolicies"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  # Node scenarios (cordon, drain) and node targeted helper pods
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["patch", "update"]
+  {{- with $rbac.extraRules }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "chaos-pipeline-{{ $namespace }}"
+  labels:
+    app.kubernetes.io/name: "chaos-pipeline-crb"
+    {{- include "chaos-pipeline.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-pipeline.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: chaos-pipeline
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: {{ ternary "cluster-admin" (printf "chaos-pipeline-%s" $namespace) (default false $rbac.clusterAdmin) | quote }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end -}}

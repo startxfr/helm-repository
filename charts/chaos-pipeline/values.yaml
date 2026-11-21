@@ -1,0 +1,260 @@
+# Default values for chaos-pipeline.
+
+# # Use it to Overwrite the helm-chart name
+#nameOverride: chaos-pipeline
+# # Use it to Overwrite the helm-chart version
+#versionOverride: 0.0.1
+
+# Application chaos context
+context:  &context
+  # Name of the global scope for this application (organizational tenant)
+  scope: companyname
+  # Name of the cluster running this application (platform tenant)
+  cluster: clustername
+  # Name of the environment for this application (ex: dev, factory, preprod or prod)
+  environment: dev
+  # Component name of this application (logical tenant)
+  component: chaos
+  # Application name (functional tenant, default use Chart name)
+  app: pipeline
+  # Version name of this application (default use Chart appVersion)
+  version: "5.2.15"
+
+# Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
+project: 
+  enabled: false
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: chaos-pipeline
+    display_name: Chaos - Pipeline
+    description: Tekton chaos pipelines of the chaos test suite
+
+# Configuration of the Tekton chaos tasks and pipelines (requires OpenShift Pipelines or Tekton Pipelines v1)
+pipeline: 
+  # Deploy the chaos tasks and pipelines. No PipelineRun is created: nothing runs until you start one
+  enabled: false
+  # Container images used by the tasks
+  images:
+    # krkn image, used by the krkn-run task
+    krkn:
+      # Image repository
+      repository: quay.io/krkn-chaos/krkn
+      # Image tag, used when no digest is set
+      tag: v5.2.15
+      # Image digest (takes precedence over the tag)
+      digest: sha256:43b3efda660477519594af8b48d16d8225b4e9e28824293f1b9a838a88c8d267
+      # Image pull policy
+      pullPolicy: IfNotPresent
+    # krkn-hub images, used by the krkn-hub-scenario task (one tag per scenario, rolling tags)
+    hub:
+      # Image repository
+      repository: quay.io/krkn-chaos/krkn-hub
+      # Image pull policy
+      pullPolicy: Always
+    # Image with curl, used by the cerberus-check task
+    check:
+      # Image repository
+      repository: registry.access.redhat.com/ubi9/ubi-minimal
+      # Image tag, used when no digest is set
+      tag: "9.9"
+      # Image digest (takes precedence over the tag)
+      digest: sha256:08d4c70f1baf6537a0728656cf7942d561e74a35916509d205b6519861266352
+      # Image pull policy
+      pullPolicy: IfNotPresent
+  # Run the krkn steps as privileged (binds the service account to the privileged SCC). Not required by default
+  privileged: false
+  # Verify the signature of the workload images started by krkn
+  imageSignatureVerification: true
+  # Resources requests and limits of the krkn steps
+  resources: {}
+  # Resources requests and limits of the cerberus-check step
+  checkResources: {}
+  # Access rights of the chaos-pipeline service account, used by the PipelineRuns
+  rbac:
+    # Bind the service account to cluster-admin instead of the chaos ClusterRole of this chart
+    clusterAdmin: false
+    # Rules added to the chaos ClusterRole of this chart
+    extraRules: []
+  # Cloud provider access, used by the node and zone scenarios
+  cloud:
+    # Name of an existing Secret whose keys are exposed as environment variables (ex: AWS_ACCESS_KEY_ID,
+    # AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION). See https://krkn-chaos.dev/docs/scenarios/cloud_setup/
+    existingSecret: ""
+  # Cerberus go/no-go signal (see https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus)
+  # These values are the defaults of the pipeline parameters: a PipelineRun can override them
+  cerberus:
+    # Gate the pipelines with the cerberus signal (before the first scenario, after each one and at the end)
+    enabled: true
+    # URL of the cerberus signal
+    url: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+    # Maximum time to wait for a healthy signal (in seconds)
+    timeout: 300
+  # Pipeline chaos-infra: chaos testing of the cluster infrastructure
+  # Each enabled scenario is one task, run in alphabetical order of its name. A scenario has:
+  # - enabled: add this scenario to the pipeline
+  # - engine: core (krkn image, default) or hub (krkn-hub image)
+  # - type and content: krkn scenario type and definition (core engine)
+  # - tag, digest and env: krkn-hub image tag, digest and environment variables (hub engine)
+  # - waitDuration: time to wait after the scenario, in seconds (core engine, default 30)
+  # - timeout: timeout of the task (default 1h0m0s)
+  infra:
+    # Deploy the chaos-infra pipeline
+    enabled: true
+    # Default HTTP endpoint checked by krkn before and after each scenario (empty to disable)
+    healthCheckUrl: ""
+    # Scenarios of the pipeline, ordered by blast radius: 1x platform pods, 2x node pressure, 3x node reboot
+    scenarios:
+      # Kill one prometheus pod of the cluster monitoring stack
+      10-pods-monitoring:
+        enabled: true
+        type: pod_disruption_scenarios
+        content:
+          - id: kill-pods
+            config:
+              namespace_pattern: ^openshift-monitoring$
+              label_selector: app.kubernetes.io/name=prometheus
+              kill: 1
+              krkn_pod_recovery_time: 180
+      # Kill one router pod of the default ingress controller
+      11-pods-ingress:
+        enabled: true
+        type: pod_disruption_scenarios
+        content:
+          - id: kill-pods
+            config:
+              namespace_pattern: ^openshift-ingress$
+              label_selector: ingresscontroller.operator.openshift.io/deployment-ingresscontroller=default
+              kill: 1
+              krkn_pod_recovery_time: 180
+      # Kill one pod of the openshift API server
+      12-pods-apiserver:
+        enabled: true
+        type: pod_disruption_scenarios
+        content:
+          - id: kill-pods
+            config:
+              namespace_pattern: ^openshift-apiserver$
+              label_selector: apiserver=true
+              kill: 1
+              krkn_pod_recovery_time: 180
+      # CPU pressure on one worker node
+      20-hog-cpu-worker:
+        enabled: false
+        type: hog_scenarios
+        content:
+          duration: 60
+          workers: ''
+          hog-type: cpu
+          image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-hog
+          namespace: default
+          cpu-load-percentage: 80
+          cpu-method: all
+          node-selector: "node-role.kubernetes.io/worker="
+          number-of-nodes: 1
+          taints: []
+      # Memory pressure on one worker node
+      21-hog-memory-worker:
+        enabled: false
+        type: hog_scenarios
+        content:
+          duration: 60
+          workers: ''
+          hog-type: memory
+          image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-hog
+          namespace: default
+          memory-vm-bytes: 80%
+          node-selector: "node-role.kubernetes.io/worker="
+          number-of-nodes: 1
+          taints: []
+      # Network latency and packet loss on one worker node
+      22-network-latency-worker:
+        enabled: false
+        type: network_chaos_ng_scenarios
+        content:
+          - id: node_network_chaos
+            image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-network-chaos
+            wait_duration: 1
+            test_duration: 60
+            label_selector: "node-role.kubernetes.io/worker="
+            service_account: ""
+            taints: []
+            namespace: default
+            instance_count: 1
+            target: ""
+            execution: serial
+            interfaces: []
+            ingress: true
+            egress: true
+            latency: 50ms
+            loss: 2
+            bandwidth: 1gbit
+            force: false
+      # Reboot one worker node (set cloud_type to your provider and give its credentials with pipeline.cloud.existingSecret)
+      30-node-reboot-worker:
+        enabled: false
+        type: node_scenarios
+        timeout: 2h0m0s
+        content:
+          node_scenarios:
+            - actions:
+                - node_reboot_scenario
+              node_name:
+              label_selector: node-role.kubernetes.io/worker
+              instance_count: 1
+              runs: 1
+              timeout: 600
+              cloud_type: aws
+              kube_check: true
+  # Pipeline chaos-application: chaos testing of an application stack
+  # Same scenario format as infra. In a scenario content, ${TARGET_NAMESPACE} and ${LABEL_SELECTOR} are replaced
+  # by the target-namespace and label-selector parameters of the pipeline
+  application:
+    # Deploy the chaos-application pipeline
+    enabled: true
+    # Default namespace of the application under chaos (pipeline parameter target-namespace)
+    targetNamespace: ""
+    # Default label selector of the application pods (pipeline parameter label-selector, empty for every pod)
+    labelSelector: ""
+    # Default HTTP endpoint checked by krkn before and after each scenario (empty to disable)
+    healthCheckUrl: ""
+    # Scenarios of the pipeline
+    scenarios:
+      # Kill one pod of the application
+      10-pods:
+        enabled: true
+        type: pod_disruption_scenarios
+        content:
+          - id: kill-pods
+            config:
+              namespace_pattern: ^${TARGET_NAMESPACE}$
+              label_selector: "${LABEL_SELECTOR}"
+              name_pattern: .*
+              kill: 1
+              krkn_pod_recovery_time: 120
+      # Kill the main process of one container of the application
+      20-container:
+        enabled: true
+        type: container_scenarios
+        content:
+          scenarios:
+            - name: kill application container
+              namespace: ${TARGET_NAMESPACE}
+              label_selector: "${LABEL_SELECTOR}"
+              container_name: ""
+              action: 1
+              count: 1
+              expected_recovery_time: 120
+      # Delete objects of the application namespace
+      30-service-disruption:
+        enabled: false
+        type: service_disruption_scenarios
+        content:
+          scenarios:
+            - namespace: "^${TARGET_NAMESPACE}$"
+              delete_count: 1
+              runs: 1
+              sleep: 15
+              wait_time: 300

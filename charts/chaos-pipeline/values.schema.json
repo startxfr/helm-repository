@@ -1,0 +1,500 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "context": {
+      "type": "object",
+      "title": "chaos context",
+      "description": "Properties of the chaos context.",
+      "required": [
+        "scope",
+        "cluster",
+        "environment",
+        "component",
+        "app"
+      ],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Scope name",
+          "description": "Name of the global scope for this application. Define an organizational tenant.",
+          "default": "companyname",
+          "examples": [
+            "myscope",
+            "mycorp",
+            "startx"
+          ]
+        },
+        "cluster": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Cluster name",
+          "description": "Name of the cluster running this application. Define a platform tenant.",
+          "default": "clustername",
+          "examples": [
+            "clustername",
+            "mycluster",
+            "localhost"
+          ]
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Environment name",
+          "description": "Name of the environment for this application. Define a stage tenant.",
+          "default": "dev",
+          "examples": [
+            "dev",
+            "build",
+            "ci",
+            "factory",
+            "preprod",
+            "prod"
+          ]
+        },
+        "component": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Component name",
+          "description": "Name of the component consisting of this application. Define a logical tenant.",
+          "default": "chaos",
+          "examples": [
+            "startx-chaos",
+            "chaos",
+            "mycomp"
+          ]
+        },
+        "app": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "title": "Application name",
+          "description": "Name of the application name. Define a functional tenant.",
+          "default": "pipeline",
+          "examples": [
+            "pipeline",
+            "watchdog"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30,
+          "title": "Version name",
+          "description": "Name of the application version. Define this chaos version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+          "default": "0.0.1",
+          "examples": [
+            "0.0.1",
+            "0.1",
+            "0.0.1-snapshot",
+            "0.0.1-202110300900"
+          ]
+        }
+      }
+    },
+    "project": {
+      "$ref": "https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values.schema.json"
+    },
+    "pipeline": {
+      "type": "object",
+      "title": "Chaos pipelines",
+      "description": "Configuration of the Tekton chaos tasks and pipelines",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "Enable the pipelines",
+          "description": "Deploy the chaos tasks and pipelines. No PipelineRun is created",
+          "default": false
+        },
+        "images": {
+          "type": "object",
+          "title": "Images",
+          "description": "Container images used by the tasks",
+          "properties": {
+            "krkn": {
+              "type": "object",
+              "title": "krkn image",
+              "description": "krkn image",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "title": "Image repository",
+                  "description": "Image repository",
+                  "default": "quay.io/krkn-chaos/krkn"
+                },
+                "tag": {
+                  "type": "string",
+                  "title": "Image tag",
+                  "description": "Image tag, used when no digest is set",
+                  "default": "v5.2.15"
+                },
+                "digest": {
+                  "type": "string",
+                  "pattern": "^(sha256:[a-f0-9]{64})?$",
+                  "title": "Image digest",
+                  "description": "Image digest, takes precedence over the tag"
+                },
+                "pullPolicy": {
+                  "enum": [
+                    "Always",
+                    "IfNotPresent",
+                    "Never"
+                  ],
+                  "title": "Image pull policy",
+                  "default": "IfNotPresent"
+                }
+              }
+            },
+            "hub": {
+              "type": "object",
+              "title": "krkn-hub images",
+              "description": "krkn-hub images",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "title": "Image repository",
+                  "description": "Image repository",
+                  "default": "quay.io/krkn-chaos/krkn-hub"
+                },
+                "pullPolicy": {
+                  "enum": [
+                    "Always",
+                    "IfNotPresent",
+                    "Never"
+                  ],
+                  "title": "Image pull policy",
+                  "default": "Always"
+                }
+              }
+            },
+            "check": {
+              "type": "object",
+              "title": "Check image",
+              "description": "Check image",
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "title": "Image repository",
+                  "description": "Image repository",
+                  "default": "registry.access.redhat.com/ubi9/ubi-minimal"
+                },
+                "tag": {
+                  "type": "string",
+                  "title": "Image tag",
+                  "description": "Image tag, used when no digest is set",
+                  "default": "9.9"
+                },
+                "digest": {
+                  "type": "string",
+                  "pattern": "^(sha256:[a-f0-9]{64})?$",
+                  "title": "Image digest",
+                  "description": "Image digest, takes precedence over the tag"
+                },
+                "pullPolicy": {
+                  "enum": [
+                    "Always",
+                    "IfNotPresent",
+                    "Never"
+                  ],
+                  "title": "Image pull policy",
+                  "default": "IfNotPresent"
+                }
+              }
+            }
+          }
+        },
+        "privileged": {
+          "type": "boolean",
+          "title": "Privileged",
+          "description": "Run the krkn steps as privileged (binds the service account to the privileged SCC)",
+          "default": false
+        },
+        "imageSignatureVerification": {
+          "type": "boolean",
+          "title": "Image signature verification",
+          "description": "Verify the signature of the workload images started by krkn",
+          "default": true
+        },
+        "resources": {
+          "type": "object",
+          "title": "Resources",
+          "description": "Resources requests and limits of the krkn steps"
+        },
+        "checkResources": {
+          "type": "object",
+          "title": "Check resources",
+          "description": "Resources requests and limits of the cerberus-check step"
+        },
+        "rbac": {
+          "type": "object",
+          "title": "RBAC",
+          "description": "Access rights of the chaos-pipeline service account",
+          "properties": {
+            "clusterAdmin": {
+              "type": "boolean",
+              "title": "Cluster admin",
+              "description": "Bind the service account to cluster-admin instead of the chaos ClusterRole of this chart",
+              "default": false
+            },
+            "extraRules": {
+              "type": "array",
+              "title": "Extra rules",
+              "description": "Rules added to the chaos ClusterRole of this chart",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "cloud": {
+          "type": "object",
+          "title": "Cloud",
+          "description": "Cloud provider access, used by the node and zone scenarios",
+          "properties": {
+            "existingSecret": {
+              "type": "string",
+              "title": "Existing secret",
+              "description": "Name of an existing Secret whose keys are exposed as environment variables",
+              "default": ""
+            }
+          }
+        },
+        "cerberus": {
+          "type": "object",
+          "title": "Cerberus",
+          "description": "Cerberus go/no-go signal, defaults of the pipeline parameters",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enabled",
+              "description": "Gate the pipelines with the cerberus signal",
+              "default": true
+            },
+            "url": {
+              "type": "string",
+              "title": "Cerberus URL",
+              "description": "URL of the cerberus signal",
+              "default": "http://cerberus.chaos-pipeline.svc.cluster.local:8080"
+            },
+            "timeout": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Timeout",
+              "description": "Maximum time to wait for a healthy signal (in seconds)",
+              "default": 300
+            }
+          }
+        },
+        "infra": {
+          "type": "object",
+          "title": "Infrastructure pipeline",
+          "description": "Pipeline chaos-infra: chaos testing of the cluster infrastructure",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enabled",
+              "description": "Deploy the chaos-infra pipeline",
+              "default": true
+            },
+            "healthCheckUrl": {
+              "type": "string",
+              "title": "Health check URL",
+              "description": "Default HTTP endpoint checked by krkn before and after each scenario",
+              "default": ""
+            },
+            "scenarios": {
+              "type": "object",
+              "title": "Scenarios",
+              "description": "Scenarios of the pipeline, one task each, run in alphabetical order of their name",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "title": "Enabled",
+                    "description": "Add this scenario to the pipeline",
+                    "default": false
+                  },
+                  "engine": {
+                    "enum": [
+                      "core",
+                      "hub"
+                    ],
+                    "title": "Engine",
+                    "description": "core (krkn image) or hub (krkn-hub image)",
+                    "default": "core"
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Scenario type",
+                    "description": "krkn scenario type (core engine)",
+                    "default": ""
+                  },
+                  "content": {
+                    "type": [
+                      "object",
+                      "array",
+                      "string"
+                    ],
+                    "title": "Scenario content",
+                    "description": "Scenario definition, in the krkn format of this type (core engine)"
+                  },
+                  "tag": {
+                    "type": "string",
+                    "title": "Image tag",
+                    "description": "krkn-hub image tag (hub engine)",
+                    "default": ""
+                  },
+                  "digest": {
+                    "type": "string",
+                    "pattern": "^(sha256:[a-f0-9]{64})?$",
+                    "title": "Image digest",
+                    "description": "krkn-hub image digest (hub engine)"
+                  },
+                  "env": {
+                    "type": "object",
+                    "title": "Environment",
+                    "description": "Environment variables of the scenario (hub engine)",
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "number",
+                        "boolean"
+                      ]
+                    }
+                  },
+                  "waitDuration": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Wait duration",
+                    "description": "Time to wait after the scenario, in seconds (core engine)",
+                    "default": 30
+                  },
+                  "timeout": {
+                    "type": "string",
+                    "title": "Timeout",
+                    "description": "Timeout of the task",
+                    "default": "1h0m0s"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "application": {
+          "type": "object",
+          "title": "Application pipeline",
+          "description": "Pipeline chaos-application: chaos testing of an application stack",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enabled",
+              "description": "Deploy the chaos-application pipeline",
+              "default": true
+            },
+            "targetNamespace": {
+              "type": "string",
+              "title": "Target namespace",
+              "description": "Default namespace of the application under chaos",
+              "default": ""
+            },
+            "labelSelector": {
+              "type": "string",
+              "title": "Label selector",
+              "description": "Default label selector of the application pods",
+              "default": ""
+            },
+            "healthCheckUrl": {
+              "type": "string",
+              "title": "Health check URL",
+              "description": "Default HTTP endpoint checked by krkn before and after each scenario",
+              "default": ""
+            },
+            "scenarios": {
+              "type": "object",
+              "title": "Scenarios",
+              "description": "Scenarios of the pipeline, one task each, run in alphabetical order of their name",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "title": "Enabled",
+                    "description": "Add this scenario to the pipeline",
+                    "default": false
+                  },
+                  "engine": {
+                    "enum": [
+                      "core",
+                      "hub"
+                    ],
+                    "title": "Engine",
+                    "description": "core (krkn image) or hub (krkn-hub image)",
+                    "default": "core"
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Scenario type",
+                    "description": "krkn scenario type (core engine)",
+                    "default": ""
+                  },
+                  "content": {
+                    "type": [
+                      "object",
+                      "array",
+                      "string"
+                    ],
+                    "title": "Scenario content",
+                    "description": "Scenario definition, in the krkn format of this type (core engine)"
+                  },
+                  "tag": {
+                    "type": "string",
+                    "title": "Image tag",
+                    "description": "krkn-hub image tag (hub engine)",
+                    "default": ""
+                  },
+                  "digest": {
+                    "type": "string",
+                    "pattern": "^(sha256:[a-f0-9]{64})?$",
+                    "title": "Image digest",
+                    "description": "krkn-hub image digest (hub engine)"
+                  },
+                  "env": {
+                    "type": "object",
+                    "title": "Environment",
+                    "description": "Environment variables of the scenario (hub engine)",
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "number",
+                        "boolean"
+                      ]
+                    }
+                  },
+                  "waitDuration": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Wait duration",
+                    "description": "Time to wait after the scenario, in seconds (core engine)",
+                    "default": 30
+                  },
+                  "timeout": {
+                    "type": "string",
+                    "title": "Timeout",
+                    "description": "Timeout of the task",
+                    "default": "1h0m0s"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

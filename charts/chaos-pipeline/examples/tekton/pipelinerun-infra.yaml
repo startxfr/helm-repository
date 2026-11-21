@@ -1,0 +1,18 @@
+# Start one run of the infrastructure chaos pipeline:
+#   oc create -n chaos-pipeline -f pipelinerun-infra.yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: chaos-infra-
+spec:
+  pipelineRef:
+    name: chaos-infra
+  taskRunTemplate:
+    serviceAccountName: chaos-pipeline
+  timeouts:
+    pipeline: 3h0m0s
+  params:
+    - name: cerberus-enabled
+      value: "true"
+    - name: cerberus-url
+      value: http://cerberus.chaos-cerberus.svc.cluster.local:8080
