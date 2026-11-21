@@ -48,9 +48,20 @@ The default [values.yaml](https://github.com/startxfr/helm-repository/blob/maste
 nothing : each part is switched on by its `enabled` key.
 
 - `project.enabled=true` : 1 **namespace** `chaos-monkey` (see the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project))
-- `monkey.enabled=true` : the kube-monkey deployment and its configuration, 1 **SecurityContextConstraints** `privileged-monkey` with its Role and RoleBinding, 1 **ClusterRoleBinding** `kube-monkey-edit-rb` (cluster role `edit` for the kube-monkey and `default` service accounts of the namespace)
+- `monkey.enabled=true` : the kube-monkey deployment, its configuration and its service account, with 1 **ClusterRole** and 1 **ClusterRoleBinding** from the upstream chart (read the workloads and the namespaces, delete pods : nothing else)
+- `monkey.privileged=true` : 1 **SecurityContextConstraints** `privileged-monkey` with its Role and RoleBinding, for the kube-monkey service account
 
 A workload is terminated only if it opted in (see the last usage example).
+
+**Migration from 21.3.390 and earlier** (breaking changes) :
+
+- the ClusterRoleBinding `kube-monkey-edit-rb`, which gave the cluster role `edit` on the whole cluster to the
+  kube-monkey and `default` service accounts of the namespace, is removed. Kube-monkey keeps the rights of the upstream
+  ClusterRole. Anything else that relied on this binding (a workload running with the `default` service account of the
+  namespace) needs its own RoleBinding.
+- the privileged SecurityContextConstraints `privileged-monkey` is no longer created by default : kube-monkey runs with
+  the restricted one. Set `monkey.privileged=true` to get it back.
+- the log directory is now an `emptyDir` volume (`monkey.additionalVolumes`), writable by an arbitrary user.
 
 | Key                                 | Default                    | Description                                                                                                                 |
 | ----------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -64,8 +75,9 @@ A workload is terminated only if it opted in (see the last usage example).
 | project.enabled                     | false                      | Create the namespace                                                                                                        |
 | project.project.name                | chaos-monkey               | Name of the namespace ; also the namespace of the resources created by this chart                                           |
 | monkey                              | {...}                      | Values of the upstream [kube-monkey chart](https://github.com/asobti/kube-monkey/tree/master/helm/kubemonkey), passed as is |
-| monkey.enabled                      | false                      | Deploy kube-monkey, the `privileged-monkey` SecurityContextConstraints and the `kube-monkey-edit-rb` ClusterRoleBinding     |
-| monkey.fullnameOverride             | example-monkey             | Name of the deployment and of its service account ; the SecurityContextConstraints and the bindings follow it               |
+| monkey.enabled                      | false                      | Deploy kube-monkey with the ClusterRole of the upstream chart                                                               |
+| monkey.privileged                   | false                      | Grant the privileged SecurityContextConstraints `privileged-monkey` to the kube-monkey service account                      |
+| monkey.fullnameOverride             | example-monkey             | Name of the deployment and of its service account ; the SecurityContextConstraints follows it                               |
 | monkey.config.dryRun                | false                      | `true` logs the terminations without doing them                                                                             |
 | monkey.config.runHour               | 8                          | Hour of the day when the terminations of the day are scheduled                                                              |
 | monkey.config.startHour / endHour   | 10 / 16                    | Time window of the terminations                                                                                             |
@@ -140,6 +152,7 @@ oc -n myapp-dev patch deployment myapp --type merge -p '{
   "metadata": {"labels": {"kube-monkey/enabled": "enabled", "kube-monkey/identifier": "myapp", "kube-monkey/mtbf": "3", "kube-monkey/kill-mode": "fixed", "kube-monkey/kill-value": "1"}},
   "spec": {"template": {"metadata": {"labels": {"kube-monkey/enabled": "enabled", "kube-monkey/identifier": "myapp"}}}}}'
 ```
+
 ## ArgoCD deployment
 
 One AppProject and two Applications : `chaos-monkey-project` (wave 1, the namespace) then `chaos-monkey-instance` (wave 5, kube-monkey in dry-run mode).

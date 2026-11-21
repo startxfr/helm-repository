@@ -74,8 +74,10 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
+    - kind: security
+      description: "Breaking : the cluster-wide edit ClusterRoleBinding (kube-monkey and default service accounts) is removed ; the privileged SecurityContextConstraints is only created with monkey.privileged=true"
     - kind: fixed
-      description: "The SecurityContextConstraints and the bindings follow the kube-monkey service account ; ArgoCD examples no longer use a missing values file"
+      description: "The SecurityContextConstraints follows the kube-monkey service account ; ArgoCD examples no longer use a missing values file"
     - kind: changed
       description: "README rewritten ; the project schema is embedded instead of an https reference"
-  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/containsSecurityUpdates: "true"
