@@ -1,0 +1,27 @@
+
+# # Use it to Overwrite the helm-chart name
+#nameOverride: chaos-pipeline
+# # Use it to Overwrite the helm-chart version
+#versionOverride: 0.0.1
+
+# Application chaos context
+context:  &context
+  scope: startx
+  cluster: mycluster
+  environment: dev
+  component: chaos
+  app: pipeline
+  version: "5.2.15"
+
+project: 
+  enabled: true
+  context: 
+    <<: *context
+  project: 
+    enabled: true
+    type: namespace
+    name: startx-chaos-pipeline
+    display_name: Chaos - Pipeline
+    description: Tekton chaos pipelines of the chaos test suite
+pipeline: 
+  enabled: false

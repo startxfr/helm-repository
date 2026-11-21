@@ -1,6 +1,16 @@
 # ![example-chaos](https://helm-repository.readthedocs.io/en/latest/img/example-chaos.svg "Example Chart : Chaos") Example Chart : Chaos
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--chaos-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+chaos+startx)
 
+> **Deprecated** : this chart is no longer maintained and will not receive new features. Use the
+> [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts) instead :
+> [chaos-cerberus](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus) (cluster health watchdog),
+> [chaos-kraken](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken) (krkn chaos scenarios),
+> chaos-pipeline (Tekton chaos pipelines, coming),
+> [chaos-litmus](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus),
+> [chaos-mesh](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh) and
+> [chaos-monkey](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey).
+> The published packages stay available.
+
 This helm chart is used to deploy a chaos testing suit composed of chaos mesh and kraken test suite.
 
 This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
@@ -146,7 +156,7 @@ spec:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: example-chaos
     # pin an exact version in production (ADR-0004)
-    targetRevision: 21.3.390
+    targetRevision: 21.3.391
     helm:
       valueFiles:
         - values.yaml
@@ -178,8 +188,8 @@ spec:
 | 21.3.309 | 2026-10-27 | Adding new charts perconna and align all to v21.3.309 |
 | 21.3.321 | 2026-11-05 | Adding external secret management |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
-| 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
 | 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
 | 21.3.389 | 2026-11-19 | full repository release: HTTPS dependency URLs, dependency-ordered release, schema guard, docs and examples |
 | 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
+| 21.3.391 | 2026-11-21 | chaos charts: krkn v5.2.15, new chaos-pipeline chart, security fixes for litmus and monkey; breaking, see README migration notes |

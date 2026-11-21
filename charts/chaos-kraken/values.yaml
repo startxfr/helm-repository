@@ -18,7 +18,7 @@ context:  &context
   # Application name (functional tenant, default use Chart name)
   app: kraken
   # Version name of this application (default use Chart appVersion)
-  version: "5.0.0"
+  version: "5.2.15"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -30,51 +30,364 @@ project:
     type: namespace
     name: chaos-kraken
     display_name: Chaos - Kraken
-    description: Kraken chaos orchestrator in STARTX Chaos test suite
+    description: Kraken chaos orchestrator of the chaos test suite
 
-# Configuration of the kraken deployment
+# Configuration of the kraken (krkn) chaos run
 kraken: 
   # Unleash the kraken ;)
   enabled: false
-  # version of the kraken image
-  version: "v5.0.0"
-  # Enable exposition for this application (route based)
-  expose: true
-  # Fill the cerberus server url. (internal is better)
-  cerberusUrl: "http://cerberus.startx-chaos-kraken.svc.cluster.local:8080"
-  # Kraken mode (could be job or pipeline)
-  mode: job
-  # configuration of the job mode
+  # Engine used to run the chaos (could be core or hub)
+  # - core: one Job running the krkn image with the scenarios enabled in kraken.scenarios
+  # - hub: one Job per scenario enabled in kraken.hub.scenarios, running a krkn-hub image configured by environment variables
+  engine: core
+  # krkn container image, used by the core engine
+  image:
+    # Image repository
+    repository: quay.io/krkn-chaos/krkn
+    # Image tag, used when no digest is set
+    tag: v5.2.15
+    # Image digest (takes precedence over the tag)
+    digest: sha256:43b3efda660477519594af8b48d16d8225b4e9e28824293f1b9a838a88c8d267
+    # Image pull policy
+    pullPolicy: IfNotPresent
+  # Run the krkn container as privileged (binds the service account to the privileged SCC). Not required by default
+  privileged: false
+  # Give the kraken service account the privileged SCC in privilegedNamespaces (auto, true or false)
+  # The node level scenarios (hog, network chaos, time) start privileged helper pods on the target nodes
+  # - auto: granted when an enabled scenario needs it
+  privilegedWorkloads: auto
+  # Namespaces where krkn starts its helper pods (key namespace of the scenarios; time scenarios always use default)
+  privilegedNamespaces:
+    - default
+  # User id of the krkn container. Leave empty on OpenShift (assigned by the SCC)
+  runAsUser: ""
+  # Resources requests and limits of the krkn container
+  resources: {}
+  # Access rights of the kraken service account (local kubeconfig mode)
+  rbac:
+    # Bind the service account to cluster-admin instead of the chaos ClusterRole of this chart
+    clusterAdmin: false
+    # Rules added to the chaos ClusterRole of this chart
+    extraRules: []
+  # Configuration of the job
   job: 
-    # Job name prefix
-    prefix: kraken-test
-  # configuration of the pipeline mode
-  pipeline: 
-    # pipelinerun name prefix
-    prefix: kraken-test
-  # AWS configuration section
-  aws: 
-    # enable the aws integration
+    # Job name (prefix of the job names with the hub engine)
+    name: kraken-test
+    # Maximum duration of the job (in seconds)
+    activeDeadlineSeconds: 7200
+    # Create the job suspended (start it with: oc patch job <name> --type merge -p '{"spec":{"suspend":false}}')
+    suspend: false
+    # Delete the finished job after this delay (in seconds), kept when empty
+    ttlSecondsAfterFinished: ""
+  # General krkn settings (core engine)
+  config:
+    # Stop the run when a scenario fails
+    exitOnFailure: false
+    # Duration to wait between each scenario (in seconds)
+    waitDuration: 60
+    # Number of times to execute the scenarios
+    iterations: 1
+    # Run the scenarios forever
+    daemonMode: false
+    # Roll back the changes of a scenario that failed
+    autoRollback: true
+    # Verify the signature of the workload images started by krkn
+    imageSignatureVerification: true
+    # Formats of the report generated at the end of the run (html, pdf)
+    reportFormats: []
+    # Resiliency score mode (standalone, detailed or disabled)
+    resiliencyRunMode: disabled
+  # Cerberus go/no-go signal (see https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus)
+  cerberus:
+    # Check the cerberus signal after each scenario
     enabled: false
-    # credentials (mandatory if enabled)
-    credentials: 
-      # used region
-      region: eu-west-3
-      # AWS accesss key ID
-      key_id: AKIAXXXXXXXXXXXXXXXX
-      # AWS secret accesss key
-      secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  # Kubeconfig of the chaos tested cluster (mandatory)
+    # URL of the cerberus signal (ex: http://cerberus.chaos-cerberus.svc.cluster.local:8080)
+    url: ""
+    # Fail the run when a route watched by cerberus was unavailable
+    checkApplicationRoutes: false
+  # HTTP health checks run by krkn itself (core engine)
+  healthChecks:
+    # Check interval (in seconds)
+    interval: 2
+    # When to run the checks (pre, during, post or a list)
+    runDuring: post
+    # Fail the run when a check fails
+    exitOnFailure: false
+    # Endpoints to check. Example: [{url: "https://myapp.apps.example.com/health", bearer_token: "", auth: ""}]
+    endpoints: []
+  # Kubernetes object condition checks run by krkn itself (core engine)
+  objectStateChecks:
+    # Check interval (in seconds)
+    interval: 2
+    # When to run the checks (list of pre, during, post). Disabled when empty
+    runDuring: []
+    # Fail the run when a check fails
+    exitOnFailure: false
+    # Checks. Example: [{name: app-ready, kind: Deployment, object_name: ".*", namespace: my-app, label_selector: "", condition: {type: Available, status: "True"}}]
+    checks: []
+  # Prometheus based checks (core engine). On OpenShift the URL and the token are discovered by krkn
+  monitoring:
+    # Prometheus URL (mandatory on plain Kubernetes)
+    prometheusUrl: ""
+    # Prometheus bearer token (mandatory on plain Kubernetes)
+    prometheusToken: ""
+    # Evaluate the alert profile during the run
+    enableAlerts: false
+    # Fail the run when a critical alert is firing after the chaos
+    checkCriticalAlerts: false
+    # Collect the metrics of the metrics profile
+    enableMetrics: false
+  # Cloud provider access, used by the node and zone scenarios
+  cloud:
+    # Name of an existing Secret whose keys are exposed as environment variables (ex: AWS_ACCESS_KEY_ID,
+    # AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION). See https://krkn-chaos.dev/docs/scenarios/cloud_setup/
+    existingSecret: ""
+  # Scenarios run by the core engine, in alphabetical order of their name. Each scenario has:
+  # - enabled: run this scenario
+  # - type: krkn scenario type (pod_disruption_scenarios, container_scenarios, hog_scenarios, node_scenarios,
+  #   time_scenarios, application_outages_scenarios, service_disruption_scenarios, pvc_scenarios,
+  #   network_chaos_ng_scenarios...)
+  # - content: scenario definition, in the krkn format of this type
+  # - file: use a scenario file shipped in the krkn image instead of content (ex: scenarios/openshift/prom_kill.yml)
+  scenarios:
+    # Kill one prometheus pod of the cluster monitoring stack
+    pods-monitoring:
+      enabled: false
+      type: pod_disruption_scenarios
+      content:
+        - id: kill-pods
+          config:
+            namespace_pattern: ^openshift-monitoring$
+            label_selector: app.kubernetes.io/name=prometheus
+            kill: 1
+            krkn_pod_recovery_time: 180
+    # Kill one router pod of the default ingress controller
+    pods-ingress:
+      enabled: false
+      type: pod_disruption_scenarios
+      content:
+        - id: kill-pods
+          config:
+            namespace_pattern: ^openshift-ingress$
+            label_selector: ingresscontroller.operator.openshift.io/deployment-ingresscontroller=default
+            kill: 1
+            krkn_pod_recovery_time: 180
+    # Kill one pod of the openshift API server
+    pods-apiserver:
+      enabled: false
+      type: pod_disruption_scenarios
+      content:
+        - id: kill-pods
+          config:
+            namespace_pattern: ^openshift-apiserver$
+            label_selector: apiserver=true
+            kill: 1
+            krkn_pod_recovery_time: 180
+    # Kill one OVN-Kubernetes node pod
+    pods-network:
+      enabled: false
+      type: pod_disruption_scenarios
+      content:
+        - id: kill-pods
+          config:
+            namespace_pattern: ^openshift-ovn-kubernetes$
+            label_selector: app=ovnkube-node
+            kill: 1
+            krkn_pod_recovery_time: 240
+    # Kill pods of an application (set the namespace and the label of your application)
+    pods-application:
+      enabled: false
+      type: pod_disruption_scenarios
+      content:
+        - id: kill-pods
+          config:
+            namespace_pattern: ^my-application$
+            label_selector: ""
+            name_pattern: .*
+            kill: 1
+            krkn_pod_recovery_time: 120
+    # Kill the main process of a container of an application
+    container-application:
+      enabled: false
+      type: container_scenarios
+      content:
+        scenarios:
+          - name: kill application container
+            namespace: my-application
+            label_selector: app=my-application
+            container_name: ""
+            action: 1
+            count: 1
+            expected_recovery_time: 120
+    # CPU pressure on one worker node
+    hog-cpu-worker:
+      enabled: false
+      type: hog_scenarios
+      content:
+        duration: 60
+        workers: ''
+        hog-type: cpu
+        image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-hog
+        namespace: default
+        cpu-load-percentage: 80
+        cpu-method: all
+        node-selector: "node-role.kubernetes.io/worker="
+        number-of-nodes: 1
+        taints: []
+    # Memory pressure on one worker node
+    hog-memory-worker:
+      enabled: false
+      type: hog_scenarios
+      content:
+        duration: 60
+        workers: ''
+        hog-type: memory
+        image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-hog
+        namespace: default
+        memory-vm-bytes: 80%
+        node-selector: "node-role.kubernetes.io/worker="
+        number-of-nodes: 1
+        taints: []
+    # Network latency and packet loss on one worker node
+    network-latency-worker:
+      enabled: false
+      type: network_chaos_ng_scenarios
+      content:
+        - id: node_network_chaos
+          image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-network-chaos
+          wait_duration: 1
+          test_duration: 60
+          label_selector: "node-role.kubernetes.io/worker="
+          service_account: ""
+          taints: []
+          namespace: default
+          instance_count: 1
+          target: ""
+          execution: serial
+          interfaces: []
+          ingress: true
+          egress: true
+          latency: 50ms
+          loss: 2
+          bandwidth: 1gbit
+          force: false
+    # Reboot one worker node (set cloud_type to your provider and give its credentials with kraken.cloud.existingSecret)
+    node-reboot-worker:
+      enabled: false
+      type: node_scenarios
+      content:
+        node_scenarios:
+          - actions:
+              - node_reboot_scenario
+            node_name:
+            label_selector: node-role.kubernetes.io/worker
+            instance_count: 1
+            runs: 1
+            timeout: 600
+            cloud_type: aws
+            kube_check: true
+    # Skew the clock of one worker node
+    time-skew-worker:
+      enabled: false
+      type: time_scenarios
+      content:
+        time_scenarios:
+          - action: skew_time
+            object_type: node
+            label_selector: node-role.kubernetes.io/worker
+    # Block the network traffic of an application
+    outage-application:
+      enabled: false
+      type: application_outages_scenarios
+      content:
+        application_outage:
+          duration: 120
+          namespace: my-application
+          pod_selector: {app: my-application}
+          block: [Ingress, Egress]
+          exclude_label: ""
+    # Delete objects of the namespaces matching a pattern
+    service-disruption-application:
+      enabled: false
+      type: service_disruption_scenarios
+      content:
+        scenarios:
+          - namespace: "^my-application$"
+            delete_count: 1
+            runs: 1
+            sleep: 15
+            wait_time: 300
+    # Fill a persistent volume of an application
+    pvc-fill-application:
+      enabled: false
+      type: pvc_scenarios
+      content:
+        pvc_scenario:
+          pvc_name: my-pvc
+          pod_name: ""
+          namespace: my-application
+          fill_percentage: 80
+          duration: 60
+          block_size: 102400
+  # Configuration of the hub engine (see https://github.com/krkn-chaos/krkn-hub)
+  hub:
+    # Image repository of the krkn-hub images
+    repository: quay.io/krkn-chaos/krkn-hub
+    # Image pull policy (krkn-hub tags are rolling: Always follows them)
+    pullPolicy: Always
+    # Scenarios run by the hub engine, one job each. Each scenario has:
+    # - enabled: run this scenario
+    # - tag: krkn-hub image tag (defaults to the scenario name). See the tag list of the repository
+    # - digest: image digest (takes precedence over the tag; krkn-hub tags are rebuilt every week)
+    # - env: environment variables of the scenario, documented in the krkn-hub repository
+    scenarios:
+      # Kill pods matching a namespace and a label
+      pod-scenarios:
+        enabled: false
+        tag: pod-scenarios
+        digest: ""
+        env:
+          NAMESPACE: "^openshift-monitoring$"
+          POD_LABEL: app.kubernetes.io/name=prometheus
+          DISRUPTION_COUNT: "1"
+          EXPECTED_RECOVERY_TIME: "180"
+      # CPU pressure on worker nodes
+      node-cpu-hog:
+        enabled: false
+        tag: node-cpu-hog
+        digest: ""
+        env:
+          TOTAL_CHAOS_DURATION: "60"
+          NODE_CPU_PERCENTAGE: "80"
+          NODE_SELECTOR: "node-role.kubernetes.io/worker="
+          NUMBER_OF_NODES: "1"
+      # Block the network traffic of an application
+      application-outages:
+        enabled: false
+        tag: application-outages
+        digest: ""
+        env:
+          DURATION: "120"
+          NAMESPACE: my-application
+          POD_SELECTOR: "{app: my-application}"
+          BLOCK_TRAFFIC_TYPE: "[Ingress, Egress]"
+  # Kubeconfig of the cluster under chaos
   kubeconfig:
-    # Connection mode to use for the cluster (could be token or file)
-    mode: token
+    # Connection mode to use for the cluster (could be local, token or file)
+    # - local: in-cluster access using the kraken service account, with the ClusterRole of kraken.rbac
+    # - token: kubeconfig built from a server URL and a bearer token, stored in a Secret
+    # - file: raw kubeconfig content, stored in a Secret
+    mode: local
     # If mode is token, this section must be filled
     token: 
       # The server URL to the target cluster API
       server: https://localhost:6443
-      # The token to use to get accesss. This token must have full 
-      # cluster admin accesss to perform some chaos scenarios
+      # The token to use to get access. Its rights must cover the scenarios you run
       token: sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
+      # PEM content of the certificate authority of the target cluster API
+      ca: ""
+      # Skip the TLS verification of the target cluster API (only used when no ca is given)
+      insecure: false
     # # If mode is file, this property must be set with a full kubeconfig content
     # file: |
     #   kind: Config
@@ -88,8 +401,7 @@ kraken:
     #   users:
     #   - name: default
     #     user:
-    #       client-certificate-data: XXXXXXX
-    #       client-key-data: XXXXXXX
+    #       token: XXXXXXX
     #   contexts:
     #   - name: default
     #     context:

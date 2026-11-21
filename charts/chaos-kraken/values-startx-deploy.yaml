@@ -12,7 +12,7 @@ context:  &context
   environment: dev
   component: chaos
   app: kraken
-  version: "5.0.0"
+  version: "5.2.15"
 
 project: 
   enabled: false
@@ -20,20 +20,16 @@ project:
     name: startx-chaos-kraken
 kraken: 
   enabled: true
-  version: "v5.0.0"
-  expose: true
-  cerberusUrl: "http://cerberus.startx-chaos-kraken.svc.cluster.local:8080"
-  mode: pipeline
-  pipeline: 
-    prefix: kraken-test
-  aws: 
+  engine: core
+  job:
+    name: kraken-test
+  cerberus:
     enabled: true
-    credentials: 
-      region: eu-west-3
-      key_id: AKIAXXXXXXXXXXXXXXXX
-      secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    url: "http://cerberus.startx-chaos-cerberus.svc.cluster.local:8080"
+  scenarios:
+    pods-monitoring:
+      enabled: true
+    pods-ingress:
+      enabled: true
   kubeconfig:
-    mode: token
-    token: 
-      server: "https://api.mycluster.startx.fr:6443"
-      token: "sha256~XXXXXXX_PUT_YOUR_STARTX_TOKEN_HERE_XXXXXXXX"
+    mode: local

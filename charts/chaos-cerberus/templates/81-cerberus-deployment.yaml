@@ -1,7 +1,7 @@
 {{- if .Values.cerberus.enabled -}}
-{{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
-{{- $version := .Values.cerberus.version | default "latest" -}}
+{{- $c := .Values.cerberus -}}
+{{- $local := eq $c.kubeconfig.mode "local" -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -23,23 +23,34 @@ spec:
       app: cerberus
       tool: cerberus
   strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
         app: cerberus
         tool: cerberus
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/21-cerberus-config.yaml") . | sha256sum }}
     spec:
+      serviceAccountName: cerberus
       containers:
       - name: cerberus
-        image: "quay.io/redhat-chaos/cerberus:{{- $version -}}"
-        imagePullPolicy: Always
-        {{- if eq .Values.cerberus.kubeconfig.mode "local" }}
+        image: {{ include "chaos-cerberus.image" . | quote }}
+        imagePullPolicy: {{ $c.image.pullPolicy | default "IfNotPresent" }}
+        command:
+          - /bin/sh
+          - -c
         args:
           - |
+            set -e
+            # The image expects to run as root in /root/cerberus: work on a writable copy instead
+            cp -r /root/cerberus /tmp/cerberus
+            cd /tmp/cerberus
+            # Custom checks are imported as python modules relative to the working directory
+            mkdir -p custom && cp /etc/cerberus/*.py custom/ 2>/dev/null || true
+            cp /etc/cerberus/config.yaml /tmp/cerberus-config.yaml
+            {{- if $local }}
+            # The kubernetes python client used by cerberus does not support tokenFile: embed the token
             TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
             CA_DATA=$(base64 -w0 /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
             cat > /tmp/kubeconfig <<KUBECONFIGEOF
@@ -63,40 +74,58 @@ spec:
                 user: default
             preferences: {}
             KUBECONFIGEOF
-            python3 start_cerberus.py -c config/config.yaml
-        {{- else }}
-        args:
-          - python3 start_cerberus.py -c config/config.yaml
-        {{- end }}
-        command:
-          - /bin/sh
-          - -c
+            sed -i "s|__SERVICE_ACCOUNT_TOKEN__|${TOKEN}|" /tmp/cerberus-config.yaml
+            {{- end }}
+            exec python3 start_cerberus.py -c /tmp/cerberus-config.yaml -o /tmp/cerberus.report
+        env:
+        - name: HOME
+          value: /tmp
+        - name: KUBECONFIG
+          value: {{ ternary "/tmp/kubeconfig" "/etc/cerberus-kubeconfig/config" $local }}
         ports:
         - containerPort: 8080
           protocol: TCP
-        resources: {}
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          {{- toYaml ($c.resources | default dict) | nindent 10 }}
         securityContext:
+          {{- if $c.privileged }}
           privileged: true
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
+          {{- else }}
+          allowPrivilegeEscalation: false
+          {{- if $c.runAsUser }}
+          runAsUser: {{ $c.runAsUser }}
+          {{- end }}
+          runAsNonRoot: true
+          capabilities:
+            drop: ["ALL"]
+          seccompProfile:
+            type: RuntimeDefault
+          {{- end }}
         volumeMounts:
-        - mountPath: /root/kubeconfig
-          name: cerberus-kubeconfig
-          subPath: config
-        - mountPath: /root/cerberus/config
+        - mountPath: /etc/cerberus
           name: cerberus-config
+        {{- if not $local }}
+        - mountPath: /etc/cerberus-kubeconfig
+          name: cerberus-kubeconfig
+          readOnly: true
+        {{- end }}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-      schedulerName: default-scheduler
-      serviceAccount: cerberus
       terminationGracePeriodSeconds: 10
       volumes:
       - configMap:
           defaultMode: 420
-          name: cerberus-kubeconfig
-        name: cerberus-kubeconfig
-      - configMap:
-          defaultMode: 420
           name: cerberus-config
         name: cerberus-config
+      {{- if not $local }}
+      - secret:
+          defaultMode: 288
+          secretName: cerberus-kubeconfig
+        name: cerberus-kubeconfig
+      {{- end }}
 {{- end -}}

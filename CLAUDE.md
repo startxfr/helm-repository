@@ -8,7 +8,7 @@
 
 | Prefix      | Role                                                                            |
 | ----------- | ------------------------------------------------------------------------------- |
-| `chaos-*`   | Chaos testing tools (cerberus, kraken, litmus, mesh, monkey) + umbrella `chaos` |
+| `chaos-*`   | Chaos testing tools (cerberus, kraken, pipeline, litmus, mesh, monkey) + umbrella `chaos` |
 | `cluster-*` | Cluster-level configuration via Openshift operators                             |
 | `example-*` | Demo / tutorial deployments                                                     |
 | `operator`  | Generic operator subscription chart                                             |
@@ -388,7 +388,7 @@ application:
 
 ### Current coverage (77 values-app files)
 
-One `values-app-<chart>.yaml` per chart with ArgoCD examples (updated 2026-11): cluster-* charts, chaos-* (4), and operator, project, sxapi, unifai.
+One `values-app-<chart>.yaml` per chart with ArgoCD examples (updated 2026-11): cluster-* charts, chaos and chaos-* (7), and operator, project, sxapi, unifai.
 Variants such as `values-app-cluster-quay-sec.yaml` come on top. In `application.list[].source` the template reads `repo` / `rev`
 (aliases `repoURL` / `targetRevision`, default repository `https://gitlab.com/startx1/helm.git` on `master`): set the revision explicitly (`stable`).
 
@@ -400,13 +400,22 @@ Example-* charts (11 total) have no ArgoCD examples — not included.
 
 | Chart            | Tool        | Role                                                                       |
 | ---------------- | ----------- | -------------------------------------------------------------------------- |
-| `chaos-cerberus` | Cerberus    | Watchdog — global cluster health check via API                             |
-| `chaos-kraken`   | Kraken      | Chaos engine — injects scenarios (node stop, pod kill, network partition…) |
+| `chaos-cerberus` | Cerberus    | Watchdog — global cluster health check via API (go/no-go signal)           |
+| `chaos-kraken`   | krkn        | Chaos engine — one-shot Job, engine `core` (krkn image) or `hub` (krkn-hub) |
+| `chaos-pipeline` | Tekton      | Chaos pipelines `chaos-infra` / `chaos-application` (krkn tasks, cerberus gate) |
 | `chaos-litmus`   | Litmus      | Chaos engineering platform — portal + workflows + scheduler                |
 | `chaos-mesh`     | Chaos Mesh  | GUI-driven chaos engine — PodChaos, NetworkChaos, TimeChaos CRs            |
 | `chaos-monkey`   | Kube-monkey | Random pod terminator — opt-in via Deployment labels during business hours |
 
-Every chaos chart README must have `## Usage examples` (after values dictionary, before History) with minimum 3 examples: (1) default/full stack, (2) minimal, (3) advanced.
+Every chaos chart README must have `## Usage examples` (after the values dictionary, before `## ArgoCD deployment`; `## History` stays last) with minimum 3 examples: (1) default/full stack, (2) minimal, (3) advanced, and an **Upstream project** line (repository, version, image) under the description.
+
+Rules for the krkn based charts (`chaos-cerberus`, `chaos-kraken`, `chaos-pipeline`):
+- Generic only: no cluster name, cloud identifier, customer or application name in templates, values or examples. Application targets are values or pipeline parameters.
+- Nothing runs by default: every scenario is `enabled: false` in `chaos-kraken`; `chaos-pipeline` never renders a `PipelineRun` (start runs with `examples/tekton/*.yaml`, `generateName`).
+- No scenario shipped by default targets etcd or control plane nodes.
+- Images: krkn pinned by tag and digest; cerberus pinned by digest (no versioned tag upstream); krkn-hub by tag (rolling tags rebuilt weekly, a pinned digest can disappear).
+- The krkn configuration reference is `config/config.yaml` of the krkn-chaos/krkn repository (also in the image), not the website.
+- The krkn and cerberus containers run unprivileged on a writable copy in `/tmp` (the images expect a fixed user); no custom SCC. Exception: node level scenarios (hog, network chaos, time) start privileged helper pods, so the chart binds its service account to the standard `privileged` SCC in `privilegedNamespaces` when such a scenario is enabled (`privilegedWorkloads: auto`). Access is the chart service account with a dedicated ClusterRole (`rbac.extraRules`, `rbac.clusterAdmin`).
 
 ---
 

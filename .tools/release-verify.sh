@@ -82,8 +82,8 @@ PY
         local want have
         want=$(awk -v r="$r" -v c="$c" '$1==r && $2==c {print $3}' "$W/digests.txt")
         have=$(sha256sum "$dir/$tgz" | cut -d' ' -f1)
-        if [[ -z $want ]]; then echo "FAIL $r/$c digest: no $VERSION entry in the index"; rc=1
-        elif [[ $want == "$have" ]]; then echo "ok   $r/$c digest"; else echo "FAIL $r/$c digest: index $want != file $have"; rc=1; fi
+        if [[ -z $want ]]; then echo "FAIL $r/$c digest no $VERSION entry in the index"; rc=1
+        elif [[ $want == "$have" ]]; then echo "ok   $r/$c digest"; else echo "FAIL $r/$c digest index $want != file $have"; rc=1; fi
         # content against git HEAD
         mkdir -p "$dir/x"; tar -xzf "$dir/$tgz" -C "$dir/x"
         for f in README.md values.yaml; do

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Contract tests of the charts that zuno-demo consumes: cluster-ods, cluster-certmanager, cluster-gpu, cluster-nfd,
-# cluster-machine, cluster-prometheus, cluster-istio and operator. Each check renders a chart with helm template and
+# cluster-machine, cluster-prometheus, cluster-istio and operator, plus the krkn based chaos charts (chaos-cerberus,
+# chaos-kraken, chaos-pipeline). Each check renders a chart with helm template and
 # asserts a few expected facts with yq. Plain bash, helm, yq (mikefarah v4): no other dependency.
 #
 # Usage: tests/contract/run.sh [chart ...]     (default: every chart above)
@@ -240,8 +241,58 @@ YAML
     }
 }
 
+# The three krkn based chaos charts: nothing runs by default, no privileged SCC, images pinned
+test_chaos-cerberus() {
+    render default && assert_count "nothing is rendered by default" Deployment 0
+    render enabled --set cerberus.enabled=true && {
+        assert_count "cerberus creates one Deployment" Deployment 1
+        assert_count "no custom SecurityContextConstraints" SecurityContextConstraints 0
+        assert_count "local mode creates no kubeconfig Secret" Secret 0
+        assert_sel "the image is pinned by digest" 'select(.kind == "Deployment") | .spec.template.spec.containers[0].image | test("^quay.io/krkn-chaos/cerberus@sha256:")' true
+        assert_sel "the container is not privileged" 'select(.kind == "Deployment") | .spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation' false
+        assert_sel "the signal is closed to other namespaces" 'select(.kind == "NetworkPolicy") | .spec.ingress[0].ports[0].port' 8080
+    }
+    render watchoff --set cerberus.enabled=true --set cerberus.watch_nodes=false && \
+        assert_sel "watch_nodes can be disabled" 'select(.kind == "ConfigMap") | .data."config.yaml" | test("watch_nodes: False")' true
+    render token --set cerberus.enabled=true --set cerberus.kubeconfig.mode=token --set cerberus.kubeconfig.token.token=sha256~contract-test-token && {
+        assert_count "token mode stores the kubeconfig in a Secret" Secret 1
+        assert_count "token mode creates no ClusterRole" ClusterRole 0
+    }
+}
+
+test_chaos-kraken() {
+    render default && assert_count "nothing is rendered by default" Job 0
+    render enabled --set kraken.enabled=true && {
+        assert_count "the core engine creates one Job" Job 1
+        assert_count "no custom SecurityContextConstraints" SecurityContextConstraints 0
+        assert_count "no Tekton Pipeline in this chart" Pipeline 0
+        assert_sel "the image is pinned by digest" 'select(.kind == "Job") | .spec.template.spec.containers[0].image | test("^quay.io/krkn-chaos/krkn@sha256:")' true
+        assert_sel "no scenario is enabled by default" 'select(.kind == "ConfigMap" and .metadata.name == "kraken-config") | .data."config.yaml" | test("chaos_scenarios: \\[\\]")' true
+        assert_sel "the service account is not cluster-admin" 'select(.kind == "ClusterRoleBinding") | .roleRef.name' kraken-chaos-chaos-kraken
+    }
+    render scenario --set kraken.enabled=true --set kraken.scenarios.pods-monitoring.enabled=true && \
+        assert_sel "an enabled scenario is added to the scenarios ConfigMap" 'select(.kind == "ConfigMap" and .metadata.name == "kraken-scenarios") | .data | has("pods-monitoring.yaml")' true
+    render hub --set kraken.enabled=true --set kraken.engine=hub --set kraken.hub.scenarios.pod-scenarios.enabled=true && \
+        assert_sel "the hub engine runs a krkn-hub image" 'select(.kind == "Job") | .spec.template.spec.containers[0].image' quay.io/krkn-chaos/krkn-hub:pod-scenarios
+}
+
+test_chaos-pipeline() {
+    render default && assert_count "nothing is rendered by default" Task 0
+    render enabled --set pipeline.enabled=true && {
+        assert_count "three tasks" Task 3
+        assert_count "two pipelines" Pipeline 2
+        assert_count "no PipelineRun: nothing runs at install time" PipelineRun 0
+        assert_count "no custom SecurityContextConstraints" SecurityContextConstraints 0
+        assert_sel "tasks use the tekton.dev/v1 API" 'select(.kind == "Task" and .metadata.name == "krkn-run") | .apiVersion' tekton.dev/v1
+        assert_sel "the infra pipeline starts with the cerberus gate" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.tasks[0].name' cerberus-gate
+        assert_sel "the infra pipeline ends with a final cerberus check" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.finally[0].name' cerberus-final-check
+        assert_sel "node scenarios are disabled by default" 'select(.kind == "ConfigMap") | .data | has("30-node-reboot-worker.yaml")' false
+        assert_sel "the application target is a pipeline parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "target-namespace") | .name' target-namespace
+    }
+}
+
 # ---------------------------------------------------------------------------------------------------------------
-ALL=(operator cluster-ods cluster-certmanager cluster-gpu cluster-nfd cluster-machine cluster-prometheus cluster-istio)
+ALL=(operator cluster-ods cluster-certmanager cluster-gpu cluster-nfd cluster-machine cluster-prometheus cluster-istio chaos-cerberus chaos-kraken chaos-pipeline)
 SELECTED=("$@"); [[ ${#SELECTED[@]} -eq 0 ]] && SELECTED=("${ALL[@]}")
 command -v yq >/dev/null || { echo "yq (mikefarah v4) is required"; exit 2; }
 for c in "${SELECTED[@]}"; do

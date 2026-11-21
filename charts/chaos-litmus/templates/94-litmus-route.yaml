@@ -1,6 +1,9 @@
 {{- if .Values.litmus.enabled -}}{{- if .Values.litmus.expose -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
+{{- /* fullname of the upstream litmus chart (same rule as its litmus-portal.fullname helper) */ -}}
+{{- $name := .Values.litmus.nameOverride | default "litmus" -}}
+{{- $fullname := .Values.litmus.fullnameOverride | default (ternary .Release.Name (printf "%s-%s" .Release.Name $name) (contains $name .Release.Name)) | trunc 63 | trimSuffix "-" -}}
 apiVersion: "route.openshift.io/v1"
 kind: Route
 metadata:
@@ -19,7 +22,7 @@ metadata:
 spec:
   to:
     kind: Service
-    name: chaos-litmus-frontend-service
+    name: {{ $fullname }}-frontend-service
     weight: 100
   port:
     targetPort: http

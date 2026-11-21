@@ -9,7 +9,7 @@ description: >-
 # Helm chart application
 type: application
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.390
+version: 21.3.391
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "1.5.2"
 # Icon of this helm-chart
@@ -74,6 +74,10 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
+    - kind: security
+      description: "Breaking : the cluster-wide edit ClusterRoleBinding (kube-monkey and default service accounts) is removed ; the privileged SecurityContextConstraints is only created with monkey.privileged=true"
+    - kind: fixed
+      description: "The SecurityContextConstraints follows the kube-monkey service account ; ArgoCD examples no longer use a missing values file"
     - kind: changed
-      description: "Align all charts to v21.3.370"
-  artifacthub.io/containsSecurityUpdates: "false"
+      description: "README rewritten ; the project schema is embedded instead of an https reference"
+  artifacthub.io/containsSecurityUpdates: "true"

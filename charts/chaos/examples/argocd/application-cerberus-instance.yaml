@@ -1,7 +1,3 @@
-# Prerequisites for cerberus: create SA with cluster-reader before deploying
-# oc create sa cerberus-monitor -n chaos-cerberus
-# oc create clusterrolebinding cerberus-monitor-cluster-reader \
-#   --clusterrole=cluster-reader --serviceaccount=chaos-cerberus:cerberus-monitor
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -17,21 +13,14 @@ spec:
   source:
     chart: chaos-cerberus
     helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
         cerberus:
           enabled: true
           kubeconfig:
-            mode: token
-            token:
-              server: "https://api.<cluster>:6443"
-              token: "sha256~REPLACE_WITH_YOUR_SA_TOKEN"
-        # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
-        kraken:
-          enabled: false
+            # local: use the cerberus ServiceAccount with a read-only ClusterRole
+            mode: local
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     # pin an exact version in production (ADR-0004)
     targetRevision: 21.3.x

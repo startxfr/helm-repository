@@ -1,6 +1,11 @@
-{{- if .Values.monkey.enabled -}}
+{{- /* privileged SCC for kube-monkey: only on request (monkey.privileged) ; the rights kube-monkey needs come from the ClusterRole of the upstream chart */ -}}
+{{- if and .Values.monkey.enabled .Values.monkey.privileged -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
+{{- /* service account of the kube-monkey chart: serviceAccount.name, else its fullname (same rule as the upstream kubemonkey.fullname helper) */ -}}
+{{- $name := .Values.monkey.nameOverride | default "monkey" -}}
+{{- $fullname := .Values.monkey.fullnameOverride | default (ternary .Release.Name (printf "%s-%s" .Release.Name $name) (contains $name .Release.Name)) | trunc 63 | trimSuffix "-" -}}
+{{- $sa := (.Values.monkey.serviceAccount).name | default $fullname -}}
 ---
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints 
@@ -14,7 +19,7 @@ metadata:
     kubernetes.io/description: 'allows privileged access to host'
     release.openshift.io/create-only: "true"
 users:
-- system:serviceaccount:{{- $namespace -}}:startx-monkey
+- system:serviceaccount:{{- $namespace -}}:{{ $sa }}
 allowHostPorts: true
 priority: null
 requiredDropCapabilities: null
@@ -59,22 +64,6 @@ rules:
     resourceNames: ["privileged-monkey"]
     verbs: ["use"]
 ---
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: kube-monkey-edit-rb
-subjects:
-  - kind: ServiceAccount
-    name: default
-    namespace: {{ $namespace | default "default" | quote }}
-  - kind: ServiceAccount
-    name: startx-monkey
-    namespace: {{ $namespace | default "default" | quote }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: edit
----
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -87,7 +76,7 @@ metadata:
     {{- include "chaos-monkey.annotations" $ | nindent 4 }}
 subjects:
   - kind: ServiceAccount
-    name: startx-monkey
+    name: {{ $sa }}
 roleRef:
   kind: Role
   name: privileged-monkey-scc-role

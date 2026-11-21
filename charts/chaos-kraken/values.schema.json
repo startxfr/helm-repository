@@ -1,355 +1,1375 @@
 {
-    "$schema": "http://json-schema.org/schema#",
-    "type": "object",
-    "properties": {
-        "context": {
-            "type": "object",
-            "title": "chaos context",
-            "description": "Properties of the chaos context.",
-            "required": [
-                "scope",
-                "cluster",
-                "environment",
-                "component",
-                "app"
-            ],
-            "properties": {
-                "scope": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organizational tenant.",
-                    "default": "companyname",
-                    "examples": [
-                        "myscope",
-                        "mycorp",
-                        "startx"
-                    ]
-                },
-                "cluster": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Cluster name",
-                    "description": "Name of the cluster running this application. Define a platform tenant.",
-                    "default": "clustername",
-                    "examples": [
-                        "clustername",
-                        "mycluster",
-                        "localhost"
-                    ]
-                },
-                "environment": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Environment name",
-                    "description": "Name of the environment for this application. Define a stage tenant.",
-                    "default": "dev",
-                    "examples": [
-                        "dev",
-                        "build",
-                        "ci",
-                        "factory",
-                        "preprod",
-                        "prod"
-                    ]
-                },
-                "component": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Component name",
-                    "description": "Name of the component consisting of this application. Define a logical tenant.",
-                    "default": "chaos",
-                    "examples": [
-                        "startx-chaos",
-                        "chaos",
-                        "mycomp"
-                    ]
-                },
-                "app": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 40,
-                    "title": "Application name",
-                    "description": "Name of the application name. Define a functional tenant.",
-                    "default": "kraken",
-                    "examples": [
-                        "kraken",
-                        "monkey"
-                    ]
-                },
-                "version": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 30,
-                    "title": "Version name",
-                    "description": "Name of the application version. Define this chaos version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
-                    "default": "0.0.1",
-                    "examples": [
-                        "0.0.1",
-                        "0.1",
-                        "0.0.1-snapshot",
-                        "0.0.1-202110300900"
-                    ]
-                }
-            }
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "context": {
+      "$ref": "#/$defs/context",
+      "required": [
+        "scope",
+        "cluster",
+        "environment",
+        "component",
+        "app"
+      ]
+    },
+    "kraken": {
+      "type": "object",
+      "title": "Configure kraken",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "Enable kraken",
+          "description": "Enable the kraken (krkn) chaos run",
+          "default": false
         },
-        "kraken": {
-            "type": "object",
-            "title": "Configure kraken",
-            "required": [
-                "enabled"
-            ],
-            "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "title": "Enable kraken",
-                    "description": "Unleash the kraken ;)",
-                    "default": true
-                },
-                "expose": {
-                    "type": "boolean",
-                    "title": "Expose result",
-                    "description": "Enable exposition for this application (route based)",
-                    "default": true
-                },
-                "cerberusUrl": {
-                    "type": "string",
-                    "minLength": 5,
-                    "maxLength": 100,
-                    "title": "Cerberus URL",
-                    "description": "Fill the cerberus server url. (internal is better)",
-                    "default": "http://cerberus.startx-chaos-kraken.svc.cluster.local:8080",
-                    "examples": [
-                        "http://cerberus.startx-chaos-kraken.svc.cluster.local:8080",
-                        "http://cerberus.svc.cluster.local:8080",
-                        "http://cerberus:8080",
-                        "http://external.cerberus.local"
-                    ]
-                },
-                "aws": {
-                    "type": "object",
-                    "title": "AWS section (optional)",
-                    "description": "AWS configuration section",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean",
-                            "title": "Enable AWS credentials",
-                            "description": "Enable the aws integration",
-                            "default": false
-                        },
-                        "credentials": {
-                            "type": "object",
-                            "title": "AWS Credentials",
-                            "description": "credentials (mandatory if enabled)",
-                            "properties": {
-                                "key_id": {
-                                    "type": "string",
-                                    "minLength": 5,
-                                    "maxLength": 45,
-                                    "title": "Access key ID",
-                                    "description": "AWS access key ID used to attack the AWS infrastructure behin the cluster",
-                                    "default": "AKIAXXXXXXXXXXXXXXXX",
-                                    "examples": [
-                                        "AKIAXXXXXXXXXXXXXXXX"
-                                    ]
-                                },
-                                "region": {
-                                    "type": "string",
-                                    "minLength": 8,
-                                    "maxLength": 16,
-                                    "title": "AWS region",
-                                    "description": "AWS used region",
-                                    "default": "eu-west-3",
-                                    "examples": [
-                                        "eu-west-3",
-                                        "eu-west-2",
-                                        "eu-west-1",
-                                        "us-east-1",
-                                        "us-east-2"
-                                    ]
-                                },
-                                "secret": {
-                                    "type": "string",
-                                    "minLength": 10,
-                                    "maxLength": 50,
-                                    "title": "Secret access key",
-                                    "description": "AWS secret access key",
-                                    "default": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                                    "examples": [
-                                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                },
-                "mode": {
-                    "type": "string",
-                    "enum": [
-                        "job",
-                        "pipeline"
-                    ],
-                    "title": "Chaos mode",
-                    "description": "Kraken mode (could be job or pipeline)",
-                    "default": "job"
-                },
-                "job": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "minLength": 0,
-                            "maxLength": 25,
-                            "title": "Job prefix",
-                            "description": "If mode is job, this property set the job name prefix",
-                            "default": "kraken-test",
-                            "examples": [
-                                "kraken-test",
-                                "kraken",
-                                "chaos"
-                            ]
-                        }
-                    }
-                },
-                "pipeline": {
-                    "type": "object",
-                    "properties": {
-                        "prefix": {
-                            "type": "string",
-                            "minLength": 0,
-                            "maxLength": 25,
-                            "title": "Pipeline prefix",
-                            "description": "If mode is pipeline, this property set the pipelinerun name prefix",
-                            "default": "kraken-test",
-                            "examples": [
-                                "kraken-test",
-                                "kraken",
-                                "chaos"
-                            ]
-                        }
-                    }
-                },
-                "kubeconfig": {
-                    "type": "object",
-                    "properties": {
-                        "mode": {
-                            "enum": [
-                                "token",
-                                "file"
-                            ],
-                            "title": "Kubeconfig mode",
-                            "description": "Connection mode to use for the cluster (could be token or file)",
-                            "default": "token"
-                        },
-                        "file": {
-                            "type": "string",
-                            "minLength": 50,
-                            "maxLength": 500,
-                            "title": "Kubeconfig file",
-                            "description": "If mode is file, this property must be set with a full kubeconfig content",
-                            "default": "kind: Config\napiVersion: v1",
-                            "examples": [
-                                "kind: Config\napiVersion: v1",
-                                "kind: Config\napiVersion: v1\ncurrent-context: default"
-                            ]
-                        },
-                        "token": {
-                            "type": "object",
-                            "properties": {
-                                "server": {
-                                    "type": "string",
-                                    "minLength": 5,
-                                    "maxLength": 200,
-                                    "title": "API endpoint",
-                                    "description": "The server URL to the target cluster API",
-                                    "default": "https://localhost:6443",
-                                    "examples": [
-                                        "https://localhost:6443",
-                                        "https://api.mycluster.local:6443"
-                                    ]
-                                },
-                                "token": {
-                                    "type": "string",
-                                    "minLength": 5,
-                                    "maxLength": 200,
-                                    "title": "API token",
-                                    "description": "The token to use to get access. This token must have full cluster admin access to perform some chaos scenarios",
-                                    "default": "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
-                                    "examples": [
-                                        "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
-                                        "mytoken"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "anyOf": [
-                        {
-                            "properties": {
-                                "mode": {
-                                    "const": "token"
-                                }
-                            },
-                            "required": [
-                                "token"
-                            ]
-                        },
-                        {
-                            "properties": {
-                                "mode": {
-                                    "const": "file"
-                                }
-                            },
-                            "required": [
-                                "file"
-                            ]
-                        }
-                    ]
-                },
-                "version": {
-                    "type": "string",
-                    "description": "Version of the kraken image."
-                }
+        "engine": {
+          "enum": [
+            "core",
+            "hub"
+          ],
+          "title": "Engine",
+          "description": "Engine used to run the chaos: core (krkn image and kraken.scenarios) or hub (one krkn-hub image per scenario of kraken.hub.scenarios)",
+          "default": "core"
+        },
+        "image": {
+          "type": "object",
+          "title": "krkn image",
+          "description": "krkn container image, used by the core engine",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "title": "Image repository",
+              "description": "Image repository",
+              "default": "quay.io/krkn-chaos/krkn"
             },
-            "anyOf": [
-                {
-                    "properties": {
-                        "enabled": {
-                            "const": true
-                        }
-                    },
-                    "required": [
-                        "mode"
-                    ]
-                },
-                {
-                    "properties": {
-                        "mode": {
-                            "const": "job"
-                        }
-                    },
-                    "required": [
-                        "job"
-                    ]
-                },
-                {
-                    "properties": {
-                        "mode": {
-                            "const": "pipeline"
-                        }
-                    },
-                    "required": [
-                        "pipeline"
-                    ]
+            "tag": {
+              "type": "string",
+              "title": "Image tag",
+              "description": "Image tag, used when no digest is set",
+              "default": "v5.2.15"
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^(sha256:[a-f0-9]{64})?$",
+              "title": "Image digest",
+              "description": "Image digest, takes precedence over the tag"
+            },
+            "pullPolicy": {
+              "enum": [
+                "Always",
+                "IfNotPresent",
+                "Never"
+              ],
+              "title": "Image pull policy",
+              "default": "IfNotPresent"
+            }
+          }
+        },
+        "privileged": {
+          "type": "boolean",
+          "title": "Privileged",
+          "description": "Run the krkn container as privileged (binds the service account to the privileged SCC)",
+          "default": false
+        },
+        "runAsUser": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "title": "Run as user",
+          "description": "User id of the krkn container. Leave empty on OpenShift",
+          "default": ""
+        },
+        "resources": {
+          "type": "object",
+          "title": "Resources",
+          "description": "Resources requests and limits of the krkn container"
+        },
+        "rbac": {
+          "type": "object",
+          "title": "RBAC",
+          "description": "Access rights of the kraken service account (local kubeconfig mode)",
+          "properties": {
+            "clusterAdmin": {
+              "type": "boolean",
+              "title": "Cluster admin",
+              "description": "Bind the service account to cluster-admin instead of the chaos ClusterRole of this chart",
+              "default": false
+            },
+            "extraRules": {
+              "type": "array",
+              "title": "Extra rules",
+              "description": "Rules added to the chaos ClusterRole of this chart",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "job": {
+          "type": "object",
+          "title": "Job",
+          "description": "Configuration of the job",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40,
+              "title": "Job name",
+              "description": "Job name (prefix of the job names with the hub engine)",
+              "default": "kraken-test"
+            },
+            "activeDeadlineSeconds": {
+              "type": "integer",
+              "minimum": 0,
+              "title": "Deadline",
+              "description": "Maximum duration of the job (in seconds)",
+              "default": 7200
+            },
+            "suspend": {
+              "type": "boolean",
+              "title": "Suspend",
+              "description": "Create the job suspended",
+              "default": false
+            },
+            "ttlSecondsAfterFinished": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "title": "TTL after finished",
+              "description": "Delete the finished job after this delay (in seconds), kept when empty",
+              "default": ""
+            }
+          }
+        },
+        "config": {
+          "type": "object",
+          "title": "krkn settings",
+          "description": "General krkn settings (core engine)",
+          "properties": {
+            "exitOnFailure": {
+              "type": "boolean",
+              "title": "Exit on failure",
+              "description": "Stop the run when a scenario fails",
+              "default": false
+            },
+            "waitDuration": {
+              "type": "integer",
+              "minimum": 0,
+              "title": "Wait duration",
+              "description": "Duration to wait between each scenario (in seconds)",
+              "default": 60
+            },
+            "iterations": {
+              "type": "integer",
+              "minimum": 0,
+              "title": "Iterations",
+              "description": "Number of times to execute the scenarios",
+              "default": 1
+            },
+            "daemonMode": {
+              "type": "boolean",
+              "title": "Daemon mode",
+              "description": "Run the scenarios forever",
+              "default": false
+            },
+            "autoRollback": {
+              "type": "boolean",
+              "title": "Auto rollback",
+              "description": "Roll back the changes of a scenario that failed",
+              "default": true
+            },
+            "imageSignatureVerification": {
+              "type": "boolean",
+              "title": "Image signature verification",
+              "description": "Verify the signature of the workload images started by krkn",
+              "default": true
+            },
+            "reportFormats": {
+              "type": "array",
+              "title": "Report formats",
+              "description": "Formats of the report generated at the end of the run",
+              "items": {
+                "enum": [
+                  "html",
+                  "pdf"
+                ]
+              }
+            },
+            "resiliencyRunMode": {
+              "enum": [
+                "standalone",
+                "detailed",
+                "disabled"
+              ],
+              "title": "Resiliency run mode",
+              "description": "Resiliency score mode",
+              "default": "disabled"
+            }
+          }
+        },
+        "cerberus": {
+          "type": "object",
+          "title": "Cerberus",
+          "description": "Cerberus go/no-go signal",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enabled",
+              "description": "Check the cerberus signal after each scenario",
+              "default": false
+            },
+            "url": {
+              "type": "string",
+              "title": "Cerberus URL",
+              "description": "URL of the cerberus signal",
+              "default": ""
+            },
+            "checkApplicationRoutes": {
+              "type": "boolean",
+              "title": "Check application routes",
+              "description": "Fail the run when a route watched by cerberus was unavailable",
+              "default": false
+            }
+          }
+        },
+        "healthChecks": {
+          "type": "object",
+          "title": "Health checks",
+          "description": "HTTP health checks run by krkn itself (core engine)",
+          "properties": {
+            "interval": {
+              "type": "integer",
+              "minimum": 0,
+              "title": "Interval",
+              "description": "Check interval (in seconds)",
+              "default": 2
+            },
+            "runDuring": {
+              "type": [
+                "string",
+                "array"
+              ],
+              "title": "Run during",
+              "description": "When to run the checks (pre, during, post or a list)"
+            },
+            "exitOnFailure": {
+              "type": "boolean",
+              "title": "Exit on failure",
+              "description": "Fail the run when a check fails",
+              "default": false
+            },
+            "endpoints": {
+              "type": "array",
+              "title": "Endpoints",
+              "description": "Endpoints to check (url, bearer_token, auth)",
+              "items": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string"
+                  },
+                  "bearer_token": {
+                    "type": "string"
+                  },
+                  "auth": {
+                    "type": "string"
+                  }
                 }
-            ]
+              }
+            }
+          }
+        },
+        "objectStateChecks": {
+          "type": "object",
+          "title": "Object state checks",
+          "description": "Kubernetes object condition checks run by krkn itself (core engine)",
+          "properties": {
+            "interval": {
+              "type": "integer",
+              "minimum": 0,
+              "title": "Interval",
+              "description": "Check interval (in seconds)",
+              "default": 2
+            },
+            "runDuring": {
+              "type": "array",
+              "title": "Run during",
+              "description": "When to run the checks (list of pre, during, post). Disabled when empty",
+              "items": {
+                "enum": [
+                  "pre",
+                  "during",
+                  "post"
+                ]
+              }
+            },
+            "exitOnFailure": {
+              "type": "boolean",
+              "title": "Exit on failure",
+              "description": "Fail the run when a check fails",
+              "default": false
+            },
+            "checks": {
+              "type": "array",
+              "title": "Checks",
+              "description": "Object checks (name, kind, object_name, namespace, label_selector, condition)",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "monitoring": {
+          "type": "object",
+          "title": "Monitoring",
+          "description": "Prometheus based checks (core engine)",
+          "properties": {
+            "prometheusUrl": {
+              "type": "string",
+              "title": "Prometheus URL",
+              "description": "Prometheus URL (mandatory on plain Kubernetes)",
+              "default": ""
+            },
+            "prometheusToken": {
+              "type": "string",
+              "title": "Prometheus token",
+              "description": "Prometheus bearer token (mandatory on plain Kubernetes)",
+              "default": ""
+            },
+            "enableAlerts": {
+              "type": "boolean",
+              "title": "Enable alerts",
+              "description": "Evaluate the alert profile during the run",
+              "default": false
+            },
+            "checkCriticalAlerts": {
+              "type": "boolean",
+              "title": "Check critical alerts",
+              "description": "Fail the run when a critical alert is firing after the chaos",
+              "default": false
+            },
+            "enableMetrics": {
+              "type": "boolean",
+              "title": "Enable metrics",
+              "description": "Collect the metrics of the metrics profile",
+              "default": false
+            },
+            "alertProfile": {
+              "type": "string",
+              "title": "Alert profile",
+              "description": "Path of the alert profile in the krkn image",
+              "default": "config/alerts.yaml"
+            },
+            "metricsProfile": {
+              "type": "string",
+              "title": "Metrics profile",
+              "description": "Path of the metrics profile in the krkn image",
+              "default": "config/metrics-report.yaml"
+            }
+          }
+        },
+        "cloud": {
+          "type": "object",
+          "title": "Cloud",
+          "description": "Cloud provider access, used by the node and zone scenarios",
+          "properties": {
+            "existingSecret": {
+              "type": "string",
+              "title": "Existing secret",
+              "description": "Name of an existing Secret whose keys are exposed as environment variables",
+              "default": ""
+            }
+          }
+        },
+        "scenarios": {
+          "type": "object",
+          "title": "Scenarios",
+          "description": "Scenarios run by the core engine, in alphabetical order of their name",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "title": "Enabled",
+                "description": "Run this scenario",
+                "default": false
+              },
+              "type": {
+                "type": "string",
+                "title": "Scenario type",
+                "description": "krkn scenario type (ex: pod_disruption_scenarios)",
+                "default": ""
+              },
+              "file": {
+                "type": "string",
+                "title": "Scenario file",
+                "description": "Scenario file shipped in the krkn image, used instead of content",
+                "default": ""
+              },
+              "content": {
+                "type": [
+                  "object",
+                  "array",
+                  "string"
+                ],
+                "title": "Scenario content",
+                "description": "Scenario definition, in the krkn format of this type"
+              }
+            }
+          }
+        },
+        "hub": {
+          "type": "object",
+          "title": "Hub engine",
+          "description": "Configuration of the hub engine",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "title": "Image repository",
+              "description": "Image repository of the krkn-hub images",
+              "default": "quay.io/krkn-chaos/krkn-hub"
+            },
+            "pullPolicy": {
+              "enum": [
+                "Always",
+                "IfNotPresent",
+                "Never"
+              ],
+              "title": "Image pull policy",
+              "default": "Always"
+            },
+            "scenarios": {
+              "type": "object",
+              "title": "Hub scenarios",
+              "description": "Scenarios run by the hub engine, one job each",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "title": "Enabled",
+                    "description": "Run this scenario",
+                    "default": false
+                  },
+                  "tag": {
+                    "type": "string",
+                    "title": "Image tag",
+                    "description": "krkn-hub image tag (defaults to the scenario name)",
+                    "default": ""
+                  },
+                  "digest": {
+                    "type": "string",
+                    "pattern": "^(sha256:[a-f0-9]{64})?$",
+                    "title": "Image digest",
+                    "description": "Image digest, takes precedence over the tag"
+                  },
+                  "env": {
+                    "type": "object",
+                    "title": "Environment",
+                    "description": "Environment variables of the scenario",
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "number",
+                        "boolean"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "kubeconfig": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "local",
+                "token",
+                "file"
+              ],
+              "title": "Kubeconfig mode",
+              "description": "Connection mode to use for the cluster (could be local, token or file)",
+              "default": "local"
+            },
+            "file": {
+              "type": "string",
+              "minLength": 50,
+              "maxLength": 500,
+              "title": "Kubeconfig file",
+              "description": "If mode is file, this property must be set with a full kubeconfig content",
+              "default": "kind: Config\napiVersion: v1",
+              "examples": [
+                "kind: Config\napiVersion: v1",
+                "kind: Config\napiVersion: v1\ncurrent-context: default"
+              ]
+            },
+            "token": {
+              "type": "object",
+              "properties": {
+                "server": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 200,
+                  "title": "API endpoint",
+                  "description": "The server URL to the target cluster API",
+                  "default": "https://localhost:6443",
+                  "examples": [
+                    "https://localhost:6443",
+                    "https://api.mycluster.local:6443"
+                  ]
+                },
+                "token": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 200,
+                  "title": "API token",
+                  "description": "The token to use to get access. Its rights must cover the scenarios you run",
+                  "default": "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                  "examples": [
+                    "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                    "mytoken"
+                  ]
+                },
+                "ca": {
+                  "type": "string",
+                  "title": "API certificate authority",
+                  "description": "PEM content of the certificate authority of the target cluster API",
+                  "default": ""
+                },
+                "insecure": {
+                  "type": "boolean",
+                  "title": "Skip TLS verification",
+                  "description": "Skip the TLS verification of the target cluster API (only used when no ca is given)",
+                  "default": false
+                }
+              }
+            }
+          },
+          "anyOf": [
+            {
+              "properties": {
+                "mode": {
+                  "const": "token"
+                }
+              },
+              "required": [
+                "token"
+              ]
+            },
+            {
+              "properties": {
+                "mode": {
+                  "const": "file"
+                }
+              },
+              "required": [
+                "file"
+              ]
+            },
+            {
+              "properties": {
+                "mode": {
+                  "const": "local"
+                }
+              }
+            }
+          ]
+        },
+        "privilegedWorkloads": {
+          "enum": [
+            "auto",
+            true,
+            false,
+            "true",
+            "false"
+          ],
+          "title": "Privileged workloads",
+          "description": "Give the service account the privileged SCC in privilegedNamespaces, for the helper pods of the node level scenarios (auto: when an enabled scenario needs it)",
+          "default": "auto"
+        },
+        "privilegedNamespaces": {
+          "type": "array",
+          "title": "Privileged namespaces",
+          "description": "Namespaces where krkn starts its helper pods",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63
+          },
+          "default": [
+            "default"
+          ]
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "enabled": {
+              "const": true
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        },
+        {
+          "properties": {
+            "mode": {
+              "const": "job"
+            }
+          },
+          "required": [
+            "job"
+          ]
+        },
+        {
+          "properties": {
+            "mode": {
+              "const": "pipeline"
+            }
+          },
+          "required": [
+            "pipeline"
+          ]
+        }
+      ]
+    },
+    "project": {
+      "$ref": "#/$defs/project"
+    }
+  },
+  "$defs": {
+    "context": {
+      "type": "object",
+      "title": "Project / namespace context",
+      "description": "Properties of the project context.",
+      "properties": {
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Scope name",
+          "description": "Name of the global scope for this application. Define an organizational tenant.",
+          "default": "myscope",
+          "examples": [
+            "myscope",
+            "mycustomer"
+          ]
+        },
+        "cluster": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Cluster name",
+          "description": "Name of the cluster running this application. Define a platform tenant.",
+          "default": "localhost",
+          "examples": [
+            "mycluster",
+            "localhost"
+          ]
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Environment name",
+          "description": "Name of the environment for this application. Define a stage tenant.",
+          "default": "dev",
+          "examples": [
+            "dev",
+            "factory",
+            "preprod",
+            "prod"
+          ]
+        },
+        "component": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Component name",
+          "description": "Name of the component consisting of this application. Define a logical tenant.",
+          "default": "mycomp",
+          "examples": [
+            "mycomp",
+            "myservice"
+          ]
+        },
+        "app": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "title": "Application name",
+          "description": "Name of the application name. Define a functional tenant.",
+          "default": "default-project",
+          "examples": [
+            "myapp",
+            "mymicroservice"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30,
+          "title": "Version name",
+          "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+          "default": "0.0.1",
+          "examples": [
+            "0.0.1",
+            "0.1",
+            "0.0.1-snapshot",
+            "0.0.1-202110300900"
+          ]
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "Enable the namespace/project creation",
+          "description": "Enable creation of the namespace or project. Is required to be enabled if you want to create the resource.",
+          "default": true
+        },
+        "context": {
+          "$ref": "#/$defs/context"
         },
         "project": {
-            "$ref": "https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values.schema.json"
+          "type": "object",
+          "title": "Project / namespace definition",
+          "description": "Information about the project or namespace definition.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable namespace / project creation",
+              "description": "Enable the creation of the project or namespace.",
+              "default": true
+            },
+            "infra": {
+              "type": "boolean",
+              "title": "Enable infra nodes",
+              "description": "Enable workload located into infra nodes",
+              "default": false
+            },
+            "hooked": {
+              "type": "boolean",
+              "title": "Helm hook",
+              "description": "Project or namespace creation is done as an helm hook. Should be set to true if type is project (helm doesn't recognize project resource as it does for namespace)",
+              "default": false
+            },
+            "name": {
+              "type": "string",
+              "title": "Name",
+              "description": "Name of the project or namespace.",
+              "default": "my-project",
+              "examples": [
+                "default-project",
+                "my-project",
+                "my-app"
+              ]
+            },
+            "nodeSelector": {
+              "type": "string",
+              "title": "Node selector",
+              "description": "A Node selector condition to set at the project level",
+              "default": false,
+              "examples": [
+                "node-role.kubernetes.io/infra=",
+                "node-role.kubernetes.io/worker=",
+                "node-role.kubernetes.io/app=",
+                "machine.startx.io/group=app-small",
+                "machine.startx.io/group=app-big",
+                "cpu-feature.node.kubevirt.io/acpi=true"
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "project",
+                "namespace"
+              ],
+              "title": "Kind of resource",
+              "description": "Kind of resource to use for namespace isolation. Project kind should be used against Openshift clusters.",
+              "default": "namespace",
+              "examples": [
+                "project",
+                "namespace"
+              ]
+            },
+            "display_name": {
+              "type": "string",
+              "title": "Display name",
+              "description": "Display name of the project. Only apply to project (Openshift) type.",
+              "default": "MY project",
+              "examples": [
+                "Default project",
+                "MY project"
+              ]
+            },
+            "description": {
+              "type": "string",
+              "title": "Description",
+              "description": "Description of the project. Only apply to project (Openshift) type.",
+              "default": "MY project description",
+              "examples": [
+                "Default project description",
+                "MY project description"
+              ]
+            }
+          }
+        },
+        "dockercfg": {
+          "type": "object",
+          "title": "Container registry credentials",
+          "description": "Creation of secret holding registry access credentials at the namespace level. Could be used with imagePull option available in the serviceAccount section.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable namespace scoped Dockercfg secret",
+              "description": "Enable the creation of various dockercfg at the namespace / project level. This file hold credentials for container images repository access. Could be linked with service accounts (see serviceAccounts section).",
+              "default": false
+            },
+            "list": {
+              "title": "Dockercfg list",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Credential name",
+                    "description": "Name of the credential to create.",
+                    "default": "corp-registrycreds-repositoryname",
+                    "examples": [
+                      "corp-registrycreds-repositoryname",
+                      "my-repository-name",
+                      "corp-repository-name"
+                    ]
+                  },
+                  "namespace": {
+                    "type": "string",
+                    "title": "Credential namespace",
+                    "description": "Namespace where the credential must reside.",
+                    "default": "default-project",
+                    "examples": [
+                      "default-project",
+                      "default"
+                    ]
+                  },
+                  "registry": {
+                    "type": "string",
+                    "title": "Registry",
+                    "description": "Domain name of the registry to use.",
+                    "default": "docker.io",
+                    "examples": [
+                      "docker.io",
+                      "quay.io"
+                    ]
+                  },
+                  "username": {
+                    "type": "string",
+                    "title": "User name",
+                    "description": "Name of the user used to connect to the registry.",
+                    "default": "myusername",
+                    "examples": [
+                      "myusername",
+                      "username"
+                    ]
+                  },
+                  "password": {
+                    "type": "string",
+                    "title": "Password",
+                    "description": "Password coresponding to the user declared for the registry access.",
+                    "default": "xxxxxx"
+                  },
+                  "email": {
+                    "type": "string",
+                    "title": "E-mail",
+                    "description": "Email associated to the registry user.",
+                    "default": "my@example.com",
+                    "examples": [
+                      "my@example.com",
+                      "my@corp.com"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "serviceAccounts": {
+          "type": "object",
+          "title": "Service Account management",
+          "description": "Creation of ServiceAccount. Could link secret holding registry creds using the imagePullSecrets option.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable namespace scoped serviceAccounts",
+              "description": "Enable the creation of various serviceAccounts at the namespace / project level. This list hold all serviceAccounts managed by this chart.",
+              "default": false
+            },
+            "list": {
+              "title": "ServiceAccounts list",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "serviceAccount name",
+                    "description": "Name of the serviceAccount to create.",
+                    "default": "default-project",
+                    "examples": [
+                      "default",
+                      "builder"
+                    ]
+                  },
+                  "imagePullSecrets": {
+                    "type": "array",
+                    "title": "imagePullSecrets list",
+                    "description": "List of secrets used for imagePull requests.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "title": "Secret name",
+                          "description": "Name of the secret to link to this serviceAccount for imagePull.",
+                          "default": "corp-registrycreds-repositoryname",
+                          "examples": [
+                            "corp-registrycreds-repositoryname",
+                            "my-repository-name",
+                            "corp-repository-name"
+                          ]
+                        },
+                        "namespace": {
+                          "type": "string",
+                          "title": "Secret namespace",
+                          "description": "Namespace of the secret to link to this serviceAccount for imagePull.",
+                          "default": "default-project",
+                          "examples": [
+                            "default-project",
+                            "default"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "quotas": {
+          "type": "object",
+          "title": "Quota management",
+          "description": "Creation of ResourceQuota in the namespace to restrict resource consumption. see https://kubernetes.io/docs/concepts/policy/resource-quotas",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable quotas into the namespace",
+              "description": "Enable the creation of ResourceQuotas in this project / namespace.",
+              "default": false
+            },
+            "rules": {
+              "type": "string",
+              "title": "Rules",
+              "description": "List quotas rules to apply to this project / namespace. You can set whatever is supported in the spec of the ResourceQuota kubernetes resource. See https://kubernetes.io/docs/concepts/policy/resource-quotas for more information.",
+              "default": "hard:\n  limits.cpu: '400m'",
+              "examples": [
+                "hard:\n  limits.cpu: '400m'"
+              ]
+            }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "title": "LimitRanges management",
+          "description": "Creation of LimitRanges in the namespace to restrict resource consumption. see https://kubernetes.io/docs/concepts/policy/limit-range",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable limit ranges into the namespace",
+              "description": "Enable the creation of LimitRanges in this project / namespace.",
+              "default": false
+            },
+            "rules": {
+              "type": "string",
+              "title": "Rules",
+              "description": "List limit ranges rules to apply to this project / namespace. You can set whatever is supported in the spec of the LimitRanges kubernetes resource. See https://kubernetes.io/docs/concepts/policy/limit-range for more information.",
+              "default": "limits:\n  - type: Pod\n    max:\n      cpu: 200m",
+              "examples": [
+                "limits:\n  - type: Pod\n    max:\n      cpu: 200m"
+              ]
+            }
+          }
+        },
+        "networkpolicy": {
+          "type": "object",
+          "title": "NetworkPolicy management",
+          "description": "Creation of various NetworkPolicy in the namespace to restrict network exposition. see https://kubernetes.io/docs/concepts/services-networking/network-policies",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable NetworkPolicy into the namespace",
+              "description": "Enable the creation of NetworkPolicies in this project / namespace.",
+              "default": false
+            },
+            "rules": {
+              "title": "NetworkPolicy rules list",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "title": "NetworkPolicy name",
+                    "description": "Name of the NetworkPolicy to create.",
+                    "default": "allow-from-openshift-ingress",
+                    "examples": [
+                      "allow-from-openshift-ingress",
+                      "allow-app1-to-app2",
+                      "deny-front-to-back"
+                    ]
+                  },
+                  "spec": {
+                    "type": "string",
+                    "title": "Rules",
+                    "description": "Specification of the network policy to apply. You can set whatever is supported in the spec of the NetworkPolicy kubernetes resource. See https://kubernetes.io/docs/concepts/services-networking/network-policies for more information.",
+                    "default": "hard:\n  limits.cpu: '400m'",
+                    "examples": [
+                      "hard:\n  limits.cpu: '400m'"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rbac": {
+          "type": "object",
+          "title": "RBAC management",
+          "description": "Creation of various RBAC resources to restrict access to the namespace resources. see https://kubernetes.io/docs/reference/access-authn-authz/rbac",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable RBAC into the namespace",
+              "description": "Enable the creation of RBAC resources in this project / namespace.",
+              "default": false
+            },
+            "groups": {
+              "title": "RoleBinding rules for groups",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "title": "RoleBinding ID",
+                    "description": "ID of the RoleBinding to create.",
+                    "default": "mygroup",
+                    "examples": [
+                      "mygroup",
+                      "mygroup-basic-user",
+                      "mygroupcluster"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "Group name",
+                    "description": "Name of the group to onboard in the project.",
+                    "default": "mygroup",
+                    "examples": [
+                      "mygroup",
+                      "mygroup-example",
+                      "group1",
+                      "dev-team"
+                    ]
+                  },
+                  "role": {
+                    "type": "string",
+                    "title": "Role name",
+                    "description": "Name of the role to give to this group.",
+                    "default": "basic-user",
+                    "examples": [
+                      "basic-user",
+                      "edit",
+                      "admin"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Role type",
+                    "description": "The kind of role to use. Could be cluster or local. Default is local.",
+                    "enum": [
+                      "local",
+                      "cluster"
+                    ],
+                    "default": "local",
+                    "examples": [
+                      "local",
+                      "cluster"
+                    ]
+                  }
+                }
+              }
+            },
+            "users": {
+              "title": "RoleBinding rules for users",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "title": "RoleBinding ID",
+                    "description": "ID of the RoleBinding to create.",
+                    "default": "myuser",
+                    "examples": [
+                      "myuser",
+                      "myuser-basic-user",
+                      "myusercluster"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "title": "User name",
+                    "description": "Name of the user to onboard in the project.",
+                    "default": "myuser",
+                    "examples": [
+                      "myuser",
+                      "myuser-example",
+                      "user1",
+                      "dev1"
+                    ]
+                  },
+                  "role": {
+                    "type": "string",
+                    "title": "Role name",
+                    "description": "Name of the role to give to this user.",
+                    "default": "basic-user",
+                    "examples": [
+                      "basic-user",
+                      "edit",
+                      "admin"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "title": "Role type",
+                    "description": "The kind of role to use. Could be cluster or local. Default is local.",
+                    "enum": [
+                      "local",
+                      "cluster"
+                    ],
+                    "default": "local",
+                    "examples": [
+                      "local",
+                      "cluster"
+                    ]
+                  }
+                }
+              }
+            },
+            "roles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "rules": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "apiGroups": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "resourceNames": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "resources": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "verbs": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "rolesbinding": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "subjects": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "namespace": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "typeRole": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "sa": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "podMonitor": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable the podMonitor creation",
+              "description": "Enable creation of the podMonitor in this project. Is required to be enabled if you want to create the resources.",
+              "default": false
+            },
+            "list": {
+              "type": "array",
+              "title": "List of podMonitor's",
+              "items": {
+                "type": "object",
+                "title": "podMonitor's definition",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Name of the podMonitor",
+                    "default": "my-pod-monitor"
+                  },
+                  "namespace": {
+                    "type": "string",
+                    "title": "Namespace",
+                    "description": "Namespace of the podMonitor. Default use the project.name value"
+                  },
+                  "spec": {
+                    "type": "string",
+                    "title": "Spec",
+                    "description": "Specification of the podMonitor. See https://docs.openshift.com/container-platform/4.14/rest_api/monitoring_apis/podmonitor-monitoring-coreos-com-v1.html#spec-podmetricsendpoints-2"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "serviceMonitor": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable the serviceMonitor creation",
+              "description": "Enable creation of the serviceMonitor in this project. Is required to be enabled if you want to create the resources.",
+              "default": false
+            },
+            "list": {
+              "type": "array",
+              "title": "List of serviceMonitor's",
+              "items": {
+                "type": "object",
+                "title": "serviceMonitor's definition",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "Name",
+                    "description": "Name of the serviceMonitor",
+                    "default": "my-service-monitor"
+                  },
+                  "namespace": {
+                    "type": "string",
+                    "title": "Namespace",
+                    "description": "Namespace of the serviceMonitor. Default use the project.name value"
+                  },
+                  "spec": {
+                    "type": "string",
+                    "title": "Spec",
+                    "description": "Specification of the serviceMonitor. See https://docs.openshift.com/container-platform/4.14/rest_api/monitoring_apis/servicemonitor-monitoring-coreos-com-v1.html"
+                  }
+                }
+              }
+            }
+          }
         }
+      }
     }
+  }
 }

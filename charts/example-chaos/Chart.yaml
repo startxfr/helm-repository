@@ -5,8 +5,10 @@ name: example-chaos
 description: Helm chart used to deploy a chaos testing suit composed of chaos mesh, kube-monkey and kraken.ci.
 # Helm chart application
 type: application
+# This chart is deprecated: use the chaos-* charts (chaos-cerberus, chaos-kraken, chaos-litmus, chaos-mesh, chaos-monkey)
+deprecated: true
 # Version of this helm chart (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release guidelines)
-version: 21.3.390
+version: 21.3.391
 # Version name of this application (see https://github.com/startxfr/helm-repository/blob/dev/README.md for helm chart release history)
 appVersion: "4.21.19"
 # Icon of this helm-chart
@@ -105,6 +107,6 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
-    - kind: changed
-      description: "Align all charts to v21.3.370"
+    - kind: deprecated
+      description: "Deprecate example-chaos, replaced by the chaos-* charts (chaos-cerberus, chaos-kraken, chaos-pipeline, chaos-litmus, chaos-mesh, chaos-monkey)"
   artifacthub.io/containsSecurityUpdates: "false"

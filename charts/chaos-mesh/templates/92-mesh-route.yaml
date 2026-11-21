@@ -1,4 +1,5 @@
-{{- if .Values.mesh.enabled -}}{{- if .Values.mesh.expose -}}
+{{- /* route to the dashboard service of the upstream chart ; no dashboard, no route */ -}}
+{{- if and .Values.mesh.enabled .Values.mesh.expose (ne (toString (.Values.mesh.dashboard).create) "false") -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 apiVersion: "route.openshift.io/v1"
@@ -23,6 +24,8 @@ spec:
   wildcardPolicy: None
   to:
     kind: Service
-    name: ui
+    name: chaos-dashboard
     weight: 100
-{{- end -}}{{- end -}}
+  port:
+    targetPort: http
+{{- end -}}

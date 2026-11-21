@@ -48,3 +48,43 @@ Must match the chart name, not `sxapi`. Charts affected: `chaos-*`, `cluster-vau
 
 Never tracked (root `.gitignore`, ADR-0005). Pins in `Chart.yaml` dependencies are exact, so the lock adds nothing; the release and the CI run `helm dependency update` themselves.
 Do not `git add -f` a lock; after changing a pin there is nothing else to commit.
+
+## chaos-litmus / chaos-mesh / chaos-monkey : wrappers around upstream charts
+
+- The route and SCC templates must name the Services and ServiceAccounts exactly as the upstream chart does: recompute
+  the upstream `fullname` (override, else release name when it contains the name, else `<release>-<name>`); with an
+  alias the default name is the alias (`monkey`, `litmus`), not the upstream chart name. Never hardcode a release name.
+- `chaos-mesh` generates its certificate authority, its webhook and chaosd certificates and a `rollme` annotation at
+  every render (no `lookup`): an ArgoCD Application needs the `ignoreDifferences` of `examples/argocd/` and
+  `RespectIgnoreDifferences=true`. Its CRDs are in the upstream `crds/` directory: no `skipCrds`, `ServerSideApply=true`.
+- No default credentials, no extra rights (maintainer decision, 2026-11-21): `chaos-litmus` ships no password and
+  refuses to render without `existingSecret` or explicit passwords (helper `chaos-litmus.validate`); its example Argo
+  `Workflow` is behind `litmus.exampleWorkflow`; `chaos-monkey` only has the ClusterRole of the upstream chart, the
+  privileged SCC is behind `monkey.privileged`. Never reintroduce a literal password or a cluster-wide binding.
+- Open, waiting for a decision of the maintainer (behaviour changes, do not fix on sight):
+  - `chaos-litmus` grants its privileged SCC to nine service accounts of the namespace, `default` included;
+  - `chaos-monkey` (`monkey.privileged`), `chaos-litmus` and `chaos-mesh` still create their own copy of a privileged
+    SCC; the krkn based charts bind the standard `system:openshift:scc:privileged` ClusterRole instead. Align them;
+  - the `chaos-mesh` route keeps `insecureEdgeTerminationPolicy: Allow`;
+  - neither `chaos-monkey` with the restricted SCC nor the `chaos-mesh` ArgoCD `ignoreDifferences` were run on a cluster.
+
+## krkn / cerberus images expect a fixed user and a writable working directory
+
+`quay.io/krkn-chaos/krkn`, `krkn-hub` and `cerberus` write in their working directory (`/home/krkn/kraken`, `/root/cerberus`).
+Under the OpenShift `restricted-v2` SCC (random UID) this fails with `PermissionError`. The chaos charts copy the
+directory to `/tmp` and run from there (`cp -r ... /tmp/...`), with `HOME=/tmp`; krkn-hub is redirected with `ROOT_FOLDER`
+and `KRAKEN_FOLDER`. Do not reintroduce a privileged SCC to work around it.
+Charts affected: `chaos-cerberus`, `chaos-kraken`, `chaos-pipeline`.
+
+## krkn / cerberus local kubeconfig must embed the token
+
+The kubernetes python client used by cerberus (and krkn-lib) does not read `tokenFile` from a kubeconfig: the start
+script writes `/tmp/kubeconfig` with the service account token and CA embedded. Custom cerberus checks are imported as
+python modules relative to the working directory (`custom/<file>.py`), never by absolute path.
+
+## chaos-kraken ClusterRole is not validated for every scenario type
+
+The chaos ClusterRole of `chaos-kraken` and `chaos-pipeline` is derived from the upstream RBAC documentation and covers
+the scenarios shipped with the charts. When a scenario fails with `Forbidden`, add the rule to `rbac.extraRules` in the
+values first, then to the template of both charts once confirmed on a cluster.
+

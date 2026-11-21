@@ -1,0 +1,110 @@
+{{- if .Values.cerberus.enabled -}}
+{{- $namespace := .Values.project.project.name -}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cerberus
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "cerberus-serviceaccount"
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
+{{- if .Values.cerberus.privileged }}
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cerberus-scc-privileged
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "cerberus-scc-privileged-rb"
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: cerberus
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- if eq .Values.cerberus.kubeconfig.mode "local" }}
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "cerberus-cluster-monitor-{{ $namespace }}"
+  labels:
+    app.kubernetes.io/name: "cerberus-cluster-monitor-cr"
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["nodes", "nodes/status", "namespaces", "pods", "services", "endpoints", "persistentvolumeclaims", "events"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts/token"]
+    verbs: ["create"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "daemonsets", "replicasets", "statefulsets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["config.openshift.io"]
+    resources: ["clusteroperators", "clusterversions", "infrastructures"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["operator.openshift.io"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["route.openshift.io"]
+    resources: ["routes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["certificates.k8s.io"]
+    resources: ["certificatesigningrequests"]
+    verbs: ["get", "list", "watch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "cerberus-cluster-monitor-{{ $namespace }}"
+  labels:
+    app.kubernetes.io/name: "cerberus-cluster-monitor-crb"
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: cerberus
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: "cerberus-cluster-monitor-{{ $namespace }}"
+  apiGroup: rbac.authorization.k8s.io
+{{- if and .Values.cerberus.prometheus .Values.cerberus.prometheus.enabled }}
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "cerberus-monitoring-view-{{ $namespace }}"
+  labels:
+    app.kubernetes.io/name: "cerberus-monitoring-view-crb"
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: cerberus
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: cluster-monitoring-view
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}
+{{- end -}}

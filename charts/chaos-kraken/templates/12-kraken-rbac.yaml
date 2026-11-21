@@ -1,0 +1,130 @@
+{{- if .Values.kraken.enabled -}}
+{{- $namespace := .Values.project.project.name -}}
+{{- $k := .Values.kraken -}}
+{{- $rbac := $k.rbac | default dict -}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kraken
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "kraken-serviceaccount"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+{{- if $k.privileged }}
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kraken-scc-privileged
+  namespace: {{ $namespace | default "default" | quote }}
+  labels:
+    app.kubernetes.io/name: "kraken-scc-privileged-rb"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: kraken
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- if eq $k.kubeconfig.mode "local" }}
+{{- if include "chaos-kraken.needsPrivilegedWorkloads" . }}
+{{- range $ns := ($k.privilegedNamespaces | default (list "default")) }}
+---
+# krkn starts privileged helper pods in this namespace for the node level scenarios (hog, network chaos, time)
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "kraken-workload-privileged-{{ $namespace }}"
+  namespace: {{ $ns | quote }}
+  labels:
+    app.kubernetes.io/name: "kraken-workload-privileged-rb"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: kraken
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}
+{{- if not $rbac.clusterAdmin }}
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "kraken-chaos-{{ $namespace }}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-cr"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+rules:
+  # Read access used to select the targets and to watch the recovery
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "services", "endpoints", "configmaps", "events", "persistentvolumeclaims", "persistentvolumes", "serviceaccounts", "namespaces", "nodes", "nodes/status"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["config.openshift.io"]
+    resources: ["clusterversions", "clusteroperators", "infrastructures", "networks"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["route.openshift.io"]
+    resources: ["routes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["machine.openshift.io"]
+    resources: ["machines", "machinesets"]
+    verbs: ["get", "list", "watch"]
+  # Chaos injection: pod, container, application outage, service disruption, pvc and helper pods
+  - apiGroups: [""]
+    resources: ["pods", "pods/exec", "pods/eviction", "services", "configmaps", "serviceaccounts"]
+    verbs: ["create", "delete", "deletecollection", "patch", "update"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "daemonsets", "replicasets"]
+    verbs: ["delete", "deletecollection", "patch", "update"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["networkpolicies"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  # Node scenarios (cordon, drain) and node targeted helper pods
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["patch", "update"]
+  {{- with $rbac.extraRules }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "kraken-chaos-{{ $namespace }}"
+  labels:
+    app.kubernetes.io/name: "kraken-chaos-crb"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: kraken
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: {{ ternary "cluster-admin" (printf "kraken-chaos-%s" $namespace) (default false $rbac.clusterAdmin) | quote }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end -}}
