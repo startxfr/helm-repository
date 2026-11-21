@@ -13,94 +13,14 @@
             "default": true
         },
         "context": {
-            "type": "object",
-            "title": "Project / namespace context",
-            "description": "Properties of the project context.",
+            "$ref": "#/$defs/context",
             "required": [
                 "scope",
                 "cluster",
                 "environment",
                 "component",
                 "app"
-            ],
-            "properties": {
-                "scope": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organizational tenant.",
-                    "default": "myscope",
-                    "examples": [
-                        "myscope",
-                        "mycustomer"
-                    ]
-                },
-                "cluster": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Cluster name",
-                    "description": "Name of the cluster running this application. Define a platform tenant.",
-                    "default": "localhost",
-                    "examples": [
-                        "mycluster",
-                        "localhost"
-                    ]
-                },
-                "environment": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Environment name",
-                    "description": "Name of the environment for this application. Define a stage tenant.",
-                    "default": "dev",
-                    "examples": [
-                        "dev",
-                        "factory",
-                        "preprod",
-                        "prod"
-                    ]
-                },
-                "component": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Component name",
-                    "description": "Name of the component consisting of this application. Define a logical tenant.",
-                    "default": "mycomp",
-                    "examples": [
-                        "mycomp",
-                        "myservice"
-                    ]
-                },
-                "app": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 40,
-                    "title": "Application name",
-                    "description": "Name of the application name. Define a functional tenant.",
-                    "default": "default-project",
-                    "examples": [
-                        "myapp",
-                        "mymicroservice"
-                    ]
-                },
-                "version": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 30,
-                    "title": "Version name",
-                    "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
-                    "default": "0.0.1",
-                    "examples": [
-                        "0.0.1",
-                        "0.1",
-                        "0.0.1-snapshot",
-                        "0.0.1-202110300900"
-                    ]
-                }
-            }
+            ]
         },
         "project": {
             "type": "object",
@@ -230,6 +150,14 @@
                                     "default"
                                 ]
                             },
+                            "existingSecret": {
+                                "type": "string",
+                                "title": "Existing Secret",
+                                "description": "Name of a Secret of type kubernetes.io/dockerconfigjson that already exists in the namespace (ExternalSecret, SealedSecret or created by hand). The chart then renders no Secret for this entry, and registry, username, password and email must not be set. Link it to a service account with imagePullSecrets in the serviceAccounts section.",
+                                "examples": [
+                                    "registry-pull-secret"
+                                ]
+                            },
                             "registry": {
                                 "type": "string",
                                 "title": "Registry",
@@ -267,12 +195,21 @@
                                 ]
                             }
                         },
-                        "required": [
-                            "name",
-                            "registry",
-                            "username",
-                            "password",
-                            "email"
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "existingSecret"
+                                ]
+                            },
+                            {
+                                "required": [
+                                    "name",
+                                    "registry",
+                                    "username",
+                                    "password",
+                                    "email"
+                                ]
+                            }
                         ]
                     }
                 }
@@ -794,6 +731,91 @@
                             }
                         }
                     }
+                }
+            }
+        }
+    },
+    "$defs": {
+        "context": {
+            "type": "object",
+            "title": "Project / namespace context",
+            "description": "Properties of the project context.",
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Scope name",
+                    "description": "Name of the global scope for this application. Define an organizational tenant.",
+                    "default": "myscope",
+                    "examples": [
+                        "myscope",
+                        "mycustomer"
+                    ]
+                },
+                "cluster": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Cluster name",
+                    "description": "Name of the cluster running this application. Define a platform tenant.",
+                    "default": "localhost",
+                    "examples": [
+                        "mycluster",
+                        "localhost"
+                    ]
+                },
+                "environment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Environment name",
+                    "description": "Name of the environment for this application. Define a stage tenant.",
+                    "default": "dev",
+                    "examples": [
+                        "dev",
+                        "factory",
+                        "preprod",
+                        "prod"
+                    ]
+                },
+                "component": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 25,
+                    "title": "Component name",
+                    "description": "Name of the component consisting of this application. Define a logical tenant.",
+                    "default": "mycomp",
+                    "examples": [
+                        "mycomp",
+                        "myservice"
+                    ]
+                },
+                "app": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "title": "Application name",
+                    "description": "Name of the application name. Define a functional tenant.",
+                    "default": "default-project",
+                    "examples": [
+                        "myapp",
+                        "mymicroservice"
+                    ]
+                },
+                "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30,
+                    "title": "Version name",
+                    "description": "Name of the application version. Define this deployment version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+                    "default": "0.0.1",
+                    "examples": [
+                        "0.0.1",
+                        "0.1",
+                        "0.0.1-snapshot",
+                        "0.0.1-202110300900"
+                    ]
                 }
             }
         }

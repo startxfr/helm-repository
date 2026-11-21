@@ -88,3 +88,19 @@ The chaos ClusterRole of `chaos-kraken` and `chaos-pipeline` is derived from the
 the scenarios shipped with the charts. When a scenario fails with `Forbidden`, add the rule to `rbac.extraRules` in the
 values first, then to the template of both charts once confirmed on a cluster.
 
+
+## project : registry credentials (dockercfg)
+
+- `dockercfg.list[]` accepts `existingSecret` : a Secret provided by the user (type `kubernetes.io/dockerconfigjson`, same
+  namespace), for which the chart renders nothing. Prefer it to clear-text credentials, which end in the values of the
+  Argo CD Applications and in the Helm release. The chart never links a Secret to a service account : its name goes in
+  `serviceAccounts.list[].imagePullSecrets[].name`, for a generated or an existing Secret.
+- The generated Secret (clear-text entry) carries the username and the password in clear in its annotations
+  (`template.openshift.io/expose-username`, `template.openshift.io/expose-password`), beside the `stringData`. They are
+  kept on purpose : every render of the chart must stay byte-identical for the consumers that track it (decision of
+  2026-11-21, project commit with `existingSecret`). The `existingSecret` path avoids them. The owner can decide to drop
+  them in a breaking release.
+- `example-fruitapp-project` copies the `dockercfg` block of the project schema with the five required entry fields, so
+  it rejects an `existingSecret` only entry. Known limitation, to fix when its schema is regenerated.
+- A dependent chart accepts the `existingSecret` only form once it pins a `project` release that contains it (Helm
+  validates the values of a dependency with the schema packaged in the dependency).

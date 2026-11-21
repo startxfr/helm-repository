@@ -863,6 +863,14 @@
                       "default"
                     ]
                   },
+                  "existingSecret": {
+                    "type": "string",
+                    "title": "Existing Secret",
+                    "description": "Name of a Secret of type kubernetes.io/dockerconfigjson that already exists in the namespace (ExternalSecret, SealedSecret or created by hand). The chart then renders no Secret for this entry, and registry, username, password and email must not be set. Link it to a service account with imagePullSecrets in the serviceAccounts section.",
+                    "examples": [
+                      "registry-pull-secret"
+                    ]
+                  },
                   "registry": {
                     "type": "string",
                     "title": "Registry",
@@ -899,7 +907,11 @@
                       "my@corp.com"
                     ]
                   }
-                }
+                },
+                "anyOf": [
+                  {},
+                  {}
+                ]
               }
             }
           }
