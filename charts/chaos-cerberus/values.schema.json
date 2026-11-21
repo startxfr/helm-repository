@@ -260,7 +260,7 @@
         "custom_checks": {
           "type": "array",
           "title": "Custom checks",
-          "description": "List of custom check scripts (paths relative to /root/cerberus/ working directory)",
+          "description": "List of custom check scripts to run (path relative to the cerberus working directory, ex: custom/my_check.py)",
           "default": []
         },
         "image": {
@@ -363,6 +363,37 @@
           "description": "Custom check scripts added to the cerberus configuration (file name: python content)",
           "additionalProperties": {
             "type": "string"
+          }
+        },
+        "runAsUser": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "title": "Run as user",
+          "description": "User id of the cerberus container. Leave empty on OpenShift, set it on plain Kubernetes",
+          "default": ""
+        },
+        "prometheus": {
+          "type": "object",
+          "title": "Prometheus checks",
+          "description": "Prometheus checks (API server latency, etcd leader changes)",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "title": "Enable prometheus checks",
+              "default": false
+            },
+            "url": {
+              "type": "string",
+              "title": "Prometheus URL",
+              "default": "https://thanos-querier.openshift-monitoring.svc:9091"
+            },
+            "token": {
+              "type": "string",
+              "title": "Prometheus bearer token",
+              "default": ""
+            }
           }
         }
       }

@@ -48,6 +48,8 @@ cerberus:
     pullPolicy: IfNotPresent
   # Run the cerberus container as privileged (binds the service account to the privileged SCC). Not required by default
   privileged: false
+  # User id of the cerberus container. Leave empty on OpenShift (assigned by the SCC), set it on plain Kubernetes (ex: 1001)
+  runAsUser: ""
   # Resources requests and limits of the cerberus container
   resources: {}
   # Expose the health signal outside of the cluster (route based)
@@ -93,11 +95,19 @@ cerberus:
   # Namespace ignore pattern (regex) - namespaces matching this pattern are excluded
   watch_namespaces_ignore_pattern:
     - "^installer.*"
-  # List of custom check scripts to run (absolute path, the scripts of customCheckScripts are in /etc/cerberus)
-  # Example: ["/etc/cerberus/my_check.py"]
+  # List of custom check scripts to run (path relative to the cerberus working directory)
+  # The scripts of customCheckScripts are copied in the custom directory. Example: ["custom/my_check.py"]
   custom_checks: []
   # Custom check scripts added to the cerberus configuration (file name: python content exposing a main() function)
   customCheckScripts: {}
+  # Prometheus checks (API server latency, etcd leader changes). Not enabled by default
+  prometheus:
+    # Enable the prometheus checks. In local mode, binds the service account to cluster-monitoring-view
+    enabled: false
+    # Prometheus or thanos querier URL
+    url: https://thanos-querier.openshift-monitoring.svc:9091
+    # Bearer token used to query prometheus (in local mode, defaults to the service account token)
+    token: ""
   # Kubeconfig of the watched cluster
   kubeconfig:
     # Connection mode to use for the cluster (could be local, token or file)

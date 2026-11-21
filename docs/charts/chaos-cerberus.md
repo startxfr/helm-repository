@@ -110,8 +110,12 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 | cerberus.watch_url_routes                | []                                    | Url list of endpoints to watch as part of the global healthcheck (double array)                                                                                                                          |
 | cerberus.watch_namespaces                | [...]                                 | List of namespaces to watch (supports regex patterns). Defaults to the critical OpenShift namespaces                                                                                                     |
 | cerberus.watch_namespaces_ignore_pattern | ["^installer.*"]                      | Regex patterns for namespaces to exclude from watching                                                                                                                                                   |
-| cerberus.custom_checks                   | []                                    | List of custom check scripts to run (absolute path). Example: ["/etc/cerberus/my_check.py"]                                                                                                              |
-| cerberus.customCheckScripts              | {}                                    | Custom check scripts added to `/etc/cerberus` (file name: python content exposing a `main()` function)                                                                                                   |
+| cerberus.custom_checks                   | []                                    | List of custom check scripts to run (path relative to the working directory). Example: ["custom/my_check.py"]                                                                                            |
+| cerberus.customCheckScripts              | {}                                    | Custom check scripts copied in the `custom` directory (file name: python content exposing a `main()` function)                                                                                           |
+| cerberus.prometheus.enabled              | false                                 | Enable the prometheus checks (API server latency, etcd leader changes). In local mode, binds the service account to `cluster-monitoring-view`                                                            |
+| cerberus.prometheus.url                  | https://thanos-querier...:9091        | Prometheus or thanos querier URL                                                                                                                                                                         |
+| cerberus.prometheus.token                | ""                                    | Bearer token used to query prometheus (in local mode, defaults to the service account token)                                                                                                             |
+| cerberus.runAsUser                       | ""                                    | User id of the container. Leave empty on OpenShift (assigned by the SCC), set it on plain Kubernetes (ex: 1001)                                                                                          |
 | cerberus.kubeconfig.mode                 | local                                 | Connection mode to the watched cluster: `local` (in-cluster service account, read-only), `token` or `file` (stored in a Secret)                                                                          |
 | cerberus.kubeconfig.token.server         | https://localhost:6443                | If mode is token, the server URL of the target cluster API                                                                                                                                               |
 | cerberus.kubeconfig.token.token          | sha256~XXX                            | If mode is token, the bearer token. A read-only access (`cluster-reader`) is enough                                                                                                                      |
@@ -127,7 +131,8 @@ helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubus
 - In `token` and `file` modes the kubeconfig is stored in a Secret, and TLS is verified unless `cerberus.kubeconfig.token.insecure` is set.
 - The custom `privileged-cerberus` SCC is removed: the container runs unprivileged (`cerberus.privileged=true` restores a privileged container).
 - The `startx_check.py` script is no longer shipped; use `cerberus.customCheckScripts`.
-- Custom checks and the configuration are mounted in `/etc/cerberus` instead of `/root/cerberus/config`.
+- Custom checks are declared in `cerberus.customCheckScripts` and referenced as `custom/<file>.py`.
+- The `ClusterRole` and `ClusterRoleBinding` of the local mode are suffixed with the namespace.
 
 ## Usage examples
 
@@ -150,6 +155,8 @@ Only the nodes and two namespaces are watched.
 cerberus:
   enabled: true
   distribution: kubernetes
+  # the image has no default user: required outside of OpenShift
+  runAsUser: 1001
   watch_cluster_operators: false
   watch_master_schedulable: false
   watch_namespaces:
@@ -169,7 +176,7 @@ cerberus:
     - ["https://myapp.apps.example.com/health"]
     - ["https://api.example.com/ready", "Bearer mytoken"]
   custom_checks:
-    - /etc/cerberus/ready_nodes.py
+    - custom/ready_nodes.py
   customCheckScripts:
     ready_nodes.py: |
       import subprocess

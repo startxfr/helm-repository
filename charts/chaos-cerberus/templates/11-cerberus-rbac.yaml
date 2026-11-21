@@ -37,7 +37,7 @@ roleRef:
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: cerberus-cluster-monitor
+  name: "cerberus-cluster-monitor-{{ $namespace }}"
   labels:
     app.kubernetes.io/name: "cerberus-cluster-monitor-cr"
     {{- include "chaos-cerberus.labels" $ | nindent 4 }}
@@ -72,7 +72,7 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: cerberus-cluster-monitor
+  name: "cerberus-cluster-monitor-{{ $namespace }}"
   labels:
     app.kubernetes.io/name: "cerberus-cluster-monitor-crb"
     {{- include "chaos-cerberus.labels" $ | nindent 4 }}
@@ -84,7 +84,27 @@ subjects:
     namespace: {{ $namespace | default "default" | quote }}
 roleRef:
   kind: ClusterRole
-  name: cerberus-cluster-monitor
+  name: "cerberus-cluster-monitor-{{ $namespace }}"
   apiGroup: rbac.authorization.k8s.io
+{{- if and .Values.cerberus.prometheus .Values.cerberus.prometheus.enabled }}
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "cerberus-monitoring-view-{{ $namespace }}"
+  labels:
+    app.kubernetes.io/name: "cerberus-monitoring-view-crb"
+    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: cerberus
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: cluster-monitoring-view
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
 {{- end }}
 {{- end -}}

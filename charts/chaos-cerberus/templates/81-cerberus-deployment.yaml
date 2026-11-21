@@ -46,6 +46,9 @@ spec:
             # The image expects to run as root in /root/cerberus: work on a writable copy instead
             cp -r /root/cerberus /tmp/cerberus
             cd /tmp/cerberus
+            # Custom checks are imported as python modules relative to the working directory
+            mkdir -p custom && cp /etc/cerberus/*.py custom/ 2>/dev/null || true
+            cp /etc/cerberus/config.yaml /tmp/cerberus-config.yaml
             {{- if $local }}
             # The kubernetes python client used by cerberus does not support tokenFile: embed the token
             TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
@@ -71,8 +74,9 @@ spec:
                 user: default
             preferences: {}
             KUBECONFIGEOF
+            sed -i "s|__SERVICE_ACCOUNT_TOKEN__|${TOKEN}|" /tmp/cerberus-config.yaml
             {{- end }}
-            exec python3 start_cerberus.py -c /etc/cerberus/config.yaml -o /tmp/cerberus.report
+            exec python3 start_cerberus.py -c /tmp/cerberus-config.yaml -o /tmp/cerberus.report
         env:
         - name: HOME
           value: /tmp
@@ -93,6 +97,9 @@ spec:
           privileged: true
           {{- else }}
           allowPrivilegeEscalation: false
+          {{- if $c.runAsUser }}
+          runAsUser: {{ $c.runAsUser }}
+          {{- end }}
           runAsNonRoot: true
           capabilities:
             drop: ["ALL"]

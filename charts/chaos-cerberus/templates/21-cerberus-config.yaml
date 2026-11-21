@@ -32,8 +32,13 @@ data:
         watch_namespaces_ignore_pattern: {{ toJson ($c.watch_namespaces_ignore_pattern | default list) }}
         cerberus_publish_status: True
         inspect_components: False
+        {{- if and $c.prometheus $c.prometheus.enabled }}
+        prometheus_url: {{ $c.prometheus.url | default "https://thanos-querier.openshift-monitoring.svc:9091" }}
+        prometheus_bearer_token: {{ $c.prometheus.token | default (ternary "__SERVICE_ACCOUNT_TOKEN__" "" (eq $c.kubeconfig.mode "local")) }}
+        {{- else }}
         prometheus_url:
         prometheus_bearer_token:
+        {{- end }}
         slack_integration: False
         watcher_slack_ID:
             Monday:
@@ -77,6 +82,9 @@ stringData:
   config: |
     {{- $c.kubeconfig.file | nindent 4 }}
 {{- else }}
+  {{- if or (not $c.kubeconfig.token.token) (contains "PUT_YOUR_TOKEN_HERE" $c.kubeconfig.token.token) }}
+  {{- fail "chaos-cerberus: cerberus.kubeconfig.token.token must be set when cerberus.kubeconfig.mode is token" }}
+  {{- end }}
   config: |
     kind: Config
     apiVersion: v1
