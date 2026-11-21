@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Contract tests of the charts that zuno-demo consumes: cluster-ods, cluster-certmanager, cluster-gpu, cluster-nfd,
+# Contract tests of the charts that zuno-demo consumes: project, cluster-ods, cluster-certmanager, cluster-gpu, cluster-nfd,
 # cluster-machine, cluster-prometheus, cluster-istio and operator, plus the krkn based chaos charts (chaos-cerberus,
 # chaos-kraken, chaos-pipeline). Each check renders a chart with helm template and
 # asserts a few expected facts with yq. Plain bash, helm, yq (mikefarah v4): no other dependency.
@@ -293,8 +293,57 @@ test_chaos-pipeline() {
     }
 }
 
+test_project() {
+    # dockercfg: an entry with existingSecret renders no Secret (the user provides it), the pull secret reference stays
+    values <<'YAML'
+enabled: true
+project: {name: demo-ns}
+dockercfg:
+  enabled: true
+  list:
+    - existingSecret: demo-pull-secret
+serviceAccounts:
+  enabled: true
+  list:
+    - name: default
+      imagePullSecrets:
+        - name: demo-pull-secret
+YAML
+    render existing -f "$WORK/values.yaml" && {
+        assert_count "an existingSecret entry renders no Secret" Secret 0
+        assert_sel "the service account references the existing Secret" 'select(.kind == "ServiceAccount") | .imagePullSecrets[0].name' demo-pull-secret
+    }
+    values <<'YAML'
+enabled: true
+project: {name: demo-ns}
+dockercfg:
+  enabled: true
+  list:
+    - existingSecret: demo-pull-secret
+    - {name: demo-generated, registry: quay.io, username: u, password: p, email: u@example.com}
+YAML
+    render mixed -f "$WORK/values.yaml" && {
+        assert_count "only the clear-text entry renders a Secret" Secret 1
+        assert_sel "the generated Secret keeps its name" 'select(.kind == "Secret") | .metadata.name' demo-generated
+        assert_sel "the generated Secret is a dockerconfigjson" 'select(.kind == "Secret") | .type' kubernetes.io/dockerconfigjson
+    }
+    values <<'YAML'
+enabled: true
+project: {name: demo-ns}
+dockercfg:
+  enabled: true
+  list:
+    - {existingSecret: demo-pull-secret, password: p}
+YAML
+    if helm template contract "$CHART_DIR" -f "$WORK/values.yaml" >"$WORK/both.yaml" 2>"$WORK/err.log"; then
+        bad "$CURRENT: existingSecret with a clear-text password must fail the render"
+    else
+        grep -q "use one or the other" "$WORK/err.log" && ok "$CURRENT: existingSecret with a clear-text password fails with a clear message" || bad "$CURRENT: wrong failure message: $(tail -1 "$WORK/err.log")"
+    fi
+}
+
 # ---------------------------------------------------------------------------------------------------------------
-ALL=(operator cluster-ods cluster-certmanager cluster-gpu cluster-nfd cluster-machine cluster-prometheus cluster-istio chaos-cerberus chaos-kraken chaos-pipeline)
+ALL=(operator project cluster-ods cluster-certmanager cluster-gpu cluster-nfd cluster-machine cluster-prometheus cluster-istio chaos-cerberus chaos-kraken chaos-pipeline)
 SELECTED=("$@"); [[ ${#SELECTED[@]} -eq 0 ]] && SELECTED=("${ALL[@]}")
 command -v yq >/dev/null || { echo "yq (mikefarah v4) is required"; exit 2; }
 for c in "${SELECTED[@]}"; do

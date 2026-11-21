@@ -4,6 +4,15 @@
 {{ range .Values.dockercfg.list }}
 {{- $name := .name | default "registrycreds" -}}
 {{- $namespace := .namespace | default $defaultns -}}
+{{- /* existingSecret: the Secret is provided by the user (ExternalSecret, SealedSecret, by hand): nothing is rendered */ -}}
+{{- if .existingSecret -}}
+{{- if or .registry .username .password .email -}}
+{{- fail (printf "project.dockercfg.list: the entry '%s' sets existingSecret and clear-text credentials (registry, username, password or email): use one or the other" .existingSecret) -}}
+{{- end -}}
+{{- if and .name (ne .name .existingSecret) -}}
+{{- fail (printf "project.dockercfg.list: the entry '%s' sets existingSecret '%s' and a different name: drop name, the Secret keeps the name given by existingSecret" .name .existingSecret) -}}
+{{- end -}}
+{{- else -}}
 ---
 kind: Secret
 apiVersion: v1
@@ -29,6 +38,6 @@ metadata:
     {{- end}}
 stringData:
   .dockerconfigjson: "{{ include "imagePullSecret" . | replace "\"" "\\\"" }}"
-
+{{ end }}
 {{ end }}
 {{- end -}}{{- end -}}{{- end }}

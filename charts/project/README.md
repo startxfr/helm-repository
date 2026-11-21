@@ -90,6 +90,11 @@ helm install project startx/project -f https://raw.githubusercontent.com/startxf
 | limits.rules                | string          | Specifications of the limitRange resource                 |
 | quotas.enabled              | false           | Enable quotas for this project                             |
 | quotas.rules                | string          | Specifications of the quotas resource                     |
+| dockercfg.enabled           | false           | Enable the registry credentials Secrets of this project    |
+| dockercfg.list[]            | []              | List of the registry credentials to record                 |
+| dockercfg.list[0].name      | registrycreds   | Name of the generated Secret (clear-text credentials)      |
+| dockercfg.list[0].registry  | docker.io       | Registry of the generated Secret (with username, password and email) |
+| dockercfg.list[0].existingSecret | -          | Name of a Secret of type `kubernetes.io/dockerconfigjson` that already exists in the namespace : the chart renders no Secret for the entry and refuses clear-text credentials beside it |
 
 ## Values files
 
@@ -202,6 +207,36 @@ Complete deployment of a startx project with the following characteristics :
 # base configuration running startx configuration
 helm install project-startx startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
 ```
+
+## Usage examples
+
+### Use a registry Secret that already exists
+
+Keep the registry credentials out of the values : create the Secret apart (an ExternalSecret, a SealedSecret or
+`oc create secret docker-registry`), then name it. The chart renders no Secret for an `existingSecret` entry and never
+reads the existing one. The Secret must be of type `kubernetes.io/dockerconfigjson`, in the namespace of the entry.
+The chart does not link it to a service account : list its name in `serviceAccounts.list[].imagePullSecrets`, as for a generated Secret.
+
+```yaml
+# my-project-values.yaml
+enabled: true
+project:
+  name: my-project
+dockercfg:
+  enabled: true
+  list:
+    # no credential here : the Secret is provided by the user
+    - existingSecret: my-registry-pull-secret
+serviceAccounts:
+  enabled: true
+  list:
+    - name: default
+      imagePullSecrets:
+        - name: my-registry-pull-secret
+```
+
+An entry sets `existingSecret` **or** `registry`, `username`, `password` and `email` : both together fail the render,
+and `name` is only accepted when it equals `existingSecret`. Entries of the two kinds can share the same list.
 
 ## ArgoCD deployment
 

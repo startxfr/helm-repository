@@ -247,6 +247,11 @@ dockercfg:
   #   password: xxxx
   #   # email associated to the user 
   #   email: xxxx
+  # # Use a Secret that already exists in the namespace instead of clear-text credentials (type
+  # # kubernetes.io/dockerconfigjson, created by an ExternalSecret, a SealedSecret or by hand). The chart renders no
+  # # Secret for this entry, never reads the existing one, and refuses registry, username, password and email beside it.
+  # # Link it to a service account with serviceAccounts.list[].imagePullSecrets[].name
+  # - existingSecret: my-registry-pull-secret
   # # Custom configuration
   # additionalLabels: |
   #   label: "secret"
