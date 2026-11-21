@@ -281,3 +281,4 @@ oc apply -k examples/argocd/
 
 | Release  | Date       | Description                                                                                                  |
 | -------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
+| 21.3.391 | 2026-11-21 | chaos charts: krkn v5.2.15, new chaos-pipeline chart, security fixes for litmus and monkey; breaking, see README migration notes |
