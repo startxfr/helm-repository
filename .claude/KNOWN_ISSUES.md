@@ -57,12 +57,14 @@ Do not `git add -f` a lock; after changing a pin there is nothing else to commit
 - `chaos-mesh` generates its certificate authority, its webhook and chaosd certificates and a `rollme` annotation at
   every render (no `lookup`): an ArgoCD Application needs the `ignoreDifferences` of `examples/argocd/` and
   `RespectIgnoreDifferences=true`. Its CRDs are in the upstream `crds/` directory: no `skipCrds`, `ServerSideApply=true`.
+- No default credentials, no extra rights (maintainer decision, 2026-11-21): `chaos-litmus` ships no password and
+  refuses to render without `existingSecret` or explicit passwords (helper `chaos-litmus.validate`); its example Argo
+  `Workflow` is behind `litmus.exampleWorkflow`; `chaos-monkey` only has the ClusterRole of the upstream chart, the
+  privileged SCC is behind `monkey.privileged`. Never reintroduce a literal password or a cluster-wide binding.
 - Open, waiting for a decision of the maintainer (behaviour changes, do not fix on sight):
-  - `chaos-monkey` binds the ClusterRole `edit` cluster-wide to the kube-monkey and `default` ServiceAccounts, and
-    grants a fully privileged SCC that kube-monkey probably does not need;
-  - `chaos-litmus` always renders the Argo `Workflow` `startx-workflow` with `litmus.enabled`: the install fails when
-    the `workflows.argoproj.io` definition is missing; its default `adminConfig` contains literal passwords;
-  - the `chaos-mesh` route keeps `insecureEdgeTerminationPolicy: Allow`.
+  - `chaos-litmus` grants its privileged SCC to nine service accounts of the namespace, `default` included;
+  - the `chaos-mesh` route keeps `insecureEdgeTerminationPolicy: Allow`;
+  - neither `chaos-monkey` with the restricted SCC nor the `chaos-mesh` ArgoCD `ignoreDifferences` were run on a cluster.
 
 ## krkn / cerberus images expect a fixed user and a writable working directory
 

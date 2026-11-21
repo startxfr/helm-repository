@@ -156,6 +156,7 @@ spec:
       app.kubernetes.io/name: myapp
 EOF
 ```
+
 ## ArgoCD deployment
 
 One AppProject and two Applications : `chaos-mesh-project` (wave 1, the namespace) then `chaos-mesh-instance` (wave 5, chaos-mesh).
