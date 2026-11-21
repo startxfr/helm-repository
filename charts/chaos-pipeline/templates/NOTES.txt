@@ -17,6 +17,7 @@ The chaos pipelines you have required are deploying with the following character
       pipelines : chaos-infra, chaos-application
 service account : chaos-pipeline
 
-No PipelineRun is created by this chart. Start a run with:
+No PipelineRun is created by this chart, and a run executes only the scenarios named in its scenarios parameter.
+Start a run with:
   oc create -n {{ .Values.project.project.name }} -f examples/tekton/pipelinerun-infra.yaml
 {{ end }}

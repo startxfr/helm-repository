@@ -12,10 +12,13 @@ spec:
   timeouts:
     pipeline: 3h0m0s
   params:
-    # Run only the platform pod scenarios (default: every enabled scenario of the pipeline)
+    # Scenarios of this run, here the platform pod scenarios (without this parameter no scenario runs)
     - name: scenarios
       value: ["10-pods-monitoring", "11-pods-ingress", "12-pods-apiserver"]
     - name: cerberus-enabled
       value: "true"
     - name: cerberus-url
       value: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+    # Check at the end that every ClusterOperator is available and not degraded (OpenShift)
+    - name: clusteroperator-check
+      value: "true"

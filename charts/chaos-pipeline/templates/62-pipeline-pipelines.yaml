@@ -3,6 +3,7 @@
 {{- $p := .Values.pipeline -}}
 {{- $cerberus := $p.cerberus | default dict -}}
 {{- $hubRepository := $p.images.hub.repository -}}
+{{- $clusterOperators := ($p.postCheck | default dict).clusterOperators | default dict -}}
 {{- range $pipelineName, $group := dict "chaos-infra" ($p.infra | default dict) "chaos-application" ($p.application | default dict) }}
 {{- if $group.enabled }}
 {{- $application := eq $pipelineName "chaos-application" }}
@@ -21,14 +22,17 @@ metadata:
 spec:
   description: >-
     {{ ternary "Chaos testing of an application stack" "Chaos testing of the cluster infrastructure" $application }}:
-    cerberus gate, krkn scenarios run one after the other, final cerberus check.
+    cerberus gate, krkn scenarios run one after the other, final cerberus and ClusterOperator checks.
     Start it with a PipelineRun using the chaos-pipeline service account. Do not run two chaos PipelineRuns at the
     same time: each one would read the failures injected by the other.
   params:
     - name: scenarios
       type: array
-      description: Names of the scenarios to run, among the enabled scenarios of this pipeline (default, all of them)
-      default: {{ include "chaos-pipeline.scenarioNames" $group.scenarios }}
+      description: >-
+        Names of the scenarios to run, among the enabled scenarios of this pipeline
+        ({{ include "chaos-pipeline.scenarioNames" $group.scenarios | fromJsonArray | join ", " }}).
+        A scenario that is not named is skipped: an empty list runs no scenario
+      default: {{ toJson ($group.defaultScenarios | default list) }}
     - name: recovery-time
       type: string
       description: Time given to a target to recover, value of the ${RECOVERY_TIME} placeholder of the scenarios (in seconds)
@@ -57,6 +61,18 @@ spec:
       type: string
       description: HTTP endpoint checked by krkn before and after each scenario (empty to disable)
       default: {{ $group.healthCheckUrl | default "" | quote }}
+    - name: clusteroperator-check
+      type: string
+      description: Check at the end of the run that every ClusterOperator is available and not degraded (true or false)
+      default: {{ ternary "true" "false" (default false $clusterOperators.enabled) | quote }}
+    - name: clusteroperator-ignore
+      type: string
+      description: Names of the ClusterOperators left out of the final check, separated by commas
+      default: {{ $clusterOperators.ignore | default list | join "," | quote }}
+    - name: clusteroperator-timeout
+      type: string
+      description: Maximum time to wait for the ClusterOperators to be healthy (in seconds)
+      default: {{ $clusterOperators.timeout | default 600 | quote }}
     {{- if $application }}
     - name: target-namespace
       type: string
@@ -96,6 +112,19 @@ spec:
           value: "$(params.cerberus-url)"
         - name: timeout
           value: "$(params.cerberus-timeout)"
+    - name: clusteroperator-final-check
+      when:
+        - input: "$(params.clusteroperator-check)"
+          operator: in
+          values: ["true"]
+      taskRef:
+        kind: Task
+        name: clusteroperator-check
+      params:
+        - name: ignore
+          value: "$(params.clusteroperator-ignore)"
+        - name: timeout
+          value: "$(params.clusteroperator-timeout)"
 {{- end }}
 {{- end }}
 {{- end -}}

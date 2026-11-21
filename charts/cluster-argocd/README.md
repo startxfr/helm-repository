@@ -90,7 +90,7 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 ### Chart version of the examples
 
 The Applications of the `examples/argocd/` folders of every chart pull the Helm chart from the startx repository and use the
-semver range `targetRevision: 21.3.397
+semver range `targetRevision: 21.3.398
 each refresh: pin an exact version in production (ADR-0004). Examples that read a chart from a git `path` and a branch are
 unchanged.
 
@@ -129,3 +129,4 @@ and the revision from `rev` (or its alias `targetRevision`, default `master`). T
 | 21.3.391 | 2026-11-21 | chaos charts: krkn v5.2.15, new chaos-pipeline chart, security fixes for litmus and monkey; breaking, see README migration notes |
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
+| 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |

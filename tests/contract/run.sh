@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Contract tests of the charts that zuno-demo consumes: cluster-ods, cluster-certmanager, cluster-gpu, cluster-nfd,
+# Contract tests of the charts that zuno-demo consumes: project, cluster-ods, cluster-certmanager, cluster-gpu, cluster-nfd,
 # cluster-machine, cluster-prometheus, cluster-istio and operator, plus the krkn based chaos charts (chaos-cerberus,
 # chaos-kraken, chaos-pipeline). Each check renders a chart with helm template and
 # asserts a few expected facts with yq. Plain bash, helm, yq (mikefarah v4): no other dependency.
@@ -279,7 +279,7 @@ test_chaos-kraken() {
 test_chaos-pipeline() {
     render default && assert_count "nothing is rendered by default" Task 0
     render enabled --set pipeline.enabled=true && {
-        assert_count "three tasks" Task 3
+        assert_count "four tasks" Task 4
         assert_count "two pipelines" Pipeline 2
         assert_count "no PipelineRun: nothing runs at install time" PipelineRun 0
         assert_count "no custom SecurityContextConstraints" SecurityContextConstraints 0
@@ -289,12 +289,71 @@ test_chaos-pipeline() {
         assert_sel "node scenarios are disabled by default" 'select(.kind == "ConfigMap") | .data | has("30-node-reboot-worker.yaml")' false
         assert_sel "a run can choose its scenarios" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "scenarios") | .type' array
         assert_sel "every scenario task is guarded by the scenarios parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.tasks[1].when[0].values[0]' '$(params.scenarios[*])'
+        assert_sel "a run that names no scenario runs none" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "scenarios") | .default | length' 0
+        assert_sel "the application pipeline has the same empty default" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "scenarios") | .default | length' 0
+        assert_sel "the ClusterOperator check is the last finally task" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.finally[1].taskRef.name' clusteroperator-check
+        assert_sel "the ClusterOperator check is off by default" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "clusteroperator-check") | .default' false
         assert_sel "the application target is a pipeline parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "target-namespace") | .name' target-namespace
+    }
+    render postcheck --set pipeline.enabled=true --set pipeline.postCheck.clusterOperators.enabled=true \
+        --set 'pipeline.postCheck.clusterOperators.ignore={one,two}' --set 'pipeline.infra.defaultScenarios={10-pods-monitoring}' && {
+        assert_sel "the ClusterOperator check can be enabled by values" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "clusteroperator-check") | .default' true
+        assert_sel "ignored operators are passed as a comma separated list" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "clusteroperator-ignore") | .default' one,two
+        assert_sel "defaultScenarios restores a default list" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "scenarios") | .default[0]' 10-pods-monitoring
     }
 }
 
+test_project() {
+    # dockercfg: an entry with existingSecret renders no Secret (the user provides it), the pull secret reference stays
+    values <<'YAML'
+enabled: true
+project: {name: demo-ns}
+dockercfg:
+  enabled: true
+  list:
+    - existingSecret: demo-pull-secret
+serviceAccounts:
+  enabled: true
+  list:
+    - name: default
+      imagePullSecrets:
+        - name: demo-pull-secret
+YAML
+    render existing -f "$WORK/values.yaml" && {
+        assert_count "an existingSecret entry renders no Secret" Secret 0
+        assert_sel "the service account references the existing Secret" 'select(.kind == "ServiceAccount") | .imagePullSecrets[0].name' demo-pull-secret
+    }
+    values <<'YAML'
+enabled: true
+project: {name: demo-ns}
+dockercfg:
+  enabled: true
+  list:
+    - existingSecret: demo-pull-secret
+    - {name: demo-generated, registry: quay.io, username: u, password: p, email: u@example.com}
+YAML
+    render mixed -f "$WORK/values.yaml" && {
+        assert_count "only the clear-text entry renders a Secret" Secret 1
+        assert_sel "the generated Secret keeps its name" 'select(.kind == "Secret") | .metadata.name' demo-generated
+        assert_sel "the generated Secret is a dockerconfigjson" 'select(.kind == "Secret") | .type' kubernetes.io/dockerconfigjson
+    }
+    values <<'YAML'
+enabled: true
+project: {name: demo-ns}
+dockercfg:
+  enabled: true
+  list:
+    - {existingSecret: demo-pull-secret, password: p}
+YAML
+    if helm template contract "$CHART_DIR" -f "$WORK/values.yaml" >"$WORK/both.yaml" 2>"$WORK/err.log"; then
+        bad "$CURRENT: existingSecret with a clear-text password must fail the render"
+    else
+        grep -q "use one or the other" "$WORK/err.log" && ok "$CURRENT: existingSecret with a clear-text password fails with a clear message" || bad "$CURRENT: wrong failure message: $(tail -1 "$WORK/err.log")"
+    fi
+}
+
 # ---------------------------------------------------------------------------------------------------------------
-ALL=(operator cluster-ods cluster-certmanager cluster-gpu cluster-nfd cluster-machine cluster-prometheus cluster-istio chaos-cerberus chaos-kraken chaos-pipeline)
+ALL=(operator project cluster-ods cluster-certmanager cluster-gpu cluster-nfd cluster-machine cluster-prometheus cluster-istio chaos-cerberus chaos-kraken chaos-pipeline)
 SELECTED=("$@"); [[ ${#SELECTED[@]} -eq 0 ]] && SELECTED=("${ALL[@]}")
 command -v yq >/dev/null || { echo "yq (mikefarah v4) is required"; exit 2; }
 for c in "${SELECTED[@]}"; do
