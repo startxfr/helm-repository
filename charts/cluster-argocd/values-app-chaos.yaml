@@ -17,6 +17,8 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: 'chaos-kraken'
           server: 'https://kubernetes.default.svc'
+        - namespace: 'chaos-pipeline'
+          server: 'https://kubernetes.default.svc'
         - namespace: 'chaos-litmus'
           server: 'https://kubernetes.default.svc'
         - namespace: 'chaos-mesh'
@@ -49,27 +51,19 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-cerberus'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-cerberus'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true
           cerberus:
             enabled: true
             kubeconfig:
-              mode: token
-              token:
-                server: "https://api.<cluster>:6443"
-                token: "sha256~REPLACE_WITH_YOUR_SA_TOKEN"
-          # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
-          kraken:
-            enabled: false
+              mode: local
           litmus:
             enabled: false
           mesh:
@@ -83,26 +77,26 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-kraken'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-kraken'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true
           kraken:
             enabled: true
-            mode: job
-            cerberusUrl: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+            engine: core
+            cerberus:
+              enabled: true
+              url: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+            scenarios:
+              pods-monitoring:
+                enabled: true
             kubeconfig:
-              mode: token
-              token:
-                server: "https://api.<cluster>:6443"
-                token: "sha256~REPLACE_WITH_YOUR_TOKEN"
+              mode: local
           cerberus:
             enabled: false
           litmus:
@@ -118,14 +112,12 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-litmus'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-litmus'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true
@@ -153,14 +145,12 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-mesh'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-mesh'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true
@@ -184,14 +174,12 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-monkey'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-monkey'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true

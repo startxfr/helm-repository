@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-pipeline-instance
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-pipeline
+    server: https://kubernetes.default.svc
+  project: chaos
+  source:
+    chart: chaos-pipeline
+    helm:
+      values: |
+        project:
+          enabled: true
+        pipeline:
+          enabled: true
+          cerberus:
+            enabled: true
+            url: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

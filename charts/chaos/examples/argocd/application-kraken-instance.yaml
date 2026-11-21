@@ -13,24 +13,22 @@ spec:
   source:
     chart: chaos-kraken
     helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
         kraken:
           enabled: true
-          mode: job
-          cerberusUrl: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+          engine: core
+          cerberus:
+            enabled: true
+            url: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+          scenarios:
+            pods-monitoring:
+              enabled: true
           kubeconfig:
-            mode: token
-            token:
-              server: "https://api.<cluster>:6443"
-              token: "sha256~REPLACE_WITH_YOUR_TOKEN"
+            mode: local
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     # pin an exact version in production (ADR-0004)
     targetRevision: 21.3.x
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  # No automated sync: every sync of this Application starts a chaos run
+  syncPolicy: {}
