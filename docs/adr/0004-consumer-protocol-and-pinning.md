@@ -17,7 +17,7 @@ cluster.
 - Every release creates an annotated tag named after the repository version (`21.3.N`). A pushed tag is never moved.
 - Index URLs published in `stable`, `noschema` and `release-21` use HTTPS only (consumer ADR-0602 C4).
 - Before pushing a change to a chart a known consumer uses (`cluster-rbac`, `project`, `operator`, `cluster-ods`,
-  `cluster-certmanager`, `cluster-gpu`, `cluster-nfd`, `cluster-machine`, `cluster-prometheus`, `cluster-istio`),
+  `cluster-certmanager`, `cluster-gpu`, `cluster-nfd`, `cluster-machine`, `cluster-prometheus`, `cluster-istio`, `chaos-cerberus`, `chaos-pipeline`),
   `helm-manager` tells the consumer's coordination session first.
 - Consumers send their requests to `helm-manager`, who triages them: a request that blocks a consumer or breaks a
   consumer ADR has priority; the others go into the next release window. `helm-manager` is the only session that

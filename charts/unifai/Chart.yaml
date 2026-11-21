@@ -6,9 +6,9 @@ description: Deploy the UnifAI multi-agent AI platform on OpenShift or Kubernete
 # Helm chart application
 type: application
 # Version of this helm chart
-version: 21.3.392
+version: 21.3.393
 # Version of the UnifAI release deployed by this chart (operator and application images)
-appVersion: "0.1.71"
+appVersion: "0.1.75"
 # Icon of this helm-chart
 icon: https://helm-repository.readthedocs.io/en/latest/img/unifai.svg
 # Kube minimum version
@@ -61,14 +61,14 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs (could be added, changed, deprecated, removed, fixed and security)
   artifacthub.io/changes: |
-    - kind: added
-      description: "Create chart unifai, replacing cluster-unifai : installs the UnifAI operator v0.1.71 and a UnifaiStack resource"
+    - kind: changed
+      description: "Update UnifAI from v0.1.71 to v0.1.75 (operator and application images, pinned by digest ; MAS_MAX_DELEGATIONS_PER_ITEM now defaults to 2)"
   # Is this release contain security updates
   artifacthub.io/containsSecurityUpdates: "false"
   # Images deployed by this chart
   artifacthub.io/images: |
     - name: unifai-operator
-      image: quay.io/zuno/unifai-operator@sha256:7f23d864dd4125ecbeb6bb2354ce540221c917966114e1888aee76529cc95ed6
+      image: quay.io/zuno/unifai-operator@sha256:b15232d4e12043cf3288363acf735e875b1012bcfb243d01a67bc3a1710ae271
   # Custom resource definitions installed by this chart
   artifacthub.io/crds: |
     - kind: UnifaiStack
