@@ -3,8 +3,9 @@ kind: Application
 metadata:
   name: chaos-kraken-project
   namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io 
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  # No finalizer on project wave — avoids deadlock when namespace is slow to terminate
 spec:
   destination:
     namespace: default
@@ -13,11 +14,11 @@ spec:
   source:
     chart: chaos-kraken
     helm:
-      valueFiles:
-        - values-startx-project.yaml
       values: |
         project:
           enabled: true
+        kraken:
+          enabled: false
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     # pin an exact version in production (ADR-0004)
     targetRevision: 21.3.x

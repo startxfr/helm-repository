@@ -1,15 +1,38 @@
 # ![chaos-kraken](https://helm-repository.readthedocs.io/en/latest/img/chaos-kraken.svg "Chaos Chart : Kraken") Chaos Chart : Kraken
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--kraken-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+kraken+startx)
 
-This helm chart used to deploy kraken on Openshift or Kubernetes cluster.
-Kraken is as a chaos engine with chaos scenarios for Openshift clusters.
+This helm chart runs krkn (formerly Kraken) chaos scenarios on an Openshift or Kubernetes cluster.
+krkn is a chaos engine injecting failures in the cluster infrastructure (pods of the platform, nodes, network, time) and
+in applications (pods, containers, network outage, storage), then checking that the platform recovers.
 
-This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
+**Upstream project**: [krkn-chaos/krkn](https://github.com/krkn-chaos/krkn), a CNCF sandbox project, version `v5.2.15`,
+image `quay.io/krkn-chaos/krkn` ([documentation](https://krkn-chaos.dev/docs/)).
+
+| Period    | Repository             | Image                            |
+| --------- | ---------------------- | -------------------------------- |
+| 2020-2022 | cloud-bulldozer/kraken | quay.io/openshift-scale/kraken   |
+| 2022      | chaos-kubox/krkn       | quay.io/chaos-kubox/krkn         |
+| 2022-2024 | redhat-chaos/krkn      | quay.io/redhat-chaos/krkn        |
+| 2024-     | krkn-chaos/krkn        | quay.io/krkn-chaos/krkn          |
+
+A chaos run is a one-shot Job. Two engines are available:
+
+- **core** (default): one Job runs the krkn image with the scenarios enabled in `kraken.scenarios`. Several scenarios per
+  run, full krkn configuration, image pinned by tag and digest.
+- **hub**: one Job per scenario enabled in `kraken.hub.scenarios`, each running a [krkn-hub](https://github.com/krkn-chaos/krkn-hub)
+  image configured by environment variables. krkn-hub tags are rolling (rebuilt every week).
+
+To run the scenarios from Tekton pipelines, see the [chaos-pipeline chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-pipeline).
+
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing.
 
 ## Requirements and guidelines
 
 Read the [startx helm-repository homepage](https://helm-repository.readthedocs.io) for
 more information on how to use these resources.
+
+Chaos scenarios destroy resources. Read each scenario before enabling it, start with pod scenarios, and never run node,
+network or time scenarios on a cluster you cannot afford to lose.
 
 ## Deploy this helm chart on openshift
 
@@ -35,184 +58,255 @@ helm show chart startx/chaos-kraken
 
 ```bash
 # Install the kraken project
-helm install --set project.enabled=true chaos-kraken-project  startx/chaos-kraken
-# Deploy the kraken instance
-helm install --set kraken.enabled=true -n chaos-kraken chaos-kraken-instance startx/chaos-kraken
+helm install --set project.enabled=true chaos-kraken-project startx/chaos-kraken
+# Run one scenario: kill a prometheus pod of the cluster monitoring
+helm install -n chaos-kraken chaos-kraken-run startx/chaos-kraken \
+  --set kraken.enabled=true --set kraken.scenarios.pods-monitoring.enabled=true
+# Follow the run
+oc logs -n chaos-kraken -f job/kraken-test
 ```
+
+The Job is immutable: uninstall the release (`helm uninstall chaos-kraken-run`) before running another set of scenarios.
+
+## Default values
+
+Nothing is deployed by default, and every scenario is disabled. With `project.enabled=true` and `kraken.enabled=true`
+the chart creates:
+
+- 1 **project** named **chaos-kraken**
+- 1 **serviceaccount** named **kraken**, with a chaos **clusterrole** and its binding (local mode)
+- 1 **configmap** with the krkn configuration and 1 **configmap** with the enabled scenarios
+- 1 **job** named **kraken-test**, unprivileged, running the enabled scenarios against the cluster it runs in
 
 ## Other available values
 
-- **startx-deploy-job** : [values-startx-deploy-job.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy-job.yaml)
-- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy.yaml)
-- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-project.yaml)
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-project.yaml) creates the `startx-chaos-kraken` namespace
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy.yaml) runs two pod scenarios (monitoring, ingress) with the core engine and the cerberus signal
+- **startx-deploy-hub** : [values-startx-deploy-hub.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy-hub.yaml) runs the `pod-scenarios` krkn-hub image
 
 ```bash
-helm install chaos-kraken startx/chaos-kraken -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy-job.yaml
+helm install chaos-kraken-project startx/chaos-kraken -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-project.yaml
+helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy.yaml
 ```
 
 ## Values dictionary
 
 ### context values dictionary
 
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | kraken     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 5.0.0     | Version name of this application (default use Chart appVersion)                   |
+| Key                 | Default     | Description                                                                      |
+| ------------------- | ----------- | -------------------------------------------------------------------------------- |
+| context.scope       | companyname | Name of the global scope for this application (organizational tenant)            |
+| context.cluster     | clustername | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev         | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | chaos       | Component name of this application (logical tenant)                              |
+| context.app         | kraken      | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 5.2.15      | Version name of this application (default use Chart appVersion)                  |
 
 ### chaos-kraken values dictionary
 
-| Key                            | Default                | Description                                                                                                                                                                                                                                                                       |
-| ------------------------------ | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| project                        | {...}                  | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
-| project.enable                 | false                  | Enable creation of the namespace                                                                                                                                                                                                                                                  |
-| kraken                         | {...}                  | Configuration of the kraken deployment                                                                                                                                                                                                                                            |
-| kraken.enable                  | false                  | Unleash the kraken ;)                                                                                                                                                                                                                                                             |
-| kraken.expose                  | true                   | Enable exposition for this application (route based)                                                                                                                                                                                                                              |
-| kraken.cerberusUrl             | url                    | Fill the cerberus server url. (prefer internal)                                                                                                                                                                                                                                   |
-| kraken.mode                    | pipeline               | Kraken mode (could be job or pipeline)                                                                                                                                                                                                                                            |
-| kraken.job                     | {...}                  | configuration of the job mode                                                                                                                                                                                                                                                     |
-| kraken.job.prefix              | kraken-test            | Job name prefix                                                                                                                                                                                                                                                                   |
-| kraken.pipeline                | {...}                  | configuration of the pipeline mode                                                                                                                                                                                                                                                |
-| kraken.pipeline.prefix         | kraken-test            | pipelinerun name prefix                                                                                                                                                                                                                                                           |
-| kraken.aws                     | {...}                  | AWS configuration section (must have privileged accesss to Openshift deployed resources like VPC, subnet, EC2 instance)                                                                                                                                                            |
-| kraken.aws.enabled             | false                  | enable the aws integration                                                                                                                                                                                                                                                        |
-| kraken.aws.credentials         | {...}                  | credentials (mandatory if enabled)                                                                                                                                                                                                                                                |
-| kraken.aws.credentials.region  | eu-west-3              | used AWS region                                                                                                                                                                                                                                                                   |
-| kraken.aws.credentials.key_id  | AKIAXXX...             | AWS accesss key ID                                                                                                                                                                                                                                                                 |
-| kraken.aws.credentials.secret  | "xxxxxxxxxx"           | AWS secret accesss key                                                                                                                                                                                                                                                             |
-| kraken.kubeconfig              | {...}                  | Kubeconfig of the supervised tested cluster (mandatory)                                                                                                                                                                                                                           |
-| kraken.kubeconfig.mode         | token                  | Connection mode to use for the cluster (could be token or file)                                                                                                                                                                                                                   |
-| kraken.kubeconfig.token        | {...}                  | If mode is token, this section must be filled                                                                                                                                                                                                                                     |
-| kraken.kubeconfig.token.server | https://localhost:6443 | The server URL to the target cluster API                                                                                                                                                                                                                                          |
-| kraken.kubeconfig.token.token  | sha256~XXX             | The token to use to get accesss. This token must have full cluster admin accesss to perform some chaos scenarios                                                                                                                                                                    |
-| kraken.kubeconfig.file         | ""                     | If mode is token, this property must be set with a full kubeconfig content                                                                                                                                                                                                        |
+| Key                                   | Default                     | Description                                                                                                                                    |
+| ------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| project                               | {...}                       | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) |
+| project.enabled                       | false                       | Enable creation of the namespace                                                                                                               |
+| kraken.enabled                        | false                       | Unleash the kraken ;)                                                                                                                          |
+| kraken.engine                         | core                        | Engine used to run the chaos: `core` or `hub`                                                                                                  |
+| kraken.image.repository               | quay.io/krkn-chaos/krkn     | Image repository (core engine)                                                                                                                 |
+| kraken.image.tag                      | v5.2.15                     | Image tag, used when no digest is set                                                                                                          |
+| kraken.image.digest                   | sha256:43b3efda...          | Image digest, takes precedence over the tag                                                                                                    |
+| kraken.image.pullPolicy               | IfNotPresent                | Image pull policy                                                                                                                              |
+| kraken.privileged                     | false                       | Run the krkn container as privileged and bind the service account to the `privileged` SCC                                                      |
+| kraken.runAsUser                      | ""                          | User id of the container. Leave empty on OpenShift (assigned by the SCC), set it on plain Kubernetes (ex: 1001)                                |
+| kraken.resources                      | {}                          | Resources requests and limits of the krkn container                                                                                            |
+| kraken.rbac.clusterAdmin              | false                       | Bind the service account to `cluster-admin` instead of the chaos ClusterRole of this chart                                                     |
+| kraken.rbac.extraRules                | []                          | Rules added to the chaos ClusterRole of this chart                                                                                             |
+| kraken.job.name                       | kraken-test                 | Job name (prefix of the job names with the hub engine)                                                                                         |
+| kraken.job.activeDeadlineSeconds      | 7200                        | Maximum duration of the job (seconds)                                                                                                          |
+| kraken.job.suspend                    | false                       | Create the job suspended                                                                                                                       |
+| kraken.job.ttlSecondsAfterFinished    | ""                          | Delete the finished job after this delay (seconds), kept when empty                                                                            |
+| kraken.config.exitOnFailure           | false                       | Stop the run when a scenario fails                                                                                                             |
+| kraken.config.waitDuration            | 60                          | Duration to wait between each scenario (seconds)                                                                                               |
+| kraken.config.iterations              | 1                           | Number of times to execute the scenarios                                                                                                       |
+| kraken.config.daemonMode              | false                       | Run the scenarios forever                                                                                                                      |
+| kraken.config.autoRollback            | true                        | Roll back the changes of a scenario that failed                                                                                                |
+| kraken.config.imageSignatureVerification | true                     | Verify the signature of the workload images started by krkn                                                                                    |
+| kraken.config.reportFormats           | []                          | Formats of the report generated at the end of the run (`html`, `pdf`)                                                                          |
+| kraken.config.resiliencyRunMode       | disabled                    | Resiliency score mode (`standalone`, `detailed` or `disabled`)                                                                                 |
+| kraken.cerberus.enabled               | false                       | Check the [cerberus](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus) signal after each scenario                        |
+| kraken.cerberus.url                   | ""                          | URL of the cerberus signal (ex: `http://cerberus.chaos-cerberus.svc.cluster.local:8080`)                                                       |
+| kraken.cerberus.checkApplicationRoutes | false                      | Fail the run when a route watched by cerberus was unavailable                                                                                  |
+| kraken.healthChecks.interval          | 2                           | Interval of the HTTP health checks run by krkn (seconds)                                                                                       |
+| kraken.healthChecks.runDuring         | post                        | When to run the checks (`pre`, `during`, `post` or a list)                                                                                     |
+| kraken.healthChecks.exitOnFailure     | false                       | Fail the run when a check fails                                                                                                                |
+| kraken.healthChecks.endpoints         | []                          | Endpoints to check (`url`, `bearer_token`, `auth`)                                                                                             |
+| kraken.objectStateChecks.runDuring    | []                          | When to run the object condition checks (list of `pre`, `during`, `post`). Disabled when empty                                                 |
+| kraken.objectStateChecks.exitOnFailure | false                      | Fail the run when a check fails                                                                                                                |
+| kraken.objectStateChecks.checks       | []                          | Object checks (`name`, `kind`, `object_name`, `namespace`, `label_selector`, `condition`)                                                      |
+| kraken.monitoring.enableAlerts        | false                       | Evaluate the krkn alert profile during the run                                                                                                 |
+| kraken.monitoring.checkCriticalAlerts | false                       | Fail the run when a critical alert is firing after the chaos                                                                                   |
+| kraken.monitoring.enableMetrics       | false                       | Collect the metrics of the krkn metrics profile                                                                                                |
+| kraken.monitoring.prometheusUrl       | ""                          | Prometheus URL (discovered on OpenShift, mandatory on plain Kubernetes)                                                                        |
+| kraken.monitoring.prometheusToken     | ""                          | Prometheus bearer token (discovered on OpenShift, mandatory on plain Kubernetes)                                                               |
+| kraken.cloud.existingSecret           | ""                          | Name of an existing Secret exposed as environment variables (cloud credentials of the node and zone scenarios)                                 |
+| kraken.scenarios                      | {...}                       | Scenarios of the core engine, run in alphabetical order of their name (see below)                                                              |
+| kraken.scenarios.NAME.enabled         | false                       | Run this scenario                                                                                                                              |
+| kraken.scenarios.NAME.type            |                             | krkn scenario type (`pod_disruption_scenarios`, `hog_scenarios`, `node_scenarios`...)                                                          |
+| kraken.scenarios.NAME.content         |                             | Scenario definition, in the krkn format of this type                                                                                           |
+| kraken.scenarios.NAME.file            |                             | Scenario file shipped in the krkn image, used instead of `content` (ex: `scenarios/openshift/prom_kill.yml`)                                   |
+| kraken.hub.repository                 | quay.io/krkn-chaos/krkn-hub | Image repository of the krkn-hub images                                                                                                        |
+| kraken.hub.pullPolicy                 | Always                      | Image pull policy of the krkn-hub images                                                                                                       |
+| kraken.hub.scenarios.NAME.enabled     | false                       | Run this krkn-hub scenario                                                                                                                     |
+| kraken.hub.scenarios.NAME.tag         | NAME                        | krkn-hub image tag                                                                                                                             |
+| kraken.hub.scenarios.NAME.digest      | ""                          | Image digest, takes precedence over the tag                                                                                                    |
+| kraken.hub.scenarios.NAME.env         | {}                          | Environment variables of the scenario, documented in the krkn-hub repository                                                                   |
+| kraken.kubeconfig.mode                | local                       | Connection mode to the cluster under chaos: `local` (in-cluster service account), `token` or `file` (stored in a Secret)                       |
+| kraken.kubeconfig.token.server        | https://localhost:6443      | If mode is token, the server URL of the target cluster API                                                                                     |
+| kraken.kubeconfig.token.token         | sha256~XXX                  | If mode is token, the bearer token. Its rights must cover the scenarios you run                                                                |
+| kraken.kubeconfig.token.ca            | ""                          | If mode is token, PEM content of the certificate authority of the target cluster API                                                           |
+| kraken.kubeconfig.token.insecure      | false                       | If mode is token and no ca is given, skip the TLS verification                                                                                 |
+| kraken.kubeconfig.file                | ""                          | If mode is file, a full kubeconfig content                                                                                                     |
 
-## Values files
+### Scenarios shipped with the chart
 
-### Default values file (values.yaml)
+All are disabled by default. Enable one with `--set kraken.scenarios.<name>.enabled=true` and adapt its `content`.
 
-Simple kraken with default configuration :
+| Name                           | krkn type                     | Effect                                                              | Blast radius   |
+| ------------------------------ | ----------------------------- | ------------------------------------------------------------------- | -------------- |
+| pods-monitoring                | pod_disruption_scenarios      | Kill one prometheus pod of `openshift-monitoring`                   | platform pods  |
+| pods-ingress                   | pod_disruption_scenarios      | Kill one router pod of the default ingress controller               | platform pods  |
+| pods-apiserver                 | pod_disruption_scenarios      | Kill one pod of `openshift-apiserver`                               | platform pods  |
+| pods-network                   | pod_disruption_scenarios      | Kill one `ovnkube-node` pod                                         | platform pods  |
+| pods-application               | pod_disruption_scenarios      | Kill pods of an application namespace                               | application    |
+| container-application          | container_scenarios           | Kill the main process of an application container                   | application    |
+| outage-application             | application_outages_scenarios | Block the network traffic of an application                         | application    |
+| service-disruption-application | service_disruption_scenarios  | Delete objects of the namespaces matching a pattern                 | application    |
+| pvc-fill-application           | pvc_scenarios                 | Fill a persistent volume of an application                          | application    |
+| hog-cpu-worker                 | hog_scenarios                 | CPU pressure on one worker node                                     | node           |
+| hog-memory-worker              | hog_scenarios                 | Memory pressure on one worker node                                  | node           |
+| network-latency-worker         | network_chaos_ng_scenarios    | Latency and packet loss on one worker node                          | node           |
+| time-skew-worker               | time_scenarios                | Skew the clock of one worker node                                   | node           |
+| node-reboot-worker             | node_scenarios                | Reboot one worker node (needs `cloud_type` and cloud credentials)   | node           |
 
-- 1 **project** named **chaos-kraken**
-- 1 **scc** with privileged context for **kraken** deployment
-- 1 **configmap** with kraken 21 generic scenarios, various scripts and configuration
-- 1 **configmap** with kubeconfig of the targeted cluster
-- 12 **pipeline** named **kraken-test-xxx**
-- 1 **service** to the **kraken** pods
-- 1 **route** to the **kraken** service
+No scenario targets etcd or the control plane nodes. The krkn image also ships the upstream scenarios
+(`scenarios/openshift/*`, `scenarios/kube/*`): use them with the `file` key.
 
-```bash
-# Running the default configuration
-helm install --set project.enable=true chaos-kraken-project startx/chaos-kraken
-helm install --set kraken.enable=true chaos-kraken-instance startx/chaos-kraken
-```
+### Access rights
 
-### STARTX values file (values-startx-xxx.yaml)
+In `local` mode the `kraken` service account gets a ClusterRole covering the pod, container, application and node
+scenarios above. It is derived from the [upstream RBAC documentation](https://krkn-chaos.dev/docs/krkn/rbac/) and may be
+too small for other scenario types: add rules with `kraken.rbac.extraRules`, or set `kraken.rbac.clusterAdmin=true`.
+The node, network and hog scenarios start helper pods on the target nodes: the namespace of these pods (key `namespace`
+of the scenario) must allow privileged pods.
 
-Same as the default configuration but with namespace prefixed with startx-
+## Migration from releases before 21.3.391
 
-```bash
-# Configuration running demo example configuration
-helm install chaos-kraken-project startx/chaos-kraken -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-project.yaml
-helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy.yaml
-```
+This release follows the upstream changes of krkn and is not compatible with the previous values.
+
+- `kraken.version` is replaced by `kraken.image.tag` and `kraken.image.digest`; the image moved from `quay.io/redhat-chaos/krkn` to `quay.io/krkn-chaos/krkn`.
+- `kraken.mode` is removed. The job mode is the `core` engine. The pipeline mode moved to the [chaos-pipeline chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-pipeline), which no longer starts a run at install time.
+- `kraken.job.prefix` becomes `kraken.job.name`; `kraken.cerberusUrl` becomes `kraken.cerberus.url`, and cerberus is disabled by default.
+- `kraken.aws.*` is replaced by `kraken.cloud.existingSecret`: the chart no longer stores cloud credentials.
+- `kraken.kubeconfig.mode` defaults to `local`. In `token` and `file` modes the kubeconfig is stored in a Secret and TLS is verified unless `kraken.kubeconfig.token.insecure` is set.
+- The scenario ConfigMaps tied to a specific environment (cloud identifiers, application names, provider scripts) are removed. Scenarios are declared in `kraken.scenarios`.
+- The custom `privileged-kraken` SCC, the Service and the Route are removed. The `pipeline` service account no longer receives any right.
+- The krkn configuration follows the current upstream format: the litmus, kube-burner and dashboard settings are gone.
 
 ## Usage examples
 
-### Run kraken in job mode (one-shot chaos run)
-
-Deploy kraken as a Kubernetes Job that runs a node failure scenario once:
-
-```yaml
-# my-kraken-job-values.yaml
-context:
-  scope: myorg
-  cluster: prod-cluster
-  environment: prod
-  component: chaos
-  app: kraken-prod
-
-kraken:
-  enabled: true
-  expose: false
-  cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
-  mode: job
-  job:
-    prefix: kraken-node-failure
-  kubeconfig:
-    mode: token
-    token:
-      server: https://api.prod-cluster.example.com:6443
-      token: sha256~REPLACE_WITH_YOUR_TOKEN
-```
+### Example 1 — Platform pod chaos with the core engine (default)
 
 ```bash
-helm install chaos-kraken-job startx/chaos-kraken -f my-kraken-job-values.yaml -n chaos-kraken
+helm install chaos-kraken-project startx/chaos-kraken --set project.enabled=true
+helm install -n chaos-kraken chaos-kraken-run startx/chaos-kraken \
+  --set kraken.enabled=true \
+  --set kraken.scenarios.pods-monitoring.enabled=true \
+  --set kraken.scenarios.pods-ingress.enabled=true
+oc logs -n chaos-kraken -f job/kraken-test
 ```
 
-### Run kraken in pipeline mode (Tekton)
+### Example 2 — Minimal run with a krkn-hub image
 
-Deploy kraken using a Tekton PipelineRun for each scenario (requires OpenShift Pipelines):
+One Job per scenario, configured by environment variables.
 
 ```yaml
-# my-kraken-pipeline-values.yaml
 kraken:
   enabled: true
-  cerberusUrl: http://cerberus.chaos-cerberus.svc.cluster.local:8080
-  mode: pipeline
-  pipeline:
-    prefix: kraken-test
-  kubeconfig:
-    mode: token
-    token:
-      server: https://api.prod-cluster.example.com:6443
-      token: sha256~REPLACE_WITH_YOUR_TOKEN
+  engine: hub
+  hub:
+    scenarios:
+      pod-scenarios:
+        enabled: true
+        env:
+          NAMESPACE: "^my-application$"
+          POD_LABEL: app=my-application
+          DISRUPTION_COUNT: "1"
 ```
 
-```bash
-helm install chaos-kraken-pipeline startx/chaos-kraken -f my-kraken-pipeline-values.yaml -n chaos-kraken
-```
-
-### Run kraken with AWS integration (node stop/start)
-
-Enable AWS credentials to allow kraken to stop/start EC2 instances during node failure scenarios:
+### Example 3 — Application chaos gated by cerberus and krkn health checks
 
 ```yaml
-# my-kraken-aws-values.yaml
 kraken:
   enabled: true
-  mode: job
-  aws:
+  config:
+    exitOnFailure: true
+    waitDuration: 30
+  cerberus:
     enabled: true
-    credentials:
-      region: eu-west-3
-      key_id: AKIAXXX_REPLACE_WITH_REAL_KEY
-      secret: "REPLACE_WITH_REAL_SECRET"
-  kubeconfig:
-    mode: token
-    token:
-      server: https://api.prod-cluster.example.com:6443
-      token: sha256~REPLACE_WITH_YOUR_TOKEN
+    url: http://cerberus.chaos-cerberus.svc.cluster.local:8080
+  healthChecks:
+    runDuring: [pre, post]
+    exitOnFailure: true
+    endpoints:
+      - url: https://myapp.apps.example.com/health
+  objectStateChecks:
+    runDuring: [post]
+    exitOnFailure: true
+    checks:
+      - name: myapp-available
+        kind: Deployment
+        object_name: ".*"
+        namespace: my-application
+        label_selector: ""
+        condition: {type: Available, status: "True"}
+  scenarios:
+    pods-application:
+      enabled: true
+      content:
+        - id: kill-pods
+          config:
+            namespace_pattern: ^my-application$
+            label_selector: app=my-application
+            kill: 1
+            krkn_pod_recovery_time: 120
+    outage-application:
+      enabled: true
+      content:
+        application_outage:
+          duration: 60
+          namespace: my-application
+          pod_selector: {app: my-application}
+          block: [Ingress]
 ```
 
+### Example 4 — Node reboot on a cloud provider
+
 ```bash
-helm install chaos-kraken-aws startx/chaos-kraken -f my-kraken-aws-values.yaml -n chaos-kraken
+oc create secret generic kraken-cloud -n chaos-kraken \
+  --from-literal=AWS_ACCESS_KEY_ID=... --from-literal=AWS_SECRET_ACCESS_KEY=... --from-literal=AWS_DEFAULT_REGION=eu-west-3
+helm install -n chaos-kraken chaos-kraken-run startx/chaos-kraken \
+  --set kraken.enabled=true --set kraken.cloud.existingSecret=kraken-cloud \
+  --set kraken.scenarios.node-reboot-worker.enabled=true
 ```
 
 ## ArgoCD deployment
 
-### Deploy via ArgoCD Application
-
-`chaos-kraken` follows the project/instance pattern. Kraken requires a kubeconfig to connect to the target cluster and optionally a cerberus URL for health gating.
+`chaos-kraken` follows the project/instance pattern: one AppProject, one Application creating the namespace (wave 1,
+no finalizer) and one Application running the chaos Job (wave 5). The instance Application has **no automated sync**:
+every sync starts a chaos run. The examples are in [`examples/argocd/`](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-kraken/examples/argocd).
 
 ```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/chaos-kraken/examples/argocd/
-oc apply -k .
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos-kraken
+oc apply -k examples/argocd/
 ```
 
 ## History

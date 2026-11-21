@@ -1,0 +1,34 @@
+
+
+# # Use it to Overwrite the helm-chart name
+#nameOverride: chaos-kraken
+# # Use it to Overwrite the helm-chart version
+#versionOverride: 0.0.1
+
+# Application chaos context
+context:  &context
+  scope: startx
+  cluster: mycluster
+  environment: dev
+  component: chaos
+  app: kraken
+  version: "5.2.15"
+
+project: 
+  enabled: false
+  project: 
+    name: startx-chaos-kraken
+kraken: 
+  enabled: true
+  engine: hub
+  job:
+    name: kraken-test
+  cerberus:
+    enabled: true
+    url: "http://cerberus.startx-chaos-cerberus.svc.cluster.local:8080"
+  hub:
+    scenarios:
+      pod-scenarios:
+        enabled: true
+  kubeconfig:
+    mode: local
