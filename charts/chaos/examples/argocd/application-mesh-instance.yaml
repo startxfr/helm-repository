@@ -1,3 +1,4 @@
+# ServerSideApply : the chaos-mesh definitions are too large for a client side apply.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -12,8 +13,6 @@ spec:
   project: chaos
   source:
     chart: chaos-mesh
-    # skipCrds avoids CRD version conflicts — ArgoCD manages CRDs separately
-    skipCrds: true
     helm:
       values: |
         project:
@@ -30,3 +29,38 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      # keep the ignored fields below when a sync is triggered by another difference
+      - RespectIgnoreDifferences=true
+  # The upstream chart generates a new certificate authority at every render : without these rules the Application
+  # is always OutOfSync and the certificates rotate at every refresh.
+  ignoreDifferences:
+    - kind: Secret
+      name: chaos-mesh-webhook-certs
+      jsonPointers:
+        - /data
+    - kind: Secret
+      name: chaos-mesh-chaosd-client-certs
+      jsonPointers:
+        - /data
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      name: chaos-mesh-mutation
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: chaos-mesh-validation
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: chaos-mesh-validation-auth
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+    - group: apps
+      kind: Deployment
+      name: chaos-controller-manager
+      jqPathExpressions:
+        - .spec.template.metadata.annotations.rollme
