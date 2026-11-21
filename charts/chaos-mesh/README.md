@@ -84,32 +84,6 @@ helm install chaos-mesh-project startx/chaos-mesh -f https://raw.githubuserconte
 helm install chaos-mesh-instance startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml -n startx-chaos-mesh
 ```
 
-## ArgoCD deployment
-
-One AppProject and two Applications : `chaos-mesh-project` (wave 1, the namespace) then `chaos-mesh-instance` (wave 5, chaos-mesh).
-The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh/examples/argocd).
-
-```bash
-git clone https://github.com/startxfr/helm-repository.git
-cd helm-repository/charts/chaos-mesh
-oc apply -k examples/argocd/
-```
-
-Each Application sets the `enabled` key of the other part to `false`, so that the two Applications never render the
-same resource. Delete `chaos-mesh-instance` first, wait for it to be gone, then delete `chaos-mesh-project` (it has no
-finalizer : a namespace can be slow to terminate).
-
-Things to know with ArgoCD :
-
-- **Custom resource definitions** : ArgoCD installs and upgrades the definitions of the `crds/` directory. They are too
-  large for a client side apply, hence `ServerSideApply=true` in the instance Application. Do not set `skipCrds` :
-  nothing else installs them.
-- **Prometheus volume** : with a `WaitForFirstConsumer` StorageClass the volume claim stays `Pending` and ArgoCD waits
-  for it before creating the pod that would bind it. The example sets `mesh.prometheus.create: false` ; otherwise give
-  an `Immediate` StorageClass.
-- **AppProject** : the chart creates `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` resources ;
-  both are in the `clusterResourceWhitelist` of the example.
-
 ## Usage examples
 
 ### Default : namespace then chaos-mesh
@@ -182,6 +156,32 @@ spec:
       app.kubernetes.io/name: myapp
 EOF
 ```
+## ArgoCD deployment
+
+One AppProject and two Applications : `chaos-mesh-project` (wave 1, the namespace) then `chaos-mesh-instance` (wave 5, chaos-mesh).
+The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh/examples/argocd).
+
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos-mesh
+oc apply -k examples/argocd/
+```
+
+Each Application sets the `enabled` key of the other part to `false`, so that the two Applications never render the
+same resource. Delete `chaos-mesh-instance` first, wait for it to be gone, then delete `chaos-mesh-project` (it has no
+finalizer : a namespace can be slow to terminate).
+
+Things to know with ArgoCD :
+
+- **Custom resource definitions** : ArgoCD installs and upgrades the definitions of the `crds/` directory. They are too
+  large for a client side apply, hence `ServerSideApply=true` in the instance Application. Do not set `skipCrds` :
+  nothing else installs them.
+- **Prometheus volume** : with a `WaitForFirstConsumer` StorageClass the volume claim stays `Pending` and ArgoCD waits
+  for it before creating the pod that would bind it. The example sets `mesh.prometheus.create: false` ; otherwise give
+  an `Immediate` StorageClass.
+- **AppProject** : the chart creates `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` resources ;
+  both are in the `clusterResourceWhitelist` of the example.
+
 ## History
 
 | Release  | Date       | Description                                                                                                                                              |

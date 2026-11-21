@@ -83,21 +83,6 @@ helm install chaos-monkey-project startx/chaos-monkey -f https://raw.githubuserc
 helm install chaos-monkey-instance startx/chaos-monkey -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-deploy.yaml -n startx-chaos-monkey
 ```
 
-## ArgoCD deployment
-
-One AppProject and two Applications : `chaos-monkey-project` (wave 1, the namespace) then `chaos-monkey-instance` (wave 5, kube-monkey in dry-run mode).
-The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-monkey/examples/argocd).
-
-```bash
-git clone https://github.com/startxfr/helm-repository.git
-cd helm-repository/charts/chaos-monkey
-oc apply -k examples/argocd/
-```
-
-Each Application sets the `enabled` key of the other part to `false`, so that the two Applications never render the
-same resource. Delete `chaos-monkey-instance` first, wait for it to be gone, then delete `chaos-monkey-project` (it has no
-finalizer : a namespace can be slow to terminate).
-
 ## Usage examples
 
 ### Default : namespace then kube-monkey
@@ -155,6 +140,21 @@ oc -n myapp-dev patch deployment myapp --type merge -p '{
   "metadata": {"labels": {"kube-monkey/enabled": "enabled", "kube-monkey/identifier": "myapp", "kube-monkey/mtbf": "3", "kube-monkey/kill-mode": "fixed", "kube-monkey/kill-value": "1"}},
   "spec": {"template": {"metadata": {"labels": {"kube-monkey/enabled": "enabled", "kube-monkey/identifier": "myapp"}}}}}'
 ```
+## ArgoCD deployment
+
+One AppProject and two Applications : `chaos-monkey-project` (wave 1, the namespace) then `chaos-monkey-instance` (wave 5, kube-monkey in dry-run mode).
+The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-monkey/examples/argocd).
+
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos-monkey
+oc apply -k examples/argocd/
+```
+
+Each Application sets the `enabled` key of the other part to `false`, so that the two Applications never render the
+same resource. Delete `chaos-monkey-instance` first, wait for it to be gone, then delete `chaos-monkey-project` (it has no
+finalizer : a namespace can be slow to terminate).
+
 ## History
 
 | Release  | Date       | Description                                                                                                                                                 |

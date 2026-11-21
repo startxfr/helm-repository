@@ -83,21 +83,6 @@ helm install chaos-litmus-project startx/chaos-litmus -f https://raw.githubuserc
 helm install chaos-litmus-instance startx/chaos-litmus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml -n startx-chaos-litmus
 ```
 
-## ArgoCD deployment
-
-One AppProject and two Applications : `chaos-litmus-project` (wave 1, the namespace) then `chaos-litmus-instance` (wave 5, the portal and its route).
-The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus/examples/argocd).
-
-```bash
-git clone https://github.com/startxfr/helm-repository.git
-cd helm-repository/charts/chaos-litmus
-oc apply -k examples/argocd/
-```
-
-Each Application sets the `enabled` key of the other part to `false`, so that the two Applications never render the
-same resource. Delete `chaos-litmus-instance` first, wait for it to be gone, then delete `chaos-litmus-project` (it has no
-finalizer : a namespace can be slow to terminate).
-
 ## Usage examples
 
 ### Default : namespace then portal
@@ -158,6 +143,21 @@ litmus:
 ```bash
 helm install chaos-litmus-instance startx/chaos-litmus -f my-litmus-values.yaml -n chaos-litmus
 ```
+## ArgoCD deployment
+
+One AppProject and two Applications : `chaos-litmus-project` (wave 1, the namespace) then `chaos-litmus-instance` (wave 5, the portal and its route).
+The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus/examples/argocd).
+
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos-litmus
+oc apply -k examples/argocd/
+```
+
+Each Application sets the `enabled` key of the other part to `false`, so that the two Applications never render the
+same resource. Delete `chaos-litmus-instance` first, wait for it to be gone, then delete `chaos-litmus-project` (it has no
+finalizer : a namespace can be slow to terminate).
+
 ## History
 
 | Release  | Date       | Description                                                                                                                                            |
