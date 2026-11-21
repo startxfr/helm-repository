@@ -105,6 +105,31 @@ application:
             enabled: false
           monkey:
             enabled: false
+    # Deploys the Tekton chaos pipelines (no chaos runs until a PipelineRun is created)
+    - name: 'chaos-all-pipeline-instance'
+      namespace: 'openshift-gitops'
+      finalizer: true
+      wave: "54"
+      server: 'https://kubernetes.default.svc'
+      destinationNamespace: 'chaos-pipeline'
+      project: 'chaos-all'
+      source:
+        repoURL: 'https://gitlab.com/startx1/helm.git'
+        path: 'charts/chaos-pipeline'
+        targetRevision: stable
+      helm: |
+        values: |
+          project:
+            enabled: true
+          pipeline:
+            enabled: true
+            cerberus:
+              enabled: true
+              url: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
     # Deploys service instances
     - name: 'chaos-all-litmus-instance'
       namespace: 'openshift-gitops'
@@ -227,7 +252,7 @@ application:
             enabled: true
             config:
               dryRun: true
-              timezone: Europe/Paris
+              timeZone: Europe/Paris
               startHour: 9
               endHour: 17
           cerberus:

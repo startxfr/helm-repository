@@ -36,7 +36,7 @@ roleRef:
 {{- end }}
 {{- if true }}
 {{- if include "chaos-pipeline.needsPrivilegedWorkloads" . }}
-{{- range $ns := ($k.privilegedNamespaces | default (list "default")) }}
+{{- range $ns := (include "chaos-pipeline.privilegedNamespaces" $ | fromJsonArray) }}
 ---
 # krkn starts privileged helper pods in this namespace for the node level scenarios (hog, network chaos, time)
 kind: RoleBinding

@@ -32,6 +32,7 @@ the consumers; `helm-assist` prepares chart and documentation changes in local c
 | 21.3.379 | 2026-11-19 | conventions wave (spelling, READMEs, ArgoCD examples, `values-app` files), `cluster-auth` `auth.oauth.enabled`, `cluster-argocd` `destinationNamespace` |
 | 21.3.389 | 2026-11-20 | full release: dependencies resolve over HTTPS (consumers pinning the old http URL must switch), dependency-ordered release with automatic pins, 33 schemas completed, blocking schema guard; no template or default change |
 | 21.3.390 | 2026-11-20 | full release, maintenance: `cluster-keepalived` package ships its README, pins aligned on 21.3.390; no template, default value or schema change; tooling only (contract tests made deterministic, `release-verify.sh`, render snapshots and feature-switch check in CI) |
+| 21.3.391 | 2026-11-21 | partial release (9 charts: chaos, chaos-cerberus, chaos-kraken, chaos-pipeline (new), chaos-litmus, chaos-mesh, chaos-monkey, example-chaos (deprecated), cluster-argocd): krkn based chaos charts rewritten (krkn v5.2.15, cerberus pinned by digest, Tekton pipelines), route and service account fixes on litmus, mesh and monkey, ArgoCD examples; **breaking**: `chaos-litmus` has no default password and its example Workflow needs `litmus.exampleWorkflow`, `chaos-monkey` has no cluster-wide `edit` binding and no privileged SCC by default, `chaos-kraken` configuration reworked (see the README migration notes). Not tested on a cluster beyond the server-side admission dry-run |
 
 ## Next
 

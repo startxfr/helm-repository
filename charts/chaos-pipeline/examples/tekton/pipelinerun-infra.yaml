@@ -12,6 +12,9 @@ spec:
   timeouts:
     pipeline: 3h0m0s
   params:
+    # Run only the platform pod scenarios (default: every enabled scenario of the pipeline)
+    - name: scenarios
+      value: ["10-pods-monitoring", "11-pods-ingress", "12-pods-apiserver"]
     - name: cerberus-enabled
       value: "true"
     - name: cerberus-url

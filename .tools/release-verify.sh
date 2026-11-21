@@ -5,7 +5,7 @@
 #   http      <chart>-<version>.tgz and .tgz.prov answer HTTP 200
 #   version   `helm show chart` version == <version>
 #   deps-https every dependencies[].repository starts with https:// (oci:// accepted: upstream registry)
-#   pins      every internal dependency (served by this bucket and a chart of this repository) is pinned on <version>
+#   pins      every internal dependency (served by this bucket and a chart of this repository) is pinned on <version>, or on an older version this bucket serves (partial release)
 #   digest    sha256 of the .tgz == digest of the entry in the repository index.yaml
 #   content   README.md and values.yaml of the package == the files of git HEAD (a chart whose .helmignore excludes *.md
 #             ships no README: reported as FAIL, cluster-keepalived)
@@ -61,7 +61,7 @@ check_chart() {
         if [[ $v == "$VERSION" ]]; then echo "ok   $r/$c version $v"; else echo "FAIL $r/$c version: package says '$v'"; rc=1; fi
         # dependencies: https and internal pins
         python3 - "$dir/$tgz" "$W/internal.txt" "$VERSION" "$r/$c" "$BASE" <<'PY' || rc=1
-import sys, tarfile, yaml
+import sys, tarfile, urllib.request, yaml
 tgz, internal, ver, tag, base = sys.argv[1:6]
 names = set(open(internal).read().split())
 with tarfile.open(tgz) as t:
@@ -73,8 +73,15 @@ for d in y.get('dependencies') or []:
     if repo and not repo.startswith(('https://', 'oci://')):  # oci:// = upstream registry (cluster-kargo)
         print(f"FAIL {tag} deps-https {d['name']}: {repo}"); bad = 1
     # internal = served by this repository (a name alone is not enough: the upstream chaos-mesh chart exists too)
+    # a partial release keeps the older pin of a dependency that was not released again: it is fine when that package is served
     if repo.startswith(base) and d['name'] in names and str(d.get('version')) != ver:
-        print(f"FAIL {tag} pins {d['name']}: {d.get('version')} != {ver}"); bad = 1
+        url = f"{repo.rstrip('/')}/{d['name']}-{d.get('version')}.tgz"
+        try:
+            ok = urllib.request.urlopen(urllib.request.Request(url, method='HEAD'), timeout=30).status == 200
+        except Exception:
+            ok = False
+        if not ok:
+            print(f"FAIL {tag} pins {d['name']}: {d.get('version')} is not served ({url})"); bad = 1
 if not bad: print(f"ok   {tag} deps-https/pins ({len(y.get('dependencies') or [])} dependencies)")
 sys.exit(bad)
 PY

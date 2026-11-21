@@ -22,8 +22,25 @@ spec:
   description: >-
     {{ ternary "Chaos testing of an application stack" "Chaos testing of the cluster infrastructure" $application }}:
     cerberus gate, krkn scenarios run one after the other, final cerberus check.
-    Start it with a PipelineRun using the chaos-pipeline service account.
+    Start it with a PipelineRun using the chaos-pipeline service account. Do not run two chaos PipelineRuns at the
+    same time: each one would read the failures injected by the other.
   params:
+    - name: scenarios
+      type: array
+      description: Names of the scenarios to run, among the enabled scenarios of this pipeline (default, all of them)
+      default: {{ include "chaos-pipeline.scenarioNames" $group.scenarios }}
+    - name: recovery-time
+      type: string
+      description: Time given to a target to recover, value of the ${RECOVERY_TIME} placeholder of the scenarios (in seconds)
+      default: {{ $group.recoveryTime | default 120 | quote }}
+    - name: node-selector
+      type: string
+      description: Label selector of the nodes targeted by the node level scenarios, value of the ${NODE_SELECTOR} placeholder
+      default: {{ $p.nodeSelector | default "node-role.kubernetes.io/worker=" | quote }}
+    - name: workload-namespace
+      type: string
+      description: Namespace of the krkn helper pods of the node level scenarios, value of the ${WORKLOAD_NAMESPACE} placeholder
+      default: {{ $p.workloadNamespace | default "default" | quote }}
     - name: cerberus-enabled
       type: string
       description: Gate the pipeline with the cerberus signal (true or false)
