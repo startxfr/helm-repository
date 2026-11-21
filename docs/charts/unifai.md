@@ -125,7 +125,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.390
+    targetRevision: 21.3.392
     helm:
       values: |
         stack:
@@ -156,7 +156,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.390
+    targetRevision: 21.3.392
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -317,8 +317,8 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.362 | 2026-11-18 | Create chart unifai, replacing cluster-unifai : UnifAI operator v0.1.71 and a UnifaiStack |
 | 21.3.363 | 2026-11-18 | Create chart unifai, replacing cluster-unifai : UnifAI operator v0.1.71 and a UnifaiStack |
 | 21.3.371 | 2026-11-19 | Add Sail, oauthProxy, DSCInitialization, spot machines and annotations support |
-| 21.3.372 | 2026-11-19 | update basic dependencies to v21.3.371 |
 | 21.3.377 | 2026-11-19 | full repository release: aligned pins, ArgoCD source fix, schemas and docs |
 | 21.3.379 | 2026-11-19 | conventions wave: spelling, READMEs, ArgoCD examples and values-app, oauth switch |
 | 21.3.389 | 2026-11-19 | full repository release: HTTPS dependency URLs, dependency-ordered release, schema guard, docs and examples |
 | 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
+| 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |

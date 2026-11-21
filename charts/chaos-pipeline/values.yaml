@@ -73,6 +73,25 @@ pipeline:
   # Namespaces where krkn starts its helper pods (key namespace of the scenarios; time scenarios always use default)
   privilegedNamespaces:
     - default
+  # Label selector of the nodes targeted by the node level scenarios (default of the node-selector pipeline parameter,
+  # value of the ${NODE_SELECTOR} placeholder of the scenarios). Use a dedicated label to keep some nodes out of the chaos
+  nodeSelector: "node-role.kubernetes.io/worker="
+  # Namespace where krkn starts the helper pods of the node level scenarios (default of the workload-namespace pipeline
+  # parameter, value of the ${WORKLOAD_NAMESPACE} placeholder). Added to privilegedNamespaces. Time scenarios always use default
+  workloadNamespace: default
+  # Fail a scenario when a critical alert is firing after the chaos. Needs the right to create a token for the
+  # prometheus-k8s service account of openshift-monitoring (add it with rbac.extraRules or rbac.clusterAdmin):
+  # without it krkn silently skips the check
+  checkCriticalAlerts: false
+  # HTTP health check run by krkn before and after each scenario, on the health-check-url pipeline parameter
+  healthCheck:
+    # Check interval (in seconds)
+    interval: 2
+    # Verify the TLS certificate of the endpoint (set false for a self-signed route)
+    verify: true
+    # Name of an existing Secret with the optional keys bearer-token and auth ("username,password")
+    # Avoid the characters " and \ in these values
+    existingSecret: ""
   # Verify the signature of the workload images started by krkn
   imageSignatureVerification: true
   # Resources requests and limits of the krkn steps
@@ -106,12 +125,15 @@ pipeline:
   # - type and content: krkn scenario type and definition (core engine)
   # - tag, digest and env: krkn-hub image tag, digest and environment variables (hub engine)
   # - waitDuration: time to wait after the scenario, in seconds (core engine, default 30)
+  # - recoveryTime: value of ${RECOVERY_TIME} for this scenario (default, the recovery-time pipeline parameter)
   # - timeout: timeout of the task (default 1h0m0s)
   infra:
     # Deploy the chaos-infra pipeline
     enabled: true
     # Default HTTP endpoint checked by krkn before and after each scenario (empty to disable)
     healthCheckUrl: ""
+    # Default time given to a target to recover, in seconds (pipeline parameter recovery-time)
+    recoveryTime: 180
     # Scenarios of the pipeline, ordered by blast radius: 1x platform pods, 2x node pressure, 3x node reboot
     scenarios:
       # Kill one prometheus pod of the cluster monitoring stack
@@ -124,7 +146,7 @@ pipeline:
               namespace_pattern: ^openshift-monitoring$
               label_selector: app.kubernetes.io/name=prometheus
               kill: 1
-              krkn_pod_recovery_time: 180
+              krkn_pod_recovery_time: ${RECOVERY_TIME}
       # Kill one router pod of the default ingress controller
       11-pods-ingress:
         enabled: true
@@ -135,7 +157,7 @@ pipeline:
               namespace_pattern: ^openshift-ingress$
               label_selector: ingresscontroller.operator.openshift.io/deployment-ingresscontroller=default
               kill: 1
-              krkn_pod_recovery_time: 180
+              krkn_pod_recovery_time: ${RECOVERY_TIME}
       # Kill one pod of the openshift API server
       12-pods-apiserver:
         enabled: true
@@ -146,7 +168,7 @@ pipeline:
               namespace_pattern: ^openshift-apiserver$
               label_selector: apiserver=true
               kill: 1
-              krkn_pod_recovery_time: 180
+              krkn_pod_recovery_time: ${RECOVERY_TIME}
       # CPU pressure on one worker node
       20-hog-cpu-worker:
         enabled: false
@@ -156,10 +178,10 @@ pipeline:
           workers: ''
           hog-type: cpu
           image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-hog
-          namespace: default
+          namespace: ${WORKLOAD_NAMESPACE}
           cpu-load-percentage: 80
           cpu-method: all
-          node-selector: "node-role.kubernetes.io/worker="
+          node-selector: "${NODE_SELECTOR}"
           number-of-nodes: 1
           taints: []
       # Memory pressure on one worker node
@@ -171,9 +193,9 @@ pipeline:
           workers: ''
           hog-type: memory
           image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-hog
-          namespace: default
+          namespace: ${WORKLOAD_NAMESPACE}
           memory-vm-bytes: 80%
-          node-selector: "node-role.kubernetes.io/worker="
+          node-selector: "${NODE_SELECTOR}"
           number-of-nodes: 1
           taints: []
       # Network latency and packet loss on one worker node
@@ -185,10 +207,10 @@ pipeline:
             image: quay.io/krkn-chaos/krkn-hub-multiarch:workload-krkn-network-chaos
             wait_duration: 1
             test_duration: 60
-            label_selector: "node-role.kubernetes.io/worker="
+            label_selector: "${NODE_SELECTOR}"
             service_account: ""
             taints: []
-            namespace: default
+            namespace: ${WORKLOAD_NAMESPACE}
             instance_count: 1
             target: ""
             execution: serial
@@ -216,8 +238,9 @@ pipeline:
               cloud_type: aws
               kube_check: true
   # Pipeline chaos-application: chaos testing of an application stack
-  # Same scenario format as infra. In a scenario content, ${TARGET_NAMESPACE} and ${LABEL_SELECTOR} are replaced
-  # by the target-namespace and label-selector parameters of the pipeline
+  # Same scenario format as infra. In a scenario content, ${TARGET_NAMESPACE}, ${LABEL_SELECTOR} and ${RECOVERY_TIME}
+  # are replaced by the target-namespace, label-selector and recovery-time parameters of the pipeline.
+  # A scenario can also name its own target in its content: a run then picks scenarios with the scenarios parameter
   application:
     # Deploy the chaos-application pipeline
     enabled: true
@@ -227,6 +250,8 @@ pipeline:
     labelSelector: ""
     # Default HTTP endpoint checked by krkn before and after each scenario (empty to disable)
     healthCheckUrl: ""
+    # Default time given to a target to recover, in seconds (pipeline parameter recovery-time)
+    recoveryTime: 120
     # Scenarios of the pipeline
     scenarios:
       # Kill one pod of the application
@@ -240,7 +265,7 @@ pipeline:
               label_selector: "${LABEL_SELECTOR}"
               name_pattern: .*
               kill: 1
-              krkn_pod_recovery_time: 120
+              krkn_pod_recovery_time: ${RECOVERY_TIME}
       # Kill the main process of one container of the application
       20-container:
         enabled: true
@@ -253,7 +278,7 @@ pipeline:
               container_name: ""
               action: 1
               count: 1
-              expected_recovery_time: 120
+              expected_recovery_time: ${RECOVERY_TIME}
       # Delete objects of the application namespace
       30-service-disruption:
         enabled: false
