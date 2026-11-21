@@ -13,18 +13,20 @@ spec:
   source:
     chart: chaos-litmus
     helm:
-      valueFiles:
-        - values-startx_noinfra.yaml
       values: |
         project:
           enabled: true
         litmus:
           enabled: true
+          # Secrets to create before the sync (see the chaos-litmus README)
+          existingSecret: litmus-admin
           # Use standalone MongoDB for test environments:
           # - avoids replicaSet (3 primary + 1 arbiter) which creates SCC issues on OCP
           # - disables PVC to avoid WaitForFirstConsumer StorageClass deadlock
           mongodb:
             architecture: standalone
+            auth:
+              existingSecret: litmus-mongodb
             persistence:
               enabled: false
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
