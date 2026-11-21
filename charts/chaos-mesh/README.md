@@ -1,10 +1,13 @@
 # ![chaos-mesh](https://helm-repository.readthedocs.io/en/latest/img/chaos-mesh.svg "Chaos Chart : ChaosMesh") Chaos Chart : Mesh
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--mesh-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+mesh+startx)
 
-This helm chart used to deploy chaos-mesh on Openshift or Kubernetes cluster.
-Chaos Mesh is a chaos engine with a GUI to define and execute chaos scenarios for Kubernetes clusters.
+This helm chart is used to deploy [Chaos Mesh](https://chaos-mesh.org) on an Openshift or Kubernetes cluster.
+Chaos Mesh is a chaos engine driven by custom resources (`PodChaos`, `NetworkChaos`, `TimeChaos`...) or by its web
+dashboard.
 
-This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
+**Upstream project** : [chaos-mesh/chaos-mesh](https://github.com/chaos-mesh/chaos-mesh), deployed with the upstream helm chart [`chaos-mesh`](https://charts.chaos-mesh.org) version `2.8.8` ; images `ghcr.io/chaos-mesh/chaos-mesh`, `chaos-daemon` and `chaos-dashboard`, tag `v2.8.8`.
+
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing.
 
 ## Requirements and guidelines
 
@@ -34,125 +37,136 @@ helm show chart startx/chaos-mesh
 ### 4. Install this component
 
 ```bash
-# Install the chaos-mesh project
-helm install --set project.enabled=true chaos-mesh-project  startx/chaos-mesh
-# Deploy the chaos-mesh instance
-helm install --set mesh.enabled=true -n chaos-mesh chaos-mesh-instance startx/chaos-mesh
+# Create the chaos-mesh namespace
+helm install chaos-mesh-project startx/chaos-mesh --set project.enabled=true
+# Deploy the mesh instance
+helm install chaos-mesh-instance startx/chaos-mesh --set mesh.enabled=true -n chaos-mesh
 ```
+
+## Default values
+
+The default [values.yaml](https://github.com/startxfr/helm-repository/blob/master/charts/chaos-mesh/values.yaml) deploys
+nothing : each part is switched on by its `enabled` key.
+
+- `project.enabled=true` : 1 **namespace** `chaos-mesh` (see the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project))
+- `mesh.enabled=true` : the chaos-mesh controller, daemon, dashboard, DNS server and Prometheus, 2 **SecurityContextConstraints** `anyuid-mesh` and `privileged-mesh` with their Role and RoleBinding, 1 **Route** `server` (unless `mesh.expose=false`)
+
+The custom resource definitions (`chaos-mesh.org`) are shipped in the `crds/` directory of the upstream chart : helm
+installs them at the first install and never upgrades them.
+
+| Key                         | Default                                      | Description                                                                                                                   |
+| --------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| context.scope               | companyname                                  | Name of the global scope for this application (organizational tenant)                                                         |
+| context.cluster             | clustername                                  | Name of the cluster running this application (platform tenant)                                                                |
+| context.environment         | dev                                          | Name of the environment for this application (ex: dev, factory, preprod or prod)                                              |
+| context.component           | chaos                                        | Component name of this application (logical tenant)                                                                           |
+| context.app                 | chaos-mesh                                   | Application name (functional tenant, default use Chart name)                                                                  |
+| context.version             | 2.8.8                                        | Version name of this application (default use Chart appVersion)                                                               |
+| project                     | {...}                                        | Values of the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project), which creates the namespace   |
+| project.enabled             | false                                        | Create the namespace                                                                                                          |
+| project.project.name        | chaos-mesh                                   | Name of the namespace ; also the namespace of the resources created by this chart                                             |
+| mesh                        | {...}                                        | Values of the upstream [chaos-mesh chart](https://github.com/chaos-mesh/chaos-mesh/tree/master/helm/chaos-mesh), passed as is |
+| mesh.enabled                | false                                        | Deploy chaos-mesh and the `anyuid-mesh` and `privileged-mesh` SecurityContextConstraints                                      |
+| mesh.expose                 | true                                         | Create the Openshift route `server` to the dashboard (when `mesh.enabled` and `mesh.dashboard.create`)                        |
+| mesh.chaosDaemon.runtime    | crio                                         | Container runtime of the nodes ; `socketPath` goes with it                                                                    |
+| mesh.dashboard.create       | true                                         | Deploy the web dashboard                                                                                                      |
+| mesh.dashboard.securityMode | true                                         | The dashboard asks for a token instead of using its own service account                                                       |
+| mesh.dashboard.rootUrl      | https://server-chaos-mesh.apps.mycluster.com | Public URL of the dashboard, to adapt to the cluster                                                                          |
+| mesh.prometheus.create      | true                                         | Deploy a Prometheus with a persistent volume                                                                                  |
 
 ## Other available values
 
-- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml)
-- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml)
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml), namespace `startx-chaos-mesh` only
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml), chaos-mesh in the namespace `startx-chaos-mesh`, 3 controller replicas
 
 ```bash
-helm install chaos-mesh startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | chaos-mesh     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### chaos-mesh values dictionary
-
-| Key            | Default | Description                                                                                                                                                                                                                                                                       |
-| -------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| project        | {...}   | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
-| project.enable | false   | Enable creation of the namespace                                                                                                                                                                                                                                                  |
-| mesh           | {...}   | Configuration of the chaos-mesh deployment. Inherit from the [official chaos-mesh chart](https://charts.chaos-mesh.org) (see [chart options](https://charts.chaos-mesh.org) for more options)                                                                                     |
-| mesh.enable    | false   | Enable deploying the chaos-mesh chaos engine                                                                                                                                                                                                                                          |
-
-## Values files
-
-### Default values file (values.yaml)
-
-Simple mesh with default configuration :
-
-- 1 **project** named **chaos-mesh**
-- 1 **scc** with privileged context for 9 **mesh** serviceaccount
-- 1 **mesh** deployment using official helm chart
-- 1 **route** to the **mesh** service
-
-```bash
-# Running the default configuration
-helm install --set project.enable=true chaos-mesh-project startx/chaos-mesh
-helm install --set mesh.enable=true chaos-mesh-instance startx/chaos-mesh
-```
-
-### STARTX values file (values-startx-xxx.yaml)
-
-Same as the default configuration but with namespace prefixed with startx-
-
-```bash
-# Configuration running demo example configuration
 helm install chaos-mesh-project startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml
-helm install chaos-mesh-deploy startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml
+helm install chaos-mesh-instance startx/chaos-mesh -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml -n startx-chaos-mesh
 ```
+
+## ArgoCD deployment
+
+One AppProject and two Applications : `chaos-mesh-project` (wave 1, the namespace) then `chaos-mesh-instance` (wave 5, chaos-mesh).
+The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh/examples/argocd).
+
+```bash
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos-mesh
+oc apply -k examples/argocd/
+```
+
+Each Application sets the `enabled` key of the other part to `false`, so that the two Applications never render the
+same resource. Delete `chaos-mesh-instance` first, wait for it to be gone, then delete `chaos-mesh-project` (it has no
+finalizer : a namespace can be slow to terminate).
+
+Things to know with ArgoCD :
+
+- **Custom resource definitions** : ArgoCD installs and upgrades the definitions of the `crds/` directory. They are too
+  large for a client side apply, hence `ServerSideApply=true` in the instance Application. Do not set `skipCrds` :
+  nothing else installs them.
+- **Prometheus volume** : with a `WaitForFirstConsumer` StorageClass the volume claim stays `Pending` and ArgoCD waits
+  for it before creating the pod that would bind it. The example sets `mesh.prometheus.create: false` ; otherwise give
+  an `Immediate` StorageClass.
+- **AppProject** : the chart creates `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` resources ;
+  both are in the `clusterResourceWhitelist` of the example.
 
 ## Usage examples
 
-### Deploy chaos-mesh with dashboard and route
+### Default : namespace then chaos-mesh
 
-Enable chaos-mesh with its web dashboard exposed via an OpenShift route:
-
-```yaml
-# my-mesh-values.yaml
-context:
-  scope: myorg
-  cluster: prod-cluster
-  environment: chaos
-  component: mesh
-  app: chaos-mesh
-
-mesh:
-  enabled: true
-  dashboard:
-    create: true
-    securityMode: false
-  controllerManager:
-    replicaCount: 1
-  chaosDaemon:
-    runtime: containerd
-    socketPath: /run/containerd/containerd.sock
-```
+Two releases of the same chart, the namespace first.
 
 ```bash
-helm install chaos-mesh-instance startx/chaos-mesh -f my-mesh-values.yaml -n chaos-mesh
+helm install chaos-mesh-project startx/chaos-mesh --set project.enabled=true
+helm install chaos-mesh-instance startx/chaos-mesh --set mesh.enabled=true -n chaos-mesh
 ```
 
-### Minimal deployment (no dashboard)
+### Minimal : engine only
 
-Deploy chaos-mesh engine only, without the web dashboard, for CLI/CR-driven chaos scenarios:
+No dashboard, no route, no Prometheus, no DNS server : experiments are applied as custom resources.
 
 ```yaml
 # my-mesh-minimal-values.yaml
 mesh:
   enabled: true
+  expose: false
   dashboard:
     create: false
-  controllerManager:
-    replicaCount: 1
+  prometheus:
+    create: false
+  dnsServer:
+    create: false
 ```
 
 ```bash
-helm install chaos-mesh-minimal startx/chaos-mesh -f my-mesh-minimal-values.yaml -n chaos-mesh
+helm install chaos-mesh-instance startx/chaos-mesh -f my-mesh-minimal-values.yaml -n chaos-mesh
 ```
 
-### Apply a PodChaos experiment after deployment
+### Advanced : highly available controller and a first experiment
 
-Once chaos-mesh is deployed, apply a `PodChaos` CR directly to kill pods at random:
+Three controller replicas, the dashboard published under the cluster domain, then a `PodChaos` that kills one pod of an application.
 
 ```yaml
-# pod-chaos-example.yaml
+# my-mesh-values.yaml
+context:
+  scope: myorg
+  cluster: mycluster
+  environment: prod
+  component: chaos
+  app: chaos-mesh
+mesh:
+  enabled: true
+  controllerManager:
+    replicaCount: 3
+  dashboard:
+    rootUrl: https://server-chaos-mesh.apps.mycluster.example.com
+  prometheus:
+    create: false
+```
+
+```bash
+helm install chaos-mesh-instance startx/chaos-mesh -f my-mesh-values.yaml -n chaos-mesh
+cat <<EOF | oc apply -f -
 apiVersion: chaos-mesh.org/v1alpha1
 kind: PodChaos
 metadata:
@@ -165,145 +179,19 @@ spec:
     namespaces:
       - myapp-namespace
     labelSelectors:
-      "app.kubernetes.io/name": "myapp"
-  scheduler:
-    cron: "@every 10m"
+      app.kubernetes.io/name: myapp
+EOF
 ```
-
-```bash
-oc apply -f pod-chaos-example.yaml
-```
-
-## ArgoCD deployment
-
-### Known limitations
-
-**CRD installation**: The upstream chaos-mesh chart installs its own CRDs (`chaos-mesh.org/*`). When deploying via ArgoCD, skip CRD installation in the chart (ArgoCD manages CRDs separately via the `skipCrds: true` option in the Application spec). This avoids CRD version conflicts during upgrades.
-
-**Label collision in v21.3.103 and earlier**: Versions up to 21.3.103 had a Helm helper name collision between the startx wrapper chart and the upstream chaos-mesh subchart. The wrapper's `chaos-mesh.labels` helper was overriding the upstream subchart's same-named helper, injecting `app.startx.fr/*` labels into pod templates that didn't match the immutable selectors. This caused all Deployments and DaemonSets to fail with `selector does not match template labels`. **Fixed in v21.3.105** by renaming the wrapper helper to `startx-chaos-mesh.labels`.
-
-**Prometheus PVC deadlock**: If `mesh.prometheus.create=true` (default), the upstream chart creates a `prometheus-pvc` PVC using the default StorageClass. On clusters with a `WaitForFirstConsumer` StorageClass, this PVC stays `Pending` indefinitely — ArgoCD waits for the PVC to be `Healthy` before deploying the pod, but the pod is what binds the PVC. Disable prometheus or use `mesh.prometheus.storageClassName` to force a `Immediate` StorageClass:
-
-```yaml
-mesh:
-  prometheus:
-    create: false
-```
-
-**Webhook whitelist in AppProject**: The chaos-mesh chart creates `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` cluster-scoped resources. Add both to `clusterResourceWhitelist`.
-
-### Deploy via ArgoCD Application
-
-`chaos-mesh` installs upstream CRDs (`chaos-mesh.org/*`) and the chaos-mesh dashboard. The AppProject must whitelist those CRD resources and the webhook configurations.
-
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: chaos-mesh
-  namespace: openshift-gitops
-spec:
-  description: Deploy Chaos Mesh chaos engineering platform on OpenShift
-  sourceRepos:
-    - 'https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/*'
-    - 'https://charts.chaos-mesh.org'
-  destinations:
-    - server: https://kubernetes.default.svc
-      namespace: chaos-mesh
-    - server: https://kubernetes.default.svc
-      namespace: default
-  clusterResourceWhitelist:
-    - group: ''
-      kind: Namespace
-    - group: project.openshift.io
-      kind: ProjectRequest
-    - group: security.openshift.io
-      kind: SecurityContextConstraints
-    - group: rbac.authorization.k8s.io
-      kind: ClusterRole
-    - group: rbac.authorization.k8s.io
-      kind: ClusterRoleBinding
-    - group: apiextensions.k8s.io
-      kind: CustomResourceDefinition
-    - group: admissionregistration.k8s.io
-      kind: MutatingWebhookConfiguration
-    - group: admissionregistration.k8s.io
-      kind: ValidatingWebhookConfiguration
-    - group: chaos-mesh.org
-      kind: '*'
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: chaos-mesh-project
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  project: chaos-mesh
-  source:
-    chart: chaos-mesh
-    helm:
-      values: |
-        project:
-          enabled: true
-    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.390
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: chaos-mesh-instance
-  namespace: openshift-gitops
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: chaos-mesh
-    server: https://kubernetes.default.svc
-  project: chaos-mesh
-  source:
-    chart: chaos-mesh
-    # skipCrds avoids CRD version conflicts — ArgoCD manages CRDs separately
-    skipCrds: true
-    helm:
-      values: |
-        mesh:
-          enabled: true
-          # Disable prometheus to avoid PVC deadlock on WaitForFirstConsumer StorageClass
-          prometheus:
-            create: false
-    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
-    targetRevision: 21.3.390
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
-
-Apply with:
-
-```bash
-kubectl apply -f chaos-mesh-argocd.yaml -n openshift-gitops
-```
-
 ## History
 
 | Release  | Date       | Description                                                                                                                                              |
 | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 16.19.59 | 2024-12-09 | Align all chart to the 16.19.59 release |
 | 17.14.90 | 2025-04-30 | Publish stable release for 4.17 version |
-| 18.11.71 | 2025-11-27 | Align all charts to the same releas |
+| 18.11.71 | 2025-11-27 | Align all charts to the same release |
 | 18.23.0 | 2026-02-28 | Start 4.19 branch |
 | 19.23.17 | 2026-03-02 | Align all dependencies to chart v19.23.11 |
-| 20.14.15 | 2026-03-02 | Update all chrat to OCP version 4.20.14 |
+| 20.14.15 | 2026-03-02 | Update all charts to OCP version 4.20.14 |
 | 21.3.0 | 2026-03-02 | Update all chart to OCP version 4.21.3 |
 | 21.3.278 | 2026-08-14 | add centigpu |
 | 21.3.300 | 2026-10-21 | Add new charts and align all to this release |
