@@ -17,15 +17,15 @@ context: &context
   # Application name (functional tenant, default use Chart name)
   app: unifai
   # Version name of this application (default use Chart appVersion)
-  version: "0.1.71"
+  version: "0.1.75"
 
 # UnifAI operator (cluster-wide : install it once per cluster)
 operator:
   # Install the operator (Deployment, RBAC). Set to false when the operator already runs on
   # the cluster (installed by OLM or by another release of this chart).
   enabled: true
-  # Operator image, pinned by digest to the UnifAI release v0.1.71
-  image: quay.io/zuno/unifai-operator@sha256:7f23d864dd4125ecbeb6bb2354ce540221c917966114e1888aee76529cc95ed6
+  # Operator image, pinned by digest to the UnifAI release v0.1.75
+  image: quay.io/zuno/unifai-operator@sha256:b15232d4e12043cf3288363acf735e875b1012bcfb243d01a67bc3a1710ae271
   # Image pull policy of the operator
   imagePullPolicy: IfNotPresent
   # Pull secrets for the operator image (list of {name: ...})
@@ -58,16 +58,16 @@ stack:
     # Sizing profile : dev (small requests, no autoscaling) or prod
     profile: dev
     # Tag of the UnifAI application images
-    version: v0.1.71
+    version: v0.1.75
     # Registry holding the UnifAI application images
     imageRegistry: quay.io/zuno
-    # Application images pinned by digest (UnifAI release v0.1.71, linux/amd64 only)
+    # Application images pinned by digest (UnifAI release v0.1.75, linux/amd64 only)
     images:
-      rag: quay.io/zuno/unifai-rag@sha256:d5f846d3b338a948c127d039c6a68982e91c6ea37385b8a784e3d51e14adb4e7
-      multiagent: quay.io/zuno/unifai-multiagent@sha256:3bbeb9fa46b8a9ab678e1425d2bd31e3d3438858e009fcaf57c0377660556ca0
-      backend: quay.io/zuno/unifai-backend@sha256:bdf39cc0495060069f5317644010bfbc9169a18dedcf84125a5da6816dde9496
-      identity: quay.io/zuno/unifai-identity@sha256:e57be1af139efcbad8c42424693772109dcb79d479e6025d564caa66fd242e1f
-      ui: quay.io/zuno/unifai-ui@sha256:d7c7c37a2e03dece368dff131156d4bd926bfed0a32f52ac536e887b2cdad136
+      rag: quay.io/zuno/unifai-rag@sha256:6edf6bfca6c7899c20e44215dcf24931371372e0f7ede1baa379907d450bc25d
+      multiagent: quay.io/zuno/unifai-multiagent@sha256:472250cfc173d1c4f1d6d520d815ee577c467f3a92a120ecf6cf18671152c4b3
+      backend: quay.io/zuno/unifai-backend@sha256:540650ab1eee5b7a1ef26d56a67bba842ee312ef21692ba4c8d033a51d5f7a43
+      identity: quay.io/zuno/unifai-identity@sha256:2d98a44ed29f2c0de84184557debd235a307efcf63b44c5fc83d03527789a751
+      ui: quay.io/zuno/unifai-ui@sha256:b193a4a0e53a67c246800e4418c03a9eba3b9d027abbe795843b7f75d83566bd
     # Identity provider. UnifAI always needs a Keycloak realm : either "keycloak" (deployed by
     # the operator, OpenShift only) or "external" (your own Keycloak). Setting "external"
     # replaces the default "keycloak" block.
