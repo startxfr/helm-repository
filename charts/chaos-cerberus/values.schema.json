@@ -1,282 +1,374 @@
 {
-    "$schema": "http://json-schema.org/schema#",
-    "type": "object",
-    "properties": {
-        "context": {
-            "type": "object",
-            "title": "chaos context",
-            "description": "Properties of the chaos context.",
-            "required": [
-                "scope",
-                "cluster",
-                "environment",
-                "component",
-                "app"
-            ],
-            "properties": {
-                "scope": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Scope name",
-                    "description": "Name of the global scope for this application. Define an organizational tenant.",
-                    "default": "companyname",
-                    "examples": [
-                        "myscope",
-                        "mycorp",
-                        "startx"
-                    ]
-                },
-                "cluster": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Cluster name",
-                    "description": "Name of the cluster running this application. Define a platform tenant.",
-                    "default": "clustername",
-                    "examples": [
-                        "clustername",
-                        "mycluster",
-                        "localhost"
-                    ]
-                },
-                "environment": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Environment name",
-                    "description": "Name of the environment for this application. Define a stage tenant.",
-                    "default": "dev",
-                    "examples": [
-                        "dev",
-                        "build",
-                        "ci",
-                        "factory",
-                        "preprod",
-                        "prod"
-                    ]
-                },
-                "component": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Component name",
-                    "description": "Name of the component consisting of this application. Define a logical tenant.",
-                    "default": "chaos",
-                    "examples": [
-                        "startx-chaos",
-                        "chaos",
-                        "mycomp"
-                    ]
-                },
-                "app": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 40,
-                    "title": "Application name",
-                    "description": "Name of the application name. Define a functional tenant.",
-                    "default": "cerberus",
-                    "examples": [
-                        "cerberus",
-                        "watchdog"
-                    ]
-                },
-                "version": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 30,
-                    "title": "Version name",
-                    "description": "Name of the application version. Define this chaos version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
-                    "default": "0.0.1",
-                    "examples": [
-                        "0.0.1",
-                        "0.1",
-                        "0.0.1-snapshot",
-                        "0.0.1-202110300900"
-                    ]
-                }
-            }
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "context": {
+      "type": "object",
+      "title": "chaos context",
+      "description": "Properties of the chaos context.",
+      "required": [
+        "scope",
+        "cluster",
+        "environment",
+        "component",
+        "app"
+      ],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Scope name",
+          "description": "Name of the global scope for this application. Define an organizational tenant.",
+          "default": "companyname",
+          "examples": [
+            "myscope",
+            "mycorp",
+            "startx"
+          ]
         },
-        "cerberus": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "title": "Enable cerberus",
-                    "description": "Enable deploying the cerberus watchdog",
-                    "default": true
-                },
-                "expose": {
-                    "type": "boolean",
-                    "title": "Expose signal",
-                    "description": "Enable exposition for this application (route based)",
-                    "default": true
-                },
-                "kraken_allowed": {
-                    "type": "boolean",
-                    "title": "Allow kraken communication",
-                    "description": "Is kraken is allowed (networkPolicy) to talk to cerberus server",
-                    "default": true
-                },
-                "sleep_time": {
-                    "type": "integer",
-                    "title": "Sleep time",
-                    "description": "Sleep time beetween 2 checks of the targeted cluster",
-                    "default": 15
-                },
-                "watch_nodes": {
-                    "type": "boolean",
-                    "title": "Watch nodes",
-                    "description": "Enable watching nodes health as part of the global health signal",
-                    "default": true
-                },
-                "watch_cluster_operators": {
-                    "type": "boolean",
-                    "title": "Watch cluster operators",
-                    "description": "Enable watching cluster operator health as part of the global health signal",
-                    "default": true
-                },
-                "isDaemon": {
-                    "type": "boolean",
-                    "title": "Cerberus is daemon",
-                    "description": "Enable kraken in a daemon mode (infinity instead of 25 runs)",
-                    "default": true
-                },
-                "kraken_ns": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 25,
-                    "title": "Kraken namespace",
-                    "description": "Namespace of the kraken pod that would be allowed",
-                    "default": "chaos-kraken",
-                    "examples": [
-                        "chaos-kraken",
-                        "chaos"
-                    ]
-                },
-                "kubeconfig": {
-                    "type": "object",
-                    "properties": {
-                        "mode": {
-                            "enum": [
-                                "token",
-                                "file",
-                                "local"
-                            ],
-                            "title": "Kubeconfig mode",
-                            "description": "Connection mode to use for the cluster (could be token, file, or local)",
-                            "default": "token"
-                        },
-                        "file": {
-                            "type": "string",
-                            "minLength": 50,
-                            "maxLength": 50000,
-                            "title": "Kubeconfig file",
-                            "description": "If mode is file, this property must be set with a full kubeconfig content",
-                            "default": "kind: Config\napiVersion: v1",
-                            "examples": [
-                                "kind: Config\napiVersion: v1",
-                                "kind: Config\napiVersion: v1\ncurrent-context: default"
-                            ]
-                        },
-                        "token": {
-                            "type": "object",
-                            "properties": {
-                                "server": {
-                                    "type": "string",
-                                    "minLength": 5,
-                                    "maxLength": 200,
-                                    "title": "API endpoint",
-                                    "description": "The server URL to the target cluster API",
-                                    "default": "https://localhost:6443",
-                                    "examples": [
-                                        "https://localhost:6443",
-                                        "https://api.mycluster.local:6443"
-                                    ]
-                                },
-                                "token": {
-                                    "type": "string",
-                                    "minLength": 5,
-                                    "maxLength": 2000,
-                                    "title": "API token",
-                                    "description": "The token to use to get access. This token must have full cluster admin access to perform some chaos scenarios",
-                                    "default": "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
-                                    "examples": [
-                                        "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
-                                        "mytoken"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "anyOf": [
-                        {
-                            "properties": {
-                                "mode": {
-                                    "const": "token"
-                                }
-                            },
-                            "required": [
-                                "token"
-                            ]
-                        },
-                        {
-                            "properties": {
-                                "mode": {
-                                    "const": "file"
-                                }
-                            },
-                            "required": [
-                                "file"
-                            ]
-                        },
-                        {
-                            "properties": {
-                                "mode": {
-                                    "const": "local"
-                                }
-                            }
-                        }
-                    ]
-                },
-                "watch_url_routes": {
-                    "type": "array",
-                    "title": "Watch routes",
-                    "description": "Url list of endpoint to watch as part of the global healthcheck (double array)",
-                    "default": []
-                },
-                "watch_terminating_namespaces": {
-                    "type": "boolean",
-                    "title": "Watch terminating namespaces",
-                    "description": "Enable watching terminating namespaces as part of the global health signal",
-                    "default": true
-                },
-                "watch_namespaces": {
-                    "type": "array",
-                    "title": "Watch namespaces",
-                    "description": "List of namespaces to watch (supports regex patterns)",
-                    "default": []
-                },
-                "watch_namespaces_ignore_pattern": {
-                    "type": "array",
-                    "title": "Namespace ignore patterns",
-                    "description": "Regex patterns for namespaces to exclude from watching",
-                    "default": []
-                },
-                "custom_checks": {
-                    "type": "array",
-                    "title": "Custom checks",
-                    "description": "List of custom check scripts (paths relative to /root/cerberus/ working directory)",
-                    "default": []
-                },
-                "version": {
-                    "type": "string",
-                    "description": "Version of the cerberus image."
-                }
-            }
+        "cluster": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Cluster name",
+          "description": "Name of the cluster running this application. Define a platform tenant.",
+          "default": "clustername",
+          "examples": [
+            "clustername",
+            "mycluster",
+            "localhost"
+          ]
         },
-        "project": {
-            "$ref": "https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values.schema.json"
+        "environment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Environment name",
+          "description": "Name of the environment for this application. Define a stage tenant.",
+          "default": "dev",
+          "examples": [
+            "dev",
+            "build",
+            "ci",
+            "factory",
+            "preprod",
+            "prod"
+          ]
+        },
+        "component": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 25,
+          "title": "Component name",
+          "description": "Name of the component consisting of this application. Define a logical tenant.",
+          "default": "chaos",
+          "examples": [
+            "startx-chaos",
+            "chaos",
+            "mycomp"
+          ]
+        },
+        "app": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "title": "Application name",
+          "description": "Name of the application name. Define a functional tenant.",
+          "default": "cerberus",
+          "examples": [
+            "cerberus",
+            "watchdog"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30,
+          "title": "Version name",
+          "description": "Name of the application version. Define this chaos version. Should be incremented each time application configuration is changed to keep track of changes and allow ease rollin of the application (and rollout in case of problem). Default use Chart appVersion.",
+          "default": "0.0.1",
+          "examples": [
+            "0.0.1",
+            "0.1",
+            "0.0.1-snapshot",
+            "0.0.1-202110300900"
+          ]
         }
+      }
+    },
+    "cerberus": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "title": "Enable cerberus",
+          "description": "Enable deploying the cerberus watchdog",
+          "default": false
+        },
+        "expose": {
+          "type": "boolean",
+          "title": "Expose signal",
+          "description": "Enable exposition for this application (route based)",
+          "default": false
+        },
+        "sleep_time": {
+          "type": "integer",
+          "title": "Sleep time",
+          "description": "Sleep time beetween 2 checks of the targeted cluster",
+          "default": 15
+        },
+        "watch_nodes": {
+          "type": "boolean",
+          "title": "Watch nodes",
+          "description": "Enable watching nodes health as part of the global health signal",
+          "default": true
+        },
+        "watch_cluster_operators": {
+          "type": "boolean",
+          "title": "Watch cluster operators",
+          "description": "Enable watching cluster operator health as part of the global health signal",
+          "default": true
+        },
+        "isDaemon": {
+          "type": "boolean",
+          "title": "Cerberus is daemon",
+          "description": "Run cerberus as a daemon (infinite loop instead of a fixed number of iterations)",
+          "default": true
+        },
+        "kubeconfig": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "local",
+                "token",
+                "file"
+              ],
+              "title": "Kubeconfig mode",
+              "description": "Connection mode to use for the cluster (could be token, file, or local)",
+              "default": "local"
+            },
+            "file": {
+              "type": "string",
+              "minLength": 50,
+              "maxLength": 50000,
+              "title": "Kubeconfig file",
+              "description": "If mode is file, this property must be set with a full kubeconfig content",
+              "default": "kind: Config\napiVersion: v1",
+              "examples": [
+                "kind: Config\napiVersion: v1",
+                "kind: Config\napiVersion: v1\ncurrent-context: default"
+              ]
+            },
+            "token": {
+              "type": "object",
+              "properties": {
+                "server": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 200,
+                  "title": "API endpoint",
+                  "description": "The server URL to the target cluster API",
+                  "default": "https://localhost:6443",
+                  "examples": [
+                    "https://localhost:6443",
+                    "https://api.mycluster.local:6443"
+                  ]
+                },
+                "token": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 2000,
+                  "title": "API token",
+                  "description": "The token to use to get access. A read-only access (cluster-reader) is enough",
+                  "default": "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                  "examples": [
+                    "sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX",
+                    "mytoken"
+                  ]
+                },
+                "ca": {
+                  "type": "string",
+                  "title": "API certificate authority",
+                  "description": "PEM content of the certificate authority of the target cluster API",
+                  "default": ""
+                },
+                "insecure": {
+                  "type": "boolean",
+                  "title": "Skip TLS verification",
+                  "description": "Skip the TLS verification of the target cluster API (only used when no ca is given)",
+                  "default": false
+                }
+              }
+            }
+          },
+          "anyOf": [
+            {
+              "properties": {
+                "mode": {
+                  "const": "token"
+                }
+              },
+              "required": [
+                "token"
+              ]
+            },
+            {
+              "properties": {
+                "mode": {
+                  "const": "file"
+                }
+              },
+              "required": [
+                "file"
+              ]
+            },
+            {
+              "properties": {
+                "mode": {
+                  "const": "local"
+                }
+              }
+            }
+          ]
+        },
+        "watch_url_routes": {
+          "type": "array",
+          "title": "Watch routes",
+          "description": "Url list of endpoint to watch as part of the global healthcheck (double array)",
+          "default": []
+        },
+        "watch_terminating_namespaces": {
+          "type": "boolean",
+          "title": "Watch terminating namespaces",
+          "description": "Enable watching terminating namespaces as part of the global health signal",
+          "default": true
+        },
+        "watch_namespaces": {
+          "type": "array",
+          "title": "Watch namespaces",
+          "description": "List of namespaces to watch (supports regex patterns)",
+          "default": []
+        },
+        "watch_namespaces_ignore_pattern": {
+          "type": "array",
+          "title": "Namespace ignore patterns",
+          "description": "Regex patterns for namespaces to exclude from watching",
+          "default": []
+        },
+        "custom_checks": {
+          "type": "array",
+          "title": "Custom checks",
+          "description": "List of custom check scripts (paths relative to /root/cerberus/ working directory)",
+          "default": []
+        },
+        "image": {
+          "type": "object",
+          "title": "Cerberus image",
+          "description": "Cerberus container image (pin it by digest, upstream publishes no versioned tag)",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "minLength": 3,
+              "title": "Image repository",
+              "default": "quay.io/krkn-chaos/cerberus"
+            },
+            "tag": {
+              "type": "string",
+              "title": "Image tag",
+              "description": "Image tag, used when no digest is set",
+              "default": "latest"
+            },
+            "digest": {
+              "type": "string",
+              "pattern": "^(sha256:[a-f0-9]{64})?$",
+              "title": "Image digest",
+              "description": "Image digest, takes precedence over the tag"
+            },
+            "pullPolicy": {
+              "enum": [
+                "Always",
+                "IfNotPresent",
+                "Never"
+              ],
+              "title": "Image pull policy",
+              "default": "IfNotPresent"
+            }
+          }
+        },
+        "privileged": {
+          "type": "boolean",
+          "title": "Privileged",
+          "description": "Run the cerberus container as privileged (binds the service account to the privileged SCC)",
+          "default": false
+        },
+        "resources": {
+          "type": "object",
+          "title": "Resources",
+          "description": "Resources requests and limits of the cerberus container"
+        },
+        "allowedNamespaces": {
+          "type": "array",
+          "title": "Allowed namespaces",
+          "description": "Namespaces allowed to query the cerberus health signal (networkpolicy)",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63
+          },
+          "default": [
+            "chaos-kraken",
+            "chaos-pipeline"
+          ]
+        },
+        "distribution": {
+          "enum": [
+            "openshift",
+            "kubernetes"
+          ],
+          "title": "Distribution",
+          "description": "Kind of cluster watched",
+          "default": "openshift"
+        },
+        "iterations": {
+          "type": "integer",
+          "minimum": 1,
+          "title": "Iterations",
+          "description": "Number of iterations when cerberus is not a daemon",
+          "default": 25
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 1,
+          "title": "Timeout",
+          "description": "Timeout of a single check (in seconds)",
+          "default": 10
+        },
+        "watch_master_schedulable": {
+          "type": "boolean",
+          "title": "Watch schedulable control plane",
+          "description": "Enable watching for schedulable control plane nodes as part of the global health signal",
+          "default": true
+        },
+        "controlPlaneLabel": {
+          "type": "string",
+          "title": "Control plane label",
+          "description": "Label identifying the control plane nodes",
+          "default": "node-role.kubernetes.io/control-plane"
+        },
+        "customCheckScripts": {
+          "type": "object",
+          "title": "Custom check scripts",
+          "description": "Custom check scripts added to the cerberus configuration (file name: python content)",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "project": {
+      "$ref": "https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values.schema.json"
     }
+  }
 }

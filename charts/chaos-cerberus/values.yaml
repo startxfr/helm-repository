@@ -18,7 +18,7 @@ context:  &context
   # Application name (functional tenant, default use Chart name)
   app: cerberus
   # Version name of this application (default use Chart appVersion)
-  version: "1.0.0"
+  version: "1.0.4"
 
 # Configuration of the project (see https://helm-repository.readthedocs.io/en/latest/charts/project)
 project: 
@@ -30,31 +30,54 @@ project:
     type: namespace
     name: chaos-cerberus
     display_name: Chaos - Cerberus
-    description: Cerberus watchdog in STARTX Chaos test suite
+    description: Cerberus watchdog of the chaos test suite
 
 # Configuration of the cerberus deployment
 cerberus: 
   # Deploy the cerberus watchdog
   enabled: false
-  # version of the cerberus image
-  version: "latest"
-  # Enable exposition for this application (route based)
-  expose: true
-  # Enable kraken pod to query the cerberus healthcheck (networkpolicy)
-  kraken_allowed: true
-  # Namespace of the kraken pod that would be allowed
-  kraken_ns: chaos-kraken
-  # Enable kraken in a daemon mode (infinity instead of 25 runs)
+  # Cerberus container image (upstream publishes no versioned tag: pin it by digest)
+  image:
+    # Image repository
+    repository: quay.io/krkn-chaos/cerberus
+    # Image tag, used when no digest is set
+    tag: latest
+    # Image digest (takes precedence over the tag). Default is the build of 2026-08-19 running cerberus v1.0.4
+    digest: sha256:59abd5d1119595197b842da9a4774533f9c599ed33983b7b548d899318dcf14d
+    # Image pull policy
+    pullPolicy: IfNotPresent
+  # Run the cerberus container as privileged (binds the service account to the privileged SCC). Not required by default
+  privileged: false
+  # Resources requests and limits of the cerberus container
+  resources: {}
+  # Expose the health signal outside of the cluster (route based)
+  expose: false
+  # Namespaces allowed to query the cerberus health signal (networkpolicy)
+  allowedNamespaces:
+    - chaos-kraken
+    - chaos-pipeline
+  # Kind of cluster watched (openshift or kubernetes)
+  distribution: openshift
+  # Run cerberus as a daemon (infinite loop instead of a fixed number of iterations)
   isDaemon: true
-  # Sleep time beetween 2 checks
+  # Number of iterations when cerberus is not a daemon
+  iterations: 25
+  # Sleep time between 2 checks (in seconds)
   sleep_time: 15
+  # Timeout of a single check (in seconds)
+  timeout: 10
   # Enable watching nodes health as part of the global health signal
   watch_nodes: true
   # Enable watching cluster operator health as part of the global health signal
   watch_cluster_operators: true
   # Enable watching terminating namespaces as part of the global health signal
   watch_terminating_namespaces: true
+  # Enable watching for schedulable control plane nodes as part of the global health signal
+  watch_master_schedulable: true
+  # Label identifying the control plane nodes
+  controlPlaneLabel: node-role.kubernetes.io/control-plane
   # Url list of endpoint to watch as part of the global healthcheck (double array)
+  # Example: [["https://myapp.apps.example.com"], ["https://api.example.com/health", "Bearer mytoken"]]
   watch_url_routes: []
   # List of namespaces to watch (supports regex patterns)
   watch_namespaces:
@@ -70,23 +93,28 @@ cerberus:
   # Namespace ignore pattern (regex) - namespaces matching this pattern are excluded
   watch_namespaces_ignore_pattern:
     - "^installer.*"
-  # List of custom check scripts to run (paths relative to /root/cerberus/ working dir)
-  # Example: ["config/startx_check.py"] - the script must exist in the cerberus-config ConfigMap
+  # List of custom check scripts to run (absolute path, the scripts of customCheckScripts are in /etc/cerberus)
+  # Example: ["/etc/cerberus/my_check.py"]
   custom_checks: []
-  # Kubeconfig of the supervised tested cluster (mandatory)
+  # Custom check scripts added to the cerberus configuration (file name: python content exposing a main() function)
+  customCheckScripts: {}
+  # Kubeconfig of the watched cluster
   kubeconfig:
-    # Connection mode to use for the cluster (could be token, file, or local)
-    # - token: static kubeconfig with explicit server URL + bearer token
-    # - file: raw kubeconfig file content injected via values
-    # - local: in-cluster auth using the pod's own service account token (no external credentials needed)
-    mode: token
+    # Connection mode to use for the cluster (could be local, token or file)
+    # - local: in-cluster access using the cerberus service account, with a read-only ClusterRole (no credential needed)
+    # - token: kubeconfig built from a server URL and a bearer token, stored in a Secret
+    # - file: raw kubeconfig content, stored in a Secret
+    mode: local
     # If mode is token, this section must be filled
     token:
       # The server URL to the target cluster API
       server: https://localhost:6443
-      # The token to use to get accesss. This token must have full 
-      # cluster admin accesss to perform some chaos scenarios
+      # The token to use to get access. A read-only access (cluster-reader) is enough
       token: sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
+      # PEM content of the certificate authority of the target cluster API
+      ca: ""
+      # Skip the TLS verification of the target cluster API (only used when no ca is given)
+      insecure: false
     # # If mode is file, this property must be set with a full kubeconfig content
     # file: |
     #   kind: Config
@@ -100,8 +128,7 @@ cerberus:
     #   users:
     #   - name: default
     #     user:
-    #       client-certificate-data: XXXXXXX
-    #       client-key-data: XXXXXXX
+    #       token: XXXXXXX
     #   contexts:
     #   - name: default
     #     context:

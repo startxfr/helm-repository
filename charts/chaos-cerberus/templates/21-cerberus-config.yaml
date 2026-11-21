@@ -1,6 +1,7 @@
 {{- if .Values.cerberus.enabled -}}
-{{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
+{{- $c := .Values.cerberus -}}
+{{- $kubeconfigPath := ternary "/tmp/kubeconfig" "/etc/cerberus-kubeconfig/config" (eq $c.kubeconfig.mode "local") -}}
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -15,23 +16,20 @@ metadata:
     {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
 data:
   config.yaml: |
-    # read https://github.com/chaos-kubox/cerberus/blob/main/config/config.yaml for full detail of each properties
+    # See https://github.com/krkn-chaos/cerberus/blob/main/config/config.yaml for the detail of each property
     cerberus:
-        distribution: openshift
-        kubeconfig_path: {{ if eq .Values.cerberus.kubeconfig.mode "local" }}/tmp/kubeconfig{{ else }}/root/kubeconfig{{ end }}
+        distribution: {{ $c.distribution | default "openshift" }}
+        kubeconfig_path: {{ $kubeconfigPath }}
         port: 8080
-        watch_nodes: {{ .Values.cerberus.watch_nodes | default true }}
-        watch_cluster_operators: {{ .Values.cerberus.watch_cluster_operators | default true }}
-        watch_terminating_namespaces: {{ .Values.cerberus.watch_terminating_namespaces | default true }}
-        watch_url_routes: {{ toJson .Values.cerberus.watch_url_routes }}
+        watch_nodes: {{ include "chaos-cerberus.bool" (list $c.watch_nodes true) }}
+        watch_cluster_operators: {{ include "chaos-cerberus.bool" (list $c.watch_cluster_operators true) }}
+        watch_terminating_namespaces: {{ include "chaos-cerberus.bool" (list $c.watch_terminating_namespaces true) }}
+        watch_url_routes: {{ toJson ($c.watch_url_routes | default list) }}
         watch_master_schedulable:
-            enabled: True
-            label: node-role.kubernetes.io/master
-        watch_namespaces:
-        {{- range .Values.cerberus.watch_namespaces }}
-        - {{ . }}
-        {{- end }}
-        watch_namespaces_ignore_pattern: {{ toJson .Values.cerberus.watch_namespaces_ignore_pattern }}
+            enabled: {{ include "chaos-cerberus.bool" (list $c.watch_master_schedulable true) }}
+            label: {{ $c.controlPlaneLabel | default "node-role.kubernetes.io/control-plane" }}
+        watch_namespaces: {{ toJson ($c.watch_namespaces | default list) }}
+        watch_namespaces_ignore_pattern: {{ toJson ($c.watch_namespaces_ignore_pattern | default list) }}
         cerberus_publish_status: True
         inspect_components: False
         prometheus_url:
@@ -46,33 +44,26 @@ data:
             Saturday:
             Sunday:
         slack_team_alias:
-        custom_checks: {{ toJson .Values.cerberus.custom_checks }}
+        custom_checks: {{ toJson ($c.custom_checks | default list) }}
     tunings:
-        timeout: 10
-        iterations: 25
-        sleep_time: {{ .Values.cerberus.sleep_time | default 10 }}
+        timeout: {{ $c.timeout | default 10 }}
+        iterations: {{ $c.iterations | default 25 }}
+        sleep_time: {{ $c.sleep_time | default 10 }}
         kube_api_request_chunk_size: 500
-        daemon_mode: {{ .Values.cerberus.isDaemon | default true }}
+        daemon_mode: {{ include "chaos-cerberus.bool" (list $c.isDaemon true) }}
         cores_usage_percentage: 0.6
     database:
         database_path: /tmp/cerberus.db
         reuse_database: False
-  startx_check.py: |-
-    import logging
-    import subprocess
-    def check_name():
-        logging.info("Check if number of Ready nodes is greater than 5\n")
-    def check():
-        node_count = subprocess.check_output("kubectl get nodes --no-headers | grep -c ' Ready '", shell=True, universal_newlines=True)
-        return True if int(node_count.strip()) > 5 else False
-    def main():
-        check_name()
-        output = check()
-        return output
+  {{- range $name, $content := $c.customCheckScripts }}
+  {{ $name }}: |-
+    {{- $content | nindent 4 }}
+  {{- end }}
+{{- if ne $c.kubeconfig.mode "local" }}
 ---
-kind: ConfigMap
+kind: Secret
 apiVersion: v1
-immutable: false
+type: Opaque
 metadata:
   name: cerberus-kubeconfig
   namespace: "{{- $namespace -}}"
@@ -81,34 +72,11 @@ metadata:
     {{- include "chaos-cerberus.labels" $ | nindent 4 }}
   annotations:
     {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
-data:
-{{- if eq .Values.cerberus.kubeconfig.mode "file" }}
+stringData:
+{{- if eq $c.kubeconfig.mode "file" }}
   config: |
-    {{- .Values.cerberus.kubeconfig.file | nindent 4 }}
-{{- end -}}
-{{- if eq .Values.cerberus.kubeconfig.mode "local" }}
-  config: |
-    kind: Config
-    apiVersion: v1
-    current-context: default
-    clusters:
-    - name: default
-      cluster:
-        certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        server: https://kubernetes.default.svc
-    users:
-    - name: default
-      user:
-        tokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-    contexts:
-    - name: default
-      context:
-        cluster: default
-        namespace: default
-        user: default
-    preferences: {}
-{{- end -}}
-{{- if eq .Values.cerberus.kubeconfig.mode "token" }}
+    {{- $c.kubeconfig.file | nindent 4 }}
+{{- else }}
   config: |
     kind: Config
     apiVersion: v1
@@ -116,12 +84,16 @@ data:
     clusters:
     - name: default
       cluster:
+        {{- if $c.kubeconfig.token.ca }}
+        certificate-authority-data: {{ $c.kubeconfig.token.ca | b64enc }}
+        {{- else if $c.kubeconfig.token.insecure }}
         insecure-skip-tls-verify: true
-        server: "{{ .Values.cerberus.kubeconfig.token.server }}"
+        {{- end }}
+        server: "{{ $c.kubeconfig.token.server }}"
     users:
     - name: default
       user:
-        token: "{{ .Values.cerberus.kubeconfig.token.token }}"
+        token: "{{ $c.kubeconfig.token.token }}"
     contexts:
     - name: default
       context:
@@ -129,5 +101,6 @@ data:
         namespace: default
         user: default
     preferences: {}
+{{- end }}
 {{- end }}
 {{- end -}}

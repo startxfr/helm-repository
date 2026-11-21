@@ -1,10 +1,18 @@
 # ![chaos-cerberus](https://helm-repository.readthedocs.io/en/latest/img/chaos-cerberus.svg "Chaos Chart : Cerberus") Chaos Chart : Cerberus
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_chaos--cerberus-2B83E2.svg)](https://artifacthub.io/packages/search?ts_query_web=chaos+cerberus+startx)
 
-This helm chart used to deploy cerberus on Openshift or Kubernetes cluster.
-Cerberus is as a watchdog who act as a global cluster healthcheck.
+This helm chart deploys Cerberus on an Openshift or Kubernetes cluster.
+Cerberus is a watchdog that monitors the health of a cluster (nodes, cluster operators, critical namespaces, routes) and
+publishes a go/no-go signal (`True` or `False`) on an HTTP endpoint. Chaos tools such as [krkn](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken)
+and the [chaos pipelines](https://helm-repository.readthedocs.io/en/latest/charts/chaos-pipeline) read this signal before and after injecting failures.
 
-This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing. [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts).
+**Upstream project**: [krkn-chaos/cerberus](https://github.com/krkn-chaos/cerberus) (formerly `openshift-scale/cerberus`, then `chaos-kubox` and `redhat-chaos`),
+version `1.0.4`, image `quay.io/krkn-chaos/cerberus` ([documentation](https://krkn-chaos.dev/docs/cerberus/)).
+The project is in maintenance mode and publishes no versioned image tag: this chart pins the image by digest.
+Cerberus is optional: krkn has its own health checks, and upstream warns that a Cerberus running inside the cluster it
+watches can itself be disrupted by a chaos scenario.
+
+This chart is part of the [chaos startx helm chart series](https://helm-repository.readthedocs.io#chaos-helm-charts) focused on deploying various kind of chaos tools for cluster infrastructure or applications chaos-testing.
 
 ## Requirements and guidelines
 
@@ -35,200 +43,171 @@ helm show chart startx/chaos-cerberus
 
 ```bash
 # Install the cerberus project
-helm install --set project.enabled=true chaos-cerberus-project  startx/chaos-cerberus
+helm install --set project.enabled=true chaos-cerberus-project startx/chaos-cerberus
 # Deploy the cerberus instance
-helm install --set cerberus.enabled=true  chaos-cerberus-instance startx/chaos-cerberus
+helm install --set cerberus.enabled=true -n chaos-cerberus chaos-cerberus-instance startx/chaos-cerberus
 ```
+
+## Default values
+
+Nothing is deployed by default. With `project.enabled=true` and `cerberus.enabled=true` the chart creates:
+
+- 1 **project** named **chaos-cerberus**
+- 1 **serviceaccount** named **cerberus**, with a read-only **clusterrole** and its binding (local mode)
+- 1 **configmap** with the cerberus configuration
+- 1 **networkpolicy** allowing the pods of the `chaos-kraken` and `chaos-pipeline` namespaces to read the signal
+- 1 **deployment** named **cerberus**, unprivileged, watching the cluster it runs in
+- 1 **service** named **cerberus** (port 8080)
 
 ## Other available values
 
-- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml)
-- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml)
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml) deploys cerberus in the `startx-chaos-cerberus` namespace, exposed by a route
+- **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml) creates the `startx-chaos-cerberus` namespace
 
 ```bash
-helm install chaos-cerberus startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml
+helm install chaos-cerberus-project startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml
+helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml
 ```
 
 ## Values dictionary
 
 ### context values dictionary
 
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | cerberus     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 1.0.0     | Version name of this application (default use Chart appVersion)                   |
+| Key                 | Default     | Description                                                                      |
+| ------------------- | ----------- | -------------------------------------------------------------------------------- |
+| context.scope       | companyname | Name of the global scope for this application (organizational tenant)            |
+| context.cluster     | clustername | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev         | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | chaos       | Component name of this application (logical tenant)                              |
+| context.app         | cerberus    | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 1.0.4       | Version name of this application (default use Chart appVersion)                  |
 
 ### chaos-cerberus values dictionary
 
-| Key                              | Default                | Description                                                                                                                                                                                                                                                                       |
-| -------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| project                          | {...}                  | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/project/#project-values-dictionary) for more options) |
-| project.enable                   | false                  | Enable creation of the namespace                                                                                                                                                                                                                                                  |
-| cerberus                         | {...}                  | Configuration of the cerberus deployment                                                                                                                                                                                                                                          |
-| cerberus.enable                  | false                  | Enable deploying the cerberus watchdog                                                                                                                                                                                                                                            |
-| cerberus.expose                  | true                   | Enable exposition for this application (route based)                                                                                                                                                                                                                              |
-| cerberus.kraken_allowed          | true                   | Enable kraken pod to query the cerberus healthcheck (networkpolicy)                                                                                                                                                                                                               |
-| cerberus.kraken_ns               | chaos-kraken           | Namespace of the kraken pod that would be allowed                                                                                                                                                                                                                                 |
-| cerberus.watch_url_routes        | []                     | Url list of endpoint to watch as part of the global healthcheck (double array)                                                                                                                                                                                                    |
-| cerberus.kubeconfig              | {...}                  | Kubeconfig of the supervised tested cluster (mandatory)                                                                                                                                                                                                                           |
-| cerberus.watch_nodes                    | true                   | Enable watching nodes health as part of the global health signal                                                                                                                                                                                                                  |
-| cerberus.watch_cluster_operators        | true                   | Enable watching cluster operator health as part of the global health signal                                                                                                                                                                                                       |
-| cerberus.watch_terminating_namespaces   | true                   | Enable watching terminating namespaces as part of the global health signal                                                                                                                                                                                                        |
-| cerberus.watch_namespaces               | [...]                  | List of namespaces to watch (supports regex patterns). Defaults to OpenShift critical namespaces                                                                                                                                                                                   |
-| cerberus.watch_namespaces_ignore_pattern| ["^installer.*"]       | Regex patterns for namespaces to exclude from watching                                                                                                                                                                                                                            |
-| cerberus.custom_checks                  | []                     | List of custom check scripts (paths relative to /root/cerberus/ working directory). Example: ["config/startx_check.py"]                                                                                                                                                          |
-| cerberus.kubeconfig                     | {...}                  | Kubeconfig of the supervised tested cluster (mandatory)                                                                                                                                                                                                                           |
-| cerberus.kubeconfig.mode                | token                  | Connection mode to use for the cluster (token, file, or local)                                                                                                                                                                                                                    |
-| cerberus.kubeconfig.token               | {...}                  | If mode is token, this section must be filled                                                                                                                                                                                                                                     |
-| cerberus.kubeconfig.token.server        | https://localhost:6443 | The server URL to the target cluster API                                                                                                                                                                                                                                          |
-| cerberus.kubeconfig.token.token         | sha256~XXX             | The bearer token with cluster-reader access (supports up to 2000 chars since v21.3.103)                                                                                                                                                                                           |
-| cerberus.kubeconfig.file                | ""                     | If mode is file, this property must be set with a full kubeconfig content                                                                                                                                                                                                         |
+| Key                                      | Default                               | Description                                                                                                                                                                                              |
+| ---------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| project                                  | {...}                                 | Configuration of the project (or namespace). Inherit from the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project)                                                           |
+| project.enabled                          | false                                 | Enable creation of the namespace                                                                                                                                                                         |
+| cerberus.enabled                         | false                                 | Enable deploying the cerberus watchdog                                                                                                                                                                   |
+| cerberus.image.repository                | quay.io/krkn-chaos/cerberus           | Image repository                                                                                                                                                                                         |
+| cerberus.image.tag                       | latest                                | Image tag, used when no digest is set                                                                                                                                                                    |
+| cerberus.image.digest                    | sha256:59abd5d1...                    | Image digest, takes precedence over the tag                                                                                                                                                              |
+| cerberus.image.pullPolicy                | IfNotPresent                          | Image pull policy                                                                                                                                                                                        |
+| cerberus.privileged                      | false                                 | Run the container as privileged and bind the service account to the `privileged` SCC                                                                                                                     |
+| cerberus.resources                       | {}                                    | Resources requests and limits of the container                                                                                                                                                           |
+| cerberus.expose                          | false                                 | Expose the signal outside of the cluster (route based)                                                                                                                                                   |
+| cerberus.allowedNamespaces               | [chaos-kraken, chaos-pipeline]        | Namespaces allowed to read the signal (networkpolicy)                                                                                                                                                    |
+| cerberus.distribution                    | openshift                             | Kind of cluster watched (`openshift` or `kubernetes`)                                                                                                                                                    |
+| cerberus.isDaemon                        | true                                  | Run as a daemon (infinite loop instead of `iterations` checks)                                                                                                                                           |
+| cerberus.iterations                      | 25                                    | Number of iterations when cerberus is not a daemon                                                                                                                                                       |
+| cerberus.sleep_time                      | 15                                    | Sleep time between 2 checks (seconds)                                                                                                                                                                    |
+| cerberus.timeout                         | 10                                    | Timeout of a single check (seconds)                                                                                                                                                                      |
+| cerberus.watch_nodes                     | true                                  | Watch nodes health as part of the global health signal                                                                                                                                                   |
+| cerberus.watch_cluster_operators         | true                                  | Watch cluster operators health as part of the global health signal                                                                                                                                       |
+| cerberus.watch_terminating_namespaces    | true                                  | Watch terminating namespaces as part of the global health signal                                                                                                                                         |
+| cerberus.watch_master_schedulable        | true                                  | Watch for schedulable control plane nodes                                                                                                                                                                |
+| cerberus.controlPlaneLabel               | node-role.kubernetes.io/control-plane | Label identifying the control plane nodes                                                                                                                                                                |
+| cerberus.watch_url_routes                | []                                    | Url list of endpoints to watch as part of the global healthcheck (double array)                                                                                                                          |
+| cerberus.watch_namespaces                | [...]                                 | List of namespaces to watch (supports regex patterns). Defaults to the critical OpenShift namespaces                                                                                                     |
+| cerberus.watch_namespaces_ignore_pattern | ["^installer.*"]                      | Regex patterns for namespaces to exclude from watching                                                                                                                                                   |
+| cerberus.custom_checks                   | []                                    | List of custom check scripts to run (absolute path). Example: ["/etc/cerberus/my_check.py"]                                                                                                              |
+| cerberus.customCheckScripts              | {}                                    | Custom check scripts added to `/etc/cerberus` (file name: python content exposing a `main()` function)                                                                                                   |
+| cerberus.kubeconfig.mode                 | local                                 | Connection mode to the watched cluster: `local` (in-cluster service account, read-only), `token` or `file` (stored in a Secret)                                                                          |
+| cerberus.kubeconfig.token.server         | https://localhost:6443                | If mode is token, the server URL of the target cluster API                                                                                                                                               |
+| cerberus.kubeconfig.token.token          | sha256~XXX                            | If mode is token, the bearer token. A read-only access (`cluster-reader`) is enough                                                                                                                      |
+| cerberus.kubeconfig.token.ca             | ""                                    | If mode is token, PEM content of the certificate authority of the target cluster API                                                                                                                     |
+| cerberus.kubeconfig.token.insecure       | false                                 | If mode is token and no ca is given, skip the TLS verification                                                                                                                                           |
+| cerberus.kubeconfig.file                 | ""                                    | If mode is file, a full kubeconfig content                                                                                                                                                               |
 
-## Values files
+## Migration from releases before 21.3.391
 
-### Default values file (values.yaml)
-
-Simple cerberus with default configuration :
-
-- 1 **project** named **chaos-cerberus**
-- 1 **scc** with privileged context for **cerberus** deployment
-- 1 **configmap** with cerberus server configuration
-- 1 **configmap** with kubeconfig of the targeted cluster
-- 2 **networkpolicy** allowing route and kraken pods in chaos-kraken namespace, to get cerberus signal
-- 1 **deployment** named **cerberus**
-  - watching the cluster https://localhost:6443
-  - using token sha256~XXXXXXXXXX_PUT_YOUR_TOKEN_HERE_XXXXXXXXXXXX
-  - watching no particular routes (as part of the watchdog)
-- 1 **service** to the **cerberus** pods
-- 1 **route** to the **cerberus** service
-
-```bash
-# Install the cerberus project
-helm install --set project.enable=true chaos-cerberus-project startx/chaos-cerberus
-# Deploy the cerberus instance
-helm install --set cerberus.enable=true -n chaos-cerberus chaos-cerberus-instance startx/chaos-cerberus
-```
-
-### STARTX values file (values-startx-xxx.yaml)
-
-Same as the default configuration but with namespace prefixed with startx-
-
-```bash
-# Configuration running demo example configuration
-helm install chaos-cerberus-project startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml
-helm install chaos-cerberus-deploy startx/chaos-cerberus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml
-```
+- `cerberus.version` is replaced by `cerberus.image.tag` and `cerberus.image.digest`; the image moved from `quay.io/redhat-chaos/cerberus` to `quay.io/krkn-chaos/cerberus`.
+- `cerberus.kraken_allowed` and `cerberus.kraken_ns` are replaced by the `cerberus.allowedNamespaces` list. The policy opening the signal to every pod is gone.
+- `cerberus.kubeconfig.mode` defaults to `local`; `cerberus.expose` defaults to `false`.
+- In `token` and `file` modes the kubeconfig is stored in a Secret, and TLS is verified unless `cerberus.kubeconfig.token.insecure` is set.
+- The custom `privileged-cerberus` SCC is removed: the container runs unprivileged (`cerberus.privileged=true` restores a privileged container).
+- The `startx_check.py` script is no longer shipped; use `cerberus.customCheckScripts`.
+- Custom checks and the configuration are mounted in `/etc/cerberus` instead of `/root/cerberus/config`.
 
 ## Usage examples
 
-### Monitor a cluster using token authentication
+### Example 1 — Watch the local cluster (default)
 
-Deploy cerberus to monitor a remote cluster and expose its healthcheck endpoint:
+Cerberus watches the cluster it runs in, with its own service account and a read-only role.
+
+```bash
+helm install chaos-cerberus-project startx/chaos-cerberus --set project.enabled=true
+helm install chaos-cerberus startx/chaos-cerberus -n chaos-cerberus --set cerberus.enabled=true
+# Read the signal from an allowed namespace
+curl http://cerberus.chaos-cerberus.svc.cluster.local:8080
+```
+
+### Example 2 — Minimal watchdog for a Kubernetes cluster
+
+Only the nodes and two namespaces are watched.
 
 ```yaml
-# my-cerberus-values.yaml
-context:
-  scope: myorg
-  cluster: prod-cluster
-  environment: prod
-  component: chaos
-  app: cerberus-prod
+cerberus:
+  enabled: true
+  distribution: kubernetes
+  watch_cluster_operators: false
+  watch_master_schedulable: false
+  watch_namespaces:
+    - kube-system
+    - ingress-nginx
+```
 
+### Example 3 — Watch a remote cluster, application routes and a custom check
+
+```yaml
 cerberus:
   enabled: true
   expose: true
-  kraken_allowed: true
-  kraken_ns: chaos-kraken
+  allowedNamespaces:
+    - my-chaos-namespace
   watch_url_routes:
-    - - http://myapp.prod.svc.cluster.local/healthz
-      - "200"
+    - ["https://myapp.apps.example.com/health"]
+    - ["https://api.example.com/ready", "Bearer mytoken"]
+  custom_checks:
+    - /etc/cerberus/ready_nodes.py
+  customCheckScripts:
+    ready_nodes.py: |
+      import subprocess
+      def main():
+          out = subprocess.check_output("kubectl get nodes --no-headers | grep -c ' Ready '", shell=True, universal_newlines=True)
+          return int(out.strip()) >= 3
   kubeconfig:
     mode: token
     token:
-      server: https://api.prod-cluster.example.com:6443
-      token: sha256~REPLACE_WITH_YOUR_TOKEN
+      server: https://api.example.com:6443
+      token: sha256~my-read-only-token
+      ca: |
+        -----BEGIN CERTIFICATE-----
+        ...
+        -----END CERTIFICATE-----
 ```
+
+A read-only token can be created on the remote cluster with:
 
 ```bash
-helm install chaos-cerberus startx/chaos-cerberus -f my-cerberus-values.yaml -n chaos-cerberus
-```
-
-### Monitor a cluster using a kubeconfig file
-
-```yaml
-# my-cerberus-file-values.yaml
-cerberus:
-  enabled: true
-  kubeconfig:
-    mode: file
-    file:
-      apiVersion: v1
-      kind: Config
-      clusters:
-      - cluster:
-          server: https://api.prod-cluster.example.com:6443
-          certificate-authority-data: <base64-encoded-ca>
-        name: prod-cluster
-      users:
-      - name: chaos-user
-        user:
-          token: sha256~REPLACE_WITH_YOUR_TOKEN
-      contexts:
-      - context:
-          cluster: prod-cluster
-          user: chaos-user
-        name: prod
-      current-context: prod
-```
-
-```bash
-helm install chaos-cerberus startx/chaos-cerberus -f my-cerberus-file-values.yaml -n chaos-cerberus
-```
-
-### Full stack with project namespace
-
-```bash
-# 1. Create the namespace
-helm install chaos-cerberus-project startx/chaos-cerberus \
-  --set project.enabled=true \
-  --set project.project.name=chaos-cerberus \
-  -n default
-
-# 2. Deploy cerberus
-helm install chaos-cerberus startx/chaos-cerberus \
-  -f my-cerberus-values.yaml \
-  -n chaos-cerberus
+oc create serviceaccount cerberus-monitor -n chaos-cerberus
+oc adm policy add-cluster-role-to-user cluster-reader -z cerberus-monitor -n chaos-cerberus
+oc create token cerberus-monitor -n chaos-cerberus --duration=8760h
 ```
 
 ## ArgoCD deployment
 
-### Prerequisites
-
-**Local mode** (in-cluster, no external credentials): the chart automatically creates the `ClusterRole` and `ClusterRoleBinding` for the `cerberus` ServiceAccount — nothing extra to prepare.
-
-**Token mode** (remote cluster monitoring): Cerberus monitors `ClusterVersions`, `ClusterOperators`, nodes and namespaces — it requires `cluster-reader` access. Create a dedicated ServiceAccount:
+`chaos-cerberus` follows the project/instance pattern: one AppProject, one Application creating the namespace (wave 1,
+no finalizer) and one Application deploying cerberus (wave 5). The examples are in [`examples/argocd/`](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-cerberus/examples/argocd).
 
 ```bash
-oc create serviceaccount cerberus-monitor -n chaos-cerberus
-oc create clusterrolebinding cerberus-monitor-cluster-reader \
-  --clusterrole=cluster-reader --serviceaccount=chaos-cerberus:cerberus-monitor
-# Generate a long-lived token (schema allows up to 2000 chars since v21.3.103)
-SA_TOKEN=$(oc create token cerberus-monitor -n chaos-cerberus --duration=8760h)
+git clone https://github.com/startxfr/helm-repository.git
+cd helm-repository/charts/chaos-cerberus
+oc apply -k examples/argocd/
 ```
 
-### Deploy via ArgoCD Application
-
-`chaos-cerberus` follows the project/instance pattern: one Application creates the namespace, a second deploys cerberus. A ready-to-use example file is available at [`examples/argocd/cerberus-argocd.yaml`](examples/argocd/cerberus-argocd.yaml).
-
-```bash
-git clone https://gitlab.com/startx1/helm.git
-cd helm-repository/charts/chaos-cerberus/examples/argocd/
-oc apply -k .
-```
+In local mode the chart creates the `ClusterRole` and `ClusterRoleBinding` of the `cerberus` service account: the
+AppProject must allow these two cluster kinds.
 
 ## History
 
