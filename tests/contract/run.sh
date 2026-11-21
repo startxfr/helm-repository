@@ -254,7 +254,7 @@ test_chaos-cerberus() {
     }
     render watchoff --set cerberus.enabled=true --set cerberus.watch_nodes=false && \
         assert_sel "watch_nodes can be disabled" 'select(.kind == "ConfigMap") | .data."config.yaml" | test("watch_nodes: False")' true
-    render token --set cerberus.enabled=true --set cerberus.kubeconfig.mode=token --set cerberus.kubeconfig.token.token=abc && {
+    render token --set cerberus.enabled=true --set cerberus.kubeconfig.mode=token --set cerberus.kubeconfig.token.token=sha256~contract-test-token && {
         assert_count "token mode stores the kubeconfig in a Secret" Secret 1
         assert_count "token mode creates no ClusterRole" ClusterRole 0
     }
