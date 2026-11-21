@@ -1,6 +1,16 @@
 # ![example-chaos](https://helm-repository.readthedocs.io/en/latest/img/example-chaos.svg "Example Chart : Chaos") Example Chart : Chaos
 [![Artifacthub](https://img.shields.io/badge/ArtifactHub-STARTX_example--chaos-E28A2B.svg)](https://artifacthub.io/packages/search?ts_query_web=example+chaos+startx)
 
+> **Deprecated** : this chart is no longer maintained and will not receive new features. Use the
+> [chaos-xxx charts](https://helm-repository.readthedocs.io#chaos-helm-charts) instead :
+> [chaos-cerberus](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus) (cluster health watchdog),
+> [chaos-kraken](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken) (krkn chaos scenarios),
+> chaos-pipeline (Tekton chaos pipelines, coming),
+> [chaos-litmus](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus),
+> [chaos-mesh](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh) and
+> [chaos-monkey](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey).
+> The published packages stay available.
+
 This helm chart is used to deploy a chaos testing suit composed of chaos mesh and kraken test suite.
 
 This chart is part of the [example-xxx startx helm chart series](https://helm-repository.readthedocs.io#examples-helm-charts) focused on deploying various kind of application consuming the cluster services deployed using the [cluster-xxx charts](https://helm-repository.readthedocs.io#cluster-helm-charts).
