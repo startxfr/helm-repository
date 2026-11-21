@@ -1,8 +1,10 @@
 {{- if .Values.monkey.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
-{{- /* service account of the kube-monkey chart: serviceAccount.name, else its fullname */ -}}
-{{- $sa := (.Values.monkey.serviceAccount).name | default .Values.monkey.fullnameOverride | default (printf "%s-%s" .Release.Name (.Values.monkey.nameOverride | default "kube-monkey")) -}}
+{{- /* service account of the kube-monkey chart: serviceAccount.name, else its fullname (same rule as the upstream kubemonkey.fullname helper) */ -}}
+{{- $name := .Values.monkey.nameOverride | default "monkey" -}}
+{{- $fullname := .Values.monkey.fullnameOverride | default (ternary .Release.Name (printf "%s-%s" .Release.Name $name) (contains $name .Release.Name)) | trunc 63 | trimSuffix "-" -}}
+{{- $sa := (.Values.monkey.serviceAccount).name | default $fullname -}}
 ---
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints 
