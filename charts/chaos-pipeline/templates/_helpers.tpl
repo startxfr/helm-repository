@@ -80,6 +80,10 @@ Pipeline tasks of a scenario map, run one after the other.
   runAfter:
     - {{ $previous }}
   {{- end }}
+  when:
+    - input: {{ $name | quote }}
+      operator: in
+      values: ["$(params.scenarios[*])"]
   timeout: {{ $s.timeout | default "1h0m0s" | quote }}
   {{- if eq ($s.engine | default "core") "hub" }}
   taskRef:
@@ -104,6 +108,12 @@ Pipeline tasks of a scenario map, run one after the other.
       value: {{ required (printf "chaos-pipeline: the scenario %s needs a type" $name) $s.type | quote }}
     - name: wait-duration
       value: {{ $s.waitDuration | default 30 | quote }}
+    - name: recovery-time
+      value: {{ if $s.recoveryTime }}{{ $s.recoveryTime | quote }}{{ else }}"$(params.recovery-time)"{{ end }}
+    - name: node-selector
+      value: "$(params.node-selector)"
+    - name: workload-namespace
+      value: "$(params.workload-namespace)"
     - name: health-check-url
       value: "$(params.health-check-url)"
     {{- if $application }}
@@ -148,4 +158,22 @@ false), or, when it is "auto", as soon as an enabled scenario has a node level t
 {{- end -}}
 {{- if $found -}}true{{- end -}}
 {{- end -}}
+{{- end -}}
+
+
+{{/* JSON list of the enabled scenario names of a scenario map, in alphabetical order */}}
+{{- define "chaos-pipeline.scenarioNames" -}}
+{{- $names := list -}}
+{{- range $name := keys (. | default dict) | sortAlpha -}}
+{{- if (index $ $name).enabled -}}{{- $names = append $names $name -}}{{- end -}}
+{{- end -}}
+{{- toJson $names -}}
+{{- end -}}
+
+{{/* Namespaces where the service account gets the privileged SCC: privilegedNamespaces plus workloadNamespace */}}
+{{- define "chaos-pipeline.privilegedNamespaces" -}}
+{{- $p := .Values.pipeline -}}
+{{- $ns := $p.privilegedNamespaces | default (list "default") -}}
+{{- if $p.workloadNamespace }}{{- $ns = append $ns $p.workloadNamespace -}}{{- end -}}
+{{- toJson ($ns | uniq) -}}
 {{- end -}}

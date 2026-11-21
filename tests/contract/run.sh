@@ -287,6 +287,8 @@ test_chaos-pipeline() {
         assert_sel "the infra pipeline starts with the cerberus gate" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.tasks[0].name' cerberus-gate
         assert_sel "the infra pipeline ends with a final cerberus check" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.finally[0].name' cerberus-final-check
         assert_sel "node scenarios are disabled by default" 'select(.kind == "ConfigMap") | .data | has("30-node-reboot-worker.yaml")' false
+        assert_sel "a run can choose its scenarios" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "scenarios") | .type' array
+        assert_sel "every scenario task is guarded by the scenarios parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.tasks[1].when[0].values[0]' '$(params.scenarios[*])'
         assert_sel "the application target is a pipeline parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "target-namespace") | .name' target-namespace
     }
 }

@@ -111,6 +111,12 @@ helm install chaos-pipeline-deploy startx/chaos-pipeline -f https://raw.githubus
 | pipeline.privileged                    | false                                                 | Run the krkn steps as privileged and bind the service account to the `privileged` SCC                                                          |
 | pipeline.privilegedWorkloads           | auto                                                  | Give the service account the `privileged` SCC in `privilegedNamespaces` (`auto`: when an enabled scenario needs it)                            |
 | pipeline.privilegedNamespaces          | [default]                                             | Namespaces where krkn starts its privileged helper pods                                                                                        |
+| pipeline.nodeSelector                  | node-role.kubernetes.io/worker=                       | Default of the `node-selector` parameter: nodes targeted by the node level scenarios (`${NODE_SELECTOR}`)                                      |
+| pipeline.workloadNamespace             | default                                               | Default of the `workload-namespace` parameter: namespace of the krkn helper pods (`${WORKLOAD_NAMESPACE}`), added to `privilegedNamespaces`    |
+| pipeline.checkCriticalAlerts           | false                                                 | Fail a scenario when a critical alert is firing after the chaos                                                                                |
+| pipeline.healthCheck.interval          | 2                                                     | Interval of the HTTP health check (seconds)                                                                                                    |
+| pipeline.healthCheck.verify            | true                                                  | Verify the TLS certificate of the health check endpoint (`false` for a self-signed route)                                                      |
+| pipeline.healthCheck.existingSecret    | ""                                                    | Existing Secret with the optional keys `bearer-token` and `auth` (`username,password`) of the health check                                     |
 | pipeline.imageSignatureVerification    | true                                                  | Verify the signature of the workload images started by krkn                                                                                    |
 | pipeline.resources                     | {}                                                    | Resources requests and limits of the krkn steps                                                                                                |
 | pipeline.checkResources                | {}                                                    | Resources requests and limits of the cerberus-check step                                                                                       |
@@ -122,11 +128,13 @@ helm install chaos-pipeline-deploy startx/chaos-pipeline -f https://raw.githubus
 | pipeline.cerberus.timeout              | 300                                                   | Default of the `cerberus-timeout` pipeline parameter (seconds)                                                                                 |
 | pipeline.infra.enabled                 | true                                                  | Deploy the `chaos-infra` pipeline                                                                                                              |
 | pipeline.infra.healthCheckUrl          | ""                                                    | Default of the `health-check-url` parameter: HTTP endpoint checked by krkn before and after each scenario                                      |
+| pipeline.infra.recoveryTime            | 180                                                   | Default of the `recovery-time` parameter (seconds)                                                                                             |
 | pipeline.infra.scenarios               | {...}                                                 | Scenarios of the `chaos-infra` pipeline (see below)                                                                                            |
 | pipeline.application.enabled           | true                                                  | Deploy the `chaos-application` pipeline                                                                                                        |
 | pipeline.application.targetNamespace   | ""                                                    | Default of the `target-namespace` parameter                                                                                                    |
 | pipeline.application.labelSelector     | ""                                                    | Default of the `label-selector` parameter                                                                                                      |
 | pipeline.application.healthCheckUrl    | ""                                                    | Default of the `health-check-url` parameter                                                                                                    |
+| pipeline.application.recoveryTime      | 120                                                   | Default of the `recovery-time` parameter (seconds)                                                                                             |
 | pipeline.application.scenarios         | {...}                                                 | Scenarios of the `chaos-application` pipeline (see below)                                                                                      |
 
 ### Scenarios
@@ -144,6 +152,7 @@ pipeline. Tasks run one after the other, in alphabetical order of the scenario n
 | digest       | ""      | krkn-hub image digest, takes precedence over the tag (hub engine)                        |
 | env          | {}      | Environment variables of the krkn-hub scenario (hub engine)                              |
 | waitDuration | 30      | Time to wait after the scenario, in seconds (core engine)                                |
+| recoveryTime |         | Value of `${RECOVERY_TIME}` for this scenario (default, the `recovery-time` parameter)   |
 | timeout      | 1h0m0s  | Timeout of the task                                                                      |
 
 Scenarios shipped with the chart:
@@ -161,13 +170,29 @@ Scenarios shipped with the chart:
 | chaos-application | 20-container              | yes     | Kill the main process of one container of the target application  |
 | chaos-application | 30-service-disruption     | no      | Delete objects of the target namespace                            |
 
-No scenario targets etcd or the control plane nodes. In the scenarios of `chaos-application`, `${TARGET_NAMESPACE}`
-and `${LABEL_SELECTOR}` are replaced at run time by the `target-namespace` and `label-selector` parameters.
+No scenario targets etcd or the control plane nodes. In a scenario content, these placeholders are replaced at run
+time by the parameters of the run:
+
+| Placeholder             | Parameter          | Used by the shipped scenarios                        |
+| ----------------------- | ------------------ | ---------------------------------------------------- |
+| `${TARGET_NAMESPACE}`   | target-namespace   | chaos-application                                    |
+| `${LABEL_SELECTOR}`     | label-selector     | chaos-application                                    |
+| `${RECOVERY_TIME}`      | recovery-time      | pod and container scenarios                          |
+| `${NODE_SELECTOR}`      | node-selector      | node pressure and network scenarios                  |
+| `${WORKLOAD_NAMESPACE}` | workload-namespace | node pressure and network scenarios (helper pods)    |
+
+To keep some nodes (GPU nodes for example) out of the node level scenarios, label the nodes that may be targeted and
+set `pipeline.nodeSelector` to that label. A scenario can also write its own target in its content instead of using the
+placeholders: declare one scenario per target, and choose the ones to run with the `scenarios` parameter.
 
 ### Pipeline parameters
 
 | Parameter        | Pipelines         | Description                                                           |
 | ---------------- | ----------------- | --------------------------------------------------------------------- |
+| scenarios        | both              | Array of the scenario names to run, among the enabled ones (default, all of them) |
+| recovery-time    | both              | Time given to a target to recover, in seconds                         |
+| node-selector    | both              | Label selector of the nodes targeted by the node level scenarios      |
+| workload-namespace | both              | Namespace of the krkn helper pods of the node level scenarios         |
 | cerberus-enabled | both              | `true` to gate the run with the cerberus signal                       |
 | cerberus-url     | both              | URL of the cerberus signal                                            |
 | cerberus-timeout | both              | Maximum time to wait for a healthy signal (seconds)                   |
@@ -177,6 +202,8 @@ and `${LABEL_SELECTOR}` are replaced at run time by the `target-namespace` and `
 
 A run is: `cerberus-gate` (waits for a healthy signal, fails after the timeout) → one task per scenario (each one fails
 the run when krkn, its health check or the cerberus signal fails) → `cerberus-final-check`, always executed.
+A scenario that is not listed in the `scenarios` parameter is skipped, and the following ones still run.
+Run one chaos PipelineRun at a time: two concurrent runs would each see the failures injected by the other.
 
 ### Access rights
 
@@ -239,7 +266,31 @@ spec:
 YAML
 ```
 
-### Example 3 — Node pressure, node reboot and a krkn-hub scenario
+### Example 3 — Run only some scenarios, on labelled nodes
+
+```bash
+oc label node my-worker-1 my-worker-2 chaos-target=true
+cat <<YAML | oc create -n chaos-pipeline -f -
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: chaos-infra-
+spec:
+  pipelineRef:
+    name: chaos-infra
+  taskRunTemplate:
+    serviceAccountName: chaos-pipeline
+  params:
+    - name: scenarios
+      value: ["20-hog-cpu-worker", "22-network-latency-worker"]
+    - name: node-selector
+      value: chaos-target=true
+    - name: recovery-time
+      value: "300"
+YAML
+```
+
+### Example 4 — Node pressure, node reboot and a krkn-hub scenario
 
 ```yaml
 pipeline:

@@ -3,6 +3,7 @@
 {{- $p := .Values.pipeline -}}
 {{- $images := $p.images -}}
 {{- $cloud := $p.cloud | default dict -}}
+{{- $hc := $p.healthCheck | default dict -}}
 ---
 apiVersion: tekton.dev/v1
 kind: Task
@@ -93,8 +94,8 @@ metadata:
 spec:
   description: >-
     Run one krkn scenario of the chaos-pipeline-scenarios ConfigMap with the krkn image, against the cluster
-    the task runs in. The placeholders ${TARGET_NAMESPACE} and ${LABEL_SELECTOR} of the scenario are replaced
-    by the matching parameters.
+    the task runs in. The placeholders ${TARGET_NAMESPACE}, ${LABEL_SELECTOR}, ${RECOVERY_TIME}, ${NODE_SELECTOR}
+    and ${WORKLOAD_NAMESPACE} of the scenario are replaced by the matching parameters.
   params:
     - name: scenario
       type: string
@@ -110,6 +111,18 @@ spec:
       type: string
       description: Value of the ${LABEL_SELECTOR} placeholder of the scenario
       default: ""
+    - name: recovery-time
+      type: string
+      description: Value of the ${RECOVERY_TIME} placeholder of the scenario, time given to the target to recover (in seconds)
+      default: "120"
+    - name: node-selector
+      type: string
+      description: Value of the ${NODE_SELECTOR} placeholder of the scenario, label selector of the target nodes
+      default: "node-role.kubernetes.io/worker="
+    - name: workload-namespace
+      type: string
+      description: Value of the ${WORKLOAD_NAMESPACE} placeholder of the scenario, namespace of the krkn helper pods
+      default: "default"
     - name: wait-duration
       type: string
       description: Duration to wait after the scenario (in seconds)
@@ -166,6 +179,26 @@ spec:
           value: "$(params.target-namespace)"
         - name: LABEL_SELECTOR
           value: "$(params.label-selector)"
+        - name: RECOVERY_TIME
+          value: "$(params.recovery-time)"
+        - name: NODE_SELECTOR
+          value: "$(params.node-selector)"
+        - name: WORKLOAD_NAMESPACE
+          value: "$(params.workload-namespace)"
+        {{- if $hc.existingSecret }}
+        - name: HEALTH_CHECK_BEARER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ $hc.existingSecret | quote }}
+              key: bearer-token
+              optional: true
+        - name: HEALTH_CHECK_AUTH
+          valueFrom:
+            secretKeyRef:
+              name: {{ $hc.existingSecret | quote }}
+              key: auth
+              optional: true
+        {{- end }}
         - name: WAIT_DURATION
           value: "$(params.wait-duration)"
         - name: ITERATIONS
@@ -190,10 +223,16 @@ spec:
         source = "/etc/chaos/scenarios/%s.yaml" % os.environ["SCENARIO"]
         if not os.path.isfile(source):
             sys.exit("scenario %s not found in the chaos-pipeline-scenarios ConfigMap" % os.environ["SCENARIO"])
+        import re
+        values = {k: os.environ.get(k, "") for k in ("TARGET_NAMESPACE", "LABEL_SELECTOR", "RECOVERY_TIME",
+                                                     "NODE_SELECTOR", "WORKLOAD_NAMESPACE")}
         with open(source) as f:
-            content = string.Template(f.read()).safe_substitute(
-                TARGET_NAMESPACE=os.environ.get("TARGET_NAMESPACE", ""),
-                LABEL_SELECTOR=os.environ.get("LABEL_SELECTOR", ""))
+            content = f.read()
+        # A placeholder with an empty value, alone as a YAML value, must stay an empty string and not become null
+        for key, value in values.items():
+            if value == "":
+                content = re.sub(r'(:[ \t]*)\$\{%s\}[ \t]*$' % key, r'\1""', content, flags=re.M)
+        content = string.Template(content).safe_substitute(values)
         with open("scenarios/custom/scenario.yaml", "w") as f:
             f.write(content)
         print(content)
@@ -248,14 +287,18 @@ spec:
             only_failures: True
             enable_metrics: False
             metrics_profile: config/metrics-report.yaml
-            check_critical_alerts: False
+            check_critical_alerts: {{ ternary "True" "False" (default false $p.checkCriticalAlerts) }}
         health_checks:
-            interval: 2
+            interval: {{ $hc.interval | default 2 }}
             run_during: ${health_during}
             exit_on_failure: True
             only_failures: False
             config:
                 - url: ${HEALTH_CHECK_URL}
+                  bearer_token: "${HEALTH_CHECK_BEARER_TOKEN:-}"
+                  auth: "${HEALTH_CHECK_AUTH:-}"
+                  exit_on_failure: True
+                  verify_url: {{ ternary "True" "False" (default true $hc.verify) }}
         kubevirt_checks:
             interval: 2
             run_during: []

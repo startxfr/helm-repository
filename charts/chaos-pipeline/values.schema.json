@@ -295,9 +295,22 @@
                     "title": "Timeout",
                     "description": "Timeout of the task",
                     "default": "1h0m0s"
+                  },
+                  "recoveryTime": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "title": "Recovery time",
+                    "description": "Value of the RECOVERY_TIME placeholder for this scenario, in seconds"
                   }
                 }
               }
+            },
+            "recoveryTime": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Recovery time",
+              "description": "Default time given to a target to recover, in seconds",
+              "default": 180
             }
           }
         },
@@ -403,9 +416,22 @@
                     "title": "Timeout",
                     "description": "Timeout of the task",
                     "default": "1h0m0s"
+                  },
+                  "recoveryTime": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "title": "Recovery time",
+                    "description": "Value of the RECOVERY_TIME placeholder for this scenario, in seconds"
                   }
                 }
               }
+            },
+            "recoveryTime": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Recovery time",
+              "description": "Default time given to a target to recover, in seconds",
+              "default": 120
             }
           }
         },
@@ -433,6 +459,51 @@
           "default": [
             "default"
           ]
+        },
+        "nodeSelector": {
+          "type": "string",
+          "title": "Node selector",
+          "description": "Label selector of the nodes targeted by the node level scenarios",
+          "default": "node-role.kubernetes.io/worker="
+        },
+        "workloadNamespace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 63,
+          "title": "Workload namespace",
+          "description": "Namespace where krkn starts the helper pods of the node level scenarios",
+          "default": "default"
+        },
+        "checkCriticalAlerts": {
+          "type": "boolean",
+          "title": "Check critical alerts",
+          "description": "Fail a scenario when a critical alert is firing after the chaos",
+          "default": false
+        },
+        "healthCheck": {
+          "type": "object",
+          "title": "Health check",
+          "description": "HTTP health check run by krkn before and after each scenario",
+          "properties": {
+            "interval": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Interval",
+              "default": 2
+            },
+            "verify": {
+              "type": "boolean",
+              "title": "Verify TLS",
+              "description": "Verify the TLS certificate of the endpoint",
+              "default": true
+            },
+            "existingSecret": {
+              "type": "string",
+              "title": "Existing secret",
+              "description": "Name of an existing Secret with the optional keys bearer-token and auth",
+              "default": ""
+            }
+          }
         }
       }
     }
