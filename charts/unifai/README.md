@@ -125,7 +125,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.392
+    targetRevision: 21.3.393
     helm:
       values: |
         stack:
@@ -156,7 +156,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.392
+    targetRevision: 21.3.393
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -324,3 +324,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.389 | 2026-11-19 | full repository release: HTTPS dependency URLs, dependency-ordered release, schema guard, docs and examples |
 | 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
+| 21.3.393 | 2026-11-21 | unifai: UnifAI v0.1.75 (images pinned by digest); no CRD or RBAC change |
