@@ -39,8 +39,14 @@ helm show chart startx/chaos-litmus
 ```bash
 # Create the chaos-litmus namespace
 helm install chaos-litmus-project startx/chaos-litmus --set project.enabled=true
+# Create the two Secrets holding the credentials (the chart has no default password)
+oc -n chaos-litmus create secret generic litmus-admin \
+  --from-literal=ADMIN_USERNAME=admin --from-literal=ADMIN_PASSWORD="$(openssl rand -base64 18)"
+oc -n chaos-litmus create secret generic litmus-mongodb \
+  --from-literal=mongodb-root-password="$(openssl rand -hex 16)" --from-literal=mongodb-replica-set-key="$(openssl rand -hex 16)"
 # Deploy the litmus instance
-helm install chaos-litmus-instance startx/chaos-litmus --set litmus.enabled=true -n chaos-litmus
+helm install chaos-litmus-instance startx/chaos-litmus -n chaos-litmus \
+  --set litmus.enabled=true --set litmus.existingSecret=litmus-admin --set litmus.mongodb.auth.existingSecret=litmus-mongodb
 ```
 
 ## Default values
@@ -49,11 +55,31 @@ The default [values.yaml](https://github.com/startxfr/helm-repository/blob/maste
 nothing : each part is switched on by its `enabled` key.
 
 - `project.enabled=true` : 1 **namespace** `chaos-litmus` (see the [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project))
-- `litmus.enabled=true` : the litmus portal (frontend, server, auth-server, MongoDB), 1 **SecurityContextConstraints** `privileged-litmus` with its Role and RoleBinding, 1 Argo **Workflow** `startx-workflow`
+- `litmus.enabled=true` : the litmus portal (frontend, server, auth-server, MongoDB), 1 **SecurityContextConstraints** `privileged-litmus` with its Role and RoleBinding
 - `litmus.expose=true` : 1 **Route** `frontend`
+- `litmus.exampleWorkflow=true` : 1 Argo **Workflow** `startx-workflow`. The `workflows.argoproj.io` definition must
+  exist on the cluster (it comes with a Litmus chaos infrastructure or with Argo Workflows), otherwise the install fails.
 
-The `startx-workflow` resource is an Argo `Workflow` : the `workflows.argoproj.io` definition must exist on the cluster
-before `litmus.enabled=true` is installed (it is installed with a Litmus chaos infrastructure or with Argo Workflows).
+**Credentials** : the chart ships no password. `litmus.enabled=true` refuses to render, with an explicit message, until
+it gets :
+
+- the portal administrator : `litmus.existingSecret` (a Secret with the keys `ADMIN_USERNAME` and `ADMIN_PASSWORD`) or
+  `litmus.adminConfig.ADMIN_PASSWORD` ;
+- the MongoDB deployed with the portal : `litmus.mongodb.auth.existingSecret` (keys `mongodb-root-password` and
+  `mongodb-replica-set-key`) or `litmus.mongodb.auth.rootPassword` ;
+- with an external MongoDB (`litmus.mongodb.enabled=false`) : the keys `DB_USER` and `DB_PASSWORD` in
+  `litmus.existingSecret`, or `litmus.adminConfig.DBUSER` and `DBPASSWORD`.
+
+Prefer the Secrets : a password given as a value is stored in the helm release and, for MongoDB, written in the
+portal Deployments by the upstream chart.
+
+**Migration from 21.3.390 and earlier** (breaking changes) :
+
+- the passwords `litmus` (administrator) and `1234` (MongoDB) are no longer defaults. For an existing release, give the
+  values it was installed with (`litmus.adminConfig.ADMIN_PASSWORD=litmus`, `litmus.mongodb.auth.rootPassword=1234`),
+  then change them ; a new install must provide its own.
+- the `startx-workflow` Workflow is no longer created with `litmus.enabled` : set `litmus.exampleWorkflow=true` to keep it.
+- `litmus.adminConfig.JWTSecret` is removed (the upstream chart does not read it).
 
 | Key                  | Default      | Description                                                                                                                      |
 | -------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -67,16 +93,19 @@ before `litmus.enabled=true` is installed (it is installed with a Litmus chaos i
 | project.enabled      | false        | Create the namespace                                                                                                             |
 | project.project.name | chaos-litmus | Name of the namespace ; also the namespace of the resources created by this chart                                                |
 | litmus               | {...}        | Values of the upstream [litmus chart](https://github.com/litmuschaos/litmus-helm/tree/master/charts/litmus), passed as is        |
-| litmus.enabled       | false        | Deploy the litmus portal, the `privileged-litmus` SecurityContextConstraints and the `startx-workflow` example workflow          |
+| litmus.enabled       | false        | Deploy the litmus portal and the `privileged-litmus` SecurityContextConstraints ; requires the credentials above                 |
 | litmus.expose        | false        | Create the Openshift route `frontend` to the litmus portal, on top of the route of the upstream chart (`litmus.openshift.route`) |
-| litmus.adminConfig   | {...}        | Portal administrator and database credentials. **Change the defaults**                                                           |
+| litmus.exampleWorkflow | false      | Create the example Argo Workflow `startx-workflow`                                                                               |
+| litmus.existingSecret | ""          | Secret holding `ADMIN_USERNAME` and `ADMIN_PASSWORD` (and `DB_USER`, `DB_PASSWORD` with an external MongoDB)                     |
+| litmus.adminConfig.ADMIN_PASSWORD | "" | Administrator password, when `litmus.existingSecret` is empty                                                               |
+| litmus.mongodb.auth.existingSecret | "" | Secret holding `mongodb-root-password` and `mongodb-replica-set-key`                                                       |
+| litmus.mongodb.auth.rootPassword | "" | MongoDB root password, when `litmus.mongodb.auth.existingSecret` is empty                                                    |
 | litmus.portal        | {...}        | Frontend, GraphQL server and authentication server of the portal                                                                 |
-| litmus.mongo         | {...}        | MongoDB deployed with the portal                                                                                                 |
 
 ## Other available values
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-project.yaml), namespace `startx-chaos-litmus` only
-- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml), litmus portal in the namespace `startx-chaos-litmus`
+- **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml), litmus portal in the namespace `startx-chaos-litmus` ; it expects the Secrets `litmus-admin` and `litmus-mongodb` in that namespace (see step 4 above)
 
 ```bash
 helm install chaos-litmus-project startx/chaos-litmus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-project.yaml
@@ -87,16 +116,18 @@ helm install chaos-litmus-instance startx/chaos-litmus -f https://raw.githubuser
 
 ### Default : namespace then portal
 
-Two releases of the same chart, the namespace first.
+Two releases of the same chart, the namespace first, with the credentials in the Secrets `litmus-admin` and
+`litmus-mongodb` (created as in step 4 above).
 
 ```bash
 helm install chaos-litmus-project startx/chaos-litmus --set project.enabled=true
-helm install chaos-litmus-instance startx/chaos-litmus --set litmus.enabled=true -n chaos-litmus
+helm install chaos-litmus-instance startx/chaos-litmus -n chaos-litmus \
+  --set litmus.enabled=true --set litmus.existingSecret=litmus-admin --set litmus.mongodb.auth.existingSecret=litmus-mongodb
 ```
 
 ### Minimal : portal in an existing namespace
 
-The namespace already exists ; the portal is reached with `oc port-forward`.
+The namespace already exists, with its two Secrets ; the portal is reached with `oc port-forward`.
 
 ```yaml
 # my-litmus-minimal-values.yaml
@@ -106,6 +137,10 @@ project:
     name: my-chaos
 litmus:
   enabled: true
+  existingSecret: litmus-admin
+  mongodb:
+    auth:
+      existingSecret: litmus-mongodb
 ```
 
 ```bash
@@ -113,9 +148,10 @@ helm install chaos-litmus startx/chaos-litmus -f my-litmus-minimal-values.yaml -
 oc port-forward -n my-chaos svc/chaos-litmus-frontend-service 9091:9091
 ```
 
-### Advanced : exposed portal with its own credentials
+### Advanced : exposed portal, example workflow and public URL
 
-The portal is exposed with a route, the administrator and database passwords are replaced and the public URL is given to the server.
+The portal is exposed with a route, the public URL is given to the server and the example workflow is created (the
+Argo Workflow definition must exist).
 
 ```yaml
 # my-litmus-values.yaml
@@ -128,11 +164,11 @@ context:
 litmus:
   enabled: true
   expose: true
-  adminConfig:
-    DBUSER: "litmus"
-    DBPASSWORD: "change-me"
-    ADMIN_USERNAME: "admin"
-    ADMIN_PASSWORD: "change-me-too"
+  exampleWorkflow: true
+  existingSecret: litmus-admin
+  mongodb:
+    auth:
+      existingSecret: litmus-mongodb
   portal:
     server:
       graphqlServer:
@@ -143,9 +179,12 @@ litmus:
 ```bash
 helm install chaos-litmus-instance startx/chaos-litmus -f my-litmus-values.yaml -n chaos-litmus
 ```
+
 ## ArgoCD deployment
 
 One AppProject and two Applications : `chaos-litmus-project` (wave 1, the namespace) then `chaos-litmus-instance` (wave 5, the portal and its route).
+The instance Application reads the credentials from the Secrets `litmus-admin` and `litmus-mongodb` : create them in
+the `chaos-litmus` namespace (step 4 above, or an ExternalSecret) once the project Application is synced.
 The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-litmus/examples/argocd).
 
 ```bash

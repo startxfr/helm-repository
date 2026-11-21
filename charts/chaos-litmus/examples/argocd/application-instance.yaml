@@ -1,4 +1,6 @@
 # Instance. Delete it, and wait for it to be gone, before deleting the -project Application.
+# The chart ships no password : create the Secrets litmus-admin (ADMIN_USERNAME, ADMIN_PASSWORD) and litmus-mongodb
+# (mongodb-root-password, mongodb-replica-set-key) in the chaos-litmus namespace first (see the chart README).
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -22,6 +24,10 @@ spec:
         litmus:
           enabled: true
           expose: true
+          existingSecret: litmus-admin
+          mongodb:
+            auth:
+              existingSecret: litmus-mongodb
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     # pin an exact version in production (ADR-0004)
     targetRevision: 21.3.x

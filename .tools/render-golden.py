@@ -41,6 +41,7 @@ IGNORE = re.compile(r'^\s+(app\.startx\.fr/version|app\.kubernetes\.io/version|h
 # (chart, key): switching the key on alone is refused on purpose by the chart (a validation, not a bug).
 # Add an entry only with the reason.
 TOGGLE_NEEDS_VALUES = {
+    ('chaos-litmus', 'litmus'): 'no default password: needs litmus.existingSecret or adminConfig.ADMIN_PASSWORD, and litmus.mongodb.auth',
     ('cluster-gitlab', 'gitlab'): 'the upstream chart requires certmanager-issuer.email',
     ('cluster-loki', 'storageSecret'): 'needs storageSecret.data or storageSecret.externalSecret',
     ('cluster-quay', 'oidc'): 'oidc.enabled requires quay.config.enabled',
