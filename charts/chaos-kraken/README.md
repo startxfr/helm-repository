@@ -115,6 +115,8 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | kraken.image.digest                   | sha256:43b3efda...          | Image digest, takes precedence over the tag                                                                                                    |
 | kraken.image.pullPolicy               | IfNotPresent                | Image pull policy                                                                                                                              |
 | kraken.privileged                     | false                       | Run the krkn container as privileged and bind the service account to the `privileged` SCC                                                      |
+| kraken.privilegedWorkloads            | auto                        | Give the service account the `privileged` SCC in `privilegedNamespaces` (`auto`: when an enabled scenario needs it)                            |
+| kraken.privilegedNamespaces           | [default]                   | Namespaces where krkn starts its privileged helper pods                                                                                        |
 | kraken.runAsUser                      | ""                          | User id of the container. Leave empty on OpenShift (assigned by the SCC), set it on plain Kubernetes (ex: 1001)                                |
 | kraken.resources                      | {}                          | Resources requests and limits of the krkn container                                                                                            |
 | kraken.rbac.clusterAdmin              | false                       | Bind the service account to `cluster-admin` instead of the chaos ClusterRole of this chart                                                     |
@@ -194,8 +196,12 @@ No scenario targets etcd or the control plane nodes. The krkn image also ships t
 In `local` mode the `kraken` service account gets a ClusterRole covering the pod, container, application and node
 scenarios above. It is derived from the [upstream RBAC documentation](https://krkn-chaos.dev/docs/krkn/rbac/) and may be
 too small for other scenario types: add rules with `kraken.rbac.extraRules`, or set `kraken.rbac.clusterAdmin=true`.
-The node, network and hog scenarios start helper pods on the target nodes: the namespace of these pods (key `namespace`
-of the scenario) must allow privileged pods.
+The node level scenarios (`hog_scenarios`, `network_chaos_scenarios`, `network_chaos_ng_scenarios`,
+`pod_network_scenarios`, `time_scenarios`, `syn_flood_scenarios`, `storage_throttle_scenarios`) start privileged helper
+pods on the target nodes, in the namespace given by the key `namespace` of the scenario (always `default` for the time
+scenarios). When such a scenario is enabled, the chart binds the service account to the `privileged` SCC in the
+namespaces of `kraken.privilegedNamespaces` (`kraken.privilegedWorkloads: auto`). The pod, container, application outage,
+service disruption and pvc scenarios need no privileged SCC.
 
 ## Migration from releases before 21.3.391
 

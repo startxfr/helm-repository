@@ -67,3 +67,28 @@ seccompProfile:
   type: RuntimeDefault
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+"true" when helper pods started by krkn need the privileged SCC: forced by kraken.privilegedWorkloads (true or false),
+or, when it is "auto", as soon as an enabled scenario has a node level type (hog, network chaos, time...)
+*/}}
+{{- define "chaos-kraken.needsPrivilegedWorkloads" -}}
+{{- $k := .Values.kraken -}}
+{{- $mode := $k.privilegedWorkloads | toString -}}
+{{- if eq $mode "true" -}}true
+{{- else if eq $mode "false" -}}
+{{- else -}}
+{{- $found := false -}}
+{{- if eq ($k.engine | default "core") "core" -}}
+{{- range $name, $s := ($k.scenarios | default dict) -}}
+{{- if and $s.enabled (has $s.type (list "hog_scenarios" "network_chaos_scenarios" "network_chaos_ng_scenarios" "pod_network_scenarios" "time_scenarios" "syn_flood_scenarios" "storage_throttle_scenarios")) -}}{{- $found = true -}}{{- end -}}
+{{- end -}}
+{{- else -}}
+{{- range $name, $s := (($k.hub | default dict).scenarios | default dict) -}}
+{{- if and $s.enabled (regexMatch "hog|network|time|flood|filter|interface|throttle" ($s.tag | default $name)) -}}{{- $found = true -}}{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- if $found -}}true{{- end -}}
+{{- end -}}
+{{- end -}}

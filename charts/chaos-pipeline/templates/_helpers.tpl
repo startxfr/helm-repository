@@ -121,3 +121,31 @@ Pipeline tasks of a scenario map, run one after the other.
 {{- end }}
 {{- end }}
 {{- end -}}
+
+
+{{/*
+"true" when helper pods started by krkn need the privileged SCC: forced by pipeline.privilegedWorkloads (true or
+false), or, when it is "auto", as soon as an enabled scenario has a node level type (hog, network chaos, time...)
+*/}}
+{{- define "chaos-pipeline.needsPrivilegedWorkloads" -}}
+{{- $p := .Values.pipeline -}}
+{{- $mode := $p.privilegedWorkloads | toString -}}
+{{- if eq $mode "true" -}}true
+{{- else if eq $mode "false" -}}
+{{- else -}}
+{{- $found := false -}}
+{{- range $group := list ($p.infra | default dict) ($p.application | default dict) -}}
+{{- if $group.enabled -}}
+{{- range $name, $s := ($group.scenarios | default dict) -}}
+{{- if $s.enabled -}}
+{{- if eq ($s.engine | default "core") "hub" -}}
+{{- if regexMatch "hog|network|time|flood|filter|interface|throttle" ($s.tag | default $name) -}}{{- $found = true -}}{{- end -}}
+{{- else if has $s.type (list "hog_scenarios" "network_chaos_scenarios" "network_chaos_ng_scenarios" "pod_network_scenarios" "time_scenarios" "syn_flood_scenarios" "storage_throttle_scenarios") -}}{{- $found = true -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- if $found -}}true{{- end -}}
+{{- end -}}
+{{- end -}}

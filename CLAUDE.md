@@ -415,7 +415,7 @@ Rules for the krkn based charts (`chaos-cerberus`, `chaos-kraken`, `chaos-pipeli
 - No scenario shipped by default targets etcd or control plane nodes.
 - Images: krkn pinned by tag and digest; cerberus pinned by digest (no versioned tag upstream); krkn-hub by tag (rolling tags rebuilt weekly, a pinned digest can disappear).
 - The krkn configuration reference is `config/config.yaml` of the krkn-chaos/krkn repository (also in the image), not the website.
-- Containers run unprivileged on a writable copy in `/tmp` (the images expect a fixed user); no custom SCC. Access is the chart service account with a dedicated ClusterRole (`rbac.extraRules`, `rbac.clusterAdmin`).
+- The krkn and cerberus containers run unprivileged on a writable copy in `/tmp` (the images expect a fixed user); no custom SCC. Exception: node level scenarios (hog, network chaos, time) start privileged helper pods, so the chart binds its service account to the standard `privileged` SCC in `privilegedNamespaces` when such a scenario is enabled (`privilegedWorkloads: auto`). Access is the chart service account with a dedicated ClusterRole (`rbac.extraRules`, `rbac.clusterAdmin`).
 
 ---
 

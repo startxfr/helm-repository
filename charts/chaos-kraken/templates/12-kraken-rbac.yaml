@@ -35,6 +35,30 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 {{- end }}
 {{- if eq $k.kubeconfig.mode "local" }}
+{{- if include "chaos-kraken.needsPrivilegedWorkloads" . }}
+{{- range $ns := ($k.privilegedNamespaces | default (list "default")) }}
+---
+# krkn starts privileged helper pods in this namespace for the node level scenarios (hog, network chaos, time)
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "kraken-workload-privileged-{{ $namespace }}"
+  namespace: {{ $ns | quote }}
+  labels:
+    app.kubernetes.io/name: "kraken-workload-privileged-rb"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: kraken
+    namespace: {{ $namespace | default "default" | quote }}
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}
 {{- if not $rbac.clusterAdmin }}
 ---
 kind: ClusterRole

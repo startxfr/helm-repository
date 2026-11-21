@@ -109,6 +109,8 @@ helm install chaos-pipeline-deploy startx/chaos-pipeline -f https://raw.githubus
 | pipeline.images.check.tag              | 9.9                                                   | Check image tag, used when no digest is set                                                                                                    |
 | pipeline.images.check.digest           | sha256:08d4c70f...                                    | Check image digest, takes precedence over the tag                                                                                              |
 | pipeline.privileged                    | false                                                 | Run the krkn steps as privileged and bind the service account to the `privileged` SCC                                                          |
+| pipeline.privilegedWorkloads           | auto                                                  | Give the service account the `privileged` SCC in `privilegedNamespaces` (`auto`: when an enabled scenario needs it)                            |
+| pipeline.privilegedNamespaces          | [default]                                             | Namespaces where krkn starts its privileged helper pods                                                                                        |
 | pipeline.imageSignatureVerification    | true                                                  | Verify the signature of the workload images started by krkn                                                                                    |
 | pipeline.resources                     | {}                                                    | Resources requests and limits of the krkn steps                                                                                                |
 | pipeline.checkResources                | {}                                                    | Resources requests and limits of the cerberus-check step                                                                                       |
@@ -183,8 +185,14 @@ covers the pod, container, application and node scenarios shipped with the chart
 [upstream RBAC documentation](https://krkn-chaos.dev/docs/krkn/rbac/) and may be too small for other scenario types: add
 rules with `pipeline.rbac.extraRules`, or set `pipeline.rbac.clusterAdmin=true`. The default `pipeline` service account
 of OpenShift Pipelines receives no right from this chart.
-The node pressure and network scenarios start helper pods on the target nodes: the namespace of these pods (key
-`namespace` of the scenario) must allow privileged pods.
+The `krkn-hub-scenario` task takes its image from a parameter: whoever can create a PipelineRun in this namespace can run
+any image with the rights of the `chaos-pipeline` service account. Restrict who can create PipelineRuns there.
+The node level scenarios (`hog_scenarios`, `network_chaos_scenarios`, `network_chaos_ng_scenarios`,
+`pod_network_scenarios`, `time_scenarios`, `syn_flood_scenarios`, `storage_throttle_scenarios`) start privileged helper
+pods on the target nodes, in the namespace given by the key `namespace` of the scenario (always `default` for the time
+scenarios). When such a scenario is enabled, the chart binds the service account to the `privileged` SCC in the
+namespaces of `pipeline.privilegedNamespaces` (`pipeline.privilegedWorkloads: auto`). The pod, container, application outage,
+service disruption and pvc scenarios need no privileged SCC.
 
 ## Usage examples
 

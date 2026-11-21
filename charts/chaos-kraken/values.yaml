@@ -52,6 +52,13 @@ kraken:
     pullPolicy: IfNotPresent
   # Run the krkn container as privileged (binds the service account to the privileged SCC). Not required by default
   privileged: false
+  # Give the kraken service account the privileged SCC in privilegedNamespaces (auto, true or false)
+  # The node level scenarios (hog, network chaos, time) start privileged helper pods on the target nodes
+  # - auto: granted when an enabled scenario needs it
+  privilegedWorkloads: auto
+  # Namespaces where krkn starts its helper pods (key namespace of the scenarios; time scenarios always use default)
+  privilegedNamespaces:
+    - default
   # User id of the krkn container. Leave empty on OpenShift (assigned by the SCC)
   runAsUser: ""
   # Resources requests and limits of the krkn container
