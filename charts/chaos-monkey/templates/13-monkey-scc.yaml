@@ -1,6 +1,8 @@
 {{- if .Values.monkey.enabled -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
+{{- /* service account of the kube-monkey chart: serviceAccount.name, else its fullname */ -}}
+{{- $sa := (.Values.monkey.serviceAccount).name | default .Values.monkey.fullnameOverride | default (printf "%s-%s" .Release.Name (.Values.monkey.nameOverride | default "kube-monkey")) -}}
 ---
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints 
@@ -14,7 +16,7 @@ metadata:
     kubernetes.io/description: 'allows privileged access to host'
     release.openshift.io/create-only: "true"
 users:
-- system:serviceaccount:{{- $namespace -}}:startx-monkey
+- system:serviceaccount:{{- $namespace -}}:{{ $sa }}
 allowHostPorts: true
 priority: null
 requiredDropCapabilities: null
@@ -68,7 +70,7 @@ subjects:
     name: default
     namespace: {{ $namespace | default "default" | quote }}
   - kind: ServiceAccount
-    name: startx-monkey
+    name: {{ $sa }}
     namespace: {{ $namespace | default "default" | quote }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -87,7 +89,7 @@ metadata:
     {{- include "chaos-monkey.annotations" $ | nindent 4 }}
 subjects:
   - kind: ServiceAccount
-    name: startx-monkey
+    name: {{ $sa }}
 roleRef:
   kind: Role
   name: privileged-monkey-scc-role
