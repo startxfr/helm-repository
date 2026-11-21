@@ -1,0 +1,22 @@
+
+The chaos pipelines you have required are deploying with the following characteristics :
+
+-- Context -------------------------
+        scope : {{ include "startx.appScope" . }}
+      cluster : {{ include "startx.appCluster" . }}
+  environment : {{ include "startx.appEnvironment" . }}
+    component : {{ include "startx.appComponent" . }}
+          app : {{ include "startx.appName" . }}
+      version : {{ include "startx.appVersion" . }}
+{{ if .Values.project.enabled }}
+-- Pipeline Project ----------------
+         name : {{ .Values.project.project.name }}
+{{ end }}
+{{ if .Values.pipeline.enabled }}
+-- Chaos pipelines -----------------
+      pipelines : chaos-infra, chaos-application
+service account : chaos-pipeline
+
+No PipelineRun is created by this chart. Start a run with:
+  oc create -n {{ .Values.project.project.name }} -f examples/tekton/pipelinerun-infra.yaml
+{{ end }}

@@ -35,6 +35,9 @@ project:
 # Configuration of the kubemonkey deployment (see https://github.com/asobti/kube-monkey)
 monkey:
   enabled: false
+  # Grant a privileged SecurityContextConstraints (privileged-monkey) to the kube-monkey service account.
+  # Not needed by kube-monkey: keep it false unless the pod cannot start with the restricted one.
+  privileged: false
   nameOverride: monkey
   fullnameOverride: example-monkey
   replicaCount: 1
@@ -55,6 +58,13 @@ monkey:
   args:
     logLevel: 5
     logDir: /var/log/kube-monkey
+  # Writable volume for the log directory (the container runs with an arbitrary user)
+  additionalVolumes:
+    - name: log
+      emptyDir: {}
+  additionalVolumeMounts:
+    - name: log
+      mountPath: /var/log/kube-monkey
   resources: {}
   nodeSelector: {}
   tolerations: []

@@ -1,0 +1,24 @@
+# Start one run of the application chaos pipeline against the application of your choice:
+#   oc create -n chaos-pipeline -f pipelinerun-application.yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: chaos-application-
+spec:
+  pipelineRef:
+    name: chaos-application
+  taskRunTemplate:
+    serviceAccountName: chaos-pipeline
+  timeouts:
+    pipeline: 2h0m0s
+  params:
+    - name: target-namespace
+      value: my-application
+    - name: label-selector
+      value: app=my-application
+    - name: health-check-url
+      value: https://myapp.apps.example.com/health
+    - name: cerberus-enabled
+      value: "true"
+    - name: cerberus-url
+      value: http://cerberus.chaos-cerberus.svc.cluster.local:8080

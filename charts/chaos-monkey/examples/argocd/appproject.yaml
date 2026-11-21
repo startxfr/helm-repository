@@ -4,7 +4,7 @@ metadata:
   name: chaos-monkey
   namespace: openshift-gitops
 spec:
-  description: Deploy kube-monkey chaos pod killer on OpenShift
+  description: Deploy the kube-monkey random pod killer on OpenShift
   sourceRepos:
     - 'https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/*'
     - 'https://asobti.github.io/kube-monkey/charts/repo'
@@ -16,11 +16,11 @@ spec:
   clusterResourceWhitelist:
     - group: ''
       kind: Namespace
-    - group: project.openshift.io
+    - group: 'project.openshift.io'
       kind: ProjectRequest
-    - group: security.openshift.io
+    - group: 'security.openshift.io'
       kind: SecurityContextConstraints
-    - group: rbac.authorization.k8s.io
+    - group: 'rbac.authorization.k8s.io'
       kind: ClusterRole
-    - group: rbac.authorization.k8s.io
+    - group: 'rbac.authorization.k8s.io'
       kind: ClusterRoleBinding

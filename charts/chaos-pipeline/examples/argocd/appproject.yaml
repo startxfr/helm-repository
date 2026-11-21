@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: chaos-pipeline
+  namespace: openshift-gitops
+spec:
+  description: Deploy the Tekton chaos testing pipelines on OpenShift
+  sourceRepos:
+    - 'https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: chaos-pipeline
+    - server: https://kubernetes.default.svc
+      namespace: default
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: project.openshift.io
+      kind: ProjectRequest
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding

@@ -17,6 +17,8 @@ argocd_project:
           server: 'https://kubernetes.default.svc'
         - namespace: 'chaos-kraken'
           server: 'https://kubernetes.default.svc'
+        - namespace: 'chaos-pipeline'
+          server: 'https://kubernetes.default.svc'
         - namespace: 'chaos-litmus'
           server: 'https://kubernetes.default.svc'
         - namespace: 'chaos-mesh'
@@ -49,27 +51,19 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-cerberus'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-cerberus'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true
           cerberus:
             enabled: true
             kubeconfig:
-              mode: token
-              token:
-                server: "https://api.<cluster>:6443"
-                token: "sha256~REPLACE_WITH_YOUR_SA_TOKEN"
-          # Required: prevents nil pointer error on .Values.kraken.version in cerberus template
-          kraken:
-            enabled: false
+              mode: local
           litmus:
             enabled: false
           mesh:
@@ -83,26 +77,26 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-kraken'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-kraken'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true
           kraken:
             enabled: true
-            mode: job
-            cerberusUrl: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+            engine: core
+            cerberus:
+              enabled: true
+              url: "http://cerberus.chaos-cerberus.svc.cluster.local:8080"
+            scenarios:
+              pods-monitoring:
+                enabled: true
             kubeconfig:
-              mode: token
-              token:
-                server: "https://api.<cluster>:6443"
-                token: "sha256~REPLACE_WITH_YOUR_TOKEN"
+              mode: local
           cerberus:
             enabled: false
           litmus:
@@ -118,24 +112,26 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-litmus'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-litmus'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true
           litmus:
             enabled: true
+            # Secrets to create before the sync (see the chaos-litmus README)
+            existingSecret: litmus-admin
             # Use standalone MongoDB for test environments:
             # - avoids replicaSet (3 primary + 1 arbiter) which creates SCC issues on OCP
             # - disables PVC to avoid WaitForFirstConsumer StorageClass deadlock
             mongodb:
               architecture: standalone
+              auth:
+                existingSecret: litmus-mongodb
               persistence:
                 enabled: false
           cerberus:
@@ -153,14 +149,12 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-mesh'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-mesh'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true
@@ -177,6 +171,42 @@ application:
             enabled: false
           monkey:
             enabled: false
+      syncPolicy: |
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - ServerSideApply=true
+        - RespectIgnoreDifferences=true
+      ignoreDifferences: |
+        - kind: Secret
+          name: chaos-mesh-webhook-certs
+          jsonPointers:
+          - /data
+        - kind: Secret
+          name: chaos-mesh-chaosd-client-certs
+          jsonPointers:
+          - /data
+        - group: admissionregistration.k8s.io
+          kind: MutatingWebhookConfiguration
+          name: chaos-mesh-mutation
+          jqPathExpressions:
+          - .webhooks[].clientConfig.caBundle
+        - group: admissionregistration.k8s.io
+          kind: ValidatingWebhookConfiguration
+          name: chaos-mesh-validation
+          jqPathExpressions:
+          - .webhooks[].clientConfig.caBundle
+        - group: admissionregistration.k8s.io
+          kind: ValidatingWebhookConfiguration
+          name: chaos-mesh-validation-auth
+          jqPathExpressions:
+          - .webhooks[].clientConfig.caBundle
+        - group: apps
+          kind: Deployment
+          name: chaos-controller-manager
+          jqPathExpressions:
+          - .spec.template.metadata.annotations.rollme
     # Deploys service instances
     - name: 'chaos-all-monkey-instance'
       namespace: 'openshift-gitops'
@@ -184,14 +214,12 @@ application:
       wave: "50"
       server: 'https://kubernetes.default.svc'
       destinationNamespace: 'chaos-monkey'
-      project: 'chaos'
+      project: 'chaos-all'
       source:
         repoURL: 'https://gitlab.com/startx1/helm.git'
         path: 'charts/chaos-monkey'
         targetRevision: stable
       helm: |
-        valueFiles:
-          - values-startx_noinfra.yaml
         values: |
           project:
             enabled: true

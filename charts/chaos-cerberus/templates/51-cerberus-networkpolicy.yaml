@@ -1,15 +1,13 @@
 {{- if .Values.cerberus.enabled -}}
-{{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
-{{- if .Values.cerberus.kraken_allowed -}}
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: kraken-to-cerberus
+  name: cerberus-allow-signal
   namespace: "{{- $namespace -}}"
   labels:
-    app.kubernetes.io/name: "kraken-to-cerberus-networkpolicy"
+    app.kubernetes.io/name: "cerberus-allow-signal-networkpolicy"
     {{- include "chaos-cerberus.labels" $ | nindent 4 }}
   annotations:
     {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
@@ -18,31 +16,22 @@ spec:
     matchLabels:
       app: cerberus
       tool: cerberus
+  policyTypes:
+    - Ingress
   ingress:
     - from:
         - podSelector: {}
-          namespaceSelector:
+        {{- range .Values.cerberus.allowedNamespaces }}
+        - namespaceSelector:
             matchLabels:
-              name: "{{ $.Values.cerberus.kraken_ns }}"
-  policyTypes:
-    - Ingress
-{{- end }}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: cerberus-allow-external
-  namespace: "{{- $namespace -}}"
-  labels:
-    app.kubernetes.io/name: "cerberus-allow-external-networkpolicy"
-    {{- include "chaos-cerberus.labels" $ | nindent 4 }}
-  annotations:
-    {{- include "chaos-cerberus.annotations" $ | nindent 4 }}
-spec:
-  podSelector:
-    matchLabels:
-      app: cerberus
-      tool: cerberus
-  ingress:
-    - {}
+              kubernetes.io/metadata.name: {{ . | quote }}
+        {{- end }}
+        {{- if .Values.cerberus.expose }}
+        - namespaceSelector:
+            matchLabels:
+              policy-group.network.openshift.io/ingress: ""
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: 8080
 {{- end -}}

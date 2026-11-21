@@ -1,5 +1,5 @@
 
-The Cerberus watchdog you've require is deploying with the following characteristics :
+The Cerberus watchdog you have required is deploying with the following characteristics :
 
 -- Context -------------------------
         scope : {{ include "startx.appScope" . }}
@@ -15,4 +15,5 @@ The Cerberus watchdog you've require is deploying with the following characteris
 {{ if .Values.cerberus.enabled }}
 -- Cerberus Instance ---------------
 kubeconfig mode : {{ .Values.cerberus.kubeconfig.mode }}
+         signal : http://cerberus.{{ .Values.project.project.name }}.svc.cluster.local:8080
 {{ end }}

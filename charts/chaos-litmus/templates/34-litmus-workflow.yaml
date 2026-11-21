@@ -1,4 +1,5 @@
-{{- if .Values.litmus.enabled -}}
+{{- /* example workflow: needs the Argo Workflow definition on the cluster, hence its own switch */ -}}
+{{- if and .Values.litmus.enabled .Values.litmus.exampleWorkflow -}}
 {{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
 ---

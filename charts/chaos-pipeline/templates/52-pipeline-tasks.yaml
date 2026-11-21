@@ -1,0 +1,362 @@
+{{- if .Values.pipeline.enabled -}}
+{{- $namespace := .Values.project.project.name -}}
+{{- $p := .Values.pipeline -}}
+{{- $images := $p.images -}}
+{{- $cloud := $p.cloud | default dict -}}
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: cerberus-check
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "cerberus-check-task"
+    {{- include "chaos-pipeline.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-pipeline.annotations" $ | nindent 4 }}
+    tekton.dev/displayName: "Cerberus check"
+    tekton.dev/tags: "chaos, cerberus"
+spec:
+  description: >-
+    Wait for the cerberus go/no-go signal to be True. Fails when the signal is still False (or unreachable)
+    after the timeout.
+  params:
+    - name: cerberus-url
+      type: string
+      description: URL of the cerberus signal
+    - name: timeout
+      type: string
+      description: Maximum time to wait for a healthy signal (in seconds)
+      default: "300"
+    - name: frequency
+      type: string
+      description: Delay between two checks (in seconds)
+      default: "15"
+  results:
+    - name: status
+      description: healthy or unhealthy
+  steps:
+    - name: check
+      image: {{ include "chaos-pipeline.image" $images.check | quote }}
+      imagePullPolicy: {{ $images.check.pullPolicy | default "IfNotPresent" }}
+      computeResources:
+        {{- toYaml ($p.checkResources | default dict) | nindent 8 }}
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        capabilities:
+          drop: ["ALL"]
+        seccompProfile:
+          type: RuntimeDefault
+      env:
+        - name: CERBERUS_URL
+          value: "$(params.cerberus-url)"
+        - name: TIMEOUT
+          value: "$(params.timeout)"
+        - name: FREQUENCY
+          value: "$(params.frequency)"
+        - name: RESULT_PATH
+          value: "$(results.status.path)"
+      script: |
+        #!/bin/bash
+        set -u
+        elapsed=0
+        while true; do
+          signal=$(curl -s -m 10 "${CERBERUS_URL}" || true)
+          if [ "${signal}" = "True" ]; then
+            echo "Cerberus signal is healthy after ${elapsed}s"
+            printf 'healthy' > "${RESULT_PATH}"
+            exit 0
+          fi
+          if [ "${elapsed}" -ge "${TIMEOUT}" ]; then
+            echo "Cerberus signal is '${signal:-unreachable}' after ${elapsed}s (timeout ${TIMEOUT}s)"
+            printf 'unhealthy' > "${RESULT_PATH}"
+            exit 1
+          fi
+          echo "Cerberus signal is '${signal:-unreachable}', next check in ${FREQUENCY}s (${elapsed}/${TIMEOUT}s)"
+          sleep "${FREQUENCY}"
+          elapsed=$((elapsed + FREQUENCY))
+        done
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: krkn-run
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "krkn-run-task"
+    {{- include "chaos-pipeline.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-pipeline.annotations" $ | nindent 4 }}
+    tekton.dev/displayName: "krkn scenario"
+    tekton.dev/tags: "chaos, krkn, kraken"
+spec:
+  description: >-
+    Run one krkn scenario of the chaos-pipeline-scenarios ConfigMap with the krkn image, against the cluster
+    the task runs in. The placeholders ${TARGET_NAMESPACE} and ${LABEL_SELECTOR} of the scenario are replaced
+    by the matching parameters.
+  params:
+    - name: scenario
+      type: string
+      description: Name of the scenario (key of the chaos-pipeline-scenarios ConfigMap, without .yaml)
+    - name: scenario-type
+      type: string
+      description: krkn scenario type (ex pod_disruption_scenarios)
+    - name: target-namespace
+      type: string
+      description: Value of the ${TARGET_NAMESPACE} placeholder of the scenario
+      default: ""
+    - name: label-selector
+      type: string
+      description: Value of the ${LABEL_SELECTOR} placeholder of the scenario
+      default: ""
+    - name: wait-duration
+      type: string
+      description: Duration to wait after the scenario (in seconds)
+      default: "30"
+    - name: iterations
+      type: string
+      description: Number of times to execute the scenario
+      default: "1"
+    - name: cerberus-enabled
+      type: string
+      description: Check the cerberus signal after the scenario (true or false)
+      default: "false"
+    - name: cerberus-url
+      type: string
+      description: URL of the cerberus signal
+      default: ""
+    - name: health-check-url
+      type: string
+      description: HTTP endpoint checked by krkn before and after the scenario (empty to disable)
+      default: ""
+  results:
+    - name: status
+      description: passed or failed
+  volumes:
+    - name: scenarios
+      configMap:
+        name: chaos-pipeline-scenarios
+  steps:
+    - name: krkn
+      image: {{ include "chaos-pipeline.image" $images.krkn | quote }}
+      imagePullPolicy: {{ $images.krkn.pullPolicy | default "IfNotPresent" }}
+      computeResources:
+        {{- toYaml ($p.resources | default dict) | nindent 8 }}
+      securityContext:
+        {{- include "chaos-pipeline.securityContext" $ | nindent 8 }}
+      volumeMounts:
+        - name: scenarios
+          mountPath: /etc/chaos/scenarios
+      {{- if $cloud.existingSecret }}
+      envFrom:
+        - secretRef:
+            name: {{ $cloud.existingSecret | quote }}
+      {{- end }}
+      env:
+        - name: HOME
+          value: /tmp
+        - name: KUBECONFIG
+          value: /tmp/kubeconfig
+        - name: SCENARIO
+          value: "$(params.scenario)"
+        - name: SCENARIO_TYPE
+          value: "$(params.scenario-type)"
+        - name: TARGET_NAMESPACE
+          value: "$(params.target-namespace)"
+        - name: LABEL_SELECTOR
+          value: "$(params.label-selector)"
+        - name: WAIT_DURATION
+          value: "$(params.wait-duration)"
+        - name: ITERATIONS
+          value: "$(params.iterations)"
+        - name: CERBERUS_ENABLED
+          value: "$(params.cerberus-enabled)"
+        - name: CERBERUS_URL
+          value: "$(params.cerberus-url)"
+        - name: HEALTH_CHECK_URL
+          value: "$(params.health-check-url)"
+        - name: RESULT_PATH
+          value: "$(results.status.path)"
+      script: |
+        #!/bin/bash
+        set -eu
+        # The image expects a fixed user owning /home/krkn/kraken: work on a writable copy instead
+        cp -r /home/krkn/kraken /tmp/kraken
+        cd /tmp/kraken
+        mkdir -p scenarios/custom
+        "${PYTHON_CMD:-python3.11}" - <<'PYEOF'
+        import os, string, sys
+        source = "/etc/chaos/scenarios/%s.yaml" % os.environ["SCENARIO"]
+        if not os.path.isfile(source):
+            sys.exit("scenario %s not found in the chaos-pipeline-scenarios ConfigMap" % os.environ["SCENARIO"])
+        with open(source) as f:
+            content = string.Template(f.read()).safe_substitute(
+                TARGET_NAMESPACE=os.environ.get("TARGET_NAMESPACE", ""),
+                LABEL_SELECTOR=os.environ.get("LABEL_SELECTOR", ""))
+        with open("scenarios/custom/scenario.yaml", "w") as f:
+            f.write(content)
+        print(content)
+        PYEOF
+        {{- include "chaos-pipeline.localKubeconfig" $ | nindent 8 }}
+        cerberus=False
+        if [ "${CERBERUS_ENABLED}" = "true" ] && [ -n "${CERBERUS_URL}" ]; then cerberus=True; fi
+        health_during="[]"
+        if [ -n "${HEALTH_CHECK_URL}" ]; then health_during="[pre, post]"; fi
+        cat > /tmp/config.yaml <<CONFIGEOF
+        kraken:
+            kubeconfig_path: /tmp/kubeconfig
+            image_signature_verification_enabled: {{ ternary "True" "False" (default true $p.imageSignatureVerification) }}
+            image_signature_public_key: cosign.pub
+            exit_on_failure: True
+            auto_rollback: True
+            rollback_versions_directory:
+            publish_kraken_status: False
+            signal_state: RUN
+            signal_address: 0.0.0.0
+            port: 8081
+            report_formats: []
+            chaos_scenarios:
+                - ${SCENARIO_TYPE}:
+                    - scenarios/custom/scenario.yaml
+        resiliency:
+            resiliency_run_mode: disabled
+            resiliency_file: config/alerts.yaml
+        cerberus:
+            cerberus_enabled: ${cerberus}
+            cerberus_url: ${CERBERUS_URL}
+            check_application_routes: False
+        elastic:
+            enable_elastic: False
+        tunings:
+            wait_duration: ${WAIT_DURATION}
+            iterations: ${ITERATIONS}
+            daemon_mode: False
+        telemetry:
+            enabled: False
+            events_backup: False
+            logs_backup: False
+            prometheus_backup: False
+        performance_monitoring:
+            prometheus_url: ''
+            prometheus_bearer_token:
+            uuid:
+            enable_alerts: False
+            alert_profile: config/alerts.yaml
+            run_during: during
+            exit_on_failure: True
+            only_failures: True
+            enable_metrics: False
+            metrics_profile: config/metrics-report.yaml
+            check_critical_alerts: False
+        health_checks:
+            interval: 2
+            run_during: ${health_during}
+            exit_on_failure: True
+            only_failures: False
+            config:
+                - url: ${HEALTH_CHECK_URL}
+        kubevirt_checks:
+            interval: 2
+            run_during: []
+            exit_on_failure: False
+            namespace:
+            name:
+            only_failures: False
+            disconnected: False
+            ssh_node: ""
+            node_names: ""
+        object_state_checks:
+            interval: 2
+            run_during: []
+            exit_on_failure: False
+            only_failures: False
+            config: []
+        CONFIGEOF
+        rc=0
+        "${PYTHON_CMD:-python3.11}" run_kraken.py --config=/tmp/config.yaml || rc=$?
+        if [ "${rc}" -eq 0 ]; then printf 'passed' > "${RESULT_PATH}"; else printf 'failed' > "${RESULT_PATH}"; fi
+        exit "${rc}"
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: krkn-hub-scenario
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "krkn-hub-scenario-task"
+    {{- include "chaos-pipeline.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-pipeline.annotations" $ | nindent 4 }}
+    tekton.dev/displayName: "krkn-hub scenario"
+    tekton.dev/tags: "chaos, krkn, kraken"
+spec:
+  description: >-
+    Run one krkn-hub scenario image, configured by environment variables, against the cluster the task runs in.
+    See https://github.com/krkn-chaos/krkn-hub for the scenarios and their variables.
+  params:
+    - name: image
+      type: string
+      description: Full reference of the krkn-hub scenario image (ex quay.io/krkn-chaos/krkn-hub:pod-scenarios)
+    - name: env
+      type: string
+      description: Environment variables of the scenario, one KEY=VALUE per line
+      default: ""
+    - name: cerberus-enabled
+      type: string
+      description: Check the cerberus signal after the scenario (true or false)
+      default: "false"
+    - name: cerberus-url
+      type: string
+      description: URL of the cerberus signal
+      default: ""
+  results:
+    - name: status
+      description: passed or failed
+  steps:
+    - name: krkn-hub
+      image: "$(params.image)"
+      imagePullPolicy: {{ $images.hub.pullPolicy | default "Always" }}
+      computeResources:
+        {{- toYaml ($p.resources | default dict) | nindent 8 }}
+      securityContext:
+        {{- include "chaos-pipeline.securityContext" $ | nindent 8 }}
+      {{- if $cloud.existingSecret }}
+      envFrom:
+        - secretRef:
+            name: {{ $cloud.existingSecret | quote }}
+      {{- end }}
+      env:
+        - name: HOME
+          value: /tmp
+        - name: KRKN_KUBE_CONFIG
+          value: /tmp/kubeconfig
+        - name: TELEMETRY_ENABLED
+          value: "False"
+        - name: SCENARIO_ENV
+          value: "$(params.env)"
+        - name: CERBERUS_REQUESTED
+          value: "$(params.cerberus-enabled)"
+        - name: CERBERUS_URL
+          value: "$(params.cerberus-url)"
+        - name: RESULT_PATH
+          value: "$(results.status.path)"
+      script: |
+        #!/bin/bash
+        set -eu
+        # The image expects a fixed user owning /home/krkn: work on a writable copy instead
+        mkdir -p /tmp/krkn
+        cp -r /home/krkn/kraken /home/krkn/*.sh /tmp/krkn/
+        export ROOT_FOLDER=/tmp/krkn KRAKEN_FOLDER=/tmp/krkn/kraken
+        {{- include "chaos-pipeline.localKubeconfig" $ | nindent 8 }}
+        export CERBERUS_ENABLED=False
+        if [ "${CERBERUS_REQUESTED}" = "true" ] && [ -n "${CERBERUS_URL}" ]; then export CERBERUS_ENABLED=True; fi
+        # Keep only the well formed KEY=VALUE lines of the env parameter and export them
+        printf '%s\n' "${SCENARIO_ENV}" | sed -e 's/^[[:space:]]*//' | grep -E '^[A-Za-z_][A-Za-z0-9_]*=' | sed -e 's/^/export /' > /tmp/scenario.env || true
+        . /tmp/scenario.env
+        cd "${KRAKEN_FOLDER}"
+        rc=0
+        /tmp/krkn/run.sh || rc=$?
+        if [ "${rc}" -eq 0 ]; then printf 'passed' > "${RESULT_PATH}"; else printf 'failed' > "${RESULT_PATH}"; fi
+        exit "${rc}"
+{{- end -}}

@@ -35,20 +35,36 @@ project:
 # Configuration of the litmus deployment (see https://litmuschaos.github.io/litmus-helm)
 litmus:
   enabled: false
+  # Expose the litmus frontend with an Openshift route
+  expose: false
+  # Create the example Argo Workflow "startx-workflow" (requires the workflows.argoproj.io definition on the cluster)
+  exampleWorkflow: false
+  # Name of an existing Secret holding the portal administrator credentials (keys ADMIN_USERNAME and ADMIN_PASSWORD,
+  # plus DB_USER and DB_PASSWORD with an external MongoDB). When empty, adminConfig.ADMIN_PASSWORD is required.
+  existingSecret: ""
   nameOverride: litmus
   portalScope: cluster
   customLabels: {}
   adminConfig:
-    DBUSER: "admin"
-    DBPASSWORD: "1234"
-    JWTSecret: "litmus-portal@123"
+    # -- user and password of an external MongoDB (only when mongodb.enabled is false)
+    DBUSER: ""
+    DBPASSWORD: ""
     VERSION: "3.26.0"
     SKIP_SSL_VERIFY: "false"
     # -- leave empty if uses Mongo DB deployed by this chart
     DB_SERVER: ""
     DB_PORT: "27017"
     ADMIN_USERNAME: "admin"
-    ADMIN_PASSWORD: "litmus"
+    # -- no default password: set it, or use existingSecret
+    ADMIN_PASSWORD: ""
+  # MongoDB deployed with the portal (mongodb sub-chart of the litmus chart)
+  mongodb:
+    enabled: true
+    auth:
+      # -- no default password: set it, or use existingSecret
+      rootPassword: ""
+      # -- existing Secret with the keys mongodb-root-password and mongodb-replica-set-key
+      existingSecret: ""
   image:
     imageRegistryName: litmuschaos
     imagePullSecrets: []

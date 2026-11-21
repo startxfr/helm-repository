@@ -12,7 +12,7 @@ context:  &context
   environment: dev
   component: chaos
   app: cerberus
-  version: "1.0.0"
+  version: "1.0.4"
 
 project: 
   enabled: false
@@ -21,17 +21,14 @@ project:
 
 cerberus: 
   enabled: true
-  version: "latest"
   expose: true
-  kraken_allowed: true
-  kraken_ns: startx-chaos-kraken
+  allowedNamespaces:
+    - startx-chaos-kraken
+    - startx-chaos-pipeline
   isDaemon: true
   sleep_time: 5
   watch_nodes: true
   watch_cluster_operators: true
   watch_url_routes: []
   kubeconfig:
-    mode: token
-    token: 
-      server: "https://api.mycluster.startx.fr:6443"
-      token: "sha256~XXXXXXX_PUT_YOUR_STARTX_TOKEN_HERE_XXXXXXXX"
+    mode: local

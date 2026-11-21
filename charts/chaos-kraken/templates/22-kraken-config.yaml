@@ -1,46 +1,138 @@
 {{- if .Values.kraken.enabled -}}
-{{- $appName := include "startx.appName" . -}}
 {{- $namespace := .Values.project.project.name -}}
-{{- if .Values.kraken.aws -}}{{- if .Values.kraken.aws.enabled -}}
-{{- with .Values.kraken.aws }}
----
-kind: Secret
-apiVersion: v1
-type: Opaque
-metadata:
-  name: kraken-aws-creds
-  namespace: "{{- $namespace -}}"
-  labels:
-    app.kubernetes.io/name: "kraken-aws-creds"
-    {{- include "chaos-kraken.labels" $ | nindent 4 }}
-  annotations:
-    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
-stringData:
-  AWS_ACCESS_KEY_ID: {{ .credentials.key_id | default "AWS_ACCESS_KEY_ID" | quote }}
-  AWS_DEFAULT_REGION: {{ .credentials.region | default "AWS_DEFAULT_REGION" | quote }}
-  AWS_SECRET_ACCESS_KEY: {{ .credentials.secret | default "AWS_SECRET_ACCESS_KEY" | quote }}
----
-kind: Secret
-apiVersion: v1
-type: Opaque
-metadata:
-  name: kraken-vcloud-creds
-  namespace: "{{- $namespace -}}"
-  labels:
-    app.kubernetes.io/name: "kraken-vcloud-creds"
-    {{- include "chaos-kraken.labels" $ | nindent 4 }}
-  annotations:
-    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
-stringData:
-  TENANT_URL: ''
-  VAPP_NAME: ''
-  REFRESH_TOKEN: ''
-{{ end }}
-{{- end -}}{{- end -}}
+{{- $k := .Values.kraken -}}
+{{- $cfg := $k.config | default dict -}}
+{{- $cerberus := $k.cerberus | default dict -}}
+{{- $hc := $k.healthChecks | default dict -}}
+{{- $osc := $k.objectStateChecks | default dict -}}
+{{- $mon := $k.monitoring | default dict -}}
+{{- $kubeconfigPath := ternary "/tmp/kubeconfig" "/etc/kraken/kubeconfig/config" (eq $k.kubeconfig.mode "local") -}}
+{{- if eq ($k.engine | default "core") "core" }}
 ---
 kind: ConfigMap
 apiVersion: v1
-immutable: false
+metadata:
+  name: kraken-config
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-config"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  config.yaml: |
+    # See https://github.com/krkn-chaos/krkn/blob/main/config/config.yaml for the detail of each property
+    kraken:
+        kubeconfig_path: {{ $kubeconfigPath }}
+        image_signature_verification_enabled: {{ include "chaos-kraken.bool" (list $cfg.imageSignatureVerification true) }}
+        image_signature_public_key: cosign.pub
+        exit_on_failure: {{ include "chaos-kraken.bool" (list $cfg.exitOnFailure false) }}
+        auto_rollback: {{ include "chaos-kraken.bool" (list $cfg.autoRollback true) }}
+        rollback_versions_directory:
+        publish_kraken_status: False
+        signal_state: RUN
+        signal_address: 0.0.0.0
+        port: 8081
+        report_formats: {{ toJson ($cfg.reportFormats | default list) }}
+        chaos_scenarios:
+        {{- $count := 0 }}
+        {{- range $name := keys ($k.scenarios | default dict) | sortAlpha }}
+        {{- $s := index $k.scenarios $name }}
+        {{- if $s.enabled }}
+        {{- $count = add1 $count }}
+        {{- if not $s.type }}{{ fail (printf "chaos-kraken: kraken.scenarios.%s.type is required" $name) }}{{ end }}
+        {{- if and (not $s.file) (not $s.content) }}{{ fail (printf "chaos-kraken: kraken.scenarios.%s needs a file or a content" $name) }}{{ end }}
+            - {{ $s.type }}:
+                - {{ $s.file | default (printf "scenarios/custom/%s.yaml" $name) }}
+        {{- end }}
+        {{- end }}
+        {{- if eq $count 0 }} []{{ end }}
+    resiliency:
+        resiliency_run_mode: {{ $cfg.resiliencyRunMode | default "disabled" }}
+        resiliency_file: config/alerts.yaml
+    cerberus:
+        cerberus_enabled: {{ include "chaos-kraken.bool" (list $cerberus.enabled false) }}
+        cerberus_url: {{ $cerberus.url | default "" }}
+        check_application_routes: {{ include "chaos-kraken.bool" (list $cerberus.checkApplicationRoutes false) }}
+    elastic:
+        enable_elastic: False
+    tunings:
+        wait_duration: {{ $cfg.waitDuration | default 60 }}
+        iterations: {{ $cfg.iterations | default 1 }}
+        daemon_mode: {{ include "chaos-kraken.bool" (list $cfg.daemonMode false) }}
+    telemetry:
+        enabled: False
+        events_backup: False
+        logs_backup: False
+        prometheus_backup: False
+    performance_monitoring:
+        prometheus_url: {{ $mon.prometheusUrl | default "''" }}
+        prometheus_bearer_token: {{ $mon.prometheusToken | default "" }}
+        uuid:
+        enable_alerts: {{ include "chaos-kraken.bool" (list $mon.enableAlerts false) }}
+        alert_profile: {{ $mon.alertProfile | default "config/alerts.yaml" }}
+        run_during: during
+        exit_on_failure: True
+        only_failures: True
+        enable_metrics: {{ include "chaos-kraken.bool" (list $mon.enableMetrics false) }}
+        metrics_profile: {{ $mon.metricsProfile | default "config/metrics-report.yaml" }}
+        check_critical_alerts: {{ include "chaos-kraken.bool" (list $mon.checkCriticalAlerts false) }}
+    health_checks:
+        interval: {{ $hc.interval | default 2 }}
+        run_during: {{ toJson ($hc.runDuring | default "post") }}
+        exit_on_failure: {{ include "chaos-kraken.bool" (list $hc.exitOnFailure false) }}
+        only_failures: False
+        config: {{ if $hc.endpoints }}{{ toJson $hc.endpoints }}{{ else }}[{"url": null}]{{ end }}
+    kubevirt_checks:
+        interval: 2
+        run_during: []
+        exit_on_failure: False
+        namespace:
+        name:
+        only_failures: False
+        disconnected: False
+        ssh_node: ""
+        node_names: ""
+    object_state_checks:
+        interval: {{ $osc.interval | default 2 }}
+        run_during: {{ toJson ($osc.runDuring | default list) }}
+        exit_on_failure: {{ include "chaos-kraken.bool" (list $osc.exitOnFailure false) }}
+        only_failures: False
+        config: {{ toJson ($osc.checks | default list) }}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kraken-scenarios
+  namespace: "{{- $namespace -}}"
+  labels:
+    app.kubernetes.io/name: "kraken-scenarios"
+    {{- include "chaos-kraken.labels" $ | nindent 4 }}
+  annotations:
+    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
+data:
+  {{- $any := false }}
+  {{- range $name := keys ($k.scenarios | default dict) | sortAlpha }}
+  {{- $s := index $k.scenarios $name }}
+  {{- if and $s.enabled $s.content (not $s.file) }}
+  {{- $any = true }}
+  {{ $name }}.yaml: |
+    {{- if kindIs "string" $s.content }}
+    {{- $s.content | nindent 4 }}
+    {{- else }}
+    {{- toYaml $s.content | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- if not $any }}
+  README: "no inline scenario enabled"
+  {{- end }}
+{{- end }}
+{{- if ne $k.kubeconfig.mode "local" }}
+---
+kind: Secret
+apiVersion: v1
+type: Opaque
 metadata:
   name: kraken-kubeconfig
   namespace: "{{- $namespace -}}"
@@ -49,12 +141,14 @@ metadata:
     {{- include "chaos-kraken.labels" $ | nindent 4 }}
   annotations:
     {{- include "chaos-kraken.annotations" $ | nindent 4 }}
-data:
-{{- if eq .Values.kraken.kubeconfig.mode "file" }}
+stringData:
+{{- if eq $k.kubeconfig.mode "file" }}
   config: |
-    {{- .Values.kraken.kubeconfig.file | nindent 4 }}
-{{- end }}
-{{- if eq .Values.kraken.kubeconfig.mode "token" }}
+    {{- $k.kubeconfig.file | nindent 4 }}
+{{- else }}
+  {{- if or (not $k.kubeconfig.token.token) (contains "PUT_YOUR_TOKEN_HERE" $k.kubeconfig.token.token) }}
+  {{- fail "chaos-kraken: kraken.kubeconfig.token.token must be set when kraken.kubeconfig.mode is token" }}
+  {{- end }}
   config: |
     kind: Config
     apiVersion: v1
@@ -62,12 +156,16 @@ data:
     clusters:
     - name: default
       cluster:
+        {{- if $k.kubeconfig.token.ca }}
+        certificate-authority-data: {{ $k.kubeconfig.token.ca | b64enc }}
+        {{- else if $k.kubeconfig.token.insecure }}
         insecure-skip-tls-verify: true
-        server: "{{ .Values.kraken.kubeconfig.token.server }}"
+        {{- end }}
+        server: "{{ $k.kubeconfig.token.server }}"
     users:
     - name: default
       user:
-        token: "{{ .Values.kraken.kubeconfig.token.token }}"
+        token: "{{ $k.kubeconfig.token.token }}"
     contexts:
     - name: default
       context:
@@ -76,270 +174,5 @@ data:
         user: default
     preferences: {}
 {{- end }}
----
-kind: ConfigMap
-apiVersion: v1
-immutable: false
-metadata:
-  name: kraken-config-all
-  namespace: "{{- $namespace -}}"
-  labels:
-    app.kubernetes.io/name: "kraken-config-all"
-    {{- include "chaos-kraken.labels" $ | nindent 4 }}
-  annotations:
-    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
-data:
-  config.yaml: |-
-    kraken:
-      distribution: openshift
-      kubeconfig_path: /home/krkn/.kube/config
-      exit_on_failure: False
-      port: 8081
-      publish_kraken_status: False
-      signal_address: 0.0.0.0
-      signal_state: RUN
-      litmus_version: v1.13.6
-      litmus_uninstall: False
-      litmus_uninstall_before_run: False
-      chaos_scenarios:
-        - pod_disruption_scenarios:
-          - scenarios/startx_openshift_logging_loki.yml
-          - scenarios/startx_openshift_monitoring.yml
-          - scenarios/startx_openshift_machines.yml
-          - scenarios/startx_openshift_ingress.yml
-          - scenarios/startx_openshift_ovn.yml
-          - scenarios/startx_kube_apiserver.yml
-          - scenarios/startx_openshift-apiserver.yml
-          - scenarios/startx_openshift_etcd_pod.yml
-          - scenarios/startx_openshift_podmonkey.yml
-        - container_scenarios:
-          - scenarios/startx_openshift_etcd_container.yml
-        - time_scenarios:
-          - scenarios/startx_time_pod.yml
-          - scenarios/startx_time_node.yml
-        - node_scenarios:
-          - scenarios/startx_node_master.yml
-          - scenarios/startx_node_infra.yml
-          - scenarios/startx_node_app.yml
-        - network_chaos_scenarios:
-          - scenarios/startx_node_app_network_chaos.yaml
-          - scenarios/startx_node_infra_network_chaos.yaml
-          - scenarios/startx_node_master_network_chaos.yaml
-        - zone_outages_scenarios:
-          - scenarios/startx_zone_outage.yaml
-        - cluster_shut_down_scenarios:
-          - scenarios/cluster_shut_down_scenario.yml
-        - application_outages_scenarios:
-          - scenarios/app_outage.yaml
-        - pvc_scenarios:
-          - scenarios/pvc_scenario.yaml
-    cerberus:
-        cerberus_enabled: True
-        cerberus_url: {{ $.Values.kraken.cerberusUrl | quote }}
-        check_applicaton_routes: True
-    performance_monitoring:
-        deploy_dashboards: False
-        repo: "https://github.com/cloud-bulldozer/performance-dashboards.git"
-        kube_burner_binary_url: "https://github.com/cloud-bulldozer/kube-burner/releases/download/v1.7.2/kube-burner-V1.7.2-linux-x86_64.tar.gz"
-        capture_metrics: True
-        config_path: config/kube_burner.yaml
-        metrics_profile_path: config/metrics-aggregated.yaml
-        prometheus_url:
-        prometheus_bearer_token:
-        uuid:
-        enable_alerts: False
-        alert_profile: config/alerts
-    tunings:
-        wait_duration: 60
-        iterations: 1
-        daemon_mode: False
-    elastic:
-        enable_elastic: False
-        verify_certs: False
-        elastic_url: ""
-        elastic_port: 32766
-        username: "elastic"
-        password: "test"
-        metrics_index: "krkn-metrics"
-        alerts_index: "krkn-alerts"
-        telemetry_index: "krkn-telemetry"
-    telemetry:
-        enabled: False
-        api_url: https://ulnmf9xv7j.execute-api.us-west-2.amazonaws.com/production
-        username: username
-        password: password
-        prometheus_backup: False
-        full_prometheus_backup: False
-        backup_threads: 5
-        archive_path: /tmp
-        max_retries: 0
-        run_tag: ''
-        archive_size: 500000
-        telemetry_group: ''
-        logs_backup: False
-        events_backup: False
----
-kind: ConfigMap
-apiVersion: v1
-immutable: false
-metadata:
-  name: kraken-config-common
-  namespace: "{{- $namespace -}}"
-  labels:
-    app.kubernetes.io/name: "kraken-config-common"
-    {{- include "chaos-kraken.labels" $ | nindent 4 }}
-  annotations:
-    {{- include "chaos-kraken.annotations" $ | nindent 4 }}
-data:
-  startx_alerts.yaml: |-
-    - expr: avg_over_time(histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[2m]))[5m:]) > 0.01
-      description: 5 minutes avg. etcd fsync latency on {{`{{`}}$labels.pod{{`}}`}} higher than 10ms {{`{{`}}$value{{`}}`}}
-      severity: error
-    - expr: avg_over_time(histogram_quantile(0.99, rate(etcd_network_peer_round_trip_time_seconds_bucket[5m]))[5m:]) > 0.1
-      description: 5 minutes avg. etcd netowrk peer round trip on {{`{{`}}$labels.pod{{`}}`}} higher than 100ms {{`{{`}}$value{{`}}`}}
-      severity: info
-    - expr: increase(etcd_server_leader_changes_seen_total[2m]) > 0
-      description: etcd leader changes observed
-      severity: critical
-  kube_burner.yaml: |-
-    ---
-    global:
-      writeToFile: true
-      metricsDirectory: collected-metrics
-      measurements:
-        - name: podLatency
-          esIndex: kraken
-      indexerConfig:
-        enabled: true
-        esServers: [http://elasticsearch.openshift-logging.svc.cluster.local:9200]
-        insecureSkipVerify: true
-        defaultIndex: kraken
-        type: elastic
-  metrics-aggregated.yaml: |-
-    metrics:
-    # API server
-      - query: histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{apiserver="kube-apiserver", verb!~"WATCH", subresource!="log"}[2m])) by (verb,resource,subresource,instance,le)) > 0
-        metricName: API99thLatency
-      - query: sum(irate(apiserver_request_total{apiserver="kube-apiserver",verb!="WATCH",subresource!="log"}[2m])) by (verb,instance,resource,code) > 0
-        metricName: APIRequestRate
-      - query: sum(apiserver_current_inflight_requests{}) by (request_kind) > 0
-        metricName: APIInflightRequests
-    # Container & pod metrics
-      - query: (sum(container_memory_rss{name!="",container!="POD",namespace=~"openshift-(etcd|oauth-apiserver|.*apiserver|ovn-kubernetes|sdn|ingress|authentication|.*controller-manager|.*scheduler)"}) by (container, pod, namespace, node) and on (node) kube_node_role{role="master"}) > 0
-        metricName: containerMemory-Masters
-      - query: (sum(irate(container_cpu_usage_seconds_total{name!="",container!="POD",namespace=~"openshift-(etcd|oauth-apiserver|sdn|ovn-kubernetes|.*apiserver|authentication|.*controller-manager|.*scheduler)"}[2m]) * 100) by (container, pod, namespace, node) and on (node) kube_node_role{role="master"}) > 0
-        metricName: containerCPU-Masters
-      - query: (sum(irate(container_cpu_usage_seconds_total{pod!="",container="prometheus",namespace="openshift-monitoring"}[2m]) * 100) by (container, pod, namespace, node) and on (node) kube_node_role{role="infra"}) > 0
-        metricName: containerCPU-Prometheus
-      - query: (avg(irate(container_cpu_usage_seconds_total{name!="",container!="POD",namespace=~"openshift-(sdn|ovn-kubernetes|ingress)"}[2m]) * 100 and on (node) kube_node_role{role="worker"}) by (namespace, container)) > 0
-        metricName: containerCPU-AggregatedWorkers
-      - query: (avg(irate(container_cpu_usage_seconds_total{name!="",container!="POD",namespace=~"openshift-(sdn|ovn-kubernetes|ingress|monitoring|image-registry|logging)"}[2m]) * 100 and on (node) kube_node_role{role="infra"}) by (namespace, container)) > 0
-        metricName: containerCPU-AggregatedInfra
-      - query: (sum(container_memory_rss{pod!="",namespace="openshift-monitoring",name!="",container="prometheus"}) by (container, pod, namespace, node) and on (node) kube_node_role{role="infra"}) > 0
-        metricName: containerMemory-Prometheus
-      - query: avg(container_memory_rss{name!="",container!="POD",namespace=~"openshift-(sdn|ovn-kubernetes|ingress)"} and on (node) kube_node_role{role="worker"}) by (container, namespace)
-        metricName: containerMemory-AggregatedWorkers
-      - query: avg(container_memory_rss{name!="",container!="POD",namespace=~"openshift-(sdn|ovn-kubernetes|ingress|monitoring|image-registry|logging)"} and on (node) kube_node_role{role="infra"}) by (container, namespace)
-        metricName: containerMemory-AggregatedInfra
-    # Node metrics
-      - query: (sum(irate(node_cpu_seconds_total[2m])) by (mode,instance) and on (instance) label_replace(kube_node_role{role="master"}, "instance", "$1", "node", "(.+)")) > 0
-        metricName: nodeCPU-Masters
-      - query: (avg((sum(irate(node_cpu_seconds_total[2m])) by (mode,instance) and on (instance) label_replace(kube_node_role{role="worker"}, "instance", "$1", "node", "(.+)"))) by (mode)) > 0
-        metricName: nodeCPU-AggregatedWorkers
-      - query: (avg((sum(irate(node_cpu_seconds_total[2m])) by (mode,instance) and on (instance) label_replace(kube_node_role{role="infra"}, "instance", "$1", "node", "(.+)"))) by (mode)) > 0
-        metricName: nodeCPU-AggregatedInfra
-      - query: avg(node_memory_MemAvailable_bytes) by (instance) and on (instance) label_replace(kube_node_role{role="master"}, "instance", "$1", "node", "(.+)")
-        metricName: nodeMemoryAvailable-Masters
-      - query: avg(node_memory_MemAvailable_bytes and on (instance) label_replace(kube_node_role{role="worker"}, "instance", "$1", "node", "(.+)"))
-        metricName: nodeMemoryAvailable-AggregatedWorkers
-      - query: avg(node_memory_MemAvailable_bytes and on (instance) label_replace(kube_node_role{role="infra"}, "instance", "$1", "node", "(.+)"))
-        metricName: nodeMemoryAvailable-AggregatedInfra
-      - query: avg(node_memory_Active_bytes) by (instance) and on (instance) label_replace(kube_node_role{role="master"}, "instance", "$1", "node", "(.+)")
-        metricName: nodeMemoryActive-Masters
-      - query: avg(node_memory_Active_bytes and on (instance) label_replace(kube_node_role{role="worker"}, "instance", "$1", "node", "(.+)"))
-        metricName: nodeMemoryActive-AggregatedWorkers
-      - query: avg(avg(node_memory_Active_bytes) by (instance) and on (instance) label_replace(kube_node_role{role="infra"}, "instance", "$1", "node", "(.+)"))
-        metricName: nodeMemoryActive-AggregatedInfra
-      - query: avg(node_memory_Cached_bytes) by (instance) + avg(node_memory_Buffers_bytes) by (instance) and on (instance) label_replace(kube_node_role{role="master"}, "instance", "$1", "node", "(.+)")
-        metricName: nodeMemoryCached+nodeMemoryBuffers-Masters
-      - query: avg(node_memory_Cached_bytes + node_memory_Buffers_bytes and on (instance) label_replace(kube_node_role{role="worker"}, "instance", "$1", "node", "(.+)"))
-        metricName: nodeMemoryCached+nodeMemoryBuffers-AggregatedWorkers
-      - query: avg(node_memory_Cached_bytes + node_memory_Buffers_bytes and on (instance) label_replace(kube_node_role{role="infra"}, "instance", "$1", "node", "(.+)"))
-        metricName: nodeMemoryCached+nodeMemoryBuffers-AggregatedInfra
-      - query: irate(node_network_receive_bytes_total{device=~"^(ens|eth|bond|team).*"}[2m]) and on (instance) label_replace(kube_node_role{role="master"}, "instance", "$1", "node", "(.+)")
-        metricName: rxNetworkBytes-Masters
-      - query: avg(irate(node_network_receive_bytes_total{device=~"^(ens|eth|bond|team).*"}[2m]) and on (instance) label_replace(kube_node_role{role="worker"}, "instance", "$1", "node", "(.+)")) by (device)
-        metricName: rxNetworkBytes-AggregatedWorkers
-      - query: avg(irate(node_network_receive_bytes_total{device=~"^(ens|eth|bond|team).*"}[2m]) and on (instance) label_replace(kube_node_role{role="infra"}, "instance", "$1", "node", "(.+)")) by (device)
-        metricName: rxNetworkBytes-AggregatedInfra
-      - query: irate(node_network_transmit_bytes_total{device=~"^(ens|eth|bond|team).*"}[2m]) and on (instance) label_replace(kube_node_role{role="master"}, "instance", "$1", "node", "(.+)")
-        metricName: txNetworkBytes-Masters
-      - query: avg(irate(node_network_transmit_bytes_total{device=~"^(ens|eth|bond|team).*"}[2m]) and on (instance) label_replace(kube_node_role{role="worker"}, "instance", "$1", "node", "(.+)")) by (device)
-        metricName: txNetworkBytes-AggregatedWorkers
-      - query: avg(irate(node_network_transmit_bytes_total{device=~"^(ens|eth|bond|team).*"}[2m]) and on (instance) label_replace(kube_node_role{role="infra"}, "instance", "$1", "node", "(.+)")) by (device)
-        metricName: txNetworkBytes-AggregatedInfra
-      - query: rate(node_disk_written_bytes_total{device!~"^(dm|rb).*"}[2m]) and on (instance) label_replace(kube_node_role{role="master"}, "instance", "$1", "node", "(.+)")
-        metricName: nodeDiskWrittenBytes-Masters
-      - query: avg(rate(node_disk_written_bytes_total{device!~"^(dm|rb).*"}[2m]) and on (instance) label_replace(kube_node_role{role="worker"}, "instance", "$1", "node", "(.+)")) by (device)
-        metricName: nodeDiskWrittenBytes-AggregatedWorkers
-      - query: avg(rate(node_disk_written_bytes_total{device!~"^(dm|rb).*"}[2m]) and on (instance) label_replace(kube_node_role{role="infra"}, "instance", "$1", "node", "(.+)")) by (device)
-        metricName: nodeDiskWrittenBytes-AggregatedInfra
-      - query: rate(node_disk_read_bytes_total{device!~"^(dm|rb).*"}[2m]) and on (instance) label_replace(kube_node_role{role="master"}, "instance", "$1", "node", "(.+)")
-        metricName: nodeDiskReadBytes-Masters
-      - query: avg(rate(node_disk_read_bytes_total{device!~"^(dm|rb).*"}[2m]) and on (instance) label_replace(kube_node_role{role="worker"}, "instance", "$1", "node", "(.+)")) by (device)
-        metricName: nodeDiskReadBytes-AggregatedWorkers
-      - query: avg(rate(node_disk_read_bytes_total{device!~"^(dm|rb).*"}[2m]) and on (instance) label_replace(kube_node_role{role="infra"}, "instance", "$1", "node", "(.+)")) by (device)
-        metricName: nodeDiskReadBytes-AggregatedInfra
-    # Etcd metrics
-      - query: sum(rate(etcd_server_leader_changes_seen_total[2m]))
-        metricName: etcdLeaderChangesRate
-      - query: etcd_server_is_leader > 0
-        metricName: etcdServerIsLeader
-      - query: histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[2m]))
-        metricName: 99thEtcdDiskBackendCommitDurationSeconds
-      - query: histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[2m]))
-        metricName: 99thEtcdDiskWalFsyncDurationSeconds
-      - query: histogram_quantile(0.99, rate(etcd_network_peer_round_trip_time_seconds_bucket[5m]))
-        metricName: 99thEtcdRoundTripTimeSeconds
-      - query: etcd_mvcc_db_total_size_in_bytes
-        metricName: etcdDBPhysicalSizeBytes
-      - query: etcd_mvcc_db_total_size_in_use_in_bytes
-        metricName: etcdDBLogicalSizeBytes
-      - query: sum by (cluster_version)(etcd_cluster_version)
-        metricName: etcdVersion
-        instant: true
-      - query: sum(rate(etcd_object_counts{}[5m])) by (resource) > 0
-        metricName: etcdObjectCount
-      - query: histogram_quantile(0.99,sum(rate(etcd_request_duration_seconds_bucket[2m])) by (le,operation,apiserver)) > 0
-        metricName: P99APIEtcdRequestLatency
-    # Cluster metrics
-      - query: count(kube_namespace_created)
-        metricName: namespaceCount
-      - query: sum(kube_pod_status_phase{}) by (phase)
-        metricName: podStatusCount
-      - query: count(kube_secret_info{})
-        metricName: secretCount
-      - query: count(kube_deployment_labels{})
-        metricName: deploymentCount
-      - query: count(kube_configmap_info{})
-        metricName: configmapCount
-      - query: count(kube_service_info{})
-        metricName: serviceCount
-      - query: kube_node_role
-        metricName: nodeRoles
-        instant: true
-      - query: sum(kube_node_status_condition{status="true"}) by (condition)
-        metricName: nodeStatus
-      - query: (sum(rate(container_fs_writes_bytes_total{container!="",device!~".+dm.+"}[5m])) by (device, container, node) and on (node) kube_node_role{role="master"}) > 0
-        metricName: containerDiskUsage
-      - query: cluster_version{type="completed"}
-        metricName: clusterVersion
-        instant: true
-    # Golang metrics
-      - query: go_memstats_heap_alloc_bytes{job=~"apiserver|api|etcd"}
-        metricName: goHeapAllocBytes
-      - query: go_memstats_heap_inuse_bytes{job=~"apiserver|api|etcd"}
-        metricName: goHeapInuseBytes
-      - query: go_gc_duration_seconds{job=~"apiserver|api|etcd",quantile="1"}
-        metricName: goGCDurationSeconds
+{{- end }}
 {{- end -}}

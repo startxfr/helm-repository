@@ -1,0 +1,69 @@
+# Instance. Delete it, and wait for it to be gone, before deleting the -project Application.
+# ServerSideApply : the chaos-mesh definitions are too large for a client side apply.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: chaos-mesh-instance
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: chaos-mesh
+    server: https://kubernetes.default.svc
+  project: chaos-mesh
+  source:
+    chart: chaos-mesh
+    helm:
+      values: |
+        project:
+          enabled: false
+        mesh:
+          enabled: true
+          # the Prometheus volume never binds with a WaitForFirstConsumer StorageClass
+          prometheus:
+            create: false
+    repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
+    # pin an exact version in production (ADR-0004)
+    targetRevision: 21.3.x
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      # keep the ignored fields below when a sync is triggered by another difference
+      - RespectIgnoreDifferences=true
+  # The upstream chart generates a new certificate authority at every render : without these rules the Application
+  # is always OutOfSync and the certificates rotate at every refresh.
+  ignoreDifferences:
+    - kind: Secret
+      name: chaos-mesh-webhook-certs
+      jsonPointers:
+        - /data
+    - kind: Secret
+      name: chaos-mesh-chaosd-client-certs
+      jsonPointers:
+        - /data
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      name: chaos-mesh-mutation
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: chaos-mesh-validation
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: chaos-mesh-validation-auth
+      jqPathExpressions:
+        - .webhooks[].clientConfig.caBundle
+    - group: apps
+      kind: Deployment
+      name: chaos-controller-manager
+      jqPathExpressions:
+        - .spec.template.metadata.annotations.rollme
