@@ -74,6 +74,36 @@ application:
           selfHeal: true
         syncOptions:
         - ServerSideApply=true
+        - RespectIgnoreDifferences=true
+      ignoreDifferences: |
+        - kind: Secret
+          name: chaos-mesh-webhook-certs
+          jsonPointers:
+          - /data
+        - kind: Secret
+          name: chaos-mesh-chaosd-client-certs
+          jsonPointers:
+          - /data
+        - group: admissionregistration.k8s.io
+          kind: MutatingWebhookConfiguration
+          name: chaos-mesh-mutation
+          jqPathExpressions:
+          - .webhooks[].clientConfig.caBundle
+        - group: admissionregistration.k8s.io
+          kind: ValidatingWebhookConfiguration
+          name: chaos-mesh-validation
+          jqPathExpressions:
+          - .webhooks[].clientConfig.caBundle
+        - group: admissionregistration.k8s.io
+          kind: ValidatingWebhookConfiguration
+          name: chaos-mesh-validation-auth
+          jqPathExpressions:
+          - .webhooks[].clientConfig.caBundle
+        - group: apps
+          kind: Deployment
+          name: chaos-controller-manager
+          jqPathExpressions:
+          - .spec.template.metadata.annotations.rollme
     - name: 'chaos-mesh-project'
       namespace: 'openshift-gitops'
       finalizer: false

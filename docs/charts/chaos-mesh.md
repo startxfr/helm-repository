@@ -179,6 +179,10 @@ Things to know with ArgoCD :
 - **Prometheus volume** : with a `WaitForFirstConsumer` StorageClass the volume claim stays `Pending` and ArgoCD waits
   for it before creating the pod that would bind it. The example sets `mesh.prometheus.create: false` ; otherwise give
   an `Immediate` StorageClass.
+- **Generated certificates** : the upstream chart generates a new certificate authority, the webhook and chaosd
+  certificates and a `rollme` annotation at every render. The instance Application ignores these fields
+  (`ignoreDifferences` and `RespectIgnoreDifferences=true`) : without it the Application is always `OutOfSync` and
+  the certificates rotate at every refresh.
 - **AppProject** : the chart creates `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` resources ;
   both are in the `clusterResourceWhitelist` of the example.
 
