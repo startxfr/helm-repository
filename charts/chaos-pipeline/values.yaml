@@ -79,7 +79,9 @@ pipeline:
   # Namespace where krkn starts the helper pods of the node level scenarios (default of the workload-namespace pipeline
   # parameter, value of the ${WORKLOAD_NAMESPACE} placeholder). Added to privilegedNamespaces. Time scenarios always use default
   workloadNamespace: default
-  # Fail a scenario when a critical alert is firing after the chaos (prometheus is discovered on OpenShift)
+  # Fail a scenario when a critical alert is firing after the chaos. Needs the right to create a token for the
+  # prometheus-k8s service account of openshift-monitoring (add it with rbac.extraRules or rbac.clusterAdmin):
+  # without it krkn silently skips the check
   checkCriticalAlerts: false
   # HTTP health check run by krkn before and after each scenario, on the health-check-url pipeline parameter
   healthCheck:
@@ -88,6 +90,7 @@ pipeline:
     # Verify the TLS certificate of the endpoint (set false for a self-signed route)
     verify: true
     # Name of an existing Secret with the optional keys bearer-token and auth ("username,password")
+    # Avoid the characters " and \ in these values
     existingSecret: ""
   # Verify the signature of the workload images started by krkn
   imageSignatureVerification: true
