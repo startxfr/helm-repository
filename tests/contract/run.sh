@@ -279,7 +279,7 @@ test_chaos-kraken() {
 test_chaos-pipeline() {
     render default && assert_count "nothing is rendered by default" Task 0
     render enabled --set pipeline.enabled=true && {
-        assert_count "three tasks" Task 3
+        assert_count "four tasks" Task 4
         assert_count "two pipelines" Pipeline 2
         assert_count "no PipelineRun: nothing runs at install time" PipelineRun 0
         assert_count "no custom SecurityContextConstraints" SecurityContextConstraints 0
@@ -289,7 +289,17 @@ test_chaos-pipeline() {
         assert_sel "node scenarios are disabled by default" 'select(.kind == "ConfigMap") | .data | has("30-node-reboot-worker.yaml")' false
         assert_sel "a run can choose its scenarios" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "scenarios") | .type' array
         assert_sel "every scenario task is guarded by the scenarios parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.tasks[1].when[0].values[0]' '$(params.scenarios[*])'
+        assert_sel "a run that names no scenario runs none" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "scenarios") | .default | length' 0
+        assert_sel "the application pipeline has the same empty default" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "scenarios") | .default | length' 0
+        assert_sel "the ClusterOperator check is the last finally task" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.finally[1].taskRef.name' clusteroperator-check
+        assert_sel "the ClusterOperator check is off by default" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "clusteroperator-check") | .default' false
         assert_sel "the application target is a pipeline parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "target-namespace") | .name' target-namespace
+    }
+    render postcheck --set pipeline.enabled=true --set pipeline.postCheck.clusterOperators.enabled=true \
+        --set 'pipeline.postCheck.clusterOperators.ignore={one,two}' --set 'pipeline.infra.defaultScenarios={10-pods-monitoring}' && {
+        assert_sel "the ClusterOperator check can be enabled by values" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "clusteroperator-check") | .default' true
+        assert_sel "ignored operators are passed as a comma separated list" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "clusteroperator-ignore") | .default' one,two
+        assert_sel "defaultScenarios restores a default list" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "scenarios") | .default[0]' 10-pods-monitoring
     }
 }
 

@@ -75,10 +75,10 @@ annotations:
     url: https://helm-repository.readthedocs.io/en/latest/pgp_keys.asc
   # Artifacthub changes logs
   artifacthub.io/changes: |
+    - kind: changed
+      description: "The scenarios pipeline parameter is empty by default: a PipelineRun that does not name scenarios runs none (was every enabled scenario); defaultScenarios restores a default list"
     - kind: added
-      description: "Pipeline parameter scenarios: choose the scenarios of a run; parameters recovery-time, node-selector and workload-namespace"
-    - kind: added
-      description: "Health check with bearer token or basic auth from a Secret, TLS verification switch, critical alerts check"
+      description: "Optional final check of the OpenShift ClusterOperators (task clusteroperator-check, pipeline.postCheck.clusterOperators, off by default)"
   # Artifacthub images used by this chart
   artifacthub.io/images: |
     - name: krkn

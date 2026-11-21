@@ -118,6 +118,17 @@ pipeline:
     url: http://cerberus.chaos-cerberus.svc.cluster.local:8080
     # Maximum time to wait for a healthy signal (in seconds)
     timeout: 300
+  # Checks run at the end of every pipeline run, after the scenarios (finally tasks)
+  postCheck:
+    # Check that every OpenShift ClusterOperator is available and not degraded. A failed check fails the PipelineRun
+    # These values are the defaults of the clusteroperator-* pipeline parameters: a PipelineRun can override them
+    clusterOperators:
+      # Run the check at the end of the pipelines
+      enabled: false
+      # Names of the ClusterOperators left out of the check
+      ignore: []
+      # Maximum time to wait for the ClusterOperators to be healthy (in seconds)
+      timeout: 600
   # Pipeline chaos-infra: chaos testing of the cluster infrastructure
   # Each enabled scenario is one task, run in alphabetical order of its name. A scenario has:
   # - enabled: add this scenario to the pipeline
@@ -130,6 +141,9 @@ pipeline:
   infra:
     # Deploy the chaos-infra pipeline
     enabled: true
+    # Scenarios run when a PipelineRun does not set the scenarios parameter (names of enabled scenarios)
+    # Empty by default: such a run executes no scenario. A PipelineRun names the scenarios it wants
+    defaultScenarios: []
     # Default HTTP endpoint checked by krkn before and after each scenario (empty to disable)
     healthCheckUrl: ""
     # Default time given to a target to recover, in seconds (pipeline parameter recovery-time)
@@ -248,6 +262,9 @@ pipeline:
     targetNamespace: ""
     # Default label selector of the application pods (pipeline parameter label-selector, empty for every pod)
     labelSelector: ""
+    # Scenarios run when a PipelineRun does not set the scenarios parameter (names of enabled scenarios)
+    # Empty by default: such a run executes no scenario. A PipelineRun names the scenarios it wants
+    defaultScenarios: []
     # Default HTTP endpoint checked by krkn before and after each scenario (empty to disable)
     healthCheckUrl: ""
     # Default time given to a target to recover, in seconds (pipeline parameter recovery-time)

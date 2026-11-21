@@ -127,12 +127,17 @@ helm install chaos-pipeline-deploy startx/chaos-pipeline -f https://raw.githubus
 | pipeline.cerberus.url                  | http://cerberus.chaos-cerberus.svc.cluster.local:8080 | Default of the `cerberus-url` pipeline parameter                                                                                               |
 | pipeline.cerberus.timeout              | 300                                                   | Default of the `cerberus-timeout` pipeline parameter (seconds)                                                                                 |
 | pipeline.infra.enabled                 | true                                                  | Deploy the `chaos-infra` pipeline                                                                                                              |
+| pipeline.postCheck.clusterOperators.enabled| false                                                 | Default of the `clusteroperator-check` parameter: final check that every ClusterOperator is available and not degraded                         |
+| pipeline.postCheck.clusterOperators.ignore| []                                                    | Default of the `clusteroperator-ignore` parameter: ClusterOperators left out of the check                                                      |
+| pipeline.postCheck.clusterOperators.timeout| 600                                                   | Default of the `clusteroperator-timeout` parameter (seconds)                                                                                   |
+| pipeline.infra.defaultScenarios        | []                                                    | Default of the `scenarios` parameter: scenarios of a run that does not name any (empty, no scenario runs)                                      |
 | pipeline.infra.healthCheckUrl          | ""                                                    | Default of the `health-check-url` parameter: HTTP endpoint checked by krkn before and after each scenario                                      |
 | pipeline.infra.recoveryTime            | 180                                                   | Default of the `recovery-time` parameter (seconds)                                                                                             |
 | pipeline.infra.scenarios               | {...}                                                 | Scenarios of the `chaos-infra` pipeline (see below)                                                                                            |
 | pipeline.application.enabled           | true                                                  | Deploy the `chaos-application` pipeline                                                                                                        |
 | pipeline.application.targetNamespace   | ""                                                    | Default of the `target-namespace` parameter                                                                                                    |
 | pipeline.application.labelSelector     | ""                                                    | Default of the `label-selector` parameter                                                                                                      |
+| pipeline.application.defaultScenarios  | []                                                    | Default of the `scenarios` parameter (empty, no scenario runs)                                                                                 |
 | pipeline.application.healthCheckUrl    | ""                                                    | Default of the `health-check-url` parameter                                                                                                    |
 | pipeline.application.recoveryTime      | 120                                                   | Default of the `recovery-time` parameter (seconds)                                                                                             |
 | pipeline.application.scenarios         | {...}                                                 | Scenarios of the `chaos-application` pipeline (see below)                                                                                      |
@@ -189,7 +194,7 @@ placeholders: declare one scenario per target, and choose the ones to run with t
 
 | Parameter        | Pipelines         | Description                                                           |
 | ---------------- | ----------------- | --------------------------------------------------------------------- |
-| scenarios        | both              | Array of the scenario names to run, among the enabled ones (default, all of them) |
+| scenarios        | both              | Array of the scenario names to run, among the enabled ones (default `defaultScenarios`: empty, no scenario runs) |
 | recovery-time    | both              | Time given to a target to recover, in seconds                         |
 | node-selector    | both              | Label selector of the nodes targeted by the node level scenarios      |
 | workload-namespace | both              | Namespace of the krkn helper pods of the node level scenarios         |
@@ -197,12 +202,22 @@ placeholders: declare one scenario per target, and choose the ones to run with t
 | cerberus-url     | both              | URL of the cerberus signal                                            |
 | cerberus-timeout | both              | Maximum time to wait for a healthy signal (seconds)                   |
 | health-check-url | both              | HTTP endpoint checked by krkn before and after each scenario          |
+| clusteroperator-check | both         | `true` to check at the end that every ClusterOperator is available and not degraded |
+| clusteroperator-ignore | both        | Names of the ClusterOperators left out of this check, separated by commas |
+| clusteroperator-timeout | both       | Maximum time to wait for healthy ClusterOperators (seconds)           |
 | target-namespace | chaos-application | Namespace of the application under chaos                              |
 | label-selector   | chaos-application | Label selector of the application pods (empty for every pod)          |
 
 A run is: `cerberus-gate` (waits for a healthy signal, fails after the timeout) → one task per scenario (each one fails
-the run when krkn, its health check or the cerberus signal fails) → `cerberus-final-check`, always executed.
-A scenario that is not listed in the `scenarios` parameter is skipped, and the following ones still run.
+the run when krkn, its health check or the cerberus signal fails) → `cerberus-final-check` and
+`clusteroperator-final-check`, always executed when they are enabled.
+A scenario that is not listed in the `scenarios` parameter is skipped, and the following ones still run. The parameter
+is empty by default: a PipelineRun that does not set it runs no scenario (only the gate and the final checks), so
+a run started by mistake injects nothing. Set `pipeline.infra.defaultScenarios` or
+`pipeline.application.defaultScenarios` to give such a run a list of scenarios.
+The `clusteroperator-check` task (OpenShift only) waits until every ClusterOperator is `Available` and not `Degraded`,
+fails the PipelineRun after `clusteroperator-timeout` and lists the unhealthy operators in its `unhealthy` result.
+It reads the ClusterOperators with the `chaos-pipeline` service account and needs no extra right.
 Run one chaos PipelineRun at a time: two concurrent runs would each see the failures injected by the other.
 
 ### Access rights
@@ -239,6 +254,11 @@ spec:
     name: chaos-infra
   taskRunTemplate:
     serviceAccountName: chaos-pipeline
+  params:
+    - name: scenarios
+      value: ["10-pods-monitoring", "11-pods-ingress", "12-pods-apiserver"]
+    - name: clusteroperator-check
+      value: "true"
 YAML
 tkn pipelinerun logs -n chaos-pipeline --last -f
 ```
@@ -259,6 +279,8 @@ spec:
   taskRunTemplate:
     serviceAccountName: chaos-pipeline
   params:
+    - name: scenarios
+      value: ["10-pods", "20-container"]
     - name: target-namespace
       value: my-application
     - name: label-selector
