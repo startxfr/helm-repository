@@ -63,6 +63,8 @@ Do not `git add -f` a lock; after changing a pin there is nothing else to commit
   privileged SCC is behind `monkey.privileged`. Never reintroduce a literal password or a cluster-wide binding.
 - Open, waiting for a decision of the maintainer (behaviour changes, do not fix on sight):
   - `chaos-litmus` grants its privileged SCC to nine service accounts of the namespace, `default` included;
+  - `chaos-monkey` (`monkey.privileged`), `chaos-litmus` and `chaos-mesh` still create their own copy of a privileged
+    SCC; the krkn based charts bind the standard `system:openshift:scc:privileged` ClusterRole instead. Align them;
   - the `chaos-mesh` route keeps `insecureEdgeTerminationPolicy: Allow`;
   - neither `chaos-monkey` with the restricted SCC nor the `chaos-mesh` ArgoCD `ignoreDifferences` were run on a cluster.
 
