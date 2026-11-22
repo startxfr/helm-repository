@@ -24,10 +24,10 @@ CI handles the rest:
 python3 .tools/bump-pins.py --levels      # level 0 (no internal dependency), level 1, level 2 ... one line per level
 # for N = 0, 1, 2 ... in order, with VERSION = <new minor>.N :
 for c in <charts of level N>; do INTERACTIVE=false VERSION=<new minor>.N DESC="first release of <new minor>, level N" make release CHART=$c; done
-make publish       # the index must list this level before the next round starts (publication is the release owner's step)
+make publish       # the index must list this level before the next round starts. WARNING: make publish merges devel into master and pushes both branches, at each round
 ```
 
-Level 0 is released as `<new minor>.0`, level 1 as `<new minor>.1` (its pins resolve to `.0`), level 2 as `<new minor>.2`. Set `.tools/repo-release` to the highest version released. The pins are never taken from the previous minor; `python3 .tools/bump-pins.py --check` proves the result.
+`make publish` merges `devel` into `master` and pushes both each time: it is the release owner's step, not to be run casually between rounds. Level 0 is released as `<new minor>.0`, level 1 as `<new minor>.1` (its pins resolve to `.0`), level 2 as `<new minor>.2`. Set `.tools/repo-release` to the highest version released. The pins are never taken from the previous minor; `python3 .tools/bump-pins.py --check` proves the result.
 
 ## Usage
 

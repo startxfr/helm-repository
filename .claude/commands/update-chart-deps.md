@@ -21,8 +21,8 @@ Examples:
 
 ## What this command does
 
-1. Lists the pins older than the latest published version (`.tools/bump-pins.py --lagging`)
-2. Releases each lagging dependent (`make release CHART=<name>`): the release tool re-resolves its pins on the published versions below the new version, and refuses (nothing written) when the index is unreachable or a dependency was never published
+1. Lists the dependents that pin a version below the highest published version of a dependency (`.tools/bump-pins.py --lagging`), with the version each must exceed
+2. Releases each lagging dependent **at a version above the dependency's** (`VERSION=<above> make release CHART=<name>`): the release tool re-resolves its pins on the published versions below the new version, and refuses (nothing written) when the index is unreachable or a dependency was never published
 3. Publishes the result (`make publish-chart` / `make publish`) when the user asks for it
 
 It never edits a `version:` of a dependency by hand and never pins a dependency on a version that is not yet published (publish the dependency first, in a release of its own).
@@ -54,7 +54,7 @@ If the check fails, stop and report: the tree is in the state of an unfinished r
 python3 .tools/bump-pins.py --lagging
 ```
 
-One line per pin: `<chart>: <dependency> pinned on <pin>, <latest> is published`. Keep the charts of `TARGET_FAMILY` (`chaos`, `chaos-*` / `cluster-*` / `example-*`). If the index cannot be downloaded the tool exits with code 2: stop and report, never fall back to the local tree.
+One line per pin: `<chart>: <dependency> pins <pin>, <B> is published: release <chart> at a version above <B>`. The version of the release must be above `<B>`, otherwise the pin resolves below it and the release prints a `WARNING`. A dependency whose highest published version is the version of the dependent itself is not listed (state right after a full release). Keep the charts of `TARGET_FAMILY` (`chaos`, `chaos-*` / `cluster-*` / `example-*`). If the index cannot be downloaded the tool exits with code 2: stop and report, never fall back to the local tree.
 
 Print the list grouped by family. If `DRY_RUN=true`, stop here.
 
@@ -64,7 +64,7 @@ For each chart of the list:
 
 ```bash
 export PATH="/home/cl/.local/bin:$PATH"
-INTERACTIVE=false DESC="pin <dependency> on <version>" make release CHART=<name>
+INTERACTIVE=false VERSION=<a version above <B>, e.g. B with the patch + 1> DESC="pin <dependency> on <B>" make release CHART=<name>
 ```
 
 The release tool rewrites the pins (`bump-pins.py --apply --only <chart> --below <new version>`) before it bumps and packages. A chart that fails is reported, the others continue. Never release a dependent before the dependency it must take is published.

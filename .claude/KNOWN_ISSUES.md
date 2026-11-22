@@ -59,7 +59,10 @@ Do not `git add -f` a lock; after changing a pin there is nothing else to commit
   proved by `bump-pins.py --check` and by the preflight (they download the index). An unreachable index stops the tool
   with exit code 2: it never falls back to the local tree.
 - A fix in `project`/`operator` does not reach its dependents by itself: release the dependency, publish, then release the
-  dependents (`sx-helm changed-charts` lists the dependents whose pin lags: `bump-pins.py --lagging`).
+  dependents **at a version above the dependency's** (fix published as 21.3.413: `VERSION=21.3.414 make release CHART=...`;
+  at 21.3.413 the pin resolves below it and the release prints a `WARNING`). `sx-helm changed-charts` lists the dependents
+  and the version to exceed (`bump-pins.py --lagging`). A published index with a version that is not a string (an unquoted
+  `version: 18.11`) stops every release (fail closed): the message names the entry, quote the version in the index.
 - A new chart has nothing published to pin: the tool refuses, release the dependencies first (alone), then the dependents.
   The first release of an OpenShift minor is made in rounds, one per level of `bump-pins.py --levels` (ADR-0006).
 
