@@ -181,162 +181,6 @@
                 "namespace"
             ],
             "properties": {
-                "config": {
-                    "type": "object",
-                    "title": "Operator configuration",
-                    "default": {},
-                    "description": "Optional configuration for Operator",
-                    "examples": [{
-                            "infra": true
-                        },
-                        {
-                            "env": [{
-                                "name": "FOO",
-                                "value": "bar"
-                            }]
-                        }
-                    ],
-                    "properties": {
-                        "env": {
-                            "type": "object",
-                            "title": "Environment variables",
-                            "default": {},
-                            "description": "Hash of environment variables",
-                            "examples": [{
-                                "name": "FOO",
-                                "value": "bar"
-                            }]
-                        },
-                        "infra": {
-                            "type": "boolean",
-                            "title": "Infra operator",
-                            "description": "If enabled the operator will have toleration and node selector set to stick infrastructure node",
-                            "default": false
-                        },
-                        "nodeSelector": {
-                            "type": "object",
-                            "title": "Node Selector",
-                            "default": {},
-                            "description": "Hash of key and values for node-selecting the operator deployment",
-                            "examples": [{
-                                "node-role.kubernetes.io/worker": ""
-                            }]
-                        },
-                        "resources": {
-                            "type": "object",
-                            "title": "Resources definitions for this operator",
-                            "default": {},
-                            "description": "Hash of limits and requests",
-                            "properties": {
-                                "limits": {
-                                    "default": {},
-                                    "description": "Hash of cpu and memory limits",
-                                    "properties": {
-                                        "cpu": {
-                                            "default": "500m",
-                                            "description": "CPU limits",
-                                            "title": "CPU limits",
-                                            "type": "string"
-                                        },
-                                        "memory": {
-                                            "default": "512Mi",
-                                            "description": "Memory limits",
-                                            "title": "Memory limits",
-                                            "type": "string"
-                                        }
-                                    },
-                                    "title": "Resources definitions limits",
-                                    "type": "object"
-                                },
-                                "requests": {
-                                    "default": {},
-                                    "description": "Hash of cpu and memory requests",
-                                    "properties": {
-                                        "cpu": {
-                                            "default": "250m",
-                                            "description": "CPU requests",
-                                            "title": "CPU requests",
-                                            "type": "string"
-                                        },
-                                        "memory": {
-                                            "default": "256Mi",
-                                            "description": "Memory requests",
-                                            "title": "Memory requests",
-                                            "type": "string"
-                                        }
-                                    },
-                                    "title": "Resources definitions requests",
-                                    "type": "object"
-                                }
-                            }
-                        },
-                        "tolerations": {
-                            "type": "array",
-                            "title": "Tolerations",
-                            "default": [],
-                            "description": "List of tolerations for this operator",
-                            "examples": [{
-                                "key": "mytaint",
-                                "operator": "Exists"
-                            }],
-                            "items": {
-                                "type": "object",
-                                "title": "Toleration item",
-                                "description": "Toleration rule",
-                                "properties": {
-                                    "effect": {
-                                        "type": "string",
-                                        "title": "Effect",
-                                        "description": "The effect for this toleration",
-                                        "default": "NoSchedule"
-                                    },
-                                    "key": {
-                                        "type": "string",
-                                        "title": "Key",
-                                        "description": "The key for this toleration",
-                                        "default": "exampleKey",
-                                        "examples": [
-                                            "node-role.kubernetes.io/worker"
-                                        ]
-                                    },
-                                    "operator": {
-                                        "type": "string",
-                                        "title": "Operator",
-                                        "description": "The operator for this toleration",
-                                        "default": "Exists",
-                                        "enum": [
-                                            "Exists",
-                                            "Equal"
-                                        ],
-                                        "examples": [
-                                            "Exists",
-                                            "Equal"
-                                        ]
-                                    },
-                                    "value": {
-                                        "type": "string",
-                                        "title": "Value",
-                                        "description": "The value for this toleration (if Equal)",
-                                        "default": "exampleVal",
-                                        "examples": [
-                                            "app"
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "csv": {
-                    "type": "string",
-                    "title": "ClusterServiceVersion",
-                    "description": "The ClusterServiceVersion name to use.",
-                    "default": "redis-operator",
-                    "examples": [
-                        "redis-operator",
-                        "my-operator"
-                    ]
-                },
                 "enabled": {
                     "type": "boolean",
                     "title": "Enable subscription creation",
@@ -348,20 +192,6 @@
                     "title": "Helm hook",
                     "description": "Subscription creation is done as an helm hook. Should be set to true when included as chart dependencies to create subscription prior to other resources (helm doesn't recognize subscription resources as it does for CRD)",
                     "default": true
-                },
-                "installPlanApproval": {
-                    "type": "string",
-                    "title": "installPlanApproval",
-                    "description": "The installPlanApproval mode to use.",
-                    "default": "Automatic",
-                    "enum": [
-                        "Automatic",
-                        "Manual"
-                    ],
-                    "examples": [
-                        "Automatic",
-                        "Manual"
-                    ]
                 },
                 "name": {
                     "type": "string",
@@ -400,40 +230,218 @@
                                 "stable",
                                 "preview"
                             ]
-                        }
-                    }
-                },
-                "source": {
-                    "type": "object",
-                    "title": "Operator source",
-                    "description": "Define the operator source.",
-                    "properties": {
+                        },
                         "name": {
                             "type": "string",
-                            "enum": [
-                                "redhat-operators",
-                                "community-operators",
-                                "certified-operators"
-                            ],
-                            "title": "Source name",
-                            "description": "Name of the operator source (default is 'redhat-operators').",
-                            "default": "community-operators",
+                            "title": "Operator name",
+                            "description": "Name of the operator in the catalog (if not set, use the subscription name).",
                             "examples": [
-                                "redhat-operators",
-                                "community-operators",
-                                "certified-operators"
+                                "my-operator"
                             ]
                         },
-                        "namespace": {
+                        "config": {
+                            "type": "object",
+                            "title": "Operator configuration",
+                            "default": {},
+                            "description": "Optional configuration for Operator",
+                            "examples": [{
+                                    "infra": true
+                                },
+                                {
+                                    "env": [{
+                                        "name": "FOO",
+                                        "value": "bar"
+                                    }]
+                                }
+                            ],
+                            "properties": {
+                                "env": {
+                                    "type": "array",
+                                    "title": "Environment variables",
+                                    "default": {},
+                                    "description": "Hash of environment variables",
+                                    "examples": [{
+                                        "name": "FOO",
+                                        "value": "bar"
+                                    }]
+                                },
+                                "infra": {
+                                    "type": "boolean",
+                                    "title": "Infra operator",
+                                    "description": "If enabled the operator will have toleration and node selector set to stick infrastructure node",
+                                    "default": false
+                                },
+                                "nodeSelector": {
+                                    "type": "object",
+                                    "title": "Node Selector",
+                                    "default": {},
+                                    "description": "Hash of key and values for node-selecting the operator deployment",
+                                    "examples": [{
+                                        "node-role.kubernetes.io/worker": ""
+                                    }]
+                                },
+                                "resources": {
+                                    "type": "object",
+                                    "title": "Resources definitions for this operator",
+                                    "default": {},
+                                    "description": "Hash of limits and requests",
+                                    "properties": {
+                                        "limits": {
+                                            "default": {},
+                                            "description": "Hash of cpu and memory limits",
+                                            "properties": {
+                                                "cpu": {
+                                                    "default": "500m",
+                                                    "description": "CPU limits",
+                                                    "title": "CPU limits",
+                                                    "type": "string"
+                                                },
+                                                "memory": {
+                                                    "default": "512Mi",
+                                                    "description": "Memory limits",
+                                                    "title": "Memory limits",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "title": "Resources definitions limits",
+                                            "type": "object"
+                                        },
+                                        "requests": {
+                                            "default": {},
+                                            "description": "Hash of cpu and memory requests",
+                                            "properties": {
+                                                "cpu": {
+                                                    "default": "250m",
+                                                    "description": "CPU requests",
+                                                    "title": "CPU requests",
+                                                    "type": "string"
+                                                },
+                                                "memory": {
+                                                    "default": "256Mi",
+                                                    "description": "Memory requests",
+                                                    "title": "Memory requests",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "title": "Resources definitions requests",
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "tolerations": {
+                                    "type": "array",
+                                    "title": "Tolerations",
+                                    "default": [],
+                                    "description": "List of tolerations for this operator",
+                                    "examples": [{
+                                        "key": "mytaint",
+                                        "operator": "Exists"
+                                    }],
+                                    "items": {
+                                        "type": "object",
+                                        "title": "Toleration item",
+                                        "description": "Toleration rule",
+                                        "properties": {
+                                            "effect": {
+                                                "type": "string",
+                                                "title": "Effect",
+                                                "description": "The effect for this toleration",
+                                                "default": "NoSchedule"
+                                            },
+                                            "key": {
+                                                "type": "string",
+                                                "title": "Key",
+                                                "description": "The key for this toleration",
+                                                "default": "exampleKey",
+                                                "examples": [
+                                                    "node-role.kubernetes.io/worker"
+                                                ]
+                                            },
+                                            "operator": {
+                                                "type": "string",
+                                                "title": "Operator",
+                                                "description": "The operator for this toleration",
+                                                "default": "Exists",
+                                                "enum": [
+                                                    "Exists",
+                                                    "Equal"
+                                                ],
+                                                "examples": [
+                                                    "Exists",
+                                                    "Equal"
+                                                ]
+                                            },
+                                            "value": {
+                                                "type": "string",
+                                                "title": "Value",
+                                                "description": "The value for this toleration (if Equal)",
+                                                "default": "exampleVal",
+                                                "examples": [
+                                                    "app"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "csv": {
                             "type": "string",
-                            "title": "Namespace",
-                            "description": "Namespace hosting the markeplace operator delivering this subscription.",
-                            "default": "openshift-marketplace",
+                            "title": "ClusterServiceVersion",
+                            "description": "The ClusterServiceVersion name to use.",
+                            "default": "redis-operator",
                             "examples": [
-                                "openshift-marketplace",
-                                "startx-marketplace",
-                                "my-marketplace"
+                                "redis-operator",
+                                "my-operator"
                             ]
+                        },
+                        "installPlanApproval": {
+                            "type": "string",
+                            "title": "installPlanApproval",
+                            "description": "The installPlanApproval mode to use.",
+                            "default": "Automatic",
+                            "enum": [
+                                "Automatic",
+                                "Manual"
+                            ],
+                            "examples": [
+                                "Automatic",
+                                "Manual"
+                            ]
+                        },
+                        "source": {
+                            "type": "object",
+                            "title": "Operator source",
+                            "description": "Define the operator source.",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "enum": [
+                                        "redhat-operators",
+                                        "community-operators",
+                                        "certified-operators"
+                                    ],
+                                    "title": "Source name",
+                                    "description": "Name of the operator source (default is 'redhat-operators').",
+                                    "default": "community-operators",
+                                    "examples": [
+                                        "redhat-operators",
+                                        "community-operators",
+                                        "certified-operators"
+                                    ]
+                                },
+                                "namespace": {
+                                    "type": "string",
+                                    "title": "Namespace",
+                                    "description": "Namespace hosting the markeplace operator delivering this subscription.",
+                                    "default": "openshift-marketplace",
+                                    "examples": [
+                                        "openshift-marketplace",
+                                        "startx-marketplace",
+                                        "my-marketplace"
+                                    ]
+                                }
+                            }
                         }
                     }
                 },
