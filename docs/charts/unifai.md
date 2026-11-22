@@ -10,7 +10,7 @@ This chart installs two things :
   web interface, backend, multi-agent engine, RAG services, identity service, and their datastores (MongoDB,
   Qdrant, RabbitMQ, Redis, Temporal).
 
-It deploys UnifAI release **v0.1.75** ; every UnifAI image is pinned by digest.
+It deploys UnifAI release **v0.1.76** ; every UnifAI image is pinned by digest.
 
 ## Requirements
 
@@ -125,7 +125,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.398
+    targetRevision: 21.3.399
     helm:
       values: |
         stack:
@@ -156,7 +156,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.398
+    targetRevision: 21.3.399
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -226,7 +226,7 @@ The settings most installs need :
 | Key                               | Default            | Description                                                                    |
 | --------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
 | `profile`                         | `dev`              | `dev` (small requests, no autoscaling) or `prod`                               |
-| `version`, `images`               | v0.1.75, digests   | UnifAI images ; change them together when upgrading                            |
+| `version`, `images`               | v0.1.76, digests   | UnifAI images ; change them together when upgrading                            |
 | `identity.adminUsers`             | `[admin]`          | Keycloak users granted the administrator role                                  |
 | `identity.keycloak`               | `{}`               | Keycloak deployed by the operator (OpenShift only)                             |
 | `identity.external`               | not set            | your own Keycloak ; replaces `identity.keycloak`                               |
@@ -289,6 +289,24 @@ stack:
           value: "3"
 ```
 
+Since v0.1.76 the time a human has to answer a tool approval request is configurable with `MAS_HITL_TIMEOUT_SECONDS`
+(seconds, a number greater than 0, default `300`). An approval that is not answered when the delay expires is rejected.
+An empty or invalid value (not a number, `0` or negative) keeps the default and logs a warning; an unset variable keeps the default silently. As for the
+delegation cap, set it under **both** `multiagent` and `multiagentWorker`, and restart the pods to apply a change. The
+chart does not set it : nothing changes unless you add it.
+
+```yaml
+stack:
+  spec:
+    extraEnv:
+      multiagent:
+        - name: MAS_HITL_TIMEOUT_SECONDS
+          value: "600"
+      multiagentWorker:
+        - name: MAS_HITL_TIMEOUT_SECONDS
+          value: "600"
+```
+
 ## Uninstall
 
 The operator is what removes the platform, so remove the stack first :
@@ -342,3 +360,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.393 | 2026-11-21 | unifai: UnifAI v0.1.75 (images pinned by digest); no CRD or RBAC change |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.399 | 2026-11-22 | update: UnifAI v0.1.76 (images pinned by digest), document MAS_HITL_TIMEOUT_SECONDS |
