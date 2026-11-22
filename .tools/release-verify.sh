@@ -5,7 +5,8 @@
 #   http      <chart>-<version>.tgz and .tgz.prov answer HTTP 200
 #   version   `helm show chart` version == <version>
 #   deps-https every dependencies[].repository starts with https:// (oci:// accepted: upstream registry)
-#   pins      every internal dependency (served by this bucket and a chart of this repository) is pinned on <version>, or on an older version this bucket serves (partial release)
+#   pins      every internal dependency (served by this bucket and a chart of this repository) is pinned on a version strictly lower than <version> (ADR-0006) that this bucket serves;
+#             releases before PINS_RULE_FROM (default 21.3.412) predate the rule: a pin equal to the release is accepted, the pin must only be served
 #   digest    sha256 of the .tgz == digest of the entry in the repository index.yaml
 #   content   README.md and values.yaml of the package == the files of git HEAD (a chart whose .helmignore excludes *.md
 #             ships no README: reported as FAIL, cluster-keepalived)
@@ -18,7 +19,11 @@ ROOT=${ROOT:-$(git rev-parse --show-toplevel)}; cd "$ROOT" || exit 2
 BASE=${BASE:-https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com}
 JOBS=${JOBS:-8}; REPOS=${REPOS:-"stable 21"}
 W=$(mktemp -d); [[ ${KEEP:-0} == 1 ]] || trap 'rm -rf "$W"' EXIT
-export BASE VERSION W ROOT REPOS
+PINS_RULE_FROM=${PINS_RULE_FROM:-21.3.412}   # first release that follows ADR-0006 (pin strictly lower than the release)
+export BASE VERSION W ROOT REPOS PINS_RULE_FROM
+if [[ $VERSION != "$PINS_RULE_FROM" && $(printf '%s\n%s\n' "$VERSION" "$PINS_RULE_FROM" | sort -V | head -1) == "$VERSION" ]]; then
+    echo "note  release $VERSION predates ADR-0006 (rule from $PINS_RULE_FROM): the pins are only checked as served, a pin equal to the release is accepted"
+fi
 
 CHARTS=("$@")
 if [[ ${#CHARTS[@]} -eq 0 ]]; then
@@ -60,9 +65,15 @@ check_chart() {
         local v; v=$(helm show chart "$dir/$tgz" 2>/dev/null | awk '/^version:/{gsub(/"/,"",$2); print $2; exit}')
         if [[ $v == "$VERSION" ]]; then echo "ok   $r/$c version $v"; else echo "FAIL $r/$c version: package says '$v'"; rc=1; fi
         # dependencies: https and internal pins
-        python3 - "$dir/$tgz" "$W/internal.txt" "$VERSION" "$r/$c" "$BASE" <<'PY' || rc=1
-import sys, tarfile, urllib.request, yaml
-tgz, internal, ver, tag, base = sys.argv[1:6]
+        python3 - "$dir/$tgz" "$W/internal.txt" "$VERSION" "$r/$c" "$BASE" "$PINS_RULE_FROM" <<'PY' || rc=1
+import re, sys, tarfile, urllib.request, yaml
+
+def vt(v):
+    m = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)', str(v or ''))
+    return tuple(map(int, m.groups())) if m else None
+
+tgz, internal, ver, tag, base, rule_from = sys.argv[1:7]
+legacy = vt(ver) is not None and vt(rule_from) is not None and vt(ver) < vt(rule_from)  # before ADR-0006
 names = set(open(internal).read().split())
 with tarfile.open(tgz) as t:
     m = next(x for x in t.getmembers() if x.name.count('/') == 1 and x.name.endswith('/Chart.yaml'))
@@ -73,8 +84,14 @@ for d in y.get('dependencies') or []:
     if repo and not repo.startswith(('https://', 'oci://')):  # oci:// = upstream registry (cluster-kargo)
         print(f"FAIL {tag} deps-https {d['name']}: {repo}"); bad = 1
     # internal = served by this repository (a name alone is not enough: the upstream chaos-mesh chart exists too)
-    # a partial release keeps the older pin of a dependency that was not released again: it is fine when that package is served
-    if repo.startswith(base) and d['name'] in names and str(d.get('version')) != ver:
+    # ADR-0006: the pin is a version already published, strictly lower than the release (never the release itself)
+    if repo.startswith(base) and d['name'] in names:
+        pin, rel = vt(d.get('version')), vt(ver)
+        if legacy and str(d.get('version')) == ver:
+            continue  # releases up to 21.3.410 pinned the release itself: served by construction
+        if not legacy and (pin is None or rel is None or pin >= rel):
+            print(f"FAIL {tag} pins {d['name']}: {d.get('version')} is not an exact version lower than {ver}"); bad = 1
+            continue
         url = f"{repo.rstrip('/')}/{d['name']}-{d.get('version')}.tgz"
         try:
             ok = urllib.request.urlopen(urllib.request.Request(url, method='HEAD'), timeout=30).status == 200

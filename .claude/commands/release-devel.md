@@ -20,7 +20,7 @@ Examples:
 1. Verifies the current branch is `devel`
 2. Shows the current repo version and proposes the next patch version
 3. Asks for confirmation before making any change
-4. Runs `make release-charts` - bumps every chart version, packages, uploads all .tgz to S3, commits `repo-release` file
+4. Runs `make release-charts` - bumps every chart version, re-resolves the internal dependency pins of each chart on the published versions below the new version (ADR-0006, no dependency order needed), packages, uploads all .tgz to S3, commits `repo-release` file
 5. Runs `make publish-devel` - regenerates and uploads `docs/repos/devel/index.yaml`
 6. Pushes `devel` to `origin` and `gitlab`
 7. Reports summary

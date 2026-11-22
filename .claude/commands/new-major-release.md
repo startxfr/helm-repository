@@ -18,6 +18,17 @@ CI handles the rest:
 - Pipeline on `master` runs `make release-all` + `make publish` automatically
 - Merge to `stable` requires a manual click in the GitLab CI pipeline
 
+**Pins (ADR-0006)**: a pin on a chart of this repository is a version of the same `MAJOR.MINOR` already published below the chart version. In the new release nothing is published yet, so `make release-all` and `make release-charts` are refused for every chart that has an internal dependency, and the new minor is released in **rounds, one per level of the dependency graph**:
+
+```bash
+python3 .tools/bump-pins.py --levels      # level 0 (no internal dependency), level 1, level 2 ... one line per level
+# for N = 0, 1, 2 ... in order, with VERSION = <new minor>.N :
+for c in <charts of level N>; do INTERACTIVE=false VERSION=<new minor>.N DESC="first release of <new minor>, level N" make release CHART=$c; done
+make publish       # the index must list this level before the next round starts. WARNING: make publish merges devel into master and pushes both branches, at each round
+```
+
+`make publish` merges `devel` into `master` and pushes both each time: it is the release owner's step, not to be run casually between rounds. Level 0 is released as `<new minor>.0`, level 1 as `<new minor>.1` (its pins resolve to `.0`), level 2 as `<new minor>.2`. Set `.tools/repo-release` to the highest version released. The pins are never taken from the previous minor; `python3 .tools/bump-pins.py --check` proves the result.
+
 ## Usage
 
 ```

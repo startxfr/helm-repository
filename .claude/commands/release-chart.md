@@ -20,7 +20,7 @@ Examples:
 1. Verifies the current branch is `devel` (warns and asks confirmation otherwise)
 2. Shows the chart's current version and proposes the next patch version
 3. Asks for confirmation (version + description) before making any change
-4. Runs `make release CHART=<name>` - bumps Chart.yaml, adds README history row, packages, uploads .tgz to S3
+4. Runs `make release CHART=<name>` - bumps Chart.yaml, re-resolves the internal dependency pins on the published versions below the new version (ADR-0006), adds README history row, packages, uploads .tgz to S3
 5. Runs `make publish-devel` - regenerates and uploads `docs/repos/devel/index.yaml`
 6. Pushes `devel` to `origin` and `gitlab`
 7. Reports what changed and the new chart version

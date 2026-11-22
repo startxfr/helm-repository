@@ -3,7 +3,7 @@
 # a laptop, in GitHub Actions (.github/workflows/ci.yml) and later in GitLab CI.
 #
 # Usage:
-#   .github/scripts/ci-check.sh static                   JSON schemas, docs/charts copies, misspellings
+#   .github/scripts/ci-check.sh static                   JSON schemas, docs/charts copies, misspellings, internal pins < chart version
 #   .github/scripts/ci-check.sh charts ["pattern ..."]   helm lint + helm template of the matching charts (default: all)
 #   .github/scripts/ci-check.sh argocd                   render the values-app files and check the ArgoCD examples
 #   .github/scripts/ci-check.sh schema                   values.yaml keys missing from values.schema.json (blocking;
@@ -55,6 +55,14 @@ check_docs() {
     return $bad
 }
 
+# Offline: an internal dependency pin (a chart served by this repository bucket) is an exact version strictly lower than the version
+# of the chart that carries it (ADR-0006). That a pin is published is only proved online (bump-pins.py --check, release-preflight.sh).
+check_pins() {
+    local out
+    if out=$(python3 -I .tools/bump-pins.py --check-offline 2>&1); then log "ok   internal pins are lower than their chart version"; return 0; fi
+    log "FAIL internal pins (ADR-0006):"; head -40 <<<"$out"; return 1
+}
+
 # spelling_hits_all: every offending line of the tree ("graphana" is allowed in cluster-dvo only)
 spelling_hits_all() {
     git grep -nIiE -- "$SPELLING" -- . "${SPELLING_EXCLUDES[@]}" || true
@@ -91,6 +99,7 @@ static() {
     check_schemas || rc=1
     check_docs || rc=1
     check_spelling || rc=1
+    check_pins || rc=1
     return $rc
 }
 

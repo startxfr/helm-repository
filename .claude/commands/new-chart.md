@@ -54,6 +54,7 @@ cp -r charts/<source> charts/<family>-<short-name>
 - `annotations.artifacthub.io/changes` → `"[<family>-<short-name>] Initial chart creation"`
 - `annotations.artifacthub.io/prerelease` → `"true"`
 - `version` → keep the source version (bumped on first release)
+- `dependencies[].version` → left as copied: the first release re-resolves every internal pin on the latest published version below the new chart version (ADR-0006). The dependencies must already be published, a dependency that was never released has to be released first
 
 **README.md** - replace every reference to the source chart:
 
