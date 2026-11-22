@@ -31,6 +31,7 @@ charts/<name>/
 **README.md sections (in order)**: title+badge → description → Requirements → Deploy on openshift (Connect/Install repo/Get info/Install) → Default values → Values files → Values dictionary → Deploy with ArgoCD → History.  
 `## Values files` is mandatory: it describes the example files of the chart (`values-*.yaml` and `examples/`) and replaces `## Other available values`. The ArgoCD section is always titled `## Deploy with ArgoCD`.  
 All history table rows must end with trailing `|`. `## History` is the last section; its table is pruned at each release (see README History pruning).
+The full chart conventions (files, Chart.yaml, values, schema, README, ArgoCD deliverables, exceptions) are in [`docs/contribute-conventions.md`](docs/contribute-conventions.md); `.github/scripts/ci-check.sh conventions` reports the README ones (section order, titles, duplicates, `values-*.yaml` coverage by `Values files`), report only.
 
 ## Recurring misspellings — fix on sight
 

@@ -9,6 +9,8 @@
 #   .github/scripts/ci-check.sh schema                   values.yaml keys missing from values.schema.json (blocking;
 #                                                        fails by default; CI_SCHEMA_STRICT=false = report only)
 #   .github/scripts/ci-check.sh toggles [chart ...]      every <key>.enabled switched on alone must render
+#   .github/scripts/ci-check.sh conventions [chart ...]  README section order, titles, duplicates, Values files coverage
+#                                                        (report only; CI_CONVENTIONS_STRICT=true = fail on a finding)
 #   .github/scripts/ci-check.sh all                      static + charts + argocd
 #   .github/scripts/ci-check.sh chart-one <chart>        one chart (used by the parallel run)
 #
@@ -26,10 +28,10 @@ CI_SPELLING=${CI_SPELLING:-all}
 # Misspellings that CLAUDE.md asks to fix on sight (ERE, case insensitive)
 SPELLING='theses resources|environement|plateform|ressource|functionnal|organisational|recommandations|others values availables|projet'
 SPELLING_GRAPHANA='graphana'
-# Not checked: CLAUDE.md and the roadmap/ADR pages (they quote the misspellings), the generated indexes, the French
+# Not checked: CLAUDE.md, the conventions page and checker (they quote the misspellings) and the roadmap/ADR pages, the generated indexes, the French
 # web templates, the French console links of cluster-console (plateforme, ressources...) and the cluster-dvo values
 # keys named graphana (kept for compatibility, never rename them)
-SPELLING_EXCLUDES=(':!CLAUDE.md' ':!webtpl' ':!**/webtpl/**' ':!docs/repos' ':!docs/roadmap' ':!docs/adr' ':!*.tgz' ':!*.prov' ':!*.asc' ':!.github/scripts/ci-check.sh' ':!charts/cluster-console/values-m*.yaml')
+SPELLING_EXCLUDES=(':!CLAUDE.md' ':!webtpl' ':!**/webtpl/**' ':!docs/repos' ':!docs/roadmap' ':!docs/adr' ':!*.tgz' ':!*.prov' ':!*.asc' ':!.github/scripts/ci-check.sh' ':!.github/scripts/readme-conventions.py' ':!docs/contribute-conventions.md' ':!charts/cluster-console/values-m*.yaml')
 
 log() { printf '%s\n' "$*"; }
 
@@ -199,6 +201,7 @@ case "${1:-all}" in
     argocd)    check_argocd ;;
     toggles)   shift; python3 .tools/render-golden.py toggles "$@" ;;
     schema)    python3 .github/scripts/schema-drift.py $([[ ${CI_SCHEMA_STRICT:-true} == true ]] && echo --strict) ;;
+    conventions) shift; python3 .github/scripts/readme-conventions.py "$@" ;;
     all)       rc=0; static || rc=1; charts || rc=1; check_argocd || rc=1; exit $rc ;;
-    *)         sed -n '2,17p' "${BASH_SOURCE[0]}"; exit 2 ;;
+    *)         sed -n '2,19p' "${BASH_SOURCE[0]}"; exit 2 ;;
 esac
