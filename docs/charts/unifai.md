@@ -324,7 +324,7 @@ stack:
 
 `stack.spec.replicas.multiagent` sets the number of `multiagent-be` pods (the multiagent API and SSE Deployment, not its
 Temporal worker), from 1 to 10. It is the only key accepted for now. The chart does not set it : unset, the count stays
-1 and nothing changes. Setting it, even to `1`, upgrades the multiagent-be release once: the pod count changes and no running pod restarts. The
+1 and nothing changes. Setting it, even to `1`, upgrades the multiagent-be release once: the pod count follows it and no running pod restarts. The
 `dev` profile has no autoscaler and runs exactly that count ; `prod` raises the autoscaler minimum to it (and the
 maximum when it is lower). More than one pod needs a ReadWriteMany shared storage (`stack.spec.storage.sharedClassName`).
 Reference : `fork/unifai-operator/README.md` of the UnifAI sources (R-570).
