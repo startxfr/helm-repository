@@ -60,6 +60,8 @@ jobs:
           version: v3.19.0
       - name: Contract tests of the charts consumed by zuno-demo
         run: tests/contract/run.sh
+      - name: Tests of the internal pin resolution (ADR-0006)
+        run: tests/pins/run.sh
 
   argocd:
     name: ArgoCD values-app and examples

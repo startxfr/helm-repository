@@ -185,67 +185,38 @@ function routerListChanged {
     last=$(git -C "$PROJECT_PATH" tag --list '[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
     echo "Charts changed since release tag ${last:-<none>} :"
     chartListChanged
+    # A changed dependency does not reach its dependents by itself (ADR-0006): list the pins that are behind the index
+    echo "Dependents pinned on an older version than the latest published one (ADR-0006) :"
+    python3 -I "$PROJECT_LIBPATH/bump-pins.py" --lagging 2>&1 | sed 's/^/ /' 
 }
 
-# Release the selected charts (see chartListToRelease) and the charts that depend on them, in dependency order
-# (leaves first). Before a chart is released its pins on the charts already released in this run are moved to their
-# new version (.tools/bump-pins.py), so a dependent always resolves what was just uploaded (ADR-0001, ADR-0005).
-# Keep going after a failure and report all failed charts at the end.
+# Release the selected charts (see chartListToRelease), one after the other. The pins of a chart on the charts of this
+# repository are resolved by routerChartRelease (.tools/bump-pins.py, ADR-0006): the latest version already published,
+# strictly below the version being released. A dependency that changed is therefore NOT released again with its
+# dependents, and no release order is needed. Keep going after a failure and report all failed charts at the end.
 function releaseAllCharts {
     local failed=()
-    local chart selected names order released="" indexed="" dep needs pkg
+    local chart selected names pkg
     selected=$(chartListToRelease)
     if [[ -z "${selected//[[:space:]]/}" ]]; then
         echo -e "\e[36mRelease\e[0m no chart changed since the last release tag : nothing to release (RELEASE_ALL=true forces a full release)"
         return 0
     fi
-    names=$(echo "$selected" | tr -d ' ' | sed 's#^\./##' | paste -sd, -)
-    names=$(python3 -I "$PROJECT_LIBPATH/release-closure.py" "$names" | paste -sd, -) || return 1
-    order=$(python3 -I "$PROJECT_LIBPATH/bump-pins.py" --order "$names") || {
-        echo -e "\e[31mRelease\e[0m cannot order the charts by dependency" >&2
-        return 1
-    }
-    echo -e "\e[36mRelease\e[0m $(echo "$order" | wc -w) chart(s) selected, dependency order"
-    for chart in $order; do
+    names=$(echo "$selected" | tr -d ' ' | sed 's#^\./##' | sort)
+    echo -e "\e[36mRelease\e[0m $(echo "$names" | wc -w) chart(s) selected"
+    for chart in $names; do
         # Resumable : a package of this version already built and uploaded in a previous run is kept
         pkg="$HELM_REPO_LOCALSYNC/$STABLE_MAINRELEASE/$chart-$1.tgz"
         if [[ -f "$pkg" ]]; then
             echo -e "\e[36mRelease\e[0m $chart already released as $1 : skipped"
-            released="${released:+$released,}$chart"
             continue
         fi
-        if [[ -n "$released" ]]; then
-            python3 -I "$PROJECT_LIBPATH/bump-pins.py" --apply --released "$released" --only "$chart" >/dev/null || true
-            # helm resolves a dependency through the index of its repository : publish the index of the packages released
-            # so far before a chart that depends on one of them (the full publish regenerates it again at the end)
-            needs=false
-            for dep in $(python3 -I "$PROJECT_LIBPATH/release-closure.py" --deps-of "$chart"); do
-                if [[ ",$released," == *",$dep,"* && ",$indexed," != *",$dep,"* ]]; then needs=true; fi
-            done
-            if [[ "$needs" == "true" ]]; then
-                releaseRefreshResolutionIndex || { failed+=("$chart"); continue; }
-                indexed="$released"
-            fi
-        fi
-        if routerChartRelease "$chart" "auto" "$1" "$2"; then
-            released="${released:+$released,}$chart"
-        else
-            failed+=("$chart")
-        fi
+        routerChartRelease "$chart" "auto" "$1" "$2" || failed+=("$chart")
     done
     if [[ ${#failed[@]} -gt 0 ]]; then
         echo -e "\e[31mRelease\e[0m ERROR ${#failed[@]} chart(s) failed : ${failed[*]}" >&2
         return 1
     fi
-}
-
-# Regenerate the index of the release repository from the local packages and upload only that file, so that
-# `helm dependency update` finds the versions released earlier in the same run.
-function releaseRefreshResolutionIndex {
-    local path="$HELM_REPO_LOCALSYNC/$STABLE_MAINRELEASE"
-    echo -e "\e[36mRelease\e[0m refresh the index of ${HELM_REPO_BASEURL}/${STABLE_MAINRELEASE} for dependency resolution"
-    helm repo index --url "${HELM_REPO_BASEURL}/${STABLE_MAINRELEASE}" "$path" || return 1
-    awsS3FileUpload "$path/index.yaml" "$STABLE_MAINRELEASE" || return 1
 }
 
 # Release all charts on the current branch without the full repository flow.
@@ -643,8 +614,14 @@ function routerChartRelease {
 
         local packagename="${chart_name}-${next_release}.tgz"
         git checkout $WORK_BRANCH &>/dev/null
+        # Pins on the charts of this repository : the latest version already published, strictly below this release (ADR-0006).
+        # Nothing is written when one of them cannot be resolved or when the index is unreachable.
+        if ! python3 -I "$PROJECT_LIBPATH/bump-pins.py" --apply --only "$chart_name" --below "$next_release"; then
+            echo -e "\e[35mRelease\e[0m \e[31mERROR\e[0m \e[1m$chart_name\e[0m dependency pins cannot be resolved : nothing bumped, publish the missing dependency first" >&2
+            return 1
+        fi
         echo -e "\e[35mRelease\e[0m bump \e[1m$chart_name\e[0m: $current_release → $next_release"
-        # Only the chart own version : a dependency pinned to the same version must not jump to a release that is not published yet
+        # Only the chart own version : the pins were resolved above and must not follow it
         sed -i -E "s/^version:.*/version: $next_release/" "$chart_dir/Chart.yaml"
         sed -i "s/targetRevision: .*/targetRevision: $next_release/" "$chart_dir/README.md"
         if [[ $DOC_ADD_HISTORY == "true" ]]; then
