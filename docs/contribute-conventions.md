@@ -92,7 +92,7 @@ Artifact Hub. It is written in English for a reader who does not know this repos
 ### 5.2 Sections
 
 The `##` sections appear in this order. Mandatory sections are always present; optional ones are present only when
-they have content, and then at their place in the order. Use the exact titles below. **[CI-report]** (`ci-check.sh conventions` checks the order of the known titles, the titles in the table of old titles below, duplicate titles, the mandatory sections, `## History` last, and that every `values-*.yaml` of the chart is named in `## Values files` or matched by a glob written there; sections not listed in the table are chart-specific and free)
+they have content, and then at their place in the order. Use the exact titles below. **[CI]** (`ci-check.sh conventions`, strict in the `conventions` job, checks the order of the known titles, the titles in the table of old titles below, duplicate titles, the mandatory sections, `## History` last, and that every `values-*.yaml` of the chart is named in `## Values files` or matched by a glob written there; sections not listed in the table are chart-specific and free)
 
 | # | Section title | Presence | Content |
 | --- | --- | --- | --- |
@@ -186,7 +186,7 @@ Run, from the repository root, on the charts you changed:
 .github/scripts/ci-check.sh charts "<name> ..."
 .github/scripts/ci-check.sh toggles <name> ...
 .github/scripts/ci-check.sh argocd            # when examples/argocd or a values-app file changed
-.github/scripts/ci-check.sh conventions       # report only for now
+.github/scripts/ci-check.sh conventions       # blocking in CI (CI_CONVENTIONS_STRICT=true), report only without it
 tests/contract/run.sh                         # when a consumed chart changed
 ```
 

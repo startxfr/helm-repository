@@ -10,7 +10,8 @@
 #                                                        fails by default; CI_SCHEMA_STRICT=false = report only)
 #   .github/scripts/ci-check.sh toggles [chart ...]      every <key>.enabled switched on alone must render
 #   .github/scripts/ci-check.sh conventions [chart ...]  README section order, titles, duplicates, Values files coverage
-#                                                        (report only; CI_CONVENTIONS_STRICT=true = fail on a finding)
+#                                                        (report only by default; CI_CONVENTIONS_STRICT=true = fail on a finding,
+#                                                        set in the `conventions` job of ci.yml and in .gitlab/ci-checks.yml)
 #   .github/scripts/ci-check.sh all                      static + charts + argocd
 #   .github/scripts/ci-check.sh chart-one <chart>        one chart (used by the parallel run)
 #

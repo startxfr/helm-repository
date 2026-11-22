@@ -27,6 +27,13 @@ check:static:
   script:
     - .github/scripts/ci-check.sh static
 
+check:conventions:
+  extends: .check-base
+  variables:
+    CI_CONVENTIONS_STRICT: "true"
+  script:
+    - .github/scripts/ci-check.sh conventions
+
 check:charts:
   extends: .check-base
   variables:
