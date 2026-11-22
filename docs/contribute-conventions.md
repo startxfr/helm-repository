@@ -38,7 +38,7 @@ charts/<name>/
 | `appVersion` | the upstream version (operator CSV, image tag), quoted | [review] |
 | `kubeVersion` | always set, as a lower bound (`">=1.30.0-0"`) | [CI-report] |
 | `icon`, `home`, `sources`, `maintainers`, `keywords` | always set; `icon` points to `img/<name>.svg` | [CI-report] |
-| `dependencies[].version` | exact pin, aligned by the release (`.tools/bump-pins.py`, ADR-0005) | [review] |
+| `dependencies[].version` | exact pin: for a chart served by this bucket, the highest version already published of the same `MAJOR.MINOR`, strictly lower than the chart version (`.tools/bump-pins.py`, ADR-0006) | [CI] (`ci-check.sh static`, offline: pin < chart version) |
 | `annotations."artifacthub.io/changes"` | describes this release; updated at each release | [review] |
 | `annotations."artifacthub.io/prerelease"` | `"true"` or `"false"`, quoted | [CI-report] |
 | `annotations."artifacthub.io/license"`, `category`, `signKey`, `containsSecurityUpdates` | always set | [CI-report] |
@@ -228,8 +228,9 @@ Lessons of the chaos releases 21.3.391 and 21.3.392; each rule was a defect foun
 - **Every `valueFiles` entry of an ArgoCD example must exist in the chart directory** (3 charts and the umbrella pointed
   to a missing `values-startx_noinfra.yaml`). **[CI-report]** to add to `ci-check.sh argocd`.
 - **A `## ` heading is preceded by a blank line** (generated READMEs lost it). **[CI-report]**
-- **Partial releases**: the pin of an unreleased dependency stays on the older version served by the repository;
-  `release-verify.sh` accepts it (66bc2b3840).
+- **Internal pins** (ADR-0006): the pin of a dependency is never the version of the chart that carries it, only a version
+  already published below it; a dependency that changed reaches its dependents when they are released again.
+  `release-verify.sh` checks that each pin is lower than the release and served.
 
 ## Exceptions
 

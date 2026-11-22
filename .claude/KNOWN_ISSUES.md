@@ -49,6 +49,23 @@ Must match the chart name, not `sxapi`. Charts affected: `chaos-*`, `cluster-vau
 Never tracked (root `.gitignore`, ADR-0005). Pins in `Chart.yaml` dependencies are exact, so the lock adds nothing; the release and the CI run `helm dependency update` themselves.
 Do not `git add -f` a lock; after changing a pin there is nothing else to commit.
 
+## Internal dependency pins (ADR-0006)
+
+- A pin on a chart of this repository (`project`, `operator`, `sxapi`, `cluster-rbac`, `chaos-*`...) is the highest version
+  already published in the index of its `repository`, of the same `MAJOR.MINOR`, **strictly lower than the version of the
+  chart that carries it**. Never write one by hand: `.tools/bump-pins.py --below <next version>` does it, called by the
+  release (`make release CHART=` and the full release use the same path).
+- `bump-pins.py --check-offline` (in `ci-check.sh static`) proves `pin < chart version` only; that the pin is published is
+  proved by `bump-pins.py --check` and by the preflight (they download the index). An unreachable index stops the tool
+  with exit code 2: it never falls back to the local tree.
+- A fix in `project`/`operator` does not reach its dependents by itself: release the dependency, publish, then release the
+  dependents **at a version above the dependency's** (fix published as 21.3.413: `VERSION=21.3.414 make release CHART=...`;
+  at 21.3.413 the pin resolves below it and the release prints a `WARNING`). `sx-helm changed-charts` lists the dependents
+  and the version to exceed (`bump-pins.py --lagging`). A published index with a version that is not a string (an unquoted
+  `version: 18.11`) stops every release (fail closed): the message names the entry, quote the version in the index.
+- A new chart has nothing published to pin: the tool refuses, release the dependencies first (alone), then the dependents.
+  The first release of an OpenShift minor is made in rounds, one per level of `bump-pins.py --levels` (ADR-0006).
+
 ## chaos-litmus / chaos-mesh / chaos-monkey : wrappers around upstream charts
 
 - The route and SCC templates must name the Services and ServiceAccounts exactly as the upstream chart does: recompute
@@ -103,4 +120,5 @@ values first, then to the template of both charts once confirmed on a cluster.
 - `example-fruitapp-project` copies the `dockercfg` block of the project schema with the five required entry fields, so
   it rejects an `existingSecret` only entry. Known limitation, to fix when its schema is regenerated.
 - A dependent chart accepts the `existingSecret` only form once it pins a `project` release that contains it (Helm
-  validates the values of a dependency with the schema packaged in the dependency).
+  validates the values of a dependency with the schema packaged in the dependency). Since ADR-0006 a dependent takes a
+  new `project` only when it is released again, after `project` is published.
