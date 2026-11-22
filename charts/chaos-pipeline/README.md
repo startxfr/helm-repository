@@ -213,6 +213,8 @@ the run when krkn, its health check or the cerberus signal fails) → `cerberus-
 `clusteroperator-final-check`, always executed when they are enabled.
 With `cerberus-enabled`, krkn also reads the cerberus signal after each scenario: an unhealthy signal fails the
 scenario task, a healthy one lets the run continue.
+The PipelineRun examples set `timeouts.finally`: this time is taken from `timeouts.pipeline`, the gate and the
+scenarios share what is left.
 At start krkn looks for the cluster Prometheus and logs a `403` on the token of the `prometheus-k8s` service account
 when the pipeline service account cannot create it. The message is harmless while `pipeline.checkCriticalAlerts` is
 `false`: krkn goes on without metrics.
