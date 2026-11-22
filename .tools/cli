@@ -195,6 +195,24 @@ function routerListChanged {
 # strictly below the version being released. A dependency that changed is therefore NOT released again with its
 # dependents, and no release order is needed. Keep going after a failure and report all failed charts at the end.
 function releaseAllCharts {
+    # One download and parse of each published index for the whole run (bump-pins.py BUMP_PINS_CACHE): the index only changes
+    # at `make publish`, never during a release. The directory is created here and removed on exit; an inherited value is never trusted.
+    local pins_cache pins_status
+    pins_cache=$(mktemp -d "${TMPDIR:-/tmp}/bump-pins-cache.XXXXXX") || pins_cache=""
+    if [[ -n "$pins_cache" ]]; then
+        export BUMP_PINS_CACHE="$pins_cache" BUMP_PINS_RUN
+        BUMP_PINS_RUN=$(date +%s)
+    else
+        unset BUMP_PINS_CACHE BUMP_PINS_RUN
+    fi
+    releaseAllChartsRun "$@"
+    pins_status=$?
+    [[ -n "$pins_cache" ]] && rm -rf -- "$pins_cache"
+    unset BUMP_PINS_CACHE BUMP_PINS_RUN
+    return $pins_status
+}
+
+function releaseAllChartsRun {
     local failed=()
     local chart selected names pkg
     selected=$(chartListToRelease)
