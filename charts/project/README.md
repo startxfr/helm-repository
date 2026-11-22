@@ -36,66 +36,6 @@ helm show chart startx/project
 helm install project startx/project
 ```
 
-## Other available values
-
-- **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml)
-- **demo-3scale** : [values-demo-3scale.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-3scale.yaml)
-- **demo-affinity** : [values-demo-affinity.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-affinity.yaml)
-- **demo-argocd** : [values-demo-argocd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-argocd.yaml)
-- **demo-automation-runner** : [values-demo-automation-runner.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-automation-runner.yaml)
-- **demo-automation** : [values-demo-automation.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-automation.yaml)
-- **demo-compliance** : [values-demo-compliance.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-compliance.yaml)
-- **demo-costs** : [values-demo-costs.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-costs.yaml)
-- and 35 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/project)
-
-```bash
-helm install project startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | project   | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### project values dictionary
-
-| Key                         | Default         | Description                                                |
-| --------------------------- | --------------- | ---------------------------------------------------------- |
-| project.type                | project         | Define the type of tenant to create (project or namespace) |
-| project.name                | default         | Name of the project                                        |
-| project.display_name        | default         | Display name of the project (only for project)             |
-| project.description         | default         | Description of the project (only for project)              |
-| rbac.enabled                | false           | Enable RBAC default for this project                       |
-| rbac.groups[]               | []              | List groups to authorize on this project                   |
-| rbac.groups[0].id           | mygroup         | Group ID for roleBinding                                   |
-| rbac.groups[0].name         | mygroup_example | Group name for roleBinding                                 |
-| rbac.groups[0].role         | view            | Role to use for this group roleBinding                     |
-| rbac.users[]                | []              | List groups to authorize on this project                   |
-| rbac.users[0].id            | myuser          | User ID for roleBinding                                    |
-| rbac.users[0].name          | myuser_example  | User name for roleBinding                                  |
-| rbac.users[0].role          | view            | Role to use for this user roleBinding                      |
-| networkpolicy.enabled       | false           | Enable NetworkPolicy default for this project              |
-| networkpolicy.rules[]       | []              | List group to create                                       |
-| networkpolicy.rules[0].id   | string          | Rule ID for the networkPolicy                              |
-| networkpolicy.rules[0].spec | string          | Specifications of this policy rule                         |
-| limits.enabled              | false           | Enable limitRange for this project                         |
-| limits.rules                | string          | Specifications of the limitRange resource                 |
-| quotas.enabled              | false           | Enable quotas for this project                             |
-| quotas.rules                | string          | Specifications of the quotas resource                     |
-| dockercfg.enabled           | false           | Enable the registry credentials Secrets of this project    |
-| dockercfg.list[]            | []              | List of the registry credentials to record                 |
-| dockercfg.list[0].name      | registrycreds   | Name of the generated Secret (clear-text credentials)      |
-| dockercfg.list[0].registry  | docker.io       | Registry of the generated Secret (with username, password and email) |
-| dockercfg.list[0].existingSecret | -          | Name of a Secret of type `kubernetes.io/dockerconfigjson` that already exists in the namespace : the chart renders no Secret for the entry and refuses clear-text credentials beside it |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -208,6 +148,61 @@ Complete deployment of a startx project with the following characteristics :
 helm install project-startx startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml
 ```
 
+### Other values files
+
+- **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml)
+- **demo-3scale** : [values-demo-3scale.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-3scale.yaml)
+- **demo-affinity** : [values-demo-affinity.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-affinity.yaml)
+- **demo-automation-runner** : [values-demo-automation-runner.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-automation-runner.yaml)
+- **demo-automation** : [values-demo-automation.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-automation.yaml)
+- **demo-compliance** : [values-demo-compliance.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-compliance.yaml)
+- **demo-costs** : [values-demo-costs.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-costs.yaml)
+helm install project startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | project   | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### project values dictionary
+
+| Key                         | Default         | Description                                                |
+| --------------------------- | --------------- | ---------------------------------------------------------- |
+| project.type                | project         | Define the type of tenant to create (project or namespace) |
+| project.name                | default         | Name of the project                                        |
+| project.display_name        | default         | Display name of the project (only for project)             |
+| project.description         | default         | Description of the project (only for project)              |
+| rbac.enabled                | false           | Enable RBAC default for this project                       |
+| rbac.groups[]               | []              | List groups to authorize on this project                   |
+| rbac.groups[0].id           | mygroup         | Group ID for roleBinding                                   |
+| rbac.groups[0].name         | mygroup_example | Group name for roleBinding                                 |
+| rbac.groups[0].role         | view            | Role to use for this group roleBinding                     |
+| rbac.users[]                | []              | List groups to authorize on this project                   |
+| rbac.users[0].id            | myuser          | User ID for roleBinding                                    |
+| rbac.users[0].name          | myuser_example  | User name for roleBinding                                  |
+| rbac.users[0].role          | view            | Role to use for this user roleBinding                      |
+| networkpolicy.enabled       | false           | Enable NetworkPolicy default for this project              |
+| networkpolicy.rules[]       | []              | List group to create                                       |
+| networkpolicy.rules[0].id   | string          | Rule ID for the networkPolicy                              |
+| networkpolicy.rules[0].spec | string          | Specifications of this policy rule                         |
+| limits.enabled              | false           | Enable limitRange for this project                         |
+| limits.rules                | string          | Specifications of the limitRange resource                 |
+| quotas.enabled              | false           | Enable quotas for this project                             |
+| quotas.rules                | string          | Specifications of the quotas resource                     |
+| dockercfg.enabled           | false           | Enable the registry credentials Secrets of this project    |
+| dockercfg.list[]            | []              | List of the registry credentials to record                 |
+| dockercfg.list[0].name      | registrycreds   | Name of the generated Secret (clear-text credentials)      |
+| dockercfg.list[0].registry  | docker.io       | Registry of the generated Secret (with username, password and email) |
+| dockercfg.list[0].existingSecret | -          | Name of a Secret of type `kubernetes.io/dockerconfigjson` that already exists in the namespace : the chart renders no Secret for the entry and refuses clear-text credentials beside it |
+
 ## Usage examples
 
 ### Use a registry Secret that already exists
@@ -238,7 +233,7 @@ serviceAccounts:
 An entry sets `existingSecret` **or** `registry`, `username`, `password` and `email` : both together fail the render,
 and `name` is only accepted when it equals `existingSecret`. Entries of the two kinds can share the same list.
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 
@@ -280,3 +275,4 @@ The automated sync policy ensures ArgoCD reconciles the namespace whenever the c
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

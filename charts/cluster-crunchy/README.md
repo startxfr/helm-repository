@@ -72,7 +72,7 @@ helm install cluster-crunchy-operator startx/cluster-crunchy --set project.enabl
 helm install cluster-crunchy-instance startx/cluster-crunchy --set project.enabled=false,operator.enabled=false,cluster.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : CrunchyDB operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-crunchy/values-startx.yaml))
 - **startx-ha** : one highly available cluster, two instances, synchronous replication, S3 backups, monitoring (see [values-startx-ha.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-crunchy/values-startx-ha.yaml))
@@ -207,3 +207,4 @@ pattern, using `values-startx_noinfra.yaml`. For a highly available cluster, rep
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

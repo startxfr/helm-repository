@@ -102,7 +102,7 @@ portal Deployments by the upstream chart.
 | litmus.mongodb.auth.rootPassword | "" | MongoDB root password, when `litmus.mongodb.auth.existingSecret` is empty                                                    |
 | litmus.portal        | {...}        | Frontend, GraphQL server and authentication server of the portal                                                                 |
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-project.yaml), namespace `startx-chaos-litmus` only
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml), litmus portal in the namespace `startx-chaos-litmus` ; it expects the Secrets `litmus-admin` and `litmus-mongodb` in that namespace (see step 4 above)
@@ -180,7 +180,7 @@ litmus:
 helm install chaos-litmus-instance startx/chaos-litmus -f my-litmus-values.yaml -n chaos-litmus
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 One AppProject and two Applications : `chaos-litmus-project` (wave 1, the namespace) then `chaos-litmus-instance` (wave 5, the portal and its route).
 The instance Application reads the credentials from the Secrets `litmus-admin` and `litmus-mongodb` : create them in
@@ -224,3 +224,4 @@ finalizer : a namespace can be slow to terminate).
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

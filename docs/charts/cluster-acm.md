@@ -61,7 +61,25 @@ helm install cluster-acm startx/cluster-acm
 helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx.yaml
 ```
 
-## ArgoCD deployment
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **startx-acm** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx-acm.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx-acm.yaml))
+- **startx-create** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx-create.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx-create.yaml))
+- **startx-import** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx-import.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx-import.yaml))
+- **startx-observability** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx-observability.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx-observability.yaml))
+- **startx-requirements** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx-requirements.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx-requirements.yaml))
+- **startx_noinfra-acm** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra-acm.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx_noinfra-acm.yaml))
+- **startx_noinfra-observability** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra-observability.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx_noinfra-observability.yaml))
+- **startx_noinfra-requirements** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra-requirements.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx_noinfra-requirements.yaml))
+- `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install cluster-acm startx/cluster-acm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-acm/values-startx-acm.yaml
+```
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 
@@ -107,3 +125,4 @@ The automated sync policy ensures ArgoCD reconciles each concern independently w
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

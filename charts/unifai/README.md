@@ -97,7 +97,19 @@ What that values file does, and why :
 Known limits on Kubernetes : scheduled backups do not run (their jobs rely on the user identifier OpenShift
 assigns), and the example Ingress annotations are for ingress-nginx.
 
-## Install with ArgoCD
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **kubernetes** : Example values for a plain Kubernetes cluster (experimental, see README) (see [values-kubernetes.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/unifai/values-kubernetes.yaml))
+- **openshift** : Example values for OpenShift : Routes, a Keycloak managed by the operator, explicit storage classes (see [values-openshift.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/unifai/values-openshift.yaml))
+- `examples/argocd/` : 4 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install unifai startx/unifai -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/unifai/values-kubernetes.yaml
+```
+
+## Deploy with ArgoCD
 
 Use two Applications, so that the operator is in place before the stack and removed after it. The manifests are
 in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/unifai/examples/argocd) :
@@ -125,7 +137,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.399
+    targetRevision: 21.3.410
     helm:
       values: |
         stack:
@@ -156,7 +168,7 @@ spec:
   source:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: unifai
-    targetRevision: 21.3.399
+    targetRevision: 21.3.410
     helm:
       # The definitions belong to the operator Application
       skipCrds: true
@@ -361,3 +373,4 @@ kubectl -n unifai logs deploy/unifai-operator-controller-manager
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
 | 21.3.399 | 2026-11-22 | update: UnifAI v0.1.76 (images pinned by digest), document MAS_HITL_TIMEOUT_SECONDS |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

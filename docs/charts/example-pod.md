@@ -36,36 +36,6 @@ helm show chart startx/example-pod
 helm install example-pod startx/example-pod
 ```
 
-## Other available values
-
-- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-pod/values-demo.yaml)
-
-```bash
-helm install example-pod startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-pod/values-demo.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | example-pod     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-pod values dictionary
-
-| Key     | Default       | Description                                                      |
-| ------- | ------------- | ---------------------------------------------------------------- |
-| image   | fedora:latest | Image to run into the pod                                        |
-| command | /bin/sx       | Command to run inside the container                              |
-| args    | run           | argunments to pass to the command exectuted inside the container |
-| debug   | true          | Enable debuging of the container                                 |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -90,7 +60,29 @@ Demo pod deployment of a container image with the following characteristics :
 helm install example-pod startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
-## ArgoCD deployment
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | example-pod     | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-pod values dictionary
+
+| Key     | Default       | Description                                                      |
+| ------- | ------------- | ---------------------------------------------------------------- |
+| image   | fedora:latest | Image to run into the pod                                        |
+| command | /bin/sx       | Command to run inside the container                              |
+| args    | run           | argunments to pass to the command exectuted inside the container |
+| debug   | true          | Enable debuging of the container                                 |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 
@@ -111,7 +103,7 @@ spec:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: example-pod
     # pin an exact version in production (ADR-0004)
-    targetRevision: 21.3.397
+    targetRevision: 21.3.410
     helm:
       valueFiles:
         - values.yaml
@@ -149,3 +141,4 @@ spec:
 | 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

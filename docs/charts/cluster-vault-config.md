@@ -36,14 +36,43 @@ helm show chart startx/cluster-vault-config
 helm install cluster-vault-config startx/cluster-vault-config
 ```
 
-## Other available values
+## Values files
 
-- **startx** : [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx.yaml)
-- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx_noinfra.yaml)
+### Default values file (values.yaml)
+
+Configuration of default properties all disabled by default. This mean no resource will be created unless overwriting default parameters. Default configuration have the following characteristics :
+
+- 1 **project** named **default-vault-config**
+- 1 **operatorGroup** named **vault-config** to enable vault-config operator in the project
+- 1 **subscription** named **vault-config-operator** to deploy vault-config operator in the project with the following characteristics
+  - operator name is **vault-config-operator**
+  - operator version is **0.8.9**
+  - operator catalog is **community-operators** located in **openshift-marketplace**
 
 ```bash
+# base configuration running default configuration
+helm install cluster-vault-config startx/cluster-vault-config
+```
+
+### Default values file (values-startx.yaml)
+
+Configuration of startx properties with the following characteristics :
+
+- 1 **project** named **startx-vault-config** (disabled by default)
+- 1 **operatorGroup** named **vault-config** to enable vault-config operator in the project
+- 1 **subscription** named **vault-config-operator** to deploy vault-config operator in the project with the following characteristics
+  - operator name is **vault-config-operator**
+  - operator version is **0.8.9**
+  - operator catalog is **community-operators** located in **openshift-marketplace**
+
+```bash
+# base configuration running startx configuration
 helm install cluster-vault-config startx/cluster-vault-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx.yaml
 ```
+
+### Other values files
+
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx_noinfra.yaml)
 
 ## Values dictionary
 
@@ -111,40 +140,6 @@ more information on the availables options you can set under this **vault** prop
 
 ````
 
-## Values files
-
-### Default values file (values.yaml)
-
-Configuration of default properties all disabled by default. This mean no resource will be created unless overwriting default parameters. Default configuration have the following characteristics :
-
-- 1 **project** named **default-vault-config**
-- 1 **operatorGroup** named **vault-config** to enable vault-config operator in the project
-- 1 **subscription** named **vault-config-operator** to deploy vault-config operator in the project with the following characteristics
-  - operator name is **vault-config-operator**
-  - operator version is **0.8.9**
-  - operator catalog is **community-operators** located in **openshift-marketplace**
-
-```bash
-# base configuration running default configuration
-helm install cluster-vault-config startx/cluster-vault-config
-```
-
-### Default values file (values-startx.yaml)
-
-Configuration of startx properties with the following characteristics :
-
-- 1 **project** named **startx-vault-config** (disabled by default)
-- 1 **operatorGroup** named **vault-config** to enable vault-config operator in the project
-- 1 **subscription** named **vault-config-operator** to deploy vault-config operator in the project with the following characteristics
-  - operator name is **vault-config-operator**
-  - operator version is **0.8.9**
-  - operator catalog is **community-operators** located in **openshift-marketplace**
-
-```bash
-# base configuration running startx configuration
-helm install cluster-vault-config startx/cluster-vault-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault-config/values-startx.yaml
-```
-
 ## Deploy with ArgoCD
 
 ### AppProject
@@ -183,3 +178,4 @@ oc apply -k .
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

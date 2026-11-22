@@ -70,7 +70,7 @@ Nothing is deployed by default. With `project.enabled=true` and `pipeline.enable
 - 2 **pipelines**: **chaos-infra** (3 platform pod scenarios enabled) and **chaos-application** (pod and container scenarios enabled)
 - no **pipelinerun**
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-pipeline/values-startx-project.yaml) creates the `startx-chaos-pipeline` namespace
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-pipeline/values-startx-deploy.yaml) deploys the pipelines in `startx-chaos-pipeline`, gated by the cerberus of `startx-chaos-cerberus`
@@ -345,7 +345,7 @@ pipeline:
           ACTION: skew_time
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 `chaos-pipeline` follows the project/instance pattern: one AppProject, one Application creating the namespace (wave 1,
 no finalizer) and one Application deploying the tasks and pipelines (wave 5). Syncing never starts a chaos run. The
@@ -366,3 +366,4 @@ oc apply -k examples/argocd/
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
 | 21.3.400 | 2026-11-22 | fix: krkn-run no longer exits after a healthy cerberus signal (exit_on_failure), ClusterOperator check hardened, exitOnFailure refused with cerberus |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

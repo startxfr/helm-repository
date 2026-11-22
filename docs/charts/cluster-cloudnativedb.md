@@ -76,7 +76,7 @@ helm install cluster-cloudnativedb-operator startx/cluster-cloudnativedb --set p
 helm install cluster-cloudnativedb-instance startx/cluster-cloudnativedb --set project.enabled=false,operator.enabled=false,cluster.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : CloudNativePG operator and a demo cluster (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx.yaml))
 - **startx-ha** : one highly available cluster, three instances, synchronous replication with quorum failover, S3 backups, monitoring (see [values-startx-ha.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx-ha.yaml))
@@ -229,3 +229,4 @@ the operator is cluster wide: drop the project Application and point the operato
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

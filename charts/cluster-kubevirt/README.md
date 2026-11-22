@@ -112,7 +112,7 @@ sriov, ovn-k8s-cni-overlay...). The default namespace of a network attachment is
 | nads.list[].annotations  | `{}`    | Additional annotations (ex: `k8s.v1.cni.cncf.io/resourceName` for SR-IOV networks)          |
 | nads.list[].config       |         | CNI configuration (YAML/JSON text or map), stored as the JSON string expected by Multus     |
 
-## Other available values
+## Values files
 
 - **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubevirt/values-cdf-poc.yaml)
 - **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubevirt/values-demo.yaml)
@@ -161,3 +161,4 @@ oc apply -k .
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

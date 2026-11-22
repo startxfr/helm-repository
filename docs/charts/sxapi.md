@@ -65,44 +65,6 @@ helm show chart startx/sxapi
 helm install sxapi startx/sxapi
 ```
 
-## Other available values
-
-- **demo-sxapi-deploy** : [values-demo-sxapi-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-demo-sxapi-deploy.yaml)
-- **dev** : [values-dev.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-dev.yaml)
-- **pprod-v1** : [values-pprod-v1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v1.yaml)
-- **pprod-v2** : [values-pprod-v2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml)
-- **prod-v1** : [values-prod-v1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-prod-v1.yaml)
-- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-startx_noinfra.yaml)
-- **test** : [values-test.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-test.yaml)
-
-```bash
-helm install sxapi startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-demo-sxapi-deploy.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | sxapi     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### sxapi values dictionary
-
-| Key                   | Default    | Description                                           |
-| --------------------- | ---------- | ----------------------------------------------------- |
-| sxapi.service.enabled | false      | Enable service for this application                   |
-| sxapi.version         | 0.3.63     | Sxapi image version to run                            |
-| sxapi.profile         | prod:start | Profile to run inside the container                   |
-| sxapi.debug           | true       | Enable debuging of the container                      |
-| sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
-| sxapi.data            | string     | Files to load into the application                    |
-
 ## Values files
 
 ### Default values file
@@ -223,7 +185,37 @@ The [values-pprod-v2.yaml example file](https://raw.githubusercontent.com/startx
 helm install sxapi-pprod-v2 startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-pprod-v2.yaml
 ```
 
-## ArgoCD deployment
+### Other values files
+
+- **demo-sxapi-deploy** : [values-demo-sxapi-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-demo-sxapi-deploy.yaml)
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-startx_noinfra.yaml)
+helm install sxapi startx/sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/sxapi/values-demo-sxapi-deploy.yaml
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | sxapi     | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### sxapi values dictionary
+
+| Key                   | Default    | Description                                           |
+| --------------------- | ---------- | ----------------------------------------------------- |
+| sxapi.service.enabled | false      | Enable service for this application                   |
+| sxapi.version         | 0.3.63     | Sxapi image version to run                            |
+| sxapi.profile         | prod:start | Profile to run inside the container                   |
+| sxapi.debug           | true       | Enable debuging of the container                      |
+| sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
+| sxapi.data            | string     | Files to load into the application                    |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 
@@ -297,3 +289,4 @@ The automated sync policy ensures ArgoCD reconciles the microservice whenever th
 | 21.3.390 | 2026-11-20 | full repository release: test fix, keepalived README, aligned pins |
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

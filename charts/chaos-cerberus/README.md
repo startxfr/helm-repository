@@ -59,7 +59,7 @@ Nothing is deployed by default. With `project.enabled=true` and `cerberus.enable
 - 1 **deployment** named **cerberus**, unprivileged, watching the cluster it runs in
 - 1 **service** named **cerberus** (port 8080)
 
-## Other available values
+## Values files
 
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-deploy.yaml) deploys cerberus in the `startx-chaos-cerberus` namespace, exposed by a route
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-cerberus/values-startx-project.yaml) creates the `startx-chaos-cerberus` namespace
@@ -202,7 +202,7 @@ oc adm policy add-cluster-role-to-user cluster-reader -z cerberus-monitor -n cha
 oc create token cerberus-monitor -n chaos-cerberus --duration=8760h
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 `chaos-cerberus` follows the project/instance pattern: one AppProject, one Application creating the namespace (wave 1,
 no finalizer) and one Application deploying cerberus (wave 5). The examples are in [`examples/argocd/`](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-cerberus/examples/argocd).
@@ -245,3 +245,4 @@ AppProject must allow these two cluster kinds.
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |

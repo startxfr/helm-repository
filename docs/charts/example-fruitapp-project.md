@@ -36,13 +36,30 @@ helm show chart startx/example-fruitapp-project
 helm install example-fruitapp-project startx/example-fruitapp-project
 ```
 
-## Other available values
+## Values files
 
-- **mc** : [values-mc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-project/values-mc.yaml)
+### Default values file (values.yaml)
+
+Deploy the full fruitapp CI/CD context with the following characteristics :
+
+- 1 **project** named **fruitapp-devel-christophe**
+- 1 **project** named **fruitapp-ci**
+- 1 **project** named **fruitapp-preprod**
+  - 1 **roleBinding** allowing **fruitapp-ci pipeline** to push image
+  - 1 **imageStream** named **frontend** holding deployed images
+- 1 **project** named **fruitapp-prod**
+  - 1 **roleBinding** allowing **fruitapp-ci pipeline** to push image
+  - 1 **imageStream** named **frontend** holding deployed images
 
 ```bash
-helm install example-fruitapp-project startx/example-fruitapp-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-project/values-mc.yaml
+# base configuration running default configuration
+helm install example-fruitapp-project startx/example-fruitapp-project
 ```
+
+### Other values files
+
+- **mc** : [values-mc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-project/values-mc.yaml)
+helm install example-fruitapp-project startx/example-fruitapp-project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-project/values-mc.yaml
 
 ## Values dictionary
 
@@ -67,27 +84,7 @@ helm install example-fruitapp-project startx/example-fruitapp-project -f https:/
 | project_prod        | {}      | See [project chart](https://helm-repository.readthedocs.io/en/latest/charts/project)                           |
 | imagestreams        | {}      | See [example-imagestreams chart](https://helm-repository.readthedocs.io/en/latest/charts/example-imagestreams) |
 
-## Values files
-
-### Default values file (values.yaml)
-
-Deploy the full fruitapp CI/CD context with the following characteristics :
-
-- 1 **project** named **fruitapp-devel-christophe**
-- 1 **project** named **fruitapp-ci**
-- 1 **project** named **fruitapp-preprod**
-  - 1 **roleBinding** allowing **fruitapp-ci pipeline** to push image
-  - 1 **imageStream** named **frontend** holding deployed images
-- 1 **project** named **fruitapp-prod**
-  - 1 **roleBinding** allowing **fruitapp-ci pipeline** to push image
-  - 1 **imageStream** named **frontend** holding deployed images
-
-```bash
-# base configuration running default configuration
-helm install example-fruitapp-project startx/example-fruitapp-project
-```
-
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 
@@ -108,7 +105,7 @@ spec:
     repoURL: https://sx-helm-repository-prod.s3.eu-west-3.amazonaws.com/stable
     chart: example-fruitapp-project
     # pin an exact version in production (ADR-0004)
-    targetRevision: 21.3.398
+    targetRevision: 21.3.410
     helm:
       valueFiles:
         - values.yaml
@@ -149,3 +146,4 @@ spec:
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.410 | 2026-11-22 | full repository release: README conventions (Values files, Deploy with ArgoCD), conventions page |
