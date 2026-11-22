@@ -88,7 +88,7 @@ helm install cluster-kasten startx/cluster-kasten -f https://raw.githubuserconte
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kasten/values-startx.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 22 keys, by top-level key: `project` (8), `policies` (4), `profiles` (4), `operator` (3), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kasten/values-startx.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash

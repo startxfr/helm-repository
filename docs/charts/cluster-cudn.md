@@ -178,8 +178,8 @@ helm install cluster-cudn startx/cluster-cudn -f https://raw.githubusercontent.c
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cudn/values-startx.yaml))
-- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cudn/values-startx_noinfra.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 13 keys, by top-level key: `project` (6), `context` (4), `clusterNetworks` (1), `namespaces` (1), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cudn/values-startx.yaml))
+- **startx_noinfra** : context `startx/default/infra`; same values as `values-startx.yaml` (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cudn/values-startx_noinfra.yaml))
 - `examples/argocd/` : 4 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash

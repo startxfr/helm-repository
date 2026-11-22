@@ -63,9 +63,9 @@ helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **mg** : STARTX cluster configuration, see values.yaml for the parameters (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-mg.yaml))
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx.yaml))
-- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx_noinfra.yaml))
+- **mg** : against `values-startx.yaml`: differ on 5 keys, by top-level key: `operator` (3), `context` (1), `project` (1) (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-mg.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 13 keys, by top-level key: `context` (4), `operator` (4), `project` (4), `gpu` (1) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx.yaml))
+- **startx_noinfra** : context `startx/default/infra`; same values as `values-startx.yaml` (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx_noinfra.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash

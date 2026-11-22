@@ -65,11 +65,11 @@ helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.c
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **cdf-poc** : STARTX cluster configuration, see values.yaml for the parameters (see [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-cdf-poc.yaml))
-- **demo** : STARTX cluster configuration, see values.yaml for the parameters (see [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-demo.yaml))
-- **mg-pfd** : STARTX cluster configuration, see values.yaml for the parameters (see [values-mg-pfd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-mg-pfd.yaml))
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx.yaml))
-- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx_noinfra.yaml))
+- **cdf-poc** : against `values-startx.yaml`: differ on 13 keys, by top-level key: `operator` (4), `context` (3), `oadp` (3), `project` (3) (see [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-cdf-poc.yaml))
+- **demo** : context `startx/default/infra`; against `values-startx.yaml`: differ on 32 keys, by top-level key: `operator` (17), `oadp` (7), `project` (4), `cloudcreds` (3), ... (see [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-demo.yaml))
+- **mg-pfd** : against `values-startx.yaml`: differ on 10 keys, by top-level key: `oadp` (7), `cloudcreds` (2), `operator` (1) (see [values-mg-pfd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-mg-pfd.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 26 keys, by top-level key: `oadp` (6), `project` (6), `context` (4), `externalSecretDefaults` (4), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx.yaml))
+- **startx_noinfra** : context `startx/default/infra`; against `values-startx.yaml`: differ on `operator.subscription.operator.config.infra` (true → false) (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx_noinfra.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash

@@ -84,7 +84,7 @@ helm install cluster-etcdbackup startx/cluster-etcdbackup -f https://raw.githubu
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-etcdbackup/values-startx.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 11 keys, by top-level key: `project` (6), `etcdBackup` (3), `context` (2) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-etcdbackup/values-startx.yaml))
 - `examples/argocd/` : 4 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash

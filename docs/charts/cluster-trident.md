@@ -85,7 +85,7 @@ helm install cluster-trident startx/cluster-trident -f https://raw.githubusercon
 
 Example values files shipped with the chart, to use with `helm install -f <file>` :
 
-- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-trident/values-startx.yaml))
+- **startx** : context `startx/default/infra`; against `values.yaml`: differ on 21 keys, by top-level key: `project` (8), `operator` (7), `context` (2), `backends` (1), ... (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-trident/values-startx.yaml))
 - `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
 
 ```bash
