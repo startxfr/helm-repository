@@ -913,6 +913,20 @@ spec:
                       the ClusterRoleBinding unifai-rag-auth-delegator-<namespace>, removed with the stack or the option.
                     type: boolean
                 type: object
+              replicas:
+                additionalProperties:
+                  format: int32
+                  type: integer
+                description: |-
+                  Replica count by component; only multiagent (the multiagent-be Deployment, not its temporal worker) for now.
+                  Unset = the chart's 1. The dev profile (no HPA) runs exactly this count; prod raises the HPA minimum to it.
+                  More than one multiagent-be pod needs a ReadWriteMany shared storage (storage.sharedClassName).
+                maxProperties: 1
+                type: object
+                x-kubernetes-validations:
+                - message: 'replicas keys: multiagent; values 1 to 10'
+                  rule: self.all(k, k in ['multiagent'] && self[k] >= 1 && self[k]
+                    <= 10)
               resources:
                 additionalProperties:
                   description: ResourceRequirements describes the compute resource

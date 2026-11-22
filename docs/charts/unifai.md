@@ -10,7 +10,7 @@ This chart installs two things :
   web interface, backend, multi-agent engine, RAG services, identity service, and their datastores (MongoDB,
   Qdrant, RabbitMQ, Redis, Temporal).
 
-It deploys UnifAI release **v0.1.76** ; every UnifAI image is pinned by digest.
+It deploys UnifAI release **v0.1.77** ; every UnifAI image is pinned by digest.
 
 ## Requirements
 
@@ -238,13 +238,14 @@ The settings most installs need :
 | Key                               | Default            | Description                                                                    |
 | --------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
 | `profile`                         | `dev`              | `dev` (small requests, no autoscaling) or `prod`                               |
-| `version`, `images`               | v0.1.76, digests   | UnifAI images ; change them together when upgrading                            |
+| `version`, `images`               | v0.1.77, digests   | UnifAI images ; change them together when upgrading                            |
 | `identity.adminUsers`             | `[admin]`          | Keycloak users granted the administrator role                                  |
 | `identity.keycloak`               | `{}`               | Keycloak deployed by the operator (OpenShift only)                             |
 | `identity.external`               | not set            | your own Keycloak ; replaces `identity.keycloak`                               |
 | `storage.className`               | cluster default    | class of the database volumes                                                  |
 | `storage.sharedClassName`         | cluster default    | class of the shared volumes ; must support ReadWriteMany                       |
 | `storage.sizes`                   | set by the profile | size per volume                                                                |
+| `replicas.multiagent`             | not set            | number of multiagent-be pods, 1 to 10 (operator 0.1.77) ; see Upgrade          |
 | `rag.gpu`                         | `false`            | give the RAG workers a GPU                                                     |
 | `integrations`                    | not set            | Slack, Langfuse, Umami                                                         |
 | `backup`                          | not set            | scheduled backups to S3                                                        |
@@ -318,6 +319,30 @@ stack:
         - name: MAS_HITL_TIMEOUT_SECONDS
           value: "600"
 ```
+
+### Replicas of the multiagent server (UnifAI v0.1.77)
+
+`stack.spec.replicas.multiagent` sets the number of `multiagent-be` pods (the multiagent API and SSE Deployment, not its
+Temporal worker), from 1 to 10. It is the only key accepted for now. The chart does not set it : unset, the count stays
+1 and nothing changes. Setting it, even to `1`, upgrades the multiagent-be release once, which normally restarts its pod once. The
+`dev` profile has no autoscaler and runs exactly that count ; `prod` raises the autoscaler minimum to it (and the
+maximum when it is lower). More than one pod needs a ReadWriteMany shared storage (`stack.spec.storage.sharedClassName`).
+Reference : `fork/unifai-operator/README.md` of the UnifAI sources (R-570).
+
+```yaml
+stack:
+  spec:
+    replicas:
+      multiagent: 2
+```
+
+**The UnifaiStack definition changes in v0.1.77** (the `spec.replicas` field is new). Helm installs the definitions of
+`crds/` only at `helm install` and never updates them, and this chart ships them there and nowhere else : after a
+`helm upgrade` alone the cluster keeps the previous definition, which does not know `replicas`, and the API server drops
+the field (or the client rejects it) so nothing scales. Update the definitions **before** the upgrade, with the first
+command of this section (`helm show crds unifai/unifai | kubectl apply --server-side -f -`). Without `replicas` the
+old definition keeps working, nothing else in the chart depends on it. With ArgoCD the operator Application applies
+the definitions (the stack Application sets `skipCrds: true`) : sync it first.
 
 ## Uninstall
 
