@@ -17,9 +17,16 @@ echo "info  commits ahead of origin/devel: $(git rev-list --count origin/devel..
 last=$(git tag --list '[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
 echo "info  last release tag: ${last:-none}, .tools/repo-release: $(cat .tools/repo-release)"
 echo "info  charts that would be released: $(./sx-helm changed-charts 2>/dev/null | tail -n +2 | wc -l) (RELEASE_ALL=true for every chart)"
-# ADR-0006: every internal pin must resolve to a version already published, strictly below the release being prepared
-next=${VERSION:-$(python3 -c 'v=open(".tools/repo-release").read().strip().split("."); v[-1]=str(int(v[-1])+1); print(".".join(v))')}
-python3 -I .tools/bump-pins.py --below "$next" >/tmp/preflight-pins.log 2>&1 && ok "internal pins resolve below $next ($(tail -1 /tmp/preflight-pins.log))" || bad "internal pins cannot be resolved below $next (see /tmp/preflight-pins.log)"
+# ADR-0006, depending on the stage of the release:
+#  - tree already conform (pins lower than the chart versions, i.e. after `make release-charts` or after the pins commit):
+#    every pin must be listed in the published index (bump-pins.py --check, online)
+#  - tree not conform yet (before the release run): every pin must be resolvable below the version about to be released
+if python3 -I .tools/bump-pins.py --check-offline >/dev/null 2>&1; then
+  python3 -I .tools/bump-pins.py --check >/tmp/preflight-pins.log 2>&1 && ok "internal pins are lower than their chart version and published ($(tail -1 /tmp/preflight-pins.log))" || bad "internal pins (see /tmp/preflight-pins.log)"
+else
+  next=${VERSION:-$(python3 -c 'v=open(".tools/repo-release").read().strip().split("."); v[-1]=str(int(v[-1])+1); print(".".join(v))')}
+  python3 -I .tools/bump-pins.py --below "$next" >/tmp/preflight-pins.log 2>&1 && ok "internal pins resolve below $next ($(tail -1 /tmp/preflight-pins.log))" || bad "internal pins cannot be resolved below $next (see /tmp/preflight-pins.log)"
+fi
 .github/scripts/ci-check.sh static >/tmp/preflight-static.log 2>&1 && ok "ci-check static" || bad "ci-check static (see /tmp/preflight-static.log)"
 .github/scripts/ci-check.sh argocd >/tmp/preflight-argocd.log 2>&1 && ok "ci-check argocd" || bad "ci-check argocd (see /tmp/preflight-argocd.log)"
 .github/scripts/ci-check.sh schema >/tmp/preflight-schema.log 2>&1 && ok "ci-check schema (no drift)" || bad "ci-check schema (see /tmp/preflight-schema.log)"

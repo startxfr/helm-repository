@@ -187,7 +187,7 @@ function routerListChanged {
     chartListChanged
     # A changed dependency does not reach its dependents by itself (ADR-0006): list the pins that are behind the index
     echo "Dependents pinned on an older version than the latest published one (ADR-0006) :"
-    python3 -I "$PROJECT_LIBPATH/bump-pins.py" --lagging 2>&1 | sed 's/^/ /' 
+    python3 -I "$PROJECT_LIBPATH/bump-pins.py" --lagging 2>&1 | sed 's/^/ /'
 }
 
 # Release the selected charts (see chartListToRelease), one after the other. The pins of a chart on the charts of this
