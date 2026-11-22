@@ -45,7 +45,7 @@ Complete deployment of a project with the following characteristics :
   - The **v0.5.0** version
   - Deployed under the **openshift-operators** project
 
-## Other available values
+## Values files
 
 - **startx** : Kepler operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kepler/values-startx.yaml))
 

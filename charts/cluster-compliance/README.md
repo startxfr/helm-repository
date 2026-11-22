@@ -55,7 +55,7 @@ helm install cluster-compliance-operator startx/cluster-compliance --set project
 helm install cluster-compliance-instance startx/cluster-compliance --set project.enabled=false,operator.enabled=false,compliance.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Compliance operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-compliance/values-startx.yaml))
 

@@ -52,7 +52,7 @@ Complete deployment of a LocalStorage configuration with the following character
 helm install cluster-localstorage startx/cluster-localstorage
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx local storage cluster wide service configuration using localstorage operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-localstorage/values-startx.yaml))
 

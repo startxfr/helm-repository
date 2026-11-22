@@ -58,6 +58,19 @@ helm install cluster-kafka-instance startx/cluster-kafka --set project.enabled=f
 helm install cluster-kafka startx/cluster-kafka -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx.yaml
 ```
 
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **demo** : STARTX cluster configuration, see values.yaml for the parameters (see [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-demo.yaml))
+- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx.yaml))
+- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-startx_noinfra.yaml))
+- `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install cluster-kafka startx/cluster-kafka -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kafka/values-demo.yaml
+```
+
 ## Deploy with ArgoCD
 
 ### AppProject

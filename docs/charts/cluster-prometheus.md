@@ -302,7 +302,19 @@ helm install cluster-prometheus startx/cluster-prometheus -f https://raw.githubu
 
 Every resource list (`monitoringStacks`, `serviceMonitors`, `podMonitors`, `prometheusRules`, `scrapeConfigs`, `alertmanagerConfigs`, `thanosQueriers`, `networkPolicies`, `routes` and `secrets`) accepts an `annotations` map per item. It is merged over the default ArgoCD sync-wave of the resource, so `argocd.argoproj.io/sync-wave` and `argocd.argoproj.io/sync-options` can be overridden. A `MonitoringStack` also accepts an explicit `spec.resourceSelector`.
 
-## ArgoCD deployment
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-prometheus/values-startx.yaml))
+- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-prometheus/values-startx_noinfra.yaml))
+- `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install cluster-prometheus startx/cluster-prometheus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-prometheus/values-startx.yaml
+```
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

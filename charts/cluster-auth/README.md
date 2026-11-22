@@ -52,7 +52,7 @@ Complete configuration of the OCP authentification with the following characteri
 helm install cluster-auth startx/cluster-auth
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx auth cluster wide service configuration using startx group (dev, devops and ops) (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-startx.yaml))
   - 3 auth templates in **openshift-config**
@@ -75,7 +75,7 @@ helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.c
 helm install cluster-auth startx/cluster-auth -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-auth/values-mg.yaml
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

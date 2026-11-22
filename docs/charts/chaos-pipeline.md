@@ -70,7 +70,7 @@ Nothing is deployed by default. With `project.enabled=true` and `pipeline.enable
 - 2 **pipelines**: **chaos-infra** (3 platform pod scenarios enabled) and **chaos-application** (pod and container scenarios enabled)
 - no **pipelinerun**
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-pipeline/values-startx-project.yaml) creates the `startx-chaos-pipeline` namespace
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-pipeline/values-startx-deploy.yaml) deploys the pipelines in `startx-chaos-pipeline`, gated by the cerberus of `startx-chaos-cerberus`
@@ -345,7 +345,7 @@ pipeline:
           ACTION: skew_time
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 `chaos-pipeline` follows the project/instance pattern: one AppProject, one Application creating the namespace (wave 1,
 no finalizer) and one Application deploying the tasks and pipelines (wave 5). Syncing never starts a chaos run. The

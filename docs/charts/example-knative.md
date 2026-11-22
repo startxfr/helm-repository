@@ -36,39 +36,6 @@ helm show chart startx/example-knative
 helm install example-knative startx/example-knative
 ```
 
-## Other available values
-
-- **demo-knative-helloworld-go** : [values-demo-knative-helloworld-go.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-knative-helloworld-go.yaml)
-- **demo-sxapi-knative** : [values-demo-sxapi-knative.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-sxapi-knative.yaml)
-
-```bash
-helm install example-knative startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-knative-helloworld-go.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | knative   | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-knative values dictionary
-
-| Key                     | Default    | Description                                             |
-| ----------------------- | ---------- | ------------------------------------------------------- |
-| knative.service.enabled | false      | Enable service for this application                     |
-| knative.version         | 0.3.63     | Sxapi image version to run                              |
-| knative.profile         | prod:start | Profile to run inside the container                     |
-| knative.debug           | true       | Enable debuging of the container                        |
-| knative.replicas        | 1          | Define the number of replicas for this knative instance |
-| knative.data            | string     | Files to load into the application                      |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -104,7 +71,31 @@ Complete deployment of a knative development application with the following char
 helm install example-knative-helloworld-go startx/example-knative -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-knative/values-demo-knative-helloworld-go.yaml
 ```
 
-## ArgoCD deployment
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | knative   | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-knative values dictionary
+
+| Key                     | Default    | Description                                             |
+| ----------------------- | ---------- | ------------------------------------------------------- |
+| knative.service.enabled | false      | Enable service for this application                     |
+| knative.version         | 0.3.63     | Sxapi image version to run                              |
+| knative.profile         | prod:start | Profile to run inside the container                     |
+| knative.debug           | true       | Enable debuging of the container                        |
+| knative.replicas        | 1          | Define the number of replicas for this knative instance |
+| knative.data            | string     | Files to load into the application                      |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

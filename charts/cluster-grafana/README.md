@@ -78,7 +78,7 @@ oc patch installplan $(oc get installplan -n default-grafana -o jsonpath='{.item
 helm install cluster-grafana-instance startx/cluster-grafana -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml --set grafana.enabled=true,route.enabled=true,grafana_datasources.enabled=true,grafana_dashboards.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : grafana operator and grafana instance on infra nodes, startx dashboard, and no download of the plugins preinstalled from grafana.com with `plugins.preinstall_disabled`, since the pod may have no internet access (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx.yaml))
 - **startx_noinfra** : the same without the infra node placement (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-grafana/values-startx_noinfra.yaml))

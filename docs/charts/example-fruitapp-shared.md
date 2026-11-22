@@ -36,13 +36,30 @@ helm show chart startx/example-fruitapp-shared
 helm install example-fruitapp-shared startx/example-fruitapp-shared
 ```
 
-## Other available values
+## Values files
 
-- **mc** : [values-mc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-shared/values-mc.yaml)
+### Default values file (values.yaml)
+
+Deploy all shared services for a given namespace with the following characteristics :
+
+- 1 **pvc** named **postgresql-preprod** with
+  - **gp3-csi** storage class
+  - **1Gi** allocation
+- 1 **secret** named **db** with all databse credentials
+- 1 **service** named **db** routing internal calls to pods
+- 1 **deployment** named **db** with
+  - port **5432** exposed
+  - path **/var/lib/pgsql/data** mounted with volume **postgresql-preprod**
 
 ```bash
-helm install example-fruitapp-shared startx/example-fruitapp-shared -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-shared/values-mc.yaml
+# base configuration running default configuration
+helm install example-fruitapp-shared startx/example-fruitapp-shared
 ```
+
+### Other values files
+
+- **mc** : [values-mc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-shared/values-mc.yaml)
+helm install example-fruitapp-shared startx/example-fruitapp-shared -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-shared/values-mc.yaml
 
 ## Values dictionary
 
@@ -72,27 +89,7 @@ helm install example-fruitapp-shared startx/example-fruitapp-shared -f https://r
 | database.memory_limit       | 256Mi                     | Database memory limit                                                                              |
 | database.version            | latest                    | The postgressql version (should be one of latest, 10-el7, 10-el8, 9.6-el8, 13-el8, 12-el8, 12-el7) |
 
-## Values files
-
-### Default values file (values.yaml)
-
-Deploy all shared services for a given namespace with the following characteristics :
-
-- 1 **pvc** named **postgresql-preprod** with
-  - **gp3-csi** storage class
-  - **1Gi** allocation
-- 1 **secret** named **db** with all databse credentials
-- 1 **service** named **db** routing internal calls to pods
-- 1 **deployment** named **db** with
-  - port **5432** exposed
-  - path **/var/lib/pgsql/data** mounted with volume **postgresql-preprod**
-
-```bash
-# base configuration running default configuration
-helm install example-fruitapp-shared startx/example-fruitapp-shared
-```
-
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

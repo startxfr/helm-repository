@@ -58,7 +58,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-argocd startx/cluster-argocd
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx argocd cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx.yaml))
 
@@ -72,7 +72,7 @@ helm install cluster-argocd startx/cluster-argocd -f https://raw.githubuserconte
 helm install cluster-argocd startx/cluster-argocd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-argocd/values-startx-gitops.yaml
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

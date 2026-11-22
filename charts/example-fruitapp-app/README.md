@@ -38,13 +38,27 @@ helm show chart startx/example-fruitapp-app
 helm install example-fruitapp-app startx/example-fruitapp-app
 ```
 
-## Other available values
+## Values files
 
-- **mc** : [values-mc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-app/values-mc.yaml)
+### Default values file (values.yaml)
+
+Deploy all app services for a given namespace with the following characteristics :
+
+- 1 **deployment** named **fruitapp-v3-2-11** with
+  - **2** replicas
+  - **128Mi** max memory
+- 1 **service** named **fruitapp-v3-2-11** load-balancing to pod from this release
+- 1 **route** named **frontend** routing to the **fruitapp-v3-2-11 service**. This route could be shared among multiple version of the application
 
 ```bash
-helm install example-fruitapp-app startx/example-fruitapp-app -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-app/values-mc.yaml
+# base configuration running default configuration
+helm install example-fruitapp-app startx/example-fruitapp-app
 ```
+
+### Other values files
+
+- **mc** : [values-mc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-app/values-mc.yaml)
+helm install example-fruitapp-app startx/example-fruitapp-app -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-fruitapp-app/values-mc.yaml
 
 ## Values dictionary
 
@@ -71,24 +85,7 @@ helm install example-fruitapp-app startx/example-fruitapp-app -f https://raw.git
 | frontend.replicas     | 2                | The number of replicas to apply                                                             |
 | frontend.version      | v3.2.11          | The appication version (should be one of latest, v3.2.8, v3.2.11 or any existing image tag) |
 
-## Values files
-
-### Default values file (values.yaml)
-
-Deploy all app services for a given namespace with the following characteristics :
-
-- 1 **deployment** named **fruitapp-v3-2-11** with
-  - **2** replicas
-  - **128Mi** max memory
-- 1 **service** named **fruitapp-v3-2-11** load-balancing to pod from this release
-- 1 **route** named **frontend** routing to the **fruitapp-v3-2-11 service**. This route could be shared among multiple version of the application
-
-```bash
-# base configuration running default configuration
-helm install example-fruitapp-app startx/example-fruitapp-app
-```
-
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

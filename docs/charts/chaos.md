@@ -82,29 +82,6 @@ oc apply -k .
 
 
 
-## Other available values
-
-This chart ships a single values file, [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos/values.yaml), described in the default values.
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                                                                                                                                                                                                                                               |
-| ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)                                                                                                                                                                                                                                     |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                                                                                                                                                                                                                                           |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod)                                                                                                                                                                                                                         |
-| context.component   | demo      | Component name of this application (logical tenant)                                                                                                                                                                                                                                                       |
-| context.app         | generic     | Application name (functional tenant, default use Chart name)                                                                                                                                                                                                                                             |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                                                                                                                                                                                                                                           |
-| cerberus            | {...}     | Configuration of the cerberus component. Inherit from the [chaos-cerberus chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus/#chaos-cerberus-values-dictionary) for more options) |
-| kraken              | {...}     | Configuration of the kraken component. Inherit from the [chaos-kraken chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken/#chaos-kraken-values-dictionary) for more options)           |
-| pipeline            | {...}     | Configuration of the Tekton chaos pipelines. Inherit from the [chaos-pipeline chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-pipeline) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-pipeline/#chaos-pipeline-values-dictionary) for more options) |
-| litmus              | {...}     | Configuration of the litmus component. Inherit from the [chaos-litmus chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus/#chaos-litmus-values-dictionary) for more options)           |
-| mesh                | {...}     | Configuration of the chaos-mesh component. Inherit from the [chaos-mesh chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh/#chaos-mesh-values-dictionary) for more options)               |
-| monkey              | {...}     | Configuration of the kube-monkey component. Inherit from the [chaos-monkey chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey/#chaos-monkey-values-dictionary) for more options)      |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -179,6 +156,25 @@ helm install \
 --set monkey.enabled=true --set monkey.monkey.enabled=true \
 chaos-monkey startx/chaos-monkey
 ```
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                                                                                                                                                                                                                                               |
+| ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)                                                                                                                                                                                                                                     |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                                                                                                                                                                                                                                           |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod)                                                                                                                                                                                                                         |
+| context.component   | demo      | Component name of this application (logical tenant)                                                                                                                                                                                                                                                       |
+| context.app         | generic     | Application name (functional tenant, default use Chart name)                                                                                                                                                                                                                                             |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                                                                                                                                                                                                                                           |
+| cerberus            | {...}     | Configuration of the cerberus component. Inherit from the [chaos-cerberus chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-cerberus/#chaos-cerberus-values-dictionary) for more options) |
+| kraken              | {...}     | Configuration of the kraken component. Inherit from the [chaos-kraken chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-kraken/#chaos-kraken-values-dictionary) for more options)           |
+| pipeline            | {...}     | Configuration of the Tekton chaos pipelines. Inherit from the [chaos-pipeline chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-pipeline) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-pipeline/#chaos-pipeline-values-dictionary) for more options) |
+| litmus              | {...}     | Configuration of the litmus component. Inherit from the [chaos-litmus chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-litmus/#chaos-litmus-values-dictionary) for more options)           |
+| mesh                | {...}     | Configuration of the chaos-mesh component. Inherit from the [chaos-mesh chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-mesh/#chaos-mesh-values-dictionary) for more options)               |
+| monkey              | {...}     | Configuration of the kube-monkey component. Inherit from the [chaos-monkey chart](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey) (see [chart options](https://helm-repository.readthedocs.io/en/latest/charts/chaos-monkey/#chaos-monkey-values-dictionary) for more options)      |
 
 ## Usage examples
 

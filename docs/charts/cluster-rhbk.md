@@ -84,7 +84,7 @@ oc patch installplan $(oc get installplan -n default-rhbk -o jsonpath='{.items[0
 helm install cluster-rhbk-instance startx/cluster-rhbk -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml --set database.enabled=true,rhbk.enabled=true,route.enabled=true,rhbk_realms.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : rhbk operator on infra nodes, demo instance, development database and startx realm (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx.yaml))
 - **startx_noinfra** : the same without the infra node placement of the operator (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rhbk/values-startx_noinfra.yaml))

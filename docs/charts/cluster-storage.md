@@ -52,7 +52,7 @@ Deployment of storage classes :
 helm install cluster-storage startx/cluster-storage
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx storage classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage/values-startx.yaml)) creating the following storage classes
   - **startx-aws-generic-retain** (AWS EBS gp3-csi level with encryption and expansion enabled with retain policy)

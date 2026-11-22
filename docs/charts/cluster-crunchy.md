@@ -72,7 +72,7 @@ helm install cluster-crunchy-operator startx/cluster-crunchy --set project.enabl
 helm install cluster-crunchy-instance startx/cluster-crunchy --set project.enabled=false,operator.enabled=false,cluster.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : CrunchyDB operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-crunchy/values-startx.yaml))
 - **startx-ha** : one highly available cluster, two instances, synchronous replication, S3 backups, monitoring (see [values-startx-ha.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-crunchy/values-startx-ha.yaml))

@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-sso startx/cluster-sso
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Redhat-SSO operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-sso/values-startx.yaml))
 

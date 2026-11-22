@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-maintenance startx/cluster-maintenance
 ```
 
-## Other available values
+## Values files
 
 - **startx** : maintenance operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-maintenance/values-startx.yaml))
 

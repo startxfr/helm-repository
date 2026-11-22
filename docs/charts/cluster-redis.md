@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-redis startx/cluster-redis
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Redis operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-redis/values-startx.yaml))
 

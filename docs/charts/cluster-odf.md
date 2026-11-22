@@ -51,7 +51,7 @@ Complete deployment of an OpenShift Data Foundation (ODF) configuration with the
 helm install cluster-odf startx/cluster-odf
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx ODF cluster wide service configuration using ODF operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-odf/values-startx.yaml))
 

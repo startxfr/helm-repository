@@ -50,7 +50,7 @@ Deployment of tekton :
 helm install cluster-pipeline startx/cluster-pipeline
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx tekton configuration for Startx clusters (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-pipeline/values-startx.yaml)) deploying the following environment
   - 1 **subscription** named **openshift-pipelines-operator-rh** to deploy codeready operator with the following characteristics

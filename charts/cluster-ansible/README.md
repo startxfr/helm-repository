@@ -57,7 +57,7 @@ helm install cluster-ansible startx/cluster-ansible
 
 `ansibleAAP.spec` accepts a YAML string or a YAML map. `ansibleAAP.annotations` is a map merged over the default ArgoCD sync-wave (`1`), for example to set `argocd.argoproj.io/sync-wave` or `argocd.argoproj.io/sync-options: Prune=false`. `ansibleController.spec` also accepts a YAML string or a YAML map, and `ansibleController.annotations` and `ansibleHub.annotations` override the default sync-waves (`5` and `10`). Helm prints a harmless `Ignoring non-table value` warning when a values file replaces the default string `spec` by a map.
 
-## Other available values
+## Values files
 
 - **startx** : Startx ansible cluster wide service configuration using startx group (dev, devops and ops) (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml))
 
@@ -65,7 +65,7 @@ helm install cluster-ansible startx/cluster-ansible
 helm install cluster-ansible startx/cluster-ansible -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ansible/values-startx.yaml
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

@@ -36,39 +36,6 @@ helm show chart startx/example-couchbase
 helm install example-couchbase startx/example-couchbase
 ```
 
-## Other available values
-
-- **demo-couchbase-yellow** : [values-demo-couchbase-yellow.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-couchbase-yellow.yaml)
-- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo.yaml)
-
-```bash
-helm install example-couchbase startx/example-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-couchbase-yellow.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | couchbase | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-couchbase values dictionary
-
-| Key                       | Default    | Description                                               |
-| ------------------------- | ---------- | --------------------------------------------------------- |
-| couchbase.service.enabled | false      | Enable service for this application                       |
-| couchbase.version         | 0.3.63     | Sxapi image version to run                                |
-| couchbase.profile         | prod:start | Profile to run inside the container                       |
-| couchbase.debug           | true       | Enable debuging of the container                          |
-| couchbase.replicas        | 1          | Define the number of replicas for this couchbase instance |
-| couchbase.data            | string     | Files to load into the application                        |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -97,7 +64,37 @@ Complete deployment of a couchbase demo application for stress test (used in HPA
 helm install example-couchbase startx/example-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-hpa.yaml
 ```
 
-## ArgoCD deployment
+### Other values files
+
+- **demo-couchbase-yellow** : [values-demo-couchbase-yellow.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-couchbase-yellow.yaml)
+- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo.yaml)
+helm install example-couchbase startx/example-couchbase -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-couchbase/values-demo-couchbase-yellow.yaml
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | couchbase | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-couchbase values dictionary
+
+| Key                       | Default    | Description                                               |
+| ------------------------- | ---------- | --------------------------------------------------------- |
+| couchbase.service.enabled | false      | Enable service for this application                       |
+| couchbase.version         | 0.3.63     | Sxapi image version to run                                |
+| couchbase.profile         | prod:start | Profile to run inside the container                       |
+| couchbase.debug           | true       | Enable debuging of the container                          |
+| couchbase.replicas        | 1          | Define the number of replicas for this couchbase instance |
+| couchbase.data            | string     | Files to load into the application                        |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

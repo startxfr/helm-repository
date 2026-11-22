@@ -36,36 +36,6 @@ helm show chart startx/example-pod
 helm install example-pod startx/example-pod
 ```
 
-## Other available values
-
-- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-pod/values-demo.yaml)
-
-```bash
-helm install example-pod startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-pod/values-demo.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | example-pod     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-pod values dictionary
-
-| Key     | Default       | Description                                                      |
-| ------- | ------------- | ---------------------------------------------------------------- |
-| image   | fedora:latest | Image to run into the pod                                        |
-| command | /bin/sx       | Command to run inside the container                              |
-| args    | run           | argunments to pass to the command exectuted inside the container |
-| debug   | true          | Enable debuging of the container                                 |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -90,7 +60,29 @@ Demo pod deployment of a container image with the following characteristics :
 helm install example-pod startx/example-pod -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-demo.yaml
 ```
 
-## ArgoCD deployment
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | example-pod     | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-pod values dictionary
+
+| Key     | Default       | Description                                                      |
+| ------- | ------------- | ---------------------------------------------------------------- |
+| image   | fedora:latest | Image to run into the pod                                        |
+| command | /bin/sx       | Command to run inside the container                              |
+| args    | run           | argunments to pass to the command exectuted inside the container |
+| debug   | true          | Enable debuging of the container                                 |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

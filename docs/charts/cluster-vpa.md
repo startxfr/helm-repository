@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-vpa startx/cluster-vpa
 ```
 
-## Other available values
+## Values files
 
 - **startx** : VerticalPodAutoscaler operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vpa/values-startx.yaml))
 

@@ -54,7 +54,7 @@ helm install cluster-devworkspaces-operator startx/cluster-devworkspaces --set p
 helm install cluster-devworkspaces-instance startx/cluster-devworkspaces --set project.enabled=false,operator.enabled=false,devworkspaces.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : DevWorkspaces operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-devworkspaces/values-startx.yaml))
 

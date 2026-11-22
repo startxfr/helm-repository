@@ -52,7 +52,7 @@ Complete deployment of a Knative configuration with the following characteristic
 helm install cluster-knative startx/cluster-knative
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx knative cluster wide service configuration using serverless operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-knative/values-startx.yaml))
 

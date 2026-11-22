@@ -36,40 +36,6 @@ helm show chart startx/example-sxapi
 helm install example-sxapi startx/example-sxapi
 ```
 
-## Other available values
-
-- **dev** : [values-dev.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml)
-- **v0.0.1** : [values-v0.0.1.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.1.yaml)
-- **v0.0.2** : [values-v0.0.2.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml)
-
-```bash
-helm install example-sxapi startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-dev.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | sxapi     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-sxapi values dictionary
-
-| Key                   | Default    | Description                                           |
-| --------------------- | ---------- | ----------------------------------------------------- |
-| sxapi.service.enabled | false      | Enable service for this application                   |
-| sxapi.version         | 0.3.63     | Sxapi image version to run                            |
-| sxapi.profile         | prod:start | Profile to run inside the container                   |
-| sxapi.debug           | true       | Enable debuging of the container                      |
-| sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
-| sxapi.data            | string     | Files to load into the application                    |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -124,7 +90,31 @@ Complete deployment of a sxapi production application (v0.0.2) with the followin
 helm install example-sxapi-v0.0.2 startx/example-sxapi -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-v0.0.2.yaml
 ```
 
-## ArgoCD deployment
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | sxapi     | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-sxapi values dictionary
+
+| Key                   | Default    | Description                                           |
+| --------------------- | ---------- | ----------------------------------------------------- |
+| sxapi.service.enabled | false      | Enable service for this application                   |
+| sxapi.version         | 0.3.63     | Sxapi image version to run                            |
+| sxapi.profile         | prod:start | Profile to run inside the container                   |
+| sxapi.debug           | true       | Enable debuging of the container                      |
+| sxapi.replicas        | 1          | Define the number of replicas for this sxapi instance |
+| sxapi.data            | string     | Files to load into the application                    |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

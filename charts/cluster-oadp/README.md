@@ -61,6 +61,21 @@ helm install cluster-oadp-instance startx/cluster-oadp --set project.enabled=fal
 helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx.yaml
 ```
 
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **cdf-poc** : STARTX cluster configuration, see values.yaml for the parameters (see [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-cdf-poc.yaml))
+- **demo** : STARTX cluster configuration, see values.yaml for the parameters (see [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-demo.yaml))
+- **mg-pfd** : STARTX cluster configuration, see values.yaml for the parameters (see [values-mg-pfd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-mg-pfd.yaml))
+- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx.yaml))
+- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-startx_noinfra.yaml))
+- `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install cluster-oadp startx/cluster-oadp -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-oadp/values-cdf-poc.yaml
+```
+
 ## Deploy with ArgoCD
 
 ### AppProject

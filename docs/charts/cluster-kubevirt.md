@@ -112,7 +112,7 @@ sriov, ovn-k8s-cni-overlay...). The default namespace of a network attachment is
 | nads.list[].annotations  | `{}`    | Additional annotations (ex: `k8s.v1.cni.cncf.io/resourceName` for SR-IOV networks)          |
 | nads.list[].config       |         | CNI configuration (YAML/JSON text or map), stored as the JSON string expected by Multus     |
 
-## Other available values
+## Values files
 
 - **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubevirt/values-cdf-poc.yaml)
 - **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubevirt/values-demo.yaml)

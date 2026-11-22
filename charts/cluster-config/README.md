@@ -65,6 +65,14 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-config startx/cluster-config
 ```
 
+## Values files
+
+- **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml))
+
+```bash
+helm install cluster-config startx/cluster-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml
+```
+
 ## Cluster monitoring
 
 The `monitoring` block manages the `cluster-monitoring-config` ConfigMap of the `openshift-monitoring`
@@ -133,14 +141,6 @@ and another one) overwrite each other and make the Application permanently OutOf
 A consumer that already manages one of these resources itself must leave the matching flag `false`: for example
 `monitoring.enabled` for `cluster-monitoring-config`, which is `false` by default. Enable a feature only in the one
 Application that owns it.
-
-## Other available values
-
-- **startx** : Startx cluster default configuration with 30min enabled image prunnning scheduling, pagerdutty alert enabled and cluster auto-scaling topped to 64 core and 400Gi RAM consumed (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml))
-
-```bash
-helm install cluster-config startx/cluster-config -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-config/values-startx.yaml
-```
 
 ## Deploy with ArgoCD
 

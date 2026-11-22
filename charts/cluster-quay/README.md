@@ -150,7 +150,7 @@ helm install cluster-quay-operator startx/cluster-quay --set project.enabled=fal
 helm install cluster-quay-app startx/cluster-quay --set project.enabled=false,operator.enabled=false,quay.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx-quay** : Quay operator and registry of the previous releases, every component managed (see [values-startx-quay.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx-quay.yaml))
 - **startx-secvuln** : Container Security operator (see [values-startx-secvuln.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-quay/values-startx-secvuln.yaml))

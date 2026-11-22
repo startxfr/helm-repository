@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-rbac startx/cluster-rbac
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx RBAC default context with dev, devops, ops and admin groups (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-rbac/values-startx.yaml))
 

@@ -49,7 +49,7 @@ Complete deployment of a Keepalived configuration with the following characteris
 helm install cluster-keepalived startx/cluster-keepalived
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx keepalived cluster wide service configuration using keepalived operator (see [values-example.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-keepalived/values-example.yaml))
 

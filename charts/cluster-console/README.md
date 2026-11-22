@@ -50,6 +50,14 @@ Complete deployment of a cluster console configuration with the following charac
 helm install cluster-console startx/cluster-console
 ```
 
+## Values files
+
+- **startx** : Startx Openshift Console customization (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml))
+
+```bash
+helm install cluster-console startx/cluster-console -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml
+```
+
 ## Console customization (OpenShift 4.19+)
 
 The masthead of the console follows the theme chosen by each user (light or dark) since OpenShift 4.19,
@@ -127,14 +135,6 @@ If a logo was previously set with `customLogoFile`, remove it from the cluster b
 | console.customize.documentationBaseURL              | `""`                      | Base URL of the documentation links (empty keeps the OpenShift documentation)                |
 | console.customize.extraCustomization                | `{}`                      | Additional spec.customization settings added as-is                                           |
 | console.plugins                                     | `[]`                      | Console plugins to enable (replaces the whole list, empty leaves it untouched)               |
-
-## Other available values
-
-- **startx** : Startx Openshift Console customization (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml))
-
-```bash
-helm install cluster-console startx/cluster-console -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml
-```
 
 ## Deploy with ArgoCD
 

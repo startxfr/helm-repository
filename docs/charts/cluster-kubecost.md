@@ -49,7 +49,7 @@ Complete deployment of a Kubecost configuration with the following characteristi
 helm install cluster-kubecost startx/cluster-kubecost
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Kubecost operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubecost/values-startx.yaml))
 
@@ -57,7 +57,7 @@ helm install cluster-kubecost startx/cluster-kubecost
 helm install cluster-kubecost startx/cluster-kubecost -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-kubecost/values-startx.yaml
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

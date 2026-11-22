@@ -85,7 +85,7 @@ A workload is terminated only if it opted in (see the last usage example).
 | monkey.config.whitelistedNamespaces | default, demo-*, example-* | Namespaces where pods can be terminated                                                                                     |
 | monkey.config.blacklistedNamespaces | kube-system, openshift-*   | Namespaces never touched                                                                                                    |
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-project.yaml), namespace `startx-chaos-monkey` only
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-monkey/values-startx-deploy.yaml), kube-monkey named `startx-monkey` in the namespace `startx-chaos-monkey`
@@ -153,7 +153,7 @@ oc -n myapp-dev patch deployment myapp --type merge -p '{
   "spec": {"template": {"metadata": {"labels": {"kube-monkey/enabled": "enabled", "kube-monkey/identifier": "myapp"}}}}}'
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 One AppProject and two Applications : `chaos-monkey-project` (wave 1, the namespace) then `chaos-monkey-instance` (wave 5, kube-monkey in dry-run mode).
 The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-monkey/examples/argocd).

@@ -51,7 +51,7 @@ Complete deployment of an EFS storage configuration with the following character
 helm install cluster-storage-efs startx/cluster-storage-efs
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Startx AWS EFS cluster wide service configuration using EFS operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-storage-efs/values-startx.yaml))
 

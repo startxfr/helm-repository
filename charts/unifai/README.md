@@ -97,7 +97,19 @@ What that values file does, and why :
 Known limits on Kubernetes : scheduled backups do not run (their jobs rely on the user identifier OpenShift
 assigns), and the example Ingress annotations are for ingress-nginx.
 
-## Install with ArgoCD
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **kubernetes** : Example values for a plain Kubernetes cluster (experimental, see README) (see [values-kubernetes.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/unifai/values-kubernetes.yaml))
+- **openshift** : Example values for OpenShift : Routes, a Keycloak managed by the operator, explicit storage classes (see [values-openshift.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/unifai/values-openshift.yaml))
+- `examples/argocd/` : 4 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install unifai startx/unifai -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/unifai/values-kubernetes.yaml
+```
+
+## Deploy with ArgoCD
 
 Use two Applications, so that the operator is in place before the stack and removed after it. The manifests are
 in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/unifai/examples/argocd) :

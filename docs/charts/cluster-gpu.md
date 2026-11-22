@@ -59,6 +59,19 @@ helm install cluster-gpu-instance startx/cluster-gpu --set project.enabled=false
 helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx.yaml
 ```
 
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **mg** : STARTX cluster configuration, see values.yaml for the parameters (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-mg.yaml))
+- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx.yaml))
+- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-startx_noinfra.yaml))
+- `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install cluster-gpu startx/cluster-gpu -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gpu/values-mg.yaml
+```
+
 ## Deploy with ArgoCD
 
 ### AppProject

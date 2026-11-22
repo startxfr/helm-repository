@@ -55,7 +55,7 @@ helm install cluster-descheduler-operator startx/cluster-descheduler --set proje
 helm install cluster-descheduler-instance startx/cluster-descheduler --set project.enabled=false,operator.enabled=false,descheduler.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : descheduler operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-descheduler/values-startx.yaml))
 

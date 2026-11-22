@@ -36,14 +36,39 @@ helm show chart startx/cluster-vault
 helm install cluster-vault startx/cluster-vault
 ```
 
-## Other available values
+## Values files
 
-- **startx** : [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml)
-- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx_noinfra.yaml)
+### Default values file (values.yaml)
+
+Configuration of default properties all disabled by default. This mean no resource will be created unless overwriting default parameters. Default configuration have the following characteristics :
+
+- 1 **project** named **default-vault**
+- 1 **chart** named **vault** to deploy vault server in the project with the following characteristics
+  - helm chart version is **0.23.0**
+  - vault server is in version **1.12.1**
 
 ```bash
+# base configuration running default configuration
+helm install cluster-vault startx/cluster-vault
+```
+
+### Default values file (values-startx.yaml)
+
+Configuration of startx properties with the following characteristics :
+
+- 1 **project** named **startx-vault** (disabled by default)
+- 1 **chart** named **vault** to deploy vault server in the project with the following characteristics
+  - helm chart version is **0.23.0**
+  - vault server is in version **1.12.1**
+
+```bash
+# base configuration running startx configuration
 helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml
 ```
+
+### Other values files
+
+- **startx_noinfra** : [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx_noinfra.yaml)
 
 ## Values dictionary
 
@@ -117,36 +142,6 @@ more information on the availables options you can set under this **vault** prop
 # example of a vault creation with this helm chart
 
 ````
-
-## Values files
-
-### Default values file (values.yaml)
-
-Configuration of default properties all disabled by default. This mean no resource will be created unless overwriting default parameters. Default configuration have the following characteristics :
-
-- 1 **project** named **default-vault**
-- 1 **chart** named **vault** to deploy vault server in the project with the following characteristics
-  - helm chart version is **0.23.0**
-  - vault server is in version **1.12.1**
-
-```bash
-# base configuration running default configuration
-helm install cluster-vault startx/cluster-vault
-```
-
-### Default values file (values-startx.yaml)
-
-Configuration of startx properties with the following characteristics :
-
-- 1 **project** named **startx-vault** (disabled by default)
-- 1 **chart** named **vault** to deploy vault server in the project with the following characteristics
-  - helm chart version is **0.23.0**
-  - vault server is in version **1.12.1**
-
-```bash
-# base configuration running startx configuration
-helm install cluster-vault startx/cluster-vault -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-vault/values-startx.yaml
-```
 
 ## Deploy with ArgoCD
 

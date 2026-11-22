@@ -50,7 +50,7 @@ Complete deployment of a MustGather configuration with the following characteris
 helm install cluster-mustgather startx/cluster-mustgather
 ```
 
-## Other available values
+## Values files
 
 - **startx** : mustgather cluster wide service configuration using mustgather operator (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mustgather/values-startx.yaml))
 
@@ -58,7 +58,7 @@ helm install cluster-mustgather startx/cluster-mustgather
 helm install cluster-mustgather startx/cluster-mustgather -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mustgather/values-startx.yaml
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

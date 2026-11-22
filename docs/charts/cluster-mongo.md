@@ -36,7 +36,7 @@ helm show chart startx/cluster-mongo
 helm install cluster-mongo startx/cluster-mongo
 ```
 
-## Deploy this helm chart with ArgoCD
+## Deploy with ArgoCD
 
 ### Applications
 
@@ -58,7 +58,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-mongo startx/cluster-mongo
 ```
 
-## Other available values
+## Values files
 
 - **startx** : MongoDB operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mongo/values-startx.yaml))
 

@@ -96,7 +96,19 @@ helm install cluster-dell-csm startx/cluster-dell-csm -f my-array.yaml \
 helm install cluster-dell-csm startx/cluster-dell-csm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx.yaml
 ```
 
-## ArgoCD deployment
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx.yaml))
+- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx_noinfra.yaml))
+- `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install cluster-dell-csm startx/cluster-dell-csm -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dell-csm/values-startx.yaml
+```
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

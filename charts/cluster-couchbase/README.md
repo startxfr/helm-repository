@@ -55,7 +55,7 @@ helm install cluster-couchbase-operator startx/cluster-couchbase --set project.e
 helm install cluster-couchbase-instance startx/cluster-couchbase --set project.enabled=false,operator.enabled=false,couchbase.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Couchbase operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-couchbase/values-startx.yaml))
 

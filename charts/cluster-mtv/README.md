@@ -47,7 +47,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-mtv startx/cluster-mtv
 ```
 
-## Other available values
+## Values files
 
 - **startx** : MTV operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mtv/values-startx.yaml))
 

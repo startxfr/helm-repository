@@ -57,7 +57,7 @@ helm install cluster-costs-operator startx/cluster-costs --set project.enabled=f
 helm install cluster-costs-instance startx/cluster-costs --set project.enabled=false,operator.enabled=false,costs.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : costs operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-costs/values-startx.yaml))
 

@@ -49,7 +49,7 @@ Complete deployment with the following characteristics:
 helm install cluster-nexus startx/cluster-nexus
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Nexus operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml))
 
@@ -57,7 +57,7 @@ helm install cluster-nexus startx/cluster-nexus
 helm install cluster-nexus startx/cluster-nexus -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nexus/values-startx.yaml
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

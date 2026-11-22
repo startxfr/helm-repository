@@ -67,7 +67,7 @@ Complete deployment of Qdrant with the following characteristics:
 helm install cluster-qdrant startx/cluster-qdrant
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Qdrant deployed in a `default-qdrant` namespace with the STARTX "infra" scope/context (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-qdrant/values-startx.yaml))
 
@@ -75,7 +75,7 @@ helm install cluster-qdrant startx/cluster-qdrant
 helm install cluster-qdrant startx/cluster-qdrant -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-qdrant/values-startx.yaml
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

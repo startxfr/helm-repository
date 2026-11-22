@@ -76,7 +76,7 @@ helm install cluster-cloudnativedb-operator startx/cluster-cloudnativedb --set p
 helm install cluster-cloudnativedb-instance startx/cluster-cloudnativedb --set project.enabled=false,operator.enabled=false,cluster.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : CloudNativePG operator and a demo cluster (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx.yaml))
 - **startx-ha** : one highly available cluster, three instances, synchronous replication with quorum failover, S3 backups, monitoring (see [values-startx-ha.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-cloudnativedb/values-startx-ha.yaml))

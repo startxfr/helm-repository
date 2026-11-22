@@ -54,7 +54,7 @@ helm install cluster-dvo-operator startx/cluster-dvo --set project.enabled=false
 helm install cluster-dvo-instance startx/cluster-dvo --set project.enabled=false,operator.enabled=false,dvo.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : DVO operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx.yaml))
 

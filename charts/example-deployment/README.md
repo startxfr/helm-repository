@@ -36,40 +36,6 @@ helm show chart startx/example-deployment
 helm install example-deployment startx/example-deployment
 ```
 
-## Other available values
-
-- **apache** : [values-apache.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-apache.yaml)
-- **demo** : [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-demo.yaml)
-- **mariadb** : [values-mariadb.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-mariadb.yaml)
-- **quay-secvuln** : [values-quay-secvuln.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-quay-secvuln.yaml)
-
-```bash
-helm install example-deployment startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-apache.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | example-deployment     | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-deployment values dictionary
-
-| Key      | Default       | Description                                                      |
-| -------- | ------------- | ---------------------------------------------------------------- |
-| image    | fedora:latest | Image to run into the pod                                        |
-| command  | /bin/sx       | Command to run inside the container                              |
-| args     | run           | argunments to pass to the command exectuted inside the container |
-| debug    | true          | Enable debuging of the container                                 |
-| replicas | 1             | Define the number of replicas for this sxapi instance            |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -120,7 +86,34 @@ Deployment of an mariadb container image with the following characteristics :
 helm install example-deployment-mariadb startx/example-deployment -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-sxapi/values-mariadb.yaml
 ```
 
-## ArgoCD deployment
+### Other values files
+
+- **quay-secvuln** : [values-quay-secvuln.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-deployment/values-quay-secvuln.yaml)
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | example-deployment     | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-deployment values dictionary
+
+| Key      | Default       | Description                                                      |
+| -------- | ------------- | ---------------------------------------------------------------- |
+| image    | fedora:latest | Image to run into the pod                                        |
+| command  | /bin/sx       | Command to run inside the container                              |
+| args     | run           | argunments to pass to the command exectuted inside the container |
+| debug    | true          | Enable debuging of the container                                 |
+| replicas | 1             | Define the number of replicas for this sxapi instance            |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

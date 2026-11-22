@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-gitlab startx/cluster-gitlab
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Gitlab operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-gitlab/values-startx.yaml))
 

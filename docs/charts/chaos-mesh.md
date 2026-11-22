@@ -74,7 +74,7 @@ installs them at the first install and never upgrades them.
 | mesh.dashboard.rootUrl      | https://server-chaos-mesh.apps.mycluster.com | Public URL of the dashboard, to adapt to the cluster                                                                          |
 | mesh.prometheus.create      | true                                         | Deploy a Prometheus with a persistent volume                                                                                  |
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-project.yaml), namespace `startx-chaos-mesh` only
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-mesh/values-startx-deploy.yaml), chaos-mesh in the namespace `startx-chaos-mesh`, 3 controller replicas
@@ -157,7 +157,7 @@ spec:
 EOF
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 One AppProject and two Applications : `chaos-mesh-project` (wave 1, the namespace) then `chaos-mesh-instance` (wave 5, chaos-mesh).
 The files are in [examples/argocd](https://github.com/startxfr/helm-repository/tree/master/charts/chaos-mesh/examples/argocd).

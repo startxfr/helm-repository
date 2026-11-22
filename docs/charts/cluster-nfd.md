@@ -61,7 +61,20 @@ helm install cluster-nfd-instance startx/cluster-nfd --set project.enabled=false
 helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx.yaml
 ```
 
-## ArgoCD deployment
+## Values files
+
+Example values files shipped with the chart, to use with `helm install -f <file>` :
+
+- **mg** : STARTX cluster configuration, see values.yaml for the parameters (see [values-mg.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-mg.yaml))
+- **startx** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx.yaml))
+- **startx_noinfra** : STARTX cluster configuration, see values.yaml for the parameters (see [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-startx_noinfra.yaml))
+- `examples/argocd/` : 5 example manifest(s) (see the ArgoCD or usage sections)
+
+```bash
+helm install cluster-nfd startx/cluster-nfd -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-nfd/values-mg.yaml
+```
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

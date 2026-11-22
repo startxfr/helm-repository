@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-mtc startx/cluster-mtc
 ```
 
-## Other available values
+## Values files
 
 - **startx** : MTC operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-mtc/values-startx.yaml))
 

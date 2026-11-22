@@ -48,7 +48,7 @@ Complete deployment of a project with the following characteristics :
 helm install cluster-ptp startx/cluster-ptp
 ```
 
-## Other available values
+## Values files
 
 - **startx** : PTP operator (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-ptp/values-startx.yaml))
 

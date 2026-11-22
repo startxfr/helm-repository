@@ -78,7 +78,7 @@ the chart creates:
 - 1 **configmap** with the krkn configuration and 1 **configmap** with the enabled scenarios
 - 1 **job** named **kraken-test**, unprivileged, running the enabled scenarios against the cluster it runs in
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-project.yaml) creates the `startx-chaos-kraken` namespace
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-kraken/values-startx-deploy.yaml) runs two pod scenarios (monitoring, ingress) with the core engine and the cerberus signal
@@ -302,7 +302,7 @@ helm install -n chaos-kraken chaos-kraken-run startx/chaos-kraken \
   --set kraken.scenarios.node-reboot-worker.enabled=true
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 `chaos-kraken` follows the project/instance pattern: one AppProject, one Application creating the namespace (wave 1,
 no finalizer) and one Application running the chaos Job (wave 5). The instance Application has **no automated sync**:

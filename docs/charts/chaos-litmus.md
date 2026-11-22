@@ -102,7 +102,7 @@ portal Deployments by the upstream chart.
 | litmus.mongodb.auth.rootPassword | "" | MongoDB root password, when `litmus.mongodb.auth.existingSecret` is empty                                                    |
 | litmus.portal        | {...}        | Frontend, GraphQL server and authentication server of the portal                                                                 |
 
-## Other available values
+## Values files
 
 - **startx-project** : [values-startx-project.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-project.yaml), namespace `startx-chaos-litmus` only
 - **startx-deploy** : [values-startx-deploy.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/chaos-litmus/values-startx-deploy.yaml), litmus portal in the namespace `startx-chaos-litmus` ; it expects the Secrets `litmus-admin` and `litmus-mongodb` in that namespace (see step 4 above)
@@ -180,7 +180,7 @@ litmus:
 helm install chaos-litmus-instance startx/chaos-litmus -f my-litmus-values.yaml -n chaos-litmus
 ```
 
-## ArgoCD deployment
+## Deploy with ArgoCD
 
 One AppProject and two Applications : `chaos-litmus-project` (wave 1, the namespace) then `chaos-litmus-instance` (wave 5, the portal and its route).
 The instance Application reads the credentials from the Secrets `litmus-admin` and `litmus-mongodb` : create them in

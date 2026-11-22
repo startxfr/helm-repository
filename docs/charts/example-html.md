@@ -36,46 +36,6 @@ helm show chart startx/example-html
 helm install example-html startx/example-html
 ```
 
-## Other available values
-
-- **demo-3scale-manpage** : [values-demo-3scale-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml)
-- **demo-aap-manpage** : [values-demo-aap-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-aap-manpage.yaml)
-- **demo-affinity-manpage** : [values-demo-affinity-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-affinity-manpage.yaml)
-- **demo-argocd-manpage** : [values-demo-argocd-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-argocd-manpage.yaml)
-- **demo-automation-runner-manpage** : [values-demo-automation-runner-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-automation-runner-manpage.yaml)
-- **demo-chaos-manpage** : [values-demo-chaos-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-chaos-manpage.yaml)
-- **demo-compliance-manpage** : [values-demo-compliance-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-compliance-manpage.yaml)
-- **demo-costs-manpage** : [values-demo-costs-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-costs-manpage.yaml)
-- and 28 more `values-*.yaml` files: see the [chart directory](https://github.com/startxfr/helm-repository/tree/master/charts/example-html)
-
-```bash
-helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml
-```
-
-## Values dictionary
-
-### context values dictionary
-
-| Key                 | Default   | Description                                                                       |
-| ------------------- | --------- | --------------------------------------------------------------------------------- |
-| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
-| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
-| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
-| context.component   | demo      | Component name of this application (logical tenant)                               |
-| context.app         | html      | Application name (functional tenant, default use Chart name)                     |
-| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
-
-### example-html values dictionary
-
-| Key                  | Default    | Description                                          |
-| -------------------- | ---------- | ---------------------------------------------------- |
-| html.service.enabled | false      | Enable service for this application                  |
-| html.version         | 0.3.63     | Sxapi image version to run                           |
-| html.profile         | prod:start | Profile to run inside the container                  |
-| html.debug           | true       | Enable debuging of the container                     |
-| html.replicas        | 1          | Define the number of replicas for this html instance |
-| html.data            | string     | Files to load into the application                   |
-
 ## Values files
 
 ### Default values file (values.yaml)
@@ -104,7 +64,43 @@ Complete deployment of a html demo application for stress test (used in HPA test
 helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-hpa.yaml
 ```
 
-## ArgoCD deployment
+### Other values files
+
+- **demo-3scale-manpage** : [values-demo-3scale-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml)
+- **demo-aap-manpage** : [values-demo-aap-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-aap-manpage.yaml)
+- **demo-affinity-manpage** : [values-demo-affinity-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-affinity-manpage.yaml)
+- **demo-argocd-manpage** : [values-demo-argocd-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-argocd-manpage.yaml)
+- **demo-automation-runner-manpage** : [values-demo-automation-runner-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-automation-runner-manpage.yaml)
+- **demo-chaos-manpage** : [values-demo-chaos-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-chaos-manpage.yaml)
+- **demo-compliance-manpage** : [values-demo-compliance-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-compliance-manpage.yaml)
+- **demo-costs-manpage** : [values-demo-costs-manpage.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-costs-manpage.yaml)
+helm install example-html startx/example-html -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/example-html/values-demo-3scale-manpage.yaml
+
+## Values dictionary
+
+### context values dictionary
+
+| Key                 | Default   | Description                                                                       |
+| ------------------- | --------- | --------------------------------------------------------------------------------- |
+| context.scope       | default   | Name of the global scope for this application (organizational tenant)             |
+| context.cluster     | localhost | Name of the cluster running this application (platform tenant)                   |
+| context.environment | dev       | Name of the environment for this application (ex: dev, factory, preprod or prod) |
+| context.component   | demo      | Component name of this application (logical tenant)                               |
+| context.app         | html      | Application name (functional tenant, default use Chart name)                     |
+| context.version     | 0.0.1     | Version name of this application (default use Chart appVersion)                   |
+
+### example-html values dictionary
+
+| Key                  | Default    | Description                                          |
+| -------------------- | ---------- | ---------------------------------------------------- |
+| html.service.enabled | false      | Enable service for this application                  |
+| html.version         | 0.3.63     | Sxapi image version to run                           |
+| html.profile         | prod:start | Profile to run inside the container                  |
+| html.debug           | true       | Enable debuging of the container                     |
+| html.replicas        | 1          | Define the number of replicas for this html instance |
+| html.data            | string     | Files to load into the application                   |
+
+## Deploy with ArgoCD
 
 ### Deploy via ArgoCD Application
 

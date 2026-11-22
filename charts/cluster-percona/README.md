@@ -51,7 +51,7 @@ helm show chart startx/cluster-percona
 helm install cluster-percona startx/cluster-percona
 ```
 
-## Deploy this helm chart with ArgoCD
+## Step by step deployment with ArgoCD
 
 ### 1. Create the project
 
@@ -160,7 +160,7 @@ helm install cluster-percona-operator startx/cluster-percona --set project.enabl
 helm install cluster-percona-instance startx/cluster-percona --set project.enabled=false,operator.enabled=false,cluster.enabled=true
 ```
 
-## Other available values
+## Values files
 
 - **startx** : Percona operator and a demo cluster (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-percona/values-startx.yaml))
 - **startx-ha** : one highly available cluster, two instances, synchronous replication, S3 backups, network policy (see [values-startx-ha.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-percona/values-startx-ha.yaml))
