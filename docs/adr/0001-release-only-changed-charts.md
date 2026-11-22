@@ -1,6 +1,7 @@
 # ADR-0001 Release only the charts that changed
 
-- Status: accepted (2026-11-19)
+- Status: accepted (2026-11-19), amended in part by [ADR-0006](0006-internal-pins-previous-published-version.md) (2026-11-22):
+  a dependency release no longer forces the release of its dependents, the pins of a release stay on already published versions
 - Deciders: helm-repository maintainers
 
 ## Context
@@ -11,8 +12,9 @@ repository release therefore forced them to rebuild and re-lock dependencies tha
 
 ## Decision
 
-- A release bumps and publishes only the charts whose content changed, plus the charts whose dependency pins were
-  updated because a dependency changed.
+- A release bumps and publishes only the charts whose content changed. *Amended by ADR-0006:* the dependents of a
+  changed dependency are no longer added to the release; they take the new version when they are released
+  themselves (`sx-helm changed-charts` lists the ones that lag behind).
 - A chart that changes takes the next repository version (`.tools/repo-release`, `21.3.N`). Charts that did not change
   keep their previous version: versions across charts are no longer identical.
 - The repository version stays the identity of a release: it is the annotated git tag created at promotion time

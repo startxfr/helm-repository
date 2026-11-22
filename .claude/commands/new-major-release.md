@@ -16,6 +16,8 @@ Create a new major OCP release in the helm-repository.
 CI handles the rest:
 - Pipeline on `devel` runs `make test-all` (validate)
 - Pipeline on `master` runs `make release-all` + `make publish` automatically
+
+**Pins (ADR-0006)**: a pin on a chart of this repository is a version of the same `MAJOR.MINOR` already published below the chart version. In the new release nothing is published yet, so `make release-all` is refused for every chart that has an internal dependency. Release the charts without internal dependency first, alone (`make release CHART=project VERSION=$NEW_MAJOR.0.0`, same for `operator`, `sxapi`, `cluster-rbac`...), `make publish`, then release the others (they pin that first version). The pins are never taken from the previous release.
 - Merge to `stable` requires a manual click in the GitLab CI pipeline
 
 ## Usage

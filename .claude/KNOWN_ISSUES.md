@@ -49,6 +49,20 @@ Must match the chart name, not `sxapi`. Charts affected: `chaos-*`, `cluster-vau
 Never tracked (root `.gitignore`, ADR-0005). Pins in `Chart.yaml` dependencies are exact, so the lock adds nothing; the release and the CI run `helm dependency update` themselves.
 Do not `git add -f` a lock; after changing a pin there is nothing else to commit.
 
+## Internal dependency pins (ADR-0006)
+
+- A pin on a chart of this repository (`project`, `operator`, `sxapi`, `cluster-rbac`, `chaos-*`...) is the highest version
+  already published in the index of its `repository`, of the same `MAJOR.MINOR`, **strictly lower than the version of the
+  chart that carries it**. Never write one by hand: `.tools/bump-pins.py --below <next version>` does it, called by the
+  release (`make release CHART=` and the full release use the same path).
+- `bump-pins.py --check-offline` (in `ci-check.sh static`) proves `pin < chart version` only; that the pin is published is
+  proved by `bump-pins.py --check` and by the preflight (they download the index). An unreachable index stops the tool
+  with exit code 2: it never falls back to the local tree.
+- A fix in `project`/`operator` does not reach its dependents by itself: release the dependency, publish, then release the
+  dependents (`sx-helm changed-charts` lists the dependents whose pin lags: `bump-pins.py --lagging`).
+- A new chart, or the first release of an OpenShift minor, has nothing published to pin: the tool refuses, release the
+  dependencies first (alone), then the dependents.
+
 ## chaos-litmus / chaos-mesh / chaos-monkey : wrappers around upstream charts
 
 - The route and SCC templates must name the Services and ServiceAccounts exactly as the upstream chart does: recompute
@@ -103,4 +117,5 @@ values first, then to the template of both charts once confirmed on a cluster.
 - `example-fruitapp-project` copies the `dockercfg` block of the project schema with the five required entry fields, so
   it rejects an `existingSecret` only entry. Known limitation, to fix when its schema is regenerated.
 - A dependent chart accepts the `existingSecret` only form once it pins a `project` release that contains it (Helm
-  validates the values of a dependency with the schema packaged in the dependency).
+  validates the values of a dependency with the schema packaged in the dependency). Since ADR-0006 a dependent takes a
+  new `project` only when it is released again, after `project` is published.

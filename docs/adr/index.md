@@ -9,3 +9,4 @@ Decisions that shape how this repository is built, released and consumed. Each r
 | [0003](0003-schema-policy.md) | Values schema policy | accepted |
 | [0004](0004-consumer-protocol-and-pinning.md) | Consumer protocol: pin releases, announce changes | accepted |
 | [0005](0005-generated-locks-not-tracked.md) | Chart.lock and subchart archives are not tracked | accepted |
+| [0006](0006-internal-pins-previous-published-version.md) | Internal dependency pins are the latest version already published | accepted |

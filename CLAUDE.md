@@ -26,6 +26,8 @@ charts/<name>/
 
 **Chart.yaml rules**: `type: application`; `version` aligned to OCP (`MAJOR.MINOR.PATCH`); `appVersion` = upstream version; `kubeVersion` always set; `annotations.artifacthub.io/changes` updated each release; `prerelease: "true"/"false"`.
 
+**Internal dependency pins** (ADR-0006): every `dependencies[]` item served by this repository bucket (`project`, `operator`, `sxapi`, `cluster-rbac`, `chaos-*`...) is pinned on the **highest version already published** (index of its `repository`) of the same `MAJOR.MINOR`, **strictly lower than the version of the chart that carries the pin** — never equal to it, or the chart cannot be rebuilt before its dependency is published. The release resolves them (`.tools/bump-pins.py --below <next version>`, called by `routerChartRelease`); never write one by hand. Upstream dependencies (kargo, vault, qdrant, gitlab, chaos-mesh, litmus, kube-monkey) keep their upstream version. A new chart, or the first release of a minor, is refused until its dependencies are published (release them first, alone).
+
 **values.yaml rules**: First line `# Default values for <chart>.`; `context:` always first key; every top-level key has a comment; no French words.
 
 **README.md sections (in order)**: title+badge → description → Requirements → Deploy on openshift (Connect/Install repo/Get info/Install) → Default values → Values files → Values dictionary → Deploy with ArgoCD → History.  
@@ -101,6 +103,8 @@ make delete     CHART=cluster-nmstate [FORCE_DELETE=yes]
 1. `make release CHART=<name>` — bumps Chart.yaml, replaces `targetRevision` in README, appends history row, syncs to `docs/charts/`, signs, packages, uploads `.tgz`+`.prov` to `.reposync/stable/` **and** `.reposync/$STABLE_MAINRELEASE/`, uploads to S3.
 2. `make publish` — regenerates Helm index for stable/current repos (noschema is frozen), syncs to S3.
 3. Commit and push (`devel` → `master` → `stable` → tag).
+
+**Pins**: `make release` rewrites the internal pins of the chart on the published versions below its new version (ADR-0006) and stops, writing nothing, when the index is unreachable or a dependency has no published version. A fix in `project`/`operator` does **not** reach its dependents by itself: (1) release and publish the dependency, (2) release the dependents that must take it (`sx-helm changed-charts` lists the dependents whose pin lags behind: `.tools/bump-pins.py --lagging`). `ci-check.sh static` proves offline that every pin is lower than its chart version; `.tools/bump-pins.py --check` and `release-preflight.sh` prove online that it is published; `release-verify.sh` checks the packages after a release.
 
 **Dual S3 copy**: every package lands in both `stable/` and `release-N/` immediately after `make release`.
 
