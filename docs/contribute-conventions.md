@@ -8,7 +8,7 @@ Each rule is tagged with how it is enforced:
 
 - **[CI]** checked by `.github/scripts/ci-check.sh`, a failure blocks the merge
 - **[CI-report]** checked by `ci-check.sh conventions`, reported but not blocking until every chart complies
-- **[review]** checked by the reviewer (`helm-quality`) before a release
+- **[review]** checked by the reviewer before a release
 
 Exceptions are listed in [Exceptions](#exceptions); a chart is never exempted silently.
 
@@ -69,8 +69,7 @@ Policy in ADR-0003, summarized:
   committed in the same commit as the `values.yaml` change.
 - `ci-check.sh schema`: no key of `values.yaml` may be missing from the schema (it looks 2 levels deep only). **[CI]**
 - `schema-sync.py --check <name>` reports 0 outdated, and `grep raw.githubusercontent charts/<name>/values.schema.json`
-  is empty. **[CI-report]** until it is wired in `ci-check.sh` (helm-assist Lot 2), then **[CI]**. Repository backlog
-  on 2026-11-21: 85 of 92 charts outdated.
+  is empty. **[CI-report]** until it is wired in `ci-check.sh`, then **[CI]**.
 - Valid JSON; validates the default values and every `values-startx*.yaml`. **[CI]**
 - A hand-written schema is an exception listed in `.claude/KNOWN_ISSUES.md`; `make schema` is never run on it.
 - Free-form blocks handed to an operator (a custom resource `spec`) stay open.
@@ -103,7 +102,7 @@ they have content, and then at their place in the order. Use the exact titles be
 | 4 | `## Deploy this helm chart on kubernetes` | optional | only for a chart that supports plain Kubernetes |
 | 5 | `## Default values` | mandatory | what `values.yaml` deploys, as a list of resources with their key settings. The `example-*`, `operator`, `project` and `sxapi` charts describe `values.yaml` as the first entry of `## Values files` instead, which is accepted |
 | 6 | `## Values files` | mandatory in every README | describes the example files of the chart: one entry per `values-*.yaml` (name, what it deploys, raw GitHub link) or per glob (`values-startx_noinfra*.yaml`) covering several files, plus the `examples/` directories; one `helm install ... -f` example. Placed right after `## Default values` (else after the `Deploy this helm chart on ...` sections), always before `## Values dictionary`. **[CI-report]** every `values-*.yaml` of the chart is named or covered by a glob |
-| 7 | `## Values dictionary` | optional | tables `Key / Default / Description`, one `###` per top-level key. Once `.tools/readme-values.py` exists (helm-assist Lot 3) the tables sit between `<!-- values:start -->` and `<!-- values:end -->` markers: generated, never edited by hand, checked by `--check` in CI. A key table inside `## Default values` is accepted in place of this section |
+| 7 | `## Values dictionary` | optional | tables `Key / Default / Description`, one `###` per top-level key. Once `.tools/readme-values.py` exists the tables sit between `<!-- values:start -->` and `<!-- values:end -->` markers: generated, never edited by hand, checked by `--check` in CI. A key table inside `## Default values` is accepted in place of this section |
 | 8 | *chart-specific sections* | optional | any topic of the chart (`## Cluster monitoring`, `## Ownership of the cluster singletons`, ...) |
 | 9 | `## Procedures` | optional | day-2 operations: manual backup, rotation, migration, upgrade notes |
 | 10 | `## Usage examples` | mandatory for `chaos-*`, optional elsewhere | at least three examples for `chaos-*`: default/full stack, minimal, advanced |
@@ -167,16 +166,14 @@ A chart split by feature uses one suffix per feature (`-monitoring`, `-registry`
 
 - Commit subjects: `[chart/<name>] <verb>: <description>`, `[docs] <description>`, `[tools] <description>`.
 - A chart change commits together: templates, `values.yaml`, `values.schema.json`, README and `docs/charts/<name>.md`.
-- Only the charts that changed are released (ADR-0001); only `helm-hachley` (lead of the helm repository, formerly `helm-manager`) releases, publishes, tags and
-  pushes (ADR-0004).
+- Only the charts that changed are released (ADR-0001); only the repository lead releases, publishes, tags and pushes (ADR-0004).
 - A change to a chart a consumer uses is announced before the push and its rendered manifests are compared with the
   last tag (`.tools/render-compare.sh`, ADR-0004). Consumed charts: `operator`, `project`, `cluster-rbac`,
   `cluster-ods`, `cluster-istio`, `cluster-prometheus`, `cluster-certmanager`, `cluster-gpu`, `cluster-machine`,
   `cluster-nfd` (pinned versions in `.tools/consumer-pins.txt`).
-- Who talks to whom: each project has one lead session named `*-hachley` and it is the single contact for that
-  project: `helm-hachley` (this repository), `unifai-hachley` (the UnifAI fork), `zuno-demo-hachley` (consumer of the
-  charts, demo cluster), `zuno-demo-agents-hachley`. Findings go to the author of the change, blocking ones to
-  `helm-hachley`; anything for another project goes through `helm-hachley`.
+- Roles: the author changes a chart, the reviewer checks it, the repository lead releases it, and the projects that
+  consume the charts are listed in ADR-0004. Review findings go to the author of the change, blocking ones also to
+  the repository lead; a request from a consumer project goes through the repository lead.
 - A change that claims to keep the render unchanged shows zero diff in `.tools/render-golden.py`. **[review]**
 
 ## 9. Before asking for a release
@@ -193,7 +190,7 @@ Run, from the repository root, on the charts you changed:
 tests/contract/run.sh                         # when a consumed chart changed
 ```
 
-then send the list of changed charts and the results to `helm-quality` for review.
+then send the list of changed charts and the results to the reviewer.
 
 ## 10. Charts wrapping an upstream project (chaos-*, cluster-*)
 

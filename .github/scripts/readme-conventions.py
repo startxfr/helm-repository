@@ -41,8 +41,19 @@ EXEMPT_LAYOUT = {"unifai"}
 
 def headings(text):
     """[(title, body_lines)] of the `## ` sections; headings inside code fences are ignored"""
-    secs, cur, fence = [], None, None
+    secs, cur, fence, comment = [], None, None, False
     for line in text.split("\n"):
+        # an HTML comment hides everything up to the line holding `-->`, code fences included (they may close with `-->`)
+        if comment:
+            comment = "-->" not in line
+            if cur is not None:
+                cur[1].append(line)
+            continue
+        if fence is None and "<!--" in line and "-->" not in line.split("<!--", 1)[1]:
+            comment = True
+            if cur is not None:
+                cur[1].append(line)
+            continue
         fm = re.match(r"^(`{3,}|~{3,})(.*)$", line)
         if fm:
             run = fm.group(1)
