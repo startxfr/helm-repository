@@ -52,7 +52,19 @@ helm install cluster-console startx/cluster-console
 
 ## Values files
 
-- **startx** : Startx Openshift Console customization (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml))
+Every file is a complete console customization (`console` block), used with `helm install cluster-console startx/cluster-console -f <file>`. The files are grouped by `context.scope`; the name of a file identifies the cluster or the customer it was written for.
+
+- **startx** : Startx Openshift Console customization (see [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml)), with the Openshift web terminal (`webTerminal`) :
+  `values-startx.yaml`, `values-startx_noinfra.yaml`, `values-lahsc.yaml`, `values-devoteam.yaml`
+- **monaco scope** : 18 files, `values-mg-*.yaml` (cluster families `c`, `p`, `r`, `s`, `mgmt` and the `pdd` series), `values-mccloud.yaml` and `values-monaco.yaml`
+- **other customers or clusters**, one scope each:
+  - scope `cdf` : `values-cdf-d1.yaml`, `values-cdf-p1.yaml`, `values-cdf-poc.yaml`
+  - scope `chd` : `values-chd-d1.yaml`
+  - scope `ct` : `values-ct-example.yaml`
+  - scope `odhf` : `values-odhf-d1.yaml`
+  - scope `ppmc` : `values-ppmc.yaml`
+  - scope `pragmatik` : `values-prgmk-p1.yaml`, `values-prgmk-r1.yaml`
+  - scope `ubisoft` : `values-ubisoft.yaml`
 
 ```bash
 helm install cluster-console startx/cluster-console -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-console/values-startx.yaml
@@ -147,8 +159,6 @@ oc apply -k .
 ```
 
 ### Applications
-
-
 
 ## History
 

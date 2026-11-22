@@ -150,14 +150,27 @@ helm install project-startx startx/project -f https://raw.githubusercontent.com/
 
 ### Other values files
 
-- **cdf-poc** : [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml)
-- **demo-3scale** : [values-demo-3scale.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-3scale.yaml)
-- **demo-affinity** : [values-demo-affinity.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-affinity.yaml)
-- **demo-automation-runner** : [values-demo-automation-runner.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-automation-runner.yaml)
-- **demo-automation** : [values-demo-automation.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-automation.yaml)
-- **demo-compliance** : [values-demo-compliance.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-compliance.yaml)
-- **demo-costs** : [values-demo-costs.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-costs.yaml)
-helm install project startx/project -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml
+Every file below is a complete set of values, used with `helm install project startx/project -f <file>`.
+
+- **demo projects** : the 31 files matching `values-demo*.yaml` (for example [values-demo-hpa.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-demo-hpa.yaml)) create one project named after the file (`values-demo-hpa.yaml` creates `demo-hpa`, `values-demo.yaml` creates `demo`; the exception is `values-demo-example.yaml`, project `example-project`) with `context.environment: demo`; some of them are also described above. Enabled blocks:
+  - 22 file(s): project, RBAC, NetworkPolicy, LimitRange and quotas
+  - 6 file(s): project, RBAC, LimitRange and quotas (no NetworkPolicy) (demo-automation, demo-costs, demo-kafka, demo-kepler, demo-keycloak, demo-knative)
+  - 1 file(s): project, RBAC, LimitRange, quotas and service accounts (no NetworkPolicy) (demo-3scale)
+  - 1 file(s): project only (demo-example)
+  - 1 file(s): no block enabled, `project.enabled: false` (context and project name only) (demo)
+- **other projects** (one file each):
+  - [values-cdf-poc.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-cdf-poc.yaml) : project `cdf`, environment `infra`, enabled blocks: project, rbac
+  - [values-prgmk-ada.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-prgmk-ada.yaml) : project `ada`, environment `devel`, enabled blocks: project, rbac
+  - [values-startx-argocd.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx-argocd.yaml) : project `startx-argocd`, environment `demo`, no block enabled (`project.enabled: false`, context and project name only)
+  - [values-startx-gitops.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx-gitops.yaml) : project `openshift-gitops`, environment `demo`, no block enabled (`project.enabled: false`, context and project name only)
+  - [values-startx-quay.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx-quay.yaml) : project `startx-quay`, environment `demo`, enabled blocks: project, rbac, networkpolicy, limits, quotas
+  - [values-startx-ubisoft.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx-ubisoft.yaml) : project `ubisoft-user`, environment `ubisoft`, enabled blocks: project, rbac
+  - [values-startx-vault.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx-vault.yaml) : project `startx-vault`, environment `demo`, enabled blocks: project
+  - [values-startx-workspaces.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx-workspaces.yaml) : project `openshift-workspaces`, environment `demo`, enabled blocks: project, rbac
+  - [values-startx.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx.yaml) : project `startx`, environment `demo`, no block enabled (`project.enabled: false`, context and project name only)
+  - [values-startx_noinfra-gitops.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx_noinfra-gitops.yaml) : project `openshift-gitops`, environment `demo`, no block enabled (`project.enabled: false`, context and project name only)
+  - [values-startx_noinfra-vault.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx_noinfra-vault.yaml) : project `startx-vault`, environment `demo`, enabled blocks: project
+  - [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/project/values-startx_noinfra.yaml) : project `startx`, environment `demo`, no block enabled (`project.enabled: false`, context and project name only)
 
 ## Values dictionary
 

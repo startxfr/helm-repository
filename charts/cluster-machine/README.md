@@ -58,27 +58,55 @@ An AWS `machineSet.list` item accepts `spotMarketOptions` (map or YAML string) r
 
 ## Values files
 
-<!-- - **startx** : Startx machine classes running under AWS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml)) creating the following machine classes
-  - **startx-aws-generic-retain** (AWS EBS gp3-csi level with encryption and expansion enabled with retain policy)
-  - **startx-aws-generic-delete** (AWS EBS gp3-csi level with encryption and expansion enabled with delete policy)
-  - **startx-aws-fast-retain** (AWS EBS io1 level without encryption and expansion enabled with retain policy)
-  - **startx-aws-fast-delete** (AWS EBS io1 level without encryption and expansion enabled with delete policy)
-  - **startx-aws-slow-retain** (AWS EBS sc1 level with encryption and expansion enabled with retain policy)
-  - **startx-aws-slow-delete** (AWS EBS sc1 level with encryption and expansion enabled with delete policy)
+Every file is a complete set of values (`machineSet`, `machineAutoscaler`... lists), used with `helm install cluster-machine startx/cluster-machine -f <file>`. `context.cluster` of a file names the machine profile it creates.
+
+- **startx sizes** : `values-startx-<size>.yaml`, one profile per cluster size (see [values-startx-default.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-default.yaml)). What each one creates:
+
+  | file | machine sets | autoscaler |
+  | ---- | ------------ | ---------- |
+  | `values-startx-centi.yaml` | none (context only) | no |
+  | `values-startx-centigpu.yaml` | worker-gpu 1 x g6.2xlarge, 1 replica(s); app 8 x g6.2xlarge/g7e.2xlarge/m5.xlarge, 2 replica(s) | no |
+  | `values-startx-deca.yaml` | infra 3 x r5a.2xlarge, 3 replica(s); app 3 x c5a.xlarge, 3 replica(s) | no |
+  | `values-startx-deci.yaml` | none (context only) | no |
+  | `values-startx-default.yaml` | infra 3 x r5a.2xlarge, 3 replica(s); app 9 x t3a.2xlarge/t3a.large/t3a.xlarge, 3 replica(s) | no |
+  | `values-startx-giga.yaml` | infra 3 x r5a.2xlarge, 0 replica(s); app 3 x r5a.2xlarge, 3 replica(s); gpu 2 x g4dn.xlarge, 0 replica(s) | no |
+  | `values-startx-hecto.yaml` | infra 3 x r5a.2xlarge, 0 replica(s); app 3 x t3a.xlarge, 3 replica(s) | no |
+  | `values-startx-kilo.yaml` | infra 3 x r5a.2xlarge, 0 replica(s); storage 3 x r5a.2xlarge, 0 replica(s); app 3 x t3a.2xlarge, 3 replica(s) | no |
+  | `values-startx-mega.yaml` | infra 3 x r5a.2xlarge, 3 replica(s); app 9 x t3a.2xlarge/t3a.large/t3a.xlarge, 5 replica(s) | no |
+  | `values-startx-metal.yaml` | infra 3 x r5a.2xlarge, 3 replica(s); storage 3 x r5a.2xlarge, 3 replica(s); app 9 x t3a.2xlarge/t3a.large/t3a.xlarge, 5 replica(s); virt 3 x c5.metal, 1 replica(s); gpu 3 x g4dn.xlarge, 0 replica(s) | no |
+  | `values-startx-metal2.yaml` | infra 3 x r5a.2xlarge, 3 replica(s); storage 3 x r5a.2xlarge, 3 replica(s); app 9 x t3a.2xlarge/t3a.large/t3a.xlarge, 5 replica(s); virt 3 x c5.metal, 1 replica(s) | no |
+  | `values-startx-micro.yaml` | none (context only) | no |
+  | `values-startx-milli.yaml` | none (context only) | no |
+  | `values-startx-nano.yaml` | none (context only) | no |
+  | `values-startx-pico.yaml` | none (context only) | no |
+  | `values-startx-snoai.yaml` | worker 1 x g6.8xlarge, 0 replica(s) | no |
+  | `values-startx-snobig.yaml` | worker 1 x c5a.12xlarge, 0 replica(s) | no |
+  | `values-startx-snobm.yaml` | worker 1 x c5.metal, 0 replica(s) | no |
+  | `values-startx-snosmall.yaml` | worker 1 x m6a.4xlarge, 0 replica(s) | no |
+  | `values-startx-tera.yaml` | infra 3 x r5a.2xlarge, 0 replica(s) | yes |
+  | `values-startx.yaml` | app 3 x m6i.xlarge, 3 replica(s) | no |
+
+- **sxv4** : `values-startx-sxv4-dev.yaml`, `values-startx-sxv4-factory.yaml`, `values-startx-sxv4-full.yaml` : application machine sets with the machine autoscaler enabled
+- **startx without infra nodes** : `values-startx_noinfra-*.yaml` (20 files, with `values-startx_noinfra.yaml`); same profile as `values-startx-<size>.yaml`:
+  identical file for centi, deci, micro, milli, nano, pico, snoai, snobig;
+  same without the infra machine sets for centigpu, deca, default, giga, hecto, mega, snobm, snosmall;
+  other content for kilo, metal, metal2 (compare the two files).
+- **customer clusters** : `values-mg-*.yaml`, `values-cdf-poc.yaml`, `values-ppmc-s1.yaml`, `values-prgmk-*.yaml`, one cluster each. What each one creates:
+
+  | file | machine sets | autoscaler |
+  | ---- | ------------ | ---------- |
+  | `values-cdf-poc.yaml` | infra 1 x unspecified type, 2 replica(s) | no |
+  | `values-mg-client1.yaml` | infra 3 x m5a.2xlarge, 3 replica(s); app 6 x c5a.xlarge/m5a.2xlarge, 0 replica(s) | no |
+  | `values-mg-client2.yaml` | infra 3 x m5a.2xlarge, 3 replica(s); app 6 x c5a.xlarge/m5a.2xlarge, 0 replica(s) | no |
+  | `values-mg-mgmt1.yaml` | infra 3 x m5a.2xlarge, 3 replica(s); storage 3 x m5a.2xlarge, 0 replica(s); app 3 x c5a.xlarge, 4 replica(s) | no |
+  | `values-mg-pfd.yaml` | infra 3 x m5a.2xlarge, 3 replica(s); worker 12 x m5a.2xlarge/m5a.4xlarge/m5a.xlarge, 10 replica(s) | no |
+  | `values-ppmc-s1.yaml` | set 2 x unspecified type, 4 replica(s) | no |
+  | `values-prgmk-p1.yaml` | set 1 x unspecified type, 1 replica(s) | no |
+  | `values-prgmk-r1.yaml` | set 1 x unspecified type, 1 replica(s) | no |
 
 ```bash
-helm install cluster-machine startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx.yaml
+helm install cluster-machine startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-default.yaml
 ```
-
-- **startx-ocs** : Startx machine classes for OCS infrastructure (see [values.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml)) creating the following machine classes
-  - **startx-odf-generic-retain** (OCS provisionned via openshift-machine.rbd.csi.ceph.com in cluster openshift-machine with retain policy and expansion enabled)
-  - **startx-odf-generic-delete** (OCS provisionned via openshift-machine.rbd.csi.ceph.com in cluster openshift-machine with delete policy and expansion enabled)
-  - **startx-odf-fs-retain** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with retain policy)
-  - **startx-odf-fs-delete** (OCS provisionned via openshift-machine.cephfs.csi.ceph.com in cluster openshift-machine with delete policy)
-
-```bash
-helm install cluster-machine startx/cluster-machine -f https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-machine/values-startx-ocs.yaml
-``` -->
 
 ## Deploy with ArgoCD
 
