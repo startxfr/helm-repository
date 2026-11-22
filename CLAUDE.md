@@ -28,12 +28,13 @@ charts/<name>/
 
 **values.yaml rules**: First line `# Default values for <chart>.`; `context:` always first key; every top-level key has a comment; no French words.
 
-**README.md sections (in order)**: title+badge → description → Requirements → Deploy on openshift (Connect/Install repo/Get info/Install) → Default values → Other values → ArgoCD deployment → History.  
+**README.md sections (in order)**: title+badge → description → Requirements → Deploy on openshift (Connect/Install repo/Get info/Install) → Default values → Values files → Values dictionary → Deploy with ArgoCD → History.  
+`## Values files` is mandatory: it describes the example files of the chart (`values-*.yaml` and `examples/`) and replaces `## Other available values`. The ArgoCD section is always titled `## Deploy with ArgoCD`.  
 All history table rows must end with trailing `|`. `## History` is the last section; its table is pruned at each release (see README History pruning).
 
 ## Recurring misspellings — fix on sight
 
-`theses resources` → `these resources` · `environement` → `environment` · `plateform` → `platform` · `ressource` → `resource` · `functionnal` → `functional` · `organisational` → `organizational` · `recommandations` → `recommendations` · `Others values availables` → `Other available values` · `graphana` → `grafana` · `projet` → `project`
+`theses resources` → `these resources` · `environement` → `environment` · `plateform` → `platform` · `ressource` → `resource` · `functionnal` → `functional` · `organisational` → `organizational` · `recommandations` → `recommendations` · `Others values availables` / `Other available values` → `Values files` · `graphana` → `grafana` · `projet` → `project`
 
 ## Tooling
 
@@ -143,7 +144,7 @@ devel → /release-chart <name>  (single chart: bump + S3 + publish-devel)
 
 ## ArgoCD deployment pattern (cluster-* charts)
 
-Every `cluster-*` README must have a `## Deploy via ArgoCD` section with **one AppProject + three Applications**.
+Every `cluster-*` README must have a `## Deploy with ArgoCD` section with **one AppProject + three Applications**.
 
 ### Operator namespace naming rules (standardized 2026-06)
 
@@ -306,7 +307,7 @@ for item in d['items']:
 
 1. Update `appVersion` in `Chart.yaml`
 2. Update version, channel, namespace names in `values.yaml` and all `values-startx*.yaml`
-3. Add `## ArgoCD deployment` section to `README.md`; `cp README.md docs/charts/<name>.md`
+3. Add `## Deploy with ArgoCD` section to `README.md`; `cp README.md docs/charts/<name>.md`
 4. `make release CHART=<name>` then `make publish` — publishes to S3
 5. Deploy the 3 ArgoCD Applications on test cluster using the newly published `targetRevision`
 6. Verify sync; fix values/templates if needed; re-release if needed
@@ -375,7 +376,7 @@ application:
 
 ### Process for new charts
 
-1. Chart gets `## ArgoCD deployment` examples section in README.md
+1. Chart gets `## Deploy with ArgoCD` examples section in README.md
 2. Examples extracted to `charts/<name>/examples/argocd/` via `process_argocd.py`
 3. **Auto-generate** `values-app-<chart>.yaml` in `charts/cluster-argocd/`:
    ```bash
@@ -407,7 +408,7 @@ Example-* charts (11 total) have no ArgoCD examples — not included.
 | `chaos-mesh`     | Chaos Mesh  | GUI-driven chaos engine — PodChaos, NetworkChaos, TimeChaos CRs            |
 | `chaos-monkey`   | Kube-monkey | Random pod terminator — opt-in via Deployment labels during business hours |
 
-Every chaos chart README must have `## Usage examples` (after the values dictionary, before `## ArgoCD deployment`; `## History` stays last) with minimum 3 examples: (1) default/full stack, (2) minimal, (3) advanced, and an **Upstream project** line (repository, version, image) under the description.
+Every chaos chart README must have `## Usage examples` (after the values dictionary, before `## Deploy with ArgoCD`; `## History` stays last) with minimum 3 examples: (1) default/full stack, (2) minimal, (3) advanced, and an **Upstream project** line (repository, version, image) under the description.
 
 Rules for the krkn based charts (`chaos-cerberus`, `chaos-kraken`, `chaos-pipeline`):
 - Generic only: no cluster name, cloud identifier, customer or application name in templates, values or examples. Application targets are values or pipeline parameters.
