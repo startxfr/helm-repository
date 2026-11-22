@@ -35,8 +35,8 @@ pass) the whole chain stopped, and a complete rebuild from a clean checkout was 
 - A dependency that has no published version below the target is an error: publish that chart first, in a release of
   its own (new charts take two releases).
 - One implementation, `.tools/bump-pins.py`, called by `routerChartRelease` for every chart with the version the
-  chart is about to get (`--below`): `make release CHART=`, `/release-chart`, `/release-devel`, `release-charts` and
-  `release-all` all go through it. A dependency that changed is **not** released again with its dependents:
+  chart is about to get (`--below`): `make release CHART=`, `/release-chart`, `/release-devel`, `release-charts` (the
+  normal path for a release of several charts) and `release-all` all go through it. A dependency that changed is **not** released again with its dependents:
   `release-closure.py`, the leaves-first order and the intermediate index refresh are removed.
 - Guards, each proving something different:
 

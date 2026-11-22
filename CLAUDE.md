@@ -85,7 +85,8 @@ The active table is the last table of the `## History` section (`cluster-acm` an
 
 ```bash
 make release   CHART=cluster-nmstate [VERSION=21.3.199] [DESC="fix"]
-make release-all                     [VERSION=21.3.199] [DESC="stable update"]
+make release-charts                  [VERSION=21.3.199] [DESC="..."]  # bump + package + upload, no merge/tag/push (normal path, RELEASE_ALL=true for every chart)
+make release-all                     [VERSION=21.3.199] [DESC="stable update"]  # one-shot: also merges, tags and pushes
 make publish        # regenerates stable/release-N S3 repos (noschema is frozen)
 make publish-chart  CHART=cluster-nmstate
 make lint/test/schema/package  CHART=cluster-nmstate
@@ -105,6 +106,18 @@ make delete     CHART=cluster-nmstate [FORCE_DELETE=yes]
 3. Commit and push (`devel` → `master` → `stable` → tag).
 
 **Pins**: `make release` rewrites the internal pins of the chart on the published versions below its new version (ADR-0006) and stops, writing nothing, when the index is unreachable or a dependency has no published version. A fix in `project`/`operator` does **not** reach its dependents by itself: (1) release and publish the dependency, (2) release the dependents that must take it (`sx-helm changed-charts` lists the dependents whose pin lags behind: `.tools/bump-pins.py --lagging`). `ci-check.sh static` proves offline that every pin is lower than its chart version; `.tools/bump-pins.py --check` and `release-preflight.sh` prove online that it is published; `release-verify.sh` checks the packages after a release.
+
+### Release flow (all charts, step by step)
+
+The release owner runs the chain by hand, nothing is merged, tagged or pushed before the checks pass:
+
+1. `RELEASE_ALL=true INTERACTIVE=false VERSION=<next> DESC="..." make release-charts` — bumps, resolves the internal pins on the published versions below `<next>` (ADR-0006), packages and uploads every chart; no merge, no tag, no push. Without `RELEASE_ALL=true` only the charts changed since the last tag are released.
+2. `.tools/release-preflight.sh` — read-only checks (pins published, schema, ArgoCD examples, contract and pin tests).
+3. `make publish` — regenerates the indexes (stable, release-N).
+4. `.tools/release-postflight.sh` and `.tools/release-verify.sh <next> [chart ...]` — read-only checks of what is served.
+5. Promotion to `stable` and annotated tag, by hand.
+
+`make release-all` does steps 1 to 5 in one go (bump + merge devel→master→stable + tag + push): it is not the normal path, use it only when the release owner asks for it.
 
 **Dual S3 copy**: every package lands in both `stable/` and `release-N/` immediately after `make release`.
 
@@ -143,7 +156,7 @@ devel → /release-chart <name>  (single chart: bump + S3 + publish-devel)
 | `/new-chart`         | `<family>-<name>`     | New chart: gather inputs, copy, update Chart.yaml+README, clean templates, adjust values, publish |
 
 - `release-charts` (make target) = bump the charts **changed since the latest release tag** (ADR-0001) **without** merging/tagging — safe to run multiple times on devel; `RELEASE_ALL=true` bumps every chart, `make changed-charts` lists the selection
-- `release-all` (make target) = full flow: bumps (same selection rule) + merges devel→master→stable + tags + pushes
+- `release-all` (make target) = one-shot full flow: bumps (same selection rule, same pin resolution) + merges devel→master→stable + tags + pushes — not the normal path, see "Release flow (all charts, step by step)"
 
 ---
 
