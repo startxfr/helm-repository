@@ -203,8 +203,31 @@ check_argocd() {
             [[ $rev == '21.3.x' ]] || { log "FAIL $f: targetRevision '$rev' of a Helm chart source must be the range 21.3.x"; rc=1; }
         done < <(yq e 'select(.kind == "Application" and ((.spec.source.chart // "") != "")) | .spec.source.targetRevision' "$f" 2>/dev/null)
     done
+    # every values file named in a valueFiles list (examples and values-app files) must exist in the chart the Application reads
+    python3 - >"$tmp/valuefiles.log" <<'PY' || rc=1
+import glob, os, sys
+import yaml
+bad = 0
+def check(origin, source, helm):
+    global bad
+    chart = (source or {}).get('chart') or os.path.basename((source or {}).get('path') or '')
+    if isinstance(helm, str):
+        helm = yaml.safe_load(helm)
+    for vf in (helm or {}).get('valueFiles') or []:
+        if chart and os.path.isdir('charts/' + chart) and not os.path.isfile('charts/%s/%s' % (chart, vf)):
+            print('FAIL %s: valueFiles %s does not exist in charts/%s' % (origin, vf, chart)); bad = 1
+for f in sorted(glob.glob('charts/*/examples/argocd/*.yaml')):
+    for d in yaml.safe_load_all(open(f)):
+        if isinstance(d, dict) and d.get('kind') == 'Application':
+            check(f, d.get('spec', {}).get('source'), (d.get('spec', {}).get('source') or {}).get('helm'))
+for f in sorted(glob.glob('charts/cluster-argocd/values-app-*.yaml')):
+    for app in (yaml.safe_load(open(f)) or {}).get('application', {}).get('list') or []:
+        check(f + ' ' + str(app.get('name')), app.get('source'), app.get('helm'))
+sys.exit(bad)
+PY
+    [[ -s "$tmp/valuefiles.log" ]] && cat "$tmp/valuefiles.log"
     rm -rf "$tmp"
-    [[ $rc -eq 0 ]] && log "ok   argocd: $(ls charts/cluster-argocd/values-app-*.yaml | wc -l) values-app files render, $(ls charts/*/examples/argocd/*.yaml | wc -l) examples are valid"
+    [[ $rc -eq 0 ]] && log "ok   argocd: $(ls charts/cluster-argocd/values-app-*.yaml | wc -l) values-app files render, $(ls charts/*/examples/argocd/*.yaml | wc -l) examples are valid, every valueFiles exists"
     return $rc
 }
 
