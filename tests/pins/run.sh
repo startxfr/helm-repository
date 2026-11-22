@@ -97,12 +97,61 @@ rc=$(run --check --only app)
 
 # lagging pins are reported, nothing is changed
 rc=$(run --lagging --only app)
-[[ $rc -eq 0 ]] && grep -q 'app: lib pinned on 21.3.4, 21.3.7 is published' "$W/out.log" && ok "lagging report" || bad "lagging: rc=$rc $(cat "$W/out.log")"
+[[ $rc -eq 0 ]] && grep -q 'app: lib pinned on 21.3.4, 21.3.5 is published' "$W/out.log" && ok "lagging report: the highest version the rule allows" || bad "lagging: rc=$rc $(cat "$W/out.log")"
+rc=$(run --lagging --only quoted)
+[[ $rc -eq 0 ]] && ! [[ -s $W/out.log ]] && ok "lagging: nothing is reported for a pin already on the highest allowed version (21.3.7 and 21.4.0 are not allowed for app)" || bad "lagging noise: rc=$rc $(cat "$W/out.log")"
 
 # index unreachable: exit 2, nothing written, no fallback on the local tree
 cp "$T/charts/app/Chart.yaml" "$W/app.before"
 rc=$(BUMP_PINS_SLEEP=0 python3 -I "$T/.tools/bump-pins.py" --apply --only app >/dev/null 2>"$W/err.log"; echo $?)
 [[ $rc -eq 2 ]] && cmp -s "$W/app.before" "$T/charts/app/Chart.yaml" && grep -q 'never taken from the local tree' "$W/err.log" && ok "unreachable index: refused (exit 2), nothing written" || bad "unreachable: rc=$rc $(cat "$W/err.log")"
+
+# a malformed index is an unreadable index: exit 2, a clear message, no traceback, nothing written
+cp "$T/charts/app/Chart.yaml" "$W/app.before"
+for kind in 'entries: [lib]' 'entries: {lib: null}' 'entries: {lib: "21.3.5"}' 'entries: {lib: [{version: 21.3}]}' 'entries: {lib: [{name: lib}]}' 'nothing: here'; do
+    printf 'apiVersion: v1\n%s\n' "$kind" > "$W/bad-index.yaml"
+    rc=$(python3 -I "$T/.tools/bump-pins.py" --index "$REPO=$W/bad-index.yaml" --apply --only app >/dev/null 2>"$W/err.log"; echo $?)
+    [[ $rc -eq 2 ]] && ! grep -q Traceback "$W/err.log" && grep -q 'unreachable or unreadable' "$W/err.log" && cmp -s "$W/app.before" "$T/charts/app/Chart.yaml" || bad "malformed index '$kind': rc=$rc $(tail -1 "$W/err.log")"
+done
+ok "malformed indexes (list, null, string, version without string, no entries) exit 2 without traceback"
+
+# a version with a leading zero is read as published, never as another version, and never selected
+cat > "$W/zero-index.yaml" <<YAML
+apiVersion: v1
+entries:
+  lib:
+    - {name: lib, version: 21.3.05}
+    - {name: lib, version: 21.3.3}
+YAML
+cp "$T/charts/app/Chart.yaml" "$W/app.before"
+rc=$(python3 -I "$T/.tools/bump-pins.py" --index "$REPO=$W/zero-index.yaml" --apply --only app --below 21.3.9 2>"$W/err.log" >"$W/out.log"; echo $?)
+[[ $rc -eq 0 ]] && [[ $(pin app lib) == 21.3.3 ]] && ok "21.3.05 is never selected nor rewritten as 21.3.5" || bad "leading zero: rc=$rc pin=$(pin app lib) $(cat "$W/err.log")"
+sed -i '0,/version: 21.3.3/s//version: 21.3.05/' "$T/charts/app/Chart.yaml"
+rc=$(run --check-offline --only app)
+[[ $rc -eq 1 ]] && grep -q 'an exact X.Y.Z version is required' "$W/err.log" && ok "a pin with a leading zero is refused by the offline check" || bad "leading zero pin: rc=$rc $(cat "$W/err.log")"
+cp "$W/app.before" "$T/charts/app/Chart.yaml"
+
+# --apply without --only is all or nothing: one chart in error, no chart written
+cp "$T/charts/app/Chart.yaml" "$W/app.before"; cp "$T/charts/quoted/Chart.yaml" "$W/quoted.before"
+rc=$(run --apply --below 21.3.8)
+[[ $rc -eq 1 ]] && cmp -s "$W/app.before" "$T/charts/app/Chart.yaml" && cmp -s "$W/quoted.before" "$T/charts/quoted/Chart.yaml" && grep -q 'NOT written' "$W/err.log" && ok "--apply without --only writes nothing while a chart fails" || bad "all or nothing: rc=$rc $(cat "$W/err.log")"
+
+# flow style dependencies cannot be rewritten: refused, never silently ignored
+chart flowy 21.3.9 "  - {name: lib, repository: $REPO, version: 21.3.7}"
+for opt in --check-offline --apply; do
+    cp "$T/charts/flowy/Chart.yaml" "$W/flowy.before"
+    rc=$(run $opt --only flowy)
+    [[ $rc -eq 1 ]] && grep -q 'flow style' "$W/err.log" && cmp -s "$W/flowy.before" "$T/charts/flowy/Chart.yaml" || bad "flow style with $opt: rc=$rc $(cat "$W/err.log")"
+done
+ok "flow style dependencies are refused (offline check and apply)"
+rm -rf "$T/charts/flowy"
+
+# --levels : depth in the internal dependency graph
+chart umbrella 21.3.9 "  - name: app
+    repository: $REPO
+    version: 21.3.6"
+python3 -I "$T/.tools/bump-pins.py" --levels > "$W/levels.log" 2>&1
+grep -q '^level 0 (2): fresh lib$' "$W/levels.log" && grep -q '^level 1 (3): app nextminor quoted$' "$W/levels.log" && grep -q '^level 2 (1): umbrella$' "$W/levels.log" && ok "--levels lists the charts by depth" || bad "levels: $(cat "$W/levels.log")"
 
 echo "summary: $PASS passed, $FAIL failed"
 [[ $FAIL -eq 0 ]]
