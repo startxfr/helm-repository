@@ -11,6 +11,9 @@ spec:
     serviceAccountName: chaos-pipeline
   timeouts:
     pipeline: 3h0m0s
+    # Time kept for the final checks (cerberus signal, ClusterOperators), taken from the pipeline timeout:
+    # the gate and the scenarios have 2h40m
+    finally: 20m0s
   params:
     # Scenarios of this run, here the platform pod scenarios (without this parameter no scenario runs)
     - name: scenarios

@@ -272,6 +272,12 @@ test_chaos-kraken() {
     }
     render scenario --set kraken.enabled=true --set kraken.scenarios.pods-monitoring.enabled=true && \
         assert_sel "an enabled scenario is added to the scenarios ConfigMap" 'select(.kind == "ConfigMap" and .metadata.name == "kraken-scenarios") | .data | has("pods-monitoring.yaml")' true
+    if helm template contract "$CHART_DIR" --set kraken.enabled=true --set kraken.cerberus.enabled=true \
+        --set kraken.cerberus.url=http://cerberus:8080 --set kraken.config.exitOnFailure=true >"$WORK/eof.yaml" 2>"$WORK/err.log"; then
+        bad "$CURRENT: exitOnFailure with cerberus must fail the render"
+    else
+        grep -q "must stay false" "$WORK/err.log" && ok "$CURRENT: exitOnFailure with cerberus fails with a clear message" || bad "$CURRENT: wrong failure message: $(tail -1 "$WORK/err.log")"
+    fi
     render hub --set kraken.enabled=true --set kraken.engine=hub --set kraken.hub.scenarios.pod-scenarios.enabled=true && \
         assert_sel "the hub engine runs a krkn-hub image" 'select(.kind == "Job") | .spec.template.spec.containers[0].image' quay.io/krkn-chaos/krkn-hub:pod-scenarios
 }
@@ -293,6 +299,7 @@ test_chaos-pipeline() {
         assert_sel "the application pipeline has the same empty default" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "scenarios") | .default | length' 0
         assert_sel "the ClusterOperator check is the last finally task" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.finally[1].taskRef.name' clusteroperator-check
         assert_sel "the ClusterOperator check is off by default" 'select(.kind == "Pipeline" and .metadata.name == "chaos-infra") | .spec.params[] | select(.name == "clusteroperator-check") | .default' false
+        assert_sel "krkn does not exit after a healthy cerberus signal" 'select(.kind == "Task" and .metadata.name == "krkn-run") | .spec.steps[].script | capture("(?s)\\nkraken:\\n(?<block>.*?)\\nresiliency:") | .block | [test("exit_on_failure: False"), (test("exit_on_failure: True") | not)] | all' true
         assert_sel "the application target is a pipeline parameter" 'select(.kind == "Pipeline" and .metadata.name == "chaos-application") | .spec.params[] | select(.name == "target-namespace") | .name' target-namespace
     }
     render postcheck --set pipeline.enabled=true --set pipeline.postCheck.clusterOperators.enabled=true \

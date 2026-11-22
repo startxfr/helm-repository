@@ -125,7 +125,7 @@ helm install chaos-kraken-deploy startx/chaos-kraken -f https://raw.githubuserco
 | kraken.job.activeDeadlineSeconds      | 7200                        | Maximum duration of the job (seconds)                                                                                                          |
 | kraken.job.suspend                    | false                       | Create the job suspended                                                                                                                       |
 | kraken.job.ttlSecondsAfterFinished    | ""                          | Delete the finished job after this delay (seconds), kept when empty                                                                            |
-| kraken.config.exitOnFailure           | false                       | Stop the run when a scenario fails                                                                                                             |
+| kraken.config.exitOnFailure           | false                       | Keep `false`: krkn reads it only with cerberus enabled and then exits 1 after the first scenario, even on a healthy signal                     |
 | kraken.config.waitDuration            | 60                          | Duration to wait between each scenario (seconds)                                                                                               |
 | kraken.config.iterations              | 1                           | Number of times to execute the scenarios                                                                                                       |
 | kraken.config.daemonMode              | false                       | Run the scenarios forever                                                                                                                      |
@@ -253,7 +253,6 @@ kraken:
 kraken:
   enabled: true
   config:
-    exitOnFailure: true
     waitDuration: 30
   cerberus:
     enabled: true
@@ -354,3 +353,4 @@ oc apply -k examples/argocd/
 | 21.3.392 | 2026-11-21 | full repository release: chaos-pipeline run parameters and authenticated health check, aligned pins |
 | 21.3.397 | 2026-11-21 | stable repository release 21.3.397: all charts aligned, unifai delegation cap documentation |
 | 21.3.398 | 2026-11-21 | project: dockercfg existingSecret; chaos-pipeline: empty default for scenarios, optional ClusterOperator final check; chaos schemas regenerated |
+| 21.3.400 | 2026-11-22 | fix: krkn-run no longer exits after a healthy cerberus signal (exit_on_failure), ClusterOperator check hardened, exitOnFailure refused with cerberus |
