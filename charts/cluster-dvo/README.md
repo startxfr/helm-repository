@@ -66,8 +66,8 @@ helm install cluster-dvo startx/cluster-dvo -f https://raw.githubusercontent.com
 
 Values files without a detailed section above (each one is a complete set of values for `helm install cluster-dvo startx/cluster-dvo -f <file>`) :
 
-- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 47 keys, by top-level key: `gra…Operator` (25), `gra…Project` (14), `operator` (3), `project` (3), `context` (1), `gra…` (1)
-- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `gra…Operator.subscription.operator.config.infra` (true → false), `operator.subscription.operator.config.infra` (true → false)
+- [values-demo.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-demo.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on 47 keys, by top-level key: `graphanaOperator` (25), `graphanaProject` (14), `operator` (3), `project` (3), `context` (1), `graphana` (1)
+- [values-startx_noinfra.yaml](https://raw.githubusercontent.com/startxfr/helm-repository/master/charts/cluster-dvo/values-startx_noinfra.yaml) : context `startx/default/infra`; against `values-startx.yaml`: differ on `graphanaOperator.subscription.operator.config.infra` (true → false), `operator.subscription.operator.config.infra` (true → false)
 
 ## Deploy with ArgoCD
 
